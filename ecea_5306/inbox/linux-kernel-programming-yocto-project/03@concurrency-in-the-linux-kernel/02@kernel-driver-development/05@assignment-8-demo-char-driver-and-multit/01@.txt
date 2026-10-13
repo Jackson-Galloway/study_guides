@@ -1,0 +1,27 @@
+In this video,
+I'll do a demo of assignment eight. So when your assignment three repository
+where you're making the changes for user space testing and native testing. If your own test.sh here, what you'll
+notice is that it's not actually going to do any testing in this case. And the reason is getting
+the automated test portion of the device driver load working
+reliably on native Linux is more than we wanted to take on for
+the current semester. So the way you'll test your assignment
+eight implementation is with your doctor or build environment. So what these instructions will step you
+through from your assignment repository is how you can build and run natively to
+verify your native driver implementation. And I absolutely suggest you do this,
+definitely go through these steps and verify that your driver's working
+properly using native build on your own to host system. But the way we're actually going to
+validate it is through the build up build again. So using your build as an example,
+if you're implementing assignment eight in builder the way you test is
+just with the test.sh script. You'll see this does the same thing it's
+done in the past where it will start by kicking off a build rebuild. After it finishes doing the builder build, it's going to kick off
+the run q mu script. And then you're run q mu script
+should load your drivers as it did with assignment seven and
+it should also load your as dhr driver. And then what's going to happen
+with the automated test is that driver test script will get copied into
+the root file system of the q mu target, it will run the driver test
+against the driver on q mu. You and then it will run the socket test,
+which should be using your as dhr driver again against the q mu,
+you instance. And if everything works properly,
+you'll see all the prints that come out of your ASD socket implementation mapped
+through your driver implementation. And you'll see this message test, complete
+with success to indicate that everything worked inside your q mu you instance.

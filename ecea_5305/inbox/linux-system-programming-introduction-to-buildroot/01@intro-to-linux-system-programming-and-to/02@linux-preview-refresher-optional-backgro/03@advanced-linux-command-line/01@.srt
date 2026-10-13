@@ -1,0 +1,1467 @@
+1
+00:00:02,039 --> 00:00:04,947
+All right, so with this video we're
+going to get in a little more detail about
+
+2
+00:00:04,947 --> 00:00:06,064
+how to use the command line.
+
+3
+00:00:06,064 --> 00:00:09,211
+So we're going to talk about how
+to edit from the command line,
+
+4
+00:00:09,211 --> 00:00:12,493
+the purpose on the role of the shell and
+the shell interpreter.
+
+5
+00:00:12,493 --> 00:00:16,937
+We'll talk about doing some searches from
+the command line using wildcard pipes and
+
+6
+00:00:16,937 --> 00:00:18,886
+redirection from the command line.
+
+7
+00:00:18,886 --> 00:00:20,062
+Also permissions and
+
+8
+00:00:20,062 --> 00:00:23,924
+permissions of files, how to
+manipulate that from the command line.
+
+9
+00:00:23,924 --> 00:00:26,943
+And also how to get remote
+access to the command line for
+
+10
+00:00:26,943 --> 00:00:30,366
+both interactive commands and
+for also transferring files.
+
+11
+00:00:30,366 --> 00:00:34,486
+So that in terms of editing there are lots
+of different text editors you can choose
+
+12
+00:00:34,486 --> 00:00:35,403
+from from linux.
+
+13
+00:00:35,403 --> 00:00:38,537
+And a lot of different ones that
+you can use on the command line.
+
+14
+00:00:38,537 --> 00:00:41,380
+Vi is the one that I'm
+going to talk about here.
+
+15
+00:00:41,380 --> 00:00:43,498
+It's one classic utility.
+
+16
+00:00:43,498 --> 00:00:45,048
+It's been around since 1976.
+
+17
+00:00:45,048 --> 00:00:49,855
+It was based on a what was called
+the visual mode of an early text
+
+18
+00:00:49,855 --> 00:00:51,154
+editor on UNIX.
+
+19
+00:00:51,154 --> 00:00:53,929
+So that's where the vi comes
+from in terms of the name.
+
+20
+00:00:53,929 --> 00:00:58,097
+And a lot of times you'll see it
+replaced now by vim or vi improved,
+
+21
+00:00:58,097 --> 00:01:02,935
+which is just a version of the vi that has
+a lot more features in terms of editing
+
+22
+00:01:02,935 --> 00:01:06,897
+with plug ins for instance for
+some additional capabilities.
+
+23
+00:01:06,897 --> 00:01:11,026
+So you have a lot of different
+ones to choose from.
+
+24
+00:01:11,026 --> 00:01:13,940
+You don't necessarily need to use vi for
+your editing, but
+
+25
+00:01:13,940 --> 00:01:17,040
+I do suggest you get at least some
+level of familiarity with vi.
+
+26
+00:01:17,040 --> 00:01:20,411
+And the main reason for that is really
+because in my experience it's the one that
+
+27
+00:01:20,411 --> 00:01:21,988
+you can count on always being there.
+
+28
+00:01:21,988 --> 00:01:24,807
+So the example I gave before
+of maybe you've got a full
+
+29
+00:01:24,807 --> 00:01:28,329
+environment that normally would
+boot up on your embedded system.
+
+30
+00:01:28,329 --> 00:01:31,987
+But for whatever reason you're
+getting stuck at the boot prompt and
+
+31
+00:01:31,987 --> 00:01:34,438
+you aren't able to load
+the full system yet.
+
+32
+00:01:34,438 --> 00:01:38,654
+Most likely vi will be an editor
+that's available in that scenario,
+
+33
+00:01:38,654 --> 00:01:41,719
+it might be that other
+editors are not available.
+
+34
+00:01:41,719 --> 00:01:45,807
+And so having a little bit of knowledge
+of vi will let you be you use
+
+35
+00:01:45,807 --> 00:01:49,315
+the command line for
+editing in that type of scenario.
+
+36
+00:01:49,315 --> 00:01:53,035
+So in terms of opening a file with vi,
+
+37
+00:01:53,035 --> 00:01:57,475
+you can just use vi plus
+the name of the file or
+
+38
+00:01:57,475 --> 00:02:01,444
+vim in case you're using vi improved.
+
+39
+00:02:01,444 --> 00:02:03,481
+And then once you're into vi and
+
+40
+00:02:03,481 --> 00:02:07,636
+interacting you can use what's
+called normal mode for command.
+
+41
+00:02:07,636 --> 00:02:12,427
+So if you hit the escape key, you'll be in
+a mode that allows you to use the keyboard
+
+42
+00:02:12,427 --> 00:02:16,047
+instead of for typing text for
+typing commands to the editor.
+
+43
+00:02:16,047 --> 00:02:19,544
+And so one of the things you would do
+inside the editor is navigate around
+
+44
+00:02:19,544 --> 00:02:20,660
+inside the document.
+
+45
+00:02:20,660 --> 00:02:23,603
+So you can use the h, j, k, and
+
+46
+00:02:23,603 --> 00:02:28,481
+l keys to move left down up or
+right within the file.
+
+47
+00:02:28,481 --> 00:02:32,120
+And this might seem a little strange
+at first, but once you get used to it
+
+48
+00:02:32,120 --> 00:02:35,458
+it's pretty powerful because you
+don't have to lift your keys or
+
+49
+00:02:35,458 --> 00:02:38,567
+your fingers off the keys in
+order to move around in the file.
+
+50
+00:02:38,567 --> 00:02:43,219
+So you can go into and out of editing
+mode very quickly and you can also move
+
+51
+00:02:43,219 --> 00:02:47,506
+around in the file pretty quickly
+once you get the hang of using it.
+
+52
+00:02:47,506 --> 00:02:50,669
+Then when you're ready to manipulate text,
+
+53
+00:02:50,669 --> 00:02:54,089
+you can use i to go into insert mode and
+type text.
+
+54
+00:02:54,089 --> 00:02:58,741
+You can also use the delete key
+to the d option to delete text.
+
+55
+00:02:58,741 --> 00:03:01,549
+And when you're ready to exit and
+save a file,
+
+56
+00:03:01,549 --> 00:03:05,442
+you hit escape to make sure you're
+in normal mode for commands.
+
+57
+00:03:05,442 --> 00:03:10,316
+And then you can use colon w to
+write the file and colon q to quit.
+
+58
+00:03:10,316 --> 00:03:13,601
+So again, there's a lot more
+you can do with the eye and
+
+59
+00:03:13,601 --> 00:03:15,756
+there are other editors out there.
+
+60
+00:03:15,756 --> 00:03:18,421
+I encourage you to look
+through the links here and
+
+61
+00:03:18,421 --> 00:03:22,386
+if you're not familiar with vi get
+a little bit of familiarity with it and
+
+62
+00:03:22,386 --> 00:03:26,039
+some level of comfort so
+that you'll be able to use it when needed.
+
+63
+00:03:26,039 --> 00:03:31,914
+So we've talked about interacting with
+the command line via the terminal, but
+
+64
+00:03:31,914 --> 00:03:37,365
+we haven't talked much about how
+those commands actually get executed.
+
+65
+00:03:37,365 --> 00:03:40,722
+So it turns out what's happening when
+you're interacting with the terminal is
+
+66
+00:03:40,722 --> 00:03:42,737
+there's what's called a shell interpreter.
+
+67
+00:03:42,737 --> 00:03:46,061
+That's interpreting what you're
+entering on the command line,
+
+68
+00:03:46,061 --> 00:03:49,387
+passing that off to the appropriate
+application for execution and
+
+69
+00:03:49,387 --> 00:03:51,954
+returning the results back
+to you on the terminal.
+
+70
+00:03:51,954 --> 00:03:56,662
+And so in addition to the interactive
+use that we've showed in the previous
+
+71
+00:03:56,662 --> 00:03:58,842
+videos and and the current video.
+
+72
+00:03:58,842 --> 00:04:03,324
+There also be the option to put
+a list of commands in a text file and
+
+73
+00:04:03,324 --> 00:04:05,159
+pass that off as a script.
+
+74
+00:04:05,159 --> 00:04:08,269
+And the shell interpreter will be the same
+thing that's going to be executing every
+
+75
+00:04:08,269 --> 00:04:10,107
+one of those commands out
+of the script for you.
+
+76
+00:04:10,107 --> 00:04:13,227
+There are lots of different
+shell interpreters out there and
+
+77
+00:04:13,227 --> 00:04:15,742
+a lot of them have very
+similar command support.
+
+78
+00:04:15,742 --> 00:04:19,312
+The bourne shell was one of
+the original shell interpreters and
+
+79
+00:04:19,312 --> 00:04:22,151
+that's often you'll find
+that abbreviated sh.
+
+80
+00:04:22,151 --> 00:04:25,440
+It was released back in 1979.
+
+81
+00:04:25,440 --> 00:04:26,970
+Then there was ksh and
+
+82
+00:04:26,970 --> 00:04:31,570
+csh and several other shell
+interpreters that were developed.
+
+83
+00:04:31,570 --> 00:04:37,598
+And each of those interpreters had some
+unique features in terms of options for
+
+84
+00:04:37,598 --> 00:04:43,185
+commands that you could use with
+the shell and inside your shell script.
+
+85
+00:04:43,185 --> 00:04:48,996
+And so what happened was bourne again
+shell or bash shell was created.
+
+86
+00:04:48,996 --> 00:04:53,098
+As a way to group all these useful
+features together from different shell
+
+87
+00:04:53,098 --> 00:04:57,011
+interpreters and add some extensions
+to the original bourne shell.
+
+88
+00:04:57,011 --> 00:04:58,242
+That was the 1979 version.
+
+89
+00:04:58,242 --> 00:05:02,385
+So for most of the stuff that we talked
+about in this class, we'll talk about
+
+90
+00:05:02,385 --> 00:05:07,011
+either using the bourne shell, s, h or the
+buorne again shell which will call bash.
+
+91
+00:05:07,011 --> 00:05:11,600
+So a few more useful things that you
+can do from the command line and
+
+92
+00:05:11,600 --> 00:05:16,704
+getting into some more advanced things
+you can do from the command line.
+
+93
+00:05:16,704 --> 00:05:20,415
+There's the find utility that
+will let you locate files or
+
+94
+00:05:20,415 --> 00:05:24,895
+directories based on things like
+the file name or the type of the file.
+
+95
+00:05:24,895 --> 00:05:29,783
+So here's an example of a command
+that will find the any file or
+
+96
+00:05:29,783 --> 00:05:36,097
+directory that's named a directory under
+the given directory that we're in.
+
+97
+00:05:36,097 --> 00:05:40,463
+And so find dot means look under
+the dot in this case means the current
+
+98
+00:05:40,463 --> 00:05:42,083
+directory that were in.
+
+99
+00:05:42,083 --> 00:05:43,375
+Find dot means look for
+
+100
+00:05:43,375 --> 00:05:48,002
+any file with your directory with name
+a directory under the current directory.
+
+101
+00:05:48,002 --> 00:05:50,337
+And so what you see spit out.
+
+102
+00:05:50,337 --> 00:05:54,651
+If you run that command would be
+a list of all the directories under
+
+103
+00:05:54,651 --> 00:05:58,035
+the current directory that
+are named a directory.
+
+104
+00:05:58,035 --> 00:06:02,182
+And so because we did our copy from
+a directory to a copy target in
+
+105
+00:06:02,182 --> 00:06:03,600
+the previous video.
+
+106
+00:06:03,600 --> 00:06:08,375
+We'll find two matches of that here
+when we search for a file by file name.
+
+107
+00:06:08,375 --> 00:06:12,642
+Another thing you will find useful from
+in terms of using the command line,
+
+108
+00:06:12,642 --> 00:06:16,855
+would be searching inside the content
+of the files for specific content.
+
+109
+00:06:16,855 --> 00:06:20,605
+So if I have two different files,
+textfile and textfile2,
+
+110
+00:06:20,605 --> 00:06:25,250
+I use the cat option to concatenate out
+and look at the content of the files.
+
+111
+00:06:25,250 --> 00:06:29,042
+I can see one of them says
+AESD awesome is awesome.
+
+112
+00:06:29,042 --> 00:06:31,150
+The second one says, CU is awesome.
+
+113
+00:06:31,150 --> 00:06:36,540
+So if I do a grep command and
+I specify is awesome.
+
+114
+00:06:36,540 --> 00:06:40,108
+It's going to find both of those match in
+both of those files is going to spit out
+
+115
+00:06:40,108 --> 00:06:42,879
+those file names and
+the corresponding matching lines.
+
+116
+00:06:42,879 --> 00:06:47,234
+And in this case I even get some color
+syntax highlighting to show me which part
+
+117
+00:06:47,234 --> 00:06:50,653
+of the string match the corresponding
+text in these photos.
+
+118
+00:06:50,653 --> 00:06:55,896
+So one thing that you'll notice about
+the grep command that I specified.
+
+119
+00:06:55,896 --> 00:07:02,158
+So I used the astrostea as
+a parameter to the direct command and
+
+120
+00:07:02,158 --> 00:07:07,587
+what this at the astrostea
+in this case is a wildcard.
+
+121
+00:07:07,587 --> 00:07:11,920
+So the star is telling the shell that any
+
+122
+00:07:11,920 --> 00:07:16,909
+character in a name of
+a file in this directory
+
+123
+00:07:16,909 --> 00:07:21,394
+should be passed into the grep command.
+
+124
+00:07:21,394 --> 00:07:26,515
+And so if I just say star,
+what it's saying is that list any files in
+
+125
+00:07:26,515 --> 00:07:32,568
+this directory and include that as one
+of the parameters to the group command.
+
+126
+00:07:32,568 --> 00:07:35,865
+I could have gotten more
+specific with this,
+
+127
+00:07:35,865 --> 00:07:40,550
+I could have said textfile star text,
+which would have meant any
+
+128
+00:07:40,550 --> 00:07:45,079
+file that started with the name
+textfile and ended with text.
+
+129
+00:07:45,079 --> 00:07:51,722
+But by just specifying the star, it
+means match any files in that directory.
+
+130
+00:07:51,722 --> 00:07:55,956
+So in the case that you specify
+a wild card on the command line.
+
+131
+00:07:55,956 --> 00:08:00,265
+What the shell is going to do is figure
+out what are all the different matches for
+
+132
+00:08:00,265 --> 00:08:04,793
+that particular wildcard and then pass
+that string into the ultimate command.
+
+133
+00:08:04,793 --> 00:08:09,274
+And so the grep command in this case is
+going to get past the string that looks
+
+134
+00:08:09,274 --> 00:08:12,078
+like this is going to see
+grep dash r is awesome.
+
+135
+00:08:12,078 --> 00:08:13,754
+And then instead of seeing the star,
+
+136
+00:08:13,754 --> 00:08:16,037
+it's going to see the expanded
+copy from the shell.
+
+137
+00:08:16,037 --> 00:08:19,517
+And so it's going to see a list of
+all the different files that match.
+
+138
+00:08:19,517 --> 00:08:21,644
+And in this case since
+I specified the star,
+
+139
+00:08:21,644 --> 00:08:24,762
+it would pick any of the files
+that are in the current directory.
+
+140
+00:08:24,762 --> 00:08:29,480
+So if I had a textfile, textfile 1234,
+it would list all those
+
+141
+00:08:29,480 --> 00:08:34,045
+on the output of the command and
+pass all those in as parameters.
+
+142
+00:08:34,045 --> 00:08:36,109
+So in addition to wildcards,
+
+143
+00:08:36,109 --> 00:08:40,492
+one other useful tool that we can
+use on command line are pipes.
+
+144
+00:08:40,492 --> 00:08:45,074
+So the pipe character is a character that
+will send the output of one command to
+
+145
+00:08:45,074 --> 00:08:46,920
+the input of another command.
+
+146
+00:08:46,920 --> 00:08:48,337
+And this is really useful.
+
+147
+00:08:48,337 --> 00:08:52,936
+You see this used a lot in the next shell
+scripting because it's very versatile.
+
+148
+00:08:52,936 --> 00:08:56,937
+You can keep your applications
+tailored to do one specific thing.
+
+149
+00:08:56,937 --> 00:09:01,310
+And when you're ready to combine the
+features of two different applications.
+
+150
+00:09:01,310 --> 00:09:05,763
+You can just use the output of one fed
+into the input of another command and
+
+151
+00:09:05,763 --> 00:09:08,763
+pass that to a third executed
+well if you want to.
+
+152
+00:09:08,763 --> 00:09:12,578
+So it allows us to change commands
+together based on standard input,
+
+153
+00:09:12,578 --> 00:09:13,639
+standard output.
+
+154
+00:09:13,639 --> 00:09:17,868
+So the same kind of thing that you'd use
+if you're writing an application and
+
+155
+00:09:17,868 --> 00:09:19,830
+using print f for standard output.
+
+156
+00:09:19,830 --> 00:09:23,226
+You could be passing that as input to
+a new command using the pipe character.
+
+157
+00:09:23,226 --> 00:09:29,490
+So if I use a cat and a command and
+cat out my textfile.text.
+
+158
+00:09:29,490 --> 00:09:34,092
+Normally that would print the entire
+content of textfiles text out to
+
+159
+00:09:34,092 --> 00:09:35,132
+the terminal.
+
+160
+00:09:35,132 --> 00:09:38,092
+If I use the pipe option and
+send it to grep,
+
+161
+00:09:38,092 --> 00:09:42,969
+then that's going to pass the textfile
+text as the input to the command.
+
+162
+00:09:42,969 --> 00:09:47,353
+So before we were specifying we want
+the grep to read specific files.
+
+163
+00:09:47,353 --> 00:09:51,696
+And in this case grep is just going to
+read what we passed into it from standard
+
+164
+00:09:51,696 --> 00:09:55,286
+out which comes from
+the concatenation of textfile.text.
+
+165
+00:09:55,286 --> 00:09:59,516
+So you can see if I do textfile.text
+by pipe grep is awesome.
+
+166
+00:09:59,516 --> 00:10:04,380
+I will get the same output that I would
+get if I grepped the textfile.text
+
+167
+00:10:04,380 --> 00:10:07,742
+file and
+I get the match on is awesome characters.
+
+168
+00:10:07,742 --> 00:10:11,361
+So in addition to wildcards and
+redirection,
+
+169
+00:10:11,361 --> 00:10:16,373
+in addition to wildcards and
+pipes, there's also redirection
+
+170
+00:10:16,373 --> 00:10:20,665
+that's really useful that
+we can use on the terminal.
+
+171
+00:10:20,665 --> 00:10:25,998
+And so redirection is going to
+say take the output stream.
+
+172
+00:10:25,998 --> 00:10:30,260
+So for instance, standard out in this
+case, what you would normally print out to
+
+173
+00:10:30,260 --> 00:10:34,471
+the terminal with the print command and
+instead direct that to somewhere else.
+
+174
+00:10:34,471 --> 00:10:38,784
+So one really common place that you
+direct this to would be to a file.
+
+175
+00:10:38,784 --> 00:10:42,127
+So using an example of the grep command.
+
+176
+00:10:42,127 --> 00:10:45,015
+So our grep is awesome
+where we're looking for
+
+177
+00:10:45,015 --> 00:10:48,430
+matches from any files in
+the directory to the string.
+
+178
+00:10:48,430 --> 00:10:50,701
+If we use the redirect character and
+
+179
+00:10:50,701 --> 00:10:53,664
+redirect to our search
+result that textfile.
+
+180
+00:10:53,664 --> 00:10:58,135
+What we'll see is that what normally would
+have been printed out on the terminal
+
+181
+00:10:58,135 --> 00:11:01,018
+is not going to be inside
+the search result textfile.
+
+182
+00:11:01,018 --> 00:11:05,641
+So if I can search result text, I'll see
+the content matching what would have been
+
+183
+00:11:05,641 --> 00:11:08,462
+printed out on the terminal
+from my grep command.
+
+184
+00:11:08,462 --> 00:11:11,241
+Similarly to redirection,
+we can also append,
+
+185
+00:11:11,241 --> 00:11:15,463
+it's just using two of these redirect
+symbols one right after the other.
+
+186
+00:11:15,463 --> 00:11:19,491
+So if I say echo hello into that
+same search result textfile and
+
+187
+00:11:19,491 --> 00:11:22,826
+then I cat out the contents
+of search results text.
+
+188
+00:11:22,826 --> 00:11:25,740
+I'll see that I've added
+hello to the end of the file.
+
+189
+00:11:25,740 --> 00:11:29,254
+Whereas if I would just use
+one redirect symbol here,
+
+190
+00:11:29,254 --> 00:11:34,253
+I would have overwritten the content of
+the of the search result textfile and
+
+191
+00:11:34,253 --> 00:11:37,790
+you wouldn't see these
+initial lines here anymore.
+
+192
+00:11:37,790 --> 00:11:42,803
+So the file permissions that control how
+we can access and use specific files.
+
+193
+00:11:42,803 --> 00:11:47,956
+There's a common way of handling this
+in Linux systems and there's really
+
+194
+00:11:47,956 --> 00:11:52,960
+three levels of permission for
+user group and either world or everyone.
+
+195
+00:11:52,960 --> 00:11:56,833
+So permissions are broken up based
+on who is the user of the file,
+
+196
+00:11:56,833 --> 00:11:59,721
+typically the person who
+has created the file.
+
+197
+00:11:59,721 --> 00:12:02,773
+What is the group account that's
+associated with the person that
+
+198
+00:12:02,773 --> 00:12:03,668
+created the file?
+
+199
+00:12:03,668 --> 00:12:06,489
+And then what are the permissions for
+anyone on the user?
+
+200
+00:12:06,489 --> 00:12:10,028
+Someone that's not the user
+that created the file or
+
+201
+00:12:10,028 --> 00:12:14,782
+in any group that's the main group for
+the user that created the file.
+
+202
+00:12:14,782 --> 00:12:19,638
+Ls is the command that we used before
+to show the files in the directory.
+
+203
+00:12:19,638 --> 00:12:23,098
+And you can use ls-l to show
+details about permission info.
+
+204
+00:12:23,098 --> 00:12:27,826
+So in this case,
+if I'm looking at a list of files and
+
+205
+00:12:27,826 --> 00:12:32,876
+directories that I've got in
+a directory on my system,
+
+206
+00:12:32,876 --> 00:12:36,218
+I can see these characters rwxr-x.
+
+207
+00:12:36,218 --> 00:12:42,147
+What this is telling me is whether each of
+the user or group or everyone has read,
+
+208
+00:12:42,147 --> 00:12:46,584
+write or execute permissions
+on the directory or the file.
+
+209
+00:12:46,584 --> 00:12:52,851
+And so the the r means read the w
+means right and the x means execute.
+
+210
+00:12:52,851 --> 00:12:57,801
+So you can see who the user is
+here from this first column that
+
+211
+00:12:57,801 --> 00:13:01,367
+shows that the user is
+my user account dan.
+
+212
+00:13:01,367 --> 00:13:03,248
+And by default, the group for
+
+213
+00:13:03,248 --> 00:13:07,697
+your user would also be the same
+group account based on your username.
+
+214
+00:13:07,697 --> 00:13:12,253
+So both of these, what this means that
+the person the the user name dan has read,
+
+215
+00:13:12,253 --> 00:13:15,045
+write, execute permissions
+on the directory.
+
+216
+00:13:15,045 --> 00:13:19,266
+And anyone in group dan has read and
+execute permissions on the directory,
+
+217
+00:13:19,266 --> 00:13:22,750
+which is the same as any user on
+the system, would have read and
+
+218
+00:13:22,750 --> 00:13:25,036
+execute permissions on the directory.
+
+219
+00:13:25,036 --> 00:13:31,098
+So one thing that you notice
+is when I just create a file.
+
+220
+00:13:31,098 --> 00:13:34,164
+So in this case, like for
+my textfiles here,
+
+221
+00:13:34,164 --> 00:13:37,405
+I don't have execute
+permissions by default.
+
+222
+00:13:37,405 --> 00:13:42,374
+And this is to avoid a scenario where
+you would be able to execute and
+
+223
+00:13:42,374 --> 00:13:44,949
+have execute permissions on a file
+
+224
+00:13:44,949 --> 00:13:49,858
+where you maybe didn't intend
+to contain script instructions.
+
+225
+00:13:49,858 --> 00:13:53,676
+So if you create hello
+world example script file
+
+226
+00:13:53,676 --> 00:13:58,549
+that just has a single echo
+command that echoes hello world.
+
+227
+00:13:58,549 --> 00:14:04,477
+If we do an ls-l on that file, you'll
+notice that there's no executable bit,
+
+228
+00:14:04,477 --> 00:14:07,491
+no execute permissions set by default.
+
+229
+00:14:07,491 --> 00:14:11,379
+If I try to run that command
+with this dot slash syntex that
+
+230
+00:14:11,379 --> 00:14:16,080
+says execute this helloworld.sh
+script in the current directory.
+
+231
+00:14:16,080 --> 00:14:20,783
+I'll get a permission denied
+message complaining that I don't
+
+232
+00:14:20,783 --> 00:14:23,141
+have the execute permissions.
+
+233
+00:14:23,141 --> 00:14:25,736
+So you can use chmod to
+change the mode of the file.
+
+234
+00:14:25,736 --> 00:14:28,012
+And if I do u+x, this means for
+
+235
+00:14:28,012 --> 00:14:32,930
+the user account at execute
+permissions and give it the file name.
+
+236
+00:14:32,930 --> 00:14:36,917
+If I do an ls-l,
+I can see a couple of things.
+
+237
+00:14:36,917 --> 00:14:38,447
+One is that the color syntax changed.
+
+238
+00:14:38,447 --> 00:14:42,444
+So I see that it's green now showing
+me that I have execute permissions and
+
+239
+00:14:42,444 --> 00:14:45,874
+I see this x bit set here in
+the user section of the permissions.
+
+240
+00:14:45,874 --> 00:14:50,095
+So now when I run the command I'll get the
+hello world output that I would expect.
+
+241
+00:14:50,095 --> 00:14:55,296
+So the permissions in addition to
+specifying with something like u+x or
+
+242
+00:14:55,296 --> 00:14:59,913
+some strings that you can see
+detailed in the man page for chmod.
+
+243
+00:14:59,913 --> 00:15:03,960
+You can also use octel
+digits in numeric mode.
+
+244
+00:15:03,960 --> 00:15:09,878
+And so If you add some combination
+of 42 and one together.
+
+245
+00:15:09,878 --> 00:15:13,598
+You'll get a setting for read, write and
+execute for those three different
+
+246
+00:15:13,598 --> 00:15:17,392
+permission groups that we talked about
+already the user group and everyone.
+
+247
+00:15:17,392 --> 00:15:21,491
+So if I do an ls-l on hello world and
+I see that I have read, write,
+
+248
+00:15:21,491 --> 00:15:24,119
+execute plus read and read permissions.
+
+249
+00:15:24,119 --> 00:15:29,333
+If I do a chmod 766 what
+the seven is going to need?
+
+250
+00:15:29,333 --> 00:15:32,332
+Make the user account have read, write and
+
+251
+00:15:32,332 --> 00:15:36,096
+execute permissions because
+4 plus 2 plus 1 is 7.
+
+252
+00:15:36,096 --> 00:15:39,855
+The 6 and
+the 6 are going to mean set read and
+
+253
+00:15:39,855 --> 00:15:44,165
+write permissions for
+the group and everyone.
+
+254
+00:15:44,165 --> 00:15:48,505
+And so
+if I issue the chmod 766 Helloworld.sh.
+
+255
+00:15:48,505 --> 00:15:51,122
+And then I checked my
+permissions with ls-l.
+
+256
+00:15:51,122 --> 00:15:55,253
+I'll see that I get the permissions I
+expect here with read write, execute for
+
+257
+00:15:55,253 --> 00:15:57,770
+user and read and write for
+group and everyone.
+
+258
+00:15:57,770 --> 00:16:02,765
+All right, so a really useful thing
+that you can do with the next command
+
+259
+00:16:02,765 --> 00:16:07,679
+line operation that will use for
+embedded systems very often is you can
+
+260
+00:16:07,679 --> 00:16:11,527
+use what's called secure
+shell to get remote access.
+
+261
+00:16:11,527 --> 00:16:13,743
+And you can use remote access for
+
+262
+00:16:13,743 --> 00:16:18,678
+both interactively entering commands
+to be run from the command line.
+
+263
+00:16:18,678 --> 00:16:22,603
+And you can also use it for
+transferring files with what's called scp.
+
+264
+00:16:22,603 --> 00:16:26,196
+If you're using a virtual machine here,
+you can set this up pretty easily with
+
+265
+00:16:26,196 --> 00:16:29,688
+port forwarding rules and there's a link
+here that tells you how to do this.
+
+266
+00:16:29,688 --> 00:16:34,203
+But what you're basically setting here
+is the IP address that you'll be able
+
+267
+00:16:34,203 --> 00:16:36,435
+to reach it from in your host machine.
+
+268
+00:16:36,435 --> 00:16:40,735
+And the port that will
+redirect to port 22 which is
+
+269
+00:16:40,735 --> 00:16:44,841
+the typical port used for
+s is h on Linux systems.
+
+270
+00:16:44,841 --> 00:16:51,453
+So if I'm from my window system, I'll be
+able to access the command line terminal.
+
+271
+00:16:51,453 --> 00:16:54,630
+If I use ssh-p giving and
+get the port option and
+
+272
+00:16:54,630 --> 00:16:57,897
+specifying 2222 which
+is my host port here.
+
+273
+00:16:57,897 --> 00:17:00,883
+Then I can specify my username and
+this IP address,
+
+274
+00:17:00,883 --> 00:17:03,667
+which is the one we enter here for
+our host type.
+
+275
+00:17:03,667 --> 00:17:06,823
+So this is an example for virtual box.
+
+276
+00:17:06,823 --> 00:17:11,400
+If you have a physical Linux machine
+that you're using, you just replace.
+
+277
+00:17:11,400 --> 00:17:14,305
+If you had a port redirect
+you to replace that here or
+
+278
+00:17:14,305 --> 00:17:17,967
+you just remove the port if you're
+using the standard ssh port.
+
+279
+00:17:17,967 --> 00:17:21,455
+And you'd use the user account for
+the system plus the IP address or
+
+280
+00:17:21,455 --> 00:17:24,330
+the host name of the system
+you're connected, okay?
+
+281
+00:17:24,330 --> 00:17:27,694
+So if you are using windows or
+windows environment for
+
+282
+00:17:27,694 --> 00:17:31,369
+remote access to the command shell and
+you want to use ssh.
+
+283
+00:17:31,369 --> 00:17:35,508
+There's several different options,
+two of them that I'll go over here.
+
+284
+00:17:35,508 --> 00:17:38,522
+One is you can install
+windows subsystem for Linux.
+
+285
+00:17:38,522 --> 00:17:41,354
+This is available on newer versions
+of windows, like Windows 10.
+
+286
+00:17:41,354 --> 00:17:46,171
+You can also use msys and either one
+of these environments will provide you
+
+287
+00:17:46,171 --> 00:17:49,831
+access to ssh that you could
+use from a windows machine.
+
+288
+00:17:49,831 --> 00:17:55,448
+So if you want to transfer from a windows
+machine to your virtual machine,
+
+289
+00:17:55,448 --> 00:18:01,263
+you can use the scp command with a capital
+P port option to specify the port.
+
+290
+00:18:01,263 --> 00:18:07,268
+You can specify the source directory
+here from the windows machine and
+
+291
+00:18:07,268 --> 00:18:12,153
+the target, both username and
+IP address with this colon
+
+292
+00:18:12,153 --> 00:18:16,443
+tilda syntax meaning copy
+to the home directory.
+
+293
+00:18:16,443 --> 00:18:21,060
+The colon separates the machine
+information from the directory and
+
+294
+00:18:21,060 --> 00:18:24,789
+the tilde says copy to the home
+directory for the user.
+
+295
+00:18:24,789 --> 00:18:29,815
+So if I do that and
+then I ssh into the virtual machine,
+
+296
+00:18:29,815 --> 00:18:33,743
+what I'll see is that the if I do it ls-l.
+
+297
+00:18:33,743 --> 00:18:36,854
+That some file that I transferred in is
+going to be there in my home directory.
+
+298
+00:18:36,854 --> 00:18:41,103
+Similarly, I could transfer out
+from my virtual machine into
+
+299
+00:18:41,103 --> 00:18:44,793
+the windows system with
+this scp-capital P option.
+
+300
+00:18:44,793 --> 00:18:49,730
+And then just swapping the order of source
+and destination as arguments to scp.
+
+301
+00:18:49,730 --> 00:18:52,770
+So this would transfer
+from my home directory,
+
+302
+00:18:52,770 --> 00:18:57,790
+a some file.textfile to my downloads
+directory on windows in from vm.text.
+
+303
+00:18:57,790 --> 00:19:01,238
+So you can use the same instructions and
+ssh and
+
+304
+00:19:01,238 --> 00:19:05,403
+scp to transfer to and
+from from Lennox systems as well.

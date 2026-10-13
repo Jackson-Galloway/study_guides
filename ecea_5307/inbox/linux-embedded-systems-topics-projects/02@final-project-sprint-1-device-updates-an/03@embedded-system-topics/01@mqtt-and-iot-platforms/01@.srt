@@ -1,0 +1,975 @@
+1
+00:00:00,000 --> 00:00:03,510
+In this video, I'm going
+to talk about MQTT and
+
+2
+00:00:03,510 --> 00:00:05,940
+some IoT platforms
+if you want to
+
+3
+00:00:05,940 --> 00:00:10,335
+create a IoT-based Linux device.
+
+4
+00:00:10,335 --> 00:00:14,175
+I'm going to introduce
+the MQTT protocol,
+
+5
+00:00:14,175 --> 00:00:18,115
+understand how to use security
+with MQTT-based products,
+
+6
+00:00:18,115 --> 00:00:19,920
+and we'll also introduce
+
+7
+00:00:19,920 --> 00:00:22,740
+the JSON format
+and the concept of
+
+8
+00:00:22,740 --> 00:00:25,470
+device shadows or digital
+twins that are common
+
+9
+00:00:25,470 --> 00:00:29,380
+with some of the IoT platforms
+that are available today.
+
+10
+00:00:29,960 --> 00:00:34,650
+MQTT stands for Message
+Queuing Telemetry Transport.
+
+11
+00:00:34,650 --> 00:00:36,270
+It's a relatively old standard,
+
+12
+00:00:36,270 --> 00:00:38,535
+it's been around since 1999.
+
+13
+00:00:38,535 --> 00:00:41,090
+It consists of all
+lightweight publish
+
+14
+00:00:41,090 --> 00:00:43,610
+and subscribe messaging
+transport that has
+
+15
+00:00:43,610 --> 00:00:46,850
+some benefits in that it's
+low bandwidth and it's
+
+16
+00:00:46,850 --> 00:00:51,690
+pretty efficient distribution
+to one or more devices.
+
+17
+00:00:51,690 --> 00:00:53,690
+It's an efficient
+way to distribute
+
+18
+00:00:53,690 --> 00:00:56,285
+common messages across
+different devices.
+
+19
+00:00:56,285 --> 00:01:01,270
+It's pretty popular and
+used on many IoT platforms.
+
+20
+00:01:01,270 --> 00:01:02,960
+It also uses a lot of
+
+21
+00:01:02,960 --> 00:01:05,600
+the same transport
+that you use for HTTP.
+
+22
+00:01:05,600 --> 00:01:07,760
+It can be securely
+transmitted using
+
+23
+00:01:07,760 --> 00:01:10,640
+SSL and TLS and
+libraries that are
+
+24
+00:01:10,640 --> 00:01:14,300
+typically available for
+web-connected devices.
+
+25
+00:01:14,300 --> 00:01:16,100
+There are protocols that
+
+26
+00:01:16,100 --> 00:01:17,480
+are available for
+establishing and
+
+27
+00:01:17,480 --> 00:01:21,020
+authenticating the encrypted
+links between devices.
+
+28
+00:01:21,020 --> 00:01:22,490
+Again, it's that same technology
+
+29
+00:01:22,490 --> 00:01:24,560
+behind HTTPS and how you
+
+30
+00:01:24,560 --> 00:01:25,775
+connect with your bank account
+
+31
+00:01:25,775 --> 00:01:28,575
+over a web browser for instance.
+
+32
+00:01:28,575 --> 00:01:31,410
+There are open-source
+applications, for instance,
+
+33
+00:01:31,410 --> 00:01:34,790
+the Mosquito client-server
+open-source software
+
+34
+00:01:34,790 --> 00:01:37,040
+is available at this link and
+
+35
+00:01:37,040 --> 00:01:42,870
+able to be included in a build.
+
+36
+00:01:42,870 --> 00:01:44,735
+I wanted to use as an example,
+
+37
+00:01:44,735 --> 00:01:46,940
+maybe you'd have
+a door or window
+
+38
+00:01:46,940 --> 00:01:51,860
+sensors in an embedded
+device implementation where
+
+39
+00:01:51,860 --> 00:01:54,830
+there's a way that you're
+interacting with these through
+
+40
+00:01:54,830 --> 00:01:56,780
+a custom Cloud server
+
+41
+00:01:56,780 --> 00:01:59,585
+and a custom application
+on a mobile device.
+
+42
+00:01:59,585 --> 00:02:02,615
+Talking through how you
+can use an IoT framework.
+
+43
+00:02:02,615 --> 00:02:05,330
+This original set of slides
+
+44
+00:02:05,330 --> 00:02:08,060
+was done to talk
+about Amazon IoT
+
+45
+00:02:08,060 --> 00:02:11,300
+in particular but there are
+several frameworks you could
+
+46
+00:02:11,300 --> 00:02:13,370
+use that all have
+really similar ways
+
+47
+00:02:13,370 --> 00:02:15,620
+to interact with the device.
+
+48
+00:02:15,800 --> 00:02:18,000
+If we have a scenario
+
+49
+00:02:18,000 --> 00:02:18,980
+like this where we
+want to be able to
+
+50
+00:02:18,980 --> 00:02:20,510
+communicate with either
+the mobile phone
+
+51
+00:02:20,510 --> 00:02:21,755
+or the Cloud device,
+
+52
+00:02:21,755 --> 00:02:25,555
+how can we leverage an IoT
+platform to help us do this?
+
+53
+00:02:25,555 --> 00:02:28,685
+First of all, talking
+about how we will
+
+54
+00:02:28,685 --> 00:02:32,350
+communicate between the
+IoT device and the server,
+
+55
+00:02:32,350 --> 00:02:35,700
+there's what's called a basic
+
+56
+00:02:35,700 --> 00:02:42,905
+security scheme that you
+would have with any device,
+
+57
+00:02:42,905 --> 00:02:45,410
+IoT device, and server setup
+
+58
+00:02:45,410 --> 00:02:47,930
+where the server would
+have a certificate and
+
+59
+00:02:47,930 --> 00:02:50,300
+a private key that
+can be used to set up
+
+60
+00:02:50,300 --> 00:02:53,845
+an encrypted communication
+channel with the IoT device.
+
+61
+00:02:53,845 --> 00:02:56,360
+Then the IoT device
+would have some way to
+
+62
+00:02:56,360 --> 00:02:59,090
+authenticate back over that
+channel to the server.
+
+63
+00:02:59,090 --> 00:03:02,330
+The key transfer that
+you're doing here relies
+
+64
+00:03:02,330 --> 00:03:05,900
+on the security of
+encrypted channel.
+
+65
+00:03:05,900 --> 00:03:08,030
+If someone is able to obtain
+
+66
+00:03:08,030 --> 00:03:09,960
+this key that's transferred
+
+67
+00:03:09,960 --> 00:03:11,600
+over the channel,
+so for instance,
+
+68
+00:03:11,600 --> 00:03:14,630
+a man in the middle
+attack where you are able
+
+69
+00:03:14,630 --> 00:03:18,185
+to spoof the server and get
+you to pass the credentials,
+
+70
+00:03:18,185 --> 00:03:20,240
+then you can emulate the device
+
+71
+00:03:20,240 --> 00:03:23,280
+with the same permissions
+on the server.
+
+72
+00:03:23,930 --> 00:03:26,159
+However, with MQTT,
+
+73
+00:03:26,159 --> 00:03:29,710
+there's an SSL security scheme
+that allows you to set up
+
+74
+00:03:29,710 --> 00:03:32,125
+a secure bi-directional
+pipe with
+
+75
+00:03:32,125 --> 00:03:34,450
+identity verified by
+
+76
+00:03:34,450 --> 00:03:37,270
+a certificate authority,
+signed certificate.
+
+77
+00:03:37,270 --> 00:03:39,700
+The nice thing about
+this is that you can set
+
+78
+00:03:39,700 --> 00:03:41,740
+up a trust relationship
+between the device and
+
+79
+00:03:41,740 --> 00:03:43,990
+server without
+having to transmit
+
+80
+00:03:43,990 --> 00:03:47,670
+any private key information.
+
+81
+00:03:47,670 --> 00:03:49,620
+This is a way that you can
+
+82
+00:03:49,620 --> 00:03:54,490
+do if a hacker was able to
+compromise this channel,
+
+83
+00:03:54,490 --> 00:03:56,590
+they would not be able
+to view anything that
+
+84
+00:03:56,590 --> 00:03:58,690
+would allow them to
+authenticate with
+
+85
+00:03:58,690 --> 00:04:01,000
+the server because for
+that they'd really need
+
+86
+00:04:01,000 --> 00:04:04,385
+the certificate that was
+stored on the IoT device.
+
+87
+00:04:04,385 --> 00:04:09,250
+It's an additional level
+of security that's
+
+88
+00:04:09,250 --> 00:04:11,710
+available to an
+MQTT implementation
+
+89
+00:04:11,710 --> 00:04:15,560
+based on the way
+SSL can be set up.
+
+90
+00:04:16,650 --> 00:04:20,110
+I'll talk a little bit
+about the JSON format as
+
+91
+00:04:20,110 --> 00:04:23,245
+a way that you can
+communicate over MQTT.
+
+92
+00:04:23,245 --> 00:04:26,095
+JSON stands for JavaScript
+Object Notation,
+
+93
+00:04:26,095 --> 00:04:27,850
+and it was originally
+developed as part of
+
+94
+00:04:27,850 --> 00:04:30,875
+the JavaScript programming
+language standard.
+
+95
+00:04:30,875 --> 00:04:33,100
+However, it's
+language independent.
+
+96
+00:04:33,100 --> 00:04:35,160
+It doesn't require you
+to use JavaScript.
+
+97
+00:04:35,160 --> 00:04:37,690
+It was just developed for
+use with that standard.
+
+98
+00:04:37,690 --> 00:04:39,610
+It's text-based, it's easier to
+
+99
+00:04:39,610 --> 00:04:42,705
+read from a human
+being perspective.
+
+100
+00:04:42,705 --> 00:04:45,490
+It's organized in
+objects so it's
+
+101
+00:04:45,490 --> 00:04:48,705
+a set of name and value
+pairs surrounded by braces.
+
+102
+00:04:48,705 --> 00:04:51,170
+There's a specific format
+with an object name followed
+
+103
+00:04:51,170 --> 00:04:54,125
+by a colon and then
+separated by a comma.
+
+104
+00:04:54,125 --> 00:04:57,085
+It's easy to parse by
+embedded software.
+
+105
+00:04:57,085 --> 00:05:01,125
+Because of the fixed
+and predictable format,
+
+106
+00:05:01,125 --> 00:05:03,260
+it's pretty easy to
+write parsers that are
+
+107
+00:05:03,260 --> 00:05:05,884
+able to convert that text into
+
+108
+00:05:05,884 --> 00:05:08,030
+instructions for software and
+
+109
+00:05:08,030 --> 00:05:12,570
+especially embedded software,
+relatively low resource.
+
+110
+00:05:12,590 --> 00:05:16,415
+Here's an example about
+how you could use
+
+111
+00:05:16,415 --> 00:05:21,230
+Amazon IoT and MQTT to
+transfer JSON messages.
+
+112
+00:05:21,230 --> 00:05:23,659
+Using our example implementation
+
+113
+00:05:23,659 --> 00:05:24,950
+where we have this mansion
+
+114
+00:05:24,950 --> 00:05:28,820
+here and we're going to detect
+whether a door is open,
+
+115
+00:05:28,820 --> 00:05:31,445
+you could map this into
+
+116
+00:05:31,445 --> 00:05:34,100
+a type of JSON response that
+looks something like this,
+
+117
+00:05:34,100 --> 00:05:35,840
+where there's a state
+
+118
+00:05:35,840 --> 00:05:37,700
+where we're going to
+report the state of
+
+119
+00:05:37,700 --> 00:05:39,710
+the front door being
+open and you can read
+
+120
+00:05:39,710 --> 00:05:42,365
+this as the content of JSON.
+
+121
+00:05:42,365 --> 00:05:46,460
+This is all formatted in
+a way that is parsable
+
+122
+00:05:46,460 --> 00:05:48,140
+by the embedded device or by
+
+123
+00:05:48,140 --> 00:05:51,300
+the server and also
+human-readable.
+
+124
+00:05:51,500 --> 00:05:54,560
+What this slide is showing
+is a case where we
+
+125
+00:05:54,560 --> 00:05:57,170
+detected that the
+door was open but
+
+126
+00:05:57,170 --> 00:05:58,790
+maybe the person who owns
+
+127
+00:05:58,790 --> 00:06:00,740
+the mansion is flying
+in their private jet
+
+128
+00:06:00,740 --> 00:06:04,610
+and they don't have connectivity
+with their mobile phone,
+
+129
+00:06:04,610 --> 00:06:05,810
+so they aren't going to get
+
+130
+00:06:05,810 --> 00:06:07,595
+the message that
+the device is open.
+
+131
+00:06:07,595 --> 00:06:11,330
+However, with the IoT
+server in the Cloud,
+
+132
+00:06:11,330 --> 00:06:13,220
+that state's going to
+get passed through to
+
+133
+00:06:13,220 --> 00:06:15,170
+the server and it's
+going to get updated
+
+134
+00:06:15,170 --> 00:06:17,060
+on the server and maybe send
+
+135
+00:06:17,060 --> 00:06:21,030
+some notifications as
+needed from the server.
+
+136
+00:06:21,530 --> 00:06:25,490
+What will happen is
+at some later point,
+
+137
+00:06:25,490 --> 00:06:27,560
+the mobile device comes online.
+
+138
+00:06:27,560 --> 00:06:29,420
+At that point, the mobile
+device could check in with
+
+139
+00:06:29,420 --> 00:06:32,855
+the IoT server and it can
+get an update on the state.
+
+140
+00:06:32,855 --> 00:06:35,840
+The IoT server can give
+
+141
+00:06:35,840 --> 00:06:38,870
+an update that the state
+was reported as open and it
+
+142
+00:06:38,870 --> 00:06:40,670
+can provide some
+additional metadata
+
+143
+00:06:40,670 --> 00:06:41,840
+that says how long it's been
+
+144
+00:06:41,840 --> 00:06:45,370
+open when it was originally
+reported by the device.
+
+145
+00:06:45,370 --> 00:06:48,815
+One thing to note is that
+for this message to happen,
+
+146
+00:06:48,815 --> 00:06:51,560
+there does not necessarily
+need to be connectivity here.
+
+147
+00:06:51,560 --> 00:06:56,030
+It could be that the power is
+switched off, for instance,
+
+148
+00:06:56,030 --> 00:06:59,000
+in the mansion but the fact that
+
+149
+00:06:59,000 --> 00:07:01,520
+the AWS IoT endpoint is
+
+150
+00:07:01,520 --> 00:07:02,840
+available means that
+we can still get
+
+151
+00:07:02,840 --> 00:07:05,280
+the update from
+the mobile device.
+
+152
+00:07:06,440 --> 00:07:11,210
+At this point, the
+mobile phone user
+
+153
+00:07:11,210 --> 00:07:12,275
+might want to say, well,
+
+154
+00:07:12,275 --> 00:07:15,275
+if we had control of the
+door through our device,
+
+155
+00:07:15,275 --> 00:07:17,540
+then we'd want to issue
+
+156
+00:07:17,540 --> 00:07:20,990
+a command to close the door
+from the mobile device.
+
+157
+00:07:20,990 --> 00:07:23,390
+Note in this case,
+we still might
+
+158
+00:07:23,390 --> 00:07:25,280
+not have connectivity
+for whatever reason to
+
+159
+00:07:25,280 --> 00:07:28,085
+the device but if
+
+160
+00:07:28,085 --> 00:07:30,595
+we can relay that
+message to the server,
+
+161
+00:07:30,595 --> 00:07:33,275
+then the server can
+save this state for us.
+
+162
+00:07:33,275 --> 00:07:35,920
+Then at some point later
+if the device comes back
+
+163
+00:07:35,920 --> 00:07:37,420
+online and we're able to
+
+164
+00:07:37,420 --> 00:07:39,040
+connect to it from
+the server again,
+
+165
+00:07:39,040 --> 00:07:40,480
+we can pass along
+
+166
+00:07:40,480 --> 00:07:42,775
+that information about state
+
+167
+00:07:42,775 --> 00:07:44,320
+that we are desiring
+the front door
+
+168
+00:07:44,320 --> 00:07:46,030
+closed and we can also have
+
+169
+00:07:46,030 --> 00:07:49,830
+the server compute what's
+called a Delta for us.
+
+170
+00:07:49,830 --> 00:07:51,820
+In other words, the
+server knows that
+
+171
+00:07:51,820 --> 00:07:54,730
+the device reported that
+the door was open and
+
+172
+00:07:54,730 --> 00:07:57,340
+it knows that there's a
+request to close it and so
+
+173
+00:07:57,340 --> 00:07:58,600
+it can make it really easy for
+
+174
+00:07:58,600 --> 00:08:00,250
+the device by
+specifically saying,
+
+175
+00:08:00,250 --> 00:08:01,600
+I want you to do this Delta.
+
+176
+00:08:01,600 --> 00:08:05,150
+I want you to change the front
+door from open to closed.
+
+177
+00:08:05,150 --> 00:08:07,960
+The server can make it
+a little bit easier on
+
+178
+00:08:07,960 --> 00:08:11,600
+the device to know exactly
+what to do in this scenario.
+
+179
+00:08:11,600 --> 00:08:15,040
+Then, of course, the
+device can relay
+
+180
+00:08:15,040 --> 00:08:17,590
+back the state as
+reported closed
+
+181
+00:08:17,590 --> 00:08:20,200
+when it is closed
+and that message can
+
+182
+00:08:20,200 --> 00:08:22,810
+go back into the mobile
+device and again,
+
+183
+00:08:22,810 --> 00:08:24,430
+get a timestamp about
+when it was actually
+
+184
+00:08:24,430 --> 00:08:27,225
+closed from the target device.
+
+185
+00:08:27,225 --> 00:08:29,920
+That's just an example about how
+
+186
+00:08:29,920 --> 00:08:32,470
+a IoT-based interaction could
+
+187
+00:08:32,470 --> 00:08:36,475
+happen on a platform
+like Amazon IoT.
+
+188
+00:08:36,475 --> 00:08:40,540
+There's several links here to
+AWS tutorials that you can
+
+189
+00:08:40,540 --> 00:08:42,205
+use if you wanted to try to use
+
+190
+00:08:42,205 --> 00:08:45,280
+AWS IoT for your platforms.
+
+191
+00:08:45,280 --> 00:08:51,500
+There's also very similar
+services with similar concepts.
+
+192
+00:08:51,780 --> 00:08:57,290
+Whereas Amazon refers to
+these as Device Shadows,
+
+193
+00:08:57,290 --> 00:09:01,645
+the Google Cloud IoT calls
+this device registry,
+
+194
+00:09:01,645 --> 00:09:04,445
+Watson IoT refers
+to Digital twins,
+
+195
+00:09:04,445 --> 00:09:08,720
+Azure IoT refers to Device
+Shadows and they're all doing
+
+196
+00:09:08,720 --> 00:09:11,045
+very similar things
+and they're all using
+
+197
+00:09:11,045 --> 00:09:12,500
+either MQTT or something
+
+198
+00:09:12,500 --> 00:09:15,275
+similar for their
+communication protocol.
+
+199
+00:09:15,275 --> 00:09:17,990
+You can use the
+basic concepts here
+
+200
+00:09:17,990 --> 00:09:20,390
+to implement a project
+
+201
+00:09:20,390 --> 00:09:22,070
+that uses some other kind of
+
+202
+00:09:22,070 --> 00:09:25,435
+IoT-based framework
+for your application.
+
+203
+00:09:25,435 --> 00:09:27,800
+There's also, I wanted
+to bring your attention
+
+204
+00:09:27,800 --> 00:09:30,470
+to a student implementation that
+
+205
+00:09:30,470 --> 00:09:33,650
+implemented a full Azure IoT
+
+206
+00:09:33,650 --> 00:09:36,255
+as part of their final project.
+
+207
+00:09:36,255 --> 00:09:38,645
+This is something you could
+check out if you wanted
+
+208
+00:09:38,645 --> 00:09:42,410
+to reuse any of their
+work for Azure IoT.

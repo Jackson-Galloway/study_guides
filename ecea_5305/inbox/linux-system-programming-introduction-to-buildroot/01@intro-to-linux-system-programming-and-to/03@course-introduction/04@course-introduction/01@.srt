@@ -1,0 +1,297 @@
+1
+00:00:01,033 --> 00:00:03,605
+This video is an introduction
+to the course,
+
+2
+00:00:03,605 --> 00:00:05,916
+Advanced Embedded Linux Development.
+
+3
+00:00:05,916 --> 00:00:07,994
+So we're going to do
+an introduction to the course.
+
+4
+00:00:07,994 --> 00:00:10,526
+Talk about why you'd
+bother to learn Linux, and
+
+5
+00:00:10,526 --> 00:00:12,767
+talk about what this course is and isn't.
+
+6
+00:00:14,036 --> 00:00:16,713
+So, first of all, who is this guy?
+
+7
+00:00:16,713 --> 00:00:22,929
+My name is Dan Walkes and I currently work
+full time in industry and teach part-time.
+
+8
+00:00:22,929 --> 00:00:27,229
+My current gig is Vice President of
+Embedded Engineering at Sighthound.
+
+9
+00:00:27,229 --> 00:00:31,556
+I began teaching at CU in
+the spring 2019 semester, and
+
+10
+00:00:31,556 --> 00:00:37,191
+I'm a former CU Boulder Embedded Systems
+student from the early 2000s.
+
+11
+00:00:37,191 --> 00:00:41,857
+And during that time, I was ta for
+ECEN 5623, real time embedded.
+
+12
+00:00:41,857 --> 00:00:45,908
+So I've spent quite a bit of time
+learning about embedded systems, and
+
+13
+00:00:45,908 --> 00:00:49,620
+it's been a great pleasure of mind
+to put this course together and
+
+14
+00:00:49,620 --> 00:00:51,727
+to be able to share it with all of you.
+
+15
+00:00:53,269 --> 00:00:58,398
+So my 20th year of industry experience
+was in 2019, and most of my
+
+16
+00:00:58,398 --> 00:01:04,470
+of the previous 12 or 10 or 12 years have
+been Linux embedded systems related.
+
+17
+00:01:04,470 --> 00:01:06,369
+I am not a doctor and I'm not a professor.
+
+18
+00:01:06,369 --> 00:01:08,347
+So you can refer to me as Dan.
+
+19
+00:01:08,347 --> 00:01:11,108
+And the attitude that
+I try to approach this
+
+20
+00:01:11,108 --> 00:01:15,879
+course with is really kind of like as
+a team lead on your development team.
+
+21
+00:01:15,879 --> 00:01:20,055
+So if you can think of me in that respect.
+
+22
+00:01:20,055 --> 00:01:22,581
+So talking about why
+should we learned Linux?
+
+23
+00:01:22,581 --> 00:01:27,540
+There's a EETimes Embedded Market Study
+from 2019
+
+24
+00:01:27,540 --> 00:01:32,394
+that kind of showed the responses
+from folks working as
+
+25
+00:01:32,394 --> 00:01:36,826
+electrical engineers and
+what they were using for
+
+26
+00:01:36,826 --> 00:01:41,909
+their operating system in
+their development projects.
+
+27
+00:01:41,909 --> 00:01:46,877
+And if you bundle a bunch of the different
+Linux based variants together, and
+
+28
+00:01:46,877 --> 00:01:51,845
+if you include platforms like android
+that are based on Linux, what you see is
+
+29
+00:01:51,845 --> 00:01:56,662
+that a huge percent percentage of
+respondents are either actively using or
+
+30
+00:01:56,662 --> 00:02:00,040
+planning to use Linux on
+projects in the short term.
+
+31
+00:02:00,040 --> 00:02:03,150
+So it's one of the most popular
+embedded systems out there.
+
+32
+00:02:03,150 --> 00:02:05,479
+It's one that if you
+know something about it,
+
+33
+00:02:05,479 --> 00:02:09,313
+there's a pretty good chance you're
+going to be able to apply it in your work.
+
+34
+00:02:11,449 --> 00:02:13,430
+So what do I want to do with this course?
+
+35
+00:02:13,430 --> 00:02:17,354
+I want to give you the tools that you
+need to understand how to configure and
+
+36
+00:02:17,354 --> 00:02:19,489
+deploy Linux based embedded systems.
+
+37
+00:02:19,489 --> 00:02:23,098
+And so, I want to give you some experience
+with some of the common system build tools
+
+38
+00:02:23,098 --> 00:02:23,898
+and components.
+
+39
+00:02:23,898 --> 00:02:26,514
+So that will include BASH and
+shell scripting.
+
+40
+00:02:26,514 --> 00:02:28,192
+It will include Buildroot and
+
+41
+00:02:28,192 --> 00:02:32,431
+Yocto as build frameworks to build
+your own embedded Linux distribution.
+
+42
+00:02:32,431 --> 00:02:39,284
+I use QEMU for virtualization for
+emulation of your embedded environment.
+
+43
+00:02:41,734 --> 00:02:46,690
+So I want to make sure that this course
+is about gaining experience with Linux
+
+44
+00:02:46,690 --> 00:02:51,411
+driver development in the follow-on
+portion of the course and general
+
+45
+00:02:51,411 --> 00:02:56,539
+improvement in your resume interview
+skills in relation to embedded Linux.
+
+46
+00:02:56,539 --> 00:03:00,546
+And really the part of the reason I
+developed this course is there's a lot of
+
+47
+00:03:00,546 --> 00:03:04,614
+things in here that I wish I would have
+had as part of my graduate studies, and
+
+48
+00:03:04,614 --> 00:03:07,183
+in a lot of cases they
+didn't really exist yet.
+
+49
+00:03:07,183 --> 00:03:10,923
+So, especially some of the build
+frameworks that we'll talk about here
+
+50
+00:03:10,923 --> 00:03:11,793
+in this course.
+
+51
+00:03:11,793 --> 00:03:14,878
+So it might be important to talk a little
+bit about what this course is not.
+
+52
+00:03:14,878 --> 00:03:18,253
+It's not really data structures or
+an algorithms course.
+
+53
+00:03:18,253 --> 00:03:22,499
+So we might cover a little bit about
+data structures or algorithms, but
+
+54
+00:03:22,499 --> 00:03:25,614
+it's mostly about how to
+use existing libraries and
+
+55
+00:03:25,614 --> 00:03:28,189
+software in the case
+that we do cover them.
+
+56
+00:03:28,189 --> 00:03:32,919
+It's also not really about low resource
+microcontroller or anything like FreeRTOS
+
+57
+00:03:32,919 --> 00:03:36,789
+is not going to cover event loops or
+anything like Bluetooth protocol.
+
+58
+00:03:36,789 --> 00:03:41,652
+We are not specifically covering sensors,
+although in the following portion of
+
+59
+00:03:41,652 --> 00:03:45,655
+this course where you do a final project,
+you'll be able to select
+
+60
+00:03:45,655 --> 00:03:49,604
+a sensor potentially to integrate
+as part of your final project.
+
+61
+00:03:49,604 --> 00:03:53,960
+And we're not really covering embedded
+libraries for low resource processors.
+
+62
+00:03:53,960 --> 00:03:57,111
+It'll all just be about Linux and
+Linux application development.

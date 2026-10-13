@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 8 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<p>Assignment 8: Char Driver and Multithreading</p><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h1>Suggested Reading:</h1><ol type="1"><li><p>Linux Device Drivers book chapters 1-5</p></li></ol><h1>GitHub Repository Start Instructions</h1><p>You will start with an empty project submission repository, and fill it with the content of your assignment 5 local repository using these commands on your local buildroot-assignments repository (substitute to use your assignment 6 repository if you would like to use yocto for your submission instead of buildroot.)</p><ol type="1"><li><p>git remote rename origin assignment-5-remote</p></li><li><p>git remote add origin &lt;your github classroom submission repo created with the link above&gt;</p></li><li><p>git push origin main</p></li></ol><h2>Repository Setup</h2><img alt="assignment8.PNG" src="assignment8.PNG"/><p>Note: The following links are external and will open in new tab.</p><h1>Implementation:</h1><ol type="1"><li><p>Pick either the Buildroot or Yocto implementation from Assignment 7 (which are located in assignment 5 or 6 repositories) to use as the basis for your assignment and push to your submission repository.  You can use either Buildroot or Yocto for this assignment.  For a buildroot implementation, use the steps below.  For yocto implementation, substitute references to the buildroot-assignments-base repository with  yocto-assignments-base repository in the instructions below.</p><ol type="1"><li><p>git fetch buildroot-assignments-base</p><ol type="1"><li><p>This step assumes you’ve already created the remote using <em>git remote </em>add buildroot-assignments-base  <a href="https://github.com/cu-ecen-aeld/buildroot-assignments-base.git">https://github.com/cu-ecen-aeld/buildroot-assignments-base.git</a> in assignment 5.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p></li></ol></li><li><p>git merge -X theirs buildroot-assignments-base/assignment8</p><ol type="1"><li><p>If you notice merge conflicts during the merge step with the assignment-autotest submodule, use:</p><ol type="1"><li><p>git checkout --theirs aesd-assignments/assignment8 -- assignment-autotest</p></li><li><p>git commit</p></li></ol></li></ol></li><li><p>git submodule update --init --recursive</p></li></ol></li><li><p>Using your assignments 3 repository, complete the following steps to pull in content from the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/tree/assignment8">aesd-assignments repository assignment-8 branch</a></p><ol type="1"><li><p>git fetch assignments-base This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in the previous assignment.  If you started from a new repo you’ll need to re-run the git remote add step before attempting to fetch.</p></li><li><p>git merge -X theirs assignments-base/assignment8</p><ol type="1"><li><p>If you notice merge conflicts during the merge step with the assignment-autotest submodule, use:</p><ol type="1"><li><p> git checkout --theirs git assignments-base/assignment8 -- assignment-autotest</p></li><li><p> git commit</p></li></ol></li></ol></li><li><p> git submodule update --init --recursive</p></li></ol></li><li><p>Modify the TODOs in the main.c to complete the instructions below</p></li><li><p>Add source code, makefile and init scripts needed to install a /dev/aesdchar device.  Ultimately this device should be installed in your qemu instance, however you may also wish to test on your host virtual machine during development.  <strong>If you are testing on your virtual machine, please make sure you have a snapshot taken before starting work on the assignment so you can recover in case you corrupt your virtual machine disk</strong>.  Your /dev/aesdchar device should use the circular buffer implementation you developed in assignment 7 plus new code you add to your driver to:</p><ol type="1"><li><p>Allocate memory for each write command as it is received, supporting any length of write request (up to the length of memory which can be allocated through kmalloc), and saving the write command content within allocated memory.  </p><ol type="1"><li><p>The write command will be terminated with a \n character as was done with the aesdsocket application.</p><ol type="1"><li><p>Write operations which do not include a \n character should be saved and appended by future write operations and should not be written to the circular buffer until terminated.</p></li></ol></li><li><p>The content for the most recent 10 write commands should be saved.  </p></li><li><p>Memory associated with write commands more than 10 writes ago should be freed.</p></li><li><p>Write position and write file offsets can be ignored on this assignment, each write will just write to the most recent entry in the history buffer or append to any unterminated command.</p></li><li><p>For the purpose of this assignment you can use kmalloc for all allocations regardless of size, and assume writes will be small enough to work with kmalloc.</p></li></ol></li><li><p>Return the content (or partial content) related to the most recent 10 write commands, in the order they were received, on any read attempt.</p><ol type="1"><li><p>You should use the position specified in the read to determine the location and number of bytes to return.</p></li><li><p>You should honor the count argument by sending only up to the first “count” bytes back of the available bytes remaining.</p></li></ol></li><li><p>Perform appropriate locking to ensure safe multi-thread and multi-process access and ensure a full write file operation from a thread completes before accepting a new write file operation.</p></li><li><p>Your implementation should print the expected contents when running the drivertest.sh script at <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment8/drivertest.sh">https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment8/drivertest.sh</a>.</p></li></ol></li><li><p>Modify your socket server application developed in assignments 5 and 6 to support and use a build switch USE_AESD_CHAR_DEVICE, set to 1 by default, which:</p><ol type="1"><li><p>Removes timestamp printing.</p></li><li><p>Ensure you do not remove the  /dev/aesdchar endpoint after exiting the aesdsocket application.</p></li><li><p>Redirects reads and writes to /dev/aesdchar instead of /var/tmp/aesdsocketdata</p><ol type="1"><li><p>In addition, please ensure you are not opening the file descriptor for your driver endpoint from aesdsocket until it is accessed.</p></li></ol></li></ol></li><li><p>Test with sockettest.sh script used with assignment 5 (which doesn’t validate timestamps), which you can find at <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment5/sockettest.sh">https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment5/sockettest.sh</a>.</p></li><li><p>Follow the instructions printed on your screen when you run ./full-test.sh to test your driver implementation, and your aesdsocket native application using <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/issue20/test/assignment8/drivertest.sh">drivertest.sh</a> and <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/issue20/test/assignment8/sockettest.sh">sockettest.sh</a> against your native application from your assignment 3 repository.</p></li><li><p>Modify your buildroot or yocto implementation in your assignment 8 repository to install updated versions of the aesd socket server application and aesdchar driver, as well as appropriate startup scripts to automatically start both driver and application.</p><ol type="1"><li><p>You have several options for starting your driver, you can use insmod or modprobe, there are no requirements other than ensuring your driver automatically starts at boot time.</p></li></ol></li><li><p>Verify your buildroot or yocto implementation by running ./full-test.sh from your assignment 8 repository.</p></li><li><p>Tag the assignment with assignment-&lt;assignment number&gt;-complete once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit">here</a></p></li></ol><h2>Steps to enable Kernel Memory Leak Detector:</h2><p>See <a href="https://www.kernel.org/doc/html/latest/dev-tools/kmemleak.html">https://www.kernel.org/doc/html/latest/dev-tools/kmemleak.html</a> for full detail.  This is not a requirement but is helpful for validating your implementation.  Steps below are detailed for buildroot.  Yocto instructions are not provided but would require making the kernel related changes discussed below using the kernel menuconfig strategy discussed <a href="https://docs.yoctoproject.org/kernel-dev/common.html?highlight=kernel+menuconfig#using-menuconfig">here</a></p><ol type="1"><li><p>Run make menuconfig from the buildroot directory and setup a  cutom linux kernel defconfig file at ../base_external/configs/linux.config under the "Kernel" submenu.  This will allow you to track your changes to kernel configuration in your base_external tree.  Use the previous kernel set as BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE in your aesd_qemu_defconfig file as the initial content of this file by copying from the buildroot directory to your base_external path specified in the kernel submenu.  You can do this with command cp buildroot/board/qemu/aarch64-virt/linux.config base_external/configs/linux.config</p></li><li><p> make linux-menuconfig from buildroot directory</p></li><li><p>Enable the following options:</p><ol type="1"><li><p>kernel hacking -&gt; kernel debugging</p></li><li><p>kernel hacking -&gt; memory debugging -&gt; kernel memory leak detector</p></li><li><p>kernel hacking -&gt; memory debugging -&gt; Simple test for the kernel memory leak detector (This option would install a module which would have memory leaks.)</p></li><li><p>kernel hacking -&gt; memory debugging -&gt; Maximum kmemleak early log entries - set to 4096 (see <a href="https://stackoverflow.com/questions/55764173/kernel-memory-leak-detector">https://stackoverflow.com/questions/55764173/kernel-memory-leak-detector</a>)</p></li><li><p>kernel hacking-&gt;Sample Kernel Code</p></li></ol></li><li><p>Save the configuration using save-config.sh, build using build.sh and run qemu.</p></li><li><p>Build and boot up the resulting image in qemu.  If the debugfs isn't already mounted, mount with:</p><ol type="1"><li><p>mount -t debugfs nodev /sys/kernel/debug/</p></li></ol></li><li><p>Enter the following commands on terminal to check if the kernel memory leak detector has been properly installed and is detecting memory leaks.  This loads a module that deliberately leaks memory called “kmemleak-test”</p><ol type="1"><li><p>echo clear &gt; /sys/kernel/debug/kmemleak</p></li><li><p>modprobe kmemleak-test</p></li><li><p>echo scan &gt; /sys/kernel/debug/kmemleak</p></li><li><p>cat /sys/kernel/debug/kmemleak</p><ol type="1"><li><p>You should see memory leaks identified, which proves your leak test kernel config is working.</p></li></ol></li><li><p>rmmod kmemleak-test</p></li></ol></li><li><p> Reboot and repeat steps 4 and 5 using your module instead of kmemleak-test, removing and adding your module after clearing any existing memory leaks.</p><ol type="1"><li><p>You should see no memory leaks identified by the scan step for /sys/kernel/debug/kmemleak when loading your module.</p></li></ol></li></ol><h2>Validation:</h2><ol type="1"><li><p>Your driver should pass the drivertest.sh script provided with the assignment</p></li><li><p>Your qemu instance should pass the sockettest script, this time writing and reading from only the /dev/aesdchar device instead of /var/tmp/aesdsocketdata.</p></li><li><p>Your implementation should not crash or have memory leaks.</p></li><li><p>Your implementation should use proper locking methods to ensure safe access from multiple threads or processes.</p></li><li><p>Your project should contain build.sh, clean.sh, and runqemu.sh scripts which function as specified in previous assignments, and can successfully clean, build, and run your project without user interaction for automated build testing.</p></li></ol><h2>Submission:</h2><ol type="1"><li><p>Your submission repository should contain a working buildroot or yocto implementation.</p></li><li><p>Your buildroot or yocto implementation should reference a commit in your assignments 3 and later repository containing the code added for this assignment.</p></li></ol><h2>Troubleshooting</h2><ol type="1"><li><p> Attempts to run full-test on qemu fails with rmmod: Can't unload aesdchar resource temporarily unavailable</p><ol type="1"><li><p> If your test script fails during the driver test step due to failure to unload your driver, please ensure you are not opening the file descriptor for your driver endpoint from aesdsocket until it is accessed.  </p></li><li><p>If your sockettest application opens the file descriptor at startup and does not close it, this will prevent the script from successfully testing your driver in isolation by unloading/reloading it.  Please modify your aesdsocket application to only open the file descriptor for your  /dev/aesdchar  device when reading/writing and otherwise close it when not in use or before initial use</p></li></ol></li></ol>
+  </div>
+</body>
+</html>

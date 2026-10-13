@@ -1,0 +1,1261 @@
+1
+00:00:00,000 --> 00:00:02,820
+This video is part of
+a multipart series
+
+2
+00:00:02,820 --> 00:00:05,655
+talking about bootloader
+and Device Trees.
+
+3
+00:00:05,655 --> 00:00:07,710
+We want to do with this video is
+
+4
+00:00:07,710 --> 00:00:09,540
+understand the role
+of the bootloader,
+
+5
+00:00:09,540 --> 00:00:12,060
+understand the role
+of Device Trees.
+
+6
+00:00:12,060 --> 00:00:13,800
+Also let's go through
+
+7
+00:00:13,800 --> 00:00:18,340
+some simple and then more
+complex bootloader examples.
+
+8
+00:00:18,640 --> 00:00:21,275
+Bootloader at a high level,
+
+9
+00:00:21,275 --> 00:00:22,680
+what we want to do is initialize
+
+10
+00:00:22,680 --> 00:00:24,555
+the system at some basic level.
+
+11
+00:00:24,555 --> 00:00:26,250
+Really what we want to do is get
+
+12
+00:00:26,250 --> 00:00:28,200
+far enough that we
+can load the kernel.
+
+13
+00:00:28,200 --> 00:00:30,420
+In the beginning
+of the semester,
+
+14
+00:00:30,420 --> 00:00:33,179
+we've been using QEMU
+for demonstrating
+
+15
+00:00:33,179 --> 00:00:36,210
+a lot of how the kernel works,
+
+16
+00:00:36,210 --> 00:00:38,400
+and how we can use
+the Linux kernel,
+
+17
+00:00:38,400 --> 00:00:41,190
+in both kernel space
+and user space.
+
+18
+00:00:41,190 --> 00:00:43,415
+We've been able to ignore
+
+19
+00:00:43,415 --> 00:00:45,560
+how you get as far as
+loading the kernel,
+
+20
+00:00:45,560 --> 00:00:47,780
+but that's really part of
+the job of the bootloader.
+
+21
+00:00:47,780 --> 00:00:49,865
+As we start to work
+with hardware,
+
+22
+00:00:49,865 --> 00:00:52,295
+the bootloader becomes more
+important because it's
+
+23
+00:00:52,295 --> 00:00:53,390
+a necessary piece of
+
+24
+00:00:53,390 --> 00:00:55,525
+being able to work
+with the Linux kernel.
+
+25
+00:00:55,525 --> 00:00:57,770
+You often are going
+to be starting with
+
+26
+00:00:57,770 --> 00:01:00,830
+a single CPU core and a
+set of on-chip memory,
+
+27
+00:01:00,830 --> 00:01:02,960
+which for more
+complicated parts,
+
+28
+00:01:02,960 --> 00:01:04,805
+is probably only a small subset
+
+29
+00:01:04,805 --> 00:01:08,010
+of the overall
+hardware solution.
+
+30
+00:01:08,170 --> 00:01:10,400
+What a bootloader is going to do
+
+31
+00:01:10,400 --> 00:01:13,250
+is what's known
+as bootstrapping.
+
+32
+00:01:13,250 --> 00:01:15,335
+In other words, starting up,
+
+33
+00:01:15,335 --> 00:01:17,405
+initializing some
+piece of hardware,
+
+34
+00:01:17,405 --> 00:01:19,310
+using that hardware
+to initialize
+
+35
+00:01:19,310 --> 00:01:21,200
+the next hardware
+in the process,
+
+36
+00:01:21,200 --> 00:01:23,240
+and loading the different
+startup software
+
+37
+00:01:23,240 --> 00:01:25,280
+that it needs to completely
+initialize the system,
+
+38
+00:01:25,280 --> 00:01:26,600
+and run the Linux kernel,
+
+39
+00:01:26,600 --> 00:01:28,615
+loading all of that in phases.
+
+40
+00:01:28,615 --> 00:01:29,840
+Some of the different phases,
+
+41
+00:01:29,840 --> 00:01:31,805
+including setting up DRAM,
+
+42
+00:01:31,805 --> 00:01:33,410
+setting up access to storage,
+
+43
+00:01:33,410 --> 00:01:35,225
+whatever you're
+persistent storage is.
+
+44
+00:01:35,225 --> 00:01:37,890
+Then loading the
+kernel into RAM.
+
+45
+00:01:38,870 --> 00:01:41,030
+We'll also talk a
+little bit about
+
+46
+00:01:41,030 --> 00:01:43,460
+Device Trees because they're
+
+47
+00:01:43,460 --> 00:01:46,010
+also important for
+the boot process.
+
+48
+00:01:46,010 --> 00:01:50,495
+Before around February 2013
+and kernel version 3.8,
+
+49
+00:01:50,495 --> 00:01:54,015
+the platform implementation for
+
+50
+00:01:54,015 --> 00:01:56,650
+Linux kernel was
+either discovered at
+
+51
+00:01:56,650 --> 00:02:00,145
+runtime or was hard-coded
+directly into the kernel.
+
+52
+00:02:00,145 --> 00:02:03,160
+This became unwieldy and
+
+53
+00:02:03,160 --> 00:02:05,330
+was less useful for
+embedded devices.
+
+54
+00:02:05,330 --> 00:02:08,875
+It was more appropriate
+for things like PCs,
+
+55
+00:02:08,875 --> 00:02:11,560
+where hardware varied widely.
+
+56
+00:02:11,560 --> 00:02:13,390
+You need to be able
+to basically auto
+
+57
+00:02:13,390 --> 00:02:15,250
+discover everything
+from the kernel,
+
+58
+00:02:15,250 --> 00:02:18,310
+as opposed to an
+embedded or ARM system,
+
+59
+00:02:18,310 --> 00:02:20,530
+where you pretty much know
+exactly what hardware
+
+60
+00:02:20,530 --> 00:02:22,750
+you're going to
+have at boot time.
+
+61
+00:02:22,750 --> 00:02:25,265
+You also might be a little
+more resource-constrained,
+
+62
+00:02:25,265 --> 00:02:27,490
+in terms of how many different
+variations of drivers
+
+63
+00:02:27,490 --> 00:02:30,040
+you would want to support,
+
+64
+00:02:30,040 --> 00:02:32,210
+based on the hardware.
+
+65
+00:02:32,420 --> 00:02:34,540
+To solve this problem,
+
+66
+00:02:34,540 --> 00:02:38,450
+the Linux kernel developers
+started replacing
+
+67
+00:02:38,450 --> 00:02:41,490
+this functionality
+by a functionality
+
+68
+00:02:41,490 --> 00:02:42,900
+called Device Trees,
+
+69
+00:02:42,900 --> 00:02:44,480
+especially on ARM, which is
+
+70
+00:02:44,480 --> 00:02:47,765
+a pretty big part of
+the embedded solution.
+
+71
+00:02:47,765 --> 00:02:50,060
+Device Trees have been the go-to
+
+72
+00:02:50,060 --> 00:02:53,035
+way of configuring
+devices in Linux.
+
+73
+00:02:53,035 --> 00:02:55,820
+It really represents
+the system and
+
+74
+00:02:55,820 --> 00:02:58,670
+the associated devices
+that make up the system,
+
+75
+00:02:58,670 --> 00:03:01,190
+as a collection of components
+in a hierarchy tree.
+
+76
+00:03:01,190 --> 00:03:03,805
+That's where the name
+Device Tree comes from.
+
+77
+00:03:03,805 --> 00:03:06,770
+It includes these properties
+and key-value pairs
+
+78
+00:03:06,770 --> 00:03:10,235
+with a form of a name that's
+assigned to know value.
+
+79
+00:03:10,235 --> 00:03:12,530
+The Mastering Embedded
+Linux Programming,
+
+80
+00:03:12,530 --> 00:03:14,710
+Chapter 3 goes over
+these in more detail,
+
+81
+00:03:14,710 --> 00:03:16,910
+but you can see the things
+that we can specify
+
+82
+00:03:16,910 --> 00:03:19,430
+here with the Device Tree.
+
+83
+00:03:19,430 --> 00:03:22,400
+We can talk about where
+memory is located,
+
+84
+00:03:22,400 --> 00:03:25,430
+and how it fits in the
+overall memory space.
+
+85
+00:03:25,430 --> 00:03:27,470
+We can describe the CPUs that we
+
+86
+00:03:27,470 --> 00:03:30,505
+have connected to the system.
+
+87
+00:03:30,505 --> 00:03:33,335
+We can describe things like
+the interrupt controller,
+
+88
+00:03:33,335 --> 00:03:36,215
+what location it's
+located at in memory,
+
+89
+00:03:36,215 --> 00:03:38,375
+what interrupts are supported,
+
+90
+00:03:38,375 --> 00:03:40,295
+and how those are being used.
+
+91
+00:03:40,295 --> 00:03:43,860
+In this case, for an LCD device.
+
+92
+00:03:45,080 --> 00:03:47,960
+The ARM bootloader and kernel
+
+93
+00:03:47,960 --> 00:03:51,280
+requires a Device Tree to
+be compiled before using.
+
+94
+00:03:51,280 --> 00:03:52,820
+You can think of it very similar
+
+95
+00:03:52,820 --> 00:03:54,335
+to what we do with a C file.
+
+96
+00:03:54,335 --> 00:03:56,510
+This would be the source
+code implementation,
+
+97
+00:03:56,510 --> 00:03:58,085
+the human-readable portion.
+
+98
+00:03:58,085 --> 00:04:01,280
+Then you go through a compiled
+step to turn that into
+
+99
+00:04:01,280 --> 00:04:05,230
+a binary that the bootloader
+or kernel can understand.
+
+100
+00:04:05,230 --> 00:04:09,020
+The binary would be a DTB,
+
+101
+00:04:09,020 --> 00:04:10,220
+which is often referred to as
+
+102
+00:04:10,220 --> 00:04:13,060
+either a Device Tree Binary
+or a Device Tree Blob,
+
+103
+00:04:13,060 --> 00:04:15,935
+and the compilation step,
+
+104
+00:04:15,935 --> 00:04:18,740
+instead of using GCC for C code,
+
+105
+00:04:18,740 --> 00:04:22,195
+we'd use DTC, which is
+the Device Tree Compiler.
+
+106
+00:04:22,195 --> 00:04:24,750
+The result, it could
+
+107
+00:04:24,750 --> 00:04:25,830
+be referred to as
+
+108
+00:04:25,830 --> 00:04:27,625
+a Device Tree Binary,
+Device Tree Blob.
+
+109
+00:04:27,625 --> 00:04:29,270
+You might also see
+it referred to as
+
+110
+00:04:29,270 --> 00:04:32,610
+a Flattened Device
+Tree or an FDT.
+
+111
+00:04:34,130 --> 00:04:37,720
+Let's talk a little bit
+about how bootloader
+
+112
+00:04:37,720 --> 00:04:40,570
+will work from a
+conceptual point of view.
+
+113
+00:04:40,570 --> 00:04:43,300
+First, starting with the
+simple bootloader example.
+
+114
+00:04:43,300 --> 00:04:45,190
+This is probably something
+you're familiar with,
+
+115
+00:04:45,190 --> 00:04:47,650
+if you've done any embedded
+development at all,
+
+116
+00:04:47,650 --> 00:04:52,915
+and use some low-resource
+common embedded product.
+
+117
+00:04:52,915 --> 00:04:55,370
+There's typically
+a reset vector.
+
+118
+00:04:55,370 --> 00:04:59,160
+You got a reset vector
+that boots into NOR flash.
+
+119
+00:04:59,160 --> 00:05:02,085
+That NOR flash
+probably sets up RAM,
+
+120
+00:05:02,085 --> 00:05:05,130
+sets up the boot,
+and run from RAM.
+
+121
+00:05:05,130 --> 00:05:06,610
+In some cases, maybe there's
+
+122
+00:05:06,610 --> 00:05:08,140
+a little more complexity
+in the NOR flash.
+
+123
+00:05:08,140 --> 00:05:10,105
+It has to deal with
+something like DRAM.
+
+124
+00:05:10,105 --> 00:05:12,340
+But ultimately, it's still
+a pretty simple scenario,
+
+125
+00:05:12,340 --> 00:05:15,330
+where a flat linear
+addressing space that's all
+
+126
+00:05:15,330 --> 00:05:19,005
+addressed from the code that
+starts with the NOR flash,
+
+127
+00:05:19,005 --> 00:05:21,715
+and is pretty
+straightforward to config,
+
+128
+00:05:21,715 --> 00:05:23,720
+and run from a
+bootloader perspective.
+
+129
+00:05:23,720 --> 00:05:26,760
+Not a lot of work for the
+bootloader to do here.
+
+130
+00:05:26,900 --> 00:05:29,750
+Why can't we just always
+use a simple bootloader?
+
+131
+00:05:29,750 --> 00:05:32,285
+That one looks nice. Why
+would we just always do that?
+
+132
+00:05:32,285 --> 00:05:35,030
+Well, it turns out that
+it gets a little more
+
+133
+00:05:35,030 --> 00:05:38,075
+complex with different parts,
+
+134
+00:05:38,075 --> 00:05:40,910
+especially with the
+higher performance parts
+
+135
+00:05:40,910 --> 00:05:43,942
+that you might want to use an
+embedded Linux environment.
+
+136
+00:05:43,942 --> 00:05:47,350
+One of the complexities
+associated with NAND flash.
+
+137
+00:05:47,350 --> 00:05:49,915
+With NAND flash
+versus NOR flash,
+
+138
+00:05:49,915 --> 00:05:52,420
+and this is covered in other
+courses you've probably
+
+139
+00:05:52,420 --> 00:05:55,795
+taken or will be
+taking in more detail,
+
+140
+00:05:55,795 --> 00:05:59,110
+the content is no longer
+linearly addressable,
+
+141
+00:05:59,110 --> 00:06:01,870
+meaning that you
+can't just jump to
+
+142
+00:06:01,870 --> 00:06:03,190
+an address and assume
+you'll be able
+
+143
+00:06:03,190 --> 00:06:05,725
+to read the content
+of the flash.
+
+144
+00:06:05,725 --> 00:06:08,080
+You probably need to
+use something like ECC,
+
+145
+00:06:08,080 --> 00:06:10,375
+support recovery of bad blocks,
+
+146
+00:06:10,375 --> 00:06:12,054
+and so all this requires
+
+147
+00:06:12,054 --> 00:06:14,620
+some additional software work to
+
+148
+00:06:14,620 --> 00:06:16,120
+support and potentially some
+
+149
+00:06:16,120 --> 00:06:17,795
+additional hardware
+work to support,
+
+150
+00:06:17,795 --> 00:06:20,740
+so it makes the bootloader
+a little more complicated.
+
+151
+00:06:20,740 --> 00:06:24,130
+There's also just general
+complexities of the hardware,
+
+152
+00:06:24,130 --> 00:06:27,535
+the multiple cores
+or cores that need
+
+153
+00:06:27,535 --> 00:06:29,260
+other hardware components like
+
+154
+00:06:29,260 --> 00:06:32,005
+DRAM brought up before
+they're able to function.
+
+155
+00:06:32,005 --> 00:06:35,050
+There's more work that
+needs to happen before we
+
+156
+00:06:35,050 --> 00:06:38,870
+can actually get to the point
+that we could start Linux.
+
+157
+00:06:39,030 --> 00:06:42,610
+If we want to go through a
+more complicated example,
+
+158
+00:06:42,610 --> 00:06:43,990
+and this is again covered in
+
+159
+00:06:43,990 --> 00:06:46,750
+your Mastering Embedded Linux
+Programming Chapter 3 book.
+
+160
+00:06:46,750 --> 00:06:48,760
+But some of the different
+components here that we'll be
+
+161
+00:06:48,760 --> 00:06:51,130
+talking through in this
+more complicated example.
+
+162
+00:06:51,130 --> 00:06:53,770
+Let's say you've got an
+on-board or external DRAM,
+
+163
+00:06:53,770 --> 00:06:56,830
+so you've got a dynamic RAM
+that you have to refresh,
+
+164
+00:06:56,830 --> 00:06:59,140
+probably need some
+hardware support for that,
+
+165
+00:06:59,140 --> 00:07:01,525
+there will be a
+tertiary program loader
+
+166
+00:07:01,525 --> 00:07:02,800
+that's associated with that,
+
+167
+00:07:02,800 --> 00:07:05,590
+that's the third stage
+of our boot process.
+
+168
+00:07:05,590 --> 00:07:08,740
+Then you might have an
+on-board or external flash,
+
+169
+00:07:08,740 --> 00:07:10,390
+and maybe that flash
+is NAND flash,
+
+170
+00:07:10,390 --> 00:07:11,755
+instead of NOR flash,
+
+171
+00:07:11,755 --> 00:07:13,390
+so that means that
+there's some extra
+
+172
+00:07:13,390 --> 00:07:14,500
+work that you'll have
+to do to be able
+
+173
+00:07:14,500 --> 00:07:18,985
+to read and access
+that NAND flash.
+
+174
+00:07:18,985 --> 00:07:20,860
+The things that
+would be stored in
+
+175
+00:07:20,860 --> 00:07:22,405
+there would be things like
+
+176
+00:07:22,405 --> 00:07:24,190
+compressed images
+
+177
+00:07:24,190 --> 00:07:26,065
+on the flattened device
+tree that we talked about,
+
+178
+00:07:26,065 --> 00:07:28,165
+the device tree,
+the kernel image,
+
+179
+00:07:28,165 --> 00:07:30,205
+maybe an initramfs image that
+
+180
+00:07:30,205 --> 00:07:32,935
+will be the early bootloader
+portion of your kernel.
+
+181
+00:07:32,935 --> 00:07:35,035
+Maybe one or more
+root filesystems,
+
+182
+00:07:35,035 --> 00:07:38,650
+and probably some
+images related to
+
+183
+00:07:38,650 --> 00:07:43,640
+the program loaders like
+the SPL or TPL image.
+
+184
+00:07:43,680 --> 00:07:47,470
+Then you might also
+have an on-board SOC.
+
+185
+00:07:47,470 --> 00:07:49,870
+Some base system that
+
+186
+00:07:49,870 --> 00:07:52,480
+is able to start from
+the reset vectors,
+
+187
+00:07:52,480 --> 00:07:54,490
+so the part that implements
+
+188
+00:07:54,490 --> 00:07:55,595
+the simple bootloader that we
+
+189
+00:07:55,595 --> 00:07:57,335
+talked about in the first slide.
+
+190
+00:07:57,335 --> 00:07:59,690
+You'd have some type
+of reset vector,
+
+191
+00:07:59,690 --> 00:08:03,740
+some storage, and in a lot
+of cases, it might be ROM.
+
+192
+00:08:03,740 --> 00:08:05,470
+This might not be something
+that's programmable,
+
+193
+00:08:05,470 --> 00:08:08,915
+it might be a fixed thing
+that's built into the part.
+
+194
+00:08:08,915 --> 00:08:11,890
+Then possibly a SRAM with
+
+195
+00:08:11,890 --> 00:08:14,855
+secondary program loader
+as a part of that SOC,
+
+196
+00:08:14,855 --> 00:08:16,990
+so a small amount of RAM that's
+
+197
+00:08:16,990 --> 00:08:21,560
+available specifically for
+the purposes of initial boot.
+
+198
+00:08:22,170 --> 00:08:25,390
+Going through how all this
+could work together in
+
+199
+00:08:25,390 --> 00:08:27,964
+a more complicated
+bootloader example,
+
+200
+00:08:27,964 --> 00:08:29,800
+you can have the reset
+vector boot into
+
+201
+00:08:29,800 --> 00:08:32,095
+ROM and then ROM
+could initialize
+
+202
+00:08:32,095 --> 00:08:36,400
+SPL or a small SRAM area.
+
+203
+00:08:36,400 --> 00:08:40,250
+Do the work to enable
+access to NAND,
+
+204
+00:08:40,250 --> 00:08:43,295
+get the content of the
+SPL image from NAND,
+
+205
+00:08:43,295 --> 00:08:47,345
+copy that into our SRAM for
+secondary program loader.
+
+206
+00:08:47,345 --> 00:08:50,080
+A lot of times this
+content could be
+
+207
+00:08:50,080 --> 00:08:52,960
+stored in a special
+portion of NAND flash,
+
+208
+00:08:52,960 --> 00:08:55,060
+for instance, a section
+
+209
+00:08:55,060 --> 00:08:57,055
+where you don't need
+to read with ECC,
+
+210
+00:08:57,055 --> 00:08:58,930
+and so it's a little bit easier
+
+211
+00:08:58,930 --> 00:09:01,650
+from a software
+perspective to access it.
+
+212
+00:09:01,650 --> 00:09:04,345
+It could also be that the SPL
+
+213
+00:09:04,345 --> 00:09:07,855
+could get transferred in
+from an external interface.
+
+214
+00:09:07,855 --> 00:09:10,900
+For instance, you might be
+able to have the ROM be
+
+215
+00:09:10,900 --> 00:09:13,540
+able to access over
+USB and possibly
+
+216
+00:09:13,540 --> 00:09:16,630
+pull the secondary program
+loader over something like
+
+217
+00:09:16,630 --> 00:09:17,920
+a USB connection as
+
+218
+00:09:17,920 --> 00:09:20,330
+an alternative to reading
+out of NAND flash.
+
+219
+00:09:20,330 --> 00:09:22,180
+But one way or another,
+it will be the job of
+
+220
+00:09:22,180 --> 00:09:24,640
+that phase 1 ROM code to get
+
+221
+00:09:24,640 --> 00:09:27,000
+the secondary program
+loader into RAM and be
+
+222
+00:09:27,000 --> 00:09:30,530
+able to run the secondary
+program loader.
+
+223
+00:09:31,320 --> 00:09:34,720
+Then as a part of running the
+secondary program loader,
+
+224
+00:09:34,720 --> 00:09:37,410
+now we probably have
+enough software support to
+
+225
+00:09:37,410 --> 00:09:40,220
+initialize the hardware that
+we need to access the DRAM,
+
+226
+00:09:40,220 --> 00:09:42,790
+and we'll probably also be able
+
+227
+00:09:42,790 --> 00:09:45,325
+to complete initialization
+of the NAND flash,
+
+228
+00:09:45,325 --> 00:09:49,645
+be able to use ECC and read
+more content from the NAND.
+
+229
+00:09:49,645 --> 00:09:53,170
+The job of a secondary
+program loader might be
+
+230
+00:09:53,170 --> 00:09:56,185
+to load the tertiary
+program loader.
+
+231
+00:09:56,185 --> 00:09:58,160
+Give us access to
+the NAND flash,
+
+232
+00:09:58,160 --> 00:10:00,065
+give us access to the DRAM,
+
+233
+00:10:00,065 --> 00:10:03,490
+and have enough capability to
+
+234
+00:10:03,490 --> 00:10:07,690
+load that tertiary program
+loader out of NAND flash,
+
+235
+00:10:07,690 --> 00:10:11,600
+put it into DRAM, and then
+jump and run from DRAM.
+
+236
+00:10:12,210 --> 00:10:15,845
+Again, the TPL could be content
+
+237
+00:10:15,845 --> 00:10:18,970
+received over USB or
+some external interface,
+
+238
+00:10:18,970 --> 00:10:22,840
+or maybe it could be content
+from the NAND flash.
+
+239
+00:10:23,140 --> 00:10:26,740
+Then in phase 3, the
+tertiary program loader,
+
+240
+00:10:26,740 --> 00:10:29,630
+now we're at support
+
+241
+00:10:29,630 --> 00:10:31,845
+of more of a
+full-featured bootloader,
+
+242
+00:10:31,845 --> 00:10:33,720
+something like U-boot
+where we've got
+
+243
+00:10:33,720 --> 00:10:36,285
+full support for reading
+or writing NAND flash.
+
+244
+00:10:36,285 --> 00:10:38,340
+It's able to read and
+
+245
+00:10:38,340 --> 00:10:40,650
+decompress the
+flattened device tree,
+
+246
+00:10:40,650 --> 00:10:42,240
+the kernel, the initramfs,
+
+247
+00:10:42,240 --> 00:10:43,290
+all the different
+components that we
+
+248
+00:10:43,290 --> 00:10:44,950
+need to actually boot kernel.
+
+249
+00:10:44,950 --> 00:10:49,365
+We can take the kernel out of
+something like NAND flash,
+
+250
+00:10:49,365 --> 00:10:52,430
+including ECC, and
+copy that into DRAM,
+
+251
+00:10:52,430 --> 00:10:54,465
+and then jump into
+and start the kernel.
+
+252
+00:10:54,465 --> 00:10:56,985
+This phase 3 step
+
+253
+00:10:56,985 --> 00:10:59,250
+gets us to exactly the point
+at when we're starting
+
+254
+00:10:59,250 --> 00:11:01,785
+our QMU instance using
+
+255
+00:11:01,785 --> 00:11:03,090
+the simple examples that we've
+
+256
+00:11:03,090 --> 00:11:05,455
+done with the first
+part of the semester.
+
+257
+00:11:05,455 --> 00:11:07,770
+Once we're at this point, we're
+
+258
+00:11:07,770 --> 00:11:10,000
+ready to boot into the kernel.
+
+259
+00:11:10,770 --> 00:11:13,920
+The tertiary program
+loader hands
+
+260
+00:11:13,920 --> 00:11:16,325
+over or jumps into the kernel,
+
+261
+00:11:16,325 --> 00:11:18,460
+and now the kernel can
+initialize all the memory in
+
+262
+00:11:18,460 --> 00:11:21,265
+DRAM since the DRAM is
+already set up for it.
+
+263
+00:11:21,265 --> 00:11:23,980
+It can start the initramfs,
+
+264
+00:11:23,980 --> 00:11:25,985
+where we can complete
+hardware initialization,
+
+265
+00:11:25,985 --> 00:11:27,820
+load some drivers if we need to,
+
+266
+00:11:27,820 --> 00:11:29,850
+and set up that root file system
+
+267
+00:11:29,850 --> 00:11:31,920
+so we can now access
+the root filesystem and
+
+268
+00:11:31,920 --> 00:11:33,735
+the NAND flash and mount it
+
+269
+00:11:33,735 --> 00:11:35,605
+appropriately and boot and
+
+270
+00:11:35,605 --> 00:11:37,840
+start running the Linux system.

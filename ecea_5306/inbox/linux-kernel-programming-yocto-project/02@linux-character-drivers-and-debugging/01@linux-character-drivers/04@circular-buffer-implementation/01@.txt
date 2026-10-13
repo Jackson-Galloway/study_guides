@@ -1,0 +1,163 @@
+In this video, I'll
+talk a little bit about the background for
+Assignment number 7. We're going to introduce
+Buildroot rootfs-overlays, introduce Buildroot Kernel
+Module Support and we're going to talk a little bit about Circular Buffer Implementation. Specifically, the Circular
+Buffer Implementation that we'll use with
+Assignment number 8 but you're going to start with a implementation in user-space
+for Assignment number 7. The Buildroot
+rootfs-overlay is really just a way to add
+some content to your root file system or
+to override content that's being provided by other packages in your root file system. You can define a directory where the content that
+you placed there is going to be placed over top of the root file system at
+whatever path you specify. You'll want to use a relative
+path so use a path to your base external
+directory and that way it's going to work outside your own implementation
+directory. Otherwise, if you hardcoded
+it to something like home, your username, et cetera, it's not going to work
+if we clone it on the automated test
+system for instance so you want to make sure you
+do use a relative path. The second thing that we're going to be doing
+with Assignment number 7, is we will be compiling kernel modules
+that we then install inside of our buildroot
+and yocto QMU instances. We need to support
+kernel module build for what's called out-of-tree kernel modules in other words, kernel modules that aren't supplied as a part of
+the kernel source, and both buildroot and yocto
+have support for this. Buildroot's manual page has
+a bunch of detail about this and there's also a really good Stack Overflow
+post that I've linked here. Between the two, read these and this should give you
+the direction that you need to implement support
+for building kernel modules. The kernel modules
+that we're going to build are just the modules that are provided by
+the ldd3 source code. Another thing that
+we're going to do, as I mentioned with the Assignment 7
+implementation is we're going to start a user-space implementation of
+a circular buffer. I did this after the
+first year when I didn't have students design a
+circular buffer in user-space, they just went directly into
+implementing in the kernel. Some students had a
+real difficult time trying to debug
+in the kernel for all the reasons we've
+talked about before, that kernel debugging
+is difficult. What I did after the first
+semester was I moved the circular buffer
+implementation earlier into Assignment number 7 and implemented
+it in user-space. This will hopefully help you, if you're having
+problems getting your circular buffer to
+work in kernel space, you can go back and
+look at the tested and completed implementation
+in user-space. There are several
+different ways to design a circular buffer but I'm
+going to talk about the way that I'd recommend and for the implementation in
+this particular assignment. In a circular buffer, you've got a set of values that
+you're storing and you have some input and
+output pointer that can say where you're
+at in the buffer. The initial state would
+be something like this, where both the input and output
+pointers are pointing to the same value and that means that in this case
+that you're empty. If you write a new
+value in this case, then you're going to
+essentially implement the input pointer and write to the output pointer
+the command that you wrote inside that
+circular buffer. The way we're defining
+it for Assignment 7 and later for Assignment 8
+is we're going to be writing entries into our circular
+buffer that are a pointer to some const char
+so some string, essentially that we're going to store inside the entry and then a size value that tells us how many bytes are
+associated with that buffer. We're essentially making
+these entries based on the number of circular buffer entries that
+we have available here. Every time we write to an entry, we're going to store
+these two values, a pointer to a buffer and a size in one of the circular
+buffer entries. Then once we stored a command, we'd increment the input
+pointer so that the next time we wrote we would write
+to this new location. Then if you think
+about the case where I haven't read anything
+out yet and I've written to everything but
+one item in my buffer, where my buffer is just
+defined as an array of values, then it would look
+something like this, where my input
+pointer is pointing at the very last
+item in the buffer. The next time I
+wrote a value there, I'd write to the buffer and
+then I'd roll back from the last value to the first value and the
+buffer would be full. If you remember
+our original state where the input pointer
+equals the output pointer, we started with that and
+the buffer was empty. It'll be important
+for us to know the difference
+between these two, where if the input pointer has rolled from the end to back to the beginning we're in a full buffer state as
+opposed to an empty state. If you implement this way, you'll need to track the
+fact that you rolled the pointer from the end of
+the buffer to the beginning. Now if you read a value
+from the output pointer, you now have a new
+location where you can store a command in
+the circular buffer. The way you would define it if you weren't
+reading any values, if you wanted to find
+a circular buffer such that you can keep writing even before an output
+value is read, then the output pointer
+is going to have to increment when you add
+something to the buffer. The way we've defined it for assignment 7 and assignment 8, the value that you read
+is always going to be the last of the size of the
+buffer values available. If we're storing a total of, let's say 10 values, and we've written all 10, and then we want to
+write one new value, you'd have two options. One is you could block and say that you couldn't
+write the value, the second is that you
+could write the value, but you could also increment
+the output pointer so that the oldest value
+gets thrown away and you still have 10 values available that are
+the 10 most recent. That second implementation
+is what we're going to use for assignment 7
+and assignment 8. In the way we're defining
+the circular buffer, when you write that
+one extra value, we're going to move
+both the input and the output pointer to the next location and
+you're still going to have the last n number of
+values available. The function prototypes
+that we've given you with assignment number 7 show
+you how you can implement the circular buffer in a way that will work
+with the unit test and implement the logic as we've described here
+in the previous slides. Your goal with assignment
+number 7 is going to be to implement this function at entry based on the description here
+and the description I just gave for the operation
+of the circular buffer, you're going to add till the
+circular buffer is full, and then you're going
+to start replacing entries with new entries. The second thing
+you're going to do in your assignment 7 unit
+test implementation for circular buffer is you're going to implement
+this function that's called circular buffer find
+entry offset for fpos. The fpos, as you'd
+probably guess, would be an offset
+position inside the buffer that you want to locate an associated entry that corresponds
+to that position. If we're storing strings and
+there's a certain size to the strings that we're storing
+in the circular buffer, if you think about the case where the char offset is two, and your circular
+buffer looks like this, where you've got a
+string that's size 4, and then you've got another
+string that's size 7, one right after another, when the char offset is two, what we want to do is first find the entry that's
+associated with offset 2. If I look at offset 012, that's less than four and
+that's going to be part of the first entry implementation or the first entry of
+the circular buffer. AESD buffer entry that
+we're returning here should point to this entry that corresponds to the location
+of the output pointer. The second thing you're going
+to do with this function is fill in this parameter with the offset within that entry where the specific
+character is located. Again, if we're referencing zero reference to offset
+2 or the r character, you want to say where at in this entry that
+character is located, and since it's just
+the first entry, it's going to be at offset 012
+within that entry as well. You'd set entry
+offset byte return to two to point out that the file position that's
+specified with char offset 2 is going to point to this
+character inside this entry. Looking at another
+example of how we want to define this function, when the char offset
+value is six, then we want to find
+location 0123456, which would be the x value
+here in the second entry. Since we're using
+the second entry of the AESD buffer entry
+that you returned here, should be the second entry
+in the circular buffer. Then the entry offset
+byte return value should again be two because 012 is the location within the AESD buffer entry where
+the x character is located. This is, again,
+just going to map an overall offset of the total number of
+bytes that are received across all entries to a specific pointer
+where that string is located and then
+the offset within that string that's being
+referenced by char offset.

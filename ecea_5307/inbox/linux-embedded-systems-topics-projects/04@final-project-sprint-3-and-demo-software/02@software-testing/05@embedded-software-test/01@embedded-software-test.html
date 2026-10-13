@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Embedded Software Test</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>A good strategy for testing is to exhaustively test every possible scenario</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~oXdUh05dEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~oXdUh05dEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Testing can show a defect is present but cannot prove a defect is absent</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~sm1fPU5dEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~sm1fPU5dEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What does the "Pestiside Paradox" mean with respect to software testing?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~y_xXO05dEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>It's best to exhaustively test to root out as many bugs as possible</p></div></li>
+<li><input name="autoGradableResponseId~y_xXO05dEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>A good strategy is to write exhaustive tests for one area when adding features, then never revisit as other components change.</p></div></li>
+<li><input name="autoGradableResponseId~y_xXO05dEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Tests cases in any specific areas need to be continually expanded to find defects which could occur later.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the definition which best matches the description of a <strong>Test Case</strong> in Software testing.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~lG9RIE7QEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>A set of test scripts or test procedures to be executed in a specfic test run.</p></div></li>
+<li><input name="autoGradableResponseId~lG9RIE7QEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>An activity which runs a test on a component or system producing results</p></div></li>
+<li><input name="autoGradableResponseId~lG9RIE7QEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>A set of preconditions, inputs, actions, expected results, and post conditions</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the definition which best matches the description of a <strong>Test Execution </strong>in Software testing.</p><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~27u6b07QEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>An activity which runs a test on a component or system producing results</p></div></li>
+<li><input name="autoGradableResponseId~27u6b07QEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>A set of preconditions, inputs, actions, expected results, and post conditions</p></div></li>
+<li><input name="autoGradableResponseId~27u6b07QEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>A set of test scripts or test procedures to be executed in a specfic test run.</p><p></p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the difference between<strong> component testing</strong> and <strong>integration testing</strong></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~LoihK07REeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Integration testing tests individual software components in isolation while component testing tests interaction between components or systems.</p></div></li>
+<li><input name="autoGradableResponseId~LoihK07REeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Component testing tests individual software components in isolation while integration testing tests interaction between components or systems.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Alpha and beta testing at customer sites is an example of which type of software testing?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~YSmZD07REeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>System Testing</p></div></li>
+<li><input name="autoGradableResponseId~YSmZD07REeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Acceptance Testing</p></div></li>
+<li><input name="autoGradableResponseId~YSmZD07REeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Component Testing</p></div></li>
+<li><input name="autoGradableResponseId~YSmZD07REeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Integration Testing</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select reasons to use a <strong>Test Mock</strong> in your automated test</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Simulate a real object which has non deterministic behavior</p></div></li>
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Simulate states which require a significant amount of setup effort</p></div></li>
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Simulate a software component which does not yet exist</p></div></li>
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Convert an automated test case to a manual test case</p></div></li>
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Simulate states which are difficult to reproduce</p></div></li>
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Select the appropriate tests to run in a test suite</p></div></li>
+<li><input name="autoGradableResponseId~juMSPk7REey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Report status of tests on an object</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your coworker says they cannot automated test their software because they are waiting for you to complete your software component which will interact with theirs.  What test strategy could you suggest instead?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~2oD7lE7REeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Ask them to write a <strong>Test Mock</strong> which mocks <strong>your</strong> component</p></div></li>
+<li><input name="autoGradableResponseId~2oD7lE7REeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Ask them to use a <strong>Test Suite</strong> instead</p></div></li>
+<li><input name="autoGradableResponseId~2oD7lE7REeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Ask them to write a <strong>Test Mock</strong> which mocks <strong>their</strong> component</p></div></li>
+<li><input name="autoGradableResponseId~2oD7lE7REeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Ask them to start with <strong>Acceptance Testing</strong> instead.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which are some possible stages of a CI/CD Pipeline?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Unit Test</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Deploy</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Manual Testing</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Build</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Automated Test</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Code Review</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>New Feature Development</p></div></li>
+<li><input name="autoGradableResponseId~ii4f1U7SEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Bug Fixing</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Jenkins is a recent CI/CD platform which offers the best integration with git revision control tools.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0fG08E7SEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~0fG08E7SEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>XML is a replacement for YAML, intended to be more readable than JSON</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~zgRG_k7VEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~zgRG_k7VEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Behavior Driven Development is a way to give someone other than the developer a way to add and review requirements used to drive automated tests</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~D9d5XU7WEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~D9d5XU7WEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which type of language can be used to write Behavior Driven Development <strong>Test Cases?</strong></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~SD5oyk7WEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Gherkin</p></div></li>
+<li><input name="autoGradableResponseId~SD5oyk7WEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Python</p></div></li>
+<li><input name="autoGradableResponseId~SD5oyk7WEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Ruby</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

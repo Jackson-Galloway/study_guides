@@ -1,0 +1,233 @@
+This video is about
+the Embedded Linux Toolchain. So we're going to understand
+the components of the Linux toolchain, understand how to set one up and understand what we mean
+by toolchain sysroot. And this will all be useful for
+your assignment to implementation. So when we talk about a Toolchain,
+what we really mean is a combination of a bunch of different components
+including the compiler, the linker and the runtime libraries. So there are two popular options
+that the book discusses as likely Toolchain options, GCC and Clang. And we're going to go over and
+cover GCC in this book and we'll use that as part of
+assignments to and later. So some of the components
+of the GCC Toolchain, there's been you tills which is
+really the binary utilities. And so those are including
+the assembler and the linker, the components that make up
+the compiler applications. And then there's GCC itself,
+which is the abbreviation for new compiler collection and this is
+the compiler that supports different programming languages and in our case will
+be using the C version of this compiler. And then the other part of
+the toolchain that that will be using is the C library and this is going to
+be using possesses definitions to have API implementations that
+will access from our program. So ways for us to get into and out of the Linux Kernel through
+that API defined by POSIX. So there are a couple different options. The book goes over for setting up a
+Toolchain number one, you can do manually by downloading building and
+installing all the components yourself. And option two is to use a builder
+build system to generate it. And this is part of what we'll talk about
+later in the course with Children and young octo. So why would you want to hand download and
+build your own toolchain? Well, there are cases where it might be
+useful to do this in general, though, if you're talking about building
+embedded system project. And you're able to leverage one of
+the frameworks, we're going to talk about later, like Bilad and Jacto,
+you probably don't need to do this step. So the reason we're going to do the it was
+assignment to is just to understand and kind of demystify the process, understand more about what these
+tools are going to be doing for us. So there's two different types of
+toolchains that are discussed in the book. One is the native toolchain and the native
+toolchain is going to run on the same system as the program it generates. And then there's a cross toolchain,
+so in the case of a cross toolchain, you're going to ultimately run
+the executable you generate on a different architecture than the host. And so this is what's referred
+to as cross compiling and this is what we'll be doing for
+this course. So typically will be building
+on a Intel X 86 Machine, but we'll be compiling and
+building for an ARM based target. So the output that we generate from
+our compile step won't actually run on our host machine. It'll be built specifically for
+an armed target. While the applications that
+were running GCC for instance, those obviously need to run on our host
+machine in order to do the compile step. So that's what we mean when
+we say cross compiling. So why would you use a cross toolchain? There's a couple different
+reasons the book goes into. But you're in general, your host is
+probably going to be more powerful than, than your target. And so your builds are probably going to
+be faster to build from your host machine and you probably also don't want
+to have the image that you use for your embedded target. You probably don't need all of your
+development tools hosted there. So there's probably no reason
+to necessarily to ship a full compiler with your embedded device and
+maybe you don't even have the space to, to fit that in your in
+your device to begin with. So having this cross compile set up from
+our host means that we have the option to use the most likely additional resources
+of the host compared to the target. Two have this a compile setup that's
+going to give us additional performance or have additional space to store programs
+that we don't actually need on the target for
+shipment of an embedded device. So in terms of the way you
+specify across compiled target, there's a specific syntax for canoe where
+a prefix to the command that you're trying to to invoke in this case GCC specifies
+what you're trying to cross compile for. So example of the QEMU system that we're
+going to target with assignment two and later is what's called aarch64 or
+the ARM 64 bit architecture. And an example command
+line that you'll see for your toolchain target is something
+like this aarch-64-none-linux-gnu-gcc. What you see here is this last GCC part. This is the part you're
+familiar with right. As a part of just normally native
+compiling an application for for a host and all this prefix that gets
+appended onto the beginning of it is all about telling the identifying
+what you're compiling for. And so the CPU here at the beginning aarch
+64 indicates that we're compiling for ARM 64 bit. The vendor is none, maybe if there was
+a specific vendor that we were targeting here, instead of just
+a generic QEMU Machine, there might be a specific vendor for
+the CPU listed here. The Kernel type is Linux because
+we're targeting Linux Kernel. And then the operating system support
+here is the GNU GCC, last step here. So, the instructions for building a toolchain with ARM cross
+compiler are linked to this page that you could find in the reference material
+associated with the slide deck. And this will change from
+semester to semester. But what we're really doing here
+is going out to the ARM website. We're pulling out the pre
+compiled binaries for Linux and we're just using those pre compiled
+binaries to implement our toolchain. And this is the same thing that
+the builder up framework will do as well. So these instructions might change in
+terms of version from year to year, but that's generally the, the format
+that will follow with the steps here. So once you do those steps,
+what you should see is that you can export a path to your path
+variable that will point to the binary directory where
+these tools were installed. And once you do that, you should be
+able to run that command that I showed previously aarch-64-none-linux-gnu-gcc 4. So this part is essentially the same thing
+you do if you were cross compiling but, and you'll generate that dot file, just like you would if you were
+if you were compiling natively. And the what you notice if you run
+the file utility is that the output is going to say? Rather than say that it's built for
+your host machine. You can see this one's built for
+ARM aarch64. So this will tell you that you've
+got a working cross compiler for aarch64 that's able to
+cross compile sys file. The other thing to know when we're
+talking about cross compiling and toolchains is that the Toolchain is
+going to be dependent on what's called a sysroot that will be installed as
+a part of the toolchain installation. And one way you can see your sysroot path
+is to use this GCC command with the dash, print, dash sysroot option. And this is going to show you a path
+to a location on your host file system where the sysroot is installed. And what the sysroot is really the root
+file system of that cross toolchain. So the files that are going to be in this
+are all specific to the target type. So if we're compiling for
+an aarch 64 type, the files that are located in this
+directory are all going to be the content that would be on the host root file
+system if we were compiling natively. But instead of being binary
+files that are intended for the host will be the Binary files for
+the target in this case aarch64. So for instance, if there's libraries
+you need to link to as a part of your application, those libraries would be
+located here in the sysroot directory. So this lib C library is a library
+that would link to in order to access those eight possess a piece
+that I mentioned before and this file will be compiled for
+the aarch 64 target. And so some of the files are going to
+be needed to compile programs and other of those files are going to be
+needed to be are going to need to be installed on the target at runtime. So some of the different
+directories in your sysroot lib directory is going to be
+the shared objects for C library and so this is content that's going to be
+need to be installed on target. The user lib directory is for
+static library, archive files. So this is used as a part of
+the C library compiled steps and user include is where the header
+files are going to be. So what you do stdio.h. This is where that file is going to
+map to when you're cross compiling. And then user (s)bin is where
+the utility programs for the cross toolchain would be located. So this would be as a part
+of your build step or after to analyze the output of your build. If you need to run host tools that
+know how to analyze ARM executables, this is where those files will
+be located in your sysroot. So what do we mean when we say we're
+going to have runtime target files, So, files that are located
+on your target at runtime. So if I use the example here of a path
+to a dot S O shared library file, and I use the file command to
+look at the content of that file. What I see here is once again that
+this is an ARM aarch64 library. So this is a library that's not going to
+be used or useful for my X 86 hosts that I'm using for compiling, it's really
+going to be specific to the toolchain and it's going to ultimately
+be installed on the target. And this will be the case even when
+it's built on a different architecture. So even though I'm building from
+X 86 this particular file is is the file that goes on my target when
+I'm running on an aarch 64 based system. So will the aarch4 non Linux,
+new GCC compiler be in the sysroot? And the answer is no,
+it won't be in the sysroot. And the reason is because
+we're cross compiling. So this one is in your host system,
+file system, it's run by your host system because it's a part of the pile step
+that you'd run for your host machine. Some of the other tools that are going to
+be located in the toolchain are going to be GCC the and G++, so
+the different compiler types. So this would be the one you'd use for
+C++ gdc. So you're crossed debugger
+would be located here and ld would be your cross linker. There's also a few other utilities
+the book goes over addr2line can convert the program address into file names and
+numbers for debug and obdump or obdump. We'll get into this one
+in later assignment, but this is useful for
+taking an object file and relating the content of an output
+object file to associated source code strip is another one that's
+going to be used for us by default. In some of our later when we're getting,
+when we're getting into application, build tools like bildred and yacto. And this is going to remove debugging
+information from executables and make your binary files smaller so
+that they'll use less space on target. There's also a retail futility that's
+going to just have additional information about executables,
+like location in memory map, for instance. So one of the concept to understand when
+we're talking about cross compiling and toolchains is static
+versus dynamic linking. So gcc or g++, as I mentioned before,
+we're going to be invoking possesses APIs. And the way we'll do that with gcc or
+g++ is using the glibc, which is the the GCC
+version of the C library. There's two different options
+about how you would link with GCC. One is using static linkage and in
+static linkage, all of the dependencies. So everything that you need from the glibc
+would be pulled out of that archive and placed directly in your executable. And this is contrast with with dynamic
+linking, where in dynamic linking, your executables doesn't actually have
+that content of the glibc library. Instead at runtime it needs to know
+where it can find a copy of that code locally and
+when it's loaded into memory, the content that it needs from that
+library will also be accessible. So the benefit being here that you don't
+need a separate copy on disk for every application that uses glibc, which pretty
+much every application is going to use. They can all use one shared file that's
+located in one spot on the file system, not need to duplicate that
+copy that content on disk. So if you have a way to reduce
+the usage of filesystem space through dynamic linking, then why would you
+ever want to use static linking? Well, one reason that you might want
+to use static linking is when you have relatively few applications or maybe if
+you have only a single application in your embedded system implementation. And you might say, well that seems
+unlikely that you'd only have a single application, but it turns out there's a
+really useful tool that we're going to be using a lot this in this
+course called Busybox. That it does exactly that that's really
+it's just a single application that includes a whole bunch of useful Linux
+command line functions all compiled into one single application. So if you only have a single application,
+there's really less benefit to using dynamic linking because you can just
+include the content directly and executed. And the second reason you might want to
+use static linkage would be if you need to run an application before the root
+file system is available. So when would you not have the full
+root file system available? Typically that would happen if
+you're booting up the device and maybe you weren't able to access
+the file system content because it was stored on some other device that
+needed specific drivers to access it. So we'll talk about this more in
+later versions of the course as well. But you'd be able to do this through a
+small program that ran at boot that didn't have access to the full root file system
+yet, but allowed you to start some applications that that would give you
+access and load the appropriate drivers. And in that case those applications would
+need to be static linked since the full root file system content is not yet
+available. So on this side I'm showing some
+commands that are useful for understanding some of what we're going to
+be covering an assignment 2 and 3. In terms of the use of shared libraries
+and dynamic linking with an application. So what I'm showing here, we're using
+the finder app that you'll implement with assignment 2, an assignment 3. And really it's the same application that
+you implemented as a part of assignment one with shell scripts. But we're going to be building
+an application here using a cross compile prefix. And so you can see here that this cross
+compiled prefix that I'm specifying is just exactly that prefix on the GCC
+execute a bill that we talked about before that specifies your toolchain. So I'm specifying this cross compiled
+prefix I'm doing a clean and I'm removing everything. I specify the same cross
+compiled prefects and I use the all target to
+build my application. And so you can see what this is doing
+is running GCC just like you would from native but pre fixing with what I
+specified for cross compile and generating a an application that is going to be
+cross compiled for my aarch64 target. If I then use that ridelf utility to
+look for information about the writer application and look for specifically for
+great for shared library. What I can see here is that it's
+using the libc.so.6 shared library. So this is going to need to be on the file
+system of the target in order for my application to run successfully. And if I look at the program interpreter,
+this would be a second reference to a library that I'm going to need in order
+to run my application on the target. So if I use the same readelf utility and
+look for the requirements of the writer application, I'm I'm and then grab
+this for for programming interpreter. I can see here that there's a reference
+to lib ld-linux-aarch64.so. These values might change depending
+on what version you have, but this general pattern here should
+allow you to find the necessary files that you're going to need on
+target in order to run your application. So why is the ld-linux-aarch64
+listed here. This is really one of the shared libraries
+is going to be referenced by writer. And what does it mean that
+glibc is listed here? This is the file that needs to be
+available in the root file system to run that writer successfully. So both of these files are going to need
+to be located on your target in order to run your application. So where would these be located? The linker is going to check for
+shared libraries in Lib Lib 64, user Lib or User Lib 64. There's also an LD library path
+environment variable that you could set to specify other locations. But for our purposes,
+you'll follow the instructions, the the details In the assignment. This will be mostly relevant when
+you get to assignment 3, but you'll want to make sure that your lib and
+lib64 directories are set up with the appropriate content
+to run your application.

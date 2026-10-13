@@ -1,0 +1,49 @@
+All right, so this video I'm going to take
+you through an overview of assignment 9. So when you run the full test on your
+assignment 9 repo, you'll see a sequence of steps very similar to what you saw
+with assignment 8 talking to you about how you can manually test your
+assignment 9 on your native build host. And I recommend doing this before
+trying to run on qemu do just because it's going to be easier to
+kind of troubleshoot and debug this, running independently like this. So following these steps, we'll go
+into the aesd char driver directory. We'll do a sudo aesd char load unload. Aesdchar will do unload first,
+and then we'll load. So now we've got the driver loaded and restarted, and now we can run
+the driver test application. So we'll go up one directory,
+and then run driver test. So, the driver test outputs what we
+should see based on the commands that we're sending for the seek. So you can see that it said it should
+show write one with the first two bytes missing, and it did, and then it
+showed all the rest of the commands. And then this one says the output should
+show the 9 from write 9 followed by write 10. So you can see that we essentially reset
+the file pointer to the last byte of write 9, and
+then printed write 9 and write 10. So this looks good,
+our driver is looking good. So now we can test our driver with
+our aesd socket application or aesd server application. So to do that, I'm going to go back into the driver directory, and I'll unload my driver and reload it. And then I'll open a new window
+in the server directory, and I'll do a make on the server application,
+so that's all up to date. And I'll run aesd socket. So aesd socket is going to be
+running in the background here. Now, I'll go back to this window, and I'll execute the assignment
+test socket test. So this should route to
+the socket application, and through our driver,
+then through our running driver. So we're doing a very similar thing here, we're seeking to a specific location for the second byte of
+the first write command. And then we're seeking to the last
+byte of the 9th write command. In this case we're doing it though
+through the aesd socket application. So we're issuing the seek
+to command over the socket. And then we're having the socket issue the
+I octal and we're getting the same result that we got when we ran the driver test,
+so things are looking good here. So now we're ready to try it on target. So to verify our driver in qemu and
+buildroat, we'll go into our buildroat directory, and
+then we'll run the full test from there. And so this assumes that you've updated
+your buildroat packages to point to your latest content from your repo for your
+character driver and your socket server. But that should be probably about
+all that you're going to need to do. All right, so
+after I remember to enter my ssh key, should get a build kicked off here. Just going to pull in the latest content,
+build the assignments repo, And actually you have to make sure
+to stop your aesd socket application running if it's running on your host. This could not set up forwarding rule,
+that's where that's coming from, so I'm going to fix that. All right, so I stopped my aesd socket
+application I had running locally for test, let's give this one more shot. All right, so now qemu is starting up. We're waiting to start the test from ssh. Kicked off the test, And we're going to be writing the same commands into the socket
+through the test scripts. And you should see this test
+pass message here at the end. So this verifies that we were able
+to load the same kernel driver, and socket application on
+our qemu instance, and then route the content from the test
+scripts through into the qemu device. And so this is verifying everything
+including the build rebuild. If you're implementing on yocto
+procedure is very similar, you'll just be using your yocto
+repo obviously builder one.

@@ -1,0 +1,185 @@
+In this video, we'll talk about
+critical sections and kernel code. We're going to understand what a critical
+section is, we're going to understand some options for handling critical
+sections in Linux kernel. And we're going to introduce
+Linux kernel Semaphores. So the concept of a critical
+section really goes along with the concept of atomic. And we talked about this already
+a little bit from user space, so this is a bit of review. What we're going to talk about atomic
+operations in semaphores now from the perspective of Kernel development. So the goal of a critical section is to
+make an operation atomic that might not be atomic. And you might remember from our discussion
+of user space code, by atomic what we mean is that as far as different threads of
+operation of execution are concerned, the operation happens all at once
+as if it was one instruction. So if you think of just some common
+operations that could happen on variables, the the a|=b would
+typically not be atomic. If you think about what would happen
+from a hardware level in hardware register level an or equals would load
+the current value into register or with a different value and
+then store that back into the register. So between the load, the or
+and the store instruction, the underlying variable
+could have changed. And if it did change then
+you have the possibility of overwriting that changed value with
+the value that you took from the the load operation that happened first. Same thing with a++, where that was kind of easy to see that it
+ends up being a load and store operation. This one a=b might be harder to think
+about why would a=b not be atomic? But you could think in terms of
+architecture sizes for instance, so if you're using a 32 bit architecture
+which only has 32 bit registers. And you're writing a 64 bit value, then
+you're probably going to be writing that in multiple instructions
+depending on your architecture. And so even just assigning one value
+into a register could be a not atomic operation. You could have a case where you
+overwrote one part of the variable and then when you are overwriting
+the second part, the first part got overwritten
+by a second threat of execution. So the answer here is that all these
+depending on architecture may or may not be atomic. And if we care about access happening in
+multiple threads, if we need to make sure that we have a consistent view of
+these resources that we're modifying. Then it's up to us to make sure that their
+atomic through programming mechanisms that we'll talk about here. So when we're talking about how
+to protect a critical section, first of all, the critical section means
+that we're talking about code that we want to make sure that it's only
+executing in one thread at a time. And if we want to know how to protect that
+we, what we really need to know is what's the detail of what could happen
+during the critical section?. So that will help us pick between
+some of the different primitives that are available to us in the Linux Kernel. So if there's some reason that we
+are going to sleep or might sleep during a critical section, then we'd be looking
+at something like semaphore as in mutexes. Because those will work be compatible
+with and operate with sleep. And then an option when
+you are able to sleep or when it's not safe to sleep
+when you're waiting for mutex or when you're waiting for
+access to a variable. You could use spin locks in that case and we'll talk about these as a different
+locking mechanism in later videos. So you need to think about is
+it safe to sleep before when I'm attempting to access
+this critical section? And there are several different reasons
+that it would not be safe to sleep. One is that your code might be
+called from interrupt handlers so you need to know if
+that could be the case. You might have latency requirements
+in terms of what expectations colors might have in terms of how
+long your function could run. Or you could be holding or accessing other critical resources in
+which case it wouldn't be safe for you to sleep and block access from
+other call from handling that resource. So it's important to think about
+will my critical function sleep or would it possibly cause call
+a function that may sleep. So going back to the example
+that we showed in the previous video where we talked about a race
+condition here during Kmalloc. And we ask the question, are we already performing
+an operation which could sleep?. And maybe you look at this code and you
+say well I don't see any calls to sleep here or anything that looks
+like it's asleep function?. But it turns out that if we look at
+the details of the Kmalloc call you, what you'll find is that if you use
+the GFP curdle option, which is kind of the default that we talked about using
+before that Kmalloc actually can sleep. So you need to be careful for
+any time that you're accessing or using Kmalloc in a critical section,
+you need to know that it's possible that you might sleep
+while you're holding that lock. And therefore using spin locks as a
+locking mechanism is not a good choice for a critical section that includes
+a Kmalloc which might sleep. So a semaphore would be the correct
+implementation when you need mutual exclusion access and the process may
+sleep while the semaphore is held. So it's ok for the code to sleep
+in the critical section and the critical section might
+call functions that sleep and that's okay as long if you
+are using a semaphore. So the semaphore implementation
+generically speaking is really just an integer value
+plus the functions P and V as I will walk over the way
+that the book describes it. So P is used when you call the P
+function on the integer and the integer value is greater than zero, the value is
+documented and the process continues. When you call P and
+the value is less than or equal to 0, the process is going to block until
+the value is greater than zero, and when you call V you always
+increment the value. So a semaphore lets us control
+how many processes are accessing a given resource based on
+this logic about calling P. And blocking a process until the value
+is greater than zero or in other words, until enough process is called
+the V to increment the value. So talking about semaphores as mutex where
+we just want to protect the resource and we want to give exactly one
+thread access to the resource. In that case we would initialize
+the semaphore value to 1, and that would ensure that we get exactly
+one caller that owns the semaphore and the associated mutex resource. So then we can consider the P operation as
+a lock and the V operation as an unlock. And this is the way that you can
+use a generic semaphore that could let multiple processes access
+a resource as what's called a mutex or mutual exclusion allowing
+exactly one process. And so this is the mechanism described
+in the book however, the Kernel now has dedicated mutex operations which
+we'll talk about in the next video and so you don't necessarily need to use this for
+mutex access. But it's still good to talk about
+semaphores as a generic construct because that's really
+the way mu taxes are built. Mutex is essentially just a special case
+of a semaphore where the count is one. So in terms of how we
+initialize semaphore in mutex, there's a couple different options
+that are similar to the way we've discussed options for
+initializing things in the past. One is you can use these defined macros
+and you can declare a mutex directly and a lot of times if you're going to be
+accessing from multiple functions, this would mean that you're
+declaring a global value. So that's one option, then a second
+option that there's probably more often the way you'd see it done would be that
+you'd include inside a structure and then initialize using some type of
+minute function like mutex in it or semaphore in it. So this is an example of what's used for skull device implementation
+in our skull device example. So we have a lock that's associated
+with the skull devices structure, and we'll call based on will provide
+an address of that lock in our mutex in it function and
+it will initialize that memory for us. And again, this is important to
+make sure that we sequenced this. Such that before we do any kind of set
+up that would notify the colonel we've initialized are locked because as
+soon as we tell the colonel about it, it's possible that another function
+could be called with that lock. And if the lock weren't initialized,
+we could have the wrong state and assume the lock was locked when
+it was not actually locked yet. So if we mapped the P and
+V operations generically back to how these work with semaphores,
+the P operation and the mutex lock really map
+to the down operation that's described in the book for
+semaphores. So down is going to be blocking until the
+semaphore is available, if the semaphore count is already high enough,
+it'll just document and return instantly. But if the semaphore count was zero, it's going to block until that V is called
+and increments the semaphore value. So the book talks about down and
+down interruptible, the difference between these two is that the interruptible
+one can be interrupted by the user. And so if an interrupt occurs and
+you did not obtain the resource or you did not obtain the semaphore,
+you'll have to look at the return value here to know that you did
+not actually obtain the semaphore, you just returned due to an interrupt. So when would a process be interrupted?,
+it could be the SIGTERM, SIGKILL, for instance, that we've talked about in
+terms of sending signals to a process. And typically in most cases you'll
+want to use the interruptible versions because otherwise you're not
+going to be able to interrupt the process with things like SIGTERM or
+SIGKILL. The downside here is that you have to be
+careful to check to return value to know if you actually got the semaphore. In that whereas in the down case you can
+assume that if it returned that means you've got the semaphore. So in terms of when to use interruptible
+or not to use interruptible, there was some text in the book about
+how to do this in previous versions. And it was basically saying don't
+use the non interruptible versions. And then this was kind of
+softened in later articles and later discussions about this. And the reason is if you look
+through some of the history on this, there were several Kernel modules and
+file store related. Kernel accesses were
+one in particular where out user applications were written
+with the idea that these particular Kernel driver functions would
+not be signal interruptible. And because they were
+written with that idea, you would run the risk of breaking
+the user space application if you changed the driver to use
+interruptible signal support. And so the really the outcome here is
+that you need to think about how your driver is used in a in the wider context. And how if there are user space
+existing user space applications, like anything related to file I/O or file system drivers that are going to
+be interacting with your driver. You need to think about how you're
+going to work with any expectations that those user space applications
+I'll always have. But if you are developing your own driver
+and you're writing your own application to interact with it, which will be
+the case for our examples for instance, then you're probably going to
+want to use interruptible. And so this is just a little more
+background on why you make that choice or why these different versions exist. So one other function that we didn't
+talk about is down_ try lock, in try_lock would never sleep. So it's just going to obtain the mute
+text for it or the semaphore for you If you can obtain it, if it's
+obtainable But it will just return one and tell you that someone else is holding
+it if you're not able to obtain it. So then the other thing to know
+about the way we talk about semaphore is that if
+a thread has completed down, that means that we will say that
+it's holding or holds the semaphore. It's taken out the semaphore or
+it's acquired the semaphore or the music's that's kind of like the way
+this is the terminology that we use for mutex access or semaphore access. So we've talked about down so far, but there's also the up function
+which is the equivalent of the V operation that's described in
+terms of generic semaphore access. So on the return of up your thread
+no longer holds the semaphore and you need to make sure that you're stopping
+any access to the associated resource. And this is very important that
+one call to down should result in exactly one called up. Which might sound kind of obvious but the
+big thing to be careful with here is air conditions because you might be used
+to if you try to do some operation and it fails, I'm going to return early. You have to make sure that in your return
+path you're going to be releasing whatever some affords you required. And this gets back to the conversation we
+had before about how go to is not really frowned upon in kernel development, like
+it is in some type that you might have learned in your other
+c programming courses. And go to can be kind of useful for this situation in terms of making certain
+that your cleaning up in an error paths. So you don't necessarily need to use go
+to, but you need to have some strategy for handling release and error paths and make sure that you're releasing
+the associated locks.

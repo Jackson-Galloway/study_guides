@@ -1,0 +1,1101 @@
+1
+00:00:00,380 --> 00:00:03,150
+In this video, I'll
+talk a little bit about
+
+2
+00:00:03,150 --> 00:00:06,030
+the background for
+Assignment number 7.
+
+3
+00:00:06,030 --> 00:00:10,080
+We're going to introduce
+Buildroot rootfs-overlays,
+
+4
+00:00:10,080 --> 00:00:13,860
+introduce Buildroot Kernel
+Module Support and we're
+
+5
+00:00:13,860 --> 00:00:15,390
+going to talk a little bit about
+
+6
+00:00:15,390 --> 00:00:17,895
+Circular Buffer Implementation.
+
+7
+00:00:17,895 --> 00:00:20,280
+Specifically, the Circular
+Buffer Implementation
+
+8
+00:00:20,280 --> 00:00:22,485
+that we'll use with
+Assignment number
+
+9
+00:00:22,485 --> 00:00:24,090
+8 but you're going to start with
+
+10
+00:00:24,090 --> 00:00:28,690
+a implementation in user-space
+for Assignment number 7.
+
+11
+00:00:28,700 --> 00:00:31,680
+The Buildroot
+rootfs-overlay is really
+
+12
+00:00:31,680 --> 00:00:33,990
+just a way to add
+some content to
+
+13
+00:00:33,990 --> 00:00:37,020
+your root file system or
+to override content that's
+
+14
+00:00:37,020 --> 00:00:38,925
+being provided by other packages
+
+15
+00:00:38,925 --> 00:00:40,995
+in your root file system.
+
+16
+00:00:40,995 --> 00:00:43,340
+You can define a directory
+
+17
+00:00:43,340 --> 00:00:45,410
+where the content that
+you placed there is going
+
+18
+00:00:45,410 --> 00:00:46,640
+to be placed over top of
+
+19
+00:00:46,640 --> 00:00:51,294
+the root file system at
+whatever path you specify.
+
+20
+00:00:51,294 --> 00:00:56,090
+You'll want to use a relative
+path so use a path to
+
+21
+00:00:56,090 --> 00:00:58,460
+your base external
+directory and that way
+
+22
+00:00:58,460 --> 00:00:59,510
+it's going to work outside
+
+23
+00:00:59,510 --> 00:01:00,935
+your own implementation
+directory.
+
+24
+00:01:00,935 --> 00:01:03,230
+Otherwise, if you hardcoded
+it to something like home,
+
+25
+00:01:03,230 --> 00:01:04,850
+your username, et cetera,
+
+26
+00:01:04,850 --> 00:01:07,655
+it's not going to work
+if we clone it on
+
+27
+00:01:07,655 --> 00:01:10,170
+the automated test
+system for instance so
+
+28
+00:01:10,170 --> 00:01:13,590
+you want to make sure you
+do use a relative path.
+
+29
+00:01:13,840 --> 00:01:16,670
+The second thing that
+
+30
+00:01:16,670 --> 00:01:18,230
+we're going to be doing
+with Assignment number 7,
+
+31
+00:01:18,230 --> 00:01:19,490
+is we will be
+
+32
+00:01:19,490 --> 00:01:22,070
+compiling kernel modules
+that we then install
+
+33
+00:01:22,070 --> 00:01:26,715
+inside of our buildroot
+and yocto QMU instances.
+
+34
+00:01:26,715 --> 00:01:30,485
+We need to support
+kernel module build
+
+35
+00:01:30,485 --> 00:01:32,480
+for what's called out-of-tree
+
+36
+00:01:32,480 --> 00:01:34,175
+kernel modules in other words,
+
+37
+00:01:34,175 --> 00:01:35,480
+kernel modules that aren't
+
+38
+00:01:35,480 --> 00:01:38,080
+supplied as a part of
+the kernel source,
+
+39
+00:01:38,080 --> 00:01:41,910
+and both buildroot and yocto
+have support for this.
+
+40
+00:01:41,910 --> 00:01:45,410
+Buildroot's manual page has
+a bunch of detail about
+
+41
+00:01:45,410 --> 00:01:46,550
+this and there's also
+
+42
+00:01:46,550 --> 00:01:49,055
+a really good Stack Overflow
+post that I've linked here.
+
+43
+00:01:49,055 --> 00:01:50,945
+Between the two, read these
+
+44
+00:01:50,945 --> 00:01:52,790
+and this should give you
+the direction that you
+
+45
+00:01:52,790 --> 00:01:57,390
+need to implement support
+for building kernel modules.
+
+46
+00:01:57,390 --> 00:01:58,970
+The kernel modules
+that we're going to
+
+47
+00:01:58,970 --> 00:02:00,470
+build are just the modules
+
+48
+00:02:00,470 --> 00:02:04,320
+that are provided by
+the ldd3 source code.
+
+49
+00:02:05,090 --> 00:02:07,200
+Another thing that
+we're going to do,
+
+50
+00:02:07,200 --> 00:02:08,010
+as I mentioned with
+
+51
+00:02:08,010 --> 00:02:09,980
+the Assignment 7
+implementation is we're
+
+52
+00:02:09,980 --> 00:02:11,150
+going to start a user-space
+
+53
+00:02:11,150 --> 00:02:13,115
+implementation of
+a circular buffer.
+
+54
+00:02:13,115 --> 00:02:16,460
+I did this after the
+first year when I didn't
+
+55
+00:02:16,460 --> 00:02:19,910
+have students design a
+circular buffer in user-space,
+
+56
+00:02:19,910 --> 00:02:22,890
+they just went directly into
+implementing in the kernel.
+
+57
+00:02:22,890 --> 00:02:26,795
+Some students had a
+real difficult time
+
+58
+00:02:26,795 --> 00:02:28,340
+trying to debug
+in the kernel for
+
+59
+00:02:28,340 --> 00:02:30,200
+all the reasons we've
+talked about before,
+
+60
+00:02:30,200 --> 00:02:32,720
+that kernel debugging
+is difficult.
+
+61
+00:02:32,720 --> 00:02:35,585
+What I did after the first
+semester was I moved
+
+62
+00:02:35,585 --> 00:02:38,630
+the circular buffer
+implementation earlier
+
+63
+00:02:38,630 --> 00:02:40,110
+into Assignment number 7
+
+64
+00:02:40,110 --> 00:02:42,115
+and implemented
+it in user-space.
+
+65
+00:02:42,115 --> 00:02:44,015
+This will hopefully help you,
+
+66
+00:02:44,015 --> 00:02:45,380
+if you're having
+problems getting
+
+67
+00:02:45,380 --> 00:02:47,930
+your circular buffer to
+work in kernel space,
+
+68
+00:02:47,930 --> 00:02:50,180
+you can go back and
+look at the tested and
+
+69
+00:02:50,180 --> 00:02:53,035
+completed implementation
+in user-space.
+
+70
+00:02:53,035 --> 00:02:55,865
+There are several
+different ways to design
+
+71
+00:02:55,865 --> 00:02:58,700
+a circular buffer but I'm
+going to talk about the way
+
+72
+00:02:58,700 --> 00:03:01,325
+that I'd recommend and
+
+73
+00:03:01,325 --> 00:03:05,130
+for the implementation in
+this particular assignment.
+
+74
+00:03:05,480 --> 00:03:08,285
+In a circular buffer, you've got
+
+75
+00:03:08,285 --> 00:03:11,480
+a set of values that
+you're storing and you
+
+76
+00:03:11,480 --> 00:03:13,850
+have some input and
+output pointer that
+
+77
+00:03:13,850 --> 00:03:17,370
+can say where you're
+at in the buffer.
+
+78
+00:03:17,370 --> 00:03:19,640
+The initial state would
+be something like this,
+
+79
+00:03:19,640 --> 00:03:21,830
+where both the input and output
+pointers are pointing to
+
+80
+00:03:21,830 --> 00:03:23,360
+the same value and that
+
+81
+00:03:23,360 --> 00:03:26,130
+means that in this case
+that you're empty.
+
+82
+00:03:26,270 --> 00:03:32,780
+If you write a new
+value in this case,
+
+83
+00:03:32,780 --> 00:03:35,030
+then you're going to
+essentially implement
+
+84
+00:03:35,030 --> 00:03:37,340
+the input pointer and write to
+
+85
+00:03:37,340 --> 00:03:39,470
+the output pointer
+the command that
+
+86
+00:03:39,470 --> 00:03:42,220
+you wrote inside that
+circular buffer.
+
+87
+00:03:42,220 --> 00:03:45,600
+The way we're defining
+it for Assignment 7
+
+88
+00:03:45,600 --> 00:03:48,725
+and later for Assignment 8
+is we're going to be writing
+
+89
+00:03:48,725 --> 00:03:55,410
+entries into our circular
+buffer that are a pointer
+
+90
+00:03:55,410 --> 00:04:02,345
+to some const char
+so some string,
+
+91
+00:04:02,345 --> 00:04:04,340
+essentially that we're going to
+
+92
+00:04:04,340 --> 00:04:06,900
+store inside the entry and
+
+93
+00:04:06,900 --> 00:04:08,240
+then a size value that tells us
+
+94
+00:04:08,240 --> 00:04:11,975
+how many bytes are
+associated with that buffer.
+
+95
+00:04:11,975 --> 00:04:15,890
+We're essentially making
+these entries based
+
+96
+00:04:15,890 --> 00:04:17,735
+on the number of
+
+97
+00:04:17,735 --> 00:04:20,525
+circular buffer entries that
+we have available here.
+
+98
+00:04:20,525 --> 00:04:22,610
+Every time we write to an entry,
+
+99
+00:04:22,610 --> 00:04:24,170
+we're going to store
+these two values,
+
+100
+00:04:24,170 --> 00:04:25,685
+a pointer to a buffer and a size
+
+101
+00:04:25,685 --> 00:04:28,075
+in one of the circular
+buffer entries.
+
+102
+00:04:28,075 --> 00:04:30,620
+Then once we stored a command,
+
+103
+00:04:30,620 --> 00:04:32,750
+we'd increment the input
+pointer so that the next time
+
+104
+00:04:32,750 --> 00:04:36,000
+we wrote we would write
+to this new location.
+
+105
+00:04:36,110 --> 00:04:38,830
+Then if you think
+about the case where I
+
+106
+00:04:38,830 --> 00:04:41,170
+haven't read anything
+out yet and I've
+
+107
+00:04:41,170 --> 00:04:45,685
+written to everything but
+one item in my buffer,
+
+108
+00:04:45,685 --> 00:04:48,655
+where my buffer is just
+defined as an array of values,
+
+109
+00:04:48,655 --> 00:04:50,530
+then it would look
+something like this,
+
+110
+00:04:50,530 --> 00:04:52,390
+where my input
+pointer is pointing
+
+111
+00:04:52,390 --> 00:04:54,220
+at the very last
+item in the buffer.
+
+112
+00:04:54,220 --> 00:04:56,320
+The next time I
+wrote a value there,
+
+113
+00:04:56,320 --> 00:04:59,020
+I'd write to the buffer and
+then I'd roll back from
+
+114
+00:04:59,020 --> 00:05:00,280
+the last value to
+
+115
+00:05:00,280 --> 00:05:02,110
+the first value and the
+buffer would be full.
+
+116
+00:05:02,110 --> 00:05:04,480
+If you remember
+our original state
+
+117
+00:05:04,480 --> 00:05:07,060
+where the input pointer
+equals the output pointer,
+
+118
+00:05:07,060 --> 00:05:09,595
+we started with that and
+the buffer was empty.
+
+119
+00:05:09,595 --> 00:05:11,380
+It'll be important
+for us to know
+
+120
+00:05:11,380 --> 00:05:13,015
+the difference
+between these two,
+
+121
+00:05:13,015 --> 00:05:15,460
+where if the input pointer
+
+122
+00:05:15,460 --> 00:05:17,080
+has rolled from the end to back
+
+123
+00:05:17,080 --> 00:05:18,400
+to the beginning we're in
+
+124
+00:05:18,400 --> 00:05:21,170
+a full buffer state as
+opposed to an empty state.
+
+125
+00:05:21,170 --> 00:05:22,940
+If you implement this way,
+
+126
+00:05:22,940 --> 00:05:24,890
+you'll need to track the
+fact that you rolled
+
+127
+00:05:24,890 --> 00:05:28,380
+the pointer from the end of
+the buffer to the beginning.
+
+128
+00:05:28,380 --> 00:05:33,430
+Now if you read a value
+from the output pointer,
+
+129
+00:05:33,430 --> 00:05:36,880
+you now have a new
+location where you can
+
+130
+00:05:36,880 --> 00:05:41,540
+store a command in
+the circular buffer.
+
+131
+00:05:45,000 --> 00:05:47,560
+The way you would
+
+132
+00:05:47,560 --> 00:05:50,095
+define it if you weren't
+reading any values,
+
+133
+00:05:50,095 --> 00:05:51,850
+if you wanted to find
+a circular buffer
+
+134
+00:05:51,850 --> 00:05:53,530
+such that you can keep writing
+
+135
+00:05:53,530 --> 00:06:00,535
+even before an output
+value is read,
+
+136
+00:06:00,535 --> 00:06:03,220
+then the output pointer
+is going to have to
+
+137
+00:06:03,220 --> 00:06:06,895
+increment when you add
+something to the buffer.
+
+138
+00:06:06,895 --> 00:06:08,635
+The way we've defined it for
+
+139
+00:06:08,635 --> 00:06:10,975
+assignment 7 and assignment 8,
+
+140
+00:06:10,975 --> 00:06:14,350
+the value that you read
+is always going to be
+
+141
+00:06:14,350 --> 00:06:22,450
+the last of the size of the
+buffer values available.
+
+142
+00:06:22,450 --> 00:06:24,580
+If we're storing a total of,
+
+143
+00:06:24,580 --> 00:06:25,975
+let's say 10 values,
+
+144
+00:06:25,975 --> 00:06:27,625
+and we've written all 10,
+
+145
+00:06:27,625 --> 00:06:29,530
+and then we want to
+write one new value,
+
+146
+00:06:29,530 --> 00:06:30,580
+you'd have two options.
+
+147
+00:06:30,580 --> 00:06:32,350
+One is you could block
+
+148
+00:06:32,350 --> 00:06:34,075
+and say that you couldn't
+write the value,
+
+149
+00:06:34,075 --> 00:06:35,740
+the second is that you
+could write the value,
+
+150
+00:06:35,740 --> 00:06:38,680
+but you could also increment
+the output pointer so that
+
+151
+00:06:38,680 --> 00:06:41,380
+the oldest value
+gets thrown away
+
+152
+00:06:41,380 --> 00:06:42,700
+and you still have 10 values
+
+153
+00:06:42,700 --> 00:06:44,755
+available that are
+the 10 most recent.
+
+154
+00:06:44,755 --> 00:06:47,170
+That second implementation
+is what we're going to use
+
+155
+00:06:47,170 --> 00:06:49,480
+for assignment 7
+and assignment 8.
+
+156
+00:06:49,480 --> 00:06:51,685
+In the way we're defining
+the circular buffer,
+
+157
+00:06:51,685 --> 00:06:53,860
+when you write that
+one extra value,
+
+158
+00:06:53,860 --> 00:06:55,240
+we're going to move
+both the input
+
+159
+00:06:55,240 --> 00:06:57,190
+and the output pointer to
+
+160
+00:06:57,190 --> 00:06:59,230
+the next location and
+you're still going to have
+
+161
+00:06:59,230 --> 00:07:02,750
+the last n number of
+values available.
+
+162
+00:07:05,370 --> 00:07:09,130
+The function prototypes
+that we've given you
+
+163
+00:07:09,130 --> 00:07:12,280
+with assignment number 7 show
+you how you can implement
+
+164
+00:07:12,280 --> 00:07:13,690
+the circular buffer in
+
+165
+00:07:13,690 --> 00:07:15,415
+a way that will work
+with the unit test
+
+166
+00:07:15,415 --> 00:07:18,535
+and implement the logic
+
+167
+00:07:18,535 --> 00:07:21,670
+as we've described here
+in the previous slides.
+
+168
+00:07:21,670 --> 00:07:24,535
+Your goal with assignment
+number 7 is going to be to
+
+169
+00:07:24,535 --> 00:07:26,905
+implement this function at entry
+
+170
+00:07:26,905 --> 00:07:29,350
+based on the description here
+and the description I just
+
+171
+00:07:29,350 --> 00:07:33,025
+gave for the operation
+of the circular buffer,
+
+172
+00:07:33,025 --> 00:07:35,350
+you're going to add till the
+circular buffer is full,
+
+173
+00:07:35,350 --> 00:07:36,850
+and then you're going
+to start replacing
+
+174
+00:07:36,850 --> 00:07:39,230
+entries with new entries.
+
+175
+00:07:40,140 --> 00:07:42,520
+The second thing
+you're going to do in
+
+176
+00:07:42,520 --> 00:07:46,300
+your assignment 7 unit
+test implementation for
+
+177
+00:07:46,300 --> 00:07:47,590
+circular buffer is you're
+
+178
+00:07:47,590 --> 00:07:48,970
+going to implement
+this function that's
+
+179
+00:07:48,970 --> 00:07:52,165
+called circular buffer find
+entry offset for fpos.
+
+180
+00:07:52,165 --> 00:07:54,610
+The fpos, as you'd
+probably guess,
+
+181
+00:07:54,610 --> 00:07:57,250
+would be an offset
+position inside
+
+182
+00:07:57,250 --> 00:08:00,730
+the buffer that you want
+
+183
+00:08:00,730 --> 00:08:05,790
+to locate an associated entry
+
+184
+00:08:05,790 --> 00:08:08,145
+that corresponds
+to that position.
+
+185
+00:08:08,145 --> 00:08:11,460
+If we're storing strings and
+there's a certain size to
+
+186
+00:08:11,460 --> 00:08:14,870
+the strings that we're storing
+in the circular buffer,
+
+187
+00:08:14,870 --> 00:08:16,510
+if you think about the case
+
+188
+00:08:16,510 --> 00:08:19,220
+where the char offset is two,
+
+189
+00:08:19,470 --> 00:08:23,110
+and your circular
+buffer looks like this,
+
+190
+00:08:23,110 --> 00:08:25,375
+where you've got a
+string that's size 4,
+
+191
+00:08:25,375 --> 00:08:27,475
+and then you've got another
+string that's size 7,
+
+192
+00:08:27,475 --> 00:08:29,140
+one right after another,
+
+193
+00:08:29,140 --> 00:08:31,135
+when the char offset is two,
+
+194
+00:08:31,135 --> 00:08:33,820
+what we want to do is first
+
+195
+00:08:33,820 --> 00:08:36,595
+find the entry that's
+associated with offset 2.
+
+196
+00:08:36,595 --> 00:08:38,559
+If I look at offset 012,
+
+197
+00:08:38,559 --> 00:08:41,260
+that's less than four and
+that's going to be part of
+
+198
+00:08:41,260 --> 00:08:43,089
+the first entry implementation
+
+199
+00:08:43,089 --> 00:08:45,295
+or the first entry of
+the circular buffer.
+
+200
+00:08:45,295 --> 00:08:49,150
+AESD buffer entry that
+we're returning here should
+
+201
+00:08:49,150 --> 00:08:50,770
+point to this entry that
+
+202
+00:08:50,770 --> 00:08:53,990
+corresponds to the location
+of the output pointer.
+
+203
+00:08:55,410 --> 00:08:58,360
+The second thing you're going
+to do with this function
+
+204
+00:08:58,360 --> 00:09:00,955
+is fill in this parameter with
+
+205
+00:09:00,955 --> 00:09:04,420
+the offset within that entry
+
+206
+00:09:04,420 --> 00:09:06,610
+where the specific
+character is located.
+
+207
+00:09:06,610 --> 00:09:08,709
+Again, if we're referencing
+
+208
+00:09:08,709 --> 00:09:12,940
+zero reference to offset
+2 or the r character,
+
+209
+00:09:12,940 --> 00:09:15,565
+you want to say where at
+
+210
+00:09:15,565 --> 00:09:18,385
+in this entry that
+character is located,
+
+211
+00:09:18,385 --> 00:09:20,230
+and since it's just
+the first entry,
+
+212
+00:09:20,230 --> 00:09:23,500
+it's going to be at offset 012
+within that entry as well.
+
+213
+00:09:23,500 --> 00:09:25,600
+You'd set entry
+offset byte return
+
+214
+00:09:25,600 --> 00:09:28,420
+to two to point out that
+
+215
+00:09:28,420 --> 00:09:32,140
+the file position that's
+specified with char offset
+
+216
+00:09:32,140 --> 00:09:37,210
+2 is going to point to this
+character inside this entry.
+
+217
+00:09:37,210 --> 00:09:39,520
+Looking at another
+example of how
+
+218
+00:09:39,520 --> 00:09:41,080
+we want to define this function,
+
+219
+00:09:41,080 --> 00:09:43,540
+when the char offset
+value is six,
+
+220
+00:09:43,540 --> 00:09:49,945
+then we want to find
+location 0123456,
+
+221
+00:09:49,945 --> 00:09:53,590
+which would be the x value
+here in the second entry.
+
+222
+00:09:53,590 --> 00:09:55,420
+Since we're using
+the second entry of
+
+223
+00:09:55,420 --> 00:09:57,880
+the AESD buffer entry
+that you returned here,
+
+224
+00:09:57,880 --> 00:10:00,745
+should be the second entry
+in the circular buffer.
+
+225
+00:10:00,745 --> 00:10:03,010
+Then the entry offset
+byte return value
+
+226
+00:10:03,010 --> 00:10:05,830
+should again be two because 012
+
+227
+00:10:05,830 --> 00:10:07,315
+is the location within
+
+228
+00:10:07,315 --> 00:10:11,380
+the AESD buffer entry where
+the x character is located.
+
+229
+00:10:11,380 --> 00:10:12,985
+This is, again,
+just going to map
+
+230
+00:10:12,985 --> 00:10:14,560
+an overall offset of
+
+231
+00:10:14,560 --> 00:10:16,780
+the total number of
+bytes that are received
+
+232
+00:10:16,780 --> 00:10:18,790
+across all entries to
+
+233
+00:10:18,790 --> 00:10:21,640
+a specific pointer
+where that string is
+
+234
+00:10:21,640 --> 00:10:23,320
+located and then
+the offset within
+
+235
+00:10:23,320 --> 00:10:27,500
+that string that's being
+referenced by char offset.

@@ -1,0 +1,828 @@
+1
+00:00:00,090 --> 00:00:04,075
+In this video, we'll talk
+about kernel debug strategies.
+
+2
+00:00:04,075 --> 00:00:05,320
+A lot of this is going to be
+
+3
+00:00:05,320 --> 00:00:07,180
+review because we've
+already talked
+
+4
+00:00:07,180 --> 00:00:10,920
+about kernel debug
+in earlier sections.
+
+5
+00:00:10,920 --> 00:00:12,390
+But what I found is that
+
+6
+00:00:12,390 --> 00:00:14,680
+assignment 8 is really
+the first chance you
+
+7
+00:00:14,680 --> 00:00:16,180
+have to try out a lot of
+
+8
+00:00:16,180 --> 00:00:17,410
+the things that
+we've talked about
+
+9
+00:00:17,410 --> 00:00:18,660
+in terms of kernel debug,
+
+10
+00:00:18,660 --> 00:00:20,410
+so it's helpful to
+go back over these
+
+11
+00:00:20,410 --> 00:00:22,420
+maybe with some
+specific Assignment 8
+
+12
+00:00:22,420 --> 00:00:24,655
+examples to help you get through
+
+13
+00:00:24,655 --> 00:00:27,940
+Assignment 8 implementation
+more easily.
+
+14
+00:00:27,940 --> 00:00:30,220
+Going back to what
+we talked about when
+
+15
+00:00:30,220 --> 00:00:32,510
+we first talked about debugging,
+
+16
+00:00:32,510 --> 00:00:35,739
+you might normally think
+of debugging applications
+
+17
+00:00:35,739 --> 00:00:38,665
+using an interactive
+debugger, like GDB.
+
+18
+00:00:38,665 --> 00:00:41,695
+Unfortunately, it's not
+that easy to deal with
+
+19
+00:00:41,695 --> 00:00:44,240
+the driver and it's
+
+20
+00:00:44,240 --> 00:00:47,500
+not typically what you
+do to debug your driver.
+
+21
+00:00:47,500 --> 00:00:49,545
+It's possible to
+do some of this,
+
+22
+00:00:49,545 --> 00:00:51,155
+you compile with debug info,
+
+23
+00:00:51,155 --> 00:00:53,240
+but it's generally
+time-consuming and for
+
+24
+00:00:53,240 --> 00:00:56,030
+the simple application
+that we're doing here,
+
+25
+00:00:56,030 --> 00:00:59,500
+it's not something you'll
+probably want to look into.
+
+26
+00:00:59,500 --> 00:01:01,845
+Part of the reason for this is,
+
+27
+00:01:01,845 --> 00:01:05,390
+Linux is not really a fan of
+interactive debuggers and
+
+28
+00:01:05,390 --> 00:01:09,590
+has not made a design goal
+
+29
+00:01:09,590 --> 00:01:10,760
+of the Linux kernel to
+
+30
+00:01:10,760 --> 00:01:13,240
+support interactive
+debugging generally.
+
+31
+00:01:13,240 --> 00:01:15,290
+Again, there are
+some times that you
+
+32
+00:01:15,290 --> 00:01:17,460
+can do interactive debugging,
+
+33
+00:01:17,460 --> 00:01:20,030
+but it's complicated
+enough to set up and
+
+34
+00:01:20,030 --> 00:01:22,580
+generally less useful for
+
+35
+00:01:22,580 --> 00:01:25,500
+the simple case that
+we're talking about here.
+
+36
+00:01:26,210 --> 00:01:29,855
+The KDB and KGDB,
+
+37
+00:01:29,855 --> 00:01:32,745
+you'll see this
+reference in the book,
+
+38
+00:01:32,745 --> 00:01:34,030
+and there are ways to use
+
+39
+00:01:34,030 --> 00:01:37,795
+it and ways to enter debug mode,
+
+40
+00:01:37,795 --> 00:01:41,520
+but I suggest that
+you know these exist,
+
+41
+00:01:41,520 --> 00:01:43,480
+but don't plan to try
+to use these for any
+
+42
+00:01:43,480 --> 00:01:46,460
+of the debug for
+assignment number 8.
+
+43
+00:01:46,560 --> 00:01:50,185
+There's other debugging
+tools that are mentioned in
+
+44
+00:01:50,185 --> 00:01:56,245
+the documentation or in the
+book about how to debug.
+
+45
+00:01:56,245 --> 00:01:57,970
+User mode Linux is no
+
+46
+00:01:57,970 --> 00:01:59,470
+longer really
+maintained and updated,
+
+47
+00:01:59,470 --> 00:02:01,765
+that one's not really
+an option anymore.
+
+48
+00:02:01,765 --> 00:02:04,050
+Linux Trace Toolkit
+is pretty useful,
+
+49
+00:02:04,050 --> 00:02:05,635
+you can use it to trace
+
+50
+00:02:05,635 --> 00:02:08,450
+events in the kernel for
+debugging and performance,
+
+51
+00:02:08,450 --> 00:02:10,520
+and there's dynamic probing
+
+52
+00:02:10,520 --> 00:02:14,420
+that was replaced by
+SystemTap and that's
+
+53
+00:02:14,420 --> 00:02:17,120
+also a really useful
+framework to hook into
+
+54
+00:02:17,120 --> 00:02:20,535
+Linux kernel and get some
+advanced debug information,
+
+55
+00:02:20,535 --> 00:02:25,685
+but they're in the same
+category as GDB and KGDB that
+
+56
+00:02:25,685 --> 00:02:28,550
+they're more difficult
+to set up and more
+
+57
+00:02:28,550 --> 00:02:30,170
+complicated and probably
+not what you'll
+
+58
+00:02:30,170 --> 00:02:32,960
+want to use for
+assignment number 8.
+
+59
+00:02:33,260 --> 00:02:37,290
+There also is debugfs
+
+60
+00:02:37,290 --> 00:02:39,410
+available as a way
+for developers to
+
+61
+00:02:39,410 --> 00:02:41,930
+make information
+available to userspace.
+
+62
+00:02:41,930 --> 00:02:45,560
+There's the proc
+file system that is
+
+63
+00:02:45,560 --> 00:02:47,239
+intended for process information
+
+64
+00:02:47,239 --> 00:02:48,590
+ended up having a whole bunch
+
+65
+00:02:48,590 --> 00:02:50,030
+of other stuff thrown into it,
+
+66
+00:02:50,030 --> 00:02:53,015
+and it's out of favor
+for new development.
+
+67
+00:02:53,015 --> 00:02:56,330
+There's sysfs, which is
+a bit more organized and
+
+68
+00:02:56,330 --> 00:02:59,875
+structured in a better
+way to do a driver debug,
+
+69
+00:02:59,875 --> 00:03:03,275
+but this again is going
+to take some setup,
+
+70
+00:03:03,275 --> 00:03:04,460
+not really something
+that you'd want
+
+71
+00:03:04,460 --> 00:03:06,660
+to do with assignment number 8.
+
+72
+00:03:06,730 --> 00:03:09,035
+One thing that you will
+
+73
+00:03:09,035 --> 00:03:10,880
+potentially want to do
+with assignment number 8
+
+74
+00:03:10,880 --> 00:03:13,130
+is validate that
+your implementation
+
+75
+00:03:13,130 --> 00:03:14,530
+doesn't have memory leaks.
+
+76
+00:03:14,530 --> 00:03:15,855
+How can you do this?
+
+77
+00:03:15,855 --> 00:03:18,410
+It turns out there's a
+kernel memory leak detector
+
+78
+00:03:18,410 --> 00:03:19,640
+that does this for us
+
+79
+00:03:19,640 --> 00:03:20,960
+and there's some details in
+
+80
+00:03:20,960 --> 00:03:23,645
+the assignment document
+about how to configure this,
+
+81
+00:03:23,645 --> 00:03:25,235
+but here's some example from
+
+82
+00:03:25,235 --> 00:03:26,510
+build wrote about where you can
+
+83
+00:03:26,510 --> 00:03:29,630
+configure kernel
+memory leak detector
+
+84
+00:03:29,630 --> 00:03:32,550
+from the Linux
+Kernel menu config.
+
+85
+00:03:33,020 --> 00:03:35,680
+Then here's some instructions
+about how you can
+
+86
+00:03:35,680 --> 00:03:38,830
+get scan for memory leaks
+
+87
+00:03:38,830 --> 00:03:40,870
+in your driver and
+then get a report,
+
+88
+00:03:40,870 --> 00:03:42,520
+very similar to
+what you're able to
+
+89
+00:03:42,520 --> 00:03:45,350
+do with Valgrind from userspace.
+
+90
+00:03:45,680 --> 00:03:48,400
+Another thing I want to
+bring up that will be
+
+91
+00:03:48,400 --> 00:03:50,980
+useful in terms of debug
+for assignment number
+
+92
+00:03:50,980 --> 00:03:56,190
+8 is bash -x or sh -x if
+you're running from QMU,
+
+93
+00:03:56,190 --> 00:03:59,320
+and what this does is
+prints out the content of
+
+94
+00:03:59,320 --> 00:04:00,790
+the command that's being
+
+95
+00:04:00,790 --> 00:04:03,215
+executed in the shell before
+it actually implements it.
+
+96
+00:04:03,215 --> 00:04:04,780
+This is really helpful
+if you're getting
+
+97
+00:04:04,780 --> 00:04:07,180
+some obscure error
+message showing
+
+98
+00:04:07,180 --> 00:04:09,130
+up and you don't know
+which command it's
+
+99
+00:04:09,130 --> 00:04:12,050
+happening in from your driver.
+
+100
+00:04:12,050 --> 00:04:15,495
+You can run with bash -x,
+
+101
+00:04:15,495 --> 00:04:17,750
+and you could run with
+a redirect like this to
+
+102
+00:04:17,750 --> 00:04:20,210
+save to a file and then
+you could attach the file,
+
+103
+00:04:20,210 --> 00:04:21,530
+for instance, to Slack,
+
+104
+00:04:21,530 --> 00:04:23,135
+to ask for help
+
+105
+00:04:23,135 --> 00:04:25,100
+in trying to figure out
+what the problem is.
+
+106
+00:04:25,100 --> 00:04:27,050
+But you can see that
+this is showing you
+
+107
+00:04:27,050 --> 00:04:30,045
+exactly where we're
+getting this error,
+
+108
+00:04:30,045 --> 00:04:32,965
+write error cannot
+allocate memory.
+
+109
+00:04:32,965 --> 00:04:35,300
+It was right after
+we did an echo
+
+110
+00:04:35,300 --> 00:04:36,740
+of the write 11 command.
+
+111
+00:04:36,740 --> 00:04:38,840
+It really helps isolate where
+
+112
+00:04:38,840 --> 00:04:41,260
+the problems are occurring
+in your driver and helps
+
+113
+00:04:41,260 --> 00:04:44,065
+you figure out where you
+
+114
+00:04:44,065 --> 00:04:47,460
+probably have an issue to
+resolve in your device driver.
+
+115
+00:04:48,260 --> 00:04:52,140
+Where bash -x is really
+useful for scripts,
+
+116
+00:04:52,140 --> 00:04:54,380
+strace is going to
+be really useful for
+
+117
+00:04:54,380 --> 00:04:58,340
+interactions between userspace
+and your device driver,
+
+118
+00:04:58,340 --> 00:05:00,740
+so that would include
+either the script or
+
+119
+00:05:00,740 --> 00:05:03,820
+the aesdsocket application.
+
+120
+00:05:03,820 --> 00:05:05,720
+Using them as an example where
+
+121
+00:05:05,720 --> 00:05:07,970
+the script does a
+write onto the device,
+
+122
+00:05:07,970 --> 00:05:09,980
+you can use strace to trace
+
+123
+00:05:09,980 --> 00:05:13,150
+exactly what's happening
+here in this sequence.
+
+124
+00:05:13,150 --> 00:05:15,770
+The open here is going to be
+
+125
+00:05:15,770 --> 00:05:18,875
+opening the device and getting
+the file descriptor 3.
+
+126
+00:05:18,875 --> 00:05:21,355
+In these next commands
+where you see the three,
+
+127
+00:05:21,355 --> 00:05:24,915
+you're going to be
+referencing the device,
+
+128
+00:05:24,915 --> 00:05:28,410
+dev aesdchar, this
+dup2 of 3 to 1
+
+129
+00:05:28,410 --> 00:05:30,080
+means that we're
+going to redirect
+
+130
+00:05:30,080 --> 00:05:32,060
+standard out into fd 3,
+
+131
+00:05:32,060 --> 00:05:33,900
+which is our device
+driver endpoint.
+
+132
+00:05:33,900 --> 00:05:36,545
+That's going to be taking
+the output from standard out
+
+133
+00:05:36,545 --> 00:05:40,325
+of echo and redirecting that
+into our device driver.
+
+134
+00:05:40,325 --> 00:05:43,250
+Then because we're
+using our file
+
+135
+00:05:43,250 --> 00:05:46,590
+descriptor 1 here
+for the dup command,
+
+136
+00:05:46,590 --> 00:05:48,720
+the write command here, write1,
+
+137
+00:05:48,720 --> 00:05:51,095
+is going to be the one that
+writes into our driver,
+
+138
+00:05:51,095 --> 00:05:52,940
+and what you can
+see here is that,
+
+139
+00:05:52,940 --> 00:05:58,090
+the return value is -1 ENOMEM
+or cannot allocate memory.
+
+140
+00:05:58,090 --> 00:06:01,920
+Why do we get -1 ENOMEM here?
+
+141
+00:06:01,920 --> 00:06:04,725
+It was because we
+
+142
+00:06:04,725 --> 00:06:08,675
+return that from our write
+function in our device driver.
+
+143
+00:06:08,675 --> 00:06:11,090
+This can be telling
+
+144
+00:06:11,090 --> 00:06:12,890
+us exactly what's
+happening in terms of
+
+145
+00:06:12,890 --> 00:06:16,070
+the interaction between user
+and kernel space and really
+
+146
+00:06:16,070 --> 00:06:17,930
+helpful for figuring
+out why your driver is
+
+147
+00:06:17,930 --> 00:06:20,790
+not doing what you
+expect it to do.
+
+148
+00:06:21,050 --> 00:06:25,355
+If you use the -o option,
+
+149
+00:06:25,355 --> 00:06:27,205
+you can write a text file
+
+150
+00:06:27,205 --> 00:06:29,170
+that you could
+then again post on
+
+151
+00:06:29,170 --> 00:06:31,240
+Slack to share with
+
+152
+00:06:31,240 --> 00:06:32,260
+other students to help get
+
+153
+00:06:32,260 --> 00:06:35,135
+some input about what
+might be going wrong.
+
+154
+00:06:35,135 --> 00:06:37,545
+Here's an example of what
+
+155
+00:06:37,545 --> 00:06:43,875
+a strace output looks like
+from a working driver.
+
+156
+00:06:43,875 --> 00:06:46,200
+You can see that if we run
+
+157
+00:06:46,200 --> 00:06:49,290
+strace on our
+aesdsocket application,
+
+158
+00:06:49,290 --> 00:06:51,235
+we'll be tracing what's actually
+
+159
+00:06:51,235 --> 00:06:53,229
+occurring between aesdsocket
+
+160
+00:06:53,229 --> 00:06:57,465
+and our device driver by looking
+at the output of strace.
+
+161
+00:06:57,465 --> 00:06:59,740
+This opener, you can
+see where we did our
+
+162
+00:06:59,740 --> 00:07:02,440
+open from within
+aesdsocket and you can
+
+163
+00:07:02,440 --> 00:07:05,120
+see that we got a file handle
+
+164
+00:07:05,120 --> 00:07:07,800
+of seven for our dev
+aesdchar device.
+
+165
+00:07:07,800 --> 00:07:11,185
+You can look at the right
+options to see that
+
+166
+00:07:11,185 --> 00:07:14,030
+a right issue to file descriptor
+
+167
+00:07:14,030 --> 00:07:15,560
+7 is ultimately going to
+
+168
+00:07:15,560 --> 00:07:17,120
+be what's written
+into our device,
+
+169
+00:07:17,120 --> 00:07:19,250
+so in this case,
+socket test script
+
+170
+00:07:19,250 --> 00:07:22,435
+was writing abcdefg\n,
+
+171
+00:07:22,435 --> 00:07:24,710
+total of eight bytes, and
+
+172
+00:07:24,710 --> 00:07:26,970
+our device driver returned
+eight bytes here.
+
+173
+00:07:26,970 --> 00:07:29,390
+This can be, again, really
+valuable to see what's
+
+174
+00:07:29,390 --> 00:07:30,920
+happening under the hood and
+
+175
+00:07:30,920 --> 00:07:32,885
+where maybe problems
+are arising,
+
+176
+00:07:32,885 --> 00:07:34,280
+especially in terms
+of what's being
+
+177
+00:07:34,280 --> 00:07:35,990
+passed in and what's being
+
+178
+00:07:35,990 --> 00:07:37,720
+returned from your read
+
+179
+00:07:37,720 --> 00:07:40,440
+or write functions in
+your device driver.

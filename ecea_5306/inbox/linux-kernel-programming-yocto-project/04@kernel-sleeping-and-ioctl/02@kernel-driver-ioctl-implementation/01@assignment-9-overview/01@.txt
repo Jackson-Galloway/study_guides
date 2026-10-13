@@ -1,0 +1,234 @@
+In this video, I'm going to
+go over the content that we'll need to cover
+in order for you to complete Assignment 9. We're going to understand
+how to implement the ioctl portions that
+we'll be adding to our AESD server application and our AESD char device
+with Assignment 9. Part of what we're
+going to be using for Assignment 9 is
+an implementation that leverages the f_pos
+member of the file structure. The f_pos member is
+going to reference the current reading or
+writing position of the file structure that we're using to represent
+our character device. That's a 64-bit signed offset representing a byte
+offset in the file. The f_pos member is going
+to be passed as an input or an output argument
+to read write. The input output is going to be referenced through a
+pointer and you'll be able to access that pointer for read and you'll
+also be able to manipulate the content
+using the pointer. One of the things you'll notice, if you look at the
+f_pos member from our existing Assignment 8
+and earlier implementations, is typically the way we're writing to the AESD char driver, we're doing something like
+just echoing a string and writing it directly
+out to the device. When you do that, what you'd notice is that the f_pos value is
+always going to be zero. The reason that is,
+is because we are doing an override of
+the file so every time we use the greater than
+symbol for redirect, we're going to be
+starting at offset zero and overriding the file. That's why you might have
+noticed already that the f_pos member is
+always going to be zero with our previous
+Assignment 8 implementation. You'll also notice that
+we mentioned before that the file position member is included in the file structure. In the case of the read
+and write functions, we essentially have
+two different ways to access the file offset. One is through the struct
+file pointer that's passed, and one is through
+the pointer to f_pos. Why would you include
+it in two places? Well, it turns out that
+the implementation allows the write or read
+function to manipulate the f_pos that's passed by reference here as
+the last argument. The idea is you should use the file pointer offset
+if you don't intend to manipulate and you want to see the value that was passed
+into the function, so in other words, the starting position
+of the file pointer. But if you want to
+manipulate the file pointer and read or write, you can do that and
+when you do that, you should just modify the value that was passed
+here by reference. File position f_pos is modified by the shared driver code
+based on read and write. The kernel is going to
+handle updating that for us, or we're going to update it
+through our llseek function. Part of what we're going
+to do in Assignment 9 is implement the
+llseek function. This is the section from
+the book that talks about the f_pos member in the file structure
+saying that in general, driver functions
+won't modify this. But the one exception
+is the llseek method, which is what we're going to
+implement in Assignment 9. In addition to modifying file pointer f_pos in
+the llseek method, we're also going to
+modify it in ioctl, and it wouldn't typically
+be done this way. We're just going to do
+it this way so that we can have an easy way to test the ioctl implementation
+of our driver as well. Looking at how we're going to be interacting from user space, the lseek function that you might have already
+used from user space, we definitely covered from
+the first part of the course. There are a few different
+options here where you can specify what the function
+refers to as the whence. How are we going to
+use the offset of llseek to determine where we
+want to seek to in the file? There's SEEK_SET that just sets to a specific
+location in the file where the offset is
+given as a byte offset. There's SEEK_CUR that
+says take wherever the current location is and seek relative to
+that in a plus or a minus number of bytes. Then there's SEEK_END that
+says go to the end of the file and then
+seek from the end, either backwards or forwards. The implementation of this in kernel space is going to
+be through the llseek method. There's two different system calls that occur
+from user space, there's lseek and llseek. The reason for these two
+different ones existing really has to do with
+historical reasons and whether or not 64 versus 32-bit architectures and
+whether or not you're guaranteed to have support
+for a long, long offset. The part that we're going
+to be implementing in kernel space is this
+llseek pointer. One of the things
+that was mentioned in the screenshot I showed previously from the Linux
+device driver book. If the llseek method is missing from the
+driver operations, then the default implementation
+is just going to seek by modifying the file position. Another thing that the
+Linux device drivers book notes for us is that for the llseek system call
+to work correctly, read and write methods must
+cooperate by using and updating offset item they
+receive as an argument. That is that last
+parameter that we showed before that gets
+passed by reference. When we don't implement
+the llseek method, then the kernel is going
+to do its own seek, and it performs this seek
+using a function like this. This is a value that
+I pulled out of the kernel source that
+shows a fixed size llseek. It's using the size of the file to determine
+how to manipulate the file position
+pointer relative to whatever offset
+you've specified and the whence value that you're specifying from
+userspace with llseek. There's several kernel provided wrappers around
+llseek that you can call from your own methods. You could leverage
+these if you like, if you don't want
+to implement your own seek method from scratch. This particular one, you specify the total size of the file
+that you wanted to use. You can just pass all these
+seek arguments directly into the kernel and it will
+update the file position for you as long as you
+just provide the size. In our case, what do you think
+we would use for the size? Since we're
+essentially simulating a file that's based out of the complete content of
+our circular buffer from Assignment 7 through 9. For size we can just
+use the total size of all content that's currently written to the circular buffer. In summary, you've
+got a few different options about how
+you're going to implement llseek in the
+driver in Assignment 9. One is you can leave llseek null and use the default llseek. But in order to
+really support this, you'd have to support
+seek and write, and not just assume that
+every write appends. This is not something that we've had as a
+requirement in the past, and I haven't tried to
+implement it this way, so I'm not sure what
+pitfalls you'd have here. This would be a more challenging
+way to implement it. The second way you could
+do it is you can add your own llseek function
+with locking and logging, but use the fixed size llseek that I showed before
+for the logic of actually manipulating
+the file pointer. The third is you
+can just implement your own llseek seek
+function on your own, completely separate from
+anything provided by the kernel and handle
+each one of the cases. I would probably use option 2. Option 2 or option 3 would work though, whichever you prefer. The other thing that
+the book mentioned is that for the llseek system
+call to work correctly, the read and write methods quiz cooperate by using an update in the reader offset item they
+receive as an argument. That means that the read
+function needs to set the file position
+to the file system plus whatever the
+return count is, so the return count is going to be the
+number of bytes read. The write function needs to
+set it to the same thing, based on the number
+of bytes that you actually wrote from
+the write function. Then you're also going
+to implement ioctl that will be a way
+that you communicate from your ASD socket application to your character driver. I've got a stub for
+you that you'll see in the assignment base
+repository that you'll pull in as part of the beginning content for Assignment 9, and this is just going
+to define some of the components that you'll share between the two
+different applications. We've got a magic
+number already defined. We've got a iocseekto command already defined for the ioctl and a sequence number
+we've already defined, and then a structure
+reference for the structure that we're going to pass
+in as part of the ioctl. Here's the structure
+that we'll pass in as part of the ioctl. We'll tell it what command
+we want to seek into and then the byte offset inside that command we'll
+want to seek into. Then on the user space side, you're going to need a way to invoke this ioctl based on when you get a seek
+command from the driver. You'll include that aesd ioctl.h file that you share with the driver implementation, and then you'll use
+the ioctl command with the file descriptor
+representing the driver, so that the device
+driver endpoint that you're opening and using
+for write commands. You'll also use that
+now for an ioctl. You'll use that
+aesdseekto structure. You'll fill in the write
+command you want to seek to, you'll fill in the offset
+you want to seek to, and then you'll
+just pass that into the driver through ioctl. Here's the signature
+for the ioctl command. You can see that there's a
+file descriptor and then request and the
+varargs argument, but the varargs we're
+going to provide is just the one address of the seek to structure we're going to pass
+into our driver. One question you
+might have is, okay, how do I get a file
+descriptor that I should use for ioctl because I'm currently manipulating based on standard IO file pointers
+when I write to the driver, but I noticed that
+I needed int FD. The answer is that
+you can use the file no function to convert from a file pointer that
+you'd use, for instance, if you're opening a
+file stream to access your driver and the
+file descriptor FD that you need to interact
+with through ioctl. Going back to the
+driver implementation, when you send that ioctl
+through to the driver from your ASD
+socket application. Your ioctl handler in your driver function is going to look
+something like this. You'll have a case that handles your ASD char IOC seek-to
+command and you'll be able to receive that
+seek-to structure from the value provided
+in user space. Then you'll be
+able to handle the adjusting your file
+offset based on whatever the write command value was in the write command offset was and so copy from user will
+be the way that you get access to that structure
+from userspace. In terms of what the adjust file offset command could look like, here's a declaration
+that you can use, doesn't have to be
+this way of course, but this is just a suggestion
+about what you could do in order to adjust the
+file offset from an ioctl. You'll want to look at
+the write command value and the write command
+offset value, calculate the start offset into the write command that you need to adjust
+the file offset into, and then add the
+write command offset. You're going to look
+at the circular buffer as a long string of bytes for every single element
+and you're going to figure out what's the byte
+offset for write command. You're going to add in
+the additional offset for the right command offset
+and then you're going to update that byte count into the file pointer f_pos as a part of your
+ioctl manipulation. When I talk about checking for valid right command and
+write command offset values, when would the
+values being valid? If you specify the command
+that you hadn't written yet, that would be a case
+that you'd want to handle in terms of validation. If you've specified an
+outer range command, so we're only
+buffering 10 commands. If you specified command 11, that would be something
+that would be out of range and invalid. Or if you said the
+write command offset, the offset inside
+the write command that you want to index into. If that was bigger than
+the size of the command, then that would also be
+in an invalid value. You're going to calculate the offset of the write command. Add the length of
+each write between the output pointer
+and write command, and then add that write
+command offset to give you the total final position
+inside the circular buffer. In order to test
+the functionality and validate the functionality of your driver and
+socket test application, there are new scripts
+that have modified logic that should
+continue past with all the changes in
+the assignment. You can find those under the assignment test
+repo in Assignment 9, driver test and socket
+test directories. What I'd recommend doing is similar to what you've probably done with Assignment 8 already. Get it building and
+running natively, test these components
+individually and make sure that everything's working on your
+Ubuntu installation and then go through the build, pull those all into your
+device or your QMU instance, and run through QMU. As part of the debugging
+or troubleshooting steps, you might want to send LLCs as a way to test your
+seek logic and your driver. You can see these in the
+Assignment 9 test strips that are referenced previously. But there's a read with seek
+function in there that will actually implement a seek
+using the dd command. Dd is a pretty helpful utility for moving bytes in or out of a driver at a specific
+offset and when you do this, when you specify this
+skip seek command, that's going to result
+in an LLC command sent from userspace into your driver and a way to test your LLC implementation.

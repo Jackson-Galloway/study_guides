@@ -1,0 +1,1100 @@
+1
+00:00:01,540 --> 00:00:04,082
+To continue our discussion
+of kernel ioctl, and
+
+2
+00:00:04,082 --> 00:00:07,244
+talking about to understand
+kernel ioctl and its purpose and
+
+3
+00:00:07,244 --> 00:00:09,851
+how to write an ioctl handler for
+a kernel driver.
+
+4
+00:00:11,140 --> 00:00:15,411
+So ioctl is a system call on a file
+descriptor this passed to driver.
+
+5
+00:00:15,411 --> 00:00:18,283
+So it's similar to the reader
+right system calls, but
+
+6
+00:00:18,283 --> 00:00:21,530
+a little bit more unstructured in
+terms of how it can be used and
+
+7
+00:00:21,530 --> 00:00:24,300
+a little bit more flexible
+in terms of how you use it.
+
+8
+00:00:24,300 --> 00:00:28,180
+So with the ioctl, you're identifying
+a specific command to be performed and
+
+9
+00:00:28,180 --> 00:00:30,844
+then you're providing some
+argument to the driver.
+
+10
+00:00:30,844 --> 00:00:34,027
+And oftentimes,
+that argument is a pointer and oftentimes,
+
+11
+00:00:34,027 --> 00:00:38,128
+that that pointer is referencing memory
+that you want to either transfer into or
+
+12
+00:00:38,128 --> 00:00:40,961
+out of your driver to perform
+some specific function.
+
+13
+00:00:42,340 --> 00:00:46,529
+So this differs from read or write where
+you're actually passing a buffer of data
+
+14
+00:00:46,529 --> 00:00:49,240
+into or out of the device
+in a structured direction,
+
+15
+00:00:49,240 --> 00:00:52,140
+based on the implementation
+of the function.
+
+16
+00:00:52,140 --> 00:00:53,540
+So one difference.
+
+17
+00:00:53,540 --> 00:00:58,525
+Another difference from my ioctl is
+that you can't access it from user
+
+18
+00:00:58,525 --> 00:01:02,748
+space as we've been doing with
+like cat and echo commands,
+
+19
+00:01:02,748 --> 00:01:07,733
+you need another program or maybe like
+a Python script that's going to be
+
+20
+00:01:07,733 --> 00:01:12,640
+able to issue the ioctl
+command through a system call.
+
+21
+00:01:12,640 --> 00:01:15,612
+So it's really designed as a common
+interface that can be used for
+
+22
+00:01:15,612 --> 00:01:16,440
+device control.
+
+23
+00:01:16,440 --> 00:01:21,422
+So one of the ways that you
+think about how ioctl is used
+
+24
+00:01:21,422 --> 00:01:26,204
+in practice today would be like a CD or
+DVD RAM tray.
+
+25
+00:01:26,204 --> 00:01:28,890
+If you wanted to eject the media
+from the CD or DVD RAM,
+
+26
+00:01:28,890 --> 00:01:32,090
+that's kind of like a classic
+example of what an ioctl would do.
+
+27
+00:01:32,090 --> 00:01:35,646
+So it's something that maybe doesn't quite
+
+28
+00:01:35,646 --> 00:01:40,340
+fit in the mold of something
+related to reading or writing.
+
+29
+00:01:40,340 --> 00:01:45,254
+So a read or write operation to a CD RAM
+or DVD RAM would be writing data onto
+
+30
+00:01:45,254 --> 00:01:49,710
+the media, but ioctl is an out of
+band type of control interface.
+
+31
+00:01:49,710 --> 00:01:52,590
+So ejecting media is kind of
+like a classic example.
+
+32
+00:01:52,590 --> 00:01:56,928
+You could also think if your device had
+some door that had a physical lock on it,
+
+33
+00:01:56,928 --> 00:01:57,980
+you could enable or
+
+34
+00:01:57,980 --> 00:02:02,160
+disable lock through an ioctl that
+would probably be an appropriate case.
+
+35
+00:02:02,160 --> 00:02:06,402
+You can also use it to report information
+about the device in that buffer that you
+
+36
+00:02:06,402 --> 00:02:08,009
+pass as one of the arguments.
+
+37
+00:02:08,009 --> 00:02:14,331
+So you can see the user space prototype
+here and it's really the file descriptor,
+
+38
+00:02:14,331 --> 00:02:18,189
+so that's going to reference
+the device endpoint.
+
+39
+00:02:18,189 --> 00:02:21,991
+The request which is
+going to be the command and
+
+40
+00:02:21,991 --> 00:02:26,221
+then this dot dot dot and
+so what do the dots mean?
+
+41
+00:02:26,221 --> 00:02:29,331
+You're probably familiar with this
+already from looking at porn f and
+
+42
+00:02:29,331 --> 00:02:30,551
+other types of functions.
+
+43
+00:02:30,551 --> 00:02:32,759
+This just represents.
+
+44
+00:02:32,759 --> 00:02:37,413
+So it's saying that there could be any
+number from a C compilers perspective,
+
+45
+00:02:37,413 --> 00:02:41,305
+the compiler is going to allow any
+number of arguments after ioctl.
+
+46
+00:02:41,305 --> 00:02:44,570
+But in this case,
+it's kind of a historical baggage thing.
+
+47
+00:02:44,570 --> 00:02:49,775
+There's really always only one
+signal argument here, rp but
+
+48
+00:02:49,775 --> 00:02:54,900
+it was implemented before you
+could have a void pointer as C.
+
+49
+00:02:54,900 --> 00:02:58,627
+And so using the dot dot dot
+gets around the fact that
+
+50
+00:02:58,627 --> 00:03:01,070
+the last argument was not typed.
+
+51
+00:03:01,070 --> 00:03:05,409
+So again, you can kind of see already we
+have a little bit of historical baggage
+
+52
+00:03:05,409 --> 00:03:06,561
+with this command.
+
+53
+00:03:08,040 --> 00:03:12,143
+So one of the reasons that we'll talk
+about it and the reason is covered in
+
+54
+00:03:12,143 --> 00:03:16,855
+the book is that it's the easiest and kind
+of the most straightforward for these out
+
+55
+00:03:16,855 --> 00:03:21,260
+of band not really read, not really
+write type of driver device operations.
+
+56
+00:03:21,260 --> 00:03:24,968
+But one of the things that book
+mentions is that it's sort of
+
+57
+00:03:24,968 --> 00:03:29,197
+fallen out of favor as among kernel
+developers just because again,
+
+58
+00:03:29,197 --> 00:03:32,778
+a little bit of that historical
+baggage that it carries.
+
+59
+00:03:32,778 --> 00:03:37,020
+It's difficult to audit, it's often
+not well documented how it works.
+
+60
+00:03:37,020 --> 00:03:41,558
+So there are some alternatives that
+you should know about if you're
+
+61
+00:03:41,558 --> 00:03:43,477
+designing your own driver.
+
+62
+00:03:43,477 --> 00:03:47,625
+For instance, the book talks about you
+can embed commands directly into the data
+
+63
+00:03:47,625 --> 00:03:50,140
+stream and
+we'll give an example of that later.
+
+64
+00:03:50,140 --> 00:03:53,039
+And you can also use virtual
+file systems like Sysfs,
+
+65
+00:03:53,039 --> 00:03:55,561
+which we're going to talk
+about in later weeks.
+
+66
+00:03:57,340 --> 00:04:01,713
+So if you look through the book,
+you'll see the ioctl file operations table
+
+67
+00:04:01,713 --> 00:04:06,633
+signature that it references and remember,
+the file operations table is where we map
+
+68
+00:04:06,633 --> 00:04:10,491
+functions in our driver to functions
+the kernel knows how to call.
+
+69
+00:04:10,491 --> 00:04:13,903
+So that's like read and
+write that we've already discussed.
+
+70
+00:04:13,903 --> 00:04:18,460
+And if you look at the signature that they
+reference in the book, it doesn't quite
+
+71
+00:04:18,460 --> 00:04:22,440
+match what the latest kernel is using,
+however, it's very similar.
+
+72
+00:04:22,440 --> 00:04:26,126
+And I wanted to point this out because
+this is a common thing that you'll
+
+73
+00:04:26,126 --> 00:04:27,550
+see as the kernel changes.
+
+74
+00:04:27,550 --> 00:04:32,418
+That function prototypes changed slightly
+and usually, you can pretty easily
+
+75
+00:04:32,418 --> 00:04:37,230
+map what the old function prototype was
+to what the new function prototype is.
+
+76
+00:04:37,230 --> 00:04:40,182
+So if you look at the example
+that was in the book,
+
+77
+00:04:40,182 --> 00:04:45,006
+there was this extra inode pointer here,
+and if you look at the latest version of
+
+78
+00:04:45,006 --> 00:04:49,920
+the kernel which you can find link here
+on this slide, the inode pointer is gone.
+
+79
+00:04:49,920 --> 00:04:53,640
+And so if you had a driver that was
+written with the old implementation,
+
+80
+00:04:53,640 --> 00:04:57,794
+it was referencing that inode, you get
+a compile error when you try to compile it
+
+81
+00:04:57,794 --> 00:04:59,550
+and you need to modify your code.
+
+82
+00:04:59,550 --> 00:05:03,665
+But if you look into more detail
+about where you can find the inode,
+
+83
+00:05:03,665 --> 00:05:08,663
+it turns out it's stored as a part of the
+file structure that's passed here and so
+
+84
+00:05:08,663 --> 00:05:13,441
+you could pretty easily just set up your
+own inode pointer that just takes file
+
+85
+00:05:13,441 --> 00:05:17,520
+pointer, file inode and
+saves that off as the local inode value.
+
+86
+00:05:17,520 --> 00:05:22,180
+So reworking your ioctl to use
+the new to find kernel mechanism
+
+87
+00:05:22,180 --> 00:05:26,680
+would be pretty straightforward
+most likely in this case.
+
+88
+00:05:26,680 --> 00:05:29,793
+And the other thing that you'll
+notice about the difference in
+
+89
+00:05:29,793 --> 00:05:32,964
+file operations is that rather
+than just being called by ioctl,
+
+90
+00:05:32,964 --> 00:05:36,561
+there are two different unlocked ioctl and
+compact ioctl definitions.
+
+91
+00:05:38,640 --> 00:05:43,592
+So going back to why we need
+new definitions for ioctl,
+
+92
+00:05:43,592 --> 00:05:48,231
+the book mentions that
+the optional arg argument.
+
+93
+00:05:48,231 --> 00:05:52,302
+So the third argument that we mentioned
+that's the dot dot dot from user space,
+
+94
+00:05:52,302 --> 00:05:56,252
+it's passed in the form of unsigned long
+regardless of whether it was given by
+
+95
+00:05:56,252 --> 00:05:58,140
+the user as an integer to pointer.
+
+96
+00:05:58,140 --> 00:05:59,411
+So what would be a problem with this?
+
+97
+00:05:59,411 --> 00:06:03,754
+Well, it means that we're assuming
+that size of unsigned long is equal to
+
+98
+00:06:03,754 --> 00:06:07,761
+size of void, and that might not
+be true based on the architecture.
+
+99
+00:06:07,761 --> 00:06:08,289
+So again,
+
+100
+00:06:08,289 --> 00:06:12,070
+kind of like a historical baggage thing
+that we're dealing here with ioctl.
+
+101
+00:06:12,070 --> 00:06:17,608
+So the new implementation includes what's
+called compact_ioctl that'll handle
+
+102
+00:06:17,608 --> 00:06:22,912
+the differences in argument size between
+64 and 32 bit, and making sure that
+
+103
+00:06:22,912 --> 00:06:28,060
+old programs running on 32 bit programs
+that run on 64 bit Kernels are going to
+
+104
+00:06:28,060 --> 00:06:32,760
+do the right thing in terms of passing
+pointers in that third argument.
+
+105
+00:06:32,760 --> 00:06:36,150
+So that's the whole purpose
+of the new compact_ioctl.
+
+106
+00:06:36,150 --> 00:06:41,011
+If you look at how an ioctl is actually
+implemented in a device driver.
+
+107
+00:06:41,011 --> 00:06:45,540
+So there's some good examples of this in
+the device drivers example source code.
+
+108
+00:06:45,540 --> 00:06:51,246
+So if we look at skull ioctl, the ioctl
+code looks like this as a general
+
+109
+00:06:51,246 --> 00:06:57,055
+design where there's a switch
+statement that switches this command,
+
+110
+00:06:57,055 --> 00:07:02,320
+that's the argument after the file
+reference from user space.
+
+111
+00:07:02,320 --> 00:07:06,360
+And based on that command,
+we do some action on the driver.
+
+112
+00:07:06,360 --> 00:07:10,203
+And so one of the things you notice is
+that these commands are defined in what
+
+113
+00:07:10,203 --> 00:07:11,789
+looks like sort of a weird way,
+
+114
+00:07:11,789 --> 00:07:16,371
+where it's using these macros and it's got
+parameters that's passing into the macro.
+
+115
+00:07:16,371 --> 00:07:21,339
+So the commands aren't just as simple
+as saying 0, 1, 2, 3, 4 and defining
+
+116
+00:07:21,339 --> 00:07:26,740
+a set of commands for your driver and
+we'll talk about that in a minute here.
+
+117
+00:07:26,740 --> 00:07:31,570
+So why do we make things more complicated,
+why are we not just defining commands at
+
+118
+00:07:31,570 --> 00:07:36,000
+0, 1, 2, 3, 4, 5 in order based
+on whatever the command support?
+
+119
+00:07:36,000 --> 00:07:39,975
+It's really an attempt by the kernel
+to try to separate commands and
+
+120
+00:07:39,975 --> 00:07:43,324
+kind of a sanity check that
+the command you're sending is
+
+121
+00:07:43,324 --> 00:07:46,240
+an appropriate command
+to send to the driver.
+
+122
+00:07:46,240 --> 00:07:49,585
+So because you could
+potentially get user space and
+
+123
+00:07:49,585 --> 00:07:54,563
+kernel space code confused, and you
+could have a situation where user space
+
+124
+00:07:54,563 --> 00:08:00,040
+tries to send a command to a driver and
+it happens to be the wrong driver.
+
+125
+00:08:00,040 --> 00:08:02,171
+Having different sets
+of commands defined for
+
+126
+00:08:02,171 --> 00:08:05,721
+different drivers helps ensure that
+the driver might be able to catch that and
+
+127
+00:08:05,721 --> 00:08:09,460
+say, I can't support this command that
+you're trying to send from user space.
+
+128
+00:08:09,460 --> 00:08:12,210
+So just provides us a little
+bit of separation, prevents
+
+129
+00:08:12,210 --> 00:08:16,105
+you from accidentally doing something on
+a driver that you didn't mean to do just
+
+130
+00:08:16,105 --> 00:08:19,860
+because you sent an ioctl that was valid
+for one driver to a different driver.
+
+131
+00:08:19,860 --> 00:08:20,440
+And again,
+
+132
+00:08:20,440 --> 00:08:23,978
+you're kind of seeing the reasons why
+ioctl maybe a little bit out of favor
+
+133
+00:08:23,978 --> 00:08:27,660
+here in terms of having to do these
+kinds of workarounds in the first place.
+
+134
+00:08:27,660 --> 00:08:33,044
+So one of the ways that ioctl does this is
+by combining a whole bunch of different
+
+135
+00:08:33,044 --> 00:08:38,049
+information about what you're trying
+to do into the command argument.
+
+136
+00:08:38,049 --> 00:08:43,007
+And so one of the things that puts in
+that argument is a what's called a magic
+
+137
+00:08:43,007 --> 00:08:47,259
+number, that really just is
+a character that helps provide some
+
+138
+00:08:47,259 --> 00:08:51,540
+separation between different
+device driver implementation.
+
+139
+00:08:51,540 --> 00:08:56,378
+And if you look at the source code, you
+can see that the magic number that they
+
+140
+00:08:56,378 --> 00:09:00,790
+chose for the skull driver is k and
+that's just arbitrarily chosen.
+
+141
+00:09:00,790 --> 00:09:05,775
+If you look at the documentation for
+the kernel, it has a bunch of lists
+
+142
+00:09:05,775 --> 00:09:10,763
+of where magic numbers are referenced
+in current device drivers, and
+
+143
+00:09:10,763 --> 00:09:15,494
+you could look at that list and
+try to decide what what is unlikely to
+
+144
+00:09:15,494 --> 00:09:19,999
+conflict with anything I'm going to
+be doing in ioctl my driver.
+
+145
+00:09:19,999 --> 00:09:24,975
+What's unlikely to as a ioctl command
+that would be sent to my driver
+
+146
+00:09:24,975 --> 00:09:29,630
+in addition to these already
+existing kernel device drivers.
+
+147
+00:09:29,630 --> 00:09:33,248
+And in our case it doesn't really
+matter because this isn't really
+
+148
+00:09:33,248 --> 00:09:34,470
+a production kernel.
+
+149
+00:09:34,470 --> 00:09:39,623
+But again, if you are developing some
+kind of production device driver,
+
+150
+00:09:39,623 --> 00:09:43,300
+this would have to be
+something you'd think about.
+
+151
+00:09:43,300 --> 00:09:47,919
+And again, a reason that maybe you decide
+ioctl isn't the right way to implement for
+
+152
+00:09:47,919 --> 00:09:50,340
+your particular driver.
+
+153
+00:09:50,340 --> 00:09:53,572
+So in addition to the magic
+number that specified,
+
+154
+00:09:53,572 --> 00:09:58,460
+we're going to wrap that with a macro that
+tells us more about what we're trying
+
+155
+00:09:58,460 --> 00:10:00,431
+to do with this ioctl command.
+
+156
+00:10:02,140 --> 00:10:06,210
+So that macro is going to be the IO macro.
+
+157
+00:10:06,210 --> 00:10:09,239
+And so this is going to tell us
+really how we're going to use or
+
+158
+00:10:09,239 --> 00:10:12,655
+if we're going to use that third
+parameter that we talked about,
+
+159
+00:10:12,655 --> 00:10:15,450
+that's the dot dot dot
+parameter from user space.
+
+160
+00:10:15,450 --> 00:10:19,628
+So it's going to tell us whether that's a
+pointer that's pointed to a data transfer
+
+161
+00:10:19,628 --> 00:10:23,440
+going into the driver, or a pointer to
+a data transfer that's coming out of
+
+162
+00:10:23,440 --> 00:10:25,941
+the driver, or
+if there's no parameter at all.
+
+163
+00:10:25,941 --> 00:10:30,607
+And it's just the command that's going to
+tell you what the device driver to do, or
+
+164
+00:10:30,607 --> 00:10:33,431
+if it's one that has
+a bidirectional transfer.
+
+165
+00:10:33,431 --> 00:10:36,028
+So you start by writing some
+data into the driver, and
+
+166
+00:10:36,028 --> 00:10:39,340
+you get a response that includes
+data coming back out of the driver.
+
+167
+00:10:39,340 --> 00:10:42,240
+So all those we encode
+with these IO macros.
+
+168
+00:10:42,240 --> 00:10:46,539
+And really this macro is just
+splitting into eight bit chunks,
+
+169
+00:10:46,539 --> 00:10:50,352
+splitting unsigned integer
+into eight bit chunks, and
+
+170
+00:10:50,352 --> 00:10:55,057
+shifting mask values into that
+integer value which you're probably
+
+171
+00:10:55,057 --> 00:11:00,440
+already familiar with other
+embedded programming paradigms.
+
+172
+00:11:00,440 --> 00:11:05,945
+And so we can use the read,
+write, and IOWR as parameters
+
+173
+00:11:05,945 --> 00:11:12,961
+that can tell us which direction
+the data transfer is going to happen in.
+
+174
+00:11:15,040 --> 00:11:19,755
+So moving past a simpler example here,
+if we start with skull IOC reset,
+
+175
+00:11:19,755 --> 00:11:24,580
+you can see that this is just using
+an IO macro with no third argument here.
+
+176
+00:11:24,580 --> 00:11:27,571
+And what this is saying is that
+it's an ioctl with no parameters.
+
+177
+00:11:27,571 --> 00:11:32,211
+So that dot dot dot or the arg argument
+that the optional argument that
+
+178
+00:11:32,211 --> 00:11:36,940
+specified from the user space,
+it's not actually used in this case.
+
+179
+00:11:36,940 --> 00:11:40,585
+So moving into a more complicated one,
+
+180
+00:11:40,585 --> 00:11:45,665
+you could also look at skull
+IOCS quantum as a an example
+
+181
+00:11:45,665 --> 00:11:50,320
+that does a transfer as
+a part of an ioctl command.
+
+182
+00:11:50,320 --> 00:11:54,789
+And so it's using the IOW macro
+where that's actually ioctl command
+
+183
+00:11:54,789 --> 00:11:58,820
+that's going to transfer data
+from user space into the kernel.
+
+184
+00:11:58,820 --> 00:12:03,321
+So the write and read here are defined
+from the perspective of user space.
+
+185
+00:12:03,321 --> 00:12:06,498
+A write is going to be writing data
+from user space into the kernel, and
+
+186
+00:12:06,498 --> 00:12:08,810
+a read is going to be doing
+the opposite direction.
+
+187
+00:12:08,810 --> 00:12:12,807
+And if you look at how this macro is
+going to work in terms of defining
+
+188
+00:12:12,807 --> 00:12:16,510
+the command number,
+it's going to use the magic number and
+
+189
+00:12:16,510 --> 00:12:21,251
+it's going to use a incremental command
+number that we're going to make as a part
+
+190
+00:12:21,251 --> 00:12:26,700
+of defining the unique command [COUGH] and
+then specifying what you're transferring.
+
+191
+00:12:26,700 --> 00:12:31,480
+So in this case, we're doing a write from
+user space into the kernel of an integer.
+
+192
+00:12:31,480 --> 00:12:34,035
+And so the check of that integer for
+
+193
+00:12:34,035 --> 00:12:38,531
+size is going to encode into
+the command the size of the data that
+
+194
+00:12:38,531 --> 00:12:43,230
+we're transferring in with
+the associated transfer buffer.
+
+195
+00:12:43,230 --> 00:12:47,374
+So you're going to use in this
+parameter the whatever structure or
+
+196
+00:12:47,374 --> 00:12:51,980
+type references, the amount of data
+that you're transferring into or
+
+197
+00:12:51,980 --> 00:12:54,761
+out of the kernel with your ioctl command.
+
+198
+00:12:56,740 --> 00:13:00,412
+So there are some ioctls that
+are recognized by the kernel and
+
+199
+00:13:00,412 --> 00:13:03,310
+decoded before passing
+to your device driver.
+
+200
+00:13:03,310 --> 00:13:07,348
+And really T is the magic type if
+you happen to choose that one,
+
+201
+00:13:07,348 --> 00:13:11,466
+there's a chance that if you
+defined your command just wrong,
+
+202
+00:13:11,466 --> 00:13:13,971
+you might never get it to your driver.
+
+203
+00:13:13,971 --> 00:13:17,926
+So this is just something that the book
+mentions as something to think about when
+
+204
+00:13:17,926 --> 00:13:19,351
+picking your magic number.
+
+205
+00:13:21,140 --> 00:13:25,985
+So we talked before about how ioctl
+fallen out of favor a little bit with
+
+206
+00:13:25,985 --> 00:13:27,480
+kernel developers.
+
+207
+00:13:27,480 --> 00:13:31,311
+So there are two things that the book
+mentions you can use instead of ioctl, and
+
+208
+00:13:31,311 --> 00:13:34,522
+you should probably consider if
+you're starting from scratch.
+
+209
+00:13:34,522 --> 00:13:37,101
+Ioctls around and
+you're definitely going to see it.
+
+210
+00:13:37,101 --> 00:13:40,225
+So it's worth knowing about it and
+understanding it but
+
+211
+00:13:40,225 --> 00:13:44,900
+there are a couple of alternatives, one of
+them will talk about now which is write.
+
+212
+00:13:44,900 --> 00:13:49,825
+So the book mentions that if you have
+a device especially device that doesn't
+
+213
+00:13:49,825 --> 00:13:54,900
+transfer data in and out normally, you can
+actually just not use ioctl at all and
+
+214
+00:13:54,900 --> 00:13:57,810
+just write control
+sequences to the device.
+
+215
+00:13:57,810 --> 00:14:02,627
+And so you could for us to just say write
+start as a string to your device name,
+
+216
+00:14:02,627 --> 00:14:07,147
+and then your device could be parsing
+the data that gets written through
+
+217
+00:14:07,147 --> 00:14:11,250
+the write command and
+deciding what to do in terms of operation.
+
+218
+00:14:11,250 --> 00:14:13,431
+So if you have a device
+that doesn't transfer data,
+
+219
+00:14:13,431 --> 00:14:14,981
+this might be a way that makes sense.
+
+220
+00:14:14,981 --> 00:14:16,980
+And it's probably a little
+bit easier to use.
+
+221
+00:14:16,980 --> 00:14:20,993
+You can just write scripts for
+instance that could read or
+
+222
+00:14:20,993 --> 00:14:25,423
+write using cat and echo and
+control your data from user space,
+
+223
+00:14:25,423 --> 00:14:29,300
+but it might make the driver
+more complex in some case.
+
+224
+00:14:29,300 --> 00:14:33,031
+And if that's the case, either the ioctl
+that we already talked about or
+
+225
+00:14:33,031 --> 00:14:36,824
+sysfs that we're going to talk about later
+in the course is probably going to be
+
+226
+00:14:36,824 --> 00:14:37,760
+a better solution

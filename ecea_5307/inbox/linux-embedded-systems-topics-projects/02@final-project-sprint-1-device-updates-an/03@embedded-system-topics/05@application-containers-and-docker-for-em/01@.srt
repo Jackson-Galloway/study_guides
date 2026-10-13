@@ -1,0 +1,1615 @@
+1
+00:00:00,000 --> 00:00:02,055
+In this video, I'm
+going to discuss
+
+2
+00:00:02,055 --> 00:00:06,060
+application containers and
+Docker for embedded systems.
+
+3
+00:00:06,380 --> 00:00:09,060
+One understand the
+difference between
+
+4
+00:00:09,060 --> 00:00:11,250
+containerization
+and virtualization,
+
+5
+00:00:11,250 --> 00:00:13,830
+understand the Linux
+kernel capabilities
+
+6
+00:00:13,830 --> 00:00:15,660
+that support containerization,
+
+7
+00:00:15,660 --> 00:00:17,460
+and understand how you can use
+
+8
+00:00:17,460 --> 00:00:20,500
+containers in embedded
+development workflow.
+
+9
+00:00:20,990 --> 00:00:24,195
+What are application containers?
+
+10
+00:00:24,195 --> 00:00:27,770
+Application containers are
+really a packaging mechanism
+
+11
+00:00:27,770 --> 00:00:29,690
+that abstracts applications from
+
+12
+00:00:29,690 --> 00:00:32,440
+whatever environment
+they intend to run from.
+
+13
+00:00:32,440 --> 00:00:35,160
+It's a way that you can deploy
+
+14
+00:00:35,160 --> 00:00:37,220
+applications consistently,
+
+15
+00:00:37,220 --> 00:00:39,350
+regardless of how the
+target environment
+
+16
+00:00:39,350 --> 00:00:41,570
+is set up specifically.
+
+17
+00:00:41,570 --> 00:00:43,850
+If I have a specific
+application that I
+
+18
+00:00:43,850 --> 00:00:45,665
+want to be able to
+deploy to, let's say,
+
+19
+00:00:45,665 --> 00:00:47,600
+a server running in
+the data center,
+
+20
+00:00:47,600 --> 00:00:48,905
+a server in the Cloud,
+
+21
+00:00:48,905 --> 00:00:51,815
+a developer laptop, or
+even an embedded device,
+
+22
+00:00:51,815 --> 00:00:53,420
+and I want that
+application to work the
+
+23
+00:00:53,420 --> 00:00:56,130
+same in any of those scenarios,
+
+24
+00:00:56,130 --> 00:00:57,680
+and I don't want
+to be dependent on
+
+25
+00:00:57,680 --> 00:01:00,320
+specific versions of
+dependent applications,
+
+26
+00:01:00,320 --> 00:01:02,450
+I can put bundle all
+the dependencies into
+
+27
+00:01:02,450 --> 00:01:03,860
+a container and run
+
+28
+00:01:03,860 --> 00:01:05,750
+that container on any
+one of those targets,
+
+29
+00:01:05,750 --> 00:01:09,070
+and get the same
+execution environment.
+
+30
+00:01:09,070 --> 00:01:14,210
+Containers allow developer
+and IT teams to focus on
+
+31
+00:01:14,210 --> 00:01:16,550
+different parts that are unique
+
+32
+00:01:16,550 --> 00:01:20,610
+to their role in the team.
+
+33
+00:01:20,610 --> 00:01:23,060
+For instance, a
+developer needs to
+
+34
+00:01:23,060 --> 00:01:25,325
+focus on the application
+logic and the dependency.
+
+35
+00:01:25,325 --> 00:01:29,870
+Which specific version
+of applications and
+
+36
+00:01:29,870 --> 00:01:31,810
+libraries need to
+be installed in
+
+37
+00:01:31,810 --> 00:01:33,140
+the roof file
+system in order for
+
+38
+00:01:33,140 --> 00:01:35,135
+my application to work properly?
+
+39
+00:01:35,135 --> 00:01:36,770
+Which versions have been
+
+40
+00:01:36,770 --> 00:01:39,115
+successfully tested
+with my application.
+
+41
+00:01:39,115 --> 00:01:40,400
+That should be the developer's
+
+42
+00:01:40,400 --> 00:01:42,095
+responsibility to know that,
+
+43
+00:01:42,095 --> 00:01:45,140
+to document that as a
+part of their setup,
+
+44
+00:01:45,140 --> 00:01:47,090
+and to provide a way to
+
+45
+00:01:47,090 --> 00:01:49,930
+deliver that specific
+tested instance.
+
+46
+00:01:49,930 --> 00:01:51,920
+It allows then IT teams
+
+47
+00:01:51,920 --> 00:01:53,930
+to focus on the deployment
+and management.
+
+48
+00:01:53,930 --> 00:01:56,940
+When should this application
+be started and stopped?
+
+49
+00:01:56,940 --> 00:01:58,715
+How much memory or storage
+
+50
+00:01:58,715 --> 00:02:00,920
+should the application
+be allowed to use of
+
+51
+00:02:00,920 --> 00:02:02,870
+the overall memory and
+
+52
+00:02:02,870 --> 00:02:05,040
+storage that I've got on
+my server, for instance?
+
+53
+00:02:05,040 --> 00:02:07,910
+Which ports should I allow it to
+
+54
+00:02:07,910 --> 00:02:12,420
+access or should be exposed
+externally on my server?
+
+55
+00:02:13,490 --> 00:02:18,850
+When we talk about
+application containerization,
+
+56
+00:02:18,850 --> 00:02:23,000
+at first glance it sounds
+a lot like virtualization.
+
+57
+00:02:24,000 --> 00:02:28,120
+If you are using
+Ubuntu virtual machine
+
+58
+00:02:28,120 --> 00:02:29,710
+for your builds this semester,
+
+59
+00:02:29,710 --> 00:02:32,050
+you're familiar with the
+term virtualization,
+
+60
+00:02:32,050 --> 00:02:33,880
+and you're familiar with
+
+61
+00:02:33,880 --> 00:02:35,740
+the concept of using
+a hypervisor and
+
+62
+00:02:35,740 --> 00:02:40,215
+virtualization to virtualize
+a guest operating system.
+
+63
+00:02:40,215 --> 00:02:42,445
+A container is similar,
+
+64
+00:02:42,445 --> 00:02:44,155
+but it's different in a key way,
+
+65
+00:02:44,155 --> 00:02:46,600
+which is that virtualization,
+
+66
+00:02:46,600 --> 00:02:48,610
+you've got a whole hypervisor
+layer where you're
+
+67
+00:02:48,610 --> 00:02:51,605
+simulating a new guest
+operating system.
+
+68
+00:02:51,605 --> 00:02:55,680
+With a container and an
+application container,
+
+69
+00:02:55,680 --> 00:02:58,820
+you aren't including
+the hypervisor layer.
+
+70
+00:02:58,820 --> 00:03:01,340
+You aren't simulating
+a different kernel.
+
+71
+00:03:01,340 --> 00:03:03,470
+You're really using the
+host operating system
+
+72
+00:03:03,470 --> 00:03:04,820
+in the associated kernel
+
+73
+00:03:04,820 --> 00:03:08,660
+to run the applications
+in dedicated containers.
+
+74
+00:03:08,660 --> 00:03:12,695
+We're sharing the kernel
+in the case of Linux,
+
+75
+00:03:12,695 --> 00:03:15,110
+but really the host
+operating system components
+
+76
+00:03:15,110 --> 00:03:19,245
+with the host system.
+
+77
+00:03:19,245 --> 00:03:21,635
+Whereas in the
+virtual machine case,
+
+78
+00:03:21,635 --> 00:03:23,210
+we've got a hypervisor
+that's creating
+
+79
+00:03:23,210 --> 00:03:26,460
+a completely virtualized
+host system as well.
+
+80
+00:03:26,930 --> 00:03:30,380
+Some of the features that
+are built into Linux kernel
+
+81
+00:03:30,380 --> 00:03:33,380
+that support containers
+and that are
+
+82
+00:03:33,380 --> 00:03:36,769
+used to build a container
+support mechanism
+
+83
+00:03:36,769 --> 00:03:39,035
+, first is namespaces.
+
+84
+00:03:39,035 --> 00:03:41,720
+A namespace allows you to
+create isolated instance
+
+85
+00:03:41,720 --> 00:03:44,780
+of a resource using
+the clone system call.
+
+86
+00:03:44,780 --> 00:03:46,925
+You can think of clone
+as similar to fork,
+
+87
+00:03:46,925 --> 00:03:49,340
+where we're taking a copy
+of a process in memory
+
+88
+00:03:49,340 --> 00:03:53,090
+and making a separate copy of
+it that we can manipulate.
+
+89
+00:03:53,090 --> 00:03:57,140
+Clone can work on separate
+things other than processes,
+
+90
+00:03:57,140 --> 00:03:59,120
+though it can work
+on networking,
+
+91
+00:03:59,120 --> 00:04:01,790
+it can work on specific ports,
+
+92
+00:04:01,790 --> 00:04:04,265
+and it can work on mount
+points for storage.
+
+93
+00:04:04,265 --> 00:04:07,520
+It can also work on process IDs.
+
+94
+00:04:07,520 --> 00:04:09,680
+Trees or process IDs in which
+
+95
+00:04:09,680 --> 00:04:11,760
+processes can interact
+with each other.
+
+96
+00:04:11,760 --> 00:04:14,285
+That can all be controlled
+based on namespaces.
+
+97
+00:04:14,285 --> 00:04:16,815
+Second thing used
+is control group.
+
+98
+00:04:16,815 --> 00:04:20,045
+Once we've defined
+our namespaces,
+
+99
+00:04:20,045 --> 00:04:23,315
+you can use control
+groups to limit
+
+100
+00:04:23,315 --> 00:04:25,520
+the constrained groups of
+
+101
+00:04:25,520 --> 00:04:27,760
+processes that are
+used in namespaces.
+
+102
+00:04:27,760 --> 00:04:29,570
+For instance, if I want to say
+
+103
+00:04:29,570 --> 00:04:31,490
+that I shouldn't have
+more than x amount
+
+104
+00:04:31,490 --> 00:04:34,280
+of memory or CPU allocated
+
+105
+00:04:34,280 --> 00:04:37,525
+to a specific group
+of processes.
+
+106
+00:04:37,525 --> 00:04:39,470
+I can do that through the
+control group's feature
+
+107
+00:04:39,470 --> 00:04:41,725
+of the kernel.
+
+108
+00:04:41,725 --> 00:04:44,185
+Then the third is union mounts
+
+109
+00:04:44,185 --> 00:04:46,030
+is a way that we can combine
+
+110
+00:04:46,030 --> 00:04:47,965
+multiple directories
+into a single one
+
+111
+00:04:47,965 --> 00:04:49,570
+that has the combined contents.
+
+112
+00:04:49,570 --> 00:04:50,980
+This was covered in
+
+113
+00:04:50,980 --> 00:04:54,260
+the read-only file
+system video series.
+
+114
+00:04:54,380 --> 00:04:57,120
+Talking about
+Process Namespaces,
+
+115
+00:04:57,120 --> 00:04:59,370
+normally a process
+tree would contain
+
+116
+00:04:59,370 --> 00:05:01,740
+a reference to any process
+that's running in the kernel.
+
+117
+00:05:01,740 --> 00:05:03,510
+If you had a process
+that's running
+
+118
+00:05:03,510 --> 00:05:05,370
+with sufficient privileges and
+
+119
+00:05:05,370 --> 00:05:07,125
+that process had a
+reference the PID
+
+120
+00:05:07,125 --> 00:05:09,795
+of another process
+in the namespace,
+
+121
+00:05:09,795 --> 00:05:14,940
+it could kill the process send
+signals to it, et cetera.
+
+122
+00:05:14,940 --> 00:05:17,295
+With a namespace,
+you can introduce
+
+123
+00:05:17,295 --> 00:05:19,035
+what's called a
+nested process tree.
+
+124
+00:05:19,035 --> 00:05:23,820
+Meaning that, a child
+PID or a child process
+
+125
+00:05:23,820 --> 00:05:26,100
+would have access and could
+
+126
+00:05:26,100 --> 00:05:29,055
+view other processes
+in its namespace,
+
+127
+00:05:29,055 --> 00:05:32,685
+but it couldn't view the content
+in the parent namespace.
+
+128
+00:05:32,685 --> 00:05:34,590
+From a parent perspective,
+
+129
+00:05:34,590 --> 00:05:35,820
+it would be able to see
+
+130
+00:05:35,820 --> 00:05:38,010
+the child PIDs and
+interact with them,
+
+131
+00:05:38,010 --> 00:05:39,330
+but the child PIDs couldn't do
+
+132
+00:05:39,330 --> 00:05:41,490
+the opposite with
+the parent PIDs.
+
+133
+00:05:41,490 --> 00:05:42,960
+This is all supported with
+
+134
+00:05:42,960 --> 00:05:45,180
+the clone function that
+
+135
+00:05:45,180 --> 00:05:48,100
+I mentioned earlier
+and CLONE_NEWPID.
+
+136
+00:05:49,520 --> 00:05:52,095
+In addition to processes,
+
+137
+00:05:52,095 --> 00:05:54,345
+you can create
+network namespaces
+
+138
+00:05:54,345 --> 00:05:55,920
+where you can have
+a different set of
+
+139
+00:05:55,920 --> 00:05:58,485
+network interfaces exposed to
+
+140
+00:05:58,485 --> 00:06:02,440
+processes based on
+namespaces that you define.
+
+141
+00:06:02,440 --> 00:06:05,840
+Network ports that
+are defined on
+
+142
+00:06:05,840 --> 00:06:07,940
+a parent process might not be
+
+143
+00:06:07,940 --> 00:06:10,810
+accessible on a child
+process, for instance.
+
+144
+00:06:10,810 --> 00:06:13,230
+You can do this so that
+you have different loop
+
+145
+00:06:13,230 --> 00:06:15,630
+back interfaces for networks
+
+146
+00:06:15,630 --> 00:06:18,000
+based on whether your
+processes running
+
+147
+00:06:18,000 --> 00:06:20,565
+in a parent or a
+child namespace.
+
+148
+00:06:20,565 --> 00:06:24,509
+Then you can create routing
+between those networks,
+
+149
+00:06:24,509 --> 00:06:29,985
+again using these network
+namespace functions.
+
+150
+00:06:29,985 --> 00:06:31,950
+CLONE_NEWNET is the thing
+
+151
+00:06:31,950 --> 00:06:35,070
+that supports this functionality
+
+152
+00:06:35,070 --> 00:06:37,440
+through the clone command.
+
+153
+00:06:37,440 --> 00:06:40,590
+What you can see with
+a network namespace
+
+154
+00:06:40,590 --> 00:06:42,330
+is a completely
+different view of
+
+155
+00:06:42,330 --> 00:06:46,815
+the network availability
+on the host.
+
+156
+00:06:46,815 --> 00:06:49,935
+For instance, if I create
+a new network namespace,
+
+157
+00:06:49,935 --> 00:06:52,320
+I might see only the
+loopback port address
+
+158
+00:06:52,320 --> 00:06:54,570
+on the host because I
+haven't specifically
+
+159
+00:06:54,570 --> 00:06:56,790
+exposed the Ethernet port that's
+
+160
+00:06:56,790 --> 00:06:59,610
+available in the
+parent PID namespace.
+
+161
+00:06:59,610 --> 00:07:01,785
+This allows us to
+specifically control
+
+162
+00:07:01,785 --> 00:07:04,320
+how a process is able
+to see the network
+
+163
+00:07:04,320 --> 00:07:06,900
+and what type of access
+it would be able
+
+164
+00:07:06,900 --> 00:07:10,540
+to have to the host
+network resources.
+
+165
+00:07:10,670 --> 00:07:14,460
+Then control groups will
+organize a process into
+
+166
+00:07:14,460 --> 00:07:15,780
+groups and then be able to
+
+167
+00:07:15,780 --> 00:07:18,090
+limit resources for that group.
+
+168
+00:07:18,090 --> 00:07:20,190
+It can control things
+like the amount of
+
+169
+00:07:20,190 --> 00:07:22,515
+CPU time, the memory available.
+
+170
+00:07:22,515 --> 00:07:25,050
+It can also freeze
+and resume execution
+
+171
+00:07:25,050 --> 00:07:28,690
+of processes running
+in a specific group.
+
+172
+00:07:29,390 --> 00:07:31,680
+Then union mounts,
+
+173
+00:07:31,680 --> 00:07:35,490
+this is again a
+generic reference to
+
+174
+00:07:35,490 --> 00:07:37,755
+the content that we covered in
+
+175
+00:07:37,755 --> 00:07:41,295
+the read-only UnionFS video.
+
+176
+00:07:41,295 --> 00:07:43,020
+Union mounts were started in
+
+177
+00:07:43,020 --> 00:07:45,435
+the early '90s to
+spot writable CDs,
+
+178
+00:07:45,435 --> 00:07:47,910
+really with the idea of
+
+179
+00:07:47,910 --> 00:07:51,360
+merging read-only file system
+content with read-write
+
+180
+00:07:51,360 --> 00:07:53,115
+file system content to get
+
+181
+00:07:53,115 --> 00:07:55,080
+the equivalent of
+
+182
+00:07:55,080 --> 00:07:58,350
+the two different
+merged directory trees.
+
+183
+00:07:58,350 --> 00:08:00,810
+There have been three
+implementation sense
+
+184
+00:08:00,810 --> 00:08:04,170
+originally coming up with
+the idea of union mounts.
+
+185
+00:08:04,170 --> 00:08:06,870
+UnionFS and aufs
+were two of them.
+
+186
+00:08:06,870 --> 00:08:08,910
+Then OverlayFS is
+the first version
+
+187
+00:08:08,910 --> 00:08:11,490
+that's been accepted in
+the main line kernel.
+
+188
+00:08:11,490 --> 00:08:13,500
+Again, that's discussed in
+
+189
+00:08:13,500 --> 00:08:16,650
+a little more detail in the
+read-only file system video.
+
+190
+00:08:16,650 --> 00:08:18,510
+But the basic idea is to
+
+191
+00:08:18,510 --> 00:08:20,670
+allow a read/write
+overlay on top of
+
+192
+00:08:20,670 --> 00:08:24,600
+a read-only overlay and be
+able to conditionally put
+
+193
+00:08:24,600 --> 00:08:26,415
+parts of the overlay in RAM
+
+194
+00:08:26,415 --> 00:08:29,770
+instead of persistent storage.
+
+195
+00:08:30,080 --> 00:08:33,690
+Docker is an open
+platform that can be
+
+196
+00:08:33,690 --> 00:08:36,735
+used to create and run
+containerized applications.
+
+197
+00:08:36,735 --> 00:08:40,019
+It's based on a Docker engine
+client-server application,
+
+198
+00:08:40,019 --> 00:08:42,675
+where there's a docker
+daemon that can start,
+
+199
+00:08:42,675 --> 00:08:44,624
+run, and control containers
+
+200
+00:08:44,624 --> 00:08:45,780
+and there's a client that can
+
+201
+00:08:45,780 --> 00:08:49,215
+interact with the daemon
+to perform commands.
+
+202
+00:08:49,215 --> 00:08:51,390
+There's also optionally
+a registry that
+
+203
+00:08:51,390 --> 00:08:53,384
+can be used to
+store docker images
+
+204
+00:08:53,384 --> 00:08:59,100
+and share docker images or use
+them on different systems.
+
+205
+00:08:59,100 --> 00:09:00,930
+Look at the way this interaction
+
+206
+00:09:00,930 --> 00:09:02,835
+works from the docker client,
+
+207
+00:09:02,835 --> 00:09:04,815
+you can use build to build
+
+208
+00:09:04,815 --> 00:09:07,395
+a local container based
+on a set of instructions.
+
+209
+00:09:07,395 --> 00:09:10,860
+You can use pull to pull
+containers from a registry,
+
+210
+00:09:10,860 --> 00:09:15,240
+and you can use run to run
+local copies of containers.
+
+211
+00:09:15,240 --> 00:09:17,145
+The docker daemon
+is the one that's
+
+212
+00:09:17,145 --> 00:09:19,170
+organizing which
+containers are pulled
+
+213
+00:09:19,170 --> 00:09:21,810
+locally and being able
+
+214
+00:09:21,810 --> 00:09:24,825
+to start and stop them
+based on commands.
+
+215
+00:09:24,825 --> 00:09:27,015
+Then the registry
+is where you can
+
+216
+00:09:27,015 --> 00:09:29,940
+share and store
+common applications.
+
+217
+00:09:29,940 --> 00:09:33,570
+For instance, this register
+entry for NGINX is
+
+218
+00:09:33,570 --> 00:09:37,395
+a NGINX server,
+
+219
+00:09:37,395 --> 00:09:39,435
+a web server that's
+
+220
+00:09:39,435 --> 00:09:42,015
+free-running in a container
+and all configured
+
+221
+00:09:42,015 --> 00:09:45,240
+based on the
+applications that NGINX
+
+222
+00:09:45,240 --> 00:09:49,140
+needs in order to support
+running on it a container.
+
+223
+00:09:49,140 --> 00:09:52,130
+Similarly, there's
+an Ubuntu image in
+
+224
+00:09:52,130 --> 00:09:55,385
+a registry and so rather than
+having to install Ubuntu,
+
+225
+00:09:55,385 --> 00:09:58,790
+you can just reference
+the registry container
+
+226
+00:09:58,790 --> 00:10:03,150
+and pull that in as the
+basis of your docker image.
+
+227
+00:10:04,190 --> 00:10:06,810
+There's some setup
+steps you can do,
+
+228
+00:10:06,810 --> 00:10:10,080
+to set up Docker on
+your Ubuntu host and
+
+229
+00:10:10,080 --> 00:10:11,580
+there's links here to
+
+230
+00:10:11,580 --> 00:10:14,280
+the Docker CE instructions
+to set this up,
+
+231
+00:10:14,280 --> 00:10:17,550
+but you basically include
+the Docker CE sources.
+
+232
+00:10:17,550 --> 00:10:20,700
+You install Docker CE
+and the Docker CLI,
+
+233
+00:10:20,700 --> 00:10:24,525
+and then you can run hello-world
+to test your install.
+
+234
+00:10:24,525 --> 00:10:26,040
+The hello-world
+example is going to
+
+235
+00:10:26,040 --> 00:10:28,770
+pull the hello-world from
+
+236
+00:10:28,770 --> 00:10:30,495
+Docker Hub and then do
+
+237
+00:10:30,495 --> 00:10:34,065
+a multi-stage build to
+actually build the container.
+
+238
+00:10:34,065 --> 00:10:36,870
+Then we'll start the
+container based on
+
+239
+00:10:36,870 --> 00:10:38,310
+the docker file Build that's
+
+240
+00:10:38,310 --> 00:10:40,245
+included with
+hello-world example.
+
+241
+00:10:40,245 --> 00:10:44,145
+That's going to pull down a
+specific Debian container
+
+242
+00:10:44,145 --> 00:10:46,680
+that has the OS components
+associated with
+
+243
+00:10:46,680 --> 00:10:50,400
+Debian file system and then
+run the commands to set up
+
+244
+00:10:50,400 --> 00:10:51,960
+the compile environment and
+
+245
+00:10:51,960 --> 00:10:54,330
+cross-compile for
+target platforms.
+
+246
+00:10:54,330 --> 00:10:56,970
+Ultimately compiles hello.c and
+
+247
+00:10:56,970 --> 00:10:58,410
+copies to root of container.
+
+248
+00:10:58,410 --> 00:11:02,500
+Then we'll run that content
+when you run the container.
+
+249
+00:11:03,200 --> 00:11:07,810
+If you want to actually set
+up Docker on Buildroot,
+
+250
+00:11:08,270 --> 00:11:11,460
+the main steps there
+are you would install
+
+251
+00:11:11,460 --> 00:11:13,065
+Docker engine and that
+
+252
+00:11:13,065 --> 00:11:15,255
+will require changing
+the tool chain.
+
+253
+00:11:15,255 --> 00:11:16,500
+If you're using Raspberry Pi,
+
+254
+00:11:16,500 --> 00:11:21,030
+you'll have to change from
+the default to glibc.
+
+255
+00:11:21,030 --> 00:11:23,280
+You'll also needed
+install Docker CLI
+
+256
+00:11:23,280 --> 00:11:25,890
+if you want to be able to
+interact with the Engine.
+
+257
+00:11:25,890 --> 00:11:27,600
+Then you'll need to increase the
+
+258
+00:11:27,600 --> 00:11:29,400
+default RPI system size because
+
+259
+00:11:29,400 --> 00:11:32,040
+the default for our Raspberry Pi
+
+260
+00:11:32,040 --> 00:11:33,975
+is too small for
+docker components.
+
+261
+00:11:33,975 --> 00:11:35,250
+As of the time of this video,
+
+262
+00:11:35,250 --> 00:11:36,690
+500 megs is sufficient,
+
+263
+00:11:36,690 --> 00:11:39,855
+so you can increase to
+500 megabytes or more.
+
+264
+00:11:39,855 --> 00:11:43,665
+You then boot the new SD
+card image on the target.
+
+265
+00:11:43,665 --> 00:11:46,095
+You can use a check
+config script
+
+266
+00:11:46,095 --> 00:11:48,825
+that will find all the
+necessary kernel packages,
+
+267
+00:11:48,825 --> 00:11:51,240
+including the ones we
+just discussed for
+
+268
+00:11:51,240 --> 00:11:53,940
+cgroup and overlay and add
+that to your kernel build.
+
+269
+00:11:53,940 --> 00:11:55,875
+Then you build with a new kernel
+
+270
+00:11:55,875 --> 00:11:58,050
+and you can run and
+tests on hardware.
+
+271
+00:11:58,050 --> 00:12:00,570
+If you look at this link,
+this is an overview of
+
+272
+00:12:00,570 --> 00:12:03,180
+all the different steps that
+you have to take in order
+
+273
+00:12:03,180 --> 00:12:07,845
+to get docker built
+into Buildroot
+
+274
+00:12:07,845 --> 00:12:10,950
+for Raspberry Pi and you
+
+275
+00:12:10,950 --> 00:12:12,450
+can see the completed
+pull request
+
+276
+00:12:12,450 --> 00:12:14,400
+here and all the changes
+you'd have to make.
+
+277
+00:12:14,400 --> 00:12:17,355
+It's pretty easy step for
+you to do if you want to
+
+278
+00:12:17,355 --> 00:12:23,710
+bring docker into
+your Buildroots.
+
+279
+00:12:23,990 --> 00:12:26,010
+When would you want to use
+
+280
+00:12:26,010 --> 00:12:27,795
+containers in
+embedded development?
+
+281
+00:12:27,795 --> 00:12:29,430
+There are really two
+different places
+
+282
+00:12:29,430 --> 00:12:31,545
+where they are very useful.
+
+283
+00:12:31,545 --> 00:12:34,305
+One is when you're
+developing on a host system.
+
+284
+00:12:34,305 --> 00:12:35,820
+So if you want to
+create a consistent
+
+285
+00:12:35,820 --> 00:12:37,215
+Build and development
+environment,
+
+286
+00:12:37,215 --> 00:12:38,880
+you have multiple
+developers who might be
+
+287
+00:12:38,880 --> 00:12:40,740
+building an
+application and let's
+
+288
+00:12:40,740 --> 00:12:43,230
+say that application has a
+bunch of dependencies and
+
+289
+00:12:43,230 --> 00:12:44,520
+specific libraries that need to
+
+290
+00:12:44,520 --> 00:12:46,515
+be installed in
+order to build it.
+
+291
+00:12:46,515 --> 00:12:48,210
+You can either give people
+
+292
+00:12:48,210 --> 00:12:49,950
+instructions or
+scripts that tried to
+
+293
+00:12:49,950 --> 00:12:53,400
+install those versions on
+their operating system.
+
+294
+00:12:53,400 --> 00:12:55,470
+Or you can just
+set up a container
+
+295
+00:12:55,470 --> 00:12:57,360
+that builds with the exact
+versions that you care
+
+296
+00:12:57,360 --> 00:12:59,220
+about and everyone
+can share the copy of
+
+297
+00:12:59,220 --> 00:13:00,570
+the container and build with
+
+298
+00:13:00,570 --> 00:13:02,310
+exactly the same Build system.
+
+299
+00:13:02,310 --> 00:13:04,110
+It's also really
+useful for creating
+
+300
+00:13:04,110 --> 00:13:05,730
+automated test
+frameworks because you
+
+301
+00:13:05,730 --> 00:13:09,810
+can know that any
+new automated tests
+
+302
+00:13:09,810 --> 00:13:11,190
+that you run is always using
+
+303
+00:13:11,190 --> 00:13:14,384
+the same environment and you
+can easily add new systems
+
+304
+00:13:14,384 --> 00:13:16,950
+that will again be using the
+exact same components you
+
+305
+00:13:16,950 --> 00:13:20,445
+use when you build on
+your development system.
+
+306
+00:13:20,445 --> 00:13:22,770
+Then you can deploy
+
+307
+00:13:22,770 --> 00:13:23,790
+what test frameworks to
+
+308
+00:13:23,790 --> 00:13:25,710
+continuous integration
+and deployment,
+
+309
+00:13:25,710 --> 00:13:28,050
+and there's more
+information about that in
+
+310
+00:13:28,050 --> 00:13:30,810
+the continuous integration
+deployments section
+
+311
+00:13:30,810 --> 00:13:33,970
+of the test videos.
+
+312
+00:13:34,040 --> 00:13:37,575
+Then in terms of on
+the target system.
+
+313
+00:13:37,575 --> 00:13:39,360
+On our target system
+that's actually
+
+314
+00:13:39,360 --> 00:13:41,565
+running our embedded Linux OS,
+
+315
+00:13:41,565 --> 00:13:43,785
+when would you want to
+use a container there?
+
+316
+00:13:43,785 --> 00:13:46,230
+This can be useful for
+
+317
+00:13:46,230 --> 00:13:48,885
+pulling independencies
+quickly for test purposes.
+
+318
+00:13:48,885 --> 00:13:50,340
+Let's say you're testing out
+
+319
+00:13:50,340 --> 00:13:53,385
+some application that
+is supported on Ubuntu,
+
+320
+00:13:53,385 --> 00:13:55,920
+but isn't, maybe has
+
+321
+00:13:55,920 --> 00:13:58,905
+some components that aren't
+supported by Buildroot today.
+
+322
+00:13:58,905 --> 00:14:00,600
+Before you go
+through the process
+
+323
+00:14:00,600 --> 00:14:01,620
+of actually implementing
+
+324
+00:14:01,620 --> 00:14:04,110
+all those recipes and
+adding to Buildroot,
+
+325
+00:14:04,110 --> 00:14:07,005
+you could just using Docker,
+
+326
+00:14:07,005 --> 00:14:10,635
+bring up on Ubuntu
+instance on Buildroot.
+
+327
+00:14:10,635 --> 00:14:12,300
+Then once you have the Ubuntu
+
+328
+00:14:12,300 --> 00:14:13,440
+instance running on Buildroot,
+
+329
+00:14:13,440 --> 00:14:15,540
+you could use sudo
+apt-get install to
+
+330
+00:14:15,540 --> 00:14:19,260
+install the dependencies and
+test locally on the device.
+
+331
+00:14:19,260 --> 00:14:22,440
+You can also use
+it for supporting
+
+332
+00:14:22,440 --> 00:14:25,755
+optional or possibly conflicting
+product configuration.
+
+333
+00:14:25,755 --> 00:14:27,960
+Maybe there's a
+specific version of
+
+334
+00:14:27,960 --> 00:14:29,520
+a Python library
+that you need for
+
+335
+00:14:29,520 --> 00:14:31,680
+some application that you're
+going to run on the target.
+
+336
+00:14:31,680 --> 00:14:33,780
+You could use Docker to bring
+
+337
+00:14:33,780 --> 00:14:35,820
+in that exact environment
+that might be
+
+338
+00:14:35,820 --> 00:14:37,890
+different from the
+environment that you have
+
+339
+00:14:37,890 --> 00:14:41,010
+for your own applications
+running on target.
+
+340
+00:14:41,010 --> 00:14:43,020
+You could also maybe bring in
+
+341
+00:14:43,020 --> 00:14:46,005
+multiple web servers
+or applications.
+
+342
+00:14:46,005 --> 00:14:49,440
+Maybe you'd have one
+main web server that
+
+343
+00:14:49,440 --> 00:14:53,220
+serves up content from
+your device on port 80,
+
+344
+00:14:53,220 --> 00:14:55,770
+but you can bring in a
+second one that served up
+
+345
+00:14:55,770 --> 00:14:57,120
+some other content based on
+
+346
+00:14:57,120 --> 00:15:00,520
+a pre-built container
+on some other port.

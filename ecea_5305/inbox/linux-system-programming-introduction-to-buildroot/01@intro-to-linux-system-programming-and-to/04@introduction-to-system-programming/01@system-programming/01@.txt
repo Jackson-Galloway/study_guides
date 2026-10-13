@@ -1,0 +1,160 @@
+Hi, students. In this lecture of advanced embedded
+software development, we're going to be talking about
+system programming and do our first discussion
+of what we mean when we talk about
+system programming, which is what we're going
+to focus on for the first third or so
+of this course. Learning objectives for this, for today will be to
+introduce system programming, understand APIs and ABIs and the difference
+between the two, and also to introduce
+the POSIX standard. What is system software? The book defines this as interfacing between the
+kernel and the C library. Common examples of system programming that you could find. It could be an GUI, it
+could be a compiler, debugger, web
+server or database. Really, there's a variety of software that could be
+considered system software. The book draws a
+distinction between system software and
+application software. In that application
+software might use higher-level libraries, whereas what we're calling
+system software does not. With system software, there's less details about the OS
+and hardware abstracted. The reason we're going to
+focus on system software for this course is because we
+want to get into the details. We're going to be working at the OS and kernel layer
+and we're going to use that for the second
+third of this course where we start talking about
+programming in kernel land. Some of the cornerstones of system programming and how
+you do system programming. One is system calls, also known as syscalls, which is how you
+get into and out of the kernel for anything that deals with interaction
+with the kernel. A second is the C library. Commonly used one is libc. Then the third cornerstone is
+the C compiler and linker, which is a part of a toolchain. Syscalls or system calls are kernel function invocations
+from user space. This is something you can use to have the kernel do some piece of work for you from
+your application. Read and write are examples of the type of things that would be a system call where
+the kernel would be doing some work for your user
+space application. There's roughly 300 of
+these system calls in total and around 90
+percent of those are implemented by all
+architectures. In other words, the
+system call interface is pretty common across different hardware architectures, that is. The second cornerstone is the C Library or in
+the case of GNU, it'd be libc or glibc. This is the wrapper
+for the system call, which gives you the ability to call from your C application. The header file
+that you include, there's a function
+prototype that you call and underneath that
+function prototype, they'll ultimately be a call to the syscall interface
+into the kernel. The third cornerstone, again, is the C compiler and
+linker in the toolchain. We're going to focus on GCC and the GNU C compiler
+for this course. One of the things that the book mentions is that
+it's not possible to link your users pace application directly with the Linux kernel. That's a design
+decision in terms of how the Linux operating
+system was designed. For security and
+reliability reasons, it's better not to
+have a direct link between your user space
+application and the kernel. Instead, the way we get functions performed
+in the kernel space is to use what's called a trap. In a lot of cases, this
+is a software interrupt. If you look at a simple
+Hello World application that's doing a printf, that printf is
+going to be calling into the POSIX API library, and then the POSIX
+API library is going to be doing a trap
+that would invoke a kernel space function that
+would do something like print to the terminal
+in the case of printf. How does the POSIX
+interface work? How is the interface
+between user space and the POSIX library defined? This is part of what's called an Application
+Programming Interface. An API is really just
+a definition about how one piece of software can talk to
+another piece of software. The software that
+provides the API is the implementation of
+the API definition. The API is used to ensure
+source compatibility, meaning that you can
+write the source once, you can compile it for x86, you can compile it for ARM. Do any different architecture. As long as the source
+matches the AI definition, it's going to be able
+to be recompiled and rerun on
+different platforms. Your source code
+can remain portable across hardware
+platforms and revisions. Ideally, there are some
+limitations on this. We mentioned before
+that syscall has about 90 percent
+architecture similarities, so that means that there's
+approximately 10 percent of syscalls that
+might be architecture independent and there might be some functions that you could call via an API that would
+be architecture specific. But for the most part, the APIs are going to be widely cross-platform and used across
+different architectures. For any of the common C
+library functions like printf, string copy, etc, you're going to
+be able to easily recompile for a different
+hardware platform and run without issue after you complete
+the compiling like. To compare with the API, there's also what's called the ABI or the application
+binary interface. Before we were talking
+about source compatibility. The ABI is talking about
+binary compatibility. It's saying, after you
+do your compile and your link step and you have
+an executable program, where is that program
+going to be able to run? That's what's ultimately defined by the application
+binary interface. Some of the things
+that's covered by the application binary interface would be calling conventions, byte ordering or register use. Meaning if you called
+some function, there would be some convention about where the first
+argument would go, in which register of a
+specific architecture. It's easy to see that, that wouldn't be portable
+across different architectures. For instance, x86 doesn't have the same register
+expect that ARM would. It makes sense that
+there would have to be a different ABI between those two different
+hardware architectures. The ABI is defined and implemented by the kernel
+and the toolchain. The ABI defines the program's
+interaction with itself, with libraries, and
+with the kernel. With itself, what I mean is, when you call a function
+in your own program, that's going to use an ABI
+to decide for instance, where to put the parameters that are passed
+into the function. The ultimate lead ABIs going to used to
+generate that binary that's the output of the
+compiler and link step. In order to know if your binary is going to run on a
+different platform, what you have to know
+is how close of a match do you have between the target that you
+originally compiled for and the target that
+you're trying to run on. Some of the things are
+going to impact whether an ABI is portable to a
+different platform would be obviously the hardware
+architecture like I just mentioned between ARM
+and x86 for instance, likely those would not
+share a similar ABI. But there would also
+be software libraries. Whether you use glibc, and also which version of
+glibc used would be important. The compiler would be important, because that's part of
+the definition of how, for instance, the parameters
+will be passed in registers. We talked about API definitions
+and API is being defined. One implementation of
+API definition for user space is in
+what's called POSIX, which stands for portable
+operating system interface. It was started back in the late 1980s as a way to coalesce what the book
+calls the Unix Wars. If you look at more history of the Unix and Linux
+operating system, what you see is a
+chart like this. In the late '70s and early '80s, there were several
+different branches that developed where different
+versions of Unix originally and ultimately
+Linux were started and each one of them were doing slightly different things
+in terms of API calls. There was a need, especially
+in the late '80s, as all these numbers of different Unix and Linux
+variants started to show up, there was a strong desire
+for programmers to coalesce how the API works and
+make sure that when you write software for one platform, you'll be able to
+recompile it and run it on a different platform
+without having to do custom API work
+for a platform. That was the original motivation behind the POSIX platform. The Linux operating system that we're going to use as
+the subject of this course. You can actually
+go back here and click on this Google
+Groups link and you can see the original posting to the Minix mailing list where Linus Torvalds proposed
+the Linux operating system, and this would
+have been in 1991. This was around the time that the POSIX standard was
+starting to be defined and everybody was working towards
+a common API that can be shared across all these different Unix
+and Linux variance. The Open Software Foundation created what was called the
+Single Unix Specification. Originally the IEEE POSIX
+specification cost money. But the Single Unix
+Specification was free and it ultimately incorporated
+the entire POSIX standard. This was a big part of why
+POSIX was ultimately adopted, because it became part of the
+Single Unix Specification. POSIX is given define the
+C code API for many of the concepts that we're going to cover throughout this semester. File and directory operation, clocks and timers, semaphores, shared memory, threads. A large amount of what we'll
+be doing from users pace is going to be defined by
+the POSIX API standard. There's an official list of headers you could
+find at this link. There's lots of headers that you probably are familiar with
+and you have used already. For instance, standard
+IO, standardint.h. Those are examples of files that are covered
+in the POSIX standards. You've probably been
+using this already. You might not have realized
+that you were using POSIX.

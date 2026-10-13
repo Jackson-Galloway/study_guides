@@ -1,0 +1,253 @@
+All right, so with this video we're
+going to get in a little more detail about how to use the command line. So we're going to talk about how
+to edit from the command line, the purpose on the role of the shell and
+the shell interpreter. We'll talk about doing some searches from
+the command line using wildcard pipes and redirection from the command line. Also permissions and permissions of files, how to
+manipulate that from the command line. And also how to get remote
+access to the command line for both interactive commands and
+for also transferring files. So that in terms of editing there are lots
+of different text editors you can choose from from linux. And a lot of different ones that
+you can use on the command line. Vi is the one that I'm
+going to talk about here. It's one classic utility. It's been around since 1976. It was based on a what was called
+the visual mode of an early text editor on UNIX. So that's where the vi comes
+from in terms of the name. And a lot of times you'll see it
+replaced now by vim or vi improved, which is just a version of the vi that has
+a lot more features in terms of editing with plug ins for instance for
+some additional capabilities. So you have a lot of different
+ones to choose from. You don't necessarily need to use vi for
+your editing, but I do suggest you get at least some
+level of familiarity with vi. And the main reason for that is really
+because in my experience it's the one that you can count on always being there. So the example I gave before
+of maybe you've got a full environment that normally would
+boot up on your embedded system. But for whatever reason you're
+getting stuck at the boot prompt and you aren't able to load
+the full system yet. Most likely vi will be an editor
+that's available in that scenario, it might be that other
+editors are not available. And so having a little bit of knowledge
+of vi will let you be you use the command line for
+editing in that type of scenario. So in terms of opening a file with vi, you can just use vi plus
+the name of the file or vim in case you're using vi improved. And then once you're into vi and interacting you can use what's
+called normal mode for command. So if you hit the escape key, you'll be in
+a mode that allows you to use the keyboard instead of for typing text for
+typing commands to the editor. And so one of the things you would do
+inside the editor is navigate around inside the document. So you can use the h, j, k, and l keys to move left down up or
+right within the file. And this might seem a little strange
+at first, but once you get used to it it's pretty powerful because you
+don't have to lift your keys or your fingers off the keys in
+order to move around in the file. So you can go into and out of editing
+mode very quickly and you can also move around in the file pretty quickly
+once you get the hang of using it. Then when you're ready to manipulate text, you can use i to go into insert mode and
+type text. You can also use the delete key
+to the d option to delete text. And when you're ready to exit and
+save a file, you hit escape to make sure you're
+in normal mode for commands. And then you can use colon w to
+write the file and colon q to quit. So again, there's a lot more
+you can do with the eye and there are other editors out there. I encourage you to look
+through the links here and if you're not familiar with vi get
+a little bit of familiarity with it and some level of comfort so
+that you'll be able to use it when needed. So we've talked about interacting with
+the command line via the terminal, but we haven't talked much about how
+those commands actually get executed. So it turns out what's happening when
+you're interacting with the terminal is there's what's called a shell interpreter. That's interpreting what you're
+entering on the command line, passing that off to the appropriate
+application for execution and returning the results back
+to you on the terminal. And so in addition to the interactive
+use that we've showed in the previous videos and and the current video. There also be the option to put
+a list of commands in a text file and pass that off as a script. And the shell interpreter will be the same
+thing that's going to be executing every one of those commands out
+of the script for you. There are lots of different
+shell interpreters out there and a lot of them have very
+similar command support. The bourne shell was one of
+the original shell interpreters and that's often you'll find
+that abbreviated sh. It was released back in 1979. Then there was ksh and csh and several other shell
+interpreters that were developed. And each of those interpreters had some
+unique features in terms of options for commands that you could use with
+the shell and inside your shell script. And so what happened was bourne again
+shell or bash shell was created. As a way to group all these useful
+features together from different shell interpreters and add some extensions
+to the original bourne shell. That was the 1979 version. So for most of the stuff that we talked
+about in this class, we'll talk about either using the bourne shell, s, h or the
+buorne again shell which will call bash. So a few more useful things that you
+can do from the command line and getting into some more advanced things
+you can do from the command line. There's the find utility that
+will let you locate files or directories based on things like
+the file name or the type of the file. So here's an example of a command
+that will find the any file or directory that's named a directory under
+the given directory that we're in. And so find dot means look under
+the dot in this case means the current directory that were in. Find dot means look for any file with your directory with name
+a directory under the current directory. And so what you see spit out. If you run that command would be
+a list of all the directories under the current directory that
+are named a directory. And so because we did our copy from
+a directory to a copy target in the previous video. We'll find two matches of that here
+when we search for a file by file name. Another thing you will find useful from
+in terms of using the command line, would be searching inside the content
+of the files for specific content. So if I have two different files,
+textfile and textfile2, I use the cat option to concatenate out
+and look at the content of the files. I can see one of them says
+AESD awesome is awesome. The second one says, CU is awesome. So if I do a grep command and
+I specify is awesome. It's going to find both of those match in
+both of those files is going to spit out those file names and
+the corresponding matching lines. And in this case I even get some color
+syntax highlighting to show me which part of the string match the corresponding
+text in these photos. So one thing that you'll notice about
+the grep command that I specified. So I used the astrostea as
+a parameter to the direct command and what this at the astrostea
+in this case is a wildcard. So the star is telling the shell that any character in a name of
+a file in this directory should be passed into the grep command. And so if I just say star,
+what it's saying is that list any files in this directory and include that as one
+of the parameters to the group command. I could have gotten more
+specific with this, I could have said textfile star text,
+which would have meant any file that started with the name
+textfile and ended with text. But by just specifying the star, it
+means match any files in that directory. So in the case that you specify
+a wild card on the command line. What the shell is going to do is figure
+out what are all the different matches for that particular wildcard and then pass
+that string into the ultimate command. And so the grep command in this case is
+going to get past the string that looks like this is going to see
+grep dash r is awesome. And then instead of seeing the star, it's going to see the expanded
+copy from the shell. And so it's going to see a list of
+all the different files that match. And in this case since
+I specified the star, it would pick any of the files
+that are in the current directory. So if I had a textfile, textfile 1234,
+it would list all those on the output of the command and
+pass all those in as parameters. So in addition to wildcards, one other useful tool that we can
+use on command line are pipes. So the pipe character is a character that
+will send the output of one command to the input of another command. And this is really useful. You see this used a lot in the next shell
+scripting because it's very versatile. You can keep your applications
+tailored to do one specific thing. And when you're ready to combine the
+features of two different applications. You can just use the output of one fed
+into the input of another command and pass that to a third executed
+well if you want to. So it allows us to change commands
+together based on standard input, standard output. So the same kind of thing that you'd use
+if you're writing an application and using print f for standard output. You could be passing that as input to
+a new command using the pipe character. So if I use a cat and a command and
+cat out my textfile.text. Normally that would print the entire
+content of textfiles text out to the terminal. If I use the pipe option and
+send it to grep, then that's going to pass the textfile
+text as the input to the command. So before we were specifying we want
+the grep to read specific files. And in this case grep is just going to
+read what we passed into it from standard out which comes from
+the concatenation of textfile.text. So you can see if I do textfile.text
+by pipe grep is awesome. I will get the same output that I would
+get if I grepped the textfile.text file and
+I get the match on is awesome characters. So in addition to wildcards and
+redirection, in addition to wildcards and
+pipes, there's also redirection that's really useful that
+we can use on the terminal. And so redirection is going to
+say take the output stream. So for instance, standard out in this
+case, what you would normally print out to the terminal with the print command and
+instead direct that to somewhere else. So one really common place that you
+direct this to would be to a file. So using an example of the grep command. So our grep is awesome
+where we're looking for matches from any files in
+the directory to the string. If we use the redirect character and redirect to our search
+result that textfile. What we'll see is that what normally would
+have been printed out on the terminal is not going to be inside
+the search result textfile. So if I can search result text, I'll see
+the content matching what would have been printed out on the terminal
+from my grep command. Similarly to redirection,
+we can also append, it's just using two of these redirect
+symbols one right after the other. So if I say echo hello into that
+same search result textfile and then I cat out the contents
+of search results text. I'll see that I've added
+hello to the end of the file. Whereas if I would just use
+one redirect symbol here, I would have overwritten the content of
+the of the search result textfile and you wouldn't see these
+initial lines here anymore. So the file permissions that control how
+we can access and use specific files. There's a common way of handling this
+in Linux systems and there's really three levels of permission for
+user group and either world or everyone. So permissions are broken up based
+on who is the user of the file, typically the person who
+has created the file. What is the group account that's
+associated with the person that created the file? And then what are the permissions for
+anyone on the user? Someone that's not the user
+that created the file or in any group that's the main group for
+the user that created the file. Ls is the command that we used before
+to show the files in the directory. And you can use ls-l to show
+details about permission info. So in this case,
+if I'm looking at a list of files and directories that I've got in
+a directory on my system, I can see these characters rwxr-x. What this is telling me is whether each of
+the user or group or everyone has read, write or execute permissions
+on the directory or the file. And so the the r means read the w
+means right and the x means execute. So you can see who the user is
+here from this first column that shows that the user is
+my user account dan. And by default, the group for your user would also be the same
+group account based on your username. So both of these, what this means that
+the person the the user name dan has read, write, execute permissions
+on the directory. And anyone in group dan has read and
+execute permissions on the directory, which is the same as any user on
+the system, would have read and execute permissions on the directory. So one thing that you notice
+is when I just create a file. So in this case, like for
+my textfiles here, I don't have execute
+permissions by default. And this is to avoid a scenario where
+you would be able to execute and have execute permissions on a file where you maybe didn't intend
+to contain script instructions. So if you create hello
+world example script file that just has a single echo
+command that echoes hello world. If we do an ls-l on that file, you'll
+notice that there's no executable bit, no execute permissions set by default. If I try to run that command
+with this dot slash syntex that says execute this helloworld.sh
+script in the current directory. I'll get a permission denied
+message complaining that I don't have the execute permissions. So you can use chmod to
+change the mode of the file. And if I do u+x, this means for the user account at execute
+permissions and give it the file name. If I do an ls-l,
+I can see a couple of things. One is that the color syntax changed. So I see that it's green now showing
+me that I have execute permissions and I see this x bit set here in
+the user section of the permissions. So now when I run the command I'll get the
+hello world output that I would expect. So the permissions in addition to
+specifying with something like u+x or some strings that you can see
+detailed in the man page for chmod. You can also use octel
+digits in numeric mode. And so If you add some combination
+of 42 and one together. You'll get a setting for read, write and
+execute for those three different permission groups that we talked about
+already the user group and everyone. So if I do an ls-l on hello world and
+I see that I have read, write, execute plus read and read permissions. If I do a chmod 766 what
+the seven is going to need? Make the user account have read, write and execute permissions because
+4 plus 2 plus 1 is 7. The 6 and
+the 6 are going to mean set read and write permissions for
+the group and everyone. And so
+if I issue the chmod 766 Helloworld.sh. And then I checked my
+permissions with ls-l. I'll see that I get the permissions I
+expect here with read write, execute for user and read and write for
+group and everyone. All right, so a really useful thing
+that you can do with the next command line operation that will use for
+embedded systems very often is you can use what's called secure
+shell to get remote access. And you can use remote access for both interactively entering commands
+to be run from the command line. And you can also use it for
+transferring files with what's called scp. If you're using a virtual machine here,
+you can set this up pretty easily with port forwarding rules and there's a link
+here that tells you how to do this. But what you're basically setting here
+is the IP address that you'll be able to reach it from in your host machine. And the port that will
+redirect to port 22 which is the typical port used for
+s is h on Linux systems. So if I'm from my window system, I'll be
+able to access the command line terminal. If I use ssh-p giving and
+get the port option and specifying 2222 which
+is my host port here. Then I can specify my username and
+this IP address, which is the one we enter here for
+our host type. So this is an example for virtual box. If you have a physical Linux machine
+that you're using, you just replace. If you had a port redirect
+you to replace that here or you just remove the port if you're
+using the standard ssh port. And you'd use the user account for
+the system plus the IP address or the host name of the system
+you're connected, okay? So if you are using windows or
+windows environment for remote access to the command shell and
+you want to use ssh. There's several different options,
+two of them that I'll go over here. One is you can install
+windows subsystem for Linux. This is available on newer versions
+of windows, like Windows 10. You can also use msys and either one
+of these environments will provide you access to ssh that you could
+use from a windows machine. So if you want to transfer from a windows
+machine to your virtual machine, you can use the scp command with a capital
+P port option to specify the port. You can specify the source directory
+here from the windows machine and the target, both username and
+IP address with this colon tilda syntax meaning copy
+to the home directory. The colon separates the machine
+information from the directory and the tilde says copy to the home
+directory for the user. So if I do that and
+then I ssh into the virtual machine, what I'll see is that the if I do it ls-l. That some file that I transferred in is
+going to be there in my home directory. Similarly, I could transfer out
+from my virtual machine into the windows system with
+this scp-capital P option. And then just swapping the order of source
+and destination as arguments to scp. So this would transfer
+from my home directory, a some file.textfile to my downloads
+directory on windows in from vm.text. So you can use the same instructions and
+ssh and scp to transfer to and
+from from Lennox systems as well.

@@ -1,0 +1,1062 @@
+1
+00:00:00,968 --> 00:00:04,476
+In this video, we're going to talk
+about a different mechanism for IPC,
+
+2
+00:00:04,476 --> 00:00:07,179
+and specifically,
+we're going to talk about sockets.
+
+3
+00:00:07,179 --> 00:00:11,099
+So we're going to understand using
+socket how to use sockets in Linux and
+
+4
+00:00:11,099 --> 00:00:13,434
+how to use sockets in your Linux program.
+
+5
+00:00:13,434 --> 00:00:17,160
+And this will be especially important for
+assignment 5.
+
+6
+00:00:17,160 --> 00:00:21,370
+So sockets are one of several forms
+of Interprocess Communication or IPC.
+
+7
+00:00:21,370 --> 00:00:24,557
+We've already talked about
+a simpler one in terms of signals.
+
+8
+00:00:24,557 --> 00:00:27,496
+Sockets are a little bit
+more versatile than signals.
+
+9
+00:00:27,496 --> 00:00:29,741
+They don't have the same
+kind of limitations and
+
+10
+00:00:29,741 --> 00:00:33,528
+restrictions that we talked about in terms
+of the signal handler, for instance.
+
+11
+00:00:33,528 --> 00:00:34,205
+And also,
+
+12
+00:00:34,205 --> 00:00:39,401
+sockets can let you communicate across
+different systems over TCP/IP, whereas
+
+13
+00:00:39,401 --> 00:00:44,539
+signals you need to know the process idea
+on a specific system to send the signal.
+
+14
+00:00:44,539 --> 00:00:49,201
+With sockets, we can use TCP IP to connect
+to another system that's physically
+
+15
+00:00:49,201 --> 00:00:51,926
+different from the system
+we're running on.
+
+16
+00:00:51,926 --> 00:00:56,099
+Sockets are also known as BSD or Berkeley
+sockets based on where they were first
+
+17
+00:00:56,099 --> 00:00:59,911
+originated, and they're supported
+by all major operating systems.
+
+18
+00:00:59,911 --> 00:01:04,223
+So there are a way you can inter-operate
+with programs running on even,
+
+19
+00:01:04,223 --> 00:01:06,282
+for instance, a Windows system.
+
+20
+00:01:06,282 --> 00:01:10,989
+So when we talk about sockets,
+the communication path
+
+21
+00:01:10,989 --> 00:01:15,198
+is going to be through TCP/IP,
+like I mentioned.
+
+22
+00:01:15,198 --> 00:01:19,554
+That gives us the option to have
+an Ethernet connected two physically
+
+23
+00:01:19,554 --> 00:01:23,836
+different hosts and can make our
+connections through TCP/IP ports
+
+24
+00:01:23,836 --> 00:01:28,358
+between two different applications
+running on these separate hosts.
+
+25
+00:01:28,358 --> 00:01:33,525
+It also can be used in a loop back mode
+where we just connect the two applications
+
+26
+00:01:33,525 --> 00:01:38,952
+using TCP/IP, but using local host
+routing without eating, go over Ethernet.
+
+27
+00:01:38,952 --> 00:01:43,878
+And the third way that we can do this that
+we'll use in this course is using what's
+
+28
+00:01:43,878 --> 00:01:45,481
+called port forwarding.
+
+29
+00:01:45,481 --> 00:01:49,995
+And so, in addition to just routing
+through a local host loop back,
+
+30
+00:01:49,995 --> 00:01:53,334
+we can route into a virtual
+instance in this case.
+
+31
+00:01:53,334 --> 00:01:57,370
+In our case for assignment 5,
+it's going to be QEMU,
+
+32
+00:01:57,370 --> 00:02:02,508
+where we can tell the host that we
+want to forward a specific post port
+
+33
+00:02:02,508 --> 00:02:07,949
+on the host into a virtual machine or
+an emulator, in our case, QEMU.
+
+34
+00:02:07,949 --> 00:02:12,551
+So in QEMU, we can use the host
+forward argument to say that we
+
+35
+00:02:12,551 --> 00:02:16,974
+want to connect port Y in
+the application running on the host
+
+36
+00:02:16,974 --> 00:02:20,963
+to a specific port that's
+running in the emulator.
+
+37
+00:02:20,963 --> 00:02:24,416
+And in this case, the same port that
+we're using for our application.
+
+38
+00:02:26,456 --> 00:02:28,821
+So how are we going to use TCP/IP or
+
+39
+00:02:28,821 --> 00:02:34,349
+what are some of the background on
+TCP/IP that allows this to be possible.
+
+40
+00:02:34,349 --> 00:02:38,878
+TCP stands for
+Transmission Control Protocol.
+
+41
+00:02:38,878 --> 00:02:43,362
+It's a connection oriented protocol where
+the connection is going to be established
+
+42
+00:02:43,362 --> 00:02:47,613
+and maintained during the entire duration
+of the program exchanging messages.
+
+43
+00:02:47,613 --> 00:02:52,062
+It's going to accept packets from want
+a source delivered to the destination,
+
+44
+00:02:52,062 --> 00:02:56,853
+manage the flow control, and automatically
+retransmit if a packet was dropped and
+
+45
+00:02:56,853 --> 00:03:00,973
+handles acknowledgement to know that
+a packet was sent successfully.
+
+46
+00:03:00,973 --> 00:03:04,045
+All that's going to be done for us by TCP.
+
+47
+00:03:04,045 --> 00:03:08,938
+And then IP is the way that we can address
+package to a specific destination.
+
+48
+00:03:08,938 --> 00:03:12,768
+So that's going to provide us
+the routing between sender and receiver.
+
+49
+00:03:12,768 --> 00:03:19,271
+The original IP standard was IPv4,
+and that's the X.X.X.X format.
+
+50
+00:03:19,271 --> 00:03:20,131
+The 4 byte and
+
+51
+00:03:20,131 --> 00:03:24,724
+32 bit format that you're probably
+most familiar with from networking.
+
+52
+00:03:24,724 --> 00:03:28,283
+This allows for 4.3 billion addresses,
+
+53
+00:03:28,283 --> 00:03:32,909
+if you take the number of
+bits that 32 bits represents.
+
+54
+00:03:32,909 --> 00:03:37,058
+And at the time it was created,
+32 bits was a lot of bits,
+
+55
+00:03:37,058 --> 00:03:39,872
+4.3 billion was a lot of addresses.
+
+56
+00:03:39,872 --> 00:03:43,963
+But now with the amount of people in the
+world and the amount of connected devices,
+
+57
+00:03:43,963 --> 00:03:46,868
+there's a problem in terms of
+running out of IPv4 space,
+
+58
+00:03:46,868 --> 00:03:48,783
+which you've probably heard about.
+
+59
+00:03:48,783 --> 00:03:49,554
+[COUGH] So,
+
+60
+00:03:49,554 --> 00:03:55,575
+another alternative to IPv4 is IPv6 where
+you have 128 bits of address space.
+
+61
+00:03:55,575 --> 00:03:58,716
+So 340 billion billion
+billion billion addresses,
+
+62
+00:03:58,716 --> 00:04:02,265
+which is about 4,000 addresses for
+each person on Earth.
+
+63
+00:04:02,265 --> 00:04:06,388
+So hopefully,
+this will last us a little bit longer.
+
+64
+00:04:06,388 --> 00:04:11,536
+And in addition to the address,
+the IPv4, the IPv6 address
+
+65
+00:04:11,536 --> 00:04:16,491
+on a particular local system,
+you will also bind to a port.
+
+66
+00:04:16,491 --> 00:04:20,107
+So that you can define import numbers for
+specific applications, and
+
+67
+00:04:20,107 --> 00:04:23,606
+then that application would own
+that particular port on that host.
+
+68
+00:04:25,488 --> 00:04:27,650
+There are two different types of sockets.
+
+69
+00:04:27,650 --> 00:04:30,602
+Socket stream is the stream
+socket that's going to
+
+70
+00:04:30,602 --> 00:04:32,838
+be reliable to a connected streams.
+
+71
+00:04:32,838 --> 00:04:35,989
+The messages are all going to be delivered
+in order, and they're going to be retried.
+
+72
+00:04:35,989 --> 00:04:39,669
+This is what we're going to use for
+our example in this course.
+
+73
+00:04:39,669 --> 00:04:43,069
+There's also datagram sockets,
+which are connection lists and
+
+74
+00:04:43,069 --> 00:04:45,119
+use what's called UDP instead of TCP.
+
+75
+00:04:45,119 --> 00:04:49,787
+This is important if you care more about
+latency than you care about delivery.
+
+76
+00:04:49,787 --> 00:04:53,948
+So it's often used for things like video,
+where it's okay to drop a frame, and
+
+77
+00:04:53,948 --> 00:04:57,814
+it's actually better to drop a frame
+than it is to have the video stagger.
+
+78
+00:04:57,814 --> 00:05:02,127
+So this is an example of something
+that you can do with sockets, but
+
+79
+00:05:02,127 --> 00:05:05,450
+we're not going to use it
+in this particular course.
+
+80
+00:05:05,450 --> 00:05:09,370
+So we talked before about how
+in Linux everything is a file.
+
+81
+00:05:09,370 --> 00:05:11,405
+So how would we interact with sockets?
+
+82
+00:05:11,405 --> 00:05:13,615
+We'll interact using
+a socket file descriptor.
+
+83
+00:05:13,615 --> 00:05:16,265
+And how do we obtain
+the socket file descriptor?
+
+84
+00:05:16,265 --> 00:05:20,202
+You're going to obtain it through
+the socket POSIX function.
+
+85
+00:05:20,202 --> 00:05:24,514
+So here's an overview of
+the socket creation process.
+
+86
+00:05:24,514 --> 00:05:29,277
+We're going to be focused in this series,
+or in this video, on the server side and
+
+87
+00:05:29,277 --> 00:05:34,557
+that's because that's what we'll implement
+with assignment number 4, all right?
+
+88
+00:05:34,557 --> 00:05:35,733
+Assignment number 5.
+
+89
+00:05:35,733 --> 00:05:37,927
+The client side is also
+a little bit simpler.
+
+90
+00:05:37,927 --> 00:05:41,570
+So if we go through the server will
+probably have a better idea about how
+
+91
+00:05:41,570 --> 00:05:43,127
+the overall sequence works.
+
+92
+00:05:43,127 --> 00:05:46,731
+But this is, we'll go through this
+in detail in the next slides.
+
+93
+00:05:48,948 --> 00:05:53,314
+So the first step is the socket creation
+using the socket function that I
+
+94
+00:05:53,314 --> 00:05:54,562
+mentioned before.
+
+95
+00:05:54,562 --> 00:05:58,618
+So, both this will happen on both
+the client and the server side.
+
+96
+00:05:58,618 --> 00:06:01,061
+Each one are going to set up
+an endpoint for communication.
+
+97
+00:06:01,061 --> 00:06:02,773
+That's really a file descriptor.
+
+98
+00:06:02,773 --> 00:06:06,837
+And when you specify the socket or
+call the socket function,
+
+99
+00:06:06,837 --> 00:06:11,858
+you'll use a domain that specifies
+whether you're using INET or INET6,
+
+100
+00:06:11,858 --> 00:06:17,697
+which is just selecting IPv4, or IPv6, and
+then socket stream or socket datagram.
+
+101
+00:06:17,697 --> 00:06:20,333
+And we'll use socket stream for
+this course, and
+
+102
+00:06:20,333 --> 00:06:24,369
+then protocol- 0 will just choose
+the proper protocol for the given type.
+
+103
+00:06:26,109 --> 00:06:28,072
+Next, once we have a file descriptor,
+
+104
+00:06:28,072 --> 00:06:31,942
+we can use that file descriptor would
+bind to assign an address to the socket.
+
+105
+00:06:31,942 --> 00:06:37,997
+So the sockfd is going to come from the
+return value from the socket function and
+
+106
+00:06:37,997 --> 00:06:43,022
+the sock address and address length,
+this is going to describe.
+
+107
+00:06:43,022 --> 00:06:46,833
+So these two arguments are going to
+describe the address that we want to
+
+108
+00:06:46,833 --> 00:06:47,445
+bind to and
+
+109
+00:06:47,445 --> 00:06:52,023
+that would allow us to optionally select
+a specific network adapter to bind to.
+
+110
+00:06:55,507 --> 00:07:00,013
+So a little bit more about how we
+specify the socket address to bind.
+
+111
+00:07:00,013 --> 00:07:05,546
+The socket address is going to map to
+a specific server socket location,
+
+112
+00:07:05,546 --> 00:07:11,097
+so that would include both the Internet,
+the IPv4 or IPv6 address.
+
+113
+00:07:11,097 --> 00:07:15,591
+In this case,
+specifying a local host address that we're
+
+114
+00:07:15,591 --> 00:07:20,372
+running on the host and
+then the destination address in port.
+
+115
+00:07:20,372 --> 00:07:26,363
+So this is, for instance, the port number
+that were binding to on the host as well.
+
+116
+00:07:26,363 --> 00:07:30,826
+And then the socket length will just
+describe the total size of the socket
+
+117
+00:07:30,826 --> 00:07:35,892
+address structure that we're passing,
+which is just going to be struck sockaddr.
+
+118
+00:07:35,892 --> 00:07:38,271
+So how do we set up sockaddr to bind?
+
+119
+00:07:38,271 --> 00:07:41,366
+How can we tell bind which
+address we want to bind to?
+
+120
+00:07:41,366 --> 00:07:45,923
+That isn't built directly,
+it's built from other structures.
+
+121
+00:07:45,923 --> 00:07:50,791
+And there are a few different ways that
+you can set up the sock outer structure
+
+122
+00:07:50,791 --> 00:07:55,907
+that are discussed in the guide here
+that we're using, which is linked below.
+
+123
+00:07:55,907 --> 00:07:59,570
+One is that, you can set up
+sock addr_in and then cast, and
+
+124
+00:07:59,570 --> 00:08:02,732
+the second is that you can
+set up with getaddrinfo.
+
+125
+00:08:02,732 --> 00:08:06,133
+Getaddrinfo is a newer and
+more flexible way, either one is fine for
+
+126
+00:08:06,133 --> 00:08:07,037
+the assignment.
+
+127
+00:08:07,037 --> 00:08:11,138
+You can go through the steps in
+this link to set them up, but
+
+128
+00:08:11,138 --> 00:08:15,597
+we're going to go over the getaddrinfo
+mechanism in this video.
+
+129
+00:08:17,296 --> 00:08:22,391
+So get out your info is going to
+take a series of arguments and
+
+130
+00:08:22,391 --> 00:08:27,381
+ultimately set up the suck
+address info structure which
+
+131
+00:08:27,381 --> 00:08:30,885
+will contain a sock outer structure for
+
+132
+00:08:30,885 --> 00:08:35,363
+us in this result pointer
+that we're going to pass.
+
+133
+00:08:37,164 --> 00:08:41,724
+So the important thing to note is that the
+latter info that is going to return to us
+
+134
+00:08:41,724 --> 00:08:42,706
+is malloced, so
+
+135
+00:08:42,706 --> 00:08:46,861
+you need to use free addrinfo to free
+that after you're done using it.
+
+136
+00:08:48,918 --> 00:08:53,494
+So the first step here and
+call and getaddrinfo,
+
+137
+00:08:53,494 --> 00:08:57,075
+the node and the addrinfo ints value.
+
+138
+00:08:57,075 --> 00:09:02,023
+In order to set these,
+what you do is create this
+
+139
+00:09:02,023 --> 00:09:07,365
+addrinfo structure and
+then set hints.ai flags.
+
+140
+00:09:07,365 --> 00:09:11,130
+So hints will be the outer
+infrastructure that you pass.
+
+141
+00:09:11,130 --> 00:09:13,837
+You'll set that to AI_PASSIVE,
+and you'll set the node to NULL.
+
+142
+00:09:13,837 --> 00:09:18,363
+And this is based on the comments in
+getaddrinfo about making a socket address
+
+143
+00:09:18,363 --> 00:09:22,902
+that's suitable for binding to a socket
+that's going to accept connections.
+
+144
+00:09:25,338 --> 00:09:26,899
+Then in the service argument,
+
+145
+00:09:26,899 --> 00:09:29,788
+you're going to specify the port
+that you want to bind to.
+
+146
+00:09:29,788 --> 00:09:35,375
+So this can just be a string and
+a string 1234 would set up for port 1234.
+
+147
+00:09:37,974 --> 00:09:40,585
+And finally, the return from getaddrinfo,
+
+148
+00:09:40,585 --> 00:09:43,334
+the sockaddr structure
+that's going to create is
+
+149
+00:09:43,334 --> 00:09:47,403
+going to be inside the getaddrinfo
+result here that's specified here.
+
+150
+00:09:47,403 --> 00:09:52,204
+So what we want to do is set up a pointer
+to store the address that's returned from
+
+151
+00:09:52,204 --> 00:09:57,034
+getaddrinfo because remember this is
+going to be malloced inside getaddrinfo.
+
+152
+00:09:57,034 --> 00:10:02,109
+And then, we're going to pass the address
+of that pointer as a pointer to a pointer
+
+153
+00:10:02,109 --> 00:10:07,505
+argument that getaddrinfo can use to store
+the location of the addr info structure.
+
+154
+00:10:07,505 --> 00:10:12,112
+So I remember pointer to pointer as being
+a really hard thing to wrap my head around
+
+155
+00:10:12,112 --> 00:10:14,097
+when I was first getting in to see.
+
+156
+00:10:14,097 --> 00:10:16,072
+So I wanted to step
+through that specifically.
+
+157
+00:10:16,072 --> 00:10:21,828
+So if we talk about, here's
+an example that comes from the beach
+
+158
+00:10:21,828 --> 00:10:27,811
+guide in terms of how to use sockets
+that shows using getaddrinfo.
+
+159
+00:10:27,811 --> 00:10:32,452
+So if you create this struck
+addrinfo pointer to serve info,
+
+160
+00:10:32,452 --> 00:10:36,557
+this is just going to be
+a pointer location on the stack.
+
+161
+00:10:36,557 --> 00:10:41,458
+So we haven't reserved location for
+the actual addr infrastructure itself.
+
+162
+00:10:41,458 --> 00:10:45,984
+We've only reserved location to store
+a pointer to that address info.
+
+163
+00:10:45,984 --> 00:10:48,637
+When we use the address
+of operator on this,
+
+164
+00:10:48,637 --> 00:10:52,883
+what we're passing again is not
+a pointer to the structure addrinfo.
+
+165
+00:10:52,883 --> 00:10:58,247
+We're passing a pointer to the location
+to store the pointer to that addrinfo.
+
+166
+00:10:58,247 --> 00:11:02,452
+So this allows getaddrinfo to
+both malloced the storage for
+
+167
+00:11:02,452 --> 00:11:07,328
+addrinfo and then save it into
+a pointer that we can reference outside
+
+168
+00:11:07,328 --> 00:11:09,447
+the getaddrinfo structure.
+
+169
+00:11:09,447 --> 00:11:12,641
+So what we're working with
+here is this struct addrinfo,
+
+170
+00:11:12,641 --> 00:11:15,843
+which is actually going to be
+malloced inside getaddrinfo.
+
+171
+00:11:15,843 --> 00:11:21,243
+So we're passing in the reference to
+this local pointer that we created
+
+172
+00:11:21,243 --> 00:11:26,733
+on the stack, then the pointer that we
+created on the stack is going to be set
+
+173
+00:11:26,733 --> 00:11:31,967
+within getaddrinfo to obstruct
+addrinfo that got malloced within.
+
+174
+00:11:31,967 --> 00:11:36,803
+And this is all how the based on the
+results' argument here that we're passing
+
+175
+00:11:36,803 --> 00:11:38,059
+in to getaddrinfo.
+
+176
+00:11:40,196 --> 00:11:44,634
+So summarizing again, how we're going to
+get the socket address for bind.
+
+177
+00:11:44,634 --> 00:11:47,488
+We're going to call
+getaddrinfo with the hints,
+
+178
+00:11:47,488 --> 00:11:50,056
+the port string as
+the service argument and
+
+179
+00:11:50,056 --> 00:11:54,499
+the pointer to the pointer in rest that's
+going to get filled by the result.
+
+180
+00:11:54,499 --> 00:11:58,474
+And then, we'll use res->ai_addr
+as the socket address for bind.
+
+181
+00:11:58,474 --> 00:11:59,037
+And then,
+
+182
+00:11:59,037 --> 00:12:03,491
+when we're done with this, we'll use free
+at res after we complete the bind stuff.
+
+183
+00:12:03,491 --> 00:12:07,102
+And what happens if you forget to free,
+you would have a memory leak in this.
+
+184
+00:12:09,482 --> 00:12:14,340
+So after we complete the bind stop,
+we're now ready to listen on the socket or
+
+185
+00:12:14,340 --> 00:12:18,325
+to notify the socket that we're
+ready to accept connections.
+
+186
+00:12:18,325 --> 00:12:20,042
+We can do that with the listen command.
+
+187
+00:12:20,042 --> 00:12:23,979
+So we take that same sockfd that we
+originally got from the socket call past
+
+188
+00:12:23,979 --> 00:12:24,942
+that and listen.
+
+189
+00:12:24,942 --> 00:12:29,370
+And we can specify the number of pending
+connections that are allowed before
+
+190
+00:12:29,370 --> 00:12:31,734
+refusing as the backlog argument here.
+
+191
+00:12:33,430 --> 00:12:34,817
+So then the next step,
+
+192
+00:12:34,817 --> 00:12:39,576
+we can use the except argument to actually
+accept a connection from a client.
+
+193
+00:12:39,576 --> 00:12:41,006
+So we use the sockfd,
+
+194
+00:12:41,006 --> 00:12:45,143
+the socket file descriptor that
+we return from socket again.
+
+195
+00:12:45,143 --> 00:12:47,374
+We pass in a location.
+
+196
+00:12:47,374 --> 00:12:51,843
+So in this case, it's just a pointer to
+a structure that we have, for instance,
+
+197
+00:12:51,843 --> 00:12:55,788
+on the stack that will provide a location
+that we can store the address of
+
+198
+00:12:55,788 --> 00:12:56,612
+the clients.
+
+199
+00:12:56,612 --> 00:13:01,106
+So we know who's connecting, for
+instance, at which IP address.
+
+200
+00:13:01,106 --> 00:13:06,300
+And then, the address length is just
+going to store the length of the sock addr
+
+201
+00:13:06,300 --> 00:13:11,834
+structure, so size of sock addr would be
+the value that we have here initially.
+
+202
+00:13:11,834 --> 00:13:18,110
+And then, the except function is going to
+update that to include the length of
+
+203
+00:13:18,110 --> 00:13:24,997
+the result that it returns in struck sock
+addr if the value is less, for instance.
+
+204
+00:13:24,997 --> 00:13:28,513
+And this function is going to return
+a new file descriptor that we can use to
+
+205
+00:13:28,513 --> 00:13:30,457
+actually read and write on the socket.
+
+206
+00:13:31,772 --> 00:13:35,974
+So when we're reading and writing on
+the socket, we'll use receive and send,
+
+207
+00:13:35,974 --> 00:13:39,864
+which are very similar to the read and
+write functions that we've already
+
+208
+00:13:39,864 --> 00:13:43,775
+discussed in lectures that you can
+use with arbitrary file descriptors.
+
+209
+00:13:43,775 --> 00:13:46,240
+And in fact, you actually can use read and
+
+210
+00:13:46,240 --> 00:13:49,847
+write on the file descriptor
+that we're using here as well.
+
+211
+00:13:49,847 --> 00:13:54,435
+But receive and send give you this extra
+flags argument, which you can use to, for
+
+212
+00:13:54,435 --> 00:13:58,113
+instance, setup blocking or
+non-blocking node on the socket.
+
+213
+00:14:00,463 --> 00:14:05,024
+So the received send sequence after
+we complete except, they will use
+
+214
+00:14:05,024 --> 00:14:10,372
+the accepted file descriptor to call from
+the server application and to receive.
+
+215
+00:14:10,372 --> 00:14:14,932
+Once the client sends data,
+we'll get the byte
+
+216
+00:14:14,932 --> 00:14:19,381
+buffer back from receive
+as our return value.
+
+217
+00:14:19,381 --> 00:14:24,305
+And we can also send then using the file
+descriptor that we got back from
+
+218
+00:14:24,305 --> 00:14:28,241
+accept and send or
+receive data to or, from the client.
+
+219
+00:14:28,241 --> 00:14:32,405
+And the flags' argument can be used to
+set up blocking or non-blocking reads.
+
+220
+00:14:32,405 --> 00:14:34,422
+You can use either with your assignment,
+
+221
+00:14:34,422 --> 00:14:37,138
+there's you can choose which
+way you want to implement.

@@ -1,0 +1,189 @@
+In this video, we're going to
+do an introduction to buildroot. So, learning objectives, we'll talk about
+build systems generically, what they are, and how we'll use them for
+embedded systems development. And then we'll give an overview of
+buildroot as a specific build system tool. So we talked before about the Linux
+components that are common to embedded systems, the toolchain, the bootloader,
+the kernel, and the root filesystem. So how are we going to generate all
+these components that we need for our embedded system? There are several options to do this. One would be a build system,
+an example of that would be Buildroot, Yocto, or OpenWRT. We're going to talk in this
+class about Buildroot or Yocto. Another option would be Roll Your Own, you
+could essentially use kind of like cross tool, NG or
+some tool like that to build a toolchain. You could build your own root
+file system from scratch, you can basically do all these steps on
+your own without a dedicated build system. And the third way is you could
+use some existing distribution that already builds these for you or that already has specific versions
+of these that it puts together for you. So for instance, debian or Ubuntu. So why would you use a build system
+instead of Rolling Your Own? And really the question would be,
+why would you need to reinvent the wheel? What would be the benefit of putting the
+work in to Roll Your Own build system when they're already are ones available? So, you need to make sure that there's a
+really specific reason that you need to be doing that, and typically, there won't be. So it's usually,
+it's going to be a lot more efficient for you to learn one of these
+existing build systems and use it than it would be to
+Roll Your Own custom build systems. So really the main reason I would
+think of to use for Roll Your Own is the reason that we did to kind of
+just learn the different parts of it, but I would not use Roll Your Own for
+a production project. Another important thing to think about is,
+what is your strategy for keeping up with security patches? And so, if you're Rolling Your Own OS and
+you're building every one of your applications, downloading them all,
+building them from scratch. You should think about what's going to
+happen when there's security patch available for one of those
+applications I just downloaded. Am I going to watch the CV reports for
+every single one of the applications I'm including in my root file system,
+try to manage that all myself? That's probably going to
+be a pretty big task, and this is pointing you to a reason why you
+should try to use a different strategy for your embedded Linux buildroot system. So then talking about using a build
+system versus using a distribution. And some of the trade offs between using
+a distribution over a build system. So the first thing to know about if you're
+going to use something like debian instead of using a build system to
+build your embedded system. You need to think about the fact that
+the goals of the distribution are probably different than of your embedded project. So the distribution is probably built and
+focused on users and desktops. And so, a lot of the decisions that are
+made about packaging that distribution, are going to be based on that, and that might not map very well
+to your embedded Linux system. For instance, you might have
+a headless system that doesn't even have a UI display or any type of
+user interaction that's occurring. So a lot of times, things like upgrades,
+if you go through a distribution upgrade, it will ask you a bunch
+of questions about, do you want to keep
+this old configuration? What's your username and password? What your time zone, for instance,
+when you're doing your installs? So upgrades and installs a lot of time
+we're going to presume someone's going to interact with the system. And you're going to have to fix all those
+as a part of if that assumption is not correct for your embedded system. And also the package management for
+distribution is not really designed for embedded software development. Again, there's a different goal in mind
+here of who the distribution is based on. So a lot, you're going to have
+to find those problems and fix them to work better
+with your embedded work. Another few things to think about if
+you're using a distribution instead of a build system, in a distribution, reducing the image size
+may be challenging. And again, the goal of the distribution
+is to make it easy for users to use it and it's probably
+not to fit on a very small flash device that isn't a common use
+scenario for a PC, for instance. And you'll also likely to do
+some customization work to generate a production image. The workflow for a distribution is
+usually installed from a USB image and then install a whole bunch of
+applications on top to customize. Whereas, what you want from an embedded
+system perspective is you want to build a whole root file system that
+you can just flash onto a device and production that's got all
+your custom components on it. So that's possible with the distribution,
+but it's going to take a little bit more
+work for you to get that all set up, this is something that a build
+system will do for you. Another thing to think about where the
+distribution is that the way distribution upgrades work is that they upgrade
+individual packages from one division to another. And those individual upgrades may
+work slightly different when you're going between two different
+revisions of the application. And so, you're not just swapping out
+one application with with another, you're running an upgrade on every
+single one of the applications. And so, what this means is that you can
+have subtle differences in your file system that happened depending on how
+you upgraded from one point to another. So, say I went from version 1
+to version 3 of my distribution, or I went from version 1
+to version 2 to version 3, there might be some slight
+differences in that path. That means that you end up with slightly
+different content in your profile system, and this could cause subtle and
+difficult errors to track down. So this is another thing to keep in mind
+when you're making this decision about, do I use a build system or distribution? And the reason why you might want to
+consider using a build system. So, from here on out, we're going to
+assume that you're using a build system for your embedded system builds, and
+we're going to talk about buildroot, Yocto has two different ways to do that. And in this particular video, we're going to talk
+specifically about buildroot. So the steps that are going to perform for you by your build system that in this
+part will be generic to any build system, it's going to download source for
+common packages from upstream. So, we talked about filling the root
+file system with applications, those applications are all going to
+come from open source repositories and developers that are working on these. And every one of those is going to have
+some source code storage somewhere online. And your build system is going to
+know where all those locations are, it's going to download all the source,
+and it's going to apply the patches for cross compilation. Maybe fix some specific bugs that
+are known, but the given release, and then it's going to build them for you. And it's going to take the output of
+the build and it's going to put it in the staging area that will ultimately
+turn into your file system. It's going to use that staging area to
+create the image files that you can then put on the device and deploy. A few other things that are handy
+that you'll get with a build system, it's going to allow you to
+easily add your own packages. And so, your own packages are probably
+coming from your own repositories that may not be public, and it's going to
+have a way for you to add that easily. And it allows you to use
+a proprietary license, for instance, for some of the applications. And so, the source code might
+not be distributed for those and you might need special access,
+you might need to build inside a VPN, or you might need an ssh key
+to access that content. And your build system is
+going to be able to support that. It's also going to let you select system
+profiles for your application target. So for instance,
+if you're building a headless system and you don't need graphics support, then
+there'll be something in the build system that will allow you to select whether or
+not you need graphics. So this is a really easy way that you
+could stripped down the image size for a system that doesn't
+need any graphic support. You can just turn that off in
+the profile of the build system, and you free up a bunch of root filesystem
+space that would in the distribution potentially be used and
+not necessarily needed. A build system is also going to track
+the open source licenses that are used in the project. And remember, we talked about your requirements
+in use of open source licenses. And the fact that this means that you
+have some responsibilities to share the source code that's
+associated with those licenses. And the build system is
+going to help you with that, so it's going to track which licenses
+are used in which packages. And it's going to help you create some
+content that you can use to share and meet your license requirements. So talking specifically about buildroot,
+what is buildroot? Buildroot is one of the build systems
+that we're going to talk about and use this semester, and buildroot is kind
+of like you would guess from the name, it's a builder of remote file systems for
+embedded devices. So it's really a collection of Linux
+packages with build instructions, and that includes both host and
+target packages. Meaning that we're going to
+install libraries and applications on our host that are going to
+help us build and cross compile. So like the cross compiled tools
+that we installed manually, that's all going to be installed for
+us as a part of the build up package. And then it's going to be packages
+that are intended for the target. So content that we're going to
+cross compile in our host and set up in our root file system,
+ultimately to be installed in the target. Buildroot was started back in 2001,
+so it's been around a very long time, and one of buildroot main
+focuses on simplicity. And that's the reason we start with
+it in this course, because it's the definitely the simpler of the two
+to get up to speed and to start with. So the buildroot build system is
+licensed GPLv2, so if you remember our discussion about the different
+licensing for open source software. GPLv2 means that you're expected to share
+changes to the source with the community, and that's part of what the licenses your
+responsibilities for using that license. It leverages the popular and
+ubiquitous make files and K kernel kconfig, menuconfig. So what we've already talked about, what
+we've already used to build the kernel, what we already used to build and
+configure busybox, ct-ng. That same configuration mechanism
+is going to be used by buildroot. So another reason that this
+one is kind of easy for you to get started if you only
+have experience with that tool. So when you're installing building,
+it's really based on the new make and a few utilities that are detailed on the
+requirements page here that you can find links below. You'll need a collection of
+packages installed in your host and there's a link to
+the mandatory packages here. And I also suggest and curses that will
+just let you be able to use menuconfig. And for buildroot, this is the end curses
+library that you can install here. So buildroot refers to
+packages as the definition for the different things that we're going to
+be adding to the root file system. Basically, the source we're
+going to pull down and compile, and then the instructions were putting that
+cross compiled content into our root file system. The building install instructions
+are going to use a GNU Make syntax, and so you're essentially
+going to be building head or include files that will be
+included in the new make files and describe what needs to get done
+in order to build your packages. And all of the built in packages for buildroot are going to be located in the
+buildroot tree under a package directory. And buildroot also supports what's called
+br2-external trees, so you can have your own tree that you define for your package
+builds that happened outside of buildroot. So why might you want to
+use a br2-external tree? And why would be used in this course? It's because in pretty much every
+application you're going to implement, you'll have some packages that
+you can't share upstream. In other words, you're going to
+have some packages that you build, they're going to have
+a proprietary license. Most likely, you'll have
+applications you're developing for your embedded system that you
+are going to want to share publicly. And so, you'd want to use an external tree
+to share that content because it's not something that you're going to be
+contributing back to buildroot community. So packages can reference get
+repositories for source code, and you can build your own custom application
+from dedicated repositories, and we'll show an example of how to
+do that with assignment for. So every package definition needs at
+least two files with some special syntax that's defined by
+the buildroot project that config.in is KConfig framework code that adds
+the package to the config menu. So when you use menuconfig you can see
+your package that's going to be defined in config.in. And then there's also
+the package_name>.mk file, which is where you're recipe editions and
+your variables that you define, and can you make syntax are going to
+be used to build your package. So the buildroot package definitions
+don't contain your code, they're really just going to contain
+the instructions to get the code, compile the code, and
+add it to the root file system.

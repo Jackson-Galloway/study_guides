@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Read Only Root Filesystems</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Modifying content in an overlay filesystem results in changes to the lower layer filesystem.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~B5-s8011EeyF_wroUAQ62w" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~B5-s8011EeyF_wroUAQ62w" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Whiteout files in an overlay filesystem are created with a char device node</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~RvAsE011EeyF_wroUAQ62w" type="radio"/> <div class="quiz-option-text"><p>Flase</p></div></li>
+<li><input name="autoGradableResponseId~RvAsE011EeyF_wroUAQ62w" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Advantages of Read Only Root File Systems are:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~BwF7sU12EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Simplifies factory default reset strategies</p></div></li>
+<li><input name="autoGradableResponseId~BwF7sU12EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Easier to setup</p></div></li>
+<li><input name="autoGradableResponseId~BwF7sU12EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Easier to modify</p></div></li>
+<li><input name="autoGradableResponseId~BwF7sU12EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Avoids unintentional writes</p></div></li>
+<li><input name="autoGradableResponseId~BwF7sU12EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Reduces File System corruption possibilities</p></div></li>
+<li><input name="autoGradableResponseId~BwF7sU12EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>simplifies device update strategies</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Use a tmpfs filesystem for</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~7fCF5k48EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Content which can be lost after reboot</p></div></li>
+<li><input name="autoGradableResponseId~7fCF5k48EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Content which needs to persist across reboot</p></div></li>
+<li><input name="autoGradableResponseId~7fCF5k48EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Content which is saved to disk</p></div></li>
+<li><input name="autoGradableResponseId~7fCF5k48EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Content which uses RAM space instead of disk space</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What benefit does a read only root filesystem offer in an A/B update scenario?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WPR1Tk49Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Replaces the bootloader update scheme</p></div></li>
+<li><input name="autoGradableResponseId~WPR1Tk49Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Ensures modified content is not lost when switching boot partitions</p></div></li>
+<li><input name="autoGradableResponseId~WPR1Tk49Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Removes the need for additional data partition</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select options for implementing a read only root filesystem on embedded Linux based devices</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~odJUPk49Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Use OverlayFS to overlay the entire root filesystem with another partition</p></div></li>
+<li><input name="autoGradableResponseId~odJUPk49Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Use OverlayFS with upper layers on tmpfs or data partition</p></div></li>
+<li><input name="autoGradableResponseId~odJUPk49Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Ensure no linux applications need to write any content to the root filesystem</p></div></li>
+<li><input name="autoGradableResponseId~odJUPk49Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Use symbolic links to data partition or tmpfs for modified content</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A whiteout file is used for what purpose in an OverlayFS?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~gBkdoU5cEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Make the upper filesystem file appear to be a char device</p></div></li>
+<li><input name="autoGradableResponseId~gBkdoU5cEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Delete a lower layer file from an overlay mount without actually deleting from the lower filesystem.</p></div></li>
+<li><input name="autoGradableResponseId~gBkdoU5cEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Delete an upper layer file from an overlay mount to prevent it from being added in the lower filesystem.</p></div></li>
+<li><input name="autoGradableResponseId~gBkdoU5cEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Make an upper filesystem file read only.</p></div></li>
+<li><input name="autoGradableResponseId~gBkdoU5cEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Make a lower filesystem file appear to be a char device</p></div></li>
+<li><input name="autoGradableResponseId~gBkdoU5cEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Make a lower filesystem file read only</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

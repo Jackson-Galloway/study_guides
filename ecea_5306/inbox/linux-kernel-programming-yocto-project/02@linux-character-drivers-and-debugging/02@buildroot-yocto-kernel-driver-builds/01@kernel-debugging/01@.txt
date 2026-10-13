@@ -1,0 +1,268 @@
+This video is going to
+be all about debugging your driver inside
+the Linux kernel. The objectives for today, we're going to talk about
+strategies for debug of kernel code and specifically
+your driver code. We're going to talk about
+strategies for using printk and handling of, oops messages. The book talks a
+lot in Chapter 4 about why kernel debugging is harder than maybe what you've experienced so far with
+user-space debugging. First of all, you
+might be used to using debuggers like GDB
+with user-space tools. While it's still possible
+to analyze with GDB, the book talks about
+using /proc/kcore. You can't do a lot of the
+things that make GDB useful. You can't really halt, set, breakpoints, modify
+memory for instance. There are other ways with KGDB that you can do
+some of this stuff. But in general,
+it's not really the typical preferred
+go-to method to debug, It's not something you're
+going to typically start with for debugging your
+kernel source code. It's also not really
+easy to trace. There are tools that
+will trace for us, but there are certain amount
+of setup that we need to do and a little bit of overhead. In terms of getting
+all that setup. It can be quite difficult
+to reproduce bugs, especially ones that
+are timing-related. The best strategy this is to really think about
+the design ahead of time and not make sure
+that your design is such that you
+won't have to try to find these timing bugs later. Finally, often bugs are
+going to crash the system. Because we don't really have
+the security that we have with user-space
+where we can take a segmentation fault and
+the kernel will connect to collect a nice
+package for us that we can use to analyze with GDB. A lot of times bugs
+that happened in the kernel are going to
+crash the system completely. We can't really rely on
+any cleanup mechanisms because we might be crashing something that's
+related to clean up. A lot of times bugs
+when they crash, they might destroy
+evidence that would be helpful to use to figure
+out what the crash was. In general, the
+takeaway here is that the stakes in terms of having kernel bugs or in terms of having
+programming bugs, go up a level as we start
+working in the kernel. You need to be more
+diligent, more patient, more cognizant of anything
+that might end up turning in some bug that could
+cause any of these issues. How do we debug the kernel, given all those restrictions
+and limitations? There are a lot of
+debugging in terms of, this is specifically talking
+about how you could use debugging with
+both GDB and KGDB. There's a bunch of options
+that are listed in the book in terms of configs that
+you can turn on and the kernel to help with this. Then there's also
+a kernel hacking section of menu
+config that'll talk about how you can do
+debugging like GDB, KGDB, and how you can get additional information like lock debugging out of the kernel. There's also SYSRQ that we'll discuss later as a
+strategy you can use here. But by far the most common
+debug method that I've seen for debugging your device driver generally is to use prints. Printk is really the
+mechanism for doing this. Essentially the equivalent
+of printf from user-space. But of course, we're
+not going to be able to use printf because that's [inaudible] and we
+don't have access to those user-space libraries
+from kernel space. One thing to notice here
+is that there's no comma. This is just a
+macro that's going to expand the
+something that tells the printk function
+that this is a warning or the level of the
+kernel message. The different levels that
+are supported are Emergency, Alert, CRIT, ERROR, Warning, Notice, Info, Debug. These are in different
+levels from 0-7. You can specify thresholds that tell where the
+log messages should go based on which level you've selected for are some
+different mechanisms. We'll talk about in a bit. Klogd and Syslogd
+Daemons are example, of daemons that can
+handle these for you. They'll ultimately
+end up depending on your configuration in something
+like /var/log, messages, it could be configured
+to go to another file, or it could even be
+configured to go straight to the console terminal based on your Syslog config if
+you're using Syslog. This is how it's
+going to be done in Ubuntu the versions that
+we're currently using. D message is going to print the kernel message as well
+from proc, k message. This is another way
+that you'd be able to get the content of your debug prints by using
+the D message command. The /proc/sys/kernel/printk
+can use to control whether prints are redirected
+to the console and which type of
+prints are redirected. This shows you the current default minimum and
+boot time settings for which prints are going to be redirected to the console. Each one of these corresponds
+to the level that I showed in the previous slide. Controlling things like
+weather warning messages are printed or warning
+and everything lower. Then the minimum and
+boot time defaults. One thing to know about printk
+is you might be concerned, well, what if I'm
+taking an interrupt? Do I need to worry about an interrupt happening and
+trying to write from printk, will there be something
+that it's doing that's not safe to
+do an interrupt. It turns out that this is
+basically design a printk. The print's not actually written anywhere as a part of
+your call to printk, it's just written into
+a circular buffer. Then there's another
+task that comes out and pulls out of
+the circular buffer and actually writes it out
+to someplace like a file. That means that it's safe
+to use printk anywhere, including in interrupt handlers. A lot of times you end up in
+a situation where you've got Debug prints that are going to help you solve some problem. Or maybe not even to help
+you solve a problem. Maybe as you're writing it, you're thinking this would
+be a good thing to know, like when I'm troubleshooting
+or initial implementation. But a lot of times
+you don't want to spam the logs with a whole bunch of additional information
+that's not necessary. A lot of these type
+of prints can be used with a macro like the ones
+that are defined in the book and used in the scull
+device implementation. We use a macro like
+this where we can define this Scull
+Debug somewhere. Like for instance in our make arguments or
+maybe in a header file. When we define Scull Debug, that changes whether we use a print message or whether we turn it
+into doing nothing. Basically, if we define
+the macro as nothing, then anytime we use
+this PDEBUG macro, it's just going to remove the line and it won't
+get compiled at all. But this particular
+implementation supports, first of all, if we're
+building a kernel module, PDEBUG is going to map to printk and we're going to print
+information about, and you notice here
+that it's putting a nice prefix on
+it so we can see more information about where
+the message is coming from. Otherwise, if we're calling
+it from userspace is just going to use printf
+on standard error. This is a common
+example that you see as well and using all
+the scull examples, and I recommend you use
+something like this to organize your prints for your example, for your assignment
+implementation as well. Here's a preview to
+a tool that we're going to use a lot for the kernel development
+portion of the class. You're probably going to
+see a lot like when you're asking me questions on Slack, I'm probably going to
+be asking you, hey, can you give me
+the strace output? Because this is really, really super-useful that
+tell what's happening behind the scenes in terms of the user space and
+driver interaction. What we can see with
+the strace utility. Here I'm just showing
+you an example of I'm doing a cat of dev/scull0. This is just going
+to ultimately read values out of the
+dev/skull0 device, which is our scull device
+driver example from LDD3. One of the things
+you'll notice here is that there'll be an
+open command for devscull0 and there'll
+be a return value here. This open app essentially
+is going to map to the open system call and the result of the open call that you do from your driver
+or are from user space, or in this case,
+the cat is doing as a part of its attempt
+to read the file. What this line tells us is that file descriptor=3 has been
+allocated for dev/scull0. Then if you follow through the trace a little bit further, you'll see that used
+here in the read. You can see that
+I've already set up the dev/scull0 device with a hello_world print
+included in it. This read of the
+file descriptors, just going to read
+that back out. The returns are going
+to tell us just like the function signature
+from userspace, that there were 12
+bytes that were read out from file descriptor
+number three. Then the next right command, you can see that we're using a file descriptor of one
+and that file descriptor of one is the default file
+descriptor for standard out. This is where the print to
+the console is going to happen and you can see that
+print happening right here, interleaved with the system
+Trace or the strace output. This is really
+valuable again because it can show essentially what these functions
+are going to map to your f Ops table functions. You can see what your f op table functions are being passed in and you can see
+what they're being returned and what
+they're returning. This is going to be a really
+useful tool for debugging. Another way that you
+can do debugging that's not really
+mentioned in the book and maybe not
+necessarily something that you'll want to use on the assignments
+that we have here because these are
+pretty trivial, but just one I wanted to mention so that you know
+about in the future. You can use dynamic debug, which is newer than what
+was covered in the book. There are basically options
+that you can turn on and off individual prints from the
+command line at runtime. The benefit is that
+you don't need special debug builds like we
+talked about before. They use Build switches
+to turn on and off prints and you don't need
+to recompile the driver. You can customize which
+prints are going to show up based on what you're
+trying to debug at one time. This can be a pretty
+useful tool for a production to scenario
+or maybe something useful to use if you
+wanted to focus on a kernel driver as a part of your file project
+implementation. You can also, another
+thing the book mentions is printk_rate limit. There's a very similar
+function, printk_ratelimited, that replaces the mentioned
+in Device Drivers Book. But this just keeps you from
+flooding the kernel logs. If you have a print that
+might happen quite often, then you can use
+printk_ratelimited to control how often
+that print actually shows up in a log so you don't end up with a log that just has hundreds of the same
+message over and over again. In terms of debugging, one concern we're going to
+have and unfortunately, you'll probably see one
+or more of these in your implementations
+for the class. It's a fact of life
+that you'll make a mistake and this was going
+to result in a system fault. System fault is going
+to happen due to a bug in a specific driver, most likely yours if you're
+doing driver development and it could result in a panic where the kernel
+stops executing. It might leave the system in
+a generally unusable state. By unusable state, I mean, it might not be enough to just unload and reload your driver. You need to be skeptical whenever you see a
+system fault that you might need to
+reboot the system or if you're using
+a virtual machine, you might need to reboot your virtual machine in
+order to recover. One of the system faults that
+are pretty common to see, and again, you'll
+probably, unfortunately, be seeing one or more
+of these as a part of your work in this course,
+are oops messages. An example of an oops is a null pointer dereference of
+an incorrect pointer value. Similar to what would cause a segmentation fault
+in user space. This is also known
+as a page fault. Again, this might
+leave the system in an unusable state and
+you might need to reboot the system
+after you see this. There's actually an
+example provided in the LDD 3 examples that purposely writes
+to a null pointer, it's called faulty write. Just to show you an
+example of how to deal with an oops message
+and give you practice parsing these so
+that you can use the output for yourself when you have these happen during your own
+driver development. The first thing we notice about an oops message
+is this unable to handle kernel null
+pointer dereference at virtual address zero. This is already
+giving us a hint, virtual address zero that looks like it's probably a
+null pointer reference. The first line is
+going to tell us what happened and then EIP. These register sections are
+specific to, in our case X86, since I ran this on X86, and so this is referencing the instruction pointer
+reference for X86. But it's essentially telling us where in code the
+fault occurred. What this is saying is that
+it happened four bytes in to a function that's
+16 or X10 bytes long. The module that it was loaded
+from was called faulty. You can see the call
+trace here in terms of where the faulty
+write occurred. If you map this to this
+really simple implementation, you can see that indeed shortly into the
+faulty write function, we attempt to write
+a null location. This would cause the oops
+message that we're seeing here. One other useful tool
+that you can use when you're trying to understand oops messages is
+objdump or objdump that's going to show you
+the assembly content associated with an object file. In this case, our object
+file is going to be our.ko file that we created from
+the kernel compile process. Objdump-S is going to intermix
+source with assembly, assuming that you have
+kernel debug turned on for your module builds and you'll see there's a
+debug option in the make file that you can turn on
+to get this option. If you're building for
+buildroot for instance, and you want to get the
+cross object dump output, remember you'll need
+something that can parse the output for whatever target
+architecture you're using. In the buildroot case,
+you'd look under buildroot output host
+bin aarc64-linux objdump to find the cross
+object dump utility that I could run on X86, but would analyze a.ko file built for a [inaudible]
+platform for me. You can do something like this, the path to whatever the
+object dump file is, dash S, and then the path to the module file that you build. You should see an output
+that looks something like this where you
+have, in this case, I don't have source intermixed and it's
+just showing assembly. But I can see that the
+faulty write function is referenced here and I can see a reference here where I move a zero into X1 to
+this next line here, the store of the value into the X1 register that we
+previously set with zero. It's going to call it cause
+at null pointer exception.

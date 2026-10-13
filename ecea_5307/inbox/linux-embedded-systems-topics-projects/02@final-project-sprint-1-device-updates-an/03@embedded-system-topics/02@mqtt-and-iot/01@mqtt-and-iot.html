@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MQTT and IOT</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>MQTT requires higher bandwidth than most communication protocols</p><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~eePfBEWAEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~eePfBEWAEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>For an MQTT SSL Security  scheme in which no private key or password is transmitted over the channel which of the following is true?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~P3WT4UWQEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>A hacker may be able to obtain the key by listening to the channel.</p></div></li>
+<li><input name="autoGradableResponseId~P3WT4UWQEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>A hacker who can compromise the channel can view/modify data sent between device and server but cannot emulate the device.</p></div></li>
+<li><input name="autoGradableResponseId~P3WT4UWQEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>A hacker who can compromise the channel cannot view/modify data sent between device and server but can emulate the device.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>An MQTT SSL security scheme requires Secure Bidirectional Pipe with Server And Device Identity  verified by _______________________________________</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~8t6cokwHEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>Certificate Authority encrypted certificate.</p></div></li>
+<li><input name="autoGradableResponseId~8t6cokwHEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>Certificate Authority signed certificate.</p></div></li>
+<li><input name="autoGradableResponseId~8t6cokwHEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>A signature encrypted by the target server</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>JSON format is a _________ based format</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Y_CTO0wJEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>Binary</p></div></li>
+<li><input name="autoGradableResponseId~Y_CTO0wJEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>Numeric</p></div></li>
+<li><input name="autoGradableResponseId~Y_CTO0wJEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>XML</p></div></li>
+<li><input name="autoGradableResponseId~Y_CTO0wJEeyQEhIbxMk5kw" type="radio"/> <div class="quiz-option-text"><p>Text</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which are possible reasons to use JSON for your IoT communication scheme?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~VGXjZk4mEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Difficult for hackers to understand due to obfuscation</p></div></li>
+<li><input name="autoGradableResponseId~VGXjZk4mEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Packed in binary format for smallest possible message transmission overhead</p></div></li>
+<li><input name="autoGradableResponseId~VGXjZk4mEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Works with many programming languages</p></div></li>
+<li><input name="autoGradableResponseId~VGXjZk4mEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Easy to parse by embedded software</p></div></li>
+<li><input name="autoGradableResponseId~VGXjZk4mEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Text based and more readable than binary output</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What are reasons to use device shadows or digital twins in your IoT device implementation?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~7EBAMk4mEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Ensure IoT devices never need internet access.</p></div></li>
+<li><input name="autoGradableResponseId~7EBAMk4mEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Save state when devices cannot reach the internet</p></div></li>
+<li><input name="autoGradableResponseId~7EBAMk4mEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Eliminate the need for an Internet server to manage device state.</p></div></li>
+<li><input name="autoGradableResponseId~7EBAMk4mEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Allow previous device state to be obtained when the IoT device cannot reach the Internet.</p></div></li>
+<li><input name="autoGradableResponseId~7EBAMk4mEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Allow state configuration when devices cannot reach the internet</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

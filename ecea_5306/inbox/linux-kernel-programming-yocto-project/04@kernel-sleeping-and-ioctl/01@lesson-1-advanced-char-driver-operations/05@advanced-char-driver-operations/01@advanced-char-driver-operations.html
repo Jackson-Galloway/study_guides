@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Char Driver Operations</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>The ioctl call allows you to interact with your driver from userspace, passing a command and optional associated argument pointer</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~cgEoXZ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~cgEoXZ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The ioctl call is the mechanism recommended by most kernel developers to interact with your device from userspace.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~AykK61" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~AykK61" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The purpose of an ioctl magic number is to...</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~sR7mVA" type="radio"/> <div class="quiz-option-text"><p>Specify the direction of the ioctl command</p></div></li>
+<li><input name="autoGradableResponseId~sR7mVA" type="radio"/> <div class="quiz-option-text"><p>Associate ioctl command arguments with specific device drivers</p></div></li>
+<li><input name="autoGradableResponseId~sR7mVA" type="radio"/> <div class="quiz-option-text"><p>Describe the length of the ioctl argument</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The magic number, sequence number, data transfer direction, and user data size values are all combined in the cmd argument of the ioctl function using ioctl macros _IO, _IOR, _IOW, and _IOWR</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~7w8232" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~7w8232" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When deciding how to allocate ioctl command argument values for your driver (second parameter in the ioctl function signature), you should start with 0 and allocate sequentially.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~O2y7wn" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~O2y7wn" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Describe the steps required (from the driver's perspective) to utilize a pointer provided as an extra argument to ioctl which describes a buffer used with ioctl direction _IOC_READ</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~4GlrzR" type="radio"/> <div class="quiz-option-text"><p>Check for safe read access to user memory and copy from kernel memory to user memory.</p></div></li>
+<li><input name="autoGradableResponseId~4GlrzR" type="radio"/> <div class="quiz-option-text"><p>Check for safe write access to user memory and copy from kernel memory to user memory.</p></div></li>
+<li><input name="autoGradableResponseId~4GlrzR" type="radio"/> <div class="quiz-option-text"><p>Check for safe write access to user memory and copy from user memory to kernel memory.</p></div></li>
+<li><input name="autoGradableResponseId~4GlrzR" type="radio"/> <div class="quiz-option-text"><p>Check for safe read access to user memory and copy from user memory to kernel memory.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Describe the steps required (from the driver's perspective) to utilize a pointer provided as an extra argument to ioctl which describes a buffer used with ioctl direction _IOC_WRITE</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~NQ6qSo" type="radio"/> <div class="quiz-option-text"><p>Check for safe read access to user memory and copy from user memory to kernel memory.</p></div></li>
+<li><input name="autoGradableResponseId~NQ6qSo" type="radio"/> <div class="quiz-option-text"><p>Check for safe write access to user memory and copy from kernel memory to user memory.</p></div></li>
+<li><input name="autoGradableResponseId~NQ6qSo" type="radio"/> <div class="quiz-option-text"><p>Check for safe read access to user memory and copy from kernel memory to user memory.</p></div></li>
+<li><input name="autoGradableResponseId~NQ6qSo" type="radio"/> <div class="quiz-option-text"><p>Check for safe write access to user memory and copy from user memory to kernel memory.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The best method for controlling devices which do not transfer data is to use the ioctl command.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~JKqQRq" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~JKqQRq" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the rules you must obey regarding sleeping from your driver code</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~4vP86V" type="checkbox"/> <div class="quiz-option-text"><p>Don't make assumptions about the state of the system after waking up</p></div></li>
+<li><input name="autoGradableResponseId~4vP86V" type="checkbox"/> <div class="quiz-option-text"><p>Ensure some other process or kernel event will wake you up</p></div></li>
+<li><input name="autoGradableResponseId~4vP86V" type="checkbox"/> <div class="quiz-option-text"><p>Ensure code in the same process/thread will wake you up</p></div></li>
+<li><input name="autoGradableResponseId~4vP86V" type="checkbox"/> <div class="quiz-option-text"><p>Ensure you are in atomic context</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the case of a blocking operation, the driver should block on read() if... (select any which apply)</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nciRlj" type="checkbox"/> <div class="quiz-option-text"><p>No buffer space is available to store data from the user space program</p></div></li>
+<li><input name="autoGradableResponseId~nciRlj" type="checkbox"/> <div class="quiz-option-text"><p>Data is available, but less than requested by the user space program</p></div></li>
+<li><input name="autoGradableResponseId~nciRlj" type="checkbox"/> <div class="quiz-option-text"><p>O_NONBLOCK was specified with open()</p></div></li>
+<li><input name="autoGradableResponseId~nciRlj" type="checkbox"/> <div class="quiz-option-text"><p>No data is available to return to the user space program</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the case of a blocking operation, the driver should block on write() if.. (select any which apply)</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~u8FmZ7" type="checkbox"/> <div class="quiz-option-text"><p>O_NONBLOCK was specified in the open() call</p></div></li>
+<li><input name="autoGradableResponseId~u8FmZ7" type="checkbox"/> <div class="quiz-option-text"><p>No space is available in the device driver buffer to store the data from the user space program</p></div></li>
+<li><input name="autoGradableResponseId~u8FmZ7" type="checkbox"/> <div class="quiz-option-text"><p>Not enough space is available in the device driver buffer to store the data from the user space program.</p></div></li>
+<li><input name="autoGradableResponseId~u8FmZ7" type="checkbox"/> <div class="quiz-option-text"><p>No data is available to return to the user space program</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The use of input and output buffering in a driver's read() and write() operations is most important to include when data transfers to the device are significantly slower than data transfers to or from memory.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~a1OQeq" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~a1OQeq" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the true statements about sleeping and sleep rules</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~E625WU" type="checkbox"/> <div class="quiz-option-text"><p>You should only sleep while holding a spinlock after careful evaluation of the associated code.</p></div></li>
+<li><input name="autoGradableResponseId~E625WU" type="checkbox"/> <div class="quiz-option-text"><p>Do not sleep when holding a semaphore or mutex under any circumstances</p></div></li>
+<li><input name="autoGradableResponseId~E625WU" type="checkbox"/> <div class="quiz-option-text"><p>You should only sleep when disabling interrupts after careful evaluation of the associated code.</p></div></li>
+<li><input name="autoGradableResponseId~E625WU" type="checkbox"/> <div class="quiz-option-text"><p>Do not sleep when disabling interrupts under any circumstances</p></div></li>
+<li><input name="autoGradableResponseId~E625WU" type="checkbox"/> <div class="quiz-option-text"><p>You should only sleep while holding a semaphore or mutex after careful evaluation of the associated code.</p></div></li>
+<li><input name="autoGradableResponseId~E625WU" type="checkbox"/> <div class="quiz-option-text"><p>Do not sleep when holding a spinlock under any circumstances</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The schedule() function will yield the CPU to another process and only return to your process when a condition your driver has specified occurs.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~u3xGNb" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~u3xGNb" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The poll function can be implemented by a driver to report whether reads or writes on a device would block.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qWiPYu" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~qWiPYu" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The fsync function is only necessary for drivers which support O_NONBLOCK operations.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WTrVSo" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~WTrVSo" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>To support seeking, a device driver must implement the llseek method.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0m6k7F" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~0m6k7F" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the appropriate methods for handling device open() within a device driver for a device which is not currently available for access.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~5d3pTN" type="checkbox"/> <div class="quiz-option-text"><p>Return -EBUSY until access is available</p></div></li>
+<li><input name="autoGradableResponseId~5d3pTN" type="checkbox"/> <div class="quiz-option-text"><p>Blocking until access is available</p></div></li>
+<li><input name="autoGradableResponseId~5d3pTN" type="checkbox"/> <div class="quiz-option-text"><p>Return -EPERM until access is available</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

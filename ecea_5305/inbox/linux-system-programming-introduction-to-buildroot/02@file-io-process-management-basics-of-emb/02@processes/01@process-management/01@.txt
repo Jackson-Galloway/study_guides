@@ -1,0 +1,184 @@
+For this video,
+we're going to start talking about
+process management, how Linux manages processes. This will be Linux system
+programming chapter 5 content. Learning objectives
+for this video, we're going to talk
+about what a process is. We've already talked
+about that a little bit in the context of
+processes and threads; we're going to get into
+a little more detail about what a process is. We're going to talk
+about PATH and how that relates to
+process execution, and then we're going to
+talk about the system calls you can use to
+invoke a process, so that includes execl, fork, wait, and system. What is a process? A process is really just a
+running program in memory, so it's a binary image of
+the program that you built. It also has that virtualized memory instance
+that we talked about before when we talked about the differences between
+process and threads. It's a collection of files, files that are being
+accessed by the process, that are based on a unique file handle that is going to be
+managed by the kernel, like we talked about in
+our previous videos. There'll be an associated
+user with the process, the person who started it, or the person under whose credentials the process
+is currently running, and then one or more
+threads of execution. The process is uniquely identified by the
+process identifier, and that process identifier is valid at a single point in time. There's always a map
+in the kernel between a process identifier and a given process at
+a moment in time. However, that process ID is reallocated and
+reused by the kernel. If you start a process
+and then you stop it, and then you start a
+different process, there's a chance that
+process ID is going to get reallocated later to
+a different process. There are a few special
+process IDs that are always used for
+specific purposes. One is the idle process, which is process ID 0. There's one of
+these per processor and it handles things
+like power control, things that are common
+to the entire system. There's also the init process
+which is process ID 1, and that's the one
+that kicks off all the services on startup and does the basics
+system initialization. It would also launch
+a login program that you could interact with
+to log into the system. If we want to execute
+a different program from inside our
+user space program, the way we do that
+through POSIX API, there's a couple
+of different ways. But one of them is execl, and the execl family
+of functions. The important thing
+to know about execl is that it's going to replace the current running
+process with a new context, and that new context will
+be based on whatever you're calling as an
+argument to execl. In this case, since
+we're calling bin vi, whatever process is
+calling this, the memory, the content is going to
+get completely swapped out and the bin vi application
+is going to run instead. So execl for this reason, it would not return on success. If it's successful, it
+will have completely replaced the process and
+run whatever you specified. It's going to change pretty much everything in the
+current process image, with the exception of the pid, priority, owning
+user and groups. All that's going
+to stay the same, but then it's just
+going to swap out the content with the new
+process you specified. There's a few different variants of execl that you can call, execlp, execle, and you can read more
+about them in chapter 5, but they differ about how
+arguments are specified to the function and also whether environment is specified and used and whether
+PATH is included. This means the bash environment, the scripts that are
+sent in the environment, including PATH, whether those are relevant to the
+execution of the program. We'll get into a
+little more detail about that in the coming slides. First of all, what is
+the PATH variable? If you've done a little
+bit of work with Linux, you might already be used to the PATH variable or at
+least have heard of it. But really the PATH
+variable is just telling the shell all the
+different places that it should look
+for executables. Here's an example
+of what I see in my system when I echo
+out the PATH variable. You can see it's just a colon
+separated list of paths. We've taken it for granted
+in the past that if I type a command like ls, it works without needing
+to specify a full PATH. Well, the way that
+work happen is because the PATH that ls is on happens to be in the PATH argument
+used by the system. If I do which ls, that'll tell me the
+ls that I'm using. You can see the full
+PATH is user bin ls, and if I look back at
+the PATH variable, I can see user bin is
+in that path variable. That's how the lookup is working and that's why I don't need to specify ls with a full PATH
+in order to execute it. You need to be careful with PATH because there are ways that it could potentially get you into trouble when you aren't specifying the full
+PATH of executables. The book talks a little
+bit about this as well, but PATH injection can happen when someone's able to
+modify your PATH and redirect a request for a application without a PATH to someplace you probably
+don't want it redirected. For instance, if some hacker was able to change my
+PATH to put home hacker ahead of my
+user bin directory. Then I tried to execute ls. I would potentially be executing home hacker ls instead
+of user bin ls, which you could see it
+would be a problem. The solution to this
+is to avoid relying on PATH and instead use
+absolute path for executables. This is one case where it
+actually becomes easier for us because we're building
+in the case of embedded, rebuilding our root file
+system from scratch so we know exactly where stuff's going to be located in the
+row file system. So we can just invoke it
+directly based on absolute path. Another related Posix function that is useful in the
+context of processes. Here is fork, so fork where exec is going to completely replace the current
+process image, fork is going to create
+a new process for us. The new process is
+going to be running in the same image as
+the current process, but it's essentially
+going to be a child of the current running process. It'll create a new PID
+for that child and then kickoff the process, running the content in the application that's
+specific to the child. This is often the method
+that's used to start daemons. The daemon is really just a process running in
+the background. We'll give a specific
+example about how to use fork with daemons. The other thing to know
+about fork is that it uses copy-on-write for any changes to the process memory space. When the parent forks
+into the child, there might be local variables, kernel resources,
+open file handles all this stuff that was
+created in the parent process. The child process is going to
+have a copy of all of those because the memory space being essentially
+cloned at start. However, if the child starts
+changing those values, then those values are going
+to differ from the parent. But behind the scenes, Linux, rather than making a
+complete separate copy of the entire environment
+between these two processes, it'll use what's
+called copy-on-write, meaning initially they will
+share exactly the same copy. Then if the parent or
+the child writes to the local variable or changes the state of
+open file handles. It's only at that
+point that they'll get their own separate copy. This is just something that's
+going on behind the scenes, but it's interesting
+to know about. Here's a really simple example
+of a fork application, and you can see the
+link to this here on the bottom of the slide. We're just going to
+do a fork call here, we can check the return
+of the fork to try to figure out whether we're
+the parent or the child. Then we can print out
+whether we're the parent or the child process here
+in this print statement. If you run this, you'll see
+something like this where you can get the child PID
+that was created. You'll see the
+hello messages from both the parent and the child
+after the process splits. The book also mentioned
+zombie processes. This is a state where when
+a child process dies before parent and before the parent is informed about the
+child terminating. It's listed as zombie status
+in the process status. When would the parent
+not have been notified? It's really when the
+parent hasn't waited or hasn't obtained the status
+about the child process. One of the ways to do that is
+using the weight POSIX API. So you can use weight
+from the parent to obtain information about
+terminated children. This would not only
+obtain information, but also wait for the child
+process to terminate. Based on the response from wait, you can figure out
+the reason that the child process terminated. You can also get the return
+code from the process. There's some additional options
+here about, for instance, specifying the process
+ID to wait for a specific process if the process is starting
+multiple children. We've discussed replacing
+a process with exec, launching a new
+child process with fork and waiting for
+completion with wait. How would we, if we
+wanted to launch a completely new process and
+then wait for completion, not replacing our current
+process, how would we do that? We just combine
+fork, exec and wait. Fork would create a
+new process for us. Exec inside that new process would replace everything about the process which is
+fine because it's our child process
+rather than a parent. Then wait from the parent is going to wait
+for that child to complete and get the status. You might say, that
+seems complicated. Is there a less
+complicated option? It turns out there is,
+it's called system. System will do all these for us. It'll do the fork, the exec and the wait. You can just call system with the command that
+you want to run. It will handle this all for you. But there are a couple
+of drawbacks to this, you have to be careful about. One is that it uses the
+PATH so it can have PATH injection concerns like
+we talked about previously. Another thing that can get you into trouble is that
+it runs in the shell, so it's going to
+expand shell input. You want to be careful when
+you create this command that you aren't passing
+anything that could look like a shell variable. For instance, if you tried
+to pass dollar home, that dollar home
+would get expanded by the shell variable to
+your home directory, which might not be
+what you wanted. These are just things
+that you need to think about before you know whether you can use system
+in your application.

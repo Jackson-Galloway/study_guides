@@ -1,0 +1,286 @@
+1
+00:00:01,340 --> 00:00:04,905
+So in this video, I'm going to talk about
+system programming and error handling.
+
+2
+00:00:04,905 --> 00:00:10,216
+We're going to discuss errno and
+understand error handling strategies for
+
+3
+00:00:10,216 --> 00:00:12,534
+system programming and Linux.
+
+4
+00:00:12,534 --> 00:00:17,291
+So the C library mechanism for
+reporting errors is errno and
+
+5
+00:00:17,291 --> 00:00:20,905
+the functions that
+are associated with it and
+
+6
+00:00:20,905 --> 00:00:24,723
+the errno access is
+handled through errno.h.
+
+7
+00:00:24,723 --> 00:00:30,042
+So what you'll see in a lot of the API
+functions that will discuss and
+
+8
+00:00:30,042 --> 00:00:33,417
+use this semester that are based on POSIX.
+
+9
+00:00:33,417 --> 00:00:35,820
+Our statements like this
+in the return value,
+
+10
+00:00:35,820 --> 00:00:37,861
+talking about how errors are handled.
+
+11
+00:00:37,861 --> 00:00:43,627
+So in this case for the Fopen function,
+if there's an error that occurs,
+
+12
+00:00:43,627 --> 00:00:47,812
+null is returned and
+errno is set to indicate the air.
+
+13
+00:00:47,812 --> 00:00:53,145
+So there's a list of POSIX to find errors
+and one error that you might get for
+
+14
+00:00:53,145 --> 00:00:56,955
+instance, with a file open
+command would be ENOENT,
+
+15
+00:00:56,955 --> 00:00:59,762
+which means no such file or directory.
+
+16
+00:00:59,762 --> 00:01:04,744
+So this is what you get back from file
+from Fopen if you tried to open a file
+
+17
+00:01:04,744 --> 00:01:06,253
+that didn't exist.
+
+18
+00:01:06,253 --> 00:01:11,213
+If you want to try to map those two
+specific error numbers values that would
+
+19
+00:01:11,213 --> 00:01:13,061
+show up in the errno value.
+
+20
+00:01:13,061 --> 00:01:15,468
+You can use errno Daschle and
+
+21
+00:01:15,468 --> 00:01:20,487
+you can see that ENOENT is
+represented by number 2 in a row.
+
+22
+00:01:20,487 --> 00:01:24,409
+So here's an example of a really
+simple program that tries to open
+
+23
+00:01:24,409 --> 00:01:25,704
+a nonexistent file.
+
+24
+00:01:25,704 --> 00:01:28,690
+So we have a file name of
+nonexistent file.text.
+
+25
+00:01:28,690 --> 00:01:30,661
+We try to open it with that open.
+
+26
+00:01:30,661 --> 00:01:35,279
+And we then if the file returns null,
+we print out some information
+
+27
+00:01:35,279 --> 00:01:38,988
+about the error using access
+to the errno variable and
+
+28
+00:01:38,988 --> 00:01:43,458
+using the perror function that
+references the errno variable.
+
+29
+00:01:43,458 --> 00:01:46,044
+So here's an example of what
+you see when you run this.
+
+30
+00:01:46,044 --> 00:01:49,863
+The value of the errno is in fact to and
+
+31
+00:01:49,863 --> 00:01:54,927
+the perror responses no such file or
+directory.
+
+32
+00:01:54,927 --> 00:01:57,149
+And you see we have two different
+ways to return that string.
+
+33
+00:01:57,149 --> 00:02:00,212
+One is to call perror directly.
+
+34
+00:02:00,212 --> 00:02:05,555
+And the second is to call
+strerror with the errno variable.
+
+35
+00:02:05,555 --> 00:02:09,964
+So this perror is a function
+that's described for us.
+
+36
+00:02:09,964 --> 00:02:16,236
+That's going to print to standard
+out a message describing the errno,
+
+37
+00:02:16,236 --> 00:02:19,920
+the underlying air described by errno.
+
+38
+00:02:19,920 --> 00:02:24,600
+So one thing to think about though
+when you're using errno and
+
+39
+00:02:24,600 --> 00:02:29,640
+error handling code is that the value
+of errno is possibly modified
+
+40
+00:02:29,640 --> 00:02:34,060
+as a side effect by some of
+the API functions that you call.
+
+41
+00:02:34,060 --> 00:02:36,588
+So for instance, if you look up at print,
+
+42
+00:02:36,588 --> 00:02:40,003
+if you'll see that in some
+cases of print may set errno.
+
+43
+00:02:40,003 --> 00:02:40,973
+So what does that mean?
+
+44
+00:02:40,973 --> 00:02:45,481
+It means that there's a chance
+that errno could change
+
+45
+00:02:45,481 --> 00:02:49,499
+between the time the air
+happens here in F open and
+
+46
+00:02:49,499 --> 00:02:53,813
+the time is actually printed
+through F F for perror.
+
+47
+00:02:53,813 --> 00:02:55,253
+So how would we handle this?
+
+48
+00:02:55,253 --> 00:02:59,059
+You could move the Fpf after perror.
+
+49
+00:02:59,059 --> 00:03:02,419
+You could also save errno to a local var.
+
+50
+00:03:02,419 --> 00:03:06,295
+So that's something that is
+probably a good thing to do if
+
+51
+00:03:06,295 --> 00:03:10,427
+you're going to be referencing
+the errno in multiple places.
+
+52
+00:03:10,427 --> 00:03:15,911
+So, given what we just talked about about
+threads and thread sharing memory space,
+
+53
+00:03:15,911 --> 00:03:21,318
+you might say, well, wouldn't there be a
+problem if errno was set by one thread and
+
+54
+00:03:21,318 --> 00:03:24,098
+then an error happened in a second thread,
+
+55
+00:03:24,098 --> 00:03:29,690
+wouldn't the second thread override the
+errno, that happened in the first thread.
+
+56
+00:03:29,690 --> 00:03:34,053
+And normally, if we were just using
+a Global, that would be the case.
+
+57
+00:03:34,053 --> 00:03:38,533
+However, the positive standard specifies
+that errno is more than just a Global.
+
+58
+00:03:38,533 --> 00:03:41,478
+It's actually what's using what's
+called thread local storage.
+
+59
+00:03:41,478 --> 00:03:44,428
+So you're guaranteed to
+have a separate copy errno,
+
+60
+00:03:44,428 --> 00:03:47,377
+that's valid for
+every thread that you're using and
+
+61
+00:03:47,377 --> 00:03:51,061
+will only be set by the current
+threat you're you're running in.

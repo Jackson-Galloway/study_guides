@@ -1,0 +1,2070 @@
+1
+00:00:00,350 --> 00:00:02,895
+In this video, I'm
+going to talk about
+
+2
+00:00:02,895 --> 00:00:05,654
+your final project
+proposal overview.
+
+3
+00:00:05,654 --> 00:00:08,355
+This is going to be the
+part where you kick off
+
+4
+00:00:08,355 --> 00:00:10,245
+your final project proposal
+
+5
+00:00:10,245 --> 00:00:13,210
+and share it with
+peer reviewers.
+
+6
+00:00:13,310 --> 00:00:15,810
+What we want to
+cover here is how to
+
+7
+00:00:15,810 --> 00:00:17,820
+propose your final project and
+
+8
+00:00:17,820 --> 00:00:19,740
+then get us started
+on talking about how
+
+9
+00:00:19,740 --> 00:00:21,675
+to retarget your
+project for hardware,
+
+10
+00:00:21,675 --> 00:00:24,910
+which is going to be the
+focus of your final project.
+
+11
+00:00:25,550 --> 00:00:27,660
+First of all, I want to step
+
+12
+00:00:27,660 --> 00:00:29,190
+through some of the details in
+
+13
+00:00:29,190 --> 00:00:31,200
+the final project
+proposal assignment which
+
+14
+00:00:31,200 --> 00:00:33,775
+you can find in the Coursera
+reading assignment.
+
+15
+00:00:33,775 --> 00:00:37,245
+Stepping through the
+Coursera reading assignment,
+
+16
+00:00:37,245 --> 00:00:39,145
+you'll have a GitHub
+Classroom link
+
+17
+00:00:39,145 --> 00:00:40,460
+to start the assignment.
+
+18
+00:00:40,460 --> 00:00:42,600
+Similar to you've done
+with previous assignments,
+
+19
+00:00:42,600 --> 00:00:45,505
+check on the resources
+page to find that.
+
+20
+00:00:45,505 --> 00:00:48,530
+By default, every student will
+
+21
+00:00:48,530 --> 00:00:51,365
+create a final
+project repository.
+
+22
+00:00:51,365 --> 00:00:53,705
+Depending on how many
+people are in your group,
+
+23
+00:00:53,705 --> 00:00:55,910
+you may need additional
+repositories.
+
+24
+00:00:55,910 --> 00:00:57,770
+If that's the case,
+just go ahead and
+
+25
+00:00:57,770 --> 00:01:00,720
+create those with your
+own GitHub account.
+
+26
+00:01:01,610 --> 00:01:05,030
+You can implement the final
+project on your own or you
+
+27
+00:01:05,030 --> 00:01:09,440
+can organize in groups of up
+to three for the assignment.
+
+28
+00:01:09,440 --> 00:01:12,495
+All grading and peer
+review will be done
+
+29
+00:01:12,495 --> 00:01:13,880
+individually based on
+
+30
+00:01:13,880 --> 00:01:16,130
+your own individual
+contribution of the project.
+
+31
+00:01:16,130 --> 00:01:18,140
+It's important to track
+what each person is
+
+32
+00:01:18,140 --> 00:01:21,650
+doing and how each person is
+contributing to the project.
+
+33
+00:01:21,650 --> 00:01:24,950
+Think about the amount of work
+
+34
+00:01:24,950 --> 00:01:27,830
+that you've done previously
+in the course in
+
+35
+00:01:27,830 --> 00:01:30,485
+each assignment
+and the idea is to
+
+36
+00:01:30,485 --> 00:01:33,635
+split that work between
+three different,
+
+37
+00:01:33,635 --> 00:01:35,780
+what we're going to call
+sprints that we use to
+
+38
+00:01:35,780 --> 00:01:39,480
+organize the work for
+our final project.
+
+39
+00:01:39,530 --> 00:01:43,350
+You'll start with an
+empty GitHub repository
+
+40
+00:01:43,350 --> 00:01:44,750
+and what you're going
+to focus on for
+
+41
+00:01:44,750 --> 00:01:47,810
+the final project proposal
+is really creating
+
+42
+00:01:47,810 --> 00:01:49,790
+some Wiki pages that describe
+
+43
+00:01:49,790 --> 00:01:50,990
+the work that you're
+planning to do
+
+44
+00:01:50,990 --> 00:01:52,355
+for your final project.
+
+45
+00:01:52,355 --> 00:01:54,650
+You need to make sure that
+it's publicly accessible
+
+46
+00:01:54,650 --> 00:01:57,565
+for peer reviews and this
+will be the default state.
+
+47
+00:01:57,565 --> 00:02:01,970
+You should create a README in
+each submission repository.
+
+48
+00:02:01,970 --> 00:02:05,570
+In the case that you're in
+group with multiple students,
+
+49
+00:02:05,570 --> 00:02:08,965
+you'll want to share a single
+project overview page.
+
+50
+00:02:08,965 --> 00:02:11,810
+For those of you who are
+in the Coursera section,
+
+51
+00:02:11,810 --> 00:02:13,655
+you may want to use
+the discussion forum
+
+52
+00:02:13,655 --> 00:02:15,875
+to look for students who are
+
+53
+00:02:15,875 --> 00:02:17,570
+interested in joining
+up in a group
+
+54
+00:02:17,570 --> 00:02:21,000
+or you're welcome to
+complete on your own.
+
+55
+00:02:22,810 --> 00:02:26,510
+The README in every student's
+repository, however,
+
+56
+00:02:26,510 --> 00:02:29,690
+should have a link to a project
+overview page and that's
+
+57
+00:02:29,690 --> 00:02:31,190
+where all the content
+that we're going to go
+
+58
+00:02:31,190 --> 00:02:33,960
+over here is going to be stored.
+
+59
+00:02:34,030 --> 00:02:36,860
+The template you can follow for
+
+60
+00:02:36,860 --> 00:02:38,720
+the project overview
+page is here.
+
+61
+00:02:38,720 --> 00:02:41,030
+There's a link that you can
+
+62
+00:02:41,030 --> 00:02:43,340
+follow to find it and
+you'll notice a bunch
+
+63
+00:02:43,340 --> 00:02:45,695
+of TBD areas in
+here that describe
+
+64
+00:02:45,695 --> 00:02:48,035
+the changes that you need
+
+65
+00:02:48,035 --> 00:02:50,390
+or the way you need
+to set up this page.
+
+66
+00:02:50,390 --> 00:02:53,390
+You can start by making
+a copy of this page into
+
+67
+00:02:53,390 --> 00:02:57,285
+your final project
+repository Wiki page
+
+68
+00:02:57,285 --> 00:02:59,375
+and use this as
+
+69
+00:02:59,375 --> 00:03:01,790
+a template for filling in
+everything that you need to do.
+
+70
+00:03:01,790 --> 00:03:02,870
+We'll go over a few of
+
+71
+00:03:02,870 --> 00:03:05,045
+the things that are
+in the template here.
+
+72
+00:03:05,045 --> 00:03:06,980
+You want to make sure
+you have an overview of
+
+73
+00:03:06,980 --> 00:03:09,080
+the project goals
+and motivation and
+
+74
+00:03:09,080 --> 00:03:10,910
+include at least one diagram
+
+75
+00:03:10,910 --> 00:03:12,830
+that helps show how the
+project's laid out,
+
+76
+00:03:12,830 --> 00:03:14,030
+the different components, the
+
+77
+00:03:14,030 --> 00:03:17,190
+interactions between the
+different components.
+
+78
+00:03:17,200 --> 00:03:20,655
+You'll want to select
+the target build system.
+
+79
+00:03:20,655 --> 00:03:23,330
+You can have either a
+Buildroot or Yocto and
+
+80
+00:03:23,330 --> 00:03:26,450
+also identify the target
+hardware platform.
+
+81
+00:03:26,450 --> 00:03:28,535
+We'll talk about
+this in a minute.
+
+82
+00:03:28,535 --> 00:03:31,025
+There are some pages
+that talk about
+
+83
+00:03:31,025 --> 00:03:33,980
+which hardware platforms
+are supported by
+
+84
+00:03:33,980 --> 00:03:35,390
+the course and which ones do we
+
+85
+00:03:35,390 --> 00:03:37,145
+have some experience
+working with.
+
+86
+00:03:37,145 --> 00:03:38,840
+You can use any
+hardware platform
+
+87
+00:03:38,840 --> 00:03:40,115
+you want, but if you do,
+
+88
+00:03:40,115 --> 00:03:42,500
+I just ask that you
+put in some detail
+
+89
+00:03:42,500 --> 00:03:46,040
+about how you plan to support
+this hardware platform.
+
+90
+00:03:46,040 --> 00:03:48,200
+I'd like you to identify any of
+
+91
+00:03:48,200 --> 00:03:49,700
+the open-source
+projects other than
+
+92
+00:03:49,700 --> 00:03:52,670
+the base Yocto builder
+packages that you intend
+
+93
+00:03:52,670 --> 00:03:54,860
+to use and if you
+don't intend to use
+
+94
+00:03:54,860 --> 00:03:58,455
+other projects,
+please state that.
+
+95
+00:03:58,455 --> 00:04:00,200
+If you're planning
+to use any projects,
+
+96
+00:04:00,200 --> 00:04:02,275
+please include some
+links to those.
+
+97
+00:04:02,275 --> 00:04:04,490
+Talk about any
+previous assignment
+
+98
+00:04:04,490 --> 00:04:06,170
+content that you've
+used for this course or
+
+99
+00:04:06,170 --> 00:04:08,690
+previous courses that you
+intend to leverage and
+
+100
+00:04:08,690 --> 00:04:09,785
+if you don't intend to leverage
+
+101
+00:04:09,785 --> 00:04:11,930
+any content, please state that.
+
+102
+00:04:11,930 --> 00:04:15,140
+You could discuss any of
+the course content that
+
+103
+00:04:15,140 --> 00:04:18,360
+you plan to use
+and how it will be
+
+104
+00:04:18,360 --> 00:04:19,910
+used or if you're not going to
+
+105
+00:04:19,910 --> 00:04:21,950
+use any specific course content
+
+106
+00:04:21,950 --> 00:04:23,750
+from this or previous courses
+
+107
+00:04:23,750 --> 00:04:26,750
+in the sequence,
+you can state that.
+
+108
+00:04:26,750 --> 00:04:30,485
+You'll also want to talk
+about how you're going to
+
+109
+00:04:30,485 --> 00:04:33,410
+organize the source code
+for group projects.
+
+110
+00:04:33,410 --> 00:04:35,300
+So which project is
+going to contain
+
+111
+00:04:35,300 --> 00:04:38,180
+the Buildroot or Yocto source?
+
+112
+00:04:38,180 --> 00:04:40,760
+And it often works best to put
+
+113
+00:04:40,760 --> 00:04:42,025
+this one in the
+same one that has
+
+114
+00:04:42,025 --> 00:04:44,030
+the project overview Wiki page.
+
+115
+00:04:44,030 --> 00:04:47,210
+Then any additional repositories
+
+116
+00:04:47,210 --> 00:04:49,700
+that you'll have to store
+content or for instance,
+
+117
+00:04:49,700 --> 00:04:52,190
+applications that you'll be
+bringing into your build.
+
+118
+00:04:52,190 --> 00:04:54,530
+You'll want to list
+every team member for
+
+119
+00:04:54,530 --> 00:04:57,110
+multi-team projects and
+then their focus or
+
+120
+00:04:57,110 --> 00:05:02,120
+role in the project as a part
+of the overview Wiki page.
+
+121
+00:05:02,120 --> 00:05:06,025
+Then you're also going to link
+to a shared schedule page.
+
+122
+00:05:06,025 --> 00:05:07,940
+For the shared schedule page,
+
+123
+00:05:07,940 --> 00:05:10,285
+you can follow these
+instructions to get set up,
+
+124
+00:05:10,285 --> 00:05:12,080
+but there's a Wiki
+page that talks
+
+125
+00:05:12,080 --> 00:05:14,045
+about how you can create
+
+126
+00:05:14,045 --> 00:05:15,620
+a project schedule page for
+
+127
+00:05:15,620 --> 00:05:19,265
+your project that will have
+step-by-step instructions,
+
+128
+00:05:19,265 --> 00:05:21,000
+will keep this up-to-date
+
+129
+00:05:21,000 --> 00:05:23,965
+as anything changes in
+terms of GitHub projects,
+
+130
+00:05:23,965 --> 00:05:25,400
+but we want to leverage
+
+131
+00:05:25,400 --> 00:05:28,865
+the GitHub projects
+feature in order to
+
+132
+00:05:28,865 --> 00:05:31,580
+create a project schedule
+for your project and
+
+133
+00:05:31,580 --> 00:05:32,930
+document the work
+that you're going
+
+134
+00:05:32,930 --> 00:05:34,655
+to be doing for your project.
+
+135
+00:05:34,655 --> 00:05:36,970
+If you follow all the
+instructions on this
+
+136
+00:05:36,970 --> 00:05:39,820
+creating an organizing your
+final project Wiki page,
+
+137
+00:05:39,820 --> 00:05:41,840
+what you should end up
+with is something that
+
+138
+00:05:41,840 --> 00:05:44,165
+looks like the template
+which is linked here.
+
+139
+00:05:44,165 --> 00:05:46,940
+This is going to show the
+different work that we
+
+140
+00:05:46,940 --> 00:05:50,045
+plan to do in the sprint,
+
+141
+00:05:50,045 --> 00:05:51,585
+who's planning to do it,
+
+142
+00:05:51,585 --> 00:05:53,100
+and the current status.
+
+143
+00:05:53,100 --> 00:05:54,500
+You can see in this case,
+
+144
+00:05:54,500 --> 00:05:56,240
+we've got some work on Sprint 1,
+
+145
+00:05:56,240 --> 00:05:57,515
+some work in Sprint 2,
+
+146
+00:05:57,515 --> 00:06:00,710
+some work in Sprint 3 and
+if I click on any of these,
+
+147
+00:06:00,710 --> 00:06:02,210
+I should get some detail about
+
+148
+00:06:02,210 --> 00:06:03,560
+what I'm planning to do and
+
+149
+00:06:03,560 --> 00:06:04,835
+a definition of done
+
+150
+00:06:04,835 --> 00:06:06,890
+about what's been done
+for each one of these.
+
+151
+00:06:06,890 --> 00:06:10,160
+You can use this
+template reference to
+
+152
+00:06:10,160 --> 00:06:11,630
+see what your
+project should look
+
+153
+00:06:11,630 --> 00:06:13,925
+like and as a peer reviewer,
+
+154
+00:06:13,925 --> 00:06:16,250
+this is the kind of view
+you should see from
+
+155
+00:06:16,250 --> 00:06:18,080
+someone's submission when they
+
+156
+00:06:18,080 --> 00:06:20,940
+submit their project
+for peer review.
+
+157
+00:06:22,830 --> 00:06:25,600
+You need to make sure that
+
+158
+00:06:25,600 --> 00:06:27,939
+when you're creating your
+final project proposal,
+
+159
+00:06:27,939 --> 00:06:31,195
+you'll want to focus on
+having Sprint 1 item defined.
+
+160
+00:06:31,195 --> 00:06:32,500
+Sprint 1 items are
+
+161
+00:06:32,500 --> 00:06:33,430
+going to be the things
+that you're going to
+
+162
+00:06:33,430 --> 00:06:36,535
+cover the very first week
+that you work on the project.
+
+163
+00:06:36,535 --> 00:06:38,890
+It's great to start putting
+
+164
+00:06:38,890 --> 00:06:41,980
+some detail and some thoughts
+in about Sprint 2 and 3.
+
+165
+00:06:41,980 --> 00:06:43,180
+But for the first week,
+
+166
+00:06:43,180 --> 00:06:46,600
+we'll focus on implementing
+what's done in
+
+167
+00:06:46,600 --> 00:06:51,040
+Sprint 1 and planning what
+needs to get done in Sprint 2.
+
+168
+00:06:51,040 --> 00:06:53,170
+The thing you should
+focus on the most,
+
+169
+00:06:53,170 --> 00:06:54,880
+just making sure that
+you have the detail in
+
+170
+00:06:54,880 --> 00:06:58,540
+Sprint 1 about what you're
+planning to do the first week.
+
+171
+00:06:58,540 --> 00:07:00,700
+We'll go over that in a
+little bit more detail
+
+172
+00:07:00,700 --> 00:07:02,305
+on the future slides.
+
+173
+00:07:02,305 --> 00:07:03,610
+There's some things here on
+
+174
+00:07:03,610 --> 00:07:05,410
+your submission to
+double-check that
+
+175
+00:07:05,410 --> 00:07:09,040
+you've completed in terms of
+your proposal submission.
+
+176
+00:07:09,040 --> 00:07:10,900
+In summary, the requirements for
+
+177
+00:07:10,900 --> 00:07:14,410
+the final project is number 1,
+
+178
+00:07:14,410 --> 00:07:16,135
+you need to use real hardware.
+
+179
+00:07:16,135 --> 00:07:17,500
+The work we've done so far for
+
+180
+00:07:17,500 --> 00:07:19,075
+this course sequence has been
+
+181
+00:07:19,075 --> 00:07:23,860
+in QEMU and simulation.
+
+182
+00:07:23,860 --> 00:07:25,600
+For your final
+project, you need to
+
+183
+00:07:25,600 --> 00:07:27,835
+plan to use a real
+hardware platform.
+
+184
+00:07:27,835 --> 00:07:30,715
+You need to use Buildroot
+or Yocto to build the image
+
+185
+00:07:30,715 --> 00:07:31,870
+since that's what
+we've covered in
+
+186
+00:07:31,870 --> 00:07:33,775
+the first portions
+of the course.
+
+187
+00:07:33,775 --> 00:07:36,220
+It needs to have
+some relationship to
+
+188
+00:07:36,220 --> 00:07:38,665
+the content that we covered
+in the course sequence.
+
+189
+00:07:38,665 --> 00:07:41,320
+This is very flexible
+because it is
+
+190
+00:07:41,320 --> 00:07:44,380
+essentially covered by using
+Buildroot or Yocto portion.
+
+191
+00:07:44,380 --> 00:07:47,020
+But I'd like to identify
+the things that
+
+192
+00:07:47,020 --> 00:07:50,710
+you are covering based on
+the content we covered here.
+
+193
+00:07:50,710 --> 00:07:54,010
+Also, if you don't have
+ideas about what to do,
+
+194
+00:07:54,010 --> 00:07:56,740
+you can use some of the
+content we've covered in
+
+195
+00:07:56,740 --> 00:07:59,830
+the previous assignments and
+expand or build on them.
+
+196
+00:07:59,830 --> 00:08:02,440
+There's a lot of things
+I didn't cover in
+
+197
+00:08:02,440 --> 00:08:04,090
+much depth and definitely don't
+
+198
+00:08:04,090 --> 00:08:06,175
+have code examples for instance,
+
+199
+00:08:06,175 --> 00:08:08,710
+and so think about maybe
+exploring some of those.
+
+200
+00:08:08,710 --> 00:08:12,700
+Another thing you can
+do for project ideas
+
+201
+00:08:12,700 --> 00:08:15,205
+are looking at the projects that
+
+202
+00:08:15,205 --> 00:08:16,915
+on-campus students
+have completed
+
+203
+00:08:16,915 --> 00:08:19,315
+in versions of this
+course previously.
+
+204
+00:08:19,315 --> 00:08:20,755
+For that, you can use the
+
+205
+00:08:20,755 --> 00:08:23,185
+project section of the homepage.
+
+206
+00:08:23,185 --> 00:08:25,210
+One thing you'll notice
+is that if you look at
+
+207
+00:08:25,210 --> 00:08:27,910
+the final project demo page
+
+208
+00:08:27,910 --> 00:08:30,715
+for each project linked
+from the homepage,
+
+209
+00:08:30,715 --> 00:08:33,760
+you should see any notes
+about future work in there.
+
+210
+00:08:33,760 --> 00:08:37,330
+Students might have noted
+when they've completed
+
+211
+00:08:37,330 --> 00:08:38,950
+a project that there are
+
+212
+00:08:38,950 --> 00:08:40,390
+some follow-up
+things you could do
+
+213
+00:08:40,390 --> 00:08:42,415
+to build on top of the project.
+
+214
+00:08:42,415 --> 00:08:44,275
+If a project looks interesting,
+
+215
+00:08:44,275 --> 00:08:46,630
+you might want to think
+about how you could add
+
+216
+00:08:46,630 --> 00:08:49,300
+onto it with your
+project and start
+
+217
+00:08:49,300 --> 00:08:52,270
+with some work that
+others have done and use
+
+218
+00:08:52,270 --> 00:08:56,020
+the Final Project
+Overview page as a way to
+
+219
+00:08:56,020 --> 00:08:57,970
+document that you're going
+to be building on top
+
+220
+00:08:57,970 --> 00:09:00,980
+of a previous completed project.
+
+221
+00:09:01,950 --> 00:09:06,355
+The hardware platforms that
+we supported are all detailed
+
+222
+00:09:06,355 --> 00:09:08,320
+in the wiki page that will keep
+
+223
+00:09:08,320 --> 00:09:11,155
+up-to-date linked from here.
+
+224
+00:09:11,155 --> 00:09:13,570
+Each one of those
+pages is going to
+
+225
+00:09:13,570 --> 00:09:15,850
+have some information
+about how to modify
+
+226
+00:09:15,850 --> 00:09:18,430
+a Buildroot or
+Yocto configuration
+
+227
+00:09:18,430 --> 00:09:20,650
+to support building on hardware.
+
+228
+00:09:20,650 --> 00:09:22,750
+In a lot of cases,
+you'll be able
+
+229
+00:09:22,750 --> 00:09:24,820
+to support not only
+building on hardware,
+
+230
+00:09:24,820 --> 00:09:26,455
+but also building on QEMU.
+
+231
+00:09:26,455 --> 00:09:27,790
+Depending on your project,
+
+232
+00:09:27,790 --> 00:09:30,055
+you may still want to
+keep the QEMU option
+
+233
+00:09:30,055 --> 00:09:33,890
+around for iterating or testing.
+
+234
+00:09:33,990 --> 00:09:36,715
+One thing to note,
+especially with Buildroot,
+
+235
+00:09:36,715 --> 00:09:39,729
+when you're switching
+between target platforms,
+
+236
+00:09:39,729 --> 00:09:42,535
+you need to make sure that
+you use either clean builds
+
+237
+00:09:42,535 --> 00:09:45,805
+or have saved different
+output directories,
+
+238
+00:09:45,805 --> 00:09:49,075
+depending on which target
+you're building for.
+
+239
+00:09:49,075 --> 00:09:52,780
+These instructions are also
+going to go over how to flash
+
+240
+00:09:52,780 --> 00:09:56,500
+the ultimate image that
+you build onto an SD card.
+
+241
+00:09:56,500 --> 00:09:59,680
+But in general, use
+something like dd on Linux
+
+242
+00:09:59,680 --> 00:10:03,890
+or and Rufus or something
+similar on Windows.
+
+243
+00:10:04,350 --> 00:10:08,110
+The overall project schedule,
+
+244
+00:10:08,110 --> 00:10:10,570
+we're going to have three
+different checkpoints and we've
+
+245
+00:10:10,570 --> 00:10:11,680
+talked a little
+bit already about
+
+246
+00:10:11,680 --> 00:10:13,405
+Agile Scrum terminology.
+
+247
+00:10:13,405 --> 00:10:15,790
+We're going to refer
+to these as sprints,
+
+248
+00:10:15,790 --> 00:10:18,430
+using that Agile terminology.
+
+249
+00:10:18,430 --> 00:10:21,100
+Think about putting
+in each sprint
+
+250
+00:10:21,100 --> 00:10:22,375
+the rough equivalent of
+
+251
+00:10:22,375 --> 00:10:24,670
+one assignment worth
+of effort per person,
+
+252
+00:10:24,670 --> 00:10:27,925
+so think about 10-15
+hours of work per week.
+
+253
+00:10:27,925 --> 00:10:29,560
+Part of what you're
+going to want to do with
+
+254
+00:10:29,560 --> 00:10:31,750
+your issues are
+demonstrate that you've
+
+255
+00:10:31,750 --> 00:10:34,060
+completed that amount
+of work per week
+
+256
+00:10:34,060 --> 00:10:35,530
+and make it clear to
+the peer reviewer
+
+257
+00:10:35,530 --> 00:10:37,375
+what you've accomplished.
+
+258
+00:10:37,375 --> 00:10:39,160
+You'll plan the work for
+
+259
+00:10:39,160 --> 00:10:40,765
+the next sprint and
+the previous sprint.
+
+260
+00:10:40,765 --> 00:10:43,074
+As I mentioned with the
+final project proposal,
+
+261
+00:10:43,074 --> 00:10:45,640
+you'll be proposing what
+you do in Sprint 1.
+
+262
+00:10:45,640 --> 00:10:47,515
+When you complete Sprint 1,
+
+263
+00:10:47,515 --> 00:10:51,130
+you'll propose what you do
+for Sprint 2, and so on.
+
+264
+00:10:51,130 --> 00:10:53,140
+You'll use the GitHub
+issues that I showed
+
+265
+00:10:53,140 --> 00:10:55,210
+previously to track
+and report your work
+
+266
+00:10:55,210 --> 00:10:57,790
+and you'll use
+GitHub Wiki pages to
+
+267
+00:10:57,790 --> 00:10:59,500
+report on the overall progress
+
+268
+00:10:59,500 --> 00:11:01,700
+and status of your project.
+
+269
+00:11:01,730 --> 00:11:04,860
+The general schedule
+for the project looks
+
+270
+00:11:04,860 --> 00:11:06,630
+like this final project proposal
+
+271
+00:11:06,630 --> 00:11:07,875
+that I'm talking about now,
+
+272
+00:11:07,875 --> 00:11:10,135
+the first week, then Sprint 1,
+
+273
+00:11:10,135 --> 00:11:14,260
+Sprint 2, and Sprint 3 in
+consecutive weeks or blocks
+
+274
+00:11:14,260 --> 00:11:16,150
+of time depending on
+whether you're taking
+
+275
+00:11:16,150 --> 00:11:18,950
+this course synchronously
+or asynchronously.
+
+276
+00:11:18,950 --> 00:11:22,875
+You'll also complete
+the final project
+
+277
+00:11:22,875 --> 00:11:25,815
+with a demo outline
+and video detailing
+
+278
+00:11:25,815 --> 00:11:28,770
+your individual contribution
+to the project and
+
+279
+00:11:28,770 --> 00:11:33,220
+some ideas about follow-on
+work or next steps.
+
+280
+00:11:35,060 --> 00:11:41,205
+One other part for the on-campus
+version of this course,
+
+281
+00:11:41,205 --> 00:11:43,890
+we'll have a final project
+Scrum that we do weekly
+
+282
+00:11:43,890 --> 00:11:46,600
+with all of the people
+
+283
+00:11:46,600 --> 00:11:48,445
+who are taking the
+course synchronously.
+
+284
+00:11:48,445 --> 00:11:49,480
+For those of you who are
+
+285
+00:11:49,480 --> 00:11:51,190
+taking this course
+asynchronously,
+
+286
+00:11:51,190 --> 00:11:53,020
+you may think about scheduling
+
+287
+00:11:53,020 --> 00:11:55,600
+one of these with
+your teammates.
+
+288
+00:11:55,600 --> 00:11:58,180
+The main idea behind the Scrum,
+
+289
+00:11:58,180 --> 00:11:59,200
+it's the same thing
+that we talked
+
+290
+00:11:59,200 --> 00:12:00,775
+about with the Agile content.
+
+291
+00:12:00,775 --> 00:12:02,515
+You want to be able to
+answer the questions,
+
+292
+00:12:02,515 --> 00:12:04,480
+what did you do since
+the last report?
+
+293
+00:12:04,480 --> 00:12:06,790
+What are you going to do
+before the next report?
+
+294
+00:12:06,790 --> 00:12:08,485
+Are there any blockers?
+
+295
+00:12:08,485 --> 00:12:11,485
+Listen, especially, for
+the blockers thing.
+
+296
+00:12:11,485 --> 00:12:13,629
+As blockers are identified,
+
+297
+00:12:13,629 --> 00:12:15,160
+think about how you
+can work together
+
+298
+00:12:15,160 --> 00:12:16,900
+as a team to help resolve them.
+
+299
+00:12:16,900 --> 00:12:19,030
+Or possibly how you
+could leverage help from
+
+300
+00:12:19,030 --> 00:12:22,135
+other teams to resolve
+any blocking issues.
+
+301
+00:12:22,135 --> 00:12:24,130
+Another strategy you
+could possibly use
+
+302
+00:12:24,130 --> 00:12:25,930
+with blockers is to
+
+303
+00:12:25,930 --> 00:12:27,880
+reorganize your work such
+
+304
+00:12:27,880 --> 00:12:30,285
+that you can complete
+something else.
+
+305
+00:12:30,285 --> 00:12:31,780
+For instance, if
+you're waiting for
+
+306
+00:12:31,780 --> 00:12:33,095
+delivery or something,
+
+307
+00:12:33,095 --> 00:12:34,840
+maybe think about how
+you could reorganize
+
+308
+00:12:34,840 --> 00:12:36,325
+the work such that you could
+
+309
+00:12:36,325 --> 00:12:37,765
+avoid being blocked by
+
+310
+00:12:37,765 --> 00:12:40,465
+an issue that's
+outside your control.
+
+311
+00:12:40,465 --> 00:12:43,620
+A bit more about
+final project ideas.
+
+312
+00:12:43,620 --> 00:12:45,535
+If you're stuck or
+have trouble thinking
+
+313
+00:12:45,535 --> 00:12:47,730
+about what you want to do
+for the final project.
+
+314
+00:12:47,730 --> 00:12:49,740
+You might want to consider
+something we haven't covered
+
+315
+00:12:49,740 --> 00:12:52,020
+fully in class or assignments.
+
+316
+00:12:52,020 --> 00:12:53,950
+Look at some content we may have
+
+317
+00:12:53,950 --> 00:12:55,870
+partially covered that
+looked interesting to you.
+
+318
+00:12:55,870 --> 00:12:56,995
+Try to build onto that,
+
+319
+00:12:56,995 --> 00:12:59,110
+explore that content
+a little more.
+
+320
+00:12:59,110 --> 00:13:01,390
+Look for projects which
+have done similar things
+
+321
+00:13:01,390 --> 00:13:04,315
+online to something that
+sounds interesting.
+
+322
+00:13:04,315 --> 00:13:06,995
+Read blogs about
+things that people
+
+323
+00:13:06,995 --> 00:13:08,105
+have done and maybe try to
+
+324
+00:13:08,105 --> 00:13:09,830
+build on some existing projects.
+
+325
+00:13:09,830 --> 00:13:12,235
+In some cases,
+projects might not
+
+326
+00:13:12,235 --> 00:13:15,080
+be built with something
+like Buildroot or Yocto.
+
+327
+00:13:15,080 --> 00:13:19,555
+You might want to put a
+standalone demo project
+
+328
+00:13:19,555 --> 00:13:21,220
+into something that
+you can build as
+
+329
+00:13:21,220 --> 00:13:23,870
+a deployable image with
+Buildroot or Yocto.
+
+330
+00:13:23,870 --> 00:13:25,420
+Or maybe something's
+been done on
+
+331
+00:13:25,420 --> 00:13:27,310
+a different hardware
+platform and you want
+
+332
+00:13:27,310 --> 00:13:29,080
+to create an image
+for it that would
+
+333
+00:13:29,080 --> 00:13:31,600
+run on Raspberry
+Pi for instance.
+
+334
+00:13:31,600 --> 00:13:33,370
+Those are some ideas
+about what you
+
+335
+00:13:33,370 --> 00:13:35,105
+could do for a final project.
+
+336
+00:13:35,105 --> 00:13:37,840
+One thing I caution
+everybody on is,
+
+337
+00:13:37,840 --> 00:13:40,650
+although the agile
+scrum methodology lets
+
+338
+00:13:40,650 --> 00:13:42,820
+you change your plan
+
+339
+00:13:42,820 --> 00:13:45,040
+in terms of how you plan
+to implement things.
+
+340
+00:13:45,040 --> 00:13:47,530
+One thing I've seen
+students struggle with in
+
+341
+00:13:47,530 --> 00:13:50,230
+the past is if you
+start the project
+
+342
+00:13:50,230 --> 00:13:52,475
+without really
+having any plan for
+
+343
+00:13:52,475 --> 00:13:54,245
+implementing some of the more
+
+344
+00:13:54,245 --> 00:13:56,275
+major of the project components,
+
+345
+00:13:56,275 --> 00:13:58,835
+it may become very
+difficult by the end
+
+346
+00:13:58,835 --> 00:14:02,065
+to have anything to
+actually submit.
+
+347
+00:14:02,065 --> 00:14:04,510
+Think about having
+a plan for any
+
+348
+00:14:04,510 --> 00:14:06,380
+of the major project
+components you're going to do.
+
+349
+00:14:06,380 --> 00:14:07,660
+Don't assume that it's just
+
+350
+00:14:07,660 --> 00:14:09,775
+going to all come
+together at the end.
+
+351
+00:14:09,775 --> 00:14:11,800
+Think about how
+you can structure
+
+352
+00:14:11,800 --> 00:14:15,305
+your project sprints
+such that you're
+
+353
+00:14:15,305 --> 00:14:17,400
+doing some work at the
+beginning to make sure
+
+354
+00:14:17,400 --> 00:14:18,485
+the most critical parts of
+
+355
+00:14:18,485 --> 00:14:21,425
+your project are
+proven out early.
+
+356
+00:14:21,425 --> 00:14:22,840
+There are a lot of
+
+357
+00:14:22,840 --> 00:14:24,730
+different project
+components that you can
+
+358
+00:14:24,730 --> 00:14:26,650
+leverage that are linked
+
+359
+00:14:26,650 --> 00:14:28,750
+from our supported
+hardware platform site.
+
+360
+00:14:28,750 --> 00:14:32,090
+The wiki pages are also
+useful to search for this.
+
+361
+00:14:32,090 --> 00:14:34,540
+Students from previous
+semesters have done work
+
+362
+00:14:34,540 --> 00:14:37,685
+to giving you common
+project components like
+
+363
+00:14:37,685 --> 00:14:41,495
+UART or things that you
+might find useful for
+
+364
+00:14:41,495 --> 00:14:45,745
+your implementations and for
+specific hardware platforms.
+
+365
+00:14:45,745 --> 00:14:47,290
+So take a look at those.
+
+366
+00:14:47,290 --> 00:14:48,670
+Also as I mentioned before,
+
+367
+00:14:48,670 --> 00:14:50,650
+look at the past project section
+
+368
+00:14:50,650 --> 00:14:53,750
+of the on-campus course website.
+
+369
+00:14:53,880 --> 00:14:59,290
+In terms of how to retarget
+for Buildroot for hardware,
+
+370
+00:14:59,290 --> 00:15:02,915
+there's a section on this
+that goes over the details.
+
+371
+00:15:02,915 --> 00:15:04,340
+But it's really about,
+
+372
+00:15:04,340 --> 00:15:07,090
+there's a shared
+script that exists
+
+373
+00:15:07,090 --> 00:15:10,045
+in the Buildroot
+assignment base repo,
+
+374
+00:15:10,045 --> 00:15:13,070
+that you can use to select
+the hardware configuration.
+
+375
+00:15:13,070 --> 00:15:15,385
+Once you change the
+hardware configuration,
+
+376
+00:15:15,385 --> 00:15:16,810
+you want to clean so that you
+
+377
+00:15:16,810 --> 00:15:18,400
+start with a new build targeting
+
+378
+00:15:18,400 --> 00:15:20,315
+that specific configuration and
+
+379
+00:15:20,315 --> 00:15:22,475
+then rerun the build dot sh.
+
+380
+00:15:22,475 --> 00:15:25,810
+That's going to use the new
+configuration setup for
+
+381
+00:15:25,810 --> 00:15:30,250
+your hardware based on
+this shared dot sh script.
+
+382
+00:15:30,250 --> 00:15:32,735
+Then do the same
+save config that we
+
+383
+00:15:32,735 --> 00:15:34,880
+did previously with the
+Buildroot assignments.
+
+384
+00:15:34,880 --> 00:15:37,690
+That's going to save that
+modified config file
+
+385
+00:15:37,690 --> 00:15:40,330
+to your repo and
+allow your teammates,
+
+386
+00:15:40,330 --> 00:15:41,830
+for instance, to build with
+
+387
+00:15:41,830 --> 00:15:44,360
+the same configuration
+you're using.
+
+388
+00:15:45,120 --> 00:15:50,184
+Once you switch to use
+a different project,
+
+389
+00:15:50,184 --> 00:15:53,475
+you'll also start with a
+brand new configuration file.
+
+390
+00:15:53,475 --> 00:15:56,400
+You'll need to use Buildroot
+and menu config to add
+
+391
+00:15:56,400 --> 00:15:59,650
+any packages that you
+want back into the build.
+
+392
+00:15:59,650 --> 00:16:01,225
+For instance, Dropbear,
+
+393
+00:16:01,225 --> 00:16:03,270
+changing the root password,
+
+394
+00:16:03,270 --> 00:16:05,590
+adding the assignment
+packages as
+
+395
+00:16:05,590 --> 00:16:07,210
+necessary if you plan to
+
+396
+00:16:07,210 --> 00:16:09,550
+leverage some of your
+assignment content.
+
+397
+00:16:09,550 --> 00:16:11,315
+Then setting up the
+root file system
+
+398
+00:16:11,315 --> 00:16:13,730
+overlay the same steps that
+we've done previously.
+
+399
+00:16:13,730 --> 00:16:15,400
+You'll need to redo once you
+
+400
+00:16:15,400 --> 00:16:18,050
+retarget for a different
+hardware platform.
+
+401
+00:16:18,050 --> 00:16:22,085
+Then save your configuration
+file and rebuild to start
+
+402
+00:16:22,085 --> 00:16:23,950
+the configuration or start
+
+403
+00:16:23,950 --> 00:16:26,890
+the build for this
+target platform.
+
+404
+00:16:27,120 --> 00:16:30,850
+One thing also to know
+as we move away from
+
+405
+00:16:30,850 --> 00:16:35,000
+QEMU and into a hardware-based
+implementation,
+
+406
+00:16:35,000 --> 00:16:37,140
+you'll find that
+reflashing the image
+
+407
+00:16:37,140 --> 00:16:39,985
+for every change is
+quite time-consuming.
+
+408
+00:16:39,985 --> 00:16:42,100
+There's a couple of
+different approaches you can
+
+409
+00:16:42,100 --> 00:16:43,735
+use for avoiding this.
+
+410
+00:16:43,735 --> 00:16:45,565
+One is depending
+on your project,
+
+411
+00:16:45,565 --> 00:16:48,280
+you might be able to still
+leverage the QEMU build.
+
+412
+00:16:48,280 --> 00:16:51,790
+You may be able to still test
+your application in QEMU
+
+413
+00:16:51,790 --> 00:16:53,020
+and get it working that
+
+414
+00:16:53,020 --> 00:16:55,810
+way and it might be
+quicker to iterate there.
+
+415
+00:16:55,810 --> 00:17:00,010
+Another successful strategy
+is to copy executables from
+
+416
+00:17:00,010 --> 00:17:01,900
+your output directory
+directly to
+
+417
+00:17:01,900 --> 00:17:04,784
+the file system using SCP.
+
+418
+00:17:04,784 --> 00:17:08,465
+We've covered SCP in
+previous courses as well,
+
+419
+00:17:08,465 --> 00:17:09,515
+but it's basically just a way to
+
+420
+00:17:09,515 --> 00:17:14,330
+transfer files to and
+from an SSH target.
+
+421
+00:17:14,330 --> 00:17:17,285
+You can just take the
+output of your build
+
+422
+00:17:17,285 --> 00:17:20,910
+and target files and SCP them.
+
+423
+00:17:20,910 --> 00:17:22,435
+If you know which
+files are changing,
+
+424
+00:17:22,435 --> 00:17:25,160
+just copy them directly
+over to the target.
+
+425
+00:17:25,160 --> 00:17:28,030
+Then once you get everything
+working, of course,
+
+426
+00:17:28,030 --> 00:17:30,005
+you can make the
+changes and rebuild
+
+427
+00:17:30,005 --> 00:17:33,125
+the entire image and retest
+it all as one component.
+
+428
+00:17:33,125 --> 00:17:35,110
+That's pretty much the basics of
+
+429
+00:17:35,110 --> 00:17:37,470
+the final project overview.
+
+430
+00:17:37,470 --> 00:17:40,840
+As I mentioned, I tried to
+keep this very generic.
+
+431
+00:17:40,840 --> 00:17:42,785
+The idea is that you
+can cover whatever
+
+432
+00:17:42,785 --> 00:17:45,505
+you find interesting
+for your final project.
+
+433
+00:17:45,505 --> 00:17:49,370
+If you happen to be
+working on a work project,
+
+434
+00:17:49,370 --> 00:17:51,605
+you might want to think
+about how you could do
+
+435
+00:17:51,605 --> 00:17:55,330
+some portion of a
+project investigation
+
+436
+00:17:55,330 --> 00:17:57,545
+that could be useful
+for your work as well.
+
+437
+00:17:57,545 --> 00:17:59,350
+Really anything that you find
+
+438
+00:17:59,350 --> 00:18:01,120
+interesting that can align with
+
+439
+00:18:01,120 --> 00:18:04,605
+the tasks that we talked
+about in this course,
+
+440
+00:18:04,605 --> 00:18:07,750
+especially building
+Buildroot or Yocto images.
+
+441
+00:18:07,750 --> 00:18:09,065
+I hope that you
+could find a way to
+
+442
+00:18:09,065 --> 00:18:11,480
+leverage that for your project.

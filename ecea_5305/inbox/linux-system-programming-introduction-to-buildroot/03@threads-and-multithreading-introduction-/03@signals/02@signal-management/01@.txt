@@ -1,0 +1,160 @@
+In this video, we'll expand on the signal concepts that we talked about in the
+previous video and talk more about how to
+manage signals. We're going to learn how
+to write signal handlers, and we're going to talk
+about the details of writing a signal handler and
+dealing with reentrancy. The book talks about
+the signal function as one way to set
+up signal handlers. But if you look at the
+latest documentation from the Linux
+programmer's manual, it recommends not
+using signal anymore due to some variation across
+older versions of Linux, and it suggests using
+sigaction instead. That's what we'll go
+over in this video. Sigaction is a POSIX alternative
+to the signal function. It wasn't a part of the
+original standard C library, but it does have better signal
+management capabilities. Those better signal management
+capabilities include the ability to block new
+signals during the handler, because as we mentioned
+in the previous video, signals could interrupt
+other signals. That's probably not the
+behavior that you want. Sigaction gives you an option to prevent that from occurring. The better single
+management capabilities also include retrieving state information
+about the system. There's some additional
+information you can retrieve as a part
+of the handler. It looks a little bit cumbersome
+to use here in terms of all the different
+sigaction content that you can set up here in the structure that
+you're passing. However, for the simplest cases, you really only need to set
+up this signal handler. It's very similar to the inner action that you need to have with
+the signal function. Once you register for a signal, you can use pause to wait for a signal if that's a part of what your
+program needs to do. In some cases, your program
+might just register for signals and then wait
+for those to happen. In that case, you'd
+use pause to do that. You can use kill to send
+a signal to a process. It's a little confusing, because you might think it
+would be sending SIGKILL. That's what I would
+do by default. But you can really send
+any signal to it with either the command line option or the argument that
+you're passing. It's available either as a
+system call or a user command, meaning I can type kill from the terminal and invoke kill on a process or send a signal that I
+specified to a process, or I can call it from
+within my own program. Here's a really simple example of a sigaction signal handling, where we register here with sigaction for either
+SIGTERM or SIGINT. We set up the new action
+signal handler here, which is pointing to our signal handler function that we've defined right here. When we get a signal, we'll get a call to signal handler that's going to include the signal
+number that we received. We're using the
+pause function here. If we were successful in
+setting up both of the signals, we'll use pause to
+wait for a signal, and then we'll just
+log what we received. The way we're communicating this is just through a global
+variable that we're setting in the signal
+handler and we're reading outside of
+the signal handler. The fact that we're only setting this value in the signal
+handler and we're only reading it outside
+the signal handler, is part of the reason that
+we won't have to worry about the reentrancy that
+we'll talk about later. An overview of how you'd use this really simple function, and you can find the source here if you want to try it yourself. You can invoke with the signal handler executable and you'll see a
+message that says, waiting forever for a signal. If you use Control-C
+at that point, you'll be able to send SIGINT. Once you send a SIGINT, you should see the message to
+say that you caught SIGINT. A second way you can use this is instead of sending
+via Control-C, you could send term
+through the kill command. In this case, you could restart and then open a new
+terminal window, use PS to find the process. In this case, it was 31236. Then I can say kill-term 31236. That's going to send SIGTERM to the process and you'll
+see the same result. You'll get that you caught the SIGTERM and the
+process will exit. Siqueue is a way that you could actually send
+a payload to a signal. The arguments here will
+allow you to provide a function pointer that would provide additional information
+to the signal handler. This can be used as a
+rudimentary form of IPC, although it's probably not
+the best way to do IPC, which we'll talk about
+later in the video. Some additional signal concepts, we've talked about forking a
+process in previous videos. When you fork a process and
+you create a child process, the child is going to inherit the signal actions of
+the parent on the fork. Whatever the parents set up, if the parent thread setup
+custom signal actions, those will be inherited
+by the child on fork. If you then would start
+a process with exec, which remember is
+part of the sequence for starting a daemon that we discussed in
+the previous week. The exec call is going to reset all signals
+to the default actions, and that's the case for
+everything other than the signals that were previously
+ignored by the parent. A little bit about
+writing signal handlers and safety inside signal
+handler functions. Because signal handlers are
+going to suspend execution of a process and then
+just jump into the signal handler function, it's important to
+know this is not a thread switch to a different
+thread or a new thread. It's going to reuse
+the existing thread, whatever was running,
+execution is going to stop and it's going to
+switch to our signal handlers. That has some important
+implications on how we can write
+signal handlers. What does this mean about
+the functions you can call? It means they must
+be async-signal-safe in the Single Unix
+Specification parlance. It means that they must be
+reentrant and also they must block signals at any point that could cause
+inconsistencies. Because even if your
+reentrant function, if it's a possible
+that you could take a second signal handler
+or a second signal, you need to make sure that
+that signal handler could also execute without causing
+inconsistencies. How do you know if a
+POSIX function that you're calling is signal safe? Really the only way to know is to look at the table
+of allowed functions. There's one that's in
+your book and there's a more complete one that I've linked in the slide below here. But the main takeaway
+is that malloc, free, any functions that might
+call malloc and free and just general stdio
+library functions, so for instance,
+printf are generally not really safe to call
+from within a signal. The signal function
+that you write or any functions that you
+call from a signal handler, must not be manipulating static data that could be used outside the signal handler. There's a handful of these that are a part of the POSIX spec, str signal is one example
+that the book gives. But anything that's returning
+a pointer to, for instance, memory that's used in some
+kind of static structure, that won't be safe to use
+inside of signal handler. Ideally, your signal
+handler would only stack allocated data or data that's provided
+by the caller. If you want to make a really
+simple signal handler, often the easiest
+way to do this is just to set a global flag. If you just set in
+the signal handler and just read outside
+the signal handler, that's one safe way that
+you can do reentrancy. But it's important that
+you must not invoke any non-async-signal-
+safe function from within your signal handler. The best practices
+if you're going to write a signal handler routine, you want to minimize
+global data access and any global data access
+that you do need to confirm that it's
+async-signal-safe. In other words, if at any process in your
+existing program, if you were accessing
+that variable, it could be interrupted, take the signal handler and it won't impact the way
+the program works. We talked about how errno
+know is stored per thread. However, because we're
+interrupting the current thread, if you call a function
+that modifies errno inside your
+signal handler, you are going to change
+the value of errno, so to be safe you should save and restore errno
+in your signal handler. Then call an absolute
+minimum set of functions and only the
+functions that are on approved list of signal
+handler functions. You really want to make
+your signal handler be as simple as possible and be really diligent about what functions
+you call within it. Why would we want to use, or why would we not
+want to use signals? Well, after the discussion
+that we just had about all the things you need to make sure of in terms
+of signal handlers, you can see that we're
+pretty restricted about what we can do
+in a signal handler. One of the biggest
+reasons not to use signals would be that there's significant risk in the signal handler
+safety and reentrancy, and if you mess that up, those problems can be easy to introduce and really
+difficult to track down. You really have to
+be careful about implementing your handlers and they're really limited
+on what you can do from a signal handler, so that's one reason you
+might not want to use it. The book references signals as old antiquated mechanism for kernel to user communication, so they're there for
+a specific purpose, they're there for historical
+reasons in a lot of cases, we need to use them for many important notifications that come from the kernel. Probably the most
+important is termination. It's important to
+know about them, but they're probably
+not the best IPC mechanism that you can use.

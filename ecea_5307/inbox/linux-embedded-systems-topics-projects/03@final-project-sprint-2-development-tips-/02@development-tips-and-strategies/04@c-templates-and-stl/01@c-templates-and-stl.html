@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>C++ templates and STL</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>What will be the value of k for given code snippet?</p><img alt="carbon (4).png" src="carbon%20%284%29.png"/><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~3urRnEWUEeyoexKra-TnSQ" type="radio"/> <div class="quiz-option-text"><p>6</p></div></li>
+<li><input name="autoGradableResponseId~3urRnEWUEeyoexKra-TnSQ" type="radio"/> <div class="quiz-option-text"><p>7</p></div></li>
+<li><input name="autoGradableResponseId~3urRnEWUEeyoexKra-TnSQ" type="radio"/> <div class="quiz-option-text"><p>5</p></div></li>
+<li><input name="autoGradableResponseId~3urRnEWUEeyoexKra-TnSQ" type="radio"/> <div class="quiz-option-text"><p>8</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What will be the value of k for the given code snippet?</p><img alt="carbon (5).png" src="carbon%20%285%29.png"/><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~OjhGEkWWEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>20.3</p></div></li>
+<li><input name="autoGradableResponseId~OjhGEkWWEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>10</p></div></li>
+<li><input name="autoGradableResponseId~OjhGEkWWEeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>This code will result in a compiler error</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a reason to use templates in C++?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Tnt38k4qEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Parameter evaulation creates helpful side effects.</p></div></li>
+<li><input name="autoGradableResponseId~Tnt38k4qEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Macros aren't allowed in C++</p></div></li>
+<li><input name="autoGradableResponseId~Tnt38k4qEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Avoid the need to rewrite functions with the same or similar behavior for different parameter types</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What does the STL abbreviation stand for in C/C++ Parlance?</p></div></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the classes included in the STL</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~K8D6DU4rEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>map</p></div></li>
+<li><input name="autoGradableResponseId~K8D6DU4rEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>vector</p></div></li>
+<li><input name="autoGradableResponseId~K8D6DU4rEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>string</p></div></li>
+<li><input name="autoGradableResponseId~K8D6DU4rEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>list</p></div></li>
+<li><input name="autoGradableResponseId~K8D6DU4rEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>webserver</p></div></li>
+<li><input name="autoGradableResponseId~K8D6DU4rEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>mqttiot</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>How are C++ Streams typically used for program output?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Z4EmXU4rEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Passed as a printf argument</p></div></li>
+<li><input name="autoGradableResponseId~Z4EmXU4rEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Used as a direct replacement for const char *</p></div></li>
+<li><input name="autoGradableResponseId~Z4EmXU4rEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Passed as a syslog argument</p></div></li>
+<li><input name="autoGradableResponseId~Z4EmXU4rEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Using the stream insertion operator &lt;&lt; with cout</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a reason to use the STL string class instead of const char *</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~5OOwSU4rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>string can be used with C programs, while const char * cannot.</p></div></li>
+<li><input name="autoGradableResponseId~5OOwSU4rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Dynamic allocation and append</p></div></li>
+<li><input name="autoGradableResponseId~5OOwSU4rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Lower overhead of storage space</p></div></li>
+<li><input name="autoGradableResponseId~5OOwSU4rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Less licensing restrictions</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When is the size of an STL vector class specified?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~SnNx704sEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>The size can grow dynamically and does not need to be specified.</p></div></li>
+<li><input name="autoGradableResponseId~SnNx704sEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>On instantiation of the variable</p></div></li>
+<li><input name="autoGradableResponseId~SnNx704sEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Through the size() method</p></div></li>
+<li><input name="autoGradableResponseId~SnNx704sEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>In a template parameter</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When should you consider using boost libraries with your application?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qzAA904sEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>When using C applications which can't be compiled with C++</p></div></li>
+<li><input name="autoGradableResponseId~qzAA904sEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>When you need a GPL license for your application</p></div></li>
+<li><input name="autoGradableResponseId~qzAA904sEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>When you need peer reviewed library capabilities not available in the STL</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

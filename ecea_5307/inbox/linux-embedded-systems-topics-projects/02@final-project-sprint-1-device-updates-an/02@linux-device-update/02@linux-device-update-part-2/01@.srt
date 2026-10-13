@@ -1,0 +1,1339 @@
+1
+00:00:00,000 --> 00:00:02,820
+This video is the
+second in a series
+
+2
+00:00:02,820 --> 00:00:05,625
+of videos about
+Linux device update.
+
+3
+00:00:05,625 --> 00:00:07,770
+We'll talk about the
+function and role of
+
+4
+00:00:07,770 --> 00:00:10,350
+cryptographic signing within
+Device Update and how you
+
+5
+00:00:10,350 --> 00:00:11,880
+can use cryptographic signing to
+
+6
+00:00:11,880 --> 00:00:15,550
+improve security of your
+device update process.
+
+7
+00:00:15,560 --> 00:00:19,410
+First, we'll talk a little
+bit about signing as
+
+8
+00:00:19,410 --> 00:00:23,760
+a general overview and
+how signing works.
+
+9
+00:00:23,760 --> 00:00:25,320
+This is not intended to
+
+10
+00:00:25,320 --> 00:00:27,450
+replace any class
+on cryptography,
+
+11
+00:00:27,450 --> 00:00:28,770
+but just to give
+you a little bit of
+
+12
+00:00:28,770 --> 00:00:30,465
+background and
+overview about how
+
+13
+00:00:30,465 --> 00:00:33,715
+cryptography can work from
+the sense of signing.
+
+14
+00:00:33,715 --> 00:00:34,730
+When you think about
+
+15
+00:00:34,730 --> 00:00:36,350
+cryptography from a
+sense of signing,
+
+16
+00:00:36,350 --> 00:00:38,390
+you could think what
+
+17
+00:00:38,390 --> 00:00:40,460
+we're talking about are
+really large numbers.
+
+18
+00:00:40,460 --> 00:00:43,565
+For instance, something
+like 256 bits,
+
+19
+00:00:43,565 --> 00:00:47,720
+which would turn into
+approximately 77 decimal digits,
+
+20
+00:00:47,720 --> 00:00:49,855
+so really huge numbers.
+
+21
+00:00:49,855 --> 00:00:52,155
+It turns out there
+are some special
+
+22
+00:00:52,155 --> 00:00:53,870
+mathematical properties you can
+
+23
+00:00:53,870 --> 00:00:57,530
+use with these really large
+numbers that make it really
+
+24
+00:00:57,530 --> 00:01:04,850
+difficult to brute force
+these specific relationships.
+
+25
+00:01:04,850 --> 00:01:07,025
+But I'll make it easy to
+
+26
+00:01:07,025 --> 00:01:11,990
+generate numbers that have
+certain properties between
+
+27
+00:01:11,990 --> 00:01:15,185
+them that you can then use
+and exploit for purposes of
+
+28
+00:01:15,185 --> 00:01:17,780
+ensuring that a payload
+
+29
+00:01:17,780 --> 00:01:20,510
+came from the place that you
+expected it to come from.
+
+30
+00:01:20,510 --> 00:01:22,040
+That's what we'll
+talk about because
+
+31
+00:01:22,040 --> 00:01:23,180
+that's an important part of how
+
+32
+00:01:23,180 --> 00:01:27,305
+to get security in your
+device update process.
+
+33
+00:01:27,305 --> 00:01:30,635
+These very large 77
+decimal digit numbers,
+
+34
+00:01:30,635 --> 00:01:32,510
+these numbers are so
+
+35
+00:01:32,510 --> 00:01:33,800
+large that they're
+hard to think about,
+
+36
+00:01:33,800 --> 00:01:36,410
+but with 77 decimal digits,
+
+37
+00:01:36,410 --> 00:01:38,750
+it's approximately
+enough to assign
+
+38
+00:01:38,750 --> 00:01:41,420
+one number to every
+atom in the universe.
+
+39
+00:01:41,420 --> 00:01:44,425
+Again, just like an
+astronomically large number.
+
+40
+00:01:44,425 --> 00:01:45,890
+When you're talking
+about numbers that
+
+41
+00:01:45,890 --> 00:01:47,405
+big computers are fast,
+
+42
+00:01:47,405 --> 00:01:48,800
+but they can't do even
+
+43
+00:01:48,800 --> 00:01:50,660
+really simple
+mathematical operations
+
+44
+00:01:50,660 --> 00:01:51,905
+on numbers that are huge,
+
+45
+00:01:51,905 --> 00:01:55,100
+just because there's
+not enough time to try
+
+46
+00:01:55,100 --> 00:01:58,485
+every possible value given
+numbers that enormous.
+
+47
+00:01:58,485 --> 00:02:00,670
+Like if you even
+
+48
+00:02:00,670 --> 00:02:02,930
+just tried to take the fastest
+supercomputer in the world
+
+49
+00:02:02,930 --> 00:02:04,925
+and just tried to do an addition
+
+50
+00:02:04,925 --> 00:02:07,400
+with that many
+possible combinations,
+
+51
+00:02:07,400 --> 00:02:09,800
+it would take multiple
+universe lifetimes
+
+52
+00:02:09,800 --> 00:02:12,050
+for that supercomputer
+to get through it.
+
+53
+00:02:12,050 --> 00:02:14,240
+We can use the fact that
+these numbers are really
+
+54
+00:02:14,240 --> 00:02:17,810
+huge plus some non-trivial
+mathematic transforms to
+
+55
+00:02:17,810 --> 00:02:21,080
+make it basically impossible
+
+56
+00:02:21,080 --> 00:02:24,835
+for someone to brute force
+guess our key values.
+
+57
+00:02:24,835 --> 00:02:27,290
+Fundamentally,
+what we'll have is
+
+58
+00:02:27,290 --> 00:02:29,225
+a random number generator
+that just picks
+
+59
+00:02:29,225 --> 00:02:33,380
+some numbers at random and
+a key generation algorithm.
+
+60
+00:02:33,380 --> 00:02:37,055
+There's a couple
+of popular ones,
+
+61
+00:02:37,055 --> 00:02:41,015
+RSA and ECC, that you can
+use for key generation.
+
+62
+00:02:41,015 --> 00:02:43,760
+But what you'll
+ultimately get as a step
+
+63
+00:02:43,760 --> 00:02:47,400
+of this process is a public
+key and a private key.
+
+64
+00:02:47,570 --> 00:02:51,110
+What you can do for
+signature generation is
+
+65
+00:02:51,110 --> 00:02:53,825
+take a really large number
+of a specific length,
+
+66
+00:02:53,825 --> 00:02:55,250
+so a separate one from the one
+
+67
+00:02:55,250 --> 00:02:57,440
+that you use to
+generate the keys.
+
+68
+00:02:57,440 --> 00:02:59,510
+But take that number that has
+
+69
+00:02:59,510 --> 00:03:01,490
+a specific length and
+combine that with
+
+70
+00:03:01,490 --> 00:03:03,230
+a private key and use
+
+71
+00:03:03,230 --> 00:03:05,795
+a signature or
+encryption algorithm,
+
+72
+00:03:05,795 --> 00:03:07,580
+again from RSA or ECC,
+
+73
+00:03:07,580 --> 00:03:10,465
+depending on how you
+generate the key to give you
+
+74
+00:03:10,465 --> 00:03:12,455
+a signature that is
+
+75
+00:03:12,455 --> 00:03:15,055
+essentially just
+another large number.
+
+76
+00:03:15,055 --> 00:03:16,850
+You might think, well,
+
+77
+00:03:16,850 --> 00:03:20,050
+I'm trading one large number
+for another large number,
+
+78
+00:03:20,050 --> 00:03:21,635
+what's really the benefit?
+
+79
+00:03:21,635 --> 00:03:23,180
+We'll talk about it in
+
+80
+00:03:23,180 --> 00:03:25,895
+a couple slides where
+this comes into play.
+
+81
+00:03:25,895 --> 00:03:30,530
+But you can take the very
+large number that you
+
+82
+00:03:30,530 --> 00:03:33,110
+generated in the previous slide
+
+83
+00:03:33,110 --> 00:03:35,060
+to generate the certificate,
+
+84
+00:03:35,060 --> 00:03:37,385
+you can combine that
+with the public key,
+
+85
+00:03:37,385 --> 00:03:41,120
+take the signature
+encryption algorithm
+
+86
+00:03:41,120 --> 00:03:43,955
+that use to generate
+the certificate.
+
+87
+00:03:43,955 --> 00:03:45,380
+What you'll get is the same
+
+88
+00:03:45,380 --> 00:03:46,820
+large number of those input with
+
+89
+00:03:46,820 --> 00:03:47,900
+the private key at
+
+90
+00:03:47,900 --> 00:03:50,245
+the previous signature
+generation step.
+
+91
+00:03:50,245 --> 00:03:52,640
+In other words, you get
+this number back here that
+
+92
+00:03:52,640 --> 00:03:55,630
+you used with the private key
+to generate the signature.
+
+93
+00:03:55,630 --> 00:03:57,980
+How can we use this to actually
+
+94
+00:03:57,980 --> 00:04:01,580
+create or maybe taking
+a step back here,
+
+95
+00:04:01,580 --> 00:04:03,080
+what are some of the
+relationships then
+
+96
+00:04:03,080 --> 00:04:04,880
+between the public key,
+
+97
+00:04:04,880 --> 00:04:07,820
+private key signature
+and the input number?
+
+98
+00:04:07,820 --> 00:04:09,890
+You can see here that
+with the private key
+
+99
+00:04:09,890 --> 00:04:12,080
+plus the input number,
+
+100
+00:04:12,080 --> 00:04:13,715
+I can generate a signature.
+
+101
+00:04:13,715 --> 00:04:16,565
+Then with the signature
+plus the public key,
+
+102
+00:04:16,565 --> 00:04:19,590
+I can generate that
+same input number back.
+
+103
+00:04:20,330 --> 00:04:23,270
+More important perhaps than
+
+104
+00:04:23,270 --> 00:04:26,015
+the relationships of how
+these can be generated are
+
+105
+00:04:26,015 --> 00:04:28,430
+again these mathematical
+properties of
+
+106
+00:04:28,430 --> 00:04:30,920
+these very large numbers and
+what that means in terms of
+
+107
+00:04:30,920 --> 00:04:33,470
+how each one of these values are
+
+108
+00:04:33,470 --> 00:04:36,050
+related and what they tell
+you about other components.
+
+109
+00:04:36,050 --> 00:04:38,120
+The key thing here
+to understand is
+
+110
+00:04:38,120 --> 00:04:41,330
+that input number that
+you started with,
+
+111
+00:04:41,330 --> 00:04:43,775
+that you generated,
+that signature value
+
+112
+00:04:43,775 --> 00:04:45,080
+and the public key,
+
+113
+00:04:45,080 --> 00:04:46,945
+all three of these together,
+
+114
+00:04:46,945 --> 00:04:49,639
+if you have all three
+of these values,
+
+115
+00:04:49,639 --> 00:04:52,010
+mathematically, you are
+not able to determine
+
+116
+00:04:52,010 --> 00:04:54,755
+anything about the content
+of the private key based on,
+
+117
+00:04:54,755 --> 00:04:57,310
+again, on these
+mathematical transforms.
+
+118
+00:04:57,310 --> 00:04:59,180
+What this means is you could
+
+119
+00:04:59,180 --> 00:05:00,320
+publish every one of these on
+
+120
+00:05:00,320 --> 00:05:04,145
+your website and any hacker
+could look at these values.
+
+121
+00:05:04,145 --> 00:05:06,080
+It's not going to get them
+any closer to being able
+
+122
+00:05:06,080 --> 00:05:09,625
+to generate the content
+of your private key.
+
+123
+00:05:09,625 --> 00:05:11,880
+How can we use these,
+
+124
+00:05:11,880 --> 00:05:14,870
+practically speaking to actually
+
+125
+00:05:14,870 --> 00:05:18,455
+deliver security as a part of
+our device updates scheme.
+
+126
+00:05:18,455 --> 00:05:22,250
+Remember, we talked
+about a value of
+
+127
+00:05:22,250 --> 00:05:23,930
+a specific length being an input
+
+128
+00:05:23,930 --> 00:05:26,975
+into the encryption algorithm.
+
+129
+00:05:26,975 --> 00:05:29,270
+Well, in our case,
+
+130
+00:05:29,270 --> 00:05:32,840
+we don't necessarily
+have a number of
+
+131
+00:05:32,840 --> 00:05:35,120
+a specific length
+that's associated
+
+132
+00:05:35,120 --> 00:05:37,890
+with our device update payload.
+
+133
+00:05:37,890 --> 00:05:39,770
+We're really starting
+with a binary file
+
+134
+00:05:39,770 --> 00:05:41,150
+that could be any length.
+
+135
+00:05:41,150 --> 00:05:43,910
+It'll depend on the device,
+
+136
+00:05:43,910 --> 00:05:46,160
+it might depend on
+the specific content
+
+137
+00:05:46,160 --> 00:05:47,935
+of the update your
+plan to perform.
+
+138
+00:05:47,935 --> 00:05:49,310
+The first thing we have to do is
+
+139
+00:05:49,310 --> 00:05:50,420
+figure out how to turn this
+
+140
+00:05:50,420 --> 00:05:53,230
+into something that's an input
+number of a fixed length.
+
+141
+00:05:53,230 --> 00:05:55,370
+It turns out there's
+a whole class of
+
+142
+00:05:55,370 --> 00:05:57,140
+cryptographic functions
+that are available
+
+143
+00:05:57,140 --> 00:05:59,300
+to do this for us called hashes.
+
+144
+00:05:59,300 --> 00:06:02,750
+One of those common ones that
+you'll hear about is SHA.
+
+145
+00:06:02,750 --> 00:06:05,330
+A SHA hash can take
+a binary file of
+
+146
+00:06:05,330 --> 00:06:09,285
+any length and generate a
+number of a specific length.
+
+147
+00:06:09,285 --> 00:06:13,550
+The important thing about
+a hash transform is that
+
+148
+00:06:13,550 --> 00:06:16,270
+if you just make one
+really small modification
+
+149
+00:06:16,270 --> 00:06:17,770
+to the binary file,
+
+150
+00:06:17,770 --> 00:06:20,240
+due to the properties
+of this hash function,
+
+151
+00:06:20,240 --> 00:06:22,060
+it's going to create,
+
+152
+00:06:22,060 --> 00:06:24,415
+again a number of
+a specific length,
+
+153
+00:06:24,415 --> 00:06:26,305
+but of completely
+different content.
+
+154
+00:06:26,305 --> 00:06:28,825
+It will have no real
+relationship to
+
+155
+00:06:28,825 --> 00:06:31,945
+this number here generated
+with the top hash function.
+
+156
+00:06:31,945 --> 00:06:35,200
+We'll be able to use the
+property of the hash to help
+
+157
+00:06:35,200 --> 00:06:38,470
+us verify that we have the
+correct formal payload,
+
+158
+00:06:38,470 --> 00:06:40,150
+that it was generated by us
+
+159
+00:06:40,150 --> 00:06:42,800
+as a part of our
+development process.
+
+160
+00:06:43,020 --> 00:06:45,190
+We talked before about
+
+161
+00:06:45,190 --> 00:06:47,440
+the properties and
+the relationships
+
+162
+00:06:47,440 --> 00:06:49,040
+between the different keys.
+
+163
+00:06:49,040 --> 00:06:51,640
+If you talk about a private key,
+
+164
+00:06:51,640 --> 00:06:53,710
+this is the one that's
+not able to be generated
+
+165
+00:06:53,710 --> 00:06:56,140
+from any of the content that you
+
+166
+00:06:56,140 --> 00:06:59,975
+use for securing or
+used with security
+
+167
+00:06:59,975 --> 00:07:04,940
+and encryption of keys.
+
+168
+00:07:04,940 --> 00:07:07,870
+The private key is
+
+169
+00:07:07,870 --> 00:07:09,070
+one that would never actually
+
+170
+00:07:09,070 --> 00:07:10,385
+leave your development
+environment.
+
+171
+00:07:10,385 --> 00:07:12,610
+Because that one can't
+be generated from
+
+172
+00:07:12,610 --> 00:07:16,555
+the content that's the output
+of our encryption steps,
+
+173
+00:07:16,555 --> 00:07:20,170
+this one if it never leaves
+your development environment,
+
+174
+00:07:20,170 --> 00:07:21,940
+you know that anybody
+who's able to
+
+175
+00:07:21,940 --> 00:07:24,215
+sign with that private key
+
+176
+00:07:24,215 --> 00:07:26,470
+necessarily is working on
+
+177
+00:07:26,470 --> 00:07:29,000
+your development or in your
+development environment.
+
+178
+00:07:29,000 --> 00:07:30,790
+As long as a hacker doesn't
+
+179
+00:07:30,790 --> 00:07:32,710
+have access to your
+development environment,
+
+180
+00:07:32,710 --> 00:07:34,150
+they also won't be able to
+
+181
+00:07:34,150 --> 00:07:39,850
+create output that is
+signed by your private key.
+
+182
+00:07:39,850 --> 00:07:43,420
+Then as I mentioned
+before, the public key,
+
+183
+00:07:43,420 --> 00:07:44,770
+the certificate,
+
+184
+00:07:44,770 --> 00:07:46,300
+and the input number or
+
+185
+00:07:46,300 --> 00:07:49,070
+hash can be saved
+on every device.
+
+186
+00:07:49,070 --> 00:07:52,180
+It's okay if a hacker
+were to get access
+
+187
+00:07:52,180 --> 00:07:55,090
+to your device and find the
+content of the private key.
+
+188
+00:07:55,090 --> 00:07:56,500
+It's not going to
+mean anything other
+
+189
+00:07:56,500 --> 00:07:58,895
+than they'd also
+be able to verify
+
+190
+00:07:58,895 --> 00:08:03,800
+that your update assigned
+as you expected it to be.
+
+191
+00:08:04,440 --> 00:08:08,905
+In terms of how you would
+create a signed update file,
+
+192
+00:08:08,905 --> 00:08:10,120
+it's really just combining
+
+193
+00:08:10,120 --> 00:08:11,900
+all the things that we
+talked about before.
+
+194
+00:08:11,900 --> 00:08:13,330
+You have the private key that's
+
+195
+00:08:13,330 --> 00:08:14,930
+part of your development
+environment,
+
+196
+00:08:14,930 --> 00:08:17,945
+you combine that with
+the device update file
+
+197
+00:08:17,945 --> 00:08:21,365
+and you do a hashing and a
+public key cryptography step,
+
+198
+00:08:21,365 --> 00:08:22,750
+and you get a signature.
+
+199
+00:08:22,750 --> 00:08:24,120
+You'll end up with a signature
+
+200
+00:08:24,120 --> 00:08:25,390
+and a device update
+file that you
+
+201
+00:08:25,390 --> 00:08:28,910
+can combine together in
+a device update package.
+
+202
+00:08:29,120 --> 00:08:33,350
+Then in terms of how this is
+verified on the device side,
+
+203
+00:08:33,350 --> 00:08:34,620
+if you take the public key from
+
+204
+00:08:34,620 --> 00:08:36,769
+the device and you
+add the signature,
+
+205
+00:08:36,769 --> 00:08:40,450
+do the RSA or ECC step,
+
+206
+00:08:40,450 --> 00:08:42,790
+you'll get assigned
+hash back out.
+
+207
+00:08:42,790 --> 00:08:46,120
+That gives you the content
+
+208
+00:08:46,120 --> 00:08:47,345
+that the signature set is
+
+209
+00:08:47,345 --> 00:08:50,085
+included in the
+device update file.
+
+210
+00:08:50,085 --> 00:08:52,620
+Then since you also have
+update to the device or
+
+211
+00:08:52,620 --> 00:08:54,825
+have access to the
+device update file,
+
+212
+00:08:54,825 --> 00:08:56,850
+you do the show of the
+device update file
+
+213
+00:08:56,850 --> 00:08:58,515
+and you get a computed hash.
+
+214
+00:08:58,515 --> 00:09:02,905
+Only if these two numbers are
+the same do you know that
+
+215
+00:09:02,905 --> 00:09:05,260
+the device update file
+was actually signed with
+
+216
+00:09:05,260 --> 00:09:06,760
+the private key here in
+
+217
+00:09:06,760 --> 00:09:09,670
+this step at the
+development workstation.
+
+218
+00:09:09,670 --> 00:09:11,470
+This provides us a way to
+
+219
+00:09:11,470 --> 00:09:14,980
+use components that we
+can again share publicly.
+
+220
+00:09:14,980 --> 00:09:19,270
+There's no risk of disclosure
+with the signature,
+
+221
+00:09:19,270 --> 00:09:22,780
+the signed hash or,
+the public key.
+
+222
+00:09:22,780 --> 00:09:25,070
+But we can use this
+to figure out,
+
+223
+00:09:25,070 --> 00:09:26,935
+was this device update file
+
+224
+00:09:26,935 --> 00:09:30,200
+signed by our
+development server?
+
+225
+00:09:31,230 --> 00:09:34,600
+If you take the device
+update payload,
+
+226
+00:09:34,600 --> 00:09:35,795
+and let's say we go
+
+227
+00:09:35,795 --> 00:09:37,180
+through the scenario
+we talked about in
+
+228
+00:09:37,180 --> 00:09:40,025
+the previous slide where a
+hacker gets access to this,
+
+229
+00:09:40,025 --> 00:09:42,115
+somehow hacks into
+your Cloud server,
+
+230
+00:09:42,115 --> 00:09:44,680
+and changes content
+of the update file
+
+231
+00:09:44,680 --> 00:09:48,010
+such that it would have some
+malicious payload on it,
+
+232
+00:09:48,010 --> 00:09:49,920
+they wouldn't be
+able to regenerate
+
+233
+00:09:49,920 --> 00:09:51,760
+the hash because the hash
+
+234
+00:09:51,760 --> 00:09:53,470
+was generated with
+the private key that
+
+235
+00:09:53,470 --> 00:09:56,305
+only came from your
+development environment.
+
+236
+00:09:56,305 --> 00:10:01,030
+The fact that they could
+access your public key
+
+237
+00:10:01,030 --> 00:10:03,475
+wouldn't make any difference
+because they wouldn't
+
+238
+00:10:03,475 --> 00:10:06,850
+have the private key used to
+generate the signed hash.
+
+239
+00:10:08,660 --> 00:10:11,960
+Another thing that often
+comes up when we talk about
+
+240
+00:10:11,960 --> 00:10:14,990
+signing schemes is
+people mentioned,
+
+241
+00:10:14,990 --> 00:10:17,065
+well, what about,
+
+242
+00:10:17,065 --> 00:10:18,605
+is it safe to use
+
+243
+00:10:18,605 --> 00:10:20,300
+encryption algorithms
+
+244
+00:10:20,300 --> 00:10:22,330
+given the fact that
+quantum computing
+
+245
+00:10:22,330 --> 00:10:24,160
+is coming up soon and
+
+246
+00:10:24,160 --> 00:10:25,330
+quantum computers
+are going to be able
+
+247
+00:10:25,330 --> 00:10:27,715
+to break encryption algorithms.
+
+248
+00:10:27,715 --> 00:10:30,400
+This is something that you're
+definitely going to have to
+
+249
+00:10:30,400 --> 00:10:32,930
+think about during your career.
+
+250
+00:10:32,930 --> 00:10:34,840
+But I think the main thing
+
+251
+00:10:34,840 --> 00:10:36,400
+I would do to think
+about this is
+
+252
+00:10:36,400 --> 00:10:38,815
+to pay attention and
+
+253
+00:10:38,815 --> 00:10:42,090
+keep up with the latest
+security standards.
+
+254
+00:10:42,090 --> 00:10:44,280
+The type of schemes that
+I'm talking about here,
+
+255
+00:10:44,280 --> 00:10:47,425
+especially RSA, are used
+all over on the Internet.
+
+256
+00:10:47,425 --> 00:10:49,400
+It's part of why you're
+able to log into
+
+257
+00:10:49,400 --> 00:10:54,545
+your bank account over a
+website, for instance.
+
+258
+00:10:54,545 --> 00:10:56,305
+There's a lot of motivation to
+
+259
+00:10:56,305 --> 00:10:58,475
+keep ahead of the curve
+here on being able to
+
+260
+00:10:58,475 --> 00:11:00,670
+have encryption
+algorithms that can
+
+261
+00:11:00,670 --> 00:11:03,305
+handle things like
+quantum computing.
+
+262
+00:11:03,305 --> 00:11:04,715
+The standards are likely to
+
+263
+00:11:04,715 --> 00:11:06,455
+change and you'll need to change
+
+264
+00:11:06,455 --> 00:11:10,015
+your implementations to match
+as well as that happens.
+
+265
+00:11:10,015 --> 00:11:14,050
+The advent of quantum
+computing really means
+
+266
+00:11:14,050 --> 00:11:18,845
+that it's probably somewhere
+between 5-15 years from now.
+
+267
+00:11:18,845 --> 00:11:21,280
+The current
+encryption algorithms
+
+268
+00:11:21,280 --> 00:11:22,170
+that I'm talking about here,
+
+269
+00:11:22,170 --> 00:11:25,150
+RSA and ECC are probably
+going to be possible to
+
+270
+00:11:25,150 --> 00:11:26,680
+be broken with something like
+
+271
+00:11:26,680 --> 00:11:28,630
+billion-dollar supercomputers.
+
+272
+00:11:28,630 --> 00:11:30,785
+You have enough of
+
+273
+00:11:30,785 --> 00:11:35,105
+a security risk that
+
+274
+00:11:35,105 --> 00:11:36,925
+someone would be willing
+to pay that kind of money,
+
+275
+00:11:36,925 --> 00:11:38,795
+then there's a chance
+that it could be
+
+276
+00:11:38,795 --> 00:11:41,375
+broken in the relatively
+short time-frame.
+
+277
+00:11:41,375 --> 00:11:44,495
+However, there's
+our active programs
+
+278
+00:11:44,495 --> 00:11:46,235
+from NIST and others that are
+
+279
+00:11:46,235 --> 00:11:48,715
+targeting quantum
+resistance standards
+
+280
+00:11:48,715 --> 00:11:51,440
+in 2022-2024 time-frame.
+
+281
+00:11:51,440 --> 00:11:52,960
+In a couple years
+there will probably be
+
+282
+00:11:52,960 --> 00:11:54,700
+some new standards that we could
+
+283
+00:11:54,700 --> 00:11:56,640
+use to do the same purposes
+
+284
+00:11:56,640 --> 00:11:58,810
+that'll be quantum
+attack resistant.
+
+285
+00:11:58,810 --> 00:12:00,980
+The main thing here is
+just to keep up with
+
+286
+00:12:00,980 --> 00:12:03,790
+the technology and use as much
+
+287
+00:12:03,790 --> 00:12:05,125
+as you can of
+
+288
+00:12:05,125 --> 00:12:07,210
+existing solutions rather than
+
+289
+00:12:07,210 --> 00:12:09,550
+trying to implement your own.

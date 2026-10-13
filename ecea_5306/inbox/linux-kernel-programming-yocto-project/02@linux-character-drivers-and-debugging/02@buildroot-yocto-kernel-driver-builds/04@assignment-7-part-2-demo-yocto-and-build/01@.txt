@@ -1,0 +1,137 @@
+This video will go over
+part 2 of assignment 7, where we're going to be building and cross compiling
+kernel drivers for our Buildroot or Yocto
+embedded system targets. You'll start by
+creating an empty repo using GitHub classroom, and you're going to set up this repository to include
+the default content from the Linux device
+drivers sample repository. You're going to make a
+really small change to this repository to personalize
+with your GitHub username. Because we're going
+to be building off the same content we used
+for assignments 5 or 6, you're just going to
+use the GitHub actions that you've already set up for either your Buildroot or the Yocto assignment repository depending on which
+one you're building. Your repository setup's
+going to look like this. Your assignment 3 repository, you will have already
+merged in assignment 7 branches as part of part
+1 of this assignment. You're going to add a
+faulty oops markdown file that discusses the oops that you get from running
+the faulty kernel module. More about that in a second. You're going to use your
+assignment 5 repository, merging the assignment 7 branch, which is going to pull in
+the unit test content. That's going to reference
+your assignment 7 repository, which again is going to contain Linux device drivers
+source code with that minor modification
+that you have to personalize with
+your GitHub username. In addition to setting up Buildroot to build with
+this type of setup, you can also take your
+assignment 6 repository, merge the assignment 7 branch from Yocto assignments base, reference your same
+assignment 7 repository, which contains that mixed
+device drivers source code and build your QMU image
+for Yocto as well. You'll start that
+assignment 7 repo with the link's device
+drivers repository and then depending on whether you're building
+for Buildroot or Yocto, you'll either use assignment
+5 or assignment 6, the same repository
+you use to submit for either one of those assignments and put the associated
+changes in there. Following the instructions here, we'll set up your assignment
+7 repository again with that Linux device
+drivers source code so that you can make
+the minor modification. Then the modification
+that's covered here in the hello.c module, which just simply
+prints hello world, when it's loaded
+into the kernel, you'll modify that to include your GitHub username
+to personalize it. Next, you're going to
+update the assignment 5 repo for your Buildroot
+build to support building, installing the
+miscellaneous modules and scull components. There's some
+sub-directories inside the Linux device
+driver repository that contain either
+the scull driver which talk about in the videos, or miscellaneous modules that include a few different
+modules that we'll use for testing and
+verification purposes. You'll want to look
+at the Buildroot documentation to see
+how to build these. But as a hint, take a look at the
+MODULE_SUBDIRS option because you want to build
+these from sub-directories. The sub-directories
+specifically are the misc modules and the
+scull sub-directories. These instructions for Git walk you through how to
+set up your assignment 5 repo such that
+you'll be ready to test it with the
+assignment 7 content. Bringing in the additional
+unit tests for assignment 7 into your assignment 5 repo and setting it
+up to test that. Next you're going to add
+a new package called LDD to your assignment 5
+base external directory. You're going to make that
+package support building, installing the misc modules
+and scull components. Then make sure to add
+that to your image the same way you added the
+ASD assignments package. Then use a root file system
+overlay to add it in a module script
+named S98lddmodules. This is going to do the
+startup for your modules similarly in the way that we did the startup for your
+ASD socket server. This one's going to
+start the modules that you're compiling
+as a part of the the package definition that you created here in step 3. The init scripts in that you had inside your root
+file system overly are going to perform the
+options on startup to load the scull driver. On shutdown, it's going to
+unload the scull driver. There's some reference
+scripts you can use for this in scull load and unload. You probably need to make
+some customizations to this, but you can get an idea of what these scripts
+are going to do. You might want to compile
+these drivers natively on your Ubuntu host and
+load and unload them there so that you get an idea about what
+these scripts do. Then you're going to also
+perform operations on startup from inside
+this start script to load the faulty driver, and then on shutdown, you're
+going to unload that driver. There's some module load and unload scripts that you can use. Based on what we're discussing
+in the video content, you might either customize those slightly in order
+to achieve this. But you get an example of some useful content here from these load
+and unload scripts. You can use mod probe on the hello module to
+load it on startup. Then you can use RM mod
+to remove on shutdown. Again, the hello modules, the one that you're
+going to customize with that small change to add
+your GitHub username in it. You can then run echo, any command but something
+like hello world, and send that to the
+dev faulty device. You'll use run QEMU
+you to startup and your faulty module is going
+to be loaded on startup. If you run this echo hello
+world to dev faulty, it's going to create
+a kernel loops. What you need to do is turn
+that into a markdown file using some of the hints here in Mastering
+Markdown from GitHub. Use the content in
+the lecture video to discuss how you
+can analyze this, oops, message that comes out as a part of the
+faulty kernel module. The faulty kernel
+module is going to purposely create a kernel fault. You'll use the instructions in the video content to understand how to troubleshoot
+that and how to document the result of that, oops file in your AST
+assignments repository. This will ultimately
+be checked in to your Assignment 3 repo. Then you'll run the full
+test script and that should successfully run against your builder AT implementation. That's just going to verify
+that you were able to get these modules cross compiled and installed and
+running automatically in your QEMU image. Then tag the assignment and that way and push to the repo. That way we'll know which
+assignment corresponds to the completed version
+of Assignment 7. For the Coursera section, you have the option
+of implementing either in Builder or in yocto. If you want to
+implement in yocto, follow these
+instructions instead. If you're implementing in
+the on-campus section, you can implement or you can implement in both
+Builder and yocto for some extra credit with
+the yocto implementation. The instructions
+for actually adding the startup script are going to be slightly
+different from yocto. But the same rules apply in terms of the full test script is just going to build your
+image and run your image, verify that the kernel
+modules are loaded, same as is going to
+do on Build rip. There's a separate section here of instructions you
+can use if you want to get your builds rebuilds working instead of or as well as your
+Build rid implementation. Looking at the
+example run of this, if I run full tests for
+my builder at repo, I should see a build,
+my implementation. Again, this will be fast after you've completed
+at once successfully. Start rebuilding, it
+should start QEMU. After starting QEMU,
+you should see messages like this showing that the drivers all
+started successfully. You've got those installed and your start scripts started
+each one of those drivers. You should see the
+customization and the hello world line that would include your GitHub username. After startup completes, you'll see a validation message, is going to check to make
+sure the drivers are running. Then if everything
+works correctly, you'll see a message
+like this saying that the test completed with success.

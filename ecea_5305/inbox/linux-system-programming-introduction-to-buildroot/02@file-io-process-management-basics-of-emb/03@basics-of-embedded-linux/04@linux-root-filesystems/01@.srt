@@ -1,0 +1,1651 @@
+1
+00:00:00,000 --> 00:00:02,190
+Now that we've built
+the Linux kernel,
+
+2
+00:00:02,190 --> 00:00:04,395
+we're going to talk
+about the last step
+
+3
+00:00:04,395 --> 00:00:07,230
+in our embedded Linux
+system build process,
+
+4
+00:00:07,230 --> 00:00:09,795
+which is to build our
+root file system.
+
+5
+00:00:09,795 --> 00:00:12,030
+Learning objectives. We're
+going to learn about
+
+6
+00:00:12,030 --> 00:00:14,115
+what's in a minimal
+root filesystem.
+
+7
+00:00:14,115 --> 00:00:16,500
+The file system
+hierarchy standard that
+
+8
+00:00:16,500 --> 00:00:18,990
+dictates the contents
+of a root filesystem.
+
+9
+00:00:18,990 --> 00:00:22,080
+Then we're going to
+talk about busy box,
+
+10
+00:00:22,080 --> 00:00:23,670
+which is going to be useful for
+
+11
+00:00:23,670 --> 00:00:26,445
+us in generating our
+minimal root filesystem.
+
+12
+00:00:26,445 --> 00:00:29,240
+If you stop at the end of
+
+13
+00:00:29,240 --> 00:00:32,510
+the last video and you
+try to start QEMU and use
+
+14
+00:00:32,510 --> 00:00:34,655
+a command like the
+one that we specified
+
+15
+00:00:34,655 --> 00:00:37,430
+earlier that we showed
+
+16
+00:00:37,430 --> 00:00:40,190
+earlier that we're going
+to use for Assignment 3,
+
+17
+00:00:40,190 --> 00:00:42,830
+what you'll note is something
+like this where you see
+
+18
+00:00:42,830 --> 00:00:45,485
+a kernel panic unable
+to mount root fs.
+
+19
+00:00:45,485 --> 00:00:48,560
+What's missing is because we
+need our root filesystem.
+
+20
+00:00:48,560 --> 00:00:50,570
+We've built the kernel,
+we built the device tree,
+
+21
+00:00:50,570 --> 00:00:52,430
+we've built modules, but we
+
+22
+00:00:52,430 --> 00:00:55,225
+haven't actually built
+the root filesystem.
+
+23
+00:00:55,225 --> 00:00:59,485
+You have a few different
+options for root filesystem.
+
+24
+00:00:59,485 --> 00:01:01,520
+One option is initramfs,
+
+25
+00:01:01,520 --> 00:01:02,870
+and this is really just a set of
+
+26
+00:01:02,870 --> 00:01:05,165
+files that gets
+extracted into RAM.
+
+27
+00:01:05,165 --> 00:01:07,100
+The typical use for this is to
+
+28
+00:01:07,100 --> 00:01:09,150
+set up your real
+root filesystem.
+
+29
+00:01:09,150 --> 00:01:10,760
+In other words, lot of
+
+30
+00:01:10,760 --> 00:01:13,055
+times you might end up
+with a scenario where
+
+31
+00:01:13,055 --> 00:01:16,160
+your real root filesystem
+is located on some type of
+
+32
+00:01:16,160 --> 00:01:17,870
+hardware that needs
+additional drivers
+
+33
+00:01:17,870 --> 00:01:19,985
+that aren't built
+into your kernel.
+
+34
+00:01:19,985 --> 00:01:23,265
+Or there might be other
+reasons you have to
+
+35
+00:01:23,265 --> 00:01:26,120
+prepare the storage that's
+
+36
+00:01:26,120 --> 00:01:28,550
+really holding your
+root filesystem.
+
+37
+00:01:28,550 --> 00:01:30,290
+Anytime you have a
+scenario like that,
+
+38
+00:01:30,290 --> 00:01:34,640
+you can use initramfs
+as a way to hold a copy
+
+39
+00:01:34,640 --> 00:01:36,860
+of the root filesystem
+in RAM that allows
+
+40
+00:01:36,860 --> 00:01:39,605
+you to get further on
+in the boot process.
+
+41
+00:01:39,605 --> 00:01:42,035
+In our case, we're just going
+to use it for simplicity.
+
+42
+00:01:42,035 --> 00:01:43,310
+We're going to use it instead of
+
+43
+00:01:43,310 --> 00:01:45,095
+having to try to
+create a disk image,
+
+44
+00:01:45,095 --> 00:01:46,850
+just takes one step
+out of the process
+
+45
+00:01:46,850 --> 00:01:50,890
+to use initramfs instead.
+
+46
+00:01:50,890 --> 00:01:53,990
+The initramfs is just
+going to be extracted
+
+47
+00:01:53,990 --> 00:01:57,095
+into RAM and that's going
+to be our filesystem.
+
+48
+00:01:57,095 --> 00:02:01,280
+Another option here that
+you would typically use,
+
+49
+00:02:01,280 --> 00:02:03,350
+possibly more likely use
+
+50
+00:02:03,350 --> 00:02:04,760
+depending on whether
+or not you needed
+
+51
+00:02:04,760 --> 00:02:08,060
+the initramfs would be just
+specifying a block device.
+
+52
+00:02:08,060 --> 00:02:10,970
+If you had an image stored
+on disk and you can
+
+53
+00:02:10,970 --> 00:02:13,760
+just point it to you that
+image as a block device,
+
+54
+00:02:13,760 --> 00:02:15,590
+then that wouldn't be
+a second way you can
+
+55
+00:02:15,590 --> 00:02:17,510
+use the root equals
+parameter to point
+
+56
+00:02:17,510 --> 00:02:21,170
+to the device you want to move.
+
+57
+00:02:21,170 --> 00:02:22,670
+The contents. What's
+going to go into
+
+58
+00:02:22,670 --> 00:02:25,440
+our minimal root filesystem?
+
+59
+00:02:25,900 --> 00:02:31,445
+Init, content is going to
+be what starts the system.
+
+60
+00:02:31,445 --> 00:02:33,740
+Usually these are going
+to be startup scripts.
+
+61
+00:02:33,740 --> 00:02:37,160
+Then the shell is going
+to be what handles
+
+62
+00:02:37,160 --> 00:02:40,280
+shell scripts and runs
+our command prompt,
+
+63
+00:02:40,280 --> 00:02:41,640
+our interactive command prompt.
+
+64
+00:02:41,640 --> 00:02:43,130
+Then daemons that we mentioned
+
+65
+00:02:43,130 --> 00:02:44,810
+that are the
+background programs,
+
+66
+00:02:44,810 --> 00:02:47,600
+they kicked off that
+provides services.
+
+67
+00:02:47,600 --> 00:02:49,340
+Other things that
+are going to be in
+
+68
+00:02:49,340 --> 00:02:50,900
+our minimal root filesystem,
+
+69
+00:02:50,900 --> 00:02:52,790
+we'll have shared libraries.
+
+70
+00:02:52,790 --> 00:02:54,845
+Our applications are
+going to be using,
+
+71
+00:02:54,845 --> 00:02:56,885
+we'll have configuration
+files which you
+
+72
+00:02:56,885 --> 00:02:59,010
+usually live in etc sys.
+
+73
+00:02:59,010 --> 00:03:00,620
+We'll have dev nodes under dev
+
+74
+00:03:00,620 --> 00:03:02,615
+that we use to interact
+with the kernel.
+
+75
+00:03:02,615 --> 00:03:05,990
+Then we'll have proc and
+sys pseudo file systems,
+
+76
+00:03:05,990 --> 00:03:09,490
+again where we can do
+some kernel interaction.
+
+77
+00:03:09,490 --> 00:03:12,334
+Then finally you'll also
+have kernel modules,
+
+78
+00:03:12,334 --> 00:03:15,215
+which would live
+under /lib/modules,
+
+79
+00:03:15,215 --> 00:03:17,000
+and then based on
+the kernel version.
+
+80
+00:03:17,000 --> 00:03:19,160
+The reason for this is
+because kernel modules
+
+81
+00:03:19,160 --> 00:03:21,300
+are going to be compiled
+for a specific version.
+
+82
+00:03:21,300 --> 00:03:22,400
+If you want to support
+
+83
+00:03:22,400 --> 00:03:24,950
+multiple kernel versions
+with your root filesystem,
+
+84
+00:03:24,950 --> 00:03:26,000
+you'd have different directories
+
+85
+00:03:26,000 --> 00:03:28,470
+under root modules
+for each kernel.
+
+86
+00:03:30,340 --> 00:03:32,675
+Where does the kernel expect
+
+87
+00:03:32,675 --> 00:03:35,300
+all these files to be located
+in the root filesystem?
+
+88
+00:03:35,300 --> 00:03:38,045
+This is again, another
+trick question,
+
+89
+00:03:38,045 --> 00:03:40,730
+because it turns out the
+kernel really doesn't have
+
+90
+00:03:40,730 --> 00:03:42,110
+any expectations about
+
+91
+00:03:42,110 --> 00:03:43,760
+the content and the
+root filesystem.
+
+92
+00:03:43,760 --> 00:03:45,950
+This was a design goal to keep
+
+93
+00:03:45,950 --> 00:03:48,980
+the kernel and the root file
+system completely decoupled,
+
+94
+00:03:48,980 --> 00:03:50,800
+or decoupled as
+much as possible.
+
+95
+00:03:50,800 --> 00:03:52,820
+Really the only thing
+that the kernel
+
+96
+00:03:52,820 --> 00:03:55,130
+expects about the root
+filesystem is that it
+
+97
+00:03:55,130 --> 00:03:59,280
+can call some application
+to initialize the system.
+
+98
+00:03:59,280 --> 00:04:01,610
+That's what's specified on
+that kernel command line
+
+99
+00:04:01,610 --> 00:04:03,980
+that we showed for
+QEMU earlier where we
+
+100
+00:04:03,980 --> 00:04:09,440
+specified slash and slash
+SH as they enter program.
+
+101
+00:04:09,440 --> 00:04:10,675
+What about programs?
+
+102
+00:04:10,675 --> 00:04:12,170
+What expectations do programs
+
+103
+00:04:12,170 --> 00:04:14,990
+have about the content
+of the root filesystem?
+
+104
+00:04:14,990 --> 00:04:17,495
+There there're definitely
+are expectations
+
+105
+00:04:17,495 --> 00:04:19,490
+that userspace programs have
+
+106
+00:04:19,490 --> 00:04:21,230
+about how other
+userspace programs,
+
+107
+00:04:21,230 --> 00:04:22,280
+for instance, will use
+
+108
+00:04:22,280 --> 00:04:23,720
+the root filesystem or
+
+109
+00:04:23,720 --> 00:04:25,655
+how you will configure
+their root filesystem.
+
+110
+00:04:25,655 --> 00:04:27,635
+Those expectations are
+defining what's called the
+
+111
+00:04:27,635 --> 00:04:31,415
+filesystem hierarchy
+standard or FHS.
+
+112
+00:04:31,415 --> 00:04:34,715
+The content of the file
+system hierarchy standard
+
+113
+00:04:34,715 --> 00:04:36,230
+defines what all the
+
+114
+00:04:36,230 --> 00:04:38,795
+different directories
+in the root filesystem,
+
+115
+00:04:38,795 --> 00:04:40,280
+how they should be used.
+
+116
+00:04:40,280 --> 00:04:45,485
+/bin is the location for
+programs for all users,
+
+117
+00:04:45,485 --> 00:04:47,980
+including programs
+that are used at boot.
+
+118
+00:04:47,980 --> 00:04:50,850
+/dev would be for a device
+nodes and other files.
+
+119
+00:04:50,850 --> 00:04:52,175
+This is where we're
+going to create
+
+120
+00:04:52,175 --> 00:04:53,660
+nodes that will let
+us interact with
+
+121
+00:04:53,660 --> 00:04:55,010
+devices in the Linux kernel
+
+122
+00:04:55,010 --> 00:04:57,520
+and connect to specific modules.
+
+123
+00:04:57,520 --> 00:04:59,480
+/etc is where all the system
+
+124
+00:04:59,480 --> 00:05:01,295
+configuration files
+are going to live.
+
+125
+00:05:01,295 --> 00:05:03,215
+/lib are the shared libraries.
+
+126
+00:05:03,215 --> 00:05:05,915
+Proc and sys are the
+sysfs file systems,
+
+127
+00:05:05,915 --> 00:05:08,195
+again, allow us to
+interact with the kernel.
+
+128
+00:05:08,195 --> 00:05:11,060
+Then sbin is where programs for
+
+129
+00:05:11,060 --> 00:05:12,920
+the system administrator
+that are used as
+
+130
+00:05:12,920 --> 00:05:15,335
+boot again are going to live.
+
+131
+00:05:15,335 --> 00:05:19,020
+If you see something in
+/sbin and not in /bin,
+
+132
+00:05:19,020 --> 00:05:22,175
+it's because the /sbin one
+
+133
+00:05:22,175 --> 00:05:24,260
+might be restricted
+in terms of use and
+
+134
+00:05:24,260 --> 00:05:27,210
+expected to only be used
+by the root account.
+
+135
+00:05:27,690 --> 00:05:30,910
+/tmp is where temporary
+files live in,
+
+136
+00:05:30,910 --> 00:05:32,470
+depending on how that's bounded,
+
+137
+00:05:32,470 --> 00:05:34,135
+it might actually be a RAM disk,
+
+138
+00:05:34,135 --> 00:05:35,560
+and so these files might be
+
+139
+00:05:35,560 --> 00:05:37,810
+automatically deleted
+every time you boot.
+
+140
+00:05:37,810 --> 00:05:41,350
+Then /usr, usr/bin,
+and usr/sbin.
+
+141
+00:05:41,350 --> 00:05:42,640
+These are additional programs,
+
+142
+00:05:42,640 --> 00:05:44,170
+libraries, and utilities.
+
+143
+00:05:44,170 --> 00:05:46,825
+Probably in the case of
+usr/bin and usr/sbin,
+
+144
+00:05:46,825 --> 00:05:50,200
+these would be ones that
+aren't used as a part of boot.
+
+145
+00:05:50,200 --> 00:05:53,320
+Then another directory specified
+
+146
+00:05:53,320 --> 00:05:55,735
+in the file system
+hierarchy standard is /var,
+
+147
+00:05:55,735 --> 00:05:58,300
+and this is for files
+modified at runtime.
+
+148
+00:05:58,300 --> 00:06:01,255
+One common location
+here is /var/log,
+
+149
+00:06:01,255 --> 00:06:03,940
+which is going to
+contain our logs.
+
+150
+00:06:03,940 --> 00:06:06,655
+One difference between
+temp and var is that
+
+151
+00:06:06,655 --> 00:06:09,595
+var is typically going to
+be retained after boot.
+
+152
+00:06:09,595 --> 00:06:11,350
+There may be some
+subdirectories under
+
+153
+00:06:11,350 --> 00:06:13,495
+var that don't meet
+this, but in general,
+
+154
+00:06:13,495 --> 00:06:17,470
+tmp might be replaced
+every boot in var that
+
+155
+00:06:17,470 --> 00:06:19,090
+at least some
+content probably is
+
+156
+00:06:19,090 --> 00:06:22,490
+likely persistent across boots.
+
+157
+00:06:23,160 --> 00:06:27,355
+Now that we know what's
+in a root file system,
+
+158
+00:06:27,355 --> 00:06:29,140
+how would we want to create one?
+
+159
+00:06:29,140 --> 00:06:32,780
+This is part of what we'll
+be doing with Assignment 3.
+
+160
+00:06:33,090 --> 00:06:35,140
+We need to start by creating
+
+161
+00:06:35,140 --> 00:06:36,730
+a folder tree where
+we're going to put
+
+162
+00:06:36,730 --> 00:06:38,440
+all the contents that
+will ultimately be
+
+163
+00:06:38,440 --> 00:06:41,050
+located in our root file system.
+
+164
+00:06:41,050 --> 00:06:44,035
+That's really the list of
+directories right here.
+
+165
+00:06:44,035 --> 00:06:46,000
+It's as simple as using mkdir
+
+166
+00:06:46,000 --> 00:06:49,480
+and creating all this
+tree of directories.
+
+167
+00:06:49,480 --> 00:06:54,715
+When all the mkdir
+step get done,
+
+168
+00:06:54,715 --> 00:06:58,000
+you should see a tree that
+looks like this that would be
+
+169
+00:06:58,000 --> 00:07:02,350
+located in essentially your
+skeleton root file system.
+
+170
+00:07:02,350 --> 00:07:06,160
+You can create this
+anywhere on the system.
+
+171
+00:07:06,160 --> 00:07:08,170
+In Assignment 3, we'll use
+
+172
+00:07:08,170 --> 00:07:10,615
+a temp directory
+for this purpose.
+
+173
+00:07:10,615 --> 00:07:14,110
+Now we've got the root file
+system structure setup
+
+174
+00:07:14,110 --> 00:07:15,910
+in terms of the directories,
+
+175
+00:07:15,910 --> 00:07:17,185
+but how about the files?
+
+176
+00:07:17,185 --> 00:07:19,630
+How do we get the structure
+
+177
+00:07:19,630 --> 00:07:21,640
+actually filled with the files
+
+178
+00:07:21,640 --> 00:07:23,680
+that we need in the
+root file system?
+
+179
+00:07:23,680 --> 00:07:26,320
+It turns out there's a
+really great utility that we
+
+180
+00:07:26,320 --> 00:07:29,005
+can use for this,
+that's called BusyBox.
+
+181
+00:07:29,005 --> 00:07:33,505
+BusyBox, what it is is
+essentially a single application.
+
+182
+00:07:33,505 --> 00:07:36,115
+A single binary executable that
+
+183
+00:07:36,115 --> 00:07:39,730
+implements a whole bunch of
+essential Linux programs.
+
+184
+00:07:39,730 --> 00:07:42,354
+Rather than having each
+one of these programs
+
+185
+00:07:42,354 --> 00:07:45,040
+individually compiled into
+a separate executable,
+
+186
+00:07:45,040 --> 00:07:48,295
+BusyBox provides one
+executable that does them all.
+
+187
+00:07:48,295 --> 00:07:52,210
+In order to understand which
+command it should run,
+
+188
+00:07:52,210 --> 00:07:54,130
+it uses a symbolic link
+
+189
+00:07:54,130 --> 00:07:57,290
+to the name of the command
+that you're trying to run.
+
+190
+00:07:57,390 --> 00:08:00,820
+For instance, if I want to use
+
+191
+00:08:00,820 --> 00:08:04,270
+the cat utility to
+cut out a file,
+
+192
+00:08:04,270 --> 00:08:06,805
+I would just have
+a symbolic link
+
+193
+00:08:06,805 --> 00:08:09,460
+from bin/cat to BusyBox,
+
+194
+00:08:09,460 --> 00:08:11,980
+and then when I run bin/cat,
+
+195
+00:08:11,980 --> 00:08:14,080
+BusyBox will be
+able to see how it
+
+196
+00:08:14,080 --> 00:08:16,210
+was invoked and know
+that I've tried
+
+197
+00:08:16,210 --> 00:08:18,565
+to run the cat
+command and then run
+
+198
+00:08:18,565 --> 00:08:21,760
+a version of the cat command
+that's specific to BusyBox.
+
+199
+00:08:21,760 --> 00:08:25,525
+One thing to know about
+BusyBox is that often
+
+200
+00:08:25,525 --> 00:08:28,600
+not all the arguments
+are supported
+
+201
+00:08:28,600 --> 00:08:31,795
+and not all the features for
+every command are supported.
+
+202
+00:08:31,795 --> 00:08:33,610
+But for our case where
+we're just trying
+
+203
+00:08:33,610 --> 00:08:35,470
+to bring up a really
+simple system.
+
+204
+00:08:35,470 --> 00:08:38,230
+It's a much easier option
+than trying to pull
+
+205
+00:08:38,230 --> 00:08:39,250
+the source for every one of
+
+206
+00:08:39,250 --> 00:08:42,290
+these utilities and to
+file them individually.
+
+207
+00:08:43,260 --> 00:08:46,345
+In order to make and
+install BusyBox,
+
+208
+00:08:46,345 --> 00:08:48,220
+we'll do steps very
+
+209
+00:08:48,220 --> 00:08:50,425
+similar to what we're doing
+with the kernel build.
+
+210
+00:08:50,425 --> 00:08:53,005
+We'll do a distclean,
+a defconfig,
+
+211
+00:08:53,005 --> 00:08:54,640
+and then we'll
+specify our arch and
+
+212
+00:08:54,640 --> 00:08:56,560
+our cross-compile and do a make.
+
+213
+00:08:56,560 --> 00:08:58,210
+Finally, we'll specify
+
+214
+00:08:58,210 --> 00:09:00,280
+the location of our
+root directory,
+
+215
+00:09:00,280 --> 00:09:01,705
+where we want it to populate,
+
+216
+00:09:01,705 --> 00:09:07,135
+and do this make install step.
+
+217
+00:09:07,135 --> 00:09:09,070
+When we do the
+make install step,
+
+218
+00:09:09,070 --> 00:09:11,020
+the install step is
+going to not only
+
+219
+00:09:11,020 --> 00:09:13,345
+copy BusyBox into our
+root file system,
+
+220
+00:09:13,345 --> 00:09:17,410
+but create all those siblings
+for us so that the commands
+
+221
+00:09:17,410 --> 00:09:19,195
+that we need to run will be
+
+222
+00:09:19,195 --> 00:09:22,400
+Simulink back to the
+BusyBox executable.
+
+223
+00:09:23,130 --> 00:09:25,734
+Next we need to,
+
+224
+00:09:25,734 --> 00:09:29,170
+because we're running BusyBox on
+
+225
+00:09:29,170 --> 00:09:31,825
+our root file system
+
+226
+00:09:31,825 --> 00:09:34,180
+and BusyBox has
+some dependencies
+
+227
+00:09:34,180 --> 00:09:36,250
+in terms of libraries
+that it needs,
+
+228
+00:09:36,250 --> 00:09:38,815
+we need to find out what
+dependencies those are,
+
+229
+00:09:38,815 --> 00:09:40,615
+and we need to add
+those dependencies
+
+230
+00:09:40,615 --> 00:09:42,865
+into our root file system.
+
+231
+00:09:42,865 --> 00:09:48,010
+The readelf command is very
+useful for this purpose.
+
+232
+00:09:48,010 --> 00:09:50,440
+The readelf that we're going to
+
+233
+00:09:50,440 --> 00:09:53,305
+use is going to be based
+on our cross-compiler.
+
+234
+00:09:53,305 --> 00:09:55,720
+We'll prefix the
+readelf command with
+
+235
+00:09:55,720 --> 00:09:59,260
+our cross-compile string
+that we're using with the,
+
+236
+00:09:59,260 --> 00:10:01,235
+for instance, the
+compile commands.
+
+237
+00:10:01,235 --> 00:10:04,980
+When we do that, we can look
+for the program interpreter.
+
+238
+00:10:04,980 --> 00:10:06,600
+This is what's
+going to ultimately
+
+239
+00:10:06,600 --> 00:10:08,370
+run the BusyBox executable.
+
+240
+00:10:08,370 --> 00:10:09,945
+We can see a reference to
+
+241
+00:10:09,945 --> 00:10:13,215
+a file that's needed for
+the program interpreter.
+
+242
+00:10:13,215 --> 00:10:15,785
+We see that that's located
+in the lib directory.
+
+243
+00:10:15,785 --> 00:10:20,350
+We'll need to populate
+this file from
+
+244
+00:10:20,350 --> 00:10:25,500
+our Cicero and place it
+into our lib directory.
+
+245
+00:10:25,500 --> 00:10:31,910
+Similarly, if we search in
+the output of readelf for
+
+246
+00:10:31,910 --> 00:10:35,090
+the BusyBox utility and search
+for shared library we'll
+
+247
+00:10:35,090 --> 00:10:36,905
+see a list of shared libraries
+
+248
+00:10:36,905 --> 00:10:38,855
+that are needed for BusyBox.
+
+249
+00:10:38,855 --> 00:10:40,610
+For each one of these files,
+
+250
+00:10:40,610 --> 00:10:42,320
+we need to locate them in
+
+251
+00:10:42,320 --> 00:10:45,500
+our Cicero for our
+cross-compile toolchain.
+
+252
+00:10:45,500 --> 00:10:47,255
+So wherever you installed
+the tool chain,
+
+253
+00:10:47,255 --> 00:10:51,335
+you need to locate those
+files in the Cicero
+
+254
+00:10:51,335 --> 00:10:55,910
+and then you need to copy them
+into the library location.
+
+255
+00:10:55,910 --> 00:10:58,655
+Now since we're using
+an AR-64 target,
+
+256
+00:10:58,655 --> 00:11:00,560
+rather than placing
+in slash lib we'll
+
+257
+00:11:00,560 --> 00:11:03,530
+place them in slash lib64.
+
+258
+00:11:03,530 --> 00:11:06,530
+So that should take
+care of most of
+
+259
+00:11:06,530 --> 00:11:07,610
+the content that we're
+going to need in
+
+260
+00:11:07,610 --> 00:11:09,215
+the root file system.
+
+261
+00:11:09,215 --> 00:11:10,910
+One other thing that
+we're going to need to
+
+262
+00:11:10,910 --> 00:11:13,190
+add, however, our devices,
+
+263
+00:11:13,190 --> 00:11:16,940
+and there aren't many
+devices we're going to need,
+
+264
+00:11:16,940 --> 00:11:20,495
+since our system is
+a very simple one.
+
+265
+00:11:20,495 --> 00:11:21,230
+But there are a couple of
+
+266
+00:11:21,230 --> 00:11:22,310
+devices that we're
+going to need.
+
+267
+00:11:22,310 --> 00:11:23,975
+One is a null device.
+
+268
+00:11:23,975 --> 00:11:27,469
+This is just a device
+that provides zeros
+
+269
+00:11:27,469 --> 00:11:29,660
+or essentially has a place
+
+270
+00:11:29,660 --> 00:11:32,105
+to dump content that's unused,
+
+271
+00:11:32,105 --> 00:11:33,680
+and some of our startup scripts
+
+272
+00:11:33,680 --> 00:11:36,635
+are going to expect
+that to exist.
+
+273
+00:11:36,635 --> 00:11:38,435
+So we'll want to create that.
+
+274
+00:11:38,435 --> 00:11:41,675
+Then we'll also need
+a console device that
+
+275
+00:11:41,675 --> 00:11:45,960
+is available for interacting
+through the terminal.
+
+276
+00:11:45,960 --> 00:11:48,730
+So for each one of
+these, we'll use
+
+277
+00:11:48,730 --> 00:11:52,870
+the make node command and
+we'll specify the name,
+
+278
+00:11:52,870 --> 00:11:56,925
+the type, and the major
+and minor number.
+
+279
+00:11:56,925 --> 00:11:58,760
+So looking for example,
+
+280
+00:11:58,760 --> 00:12:00,725
+at the null device,
+
+281
+00:12:00,725 --> 00:12:04,505
+we can do a make node -M 666.
+
+282
+00:12:04,505 --> 00:12:11,285
+So this would be the access
+permissions of the node,
+
+283
+00:12:11,285 --> 00:12:15,350
+and then /dev/null is the
+node that we're creating.
+
+284
+00:12:15,350 --> 00:12:18,200
+C specifies that it's
+the character type,
+
+285
+00:12:18,200 --> 00:12:20,150
+and then one and three are
+
+286
+00:12:20,150 --> 00:12:23,435
+just known major and minor
+numbers for our null device.
+
+287
+00:12:23,435 --> 00:12:26,210
+So we need to run
+this command to
+
+288
+00:12:26,210 --> 00:12:29,210
+create the dev null device
+in our root file system.
+
+289
+00:12:29,210 --> 00:12:31,250
+And similarly, we'll
+need to create
+
+290
+00:12:31,250 --> 00:12:33,830
+a dev console device using
+
+291
+00:12:33,830 --> 00:12:37,460
+swapping out the major
+numbers 5 and minor number 1.
+
+292
+00:12:37,460 --> 00:12:40,010
+So now that we've got a
+root file system created,
+
+293
+00:12:40,010 --> 00:12:42,515
+how do we actually
+use this with target?
+
+294
+00:12:42,515 --> 00:12:44,960
+So there's a few
+different options that
+
+295
+00:12:44,960 --> 00:12:46,820
+are kind of standard ways
+
+296
+00:12:46,820 --> 00:12:49,085
+to use a root file
+system with the target.
+
+297
+00:12:49,085 --> 00:12:50,570
+One is a RAM disk,
+
+298
+00:12:50,570 --> 00:12:52,670
+which is essentially a disk
+image that's loaded in
+
+299
+00:12:52,670 --> 00:12:55,895
+RAM by the bootloader
+at boot time.
+
+300
+00:12:55,895 --> 00:12:57,830
+Second is a disk image,
+
+301
+00:12:57,830 --> 00:13:00,230
+so something that's
+written to like an SD card
+
+302
+00:13:00,230 --> 00:13:03,645
+or maybe an actual
+spinning disk.
+
+303
+00:13:03,645 --> 00:13:07,000
+Then, a third option is
+network file system.
+
+304
+00:13:07,000 --> 00:13:09,760
+So it's one that we can just
+access over the network.
+
+305
+00:13:09,760 --> 00:13:11,530
+Again, in our simple scenario,
+
+306
+00:13:11,530 --> 00:13:13,900
+we're going to use the
+RAM disk and a disk
+
+307
+00:13:13,900 --> 00:13:16,740
+that's just loaded into
+RAM by our bootloader.
+
+308
+00:13:16,740 --> 00:13:18,950
+Our bootloader is
+essentially going to
+
+309
+00:13:18,950 --> 00:13:22,205
+be our qemu emulation
+environment.
+
+310
+00:13:22,205 --> 00:13:24,980
+So to prepare our
+RAM disk will use
+
+311
+00:13:24,980 --> 00:13:28,670
+the cpio utility to
+create a.cpio file.
+
+312
+00:13:28,670 --> 00:13:31,340
+This cpio utility is just
+going to essentially
+
+313
+00:13:31,340 --> 00:13:34,100
+bundle the content of
+our root file system in
+
+314
+00:13:34,100 --> 00:13:37,520
+a format that's understood
+by qemu that we can pass
+
+315
+00:13:37,520 --> 00:13:42,110
+to the qemu as a Run command.
+
+316
+00:13:42,110 --> 00:13:44,270
+Qemu is going to know
+how to extract that
+
+317
+00:13:44,270 --> 00:13:47,345
+into a RAM disk that
+we can then boot into.
+
+318
+00:13:47,345 --> 00:13:51,350
+So you can use a command
+like this with cpio,
+
+319
+00:13:51,350 --> 00:13:53,660
+this is just saying
+find everything in
+
+320
+00:13:53,660 --> 00:13:55,760
+my root file system that I've
+
+321
+00:13:55,760 --> 00:13:58,670
+set up as using the
+previous instructions.
+
+322
+00:13:58,670 --> 00:14:03,605
+Then create a cpio file
+using an owner of root:root.
+
+323
+00:14:03,605 --> 00:14:05,555
+Again, for our simple case,
+
+324
+00:14:05,555 --> 00:14:08,255
+we're only going to have
+a single root user.
+
+325
+00:14:08,255 --> 00:14:10,970
+So you need to make sure
+that you don't specify
+
+326
+00:14:10,970 --> 00:14:12,905
+your user account on
+
+327
+00:14:12,905 --> 00:14:14,180
+the root file system because
+
+328
+00:14:14,180 --> 00:14:16,385
+that user is not going to exist.
+
+329
+00:14:16,385 --> 00:14:18,500
+You'll use a command
+like this to
+
+330
+00:14:18,500 --> 00:14:21,500
+create the initramfs.cpio file.
+
+331
+00:14:21,500 --> 00:14:24,710
+Then you'll compress
+it with gzip to match
+
+332
+00:14:24,710 --> 00:14:28,025
+the format that is expected
+for our qemu start command.
+
+333
+00:14:28,025 --> 00:14:31,520
+To compress, you just
+use this gzip command.
+
+334
+00:14:31,520 --> 00:14:34,535
+So now we should have all
+the pieces put together.
+
+335
+00:14:34,535 --> 00:14:36,410
+We've got the kernel,
+
+336
+00:14:36,410 --> 00:14:37,880
+we've got the root file system,
+
+337
+00:14:37,880 --> 00:14:40,670
+and we've got the content
+
+338
+00:14:40,670 --> 00:14:43,175
+that we need populated
+into the file system,
+
+339
+00:14:43,175 --> 00:14:45,950
+and we've got that
+all into a cpio file
+
+340
+00:14:45,950 --> 00:14:49,175
+and compressed into a gz file.
+
+341
+00:14:49,175 --> 00:14:53,255
+Now we're ready to
+actually run in qemu.
+
+342
+00:14:53,255 --> 00:14:56,390
+So there is a star
+qemu terminal script
+
+343
+00:14:56,390 --> 00:14:59,000
+that's gonna be provided with
+your assignment resource,
+
+344
+00:14:59,000 --> 00:15:01,595
+and that it will have
+a command line that
+
+345
+00:15:01,595 --> 00:15:05,495
+will take all the
+components to be built and
+
+346
+00:15:05,495 --> 00:15:08,405
+issue a qemu command
+that's going to start
+
+347
+00:15:08,405 --> 00:15:13,610
+our emulator using the content
+
+348
+00:15:13,610 --> 00:15:15,530
+that we built as a part of this
+
+349
+00:15:15,530 --> 00:15:18,605
+in previous lectures source.
+
+350
+00:15:18,605 --> 00:15:21,950
+You should now be ready
+to move on to Part 2
+
+351
+00:15:21,950 --> 00:15:24,695
+of Assignment 3 and actually
+
+352
+00:15:24,695 --> 00:15:28,040
+build and boot your own custom
+
+353
+00:15:28,040 --> 00:15:31,560
+embedded Linux distribution.

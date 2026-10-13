@@ -1,0 +1,99 @@
+. This recording discusses embedded testing part 4 of
+our embedded test series. This is going to go
+over TDD and BDD, test-driven development and
+behavior-driven development. We're going to introduce
+test-driven development and introduce
+behavior-driven development, just give you an overview of these different testing tools. Test-driven development
+is a common paradigm that can be used when
+testing software. The idea is to write
+requirements as test case as part of
+the test process. You start out with a
+set of requirements, you write test case to
+those requirements, you run the test case,
+and the test case obviously fails because you
+haven't written software yet. You start out with
+a set of failing test cases that describe the requirements for
+the application. You then write the
+software and you iterate on writing the software until the test cases
+that you wrote pass. This is a very useful way. It's often used in what's
+called pair programming, where you can have a
+different developer write the test case and the developer that writes the code, and work on the two
+things in parallel. A few pitfalls
+with this approach : Usually it's going to be a developer that's writing the tests for the requirements, and in order for
+the developer to write test for the requirements, they need to understand
+the requirements. But often the requirements aren't coming from
+the developer, so the success of
+this whole paradigm requires that the developer understands and interprets
+the requirements properly. There's a chance that if the
+developer doesn't understand and interpret the
+requirements properly, then both the test and
+the software could be implemented wrong causing
+success in a test case, but ultimately making the
+application not work the way it was designed to work
+from a business perspective. This is where behavior-driven
+development is an interesting idea about how to use test-driven
+development, but in a slightly different way. The different way really has to do with how the
+tests are defined. Rather than having a test
+case that's written in a programming language that only a developer can really
+read and understand, the idea behind behavior-driven
+development is to write a test case in a
+natural language that non-programmers can read. This is often referred to in
+BDD parlance as a scenario. The scenario just
+describes the purpose and the benefit of the
+code that you're implementing for the
+application and doesn't really get into the technical
+details about how it works. There's a special
+Gherkin language syntax that you can use for this. Here's an example of
+the difference between an implementation
+and an interaction that could happen between, for instance, a product manager who is setting requirements for the product and developers that are implementing
+different portions of the development. You can see here the
+product manager saying, we want to encourage new
+users to buy in our shop. We'll offer 10 percent
+discount for the first order, and the developers
+turning this into code. They're thinking about the
+calculate discount function that's going to calculate
+the discount on the order. They're thinking about
+the implementation of the front end, the web UI, that's going to do the search
+and add to cart functions. You can see that this
+part probably requires someone with
+engineering background to really understand
+and make sense of, whereas these requirements
+can be understood by anyone. The idea is to try to
+make the test case more representative of what
+the true requirements are. What if instead of
+thinking like this about the test implementation and the actual code implementation, product manager could
+make the same statement, but then the developers could
+think of the test case and the implementation
+in the sense of just common Given-When-Then
+type of syntax. You could actually write
+a test case that says, given that the user
+hasn't ordered, when the user adds a book
+with whatever the price is, then the shopping cart
+sub-total is whatever. The difference here being
+that the product manager, even if they don't have an
+engineering background, they can look through
+these test cases. If you picture a whole bank
+of test cases like this, the product manager
+could help analyze, "Oh, there's one other requirement
+that I forgot to mention. You need to make sure you
+cover this particular case." They can look for
+gaps like that, but they wouldn't
+be able to do if it was all implemented in code. There are several
+different tools you can use for behavior-driven
+development. If you're using Python
+development environment, there's a tool called behave
+that can be used for this. Ruby programming
+language also has a very popular one
+called Cucumber. You'll probably see a
+lot about Cucumber if you look up behavior-driven
+development paradigms. The snapshot that I have below is an example of a
+behave implementation. This would be a Python
+implementation of BDD. You can see these scenarios, the overview of the tests
+that it's covering, and then a given,
+and then statement. This is really what's
+driving the test case. Given I search for
+a valid account, then I will see account details. How this is actually implemented from a programmer perspective, these given and then steps, you can map the English strings
+possibly with variables. You can get these more complex. You can map these directly
+into step functions that are implemented in Python and that are specific to the application. But the idea is,
+from a high level, these can be described in text like this that
+anyone can understand.

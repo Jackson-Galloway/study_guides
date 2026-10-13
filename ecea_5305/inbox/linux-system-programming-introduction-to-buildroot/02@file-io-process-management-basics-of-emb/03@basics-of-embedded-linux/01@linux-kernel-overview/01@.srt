@@ -1,0 +1,666 @@
+1
+00:00:00,040 --> 00:00:04,387
+In this video we're going to start
+talking about the Linux kernel.
+
+2
+00:00:04,387 --> 00:00:07,327
+And this is going to help give us
+the background that we need to
+
+3
+00:00:07,327 --> 00:00:09,856
+complete assignment number three for
+this week.
+
+4
+00:00:09,856 --> 00:00:13,978
+And we're going to be moving into the
+mastering embedded Linux programming book
+
+5
+00:00:13,978 --> 00:00:16,180
+as reference material for this content.
+
+6
+00:00:16,180 --> 00:00:17,671
+So learning objectives for
+
+7
+00:00:17,671 --> 00:00:21,698
+this video, we want to understand
+the high level Linux kernel functions.
+
+8
+00:00:21,698 --> 00:00:26,307
+And we're just going to get an overview
+of the Linux kernel source that we're
+
+9
+00:00:26,307 --> 00:00:28,221
+going to use to build the kernel.
+
+10
+00:00:28,221 --> 00:00:31,533
+So the main jobs of the kernel,
+the kernel manages resources,
+
+11
+00:00:31,533 --> 00:00:33,171
+it interfaces with hardware.
+
+12
+00:00:33,171 --> 00:00:37,274
+And it's going to provide that API for
+user space programs that we've been
+
+13
+00:00:37,274 --> 00:00:40,177
+talking about already from
+the POSIX API setting.
+
+14
+00:00:40,177 --> 00:00:44,755
+It's typically going to be tailored for
+specific hardware to some extent.
+
+15
+00:00:44,755 --> 00:00:48,660
+It's probably, it's more than likely
+that if you're going to be using
+
+16
+00:00:48,660 --> 00:00:52,311
+an embedded software designed
+targeted to a specific platform.
+
+17
+00:00:52,311 --> 00:00:54,830
+You're going to be at least configuring
+something about the kernel.
+
+18
+00:00:54,830 --> 00:00:56,457
+There's almost always
+going to be something that
+
+19
+00:00:56,457 --> 00:00:57,561
+you're going to be customizing.
+
+20
+00:00:59,330 --> 00:01:02,350
+The kernel runs at a high
+CPU privilege level.
+
+21
+00:01:02,350 --> 00:01:06,590
+So it's got access to memory addresses,
+access to all CPU registers.
+
+22
+00:01:06,590 --> 00:01:11,309
+And for that reason, you need to be
+careful about the what you're doing inside
+
+23
+00:01:11,309 --> 00:01:16,102
+kernel code because what we've talked
+about before where the doctrine of lease
+
+24
+00:01:16,102 --> 00:01:18,127
+privilege rights in user space.
+
+25
+00:01:18,127 --> 00:01:19,951
+That doesn't really exist in kernel space.
+
+26
+00:01:19,951 --> 00:01:24,680
+You pretty much always have the rights to
+do pretty much anything on the system.
+
+27
+00:01:24,680 --> 00:01:28,690
+You have to be very careful about
+the programming that you're doing there.
+
+28
+00:01:28,690 --> 00:01:32,165
+The entry point into the kernel can
+either be system calls from user space or
+
+29
+00:01:32,165 --> 00:01:33,900
+it can be interrupts from hardware.
+
+30
+00:01:33,900 --> 00:01:38,685
+So, most of what we've been talking about
+so far is the POSIX API library, and
+
+31
+00:01:38,685 --> 00:01:42,250
+that system call or
+sys-call interface into the kernel.
+
+32
+00:01:42,250 --> 00:01:46,424
+And that looks something like this, where
+you can picture the application doing for
+
+33
+00:01:46,424 --> 00:01:49,203
+instance, a printout for
+some POSIX API library call.
+
+34
+00:01:49,203 --> 00:01:52,460
+That turning into a system call
+that's handled by the kernel.
+
+35
+00:01:52,460 --> 00:01:57,098
+And this is essentially a software trap or
+software,
+
+36
+00:01:57,098 --> 00:02:02,270
+software interrupts, sorry,
+handling in kernel space.
+
+37
+00:02:02,270 --> 00:02:06,497
+And then some kind of, you can see
+where that would end up being some
+
+38
+00:02:06,497 --> 00:02:10,197
+kind of service handler for
+a specific device driver, and
+
+39
+00:02:10,197 --> 00:02:13,930
+that could mean some type of
+action that happens to apart.
+
+40
+00:02:13,930 --> 00:02:17,781
+So this would be kind of like
+the flow that we've talked about so
+
+41
+00:02:17,781 --> 00:02:20,340
+far with the first portion of the class.
+
+42
+00:02:20,340 --> 00:02:24,473
+There's also a second way that this could
+be used where the entry in the kernel
+
+43
+00:02:24,473 --> 00:02:27,610
+space is actually directly
+from hardware via interrupt.
+
+44
+00:02:27,610 --> 00:02:31,210
+So hardware can generate an interrupt
+that could invoke some function in
+
+45
+00:02:31,210 --> 00:02:32,230
+our device driver.
+
+46
+00:02:32,230 --> 00:02:36,312
+And then maybe later there's some user
+space interaction that would come get
+
+47
+00:02:36,312 --> 00:02:39,730
+status back out of the device
+driver related to that interrupt.
+
+48
+00:02:39,730 --> 00:02:44,296
+We are living in a really
+crazy time because this Linux
+
+49
+00:02:44,296 --> 00:02:48,170
+operating system that
+we are studying here.
+
+50
+00:02:48,170 --> 00:02:52,962
+The original inventor of it is still
+around answering questions and
+
+51
+00:02:52,962 --> 00:02:56,922
+taking an active role in
+the development of the kernel.
+
+52
+00:02:56,922 --> 00:03:02,892
+So you can actually go to git.kernel.org
+and see Linus Torvalds actual tree and
+
+53
+00:03:02,892 --> 00:03:07,301
+see day by day what's being
+checked into the Linux kernel.
+
+54
+00:03:07,301 --> 00:03:10,244
+One other thing to note
+about git.kernel.org,
+
+55
+00:03:10,244 --> 00:03:14,040
+the size of the kernel is,
+Linux kernel is absolutely massive.
+
+56
+00:03:14,040 --> 00:03:17,080
+So 57,000 files, 14 million lines of code.
+
+57
+00:03:17,080 --> 00:03:21,942
+You're definitely not going to understand
+the kernel completely, probably ever, but
+
+58
+00:03:21,942 --> 00:03:24,548
+definitely not going to
+happen from this class.
+
+59
+00:03:24,548 --> 00:03:26,181
+So it's a very complex thing.
+
+60
+00:03:26,181 --> 00:03:29,237
+We're going to go over the basic
+overview in this class and
+
+61
+00:03:29,237 --> 00:03:31,967
+give you the tools that you
+need to learn more about
+
+62
+00:03:31,967 --> 00:03:35,625
+whatever specific portion you need
+to study later in your career.
+
+63
+00:03:35,625 --> 00:03:40,342
+So a little bit more about kernel
+source and kernel licensing.
+
+64
+00:03:40,342 --> 00:03:42,340
+Do all kernels come from kernel.org?
+
+65
+00:03:42,340 --> 00:03:43,468
+No.
+
+66
+00:03:43,468 --> 00:03:47,692
+A lot of times, SoC vendors are going to
+have their own customized kernels that
+
+67
+00:03:47,692 --> 00:03:50,730
+will be based on not only
+the source from kernel.org.
+
+68
+00:03:50,730 --> 00:03:53,963
+But probably some source code that's
+specific to their part that they
+
+69
+00:03:53,963 --> 00:03:56,620
+haven't actually got merged
+into the mainline kernel.
+
+70
+00:03:56,620 --> 00:03:58,134
+There's kind of a different bar for
+
+71
+00:03:58,134 --> 00:04:00,161
+getting things merged
+in the mainline kernel.
+
+72
+00:04:00,161 --> 00:04:05,128
+And sometimes it's easier to have your
+own branch than try to get everything
+
+73
+00:04:05,128 --> 00:04:06,918
+merged into the main line.
+
+74
+00:04:06,918 --> 00:04:12,211
+However, based on the licensing, and
+we've talked about the different types
+
+75
+00:04:12,211 --> 00:04:17,745
+of licensing in week one based on the fact
+that Linux uses a GPL version two license.
+
+76
+00:04:17,745 --> 00:04:22,180
+It's not legal for an SoC vendor to
+have a close source Linux kernel.
+
+77
+00:04:22,180 --> 00:04:25,800
+So it is a requirement that
+that kernel be open source.
+
+78
+00:04:25,800 --> 00:04:30,672
+So part of the reason for that is to make
+it more likely that others can use it,
+
+79
+00:04:30,672 --> 00:04:32,815
+you can use it in different ways.
+
+80
+00:04:32,815 --> 00:04:36,651
+And that things that are useful could
+ultimately be put in the mainline kernel
+
+81
+00:04:36,651 --> 00:04:40,264
+so that everyone can share it,
+even people using different heartburn.
+
+82
+00:04:40,264 --> 00:04:43,840
+So you legally can't have
+a close source Linux kernel.
+
+83
+00:04:43,840 --> 00:04:45,720
+This is kind of a trick question.
+
+84
+00:04:45,720 --> 00:04:47,212
+What if I don't change the source,
+
+85
+00:04:47,212 --> 00:04:49,320
+do I still need to make
+the source code available?
+
+86
+00:04:49,320 --> 00:04:53,232
+And the answer is yes, legally,
+you do need to do that,
+
+87
+00:04:53,232 --> 00:04:56,078
+if you read the terms of the GPL license.
+
+88
+00:04:56,078 --> 00:04:59,642
+And a lot of this comes from in the days
+that the GPL license was originally
+
+89
+00:04:59,642 --> 00:05:02,060
+created, we didn't really
+have the Internet.
+
+90
+00:05:02,060 --> 00:05:05,102
+So the thought was everybody
+that's using the source,
+
+91
+00:05:05,102 --> 00:05:07,367
+if you force them to also host the source,
+
+92
+00:05:07,367 --> 00:05:11,860
+there's less of the likelihood that that
+source is going to ultimately disappear.
+
+93
+00:05:11,860 --> 00:05:16,068
+So back in those days,
+it was like shipping CDs around.
+
+94
+00:05:16,068 --> 00:05:20,428
+And the more people that had those CDs and
+we're shipping them out, the more likely
+
+95
+00:05:20,428 --> 00:05:24,540
+that it would be that the you wouldn't
+lose access to that source somehow.
+
+96
+00:05:24,540 --> 00:05:27,613
+So it may be less important in
+the days of the Internet, but
+
+97
+00:05:27,613 --> 00:05:29,460
+you still are legally obligated.
+
+98
+00:05:29,460 --> 00:05:32,560
+Even if you're not
+changing the source code,
+
+99
+00:05:32,560 --> 00:05:36,144
+you're required to share
+that with your customers.
+
+100
+00:05:36,144 --> 00:05:41,130
+So what if I make a custom kernel module,
+do I need to share my source code?
+
+101
+00:05:41,130 --> 00:05:44,050
+And the answer to that one
+is deliberately ambiguous.
+
+102
+00:05:44,050 --> 00:05:49,121
+It's, you probably do, but
+it's not specifically spelled out and
+
+103
+00:05:49,121 --> 00:05:51,492
+it's done that way on purpose.
+
+104
+00:05:51,492 --> 00:05:55,866
+Really the main thing to know here
+is that if you really don't need or
+
+105
+00:05:55,866 --> 00:05:59,320
+want to share your source for
+a custom kernel module,
+
+106
+00:05:59,320 --> 00:06:02,251
+then you need some legal
+help to review this.
+
+107
+00:06:02,251 --> 00:06:04,888
+So if,
+which means spending money obviously.
+
+108
+00:06:04,888 --> 00:06:08,377
+So, if it's not important enough
+to spend money on the legal help,
+
+109
+00:06:08,377 --> 00:06:11,380
+that probably means that you
+should just open source, and
+
+110
+00:06:11,380 --> 00:06:15,270
+not have to worry about whether or
+not you're complying with the license.
+
+111
+00:06:15,270 --> 00:06:19,081
+Also, another important trade off is
+if you aren't sharing your source with
+
+112
+00:06:19,081 --> 00:06:22,963
+the community, definitely don't expect
+to get any help from the community.
+
+113
+00:06:22,963 --> 00:06:26,571
+Because that's going to be one of
+the first questions that you'll have
+
+114
+00:06:26,571 --> 00:06:28,746
+to answer is, where is your source code so
+
+115
+00:06:28,746 --> 00:06:31,434
+I can understand what your
+code is actually doing?
+
+116
+00:06:31,434 --> 00:06:36,678
+So going over a few of, if you look at
+the trees on git.kernel.org for instance,
+
+117
+00:06:36,678 --> 00:06:41,168
+just a high level overview of
+the directories that you'll see there.
+
+118
+00:06:41,168 --> 00:06:44,304
+And there's more detail in mastering
+embedded Linux programming about each of
+
+119
+00:06:44,304 --> 00:06:46,280
+these that I wanted to go
+through specific files.
+
+120
+00:06:46,280 --> 00:06:48,740
+So that's where things
+like boot related code,
+
+121
+00:06:48,740 --> 00:06:51,932
+like assembly code that's
+specific to a specific processor.
+
+122
+00:06:51,932 --> 00:06:54,312
+That would all live in that directory.
+
+123
+00:06:54,312 --> 00:06:57,351
+Documentation is pretty obvious,
+that the documentation for
+
+124
+00:06:57,351 --> 00:06:59,828
+the different parts of
+the kernel all lives there.
+
+125
+00:06:59,828 --> 00:07:04,301
+Drivers is where the hardware support
+is going to live and loadable modules.
+
+126
+00:07:04,301 --> 00:07:08,462
+So things that we can load at runtime
+into the kernel are going to live in
+
+127
+00:07:08,462 --> 00:07:09,634
+the drivers tree.
+
+128
+00:07:09,634 --> 00:07:11,971
+And FS is where file system components.
+
+129
+00:07:11,971 --> 00:07:15,200
+So all the different file systems that
+are supported are going to be there.
+
+130
+00:07:15,200 --> 00:07:19,776
+The include is where either user kernel
+space programs when you pound includes
+
+131
+00:07:19,776 --> 00:07:22,080
+something that's in the kernel tree.
+
+132
+00:07:22,080 --> 00:07:24,696
+This is where the header files
+are going to be located.
+
+133
+00:07:24,696 --> 00:07:28,257
+Init is where the system
+initialization code is going to live.
+
+134
+00:07:28,257 --> 00:07:30,181
+Kernel is where all
+the core functions live.
+
+135
+00:07:30,181 --> 00:07:33,909
+So scheduling, locking and timers,
+the things that are common to lots of
+
+136
+00:07:33,909 --> 00:07:37,532
+different drivers and internal kernel
+code that's going to live there.
+
+137
+00:07:37,532 --> 00:07:39,830
+And then this is where
+memory management lives.
+
+138
+00:07:39,830 --> 00:07:42,835
+Net is for all the network protocols,
+and there's scripts and
+
+139
+00:07:42,835 --> 00:07:45,743
+tools that are useful for
+the build process, for instance.

@@ -1,0 +1,818 @@
+1
+00:00:00,000 --> 00:00:03,030
+In this video, I'm going to talk
+
+2
+00:00:03,030 --> 00:00:05,055
+about C dependency generation.
+
+3
+00:00:05,055 --> 00:00:07,560
+This is a sequence of videos
+that'll talk about how to
+
+4
+00:00:07,560 --> 00:00:11,340
+do dependency generation
+for C projects.
+
+5
+00:00:11,340 --> 00:00:14,025
+I'm going to start by
+talking about GNU make.
+
+6
+00:00:14,025 --> 00:00:15,780
+We're going to
+learn how to handle
+
+7
+00:00:15,780 --> 00:00:18,240
+incremental builds using
+GNU make and how to
+
+8
+00:00:18,240 --> 00:00:20,850
+automate dependency
+tracking with
+
+9
+00:00:20,850 --> 00:00:23,980
+makefile generation
+using the GNU make.
+
+10
+00:00:25,250 --> 00:00:29,445
+First of all, why do we need
+to worry about dependencies?
+
+11
+00:00:29,445 --> 00:00:33,960
+Well, when a C source file
+references header files,
+
+12
+00:00:33,960 --> 00:00:36,495
+then there's a chance
+that you need to rebuild
+
+13
+00:00:36,495 --> 00:00:38,130
+the object file when either the
+
+14
+00:00:38,130 --> 00:00:41,295
+header file or the
+source file changes.
+
+15
+00:00:41,295 --> 00:00:44,300
+One way that you can
+do this is by adding
+
+16
+00:00:44,300 --> 00:00:46,850
+header files as prerequisites
+to your make targets.
+
+17
+00:00:46,850 --> 00:00:48,155
+If you only have
+
+18
+00:00:48,155 --> 00:00:51,425
+a few C and a few H
+files in your project,
+
+19
+00:00:51,425 --> 00:00:53,750
+it's pretty easy to just always
+
+20
+00:00:53,750 --> 00:00:56,510
+make the build depend
+on any change to any of
+
+21
+00:00:56,510 --> 00:00:59,390
+the files and to
+
+22
+00:00:59,390 --> 00:01:01,490
+track for specific files
+
+23
+00:01:01,490 --> 00:01:03,970
+which ones include
+which header files.
+
+24
+00:01:03,970 --> 00:01:06,165
+However, once you get to
+
+25
+00:01:06,165 --> 00:01:08,585
+pretty much any
+reasonably sized project,
+
+26
+00:01:08,585 --> 00:01:10,010
+that becomes pretty difficult to
+
+27
+00:01:10,010 --> 00:01:11,645
+track and to keep track of
+
+28
+00:01:11,645 --> 00:01:14,120
+and understanding
+from header files
+
+29
+00:01:14,120 --> 00:01:15,725
+that include other header files,
+
+30
+00:01:15,725 --> 00:01:17,300
+getting all those
+dependencies right
+
+31
+00:01:17,300 --> 00:01:18,950
+and tracking it manually would
+
+32
+00:01:18,950 --> 00:01:20,120
+be very error prone and
+
+33
+00:01:20,120 --> 00:01:22,780
+tedious and not something
+you'd ever want to do.
+
+34
+00:01:22,780 --> 00:01:24,350
+What you can do instead,
+
+35
+00:01:24,350 --> 00:01:26,255
+if you're planning
+to use GNU make,
+
+36
+00:01:26,255 --> 00:01:28,940
+is you can use GCC plus GNU
+
+37
+00:01:28,940 --> 00:01:32,465
+make to automatically generate
+dependency files for you.
+
+38
+00:01:32,465 --> 00:01:34,955
+Here's an example of what I mean
+
+39
+00:01:34,955 --> 00:01:37,285
+when I'm talking about
+dependency generation.
+
+40
+00:01:37,285 --> 00:01:39,590
+If you take a really
+simple example
+
+41
+00:01:39,590 --> 00:01:41,630
+where you have two
+different files,
+
+42
+00:01:41,630 --> 00:01:43,430
+file 1 and 2 dot c,
+
+43
+00:01:43,430 --> 00:01:45,500
+that each have their
+own header file
+
+44
+00:01:45,500 --> 00:01:47,060
+and then you have
+a main file that
+
+45
+00:01:47,060 --> 00:01:51,225
+calls functions in each one
+of those separate C files.
+
+46
+00:01:51,225 --> 00:01:53,030
+It'll include file 1,
+
+47
+00:01:53,030 --> 00:01:55,250
+file 2 and it'll call file
+
+48
+00:01:55,250 --> 00:01:57,770
+1 and file 2 hello
+functions two,
+
+49
+00:01:57,770 --> 00:02:00,500
+in this case, just print
+a simple Hello World
+
+50
+00:02:00,500 --> 00:02:02,185
+from each of the files.
+
+51
+00:02:02,185 --> 00:02:04,920
+If anything changes
+about the file
+
+52
+00:02:04,920 --> 00:02:07,400
+1 or file 2 header file,
+
+53
+00:02:07,400 --> 00:02:09,170
+we need to recompile
+the main file.
+
+54
+00:02:09,170 --> 00:02:10,550
+The way we know that is
+
+55
+00:02:10,550 --> 00:02:14,000
+because the main file
+includes both of those files.
+
+56
+00:02:14,000 --> 00:02:16,160
+In other words, we have
+a dependency between
+
+57
+00:02:16,160 --> 00:02:18,595
+the main.c and either
+one of the header files.
+
+58
+00:02:18,595 --> 00:02:22,190
+However, if we look at
+file 1 and file 2 dot c,
+
+59
+00:02:22,190 --> 00:02:23,990
+we only have
+dependencies on file
+
+60
+00:02:23,990 --> 00:02:25,910
+1 or file 2 dot c header files.
+
+61
+00:02:25,910 --> 00:02:27,170
+We do not need to rebuild
+
+62
+00:02:27,170 --> 00:02:31,205
+these if the opposite
+header file changes.
+
+63
+00:02:31,205 --> 00:02:34,180
+We can use GCC and GNU make
+
+64
+00:02:34,180 --> 00:02:37,825
+to automatically build
+dependencies for us.
+
+65
+00:02:37,825 --> 00:02:40,280
+GCC can output GNU make
+
+66
+00:02:40,280 --> 00:02:42,395
+compatible dependency files with
+
+67
+00:02:42,395 --> 00:02:44,795
+a few command options
+that are available.
+
+68
+00:02:44,795 --> 00:02:48,505
+Dash MMD will generate the
+dependency files for us,
+
+69
+00:02:48,505 --> 00:02:51,470
+dash MT sets the target name
+of the dependency files and
+
+70
+00:02:51,470 --> 00:02:54,770
+dash MF tells it where
+to write the files.
+
+71
+00:02:54,770 --> 00:02:57,380
+This was not an
+original feature of GCC
+
+72
+00:02:57,380 --> 00:02:59,450
+before and you might see this
+
+73
+00:02:59,450 --> 00:03:01,840
+if you look at some
+older projects.
+
+74
+00:03:01,840 --> 00:03:04,219
+This was previously
+done with sed commands,
+
+75
+00:03:04,219 --> 00:03:06,860
+where sed is a stream
+editor that's able
+
+76
+00:03:06,860 --> 00:03:11,015
+to generate dependencies
+based on text manipulation.
+
+77
+00:03:11,015 --> 00:03:13,760
+If you see that implemented
+
+78
+00:03:13,760 --> 00:03:15,450
+on an old project it
+was probably done
+
+79
+00:03:15,450 --> 00:03:20,590
+before GNU make had
+support for these flags.
+
+80
+00:03:20,840 --> 00:03:24,200
+Here's an example of
+the dependency files
+
+81
+00:03:24,200 --> 00:03:26,330
+that GCC can generate for us.
+
+82
+00:03:26,330 --> 00:03:30,275
+If I look at these
+file dot ds files,
+
+83
+00:03:30,275 --> 00:03:33,500
+what I can see is that
+I've got a dot o that's
+
+84
+00:03:33,500 --> 00:03:37,500
+dependent on either a
+dot c or a dot h file.
+
+85
+00:03:37,600 --> 00:03:40,310
+I can see that the map here for
+
+86
+00:03:40,310 --> 00:03:42,560
+file 1 and file 2 dot o matches
+
+87
+00:03:42,560 --> 00:03:44,375
+the header files
+that I've already
+
+88
+00:03:44,375 --> 00:03:47,045
+referenced in each
+one of those files.
+
+89
+00:03:47,045 --> 00:03:48,815
+Similarly for main dot o,
+
+90
+00:03:48,815 --> 00:03:50,390
+I'm dependent on main C,
+
+91
+00:03:50,390 --> 00:03:51,710
+file one h and file two
+
+92
+00:03:51,710 --> 00:03:53,900
+h. Each one of these
+were automatically
+
+93
+00:03:53,900 --> 00:03:59,040
+generated for me based
+on the arguments to GCC.
+
+94
+00:03:59,870 --> 00:04:02,600
+How can you make this a part of
+
+95
+00:04:02,600 --> 00:04:05,215
+your overall make
+and build process?
+
+96
+00:04:05,215 --> 00:04:07,670
+It's a little bit
+complicated to setup.
+
+97
+00:04:07,670 --> 00:04:08,810
+There's a couple of
+
+98
+00:04:08,810 --> 00:04:10,280
+links that I've
+included here and I've
+
+99
+00:04:10,280 --> 00:04:12,170
+got an actual working example
+
+100
+00:04:12,170 --> 00:04:13,730
+if you want to go through it.
+
+101
+00:04:13,730 --> 00:04:16,010
+I've annotated the steps here
+
+102
+00:04:16,010 --> 00:04:19,880
+but you can do this
+in a generic way
+
+103
+00:04:19,880 --> 00:04:22,250
+using the framework that
+I've provided here in
+
+104
+00:04:22,250 --> 00:04:25,054
+the automatic
+template generation
+
+105
+00:04:25,054 --> 00:04:27,094
+or dependency
+generation example,
+
+106
+00:04:27,094 --> 00:04:29,509
+where you could just
+list source files
+
+107
+00:04:29,509 --> 00:04:32,735
+and list the application
+that you're going to
+
+108
+00:04:32,735 --> 00:04:35,510
+build and the rest of the
+macros here in the makefile
+
+109
+00:04:35,510 --> 00:04:36,830
+will take care of automatically
+
+110
+00:04:36,830 --> 00:04:38,600
+generating dependencies for you.
+
+111
+00:04:38,600 --> 00:04:40,070
+It's using a rule here
+
+112
+00:04:40,070 --> 00:04:42,680
+to automatically create
+the object files from
+
+113
+00:04:42,680 --> 00:04:45,110
+the sources and
+define the all in
+
+114
+00:04:45,110 --> 00:04:46,640
+default build types based on
+
+115
+00:04:46,640 --> 00:04:49,070
+the app time that
+we specified here.
+
+116
+00:04:49,070 --> 00:04:53,300
+This command is going to do
+the link step for us to take
+
+117
+00:04:53,300 --> 00:04:55,250
+all the object files and
+
+118
+00:04:55,250 --> 00:04:58,420
+build them into the app
+that we've specified.
+
+119
+00:04:58,420 --> 00:05:00,480
+In terms of how we actually do
+
+120
+00:05:00,480 --> 00:05:01,995
+the dependency generation,
+
+121
+00:05:01,995 --> 00:05:03,575
+we're going to create
+
+122
+00:05:03,575 --> 00:05:04,970
+a hidden directory where
+
+123
+00:05:04,970 --> 00:05:06,625
+we'll put all our
+dependency files.
+
+124
+00:05:06,625 --> 00:05:09,050
+A benefit of making a
+hidden directory here is
+
+125
+00:05:09,050 --> 00:05:12,000
+that we typically wouldn't
+be looking at these files,
+
+126
+00:05:12,000 --> 00:05:13,100
+we won't want to check them into
+
+127
+00:05:13,100 --> 00:05:15,250
+revision control, for instance.
+
+128
+00:05:15,250 --> 00:05:18,165
+Then we'll have depth flags,
+
+129
+00:05:18,165 --> 00:05:22,520
+a parameter that will
+pass to GCC that will use
+
+130
+00:05:22,520 --> 00:05:27,365
+the empty MMD and MF arguments
+to tell it where to write
+
+131
+00:05:27,365 --> 00:05:32,790
+the auto-generated
+dependency files.
+
+132
+00:05:32,790 --> 00:05:35,960
+Then you can see the
+compile C command
+
+133
+00:05:35,960 --> 00:05:37,610
+that we're specifying here,
+
+134
+00:05:37,610 --> 00:05:39,740
+just specifies doing
+the compile step with
+
+135
+00:05:39,740 --> 00:05:41,210
+all the dependent flags and
+
+136
+00:05:41,210 --> 00:05:43,890
+any other flags that
+were specified.
+
+137
+00:05:44,300 --> 00:05:48,190
+Then we can generate
+rules here that use
+
+138
+00:05:48,190 --> 00:05:51,340
+our compile C to generate
+the output dot o file
+
+139
+00:05:51,340 --> 00:05:53,530
+based on both the dependencies
+
+140
+00:05:53,530 --> 00:05:55,090
+in the dependency
+directory that we're
+
+141
+00:05:55,090 --> 00:05:57,790
+creating plus the dot c file
+
+142
+00:05:57,790 --> 00:05:59,710
+that we're actually compiling.
+
+143
+00:05:59,710 --> 00:06:03,700
+Then we'll include all
+the dependency files in
+
+144
+00:06:03,700 --> 00:06:11,295
+the list of files that we
+include in our makefile.
+
+145
+00:06:11,295 --> 00:06:12,610
+That we'll pull in
+
+146
+00:06:12,610 --> 00:06:14,230
+all those dependencies mentioned
+
+147
+00:06:14,230 --> 00:06:15,895
+in each one of the
+dependency files,
+
+148
+00:06:15,895 --> 00:06:18,355
+as a part of the rules for doing
+
+149
+00:06:18,355 --> 00:06:21,770
+make right here with
+this wildcard option.
+
+150
+00:06:22,580 --> 00:06:25,570
+There's a test script that
+
+151
+00:06:25,570 --> 00:06:28,490
+verifies that only the files you
+
+152
+00:06:28,490 --> 00:06:30,875
+expect are going
+to be recompiled
+
+153
+00:06:30,875 --> 00:06:34,220
+on when touching one of
+the two header files.
+
+154
+00:06:34,220 --> 00:06:35,960
+You can go through this
+if you want without
+
+155
+00:06:35,960 --> 00:06:38,980
+a make dependency
+generation example.
+
+156
+00:06:38,980 --> 00:06:41,060
+You can definitely do this,
+
+157
+00:06:41,060 --> 00:06:42,830
+but there are some
+pitfalls to be aware of if
+
+158
+00:06:42,830 --> 00:06:44,945
+you're going to try to
+use GNU make for this.
+
+159
+00:06:44,945 --> 00:06:48,710
+One is dependency
+tracking isn't automatic.
+
+160
+00:06:48,710 --> 00:06:50,870
+The example that I
+
+161
+00:06:50,870 --> 00:06:54,080
+gave covers most of the
+dependencies you'll care about,
+
+162
+00:06:54,080 --> 00:06:56,090
+but there are still
+some that are missing.
+
+163
+00:06:56,090 --> 00:06:57,710
+For instance, the makefile,
+
+164
+00:06:57,710 --> 00:06:59,060
+if the makefile changes,
+
+165
+00:06:59,060 --> 00:07:01,760
+you probably need to
+rebuild the entire project.
+
+166
+00:07:01,760 --> 00:07:04,100
+That's not in the dependencies
+that I shared with
+
+167
+00:07:04,100 --> 00:07:08,100
+that simple example and I'm
+sure there are other ones.
+
+168
+00:07:08,770 --> 00:07:11,930
+Also the makefile
+implementation details
+
+169
+00:07:11,930 --> 00:07:14,225
+are probably platform specific.
+
+170
+00:07:14,225 --> 00:07:17,645
+Definitely the case that I
+just showed is GCC specific,
+
+171
+00:07:17,645 --> 00:07:20,230
+it's only going to work
+with the GCC compiler.
+
+172
+00:07:20,230 --> 00:07:22,759
+It assumes that binary utilities
+
+173
+00:07:22,759 --> 00:07:25,325
+are present in the
+root file system.
+
+174
+00:07:25,325 --> 00:07:28,700
+The utilities that are using for
+
+175
+00:07:28,700 --> 00:07:32,425
+the dependency generation
+step have to be installed.
+
+176
+00:07:32,425 --> 00:07:34,430
+It probably means that your code
+
+177
+00:07:34,430 --> 00:07:36,365
+won't build on other platforms.
+
+178
+00:07:36,365 --> 00:07:39,840
+For instance, one that
+didn't have GCC installed.

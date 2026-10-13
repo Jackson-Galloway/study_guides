@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Concurrency</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>Select any true statements about the code block below, assuming dptr-&gt;data points to a location used in the write() operation of a driver accessed by multiple processes.</p><img alt="73533452-6e8e-4a97-8d00-67360b275432image2.png" src="73533452-6e8e-4a97-8d00-67360b275432image2.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Zmy7q7" type="checkbox"/> <div class="quiz-option-text"><p>The processor may sleep at line 2</p></div></li>
+<li><input name="autoGradableResponseId~Zmy7q7" type="checkbox"/> <div class="quiz-option-text"><p>The memory allocated at line 2 may never be released with kfree</p></div></li>
+<li><input name="autoGradableResponseId~Zmy7q7" type="checkbox"/> <div class="quiz-option-text"><p>No locking is needed for this scenario</p></div></li>
+<li><input name="autoGradableResponseId~Zmy7q7" type="checkbox"/> <div class="quiz-option-text"><p>kfree at line 4 may be called with a null argument</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>Select the appropriate locking to add to the code below, assuming dptr-&gt;data points to a location used in the write() operation of a driver accessed by multiple processes.</p><img alt="73533452-6e8e-4a97-8d00-67360b275432image1.png" src="73533452-6e8e-4a97-8d00-67360b275432image1.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Ad8EBt" type="radio"/> <div class="quiz-option-text"><p>Locking should be added around line 1 only</p></div></li>
+<li><input name="autoGradableResponseId~Ad8EBt" type="radio"/> <div class="quiz-option-text"><p>Locking should be added around the entire block from line 1 through 7.</p></div></li>
+<li><input name="autoGradableResponseId~Ad8EBt" type="radio"/> <div class="quiz-option-text"><p>No locking is necessary for this code.</p></div></li>
+<li><input name="autoGradableResponseId~Ad8EBt" type="radio"/> <div class="quiz-option-text"><p>Locking should be added around lines 2 through 6</p></div></li>
+<li><input name="autoGradableResponseId~Ad8EBt" type="radio"/> <div class="quiz-option-text"><p>Locking should be added around line 2 only</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Typically a device driver allocates an object, then provides a reference to the kernel before initializing it.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~fhMKQ7" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~fhMKQ7" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>References to objects provided to the kernel need to be tracked because device drivers must continue to honor requests as long as the object exists.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Aukdtk" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~Aukdtk" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Processes may sleep while waiting for I/O to complete.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~jxhKAh" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~jxhKAh" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A kernel driver which needs to obtain a semaphore should use:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0ggymH" type="radio"/> <div class="quiz-option-text"><p>The "up" function to increment and hold the semaphore</p></div></li>
+<li><input name="autoGradableResponseId~0ggymH" type="radio"/> <div class="quiz-option-text"><p>The "down" functions to decrement and obtain the semaphore</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Interruptible versions of semaphore functions should be used:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~kbqK2x" type="radio"/> <div class="quiz-option-text"><p>When your semaphore is used in an interrupt.</p></div></li>
+<li><input name="autoGradableResponseId~kbqK2x" type="radio"/> <div class="quiz-option-text"><p>Only when your code needs to sleep after obtaining.</p></div></li>
+<li><input name="autoGradableResponseId~kbqK2x" type="radio"/> <div class="quiz-option-text"><p>In most cases</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A thread that takes a semaphore needs to call:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~pTygsq" type="radio"/> <div class="quiz-option-text"><p>down at least one time to release it.</p></div></li>
+<li><input name="autoGradableResponseId~pTygsq" type="radio"/> <div class="quiz-option-text"><p>up exactly one time to release it</p></div></li>
+<li><input name="autoGradableResponseId~pTygsq" type="radio"/> <div class="quiz-option-text"><p>down exactly one time to release it</p></div></li>
+<li><input name="autoGradableResponseId~pTygsq" type="radio"/> <div class="quiz-option-text"><p>up at least one time to release it</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When designing a kernel driver, you should consider using a unique semaphore for each device if devices don't share common resources.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~6S2unx" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~6S2unx" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Reader/Writer semaphores allow one writer or an unlimited amount of readers to hold a semaphore</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~VxxRJY" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~VxxRJY" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Reader/Writer semaphores are most useful when write access to a resource is more common than read access.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~TffnF7" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~TffnF7" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Completions are different from semaphores because completions are optimized for cases where the lock is available to be acquired.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Te4wM5" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~Te4wM5" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Match the completion locking type to its best use:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1MwVOm" type="radio"/> <div class="quiz-option-text"><p>Protect access to a resource and actions which do not include sleeping</p></div></li>
+<li><input name="autoGradableResponseId~1MwVOm" type="radio"/> <div class="quiz-option-text"><p>wait for a potentially long running task to end</p></div></li>
+<li><input name="autoGradableResponseId~1MwVOm" type="radio"/> <div class="quiz-option-text"><p>Protect access to a resource and actions which require sleep</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Spinlocks are only needed if your code may run on a multiprocessor machine</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~7ugzQa" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~7ugzQa" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You are writing code for a driver which needs to access a shared resource.  While accessing the resource you need to allocate memory.  Which locking primitive should you use?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~3ydrVM" type="radio"/> <div class="quiz-option-text"><p>mutex</p></div></li>
+<li><input name="autoGradableResponseId~3ydrVM" type="radio"/> <div class="quiz-option-text"><p>atomic</p></div></li>
+<li><input name="autoGradableResponseId~3ydrVM" type="radio"/> <div class="quiz-option-text"><p>spinlock</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You are writing code for a driver which needs to access a shared resource for a very brief period of time, during which you will not call any other kernel functions.  Which locking type would be the best fit for this scenario?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~2kIOmD" type="radio"/> <div class="quiz-option-text"><p>spinlock</p></div></li>
+<li><input name="autoGradableResponseId~2kIOmD" type="radio"/> <div class="quiz-option-text"><p>semaphore</p></div></li>
+<li><input name="autoGradableResponseId~2kIOmD" type="radio"/> <div class="quiz-option-text"><p>mutex</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The spin_lock_irqsave function should be used to acquire a spinlock..</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~xxQ7A7" type="radio"/> <div class="quiz-option-text"><p>only when interrupts are disabled</p></div></li>
+<li><input name="autoGradableResponseId~xxQ7A7" type="radio"/> <div class="quiz-option-text"><p>only when interrupts are enabled</p></div></li>
+<li><input name="autoGradableResponseId~xxQ7A7" type="radio"/> <div class="quiz-option-text"><p>only when your code is running from an interrupt</p></div></li>
+<li><input name="autoGradableResponseId~xxQ7A7" type="radio"/> <div class="quiz-option-text"><p>when the associated spinlock may be used in an interrupt</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Spinlocks differ from semaphores because spinlocks allow the processor to sleep while waiting for a lock.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ErbFHm" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~ErbFHm" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The best strategy for designing a locking scheme is to wait for locking issues to appear in your driver, then debug them and add needed locks.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~wrfkbK" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~wrfkbK" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>Select the true statement about the locking scheme which should be added to the code below to protect access to shared structure struct my_data via a single lock located inside the structure.</p><img alt="73533452-6e8e-4a97-8d00-67360b275432image3.png" src="73533452-6e8e-4a97-8d00-67360b275432image3.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~aQl89y" type="radio"/> <div class="quiz-option-text"><p>A second lock needs to be added to support both var1 and var2 operations</p></div></li>
+<li><input name="autoGradableResponseId~aQl89y" type="radio"/> <div class="quiz-option-text"><p>The lock should be acquired and released inside each of the functions to ensure safe operations.</p></div></li>
+<li><input name="autoGradableResponseId~aQl89y" type="radio"/> <div class="quiz-option-text"><p>No locking is needed since all operations are already atomic</p></div></li>
+<li><input name="autoGradableResponseId~aQl89y" type="radio"/> <div class="quiz-option-text"><p>The lock should be acquired and released in somekernelfunc around the do_something call, and functions do_something and do_something_else should require callers to hold a lock.  </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A properly designed circular buffer can be used without locks, even when two threads are using the buffer with one thread accessing for read and one thread accessing for write.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~D9ihAb" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~D9ihAb" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Operations on a single atomic value may require additional locking to safely access across multiple threads on some architectures.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~3ZsJ2v" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~3ZsJ2v" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

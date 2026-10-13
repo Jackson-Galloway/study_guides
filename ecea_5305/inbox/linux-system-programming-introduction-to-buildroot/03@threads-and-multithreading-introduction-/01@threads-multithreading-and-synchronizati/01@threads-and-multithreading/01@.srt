@@ -1,0 +1,1180 @@
+1
+00:00:01,240 --> 00:00:04,442
+In this video, we're going to be
+talking about an intro to Threads and
+
+2
+00:00:04,442 --> 00:00:05,940
+Multithreading.
+
+3
+00:00:05,940 --> 00:00:09,055
+So the learning objectives, we've already
+talked about threads a little bit in this
+
+4
+00:00:09,055 --> 00:00:10,870
+class, so
+we're going to do a little bit overview,
+
+5
+00:00:10,870 --> 00:00:13,440
+a little bit of review of what
+we've already talked about.
+
+6
+00:00:13,440 --> 00:00:15,933
+Then we're going to talk specifically
+about multithreading and
+
+7
+00:00:15,933 --> 00:00:19,091
+some of the trade offs associated with
+different multi threading strategies.
+
+8
+00:00:19,091 --> 00:00:21,751
+And some of the different models
+that you can use for threading.
+
+9
+00:00:23,440 --> 00:00:27,038
+So threads,
+when we're talking about threads,
+
+10
+00:00:27,038 --> 00:00:33,219
+we're talking about how are your running
+an application inside a specific process.
+
+11
+00:00:33,219 --> 00:00:36,542
+And we've already talked
+about the binaries
+
+12
+00:00:36,542 --> 00:00:41,011
+being essentially the programs
+that are living on storage.
+
+13
+00:00:41,011 --> 00:00:43,796
+So somewhere in the root filesystem,
+probably an l file and
+
+14
+00:00:43,796 --> 00:00:46,210
+then the process is being the binaries and
+action.
+
+15
+00:00:46,210 --> 00:00:50,000
+So that's the binary when it's
+actually running on the system and
+
+16
+00:00:50,000 --> 00:00:52,860
+the process is going to contain one or
+more threads.
+
+17
+00:00:52,860 --> 00:00:55,486
+If you have one thread,
+it's a single threaded process,
+
+18
+00:00:55,486 --> 00:00:58,440
+if you have more than one
+thread it's multithreaded.
+
+19
+00:00:58,440 --> 00:01:00,537
+And as we've mentioned already,
+
+20
+00:01:00,537 --> 00:01:04,162
+the process is going to have
+a dedicated virtualized memory.
+
+21
+00:01:04,162 --> 00:01:09,064
+That it believes that it basically has its
+own copy of a dedicated virtualized memory
+
+22
+00:01:09,064 --> 00:01:10,740
+instance.
+
+23
+00:01:10,740 --> 00:01:14,531
+So then threads are going to be units of
+execution within that process by default.
+
+24
+00:01:14,531 --> 00:01:17,097
+That will always be one when
+you create the process, but
+
+25
+00:01:17,097 --> 00:01:21,740
+you'll have the opportunity to create more
+and create a multithreaded applications.
+
+26
+00:01:21,740 --> 00:01:26,301
+So the threat is going to have
+a virtualized processor and stack.
+
+27
+00:01:26,301 --> 00:01:30,332
+So it's going to have its own
+execution state within the program.
+
+28
+00:01:30,332 --> 00:01:31,833
+And its own program state, but
+
+29
+00:01:31,833 --> 00:01:34,980
+it's going to share that virtualized
+memory with the process.
+
+30
+00:01:34,980 --> 00:01:36,075
+So here's an example,
+
+31
+00:01:36,075 --> 00:01:40,140
+here is a drawing that shows a little
+bit more of what this looks like.
+
+32
+00:01:40,140 --> 00:01:44,448
+So we have two different processes running
+each of them has their own dedicated map
+
+33
+00:01:44,448 --> 00:01:46,894
+of processed memory
+inside physical memory.
+
+34
+00:01:46,894 --> 00:01:50,429
+And then each one of the threads
+inside the process is going to share
+
+35
+00:01:50,429 --> 00:01:52,020
+that process memory.
+
+36
+00:01:52,020 --> 00:01:55,444
+And since we're talking about
+multithreaded application,
+
+37
+00:01:55,444 --> 00:01:59,540
+we're talking about at least
+two threads in a given process.
+
+38
+00:01:59,540 --> 00:02:03,718
+So the threat scheduler is going
+to schedule the threats from these
+
+39
+00:02:03,718 --> 00:02:06,934
+processes onto any of
+the CPUs that are available.
+
+40
+00:02:06,934 --> 00:02:11,796
+And time slice that over
+a given period of time.
+
+41
+00:02:13,740 --> 00:02:16,350
+So why would we bother using
+multithreading at all?
+
+42
+00:02:16,350 --> 00:02:19,141
+Multithreading is really
+an alternative to state machines.
+
+43
+00:02:19,141 --> 00:02:22,912
+So you've probably already covered
+state machines in other courses and
+
+44
+00:02:22,912 --> 00:02:27,080
+you've probably used them already on
+low recess resource microcontrollers.
+
+45
+00:02:27,080 --> 00:02:29,738
+So if we don't really have
+a way to do threading.
+
+46
+00:02:29,738 --> 00:02:33,693
+Then you always have to use a state
+machine anytime you want to have some
+
+47
+00:02:33,693 --> 00:02:37,740
+process running while another
+process is waiting for input.
+
+48
+00:02:37,740 --> 00:02:41,991
+So you've probably used this already
+where you have a state set up that
+
+49
+00:02:41,991 --> 00:02:44,170
+requests some input from a device.
+
+50
+00:02:44,170 --> 00:02:46,899
+If you want to do more processing
+at that point you need some way
+
+51
+00:02:46,899 --> 00:02:47,926
+to do the processing.
+
+52
+00:02:47,926 --> 00:02:51,940
+And then come back and resume where
+you were when the wait is complete.
+
+53
+00:02:51,940 --> 00:02:56,121
+So an alternative to that would be to
+have a dedicated thread that's handling
+
+54
+00:02:56,121 --> 00:02:57,097
+the wait for you.
+
+55
+00:02:57,097 --> 00:03:00,304
+And spin off a second thread that's
+that's going to continue on and
+
+56
+00:03:00,304 --> 00:03:01,361
+do more processing.
+
+57
+00:03:02,740 --> 00:03:06,130
+Another reason that you want to use
+multithreaded is for parallelism.
+
+58
+00:03:06,130 --> 00:03:10,275
+So if you have multiple
+processors in your system.
+
+59
+00:03:10,275 --> 00:03:15,211
+Multithreading allows you to potentially
+get more speed out of your application by
+
+60
+00:03:15,211 --> 00:03:21,040
+letting multiple threads of your process
+run at once on these different processors.
+
+61
+00:03:21,040 --> 00:03:27,740
+So you can also improve responsiveness
+relative to blocking in a single thread.
+
+62
+00:03:27,740 --> 00:03:32,007
+So you wouldn't want to put long running
+operations in the UI handling thread for
+
+63
+00:03:32,007 --> 00:03:32,652
+instance.
+
+64
+00:03:32,652 --> 00:03:36,106
+Because if those threads took
+a long time to complete or
+
+65
+00:03:36,106 --> 00:03:39,725
+if actions with them thread
+took a long time to complete.
+
+66
+00:03:39,725 --> 00:03:42,770
+Then the UI would probably freeze
+up waiting for the user in.
+
+67
+00:03:42,770 --> 00:03:47,475
+So that's an example of where you'd want
+two different threads running one to be
+
+68
+00:03:47,475 --> 00:03:49,979
+responsive to the user requests in the UI.
+
+69
+00:03:49,979 --> 00:03:55,040
+And maybe one to handle some kind of long
+running computational or other task.
+
+70
+00:03:55,040 --> 00:03:57,710
+And also blocking I/O wouldn't
+belong in UI thread so
+
+71
+00:03:57,710 --> 00:04:01,551
+you wouldn't want to be waiting for
+a hardware device or something like that.
+
+72
+00:04:04,140 --> 00:04:07,237
+So, talking a little bit
+more about multi threading,
+
+73
+00:04:07,237 --> 00:04:11,830
+we should give a little bit of background
+on what we mean when we say parallelism.
+
+74
+00:04:11,830 --> 00:04:15,840
+And what's the difference between
+concurrency and parallelism?
+
+75
+00:04:15,840 --> 00:04:19,284
+So first,
+concurrency is the ability of two or
+
+76
+00:04:19,284 --> 00:04:23,370
+more threats to execute
+an overlapping time periods.
+
+77
+00:04:23,370 --> 00:04:28,683
+And this is essentially a programming
+pattern that we can use to have it
+
+78
+00:04:28,683 --> 00:04:35,240
+appear that multiple things are happening
+at once from the perspective of a process.
+
+79
+00:04:35,240 --> 00:04:38,524
+And so you can see here when we
+have thread one, two and three.
+
+80
+00:04:38,524 --> 00:04:40,388
+Each one of these are time sliced and
+
+81
+00:04:40,388 --> 00:04:44,740
+each one of them appear to be executing at
+the same time when in reality they're just
+
+82
+00:04:44,740 --> 00:04:47,940
+getting time sliced across
+different processors.
+
+83
+00:04:47,940 --> 00:04:51,665
+But the switch between thread one,
+two and three is all being handled for
+
+84
+00:04:51,665 --> 00:04:52,660
+us and the kernel.
+
+85
+00:04:52,660 --> 00:04:59,597
+And that can happen at any time from the
+perspective of our code that's running.
+
+86
+00:04:59,597 --> 00:05:03,770
+When we talk about parallelism, what we
+talk about there is that we are actually
+
+87
+00:05:03,770 --> 00:05:06,610
+able to execute two or
+more threads simultaneously.
+
+88
+00:05:06,610 --> 00:05:08,911
+So here we have some
+actual hardware support,
+
+89
+00:05:08,911 --> 00:05:12,511
+we have multiple processors in hardware
+that are enabling us to do this.
+
+90
+00:05:12,511 --> 00:05:16,244
+And so the kernels's going to schedule
+threads on different processors.
+
+91
+00:05:16,244 --> 00:05:20,156
+And rather than having to time slice,
+like we're doing up here.
+
+92
+00:05:20,156 --> 00:05:24,381
+All three of our threads are going to in
+this example are going to execute at once.
+
+93
+00:05:24,381 --> 00:05:27,661
+And essentially complete on
+separate processors all at once.
+
+94
+00:05:29,940 --> 00:05:34,735
+So more reasons why you'd
+use multi threading for
+
+95
+00:05:34,735 --> 00:05:38,171
+the purpose of context switching.
+
+96
+00:05:38,171 --> 00:05:41,684
+This would be why you'd use multi
+threading instead of multiple processes.
+
+97
+00:05:41,684 --> 00:05:45,052
+If you need to to wait for some process
+and do some other processing and
+
+98
+00:05:45,052 --> 00:05:47,682
+there's a context switch
+that would need to happen.
+
+99
+00:05:47,682 --> 00:05:52,279
+You do either a threat or a process thread
+context switching is usually cheaper than
+
+100
+00:05:52,279 --> 00:05:53,931
+process context switching.
+
+101
+00:05:53,931 --> 00:05:56,525
+From a perspective of system resources.
+
+102
+00:05:56,525 --> 00:06:01,153
+And the reason for that is because
+threads are going to share that
+
+103
+00:06:01,153 --> 00:06:06,137
+virtual memory space so
+you don't have the additional overhead of
+
+104
+00:06:06,137 --> 00:06:11,399
+the process swapping out the what it
+needs to swap out in order to swap.
+
+105
+00:06:11,399 --> 00:06:15,975
+Memory spaces when it switches
+to the different process.
+
+106
+00:06:15,975 --> 00:06:19,806
+And then also you can have memory
+savings because most likely your process
+
+107
+00:06:19,806 --> 00:06:23,590
+doesn't need that entire virtualized
+memory that's allocated to it.
+
+108
+00:06:23,590 --> 00:06:27,069
+So the more threads you have
+running on that same process,
+
+109
+00:06:27,069 --> 00:06:29,636
+the less total system memory you'll use.
+
+110
+00:06:29,636 --> 00:06:34,494
+Because each threat is going to
+be sharing that process memory.
+
+111
+00:06:36,515 --> 00:06:41,340
+So why wouldn't we just always use
+multithreading with every application?
+
+112
+00:06:41,340 --> 00:06:44,940
+Well, there's some complexity that
+comes with multithreading and
+
+113
+00:06:44,940 --> 00:06:47,933
+that complexity comes out
+when we're writing the code.
+
+114
+00:06:47,933 --> 00:06:50,240
+When we're trying to
+understand how the code works.
+
+115
+00:06:50,240 --> 00:06:53,789
+So when we're reading someone else's code,
+for instance or something,
+
+116
+00:06:53,789 --> 00:06:55,831
+we wrote long enough
+ago that we forgot it.
+
+117
+00:06:55,831 --> 00:06:58,721
+Or when we're debugging and
+trying to figure out a problem,
+
+118
+00:06:58,721 --> 00:07:02,361
+all those things become more difficult
+when we're using multithreading.
+
+119
+00:07:03,540 --> 00:07:07,465
+So the alternatives that we could use
+instead of using multithreading we
+
+120
+00:07:07,465 --> 00:07:09,212
+could use non-blocking I/O.
+
+121
+00:07:09,212 --> 00:07:13,513
+So we could kick off some task in
+one thread and then come back and
+
+122
+00:07:13,513 --> 00:07:14,830
+pull for it later.
+
+123
+00:07:14,830 --> 00:07:19,540
+That would be an example of using that
+in a state machine implementation.
+
+124
+00:07:19,540 --> 00:07:23,440
+Or we can use multiple processes
+instead of multiple threads.
+
+125
+00:07:23,440 --> 00:07:28,017
+And the drawback there would be
+we wouldn't be able to use shared
+
+126
+00:07:28,017 --> 00:07:32,701
+memory to communicate or
+at least not the process shared memory.
+
+127
+00:07:32,701 --> 00:07:36,040
+We'd have to use some
+kind of IPC mechanism.
+
+128
+00:07:36,040 --> 00:07:41,289
+So the link 6 to programming book Chapter
+seven talks about a couple different
+
+129
+00:07:41,289 --> 00:07:46,150
+models you can use for thread design
+in a multithreaded application.
+
+130
+00:07:46,150 --> 00:07:48,600
+One of them is the thread
+per connection model.
+
+131
+00:07:48,600 --> 00:07:53,600
+So it's using connection as an idea
+of a different unit of work that
+
+132
+00:07:53,600 --> 00:07:56,660
+gets invoked on your specific process.
+
+133
+00:07:56,660 --> 00:08:01,551
+So it uses the example of a web server
+where the user might be opening web pages
+
+134
+00:08:01,551 --> 00:08:04,540
+and making requests of your web server.
+
+135
+00:08:04,540 --> 00:08:06,587
+So every unit of work that comes in so
+
+136
+00:08:06,587 --> 00:08:10,836
+every page request in the thread per
+connection model would get a thread.
+
+137
+00:08:10,836 --> 00:08:14,488
+And then if there's blocking I/O that
+has to happen in order to complete that
+
+138
+00:08:14,488 --> 00:08:18,140
+request, that particular thread
+would block waiting for the I/O.
+
+139
+00:08:18,140 --> 00:08:21,574
+So in that particular case
+you might need more threads
+
+140
+00:08:21,574 --> 00:08:25,401
+than CPU processors in order
+to have maximum parallelism.
+
+141
+00:08:25,401 --> 00:08:28,849
+And the reason is the thread that's
+handling the request is going to be
+
+142
+00:08:28,849 --> 00:08:29,410
+blocked.
+
+143
+00:08:29,410 --> 00:08:34,586
+And this means that another
+thread will be able to
+
+144
+00:08:34,586 --> 00:08:39,530
+execute at the same time
+if it were available.
+
+145
+00:08:39,530 --> 00:08:43,912
+So the more threads you have, the more
+likely you are to be able to keep that
+
+146
+00:08:43,912 --> 00:08:48,170
+process busy and get the maximum
+parallelism out of all your CPU cores.
+
+147
+00:08:48,170 --> 00:08:51,765
+This model tends to break down as
+a number of requests becomes very large.
+
+148
+00:08:51,765 --> 00:08:55,088
+And that has to do with the fact
+that every every one of the unit of
+
+149
+00:08:55,088 --> 00:08:56,671
+work is going to get a thread.
+
+150
+00:08:56,671 --> 00:08:59,207
+And so
+the larger the number of requests are,
+
+151
+00:08:59,207 --> 00:09:03,227
+the more dedicated resources you
+have waiting to handle that request.
+
+152
+00:09:03,227 --> 00:09:07,857
+And consuming resources in the way so,
+the Apache web server is kind of
+
+153
+00:09:07,857 --> 00:09:12,351
+a traditional implementation of
+this particular model of threat.
+
+154
+00:09:13,840 --> 00:09:17,952
+As an alternative, the book talks about
+an event driven threading model which,
+
+155
+00:09:17,952 --> 00:09:19,111
+instead of blocking.
+
+156
+00:09:19,111 --> 00:09:23,740
+And waiting for I/O it uses asynchronous
+I/O and callbacks and an event loop.
+
+157
+00:09:23,740 --> 00:09:26,780
+And there are newer web
+servers like NGINX and
+
+158
+00:09:26,780 --> 00:09:29,661
+Node.js that are examples of this model.
+
+159
+00:09:29,661 --> 00:09:35,875
+In this case since we're not actually
+waiting for I/O within our threads,
+
+160
+00:09:35,875 --> 00:09:41,911
+then there's really no reason to have
+more threads than CPU processors.
+
+161
+00:09:41,911 --> 00:09:46,381
+So everyone of the threats that we
+invoke is always going to be running and
+
+162
+00:09:46,381 --> 00:09:48,070
+not not going to be blocked.
+
+163
+00:09:48,070 --> 00:09:51,507
+And so
+there's no real chance to improve or
+
+164
+00:09:51,507 --> 00:09:57,740
+increase parallelism by adding
+more threads, than processors.
+
+165
+00:09:57,740 --> 00:10:02,370
+So the author's suggestion is to try
+the event driven threat model first for
+
+166
+00:10:02,370 --> 00:10:03,612
+your application.
+
+167
+00:10:03,612 --> 00:10:08,223
+And only used the older or
+traditional method of thread for
+
+168
+00:10:08,223 --> 00:10:12,751
+connection, if that doesn't map well for
+some reason.
+
+169
+00:10:14,040 --> 00:10:16,887
+So here's a visual drawing that
+shows a little bit more about what
+
+170
+00:10:16,887 --> 00:10:19,130
+we're talking about with
+thread per connection.
+
+171
+00:10:19,130 --> 00:10:22,470
+Versus event driven threading as
+the book example goes through.
+
+172
+00:10:22,470 --> 00:10:25,795
+So if you think about a client
+making requests of a web server and
+
+173
+00:10:25,795 --> 00:10:29,711
+maybe the web server is going to be
+making requests itself out of a database.
+
+174
+00:10:29,711 --> 00:10:32,040
+And that database could
+be slow to respond.
+
+175
+00:10:32,040 --> 00:10:36,716
+So here with the blue, green and
+red bars, you can see three different
+
+176
+00:10:36,716 --> 00:10:41,487
+requests that came from the client
+before the first request finished.
+
+177
+00:10:41,487 --> 00:10:44,171
+And then that turns into
+three different request for
+
+178
+00:10:44,171 --> 00:10:47,228
+a database with varying times
+returned from the database.
+
+179
+00:10:47,228 --> 00:10:51,215
+And you can see the blue line is the one
+that took the longest green line took
+
+180
+00:10:51,215 --> 00:10:55,161
+the second longest and the red line
+took the the shortest amount of time.
+
+181
+00:10:56,640 --> 00:11:00,385
+So what we see here in the thread per
+connection cases, that the request comes
+
+182
+00:11:00,385 --> 00:11:03,460
+into the web server that turns
+into a request for the database.
+
+183
+00:11:03,460 --> 00:11:07,527
+And that thread just keeps waiting for
+the database to to return and
+
+184
+00:11:07,527 --> 00:11:10,640
+then finally returns your response.
+
+185
+00:11:10,640 --> 00:11:14,590
+And similarly the same thing happens for
+request B and C.
+
+186
+00:11:14,590 --> 00:11:17,070
+The thread from the web server
+is going to block waiting for
+
+187
+00:11:17,070 --> 00:11:18,351
+that response to complete.
+
+188
+00:11:20,140 --> 00:11:24,735
+By comparison though for the event driven
+threading case, if we're going to schedule
+
+189
+00:11:24,735 --> 00:11:28,761
+a callback that happens after the I/O
+is complete rather than blocking.
+
+190
+00:11:28,761 --> 00:11:33,091
+Then when we make request a of the web
+server, it's just going to fire off this
+
+191
+00:11:33,091 --> 00:11:37,721
+request with a callback to the database
+and then the threat is going to terminate.
+
+192
+00:11:37,721 --> 00:11:40,001
+There's not anything else for
+it to do at this case.
+
+193
+00:11:40,001 --> 00:11:42,524
+So even though the database
+threat is going to be,
+
+194
+00:11:42,524 --> 00:11:46,140
+the database process is going to be
+working on handling this request.
+
+195
+00:11:46,140 --> 00:11:50,120
+There won't be a threat in our web server
+again until the request completes.
+
+196
+00:11:50,120 --> 00:11:52,618
+At which point it will
+call this call back and
+
+197
+00:11:52,618 --> 00:11:55,200
+that'll be the response
+back to our client.
+
+198
+00:11:55,200 --> 00:12:00,321
+So the the difference here that is,
+you can see that there's cases
+
+199
+00:12:00,321 --> 00:12:06,189
+where we had three different threads
+running at once in our web server here.
+
+200
+00:12:06,189 --> 00:12:08,989
+And in this case we're going to have
+several points where there's no
+
+201
+00:12:08,989 --> 00:12:09,789
+threads running.
+
+202
+00:12:09,789 --> 00:12:14,512
+And nothing is blocked waiting on I/O so
+because in each one of the cases that we
+
+203
+00:12:14,512 --> 00:12:18,690
+have a thread running,
+it's actually doing work and not blocking.
+
+204
+00:12:18,690 --> 00:12:23,565
+This is the way that we can essentially
+maximize the amount of parallelism we
+
+205
+00:12:23,565 --> 00:12:27,161
+can get based on the number of
+CPUs we have in the system.
+
+206
+00:12:28,540 --> 00:12:30,724
+So how the max number of threads and
+
+207
+00:12:30,724 --> 00:12:35,181
+the thread duration compares the max
+number of threads here is three.
+
+208
+00:12:35,181 --> 00:12:37,901
+And in the event driven threading case,
+
+209
+00:12:37,901 --> 00:12:41,909
+it's only two just based on
+the way the the I/O worked out.
+
+210
+00:12:41,909 --> 00:12:46,519
+And the fact that request
+c came before requests b
+
+211
+00:12:46,519 --> 00:12:50,125
+issued it's database request here.
+
+212
+00:12:50,125 --> 00:12:54,787
+And the duration actually is the same
+because the duration is waiting on
+
+213
+00:12:54,787 --> 00:12:55,804
+the database.
+
+214
+00:12:55,804 --> 00:13:00,575
+And the database was presumably doing
+some kind of processing there that
+
+215
+00:13:00,575 --> 00:13:04,231
+that's taking a longer time to complete.
+
+216
+00:13:04,231 --> 00:13:08,928
+So I want to talk a little bit about
+Amdahl's law as well because it relates
+
+217
+00:13:08,928 --> 00:13:09,551
+to this.
+
+218
+00:13:09,551 --> 00:13:13,954
+And it relates to how you can
+these different threading
+
+219
+00:13:13,954 --> 00:13:18,940
+models relate to the amount
+of parallelism you can get.
+
+220
+00:13:18,940 --> 00:13:24,425
+So Amdahl's law said that this
+theoretical speed up you can get
+
+221
+00:13:24,425 --> 00:13:31,280
+on a given section of code is or the
+theoretical speed up being the multiplier.
+
+222
+00:13:31,280 --> 00:13:36,043
+Like the number of times faster you can
+make code is based on the part of the code
+
+223
+00:13:36,043 --> 00:13:38,621
+that benefits from improved resources.
+
+224
+00:13:38,621 --> 00:13:42,997
+And the proportion of the execution
+time that the part benefiting from
+
+225
+00:13:42,997 --> 00:13:45,940
+the improved resources originally applied.
+
+226
+00:13:45,940 --> 00:13:50,961
+So if you look at two different
+parts of the process or a thread
+
+227
+00:13:50,961 --> 00:13:57,580
+where some specific part A that took this
+long in some part B that took this long.
+
+228
+00:13:57,580 --> 00:13:59,791
+If you can make be five
+times faster than that,
+
+229
+00:13:59,791 --> 00:14:02,190
+will shorten the total
+execution by this amount.
+
+230
+00:14:02,190 --> 00:14:07,584
+If you can make A two times faster, you
+can see that that's ultimately a better
+
+231
+00:14:07,584 --> 00:14:13,081
+performance change here in terms of
+the total performance of the application.
+
+232
+00:14:14,140 --> 00:14:18,087
+So how does what we just talked about
+related to event driven threading and
+
+233
+00:14:18,087 --> 00:14:22,120
+the statement of there's no reason to
+have more threats than processors.
+
+234
+00:14:22,120 --> 00:14:24,520
+How does that relate to Amdahl's law?
+
+235
+00:14:24,520 --> 00:14:28,940
+It means that because we're using event
+driven threading and we aren't waiting.
+
+236
+00:14:28,940 --> 00:14:32,103
+If there's no waiting,
+that's happening in threads and
+
+237
+00:14:32,103 --> 00:14:36,570
+you're already using a number of threads
+that matches the number of processors.
+
+238
+00:14:36,570 --> 00:14:40,813
+Then that means that there's no more
+parallelization that is possible to be
+
+239
+00:14:40,813 --> 00:14:42,151
+obtained in that case.
+
+240
+00:14:45,616 --> 00:14:50,201
+So the book makes the comment that threads
+only need to be added an event driven case
+
+241
+00:14:50,201 --> 00:14:51,935
+to provide true parallelism.
+
+242
+00:14:51,935 --> 00:14:54,640
+And there's no reason to have
+more threads and processors.
+
+243
+00:14:54,640 --> 00:14:58,949
+And that's just because we can't add more
+threats to paralyze if every one of them
+
+244
+00:14:58,949 --> 00:15:01,759
+that we've already got is
+assigned to a processor and
+
+245
+00:15:01,759 --> 00:15:03,578
+none of the threads are blocking.

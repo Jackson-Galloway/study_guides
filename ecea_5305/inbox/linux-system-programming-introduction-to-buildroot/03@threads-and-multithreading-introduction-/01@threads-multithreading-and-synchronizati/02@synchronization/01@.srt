@@ -1,0 +1,1156 @@
+1
+00:00:01,040 --> 00:00:03,411
+In this video,
+we're going to talk about synchronization.
+
+2
+00:00:03,411 --> 00:00:07,675
+So we talked about threading and multi
+threading and now we're going to talk
+
+3
+00:00:07,675 --> 00:00:13,040
+about how we can keep our code that uses
+threads safe from synchronization issues.
+
+4
+00:00:13,040 --> 00:00:16,329
+So we want to understand race
+conditions what a race condition is.
+
+5
+00:00:16,329 --> 00:00:19,663
+And then we're going to understand how we
+can do synchronization with the threat to
+
+6
+00:00:19,663 --> 00:00:20,671
+avoid race conditions.
+
+7
+00:00:22,540 --> 00:00:27,066
+So the race condition, the book defines
+us as different program behavior
+
+8
+00:00:27,066 --> 00:00:30,880
+depending on which thread gets
+to a particular chunk of code.
+
+9
+00:00:30,880 --> 00:00:34,161
+First and more generically stated.
+
+10
+00:00:34,161 --> 00:00:38,813
+It's in the case that unsupervised
+access of a shared resource
+
+11
+00:00:38,813 --> 00:00:41,730
+leads to erroneous program behavior.
+
+12
+00:00:41,730 --> 00:00:45,360
+So the shared resource that's
+talking about could be hardware,
+
+13
+00:00:45,360 --> 00:00:47,880
+it could be a Colonel resource or
+in our case.
+
+14
+00:00:47,880 --> 00:00:51,360
+And in a lot of cases it's
+going to be access to memory.
+
+15
+00:00:51,360 --> 00:00:55,456
+And because we're sharing memory in a
+multithreaded application, that's a lot of
+
+16
+00:00:55,456 --> 00:00:58,761
+times where the race condition and
+concurrent issues are going to.
+
+17
+00:00:59,840 --> 00:01:04,012
+And so the if we are talking about memory
+race conditions, that would be also known
+
+18
+00:01:04,012 --> 00:01:08,261
+as a data race and that's probably one of
+the most common forms of race conditions.
+
+19
+00:01:09,640 --> 00:01:13,903
+So a couple more terms that are important
+when we're talking about race condition,
+
+20
+00:01:13,903 --> 00:01:18,140
+the critical region is the regional
+code that needs some synchronization.
+
+21
+00:01:18,140 --> 00:01:22,862
+And we're going to eliminate races race
+conditions by synchronizing threat
+
+22
+00:01:22,862 --> 00:01:25,060
+access to those critical regions.
+
+23
+00:01:25,060 --> 00:01:29,615
+So in other words, making sure that
+only exactly one thread has access and
+
+24
+00:01:29,615 --> 00:01:32,861
+is using that critical region
+at one at a given time.
+
+25
+00:01:33,940 --> 00:01:38,766
+So here's an example of a function
+that would be not thread safe in
+
+26
+00:01:38,766 --> 00:01:40,621
+some implementations.
+
+27
+00:01:40,621 --> 00:01:44,255
+So here's a case that we've
+got a function that's doing
+
+28
+00:01:44,255 --> 00:01:46,461
+a withdrawal from a bank account.
+
+29
+00:01:46,461 --> 00:01:49,885
+So it's passing in a structure
+that's describing the account and
+
+30
+00:01:49,885 --> 00:01:51,860
+the amount that it wants to withdraw.
+
+31
+00:01:51,860 --> 00:01:56,334
+We're going to check the current balance
+and then we're going to say if the balance
+
+32
+00:01:56,334 --> 00:02:00,130
+is greater than the amount that
+withdrawal is going to be approved and
+
+33
+00:02:00,130 --> 00:02:02,231
+we're going to disperse the money,
+
+34
+00:02:02,231 --> 00:02:06,164
+we're going to detriment from
+the account from the current balance and
+
+35
+00:02:06,164 --> 00:02:09,861
+then disperse the money through
+the disperse money about here.
+
+36
+00:02:10,940 --> 00:02:12,901
+So when is this code?
+
+37
+00:02:12,901 --> 00:02:14,630
+Not thread safe?
+
+38
+00:02:14,630 --> 00:02:20,056
+It would be not thread safe if there's
+the account structure is shared and
+
+39
+00:02:20,056 --> 00:02:25,046
+a multithreaded program might be
+calling this with the same account
+
+40
+00:02:25,046 --> 00:02:27,161
+structure at the same time.
+
+41
+00:02:28,840 --> 00:02:33,495
+So in that case these operations could be
+happening in two different threads at once
+
+42
+00:02:33,495 --> 00:02:37,561
+and we'll talk about how that could
+cause a problem in a few slides here.
+
+43
+00:02:38,840 --> 00:02:43,321
+So is this code thread safe when
+hardware does not support parallelism?
+
+44
+00:02:43,321 --> 00:02:45,350
+So what if we only have one processor?
+
+45
+00:02:45,350 --> 00:02:49,619
+Does that mean that we don't have to worry
+about thread safety then anymore for
+
+46
+00:02:49,619 --> 00:02:51,540
+this withdraw function?
+
+47
+00:02:51,540 --> 00:02:52,940
+And the answer is no.
+
+48
+00:02:52,940 --> 00:02:57,022
+And the reason is we talked about
+a couple different mechanisms where we
+
+49
+00:02:57,022 --> 00:03:01,581
+can essentially have execution happening
+at what appears to be the same time and
+
+50
+00:03:01,581 --> 00:03:05,201
+one of those was concurrency in
+a multithreaded application.
+
+51
+00:03:05,201 --> 00:03:07,813
+And so concurrency is still
+an issue in this case and
+
+52
+00:03:07,813 --> 00:03:10,261
+we'll talk about that
+in the upcoming slides.
+
+53
+00:03:11,340 --> 00:03:17,581
+So the using an even simpler example about
+how we can demonstrate a race condition
+
+54
+00:03:17,581 --> 00:03:23,361
+if we have some function that works on
+a structure that has a single value and
+
+55
+00:03:23,361 --> 00:03:28,650
+we just increment that particular
+variable here in the some funk.
+
+56
+00:03:28,650 --> 00:03:31,560
+So here we're doing an X
+plus plus operation.
+
+57
+00:03:31,560 --> 00:03:35,547
+So what does that look like if we look at
+how the what the assembly code is actually
+
+58
+00:03:35,547 --> 00:03:38,361
+doing in order to implement
+this X plus plus operation?
+
+59
+00:03:39,640 --> 00:03:43,652
+And what would happen in the case
+that two different threads were both
+
+60
+00:03:43,652 --> 00:03:48,740
+calling some funk on the same memory
+here pointed to by the simple structure.
+
+61
+00:03:48,740 --> 00:03:54,286
+So in a normal case where we
+didn't have a race condition or
+
+62
+00:03:54,286 --> 00:03:59,151
+or a data race thread one in
+order to do the X plus plus
+
+63
+00:03:59,151 --> 00:04:04,500
+operation from some funk,
+it would load the value of S.
+
+64
+00:04:04,500 --> 00:04:08,151
+X into a register, it would add one to
+it and then it would store it back.
+
+65
+00:04:08,151 --> 00:04:09,071
+And the same thing.
+
+66
+00:04:09,071 --> 00:04:10,847
+If there wasn't a day to race happening,
+
+67
+00:04:10,847 --> 00:04:14,061
+the same thing would happen in a second
+thread and there'd be no problems.
+
+68
+00:04:15,240 --> 00:04:20,147
+The problem would happen if we had
+either parallelism or concurrency that
+
+69
+00:04:20,147 --> 00:04:24,896
+occurred and we had a thread switch
+that occurred between thread one and
+
+70
+00:04:24,896 --> 00:04:29,280
+two while we were in the middle of
+the operation of the X plus plus.
+
+71
+00:04:29,280 --> 00:04:32,815
+So here's an example of when
+you could have this problem,
+
+72
+00:04:32,815 --> 00:04:36,210
+they thread one loads the value
+of X into a register.
+
+73
+00:04:36,210 --> 00:04:39,975
+It adds one to the register, but
+then before it stores it again,
+
+74
+00:04:39,975 --> 00:04:42,810
+it would get interrupted
+by thread number two.
+
+75
+00:04:42,810 --> 00:04:45,721
+So threat to loads SX into the register,
+but
+
+76
+00:04:45,721 --> 00:04:49,420
+it's loading the old value
+before it got implemented,
+
+77
+00:04:49,420 --> 00:04:54,340
+Then it adds 1 to the register and
+then it stores the register in SX.
+
+78
+00:04:54,340 --> 00:04:58,000
+However, that happens
+after thread one stored,
+
+79
+00:04:58,000 --> 00:05:00,980
+it's old copy of Of the registry and SX.
+
+80
+00:05:00,980 --> 00:05:05,698
+So what this means is that rather than
+implementing SX twice between these two
+
+81
+00:05:05,698 --> 00:05:11,020
+threads, we're going to implement it and
+we're going to implement it only one time.
+
+82
+00:05:11,020 --> 00:05:14,637
+And the reason is the value that we
+implemented here is going to be one more
+
+83
+00:05:14,637 --> 00:05:16,010
+than the original value.
+
+84
+00:05:16,010 --> 00:05:18,680
+And the value we implemented
+here is going to be one more.
+
+85
+00:05:18,680 --> 00:05:22,700
+And the reason is the load happened from
+thread to before the store happened from
+
+86
+00:05:22,700 --> 00:05:23,740
+the Red one.
+
+87
+00:05:23,740 --> 00:05:28,443
+So whether we're using parallelism or
+concurrency, we can still have this kind
+
+88
+00:05:28,443 --> 00:05:33,040
+of race condition issue that
+happens in this simple example.
+
+89
+00:05:33,040 --> 00:05:36,160
+So why did we have the problem
+with that particular code?
+
+90
+00:05:36,160 --> 00:05:39,681
+It's because the plus plus
+operation is not atomic.
+
+91
+00:05:39,681 --> 00:05:44,546
+So an atomic operation is one that's
+indivisible and unable to be interviewed
+
+92
+00:05:44,546 --> 00:05:48,770
+with any other operation and
+essentially appears instantaneous.
+
+93
+00:05:48,770 --> 00:05:54,818
+And so if the processor is able to
+handle in one execution cycle or
+
+94
+00:05:54,818 --> 00:06:02,450
+in one uninterruptible cycle, that would
+essentially be an atomic operation.
+
+95
+00:06:02,450 --> 00:06:06,332
+But you can see that Plus plus is
+typically not an atomic operation because
+
+96
+00:06:06,332 --> 00:06:10,337
+of the load store that's going to happen
+in order to copy the value back out to
+
+97
+00:06:10,337 --> 00:06:10,851
+memory.
+
+98
+00:06:11,940 --> 00:06:14,632
+So to make these kind of
+shared memory operations safe,
+
+99
+00:06:14,632 --> 00:06:16,430
+we have to make the sequence atomic.
+
+100
+00:06:16,430 --> 00:06:17,851
+And that's what we're
+going to do with locking.
+
+101
+00:06:19,340 --> 00:06:23,790
+So we make the sequence of atomic using
+a mutually exclusive locker mu tex.
+
+102
+00:06:23,790 --> 00:06:27,570
+And if we're using the p
+thread library for this,
+
+103
+00:06:27,570 --> 00:06:30,810
+which is the politics, you text library,
+
+104
+00:06:30,810 --> 00:06:36,230
+we can use p threaten you tex lock and
+third music's unlocked for this.
+
+105
+00:06:36,230 --> 00:06:40,041
+So by adding a mute text
+to the account structure,
+
+106
+00:06:40,041 --> 00:06:43,700
+we can make our withdraw
+function thread safe.
+
+107
+00:06:43,700 --> 00:06:49,340
+Using P threaten you tex lock and
+P thread music's unlock around accesses.
+
+108
+00:06:49,340 --> 00:06:53,471
+So where before we were doing
+the operation here where we were adding
+
+109
+00:06:53,471 --> 00:06:58,340
+the amount to withdrawal total and
+documenting the current balance.
+
+110
+00:06:58,340 --> 00:07:02,181
+Now we're doing locks around that to make
+sure that there's exactly one thread
+
+111
+00:07:02,181 --> 00:07:05,061
+that's going to have access to
+that code at any given time.
+
+112
+00:07:06,840 --> 00:07:08,834
+So you might look at this and say,
+
+113
+00:07:08,834 --> 00:07:13,130
+well it looks like we didn't put
+the unlock in the right place, right?
+
+114
+00:07:13,130 --> 00:07:18,340
+Because we're doing disperse money down
+here and we don't have a lock around that.
+
+115
+00:07:18,340 --> 00:07:22,740
+So why wouldn't we need a lock
+around the disperse money operation?
+
+116
+00:07:22,740 --> 00:07:27,120
+Well the reason is we aren't accessing
+shared memory with this first money.
+
+117
+00:07:27,120 --> 00:07:31,562
+So if the way this code is written,
+we are keeping the amount or we are using
+
+118
+00:07:31,562 --> 00:07:36,220
+the amount not as a shared memory,
+not anything pointing to shared memory but
+
+119
+00:07:36,220 --> 00:07:39,740
+just as a variable that's
+passed into the function.
+
+120
+00:07:39,740 --> 00:07:43,422
+And so that variable is not going to be
+affected by a multi a different thread
+
+121
+00:07:43,422 --> 00:07:47,140
+running and sharing memory the way
+the account structure would be.
+
+122
+00:07:47,140 --> 00:07:52,120
+So that's the that's the reason that we
+don't have to have mu tex unlock after
+
+123
+00:07:52,120 --> 00:07:56,961
+disperse money and we can do it only
+around access to the account structure.
+
+124
+00:07:58,440 --> 00:08:02,704
+So another important thing to talk
+about when we're talking about
+
+125
+00:08:02,704 --> 00:08:05,540
+synchronization is the idea of deadlocks.
+
+126
+00:08:05,540 --> 00:08:10,314
+So deadlock can happen when there are two
+threads that are both waiting for
+
+127
+00:08:10,314 --> 00:08:11,790
+each other to finish.
+
+128
+00:08:11,790 --> 00:08:14,669
+Or it could happen when there's
+one thread that's blocked on
+
+129
+00:08:14,669 --> 00:08:16,340
+you tex that already holds.
+
+130
+00:08:16,340 --> 00:08:19,284
+So in order to avoid this,
+what we need to do or
+
+131
+00:08:19,284 --> 00:08:22,530
+what the book suggests is to data and
+not code.
+
+132
+00:08:22,530 --> 00:08:27,597
+So you need to think about if you
+are designing you're locking structure
+
+133
+00:08:27,597 --> 00:08:31,917
+such that you're locking based
+on access to a data resource or
+
+134
+00:08:31,917 --> 00:08:35,850
+are you trying to lock based
+on what some function does?
+
+135
+00:08:35,850 --> 00:08:40,181
+And if you're trying to lock based on some
+function does what some function does,
+
+136
+00:08:40,181 --> 00:08:42,127
+you can end up confusing yourself and
+
+137
+00:08:42,127 --> 00:08:46,540
+ending up in scenarios like this
+where you could have deadlocked.
+
+138
+00:08:46,540 --> 00:08:51,614
+So one important concept to try to
+implement in your programs is to make
+
+139
+00:08:51,614 --> 00:08:56,351
+sure locks are tied to a specific
+data structure or chunk of data.
+
+140
+00:08:56,351 --> 00:09:00,639
+And that way it's less likely to be the
+case that you'll confuse yourself about
+
+141
+00:09:00,639 --> 00:09:05,140
+which lock you need to hold when
+you're doing some specific operation.
+
+142
+00:09:05,140 --> 00:09:08,970
+The second is if you do actually need
+to hold locks for multiple structures
+
+143
+00:09:08,970 --> 00:09:13,232
+that wants for instance, would be to have
+a specific order for obtaining the locks
+
+144
+00:09:13,232 --> 00:09:17,351
+when multiple data locks are required and
+then release in the opposite order.
+
+145
+00:09:20,740 --> 00:09:23,399
+So if we're talking about
+synchronization issues in the multiple
+
+146
+00:09:23,399 --> 00:09:24,444
+multithreaded program,
+
+147
+00:09:24,444 --> 00:09:27,690
+we need to talk about how we're going to
+create those threats in the first place.
+
+148
+00:09:27,690 --> 00:09:31,328
+So if we're using the P thread library
+will use P thread create to create our
+
+149
+00:09:31,328 --> 00:09:32,330
+threads.
+
+150
+00:09:32,330 --> 00:09:37,316
+The three thread is going to be created
+and start execution with whatever is
+
+151
+00:09:37,316 --> 00:09:41,560
+passed here as this start
+routine out function pointer.
+
+152
+00:09:41,560 --> 00:09:46,771
+So in our case it's start withdrawal
+thread and the R that you pass here with
+
+153
+00:09:46,771 --> 00:09:52,640
+this parameter is going to get passed into
+the function pointer as the argument.
+
+154
+00:09:52,640 --> 00:09:56,790
+So in our case we have a parameter
+structure that gets passed in here.
+
+155
+00:09:56,790 --> 00:09:58,770
+And if you look at the link
+at the bottom of the slide,
+
+156
+00:09:58,770 --> 00:10:01,161
+you could see the reference code
+where I'm pulling this from.
+
+157
+00:10:02,540 --> 00:10:06,768
+The attribute that you can specify with
+the thread create can specify things like
+
+158
+00:10:06,768 --> 00:10:10,811
+stack size scheduling parameters and
+whether or not the threat is detached,
+
+159
+00:10:10,811 --> 00:10:13,400
+which we'll talk about in a minute.
+
+160
+00:10:13,400 --> 00:10:15,460
+Or you can specify null
+to use the defaults,
+
+161
+00:10:15,460 --> 00:10:18,140
+which is what I'm doing here in my case.
+
+162
+00:10:18,140 --> 00:10:22,802
+And then the thread is either the a null
+value or a location that you can use to
+
+163
+00:10:22,802 --> 00:10:27,761
+that the P thread create function can use
+to store the threat I'd for use later.
+
+164
+00:10:29,540 --> 00:10:32,957
+There's a few different ways then to
+terminate the thread once you've started
+
+165
+00:10:32,957 --> 00:10:36,221
+it, one is you can just return from
+whatever threat you passed in as the start
+
+166
+00:10:36,221 --> 00:10:38,240
+thread routine function pointer.
+
+167
+00:10:38,240 --> 00:10:42,240
+The second is that the threat itself
+could invoke the threat exit.
+
+168
+00:10:42,240 --> 00:10:46,540
+And then the third is that another
+threat could call P threat cancel.
+
+169
+00:10:46,540 --> 00:10:51,464
+And another thing to know about threading
+is that when a process executes
+
+170
+00:10:51,464 --> 00:10:56,468
+all the threads of that process are going
+to be automatically killed.N So
+
+171
+00:10:56,468 --> 00:10:59,453
+we talked before about
+the having a detached
+
+172
+00:10:59,453 --> 00:11:04,052
+state that's really related to how
+you detect a threat has ended and
+
+173
+00:11:04,052 --> 00:11:09,340
+how you free up the resources that
+were associated with that threat.
+
+174
+00:11:09,340 --> 00:11:12,693
+And when we talk about detecting
+that a threat has ended and
+
+175
+00:11:12,693 --> 00:11:17,590
+freeing up resources, what we're talking
+about in most cases is joining a threat.
+
+176
+00:11:17,590 --> 00:11:21,506
+So when we join a thread were essentially
+blocking in one thread, waiting for
+
+177
+00:11:21,506 --> 00:11:23,081
+another threat to terminate.
+
+178
+00:11:23,081 --> 00:11:26,194
+So if you have a parent thread
+that creates a child thread and
+
+179
+00:11:26,194 --> 00:11:29,306
+you want to wait and
+know when that child threads complete,
+
+180
+00:11:29,306 --> 00:11:32,630
+you'd use P threat joint for
+that and you'd use the thread id.
+
+181
+00:11:32,630 --> 00:11:37,380
+That was the one that was set up for
+you in P thread create.
+
+182
+00:11:37,380 --> 00:11:43,332
+So if this is a reference to a pointer
+that contains the thread attribute,
+
+183
+00:11:43,332 --> 00:11:47,941
+You'll use that particular
+threat attribute in your P.
+
+184
+00:11:47,941 --> 00:11:52,351
+Three joint call to tell it which
+thread you want to wait to terminate.
+
+185
+00:11:54,140 --> 00:11:58,694
+So the option to specify detached thatched
+threads mean that you're creating
+
+186
+00:11:58,694 --> 00:12:03,179
+a threat that is enjoyable, and you can
+do that through the thread detached or
+
+187
+00:12:03,179 --> 00:12:07,940
+based on the attributes to use when you
+create the thread, it's important to note
+
+188
+00:12:07,940 --> 00:12:11,680
+that threads are going to consume
+system resources until joined.
+
+189
+00:12:11,680 --> 00:12:16,638
+And so if you don't use a detached thread
+that and you forget to join a thread,
+
+190
+00:12:16,638 --> 00:12:21,011
+then you're going to end up with
+a memory leak in your application.
+
+191
+00:12:21,011 --> 00:12:26,203
+And if you invoked enough threads and
+didn't join any of them and didn't create
+
+192
+00:12:26,203 --> 00:12:31,261
+them detached, then you would eventually
+run out of memory in your process.
+
+193
+00:12:33,140 --> 00:12:36,440
+So combining this with what we
+talked about before with mu texas,
+
+194
+00:12:36,440 --> 00:12:39,440
+how would you use you
+text then in a thread?
+
+195
+00:12:39,440 --> 00:12:44,350
+So the using the example before but
+a little bit more generalized,
+
+196
+00:12:44,350 --> 00:12:48,386
+you start with you text in it
+where you would initialize
+
+197
+00:12:48,386 --> 00:12:53,051
+the mute texts that we defined
+in our structure and knowledge.
+
+198
+00:12:53,051 --> 00:12:56,750
+Just initialize is with
+the default setting of unlocked.
+
+199
+00:12:56,750 --> 00:12:59,209
+And then inside your
+code you'd call P thread,
+
+200
+00:12:59,209 --> 00:13:02,840
+music's unlock with the address
+of the music's to lock it.
+
+201
+00:13:02,840 --> 00:13:04,661
+You do a critical section.
+
+202
+00:13:04,661 --> 00:13:08,731
+Once you know that you've got the locks or
+whatever code you're trying to protect in
+
+203
+00:13:08,731 --> 00:13:12,227
+this case the account structure and
+then you do a P threaten you tex unlock
+
+204
+00:13:12,227 --> 00:13:16,540
+after the critical section to release
+the lock and let another thread run.
+
+205
+00:13:16,540 --> 00:13:20,990
+So why would we want to store the mute
+checks in with the account structure?
+
+206
+00:13:20,990 --> 00:13:24,809
+Again, this is the suggestion from the
+book about designing in a way that you're
+
+207
+00:13:24,809 --> 00:13:26,111
+locking data and not code.
+
+208
+00:13:26,111 --> 00:13:27,517
+So for locking data and
+
+209
+00:13:27,517 --> 00:13:31,680
+this mu text is associated with
+the data in the account structure.
+
+210
+00:13:31,680 --> 00:13:35,940
+It probably makes sense to locate that mu
+text directly in the structure itself.
+
+211
+00:13:35,940 --> 00:13:40,451
+So this is just kind of a design decision
+that makes that relationship really
+
+212
+00:13:40,451 --> 00:13:41,161
+apparent.
+
+213
+00:13:43,340 --> 00:13:48,256
+The other thing that the book mentions,
+that's kind of an interesting way
+
+214
+00:13:48,256 --> 00:13:52,091
+to do locking is to use that you
+can use scope blocks with C.
+
+215
+00:13:52,091 --> 00:13:55,872
+Plus Plus, so I'm not sure how much
+familiarity you have with C Plus Plus,
+
+216
+00:13:55,872 --> 00:13:59,440
+but I wanted to mention this in
+case you see this in practice.
+
+217
+00:13:59,440 --> 00:14:03,081
+So the scope lock uses C plus
+plus allocation constructors.
+
+218
+00:14:03,081 --> 00:14:07,771
+And destructor is to acquire mu text on,
+create and then releasing you text when
+
+219
+00:14:07,771 --> 00:14:11,971
+it's falling out of scope and when and
+so the create part would happen in
+
+220
+00:14:11,971 --> 00:14:16,111
+the constructor and the release part
+would happen in the destructor.
+
+221
+00:14:16,111 --> 00:14:19,682
+So each one of these are going to
+be called for us in C Plus Plus,
+
+222
+00:14:19,682 --> 00:14:23,440
+when a particular variable goes
+in scope or falls out of scope.
+
+223
+00:14:23,440 --> 00:14:28,192
+And so this is really just doing
+the lock when it comes in scope and
+
+224
+00:14:28,192 --> 00:14:31,272
+the unlocked when it
+falls out of scope and
+
+225
+00:14:31,272 --> 00:14:35,232
+the design of this class is
+such that when we create and
+
+226
+00:14:35,232 --> 00:14:40,776
+give it a reference to mu text, we'll
+save that value here as the private mu
+
+227
+00:14:40,776 --> 00:14:46,240
+text attribute that we can reference
+later here in the destructor.
+
+228
+00:14:46,240 --> 00:14:51,640
+And this strategy is known as aria or
+resource acquisition, is initialization.
+
+229
+00:14:51,640 --> 00:14:55,573
+So here's an example of how you could use
+this in a scope lock in the withdrawal
+
+230
+00:14:55,573 --> 00:14:56,420
+application and
+
+231
+00:14:56,420 --> 00:15:00,240
+you can use the link at the bottom
+to to look at this code yourself.
+
+232
+00:15:00,240 --> 00:15:04,711
+But if we use this C Plus plus trick and
+then we just do scope mu text and
+
+233
+00:15:04,711 --> 00:15:08,730
+pass in a reference to the mute
+text that we want to lock here.
+
+234
+00:15:08,730 --> 00:15:11,741
+You can see that we don't
+need to remember to put
+
+235
+00:15:11,741 --> 00:15:14,550
+a any kind of unlocked
+statement at the end.
+
+236
+00:15:14,550 --> 00:15:18,440
+What's going to happen here is
+because we declare this scope.
+
+237
+00:15:18,440 --> 00:15:21,183
+C Plus Plus is going to
+call the destructor for
+
+238
+00:15:21,183 --> 00:15:26,058
+us as we're exiting this scope right
+here and we'll do the p thread music's
+
+239
+00:15:26,058 --> 00:15:30,191
+unlock based on the reference that
+we set up here with politics.

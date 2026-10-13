@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Intro to System Programming</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>System Programming is similar to Application Programming in that both <strong>may</strong><strong> </strong>interact with the kernel and C library.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~JCOSmfGEEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~JCOSmfGEEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>System programs can use system calls (syscalls) to invoke kernel functions from user space.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~N4MiEPGEEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~N4MiEPGEEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>As an alternative to using system calls to invoke kernel functions, user space applications can be directly linked with kernel space functions.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~RQiXgPGEEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~RQiXgPGEEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select examples of wrapper functions provided by the C library glibc (select any which apply).</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~VgrWsfGEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>System calls</p></div></li>
+<li><input name="autoGradableResponseId~VgrWsfGEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Threading support</p></div></li>
+<li><input name="autoGradableResponseId~VgrWsfGEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Compilation</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>APIs ensure source compatibility.  This means: </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~c1x8YPGEEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>Application executable files can be copied from one hardware platform to another and will be expected to run successfully on the new platform.</p></div></li>
+<li><input name="autoGradableResponseId~c1x8YPGEEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>Application source code can be compiled for another platform and expected to work properly.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select all the true statements about ABIs (select any which apply):</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~iSxJM_GEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Can define how an application interacts with itself.</p></div></li>
+<li><input name="autoGradableResponseId~iSxJM_GEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Can define how an application interacts with libraries.</p></div></li>
+<li><input name="autoGradableResponseId~iSxJM_GEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Can define how an application interacts with the kernel.</p></div></li>
+<li><input name="autoGradableResponseId~iSxJM_GEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Enforced by the toolchain for a platform.</p></div></li>
+<li><input name="autoGradableResponseId~iSxJM_GEEeu2FwpKxArGeQ" type="checkbox"/> <div class="quiz-option-text"><p>Defines interfaces by which one piece of software communicates with another at the source level. </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In Linux, most everything is accessed as a file, except for device access, which is handled completely differently.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~tp6A-PGEEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~tp6A-PGEEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A Linux file's inode contains the following parameters (select any which apply):</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~zIWmIfGEEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Filename</p></div></li>
+<li><input name="autoGradableResponseId~zIWmIfGEEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Modification timestamp</p></div></li>
+<li><input name="autoGradableResponseId~zIWmIfGEEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Owner of the file </p></div></li>
+<li><input name="autoGradableResponseId~zIWmIfGEEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Location of the file's data on disk </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Linux Directories are used to map names with which to access files.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~_L7F0PGEEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~_L7F0PGEEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the types of Linux files referred to as "Special files" (select any which apply):</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~O9WiVfGGEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Block devices </p></div></li>
+<li><input name="autoGradableResponseId~O9WiVfGGEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Character devices </p></div></li>
+<li><input name="autoGradableResponseId~O9WiVfGGEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Named pipes</p></div></li>
+<li><input name="autoGradableResponseId~O9WiVfGGEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Directories</p></div></li>
+<li><input name="autoGradableResponseId~O9WiVfGGEeuptBIEc6G6Qw" type="checkbox"/> <div class="quiz-option-text"><p>Links</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Block devices and character devices are similar in that they can both address memory on byte boundaries as opposed to sector boundaries.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Y1XvZfGGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~Y1XvZfGGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Block devices and character devices are similar in that they are both considered "Special files".</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~b1eD2vGGEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~b1eD2vGGEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Processes use memory virtualization, meaning each process appears to use its own single linear address space.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~eWhq3fGGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~eWhq3fGGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Two threads running under the same Process each use their own process memory space and can't access each other's memory.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~glMiH_GGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~glMiH_GGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The uid value of 1 is associated with a special user known as root.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~kBPLd_GGEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~kBPLd_GGEeuwgw4lei9tnQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the permission represented by the octal value 755:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nepF_vGGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>Owner may read, write, execute. Group and Everyone else may read and execute only.</p></div></li>
+<li><input name="autoGradableResponseId~nepF_vGGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>Owner may read, write, execute. Group and Everyone Else may read and write only.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the permissions represented by the octal value 640:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~u84ZdPGGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>Owner may read and write only. Group may read only. Everyone else has no access.</p></div></li>
+<li><input name="autoGradableResponseId~u84ZdPGGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>Owner may read and write only. Group may write only. Everyone else has no access. </p></div></li>
+<li><input name="autoGradableResponseId~u84ZdPGGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>Owner may read, write and execute. Group may write only. Everyone else has no access. </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Signals are used as a one-way asynchronous notification mechanism for a process.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1P52v_GGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~1P52v_GGEeu2FwpKxArGeQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The Ctrl-C handler is an example of what type of communication mechanism in Linux?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~4WsBS_GGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>Signal</p></div></li>
+<li><input name="autoGradableResponseId~4WsBS_GGEeuptBIEc6G6Qw" type="radio"/> <div class="quiz-option-text"><p>Interprocess Communication </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is an Absolute Pathname </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~aHf0gAhqEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>usr/bin/env</p></div></li>
+<li><input name="autoGradableResponseId~aHf0gAhqEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>home/user/Documents</p></div></li>
+<li><input name="autoGradableResponseId~aHf0gAhqEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>httpd/httpd.conf</p></div></li>
+<li><input name="autoGradableResponseId~aHf0gAhqEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>/etc/httpd/httpd.conf</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is a Relative Pathname</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WKFmfAhuEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>/etc/httpd/httpd.conf</p></div></li>
+<li><input name="autoGradableResponseId~WKFmfAhuEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>httpd/httpd.conf</p></div></li>
+<li><input name="autoGradableResponseId~WKFmfAhuEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>/home/user/Documents</p></div></li>
+<li><input name="autoGradableResponseId~WKFmfAhuEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>/usr/bin/env</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

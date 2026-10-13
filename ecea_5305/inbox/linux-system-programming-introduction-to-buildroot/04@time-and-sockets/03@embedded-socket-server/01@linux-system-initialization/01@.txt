@@ -1,0 +1,70 @@
+In this video, we're going to talk
+about Linux system initialization. So starting up the system and
+getting our initial daemos and tasks started on the system. So we're going to talk about
+Linux initialization and startup manager options. It's the basics of writing
+Linux in its scripts, which will also use in assignment five. So, there are a few different
+mechanisms for initialization, Busybox is going to be the default for
+buildroot projects. So that's the one that we're
+going to use for assignment five. There's also system five, it's a system
+V where V is a Roman numeral for five. System 5 in it, which is the default for
+Yocto projects and systemd is more sophisticated
+startup manager. That we're not going to really
+cover in this course, but I just wanted to let you
+know that it exists. And of these three different options,
+system five and busy box are both very similar, and systemd is kind of
+a completely different in its system. So for system 5 Init,
+this was a 1980s era Unix system, it introduced and
+included a concept of run levels. And there were different run levels
+happened based on whether you were in single multi user mode,
+whether you had graphical support. And then there was
+a concept of startup and shutdown tasks that would happen when the
+system was starting up or shutting down. So, in both system 5 and
+Busybox cases, the startup and shutdown initialization related
+functions are driven with shell scripts. And in the Busybox case specifically, this happens through a script
+that's located at etc Init.d rcS. So this is going to be invoked on startup
+and it's going to have really simple logic that looks in the etc Init.d directory and
+looks for files that start with S. And whatever those files are, it's
+going to try to run them as a script and it's going to run them in the order that
+specified based on the number after the S. So this really simple logic is
+just going to first find all the different shell scripts and then it's going to execute here
+the shell script that have found. So similar on shutdown,
+the kill script is going to stop so, So in either the system 5 or
+Busybox cases, the initialization is going to
+be driven by shell scripts. In a Busybox case, etc Init.d rcS is going to be a really
+simple script that looks like this. That's going to look for
+any scripts that start with an S and list them based on the number
+that's lifted after the S. And based on the order, is going to just call each script
+with a start argument as shown here. Similarly, on shutdown Busybox is
+going to invoke etc Init.d rcK and that's just going to list. Look through each of the etc Init.d start
+scripts again, it's going to list them in order and in this case it's going to
+use the reverse order with Ls dash r. So in the opposite order
+that they started, it's just going to call
+the script with a stop argument. So if your script that you place etc
+Init.d just needs to start with an S. And a specific number giving the sequence
+that you wanted to start up relative to the other scripts that
+are in that directory. The script needs to support the start and stop parameters to work with the rc
+scripts that I just mentioned previously. And the usual way to implement this
+is to use it in a case statement, there is a good example of this in
+mastering embedded links programming. Where you take the parameter that was
+provided here as the first argument and you look to see whether it was start or
+stop. And then depending on which one it was,
+you call start, stop daemon with either the dash S or
+the dash K argument. And you specify here the example
+showing simple server, this is where you specify what your
+application is going to be called. And this is where you specify where it
+can be found in the root file system. So all the Init scripts
+should you start stop daemon, except these arguments Dash S dash K. To set up whether you're starting or
+killing the daemon and with the dash K argument
+it's going to send sig term. So that was the signal that we mentioned
+earlier that will allow graceful termination of a process. So this gives your daemon a chance to
+do any kind of clean up it needs and then gracefully exit. And we've already talked in a week four
+about how you can write the daemon. So you can use that to write
+your daemon that you'd reference here in the dash S version of start,
+stopping daemon. You probably also for test purposes,
+rather than needing to boot up the system, you probably want to test starting and
+stopping your script. So that's just as easy
+as doing etc Init.d and then S whatever your daemon
+script is named in start. Or etc Init.d S whatever your
+system daemon is called stop and that will test that you're starting and
+stopping it correctly. So you can use the PS command for instance
+to make sure that it's either running or that it's been stopped successfully.

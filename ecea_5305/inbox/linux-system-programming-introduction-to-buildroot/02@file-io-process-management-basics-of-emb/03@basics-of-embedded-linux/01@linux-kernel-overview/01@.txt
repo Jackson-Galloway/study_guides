@@ -1,0 +1,112 @@
+In this video we're going to start
+talking about the Linux kernel. And this is going to help give us
+the background that we need to complete assignment number three for
+this week. And we're going to be moving into the
+mastering embedded Linux programming book as reference material for this content. So learning objectives for this video, we want to understand
+the high level Linux kernel functions. And we're just going to get an overview
+of the Linux kernel source that we're going to use to build the kernel. So the main jobs of the kernel,
+the kernel manages resources, it interfaces with hardware. And it's going to provide that API for
+user space programs that we've been talking about already from
+the POSIX API setting. It's typically going to be tailored for
+specific hardware to some extent. It's probably, it's more than likely
+that if you're going to be using an embedded software designed
+targeted to a specific platform. You're going to be at least configuring
+something about the kernel. There's almost always
+going to be something that you're going to be customizing. The kernel runs at a high
+CPU privilege level. So it's got access to memory addresses,
+access to all CPU registers. And for that reason, you need to be
+careful about the what you're doing inside kernel code because what we've talked
+about before where the doctrine of lease privilege rights in user space. That doesn't really exist in kernel space. You pretty much always have the rights to
+do pretty much anything on the system. You have to be very careful about
+the programming that you're doing there. The entry point into the kernel can
+either be system calls from user space or it can be interrupts from hardware. So, most of what we've been talking about
+so far is the POSIX API library, and that system call or
+sys-call interface into the kernel. And that looks something like this, where
+you can picture the application doing for instance, a printout for
+some POSIX API library call. That turning into a system call
+that's handled by the kernel. And this is essentially a software trap or
+software, software interrupts, sorry,
+handling in kernel space. And then some kind of, you can see
+where that would end up being some kind of service handler for
+a specific device driver, and that could mean some type of
+action that happens to apart. So this would be kind of like
+the flow that we've talked about so far with the first portion of the class. There's also a second way that this could
+be used where the entry in the kernel space is actually directly
+from hardware via interrupt. So hardware can generate an interrupt
+that could invoke some function in our device driver. And then maybe later there's some user
+space interaction that would come get status back out of the device
+driver related to that interrupt. We are living in a really
+crazy time because this Linux operating system that
+we are studying here. The original inventor of it is still
+around answering questions and taking an active role in
+the development of the kernel. So you can actually go to git.kernel.org
+and see Linus Torvalds actual tree and see day by day what's being
+checked into the Linux kernel. One other thing to note
+about git.kernel.org, the size of the kernel is,
+Linux kernel is absolutely massive. So 57,000 files, 14 million lines of code. You're definitely not going to understand
+the kernel completely, probably ever, but definitely not going to
+happen from this class. So it's a very complex thing. We're going to go over the basic
+overview in this class and give you the tools that you
+need to learn more about whatever specific portion you need
+to study later in your career. So a little bit more about kernel
+source and kernel licensing. Do all kernels come from kernel.org? No. A lot of times, SoC vendors are going to
+have their own customized kernels that will be based on not only
+the source from kernel.org. But probably some source code that's
+specific to their part that they haven't actually got merged
+into the mainline kernel. There's kind of a different bar for getting things merged
+in the mainline kernel. And sometimes it's easier to have your
+own branch than try to get everything merged into the main line. However, based on the licensing, and
+we've talked about the different types of licensing in week one based on the fact
+that Linux uses a GPL version two license. It's not legal for an SoC vendor to
+have a close source Linux kernel. So it is a requirement that
+that kernel be open source. So part of the reason for that is to make
+it more likely that others can use it, you can use it in different ways. And that things that are useful could
+ultimately be put in the mainline kernel so that everyone can share it,
+even people using different heartburn. So you legally can't have
+a close source Linux kernel. This is kind of a trick question. What if I don't change the source, do I still need to make
+the source code available? And the answer is yes, legally,
+you do need to do that, if you read the terms of the GPL license. And a lot of this comes from in the days
+that the GPL license was originally created, we didn't really
+have the Internet. So the thought was everybody
+that's using the source, if you force them to also host the source, there's less of the likelihood that that
+source is going to ultimately disappear. So back in those days,
+it was like shipping CDs around. And the more people that had those CDs and
+we're shipping them out, the more likely that it would be that the you wouldn't
+lose access to that source somehow. So it may be less important in
+the days of the Internet, but you still are legally obligated. Even if you're not
+changing the source code, you're required to share
+that with your customers. So what if I make a custom kernel module,
+do I need to share my source code? And the answer to that one
+is deliberately ambiguous. It's, you probably do, but
+it's not specifically spelled out and it's done that way on purpose. Really the main thing to know here
+is that if you really don't need or want to share your source for
+a custom kernel module, then you need some legal
+help to review this. So if,
+which means spending money obviously. So, if it's not important enough
+to spend money on the legal help, that probably means that you
+should just open source, and not have to worry about whether or
+not you're complying with the license. Also, another important trade off is
+if you aren't sharing your source with the community, definitely don't expect
+to get any help from the community. Because that's going to be one of
+the first questions that you'll have to answer is, where is your source code so I can understand what your
+code is actually doing? So going over a few of, if you look at
+the trees on git.kernel.org for instance, just a high level overview of
+the directories that you'll see there. And there's more detail in mastering
+embedded Linux programming about each of these that I wanted to go
+through specific files. So that's where things
+like boot related code, like assembly code that's
+specific to a specific processor. That would all live in that directory. Documentation is pretty obvious,
+that the documentation for the different parts of
+the kernel all lives there. Drivers is where the hardware support
+is going to live and loadable modules. So things that we can load at runtime
+into the kernel are going to live in the drivers tree. And FS is where file system components. So all the different file systems that
+are supported are going to be there. The include is where either user kernel
+space programs when you pound includes something that's in the kernel tree. This is where the header files
+are going to be located. Init is where the system
+initialization code is going to live. Kernel is where all
+the core functions live. So scheduling, locking and timers,
+the things that are common to lots of different drivers and internal kernel
+code that's going to live there. And then this is where
+memory management lives. Net is for all the network protocols,
+and there's scripts and tools that are useful for
+the build process, for instance.

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 5 Part 1 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2>Assignment 5 Part 1: Native Socket Server</h2><h2><strong>GitHub Classroom Start Instructions</strong></h2><p>Execute the following instructions in your aesd-assignments assignments-3-and-later local repository folder:</p><p>1. git fetch assignments-base</p><ul><li><p>This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in assignment 2.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p></li></ul><p>2. git merge assignments-base/assignment5</p><p>3. git submodule update --init --recursive</p><ul><li><p>Also make sure your aesd-assignments repository origin still points to your assignments-3-and-later repository using git remote get-url origin</p></li></ul><p>
+<strong>Suggested Reading:</strong></p><p>1. Video content, daemons and sockets</p><ul><li><p><a href="https://beej.us/guide/bgnet/html/"><u>https://beej.us/guide/bgnet/html/</u></a></p></li></ul><p>2. QEMU Documentation and network options</p><ul><li><p><a href="https://www.qemu.org/docs/master/system/devices/net.html">https://www.qemu.org/docs/master/system/devices/net.html</a></p></li></ul><p>3. Buildroot Documentation:</p><ul><li><p><a href="https://buildroot.org/downloads/manual/manual.html#configure"><u>https://buildroot.org/downloads/manual/manual.html#configure</u></a></p></li></ul><p>4. Mastering Embedded Linux Programming Chapter: Starting Up</p><p>5. Init scripts documentation</p><ul><li><p><a href="http://man7.org/linux/man-pages/man8/start-stop-daemon.8.html"><u>http://man7.org/linux/man-pages/man8/start-stop-daemon.8.html</u></a></p></li></ul><p>Note: The following links are external and will open in a new tab. </p><h2><strong>Repository Setup:</strong></h2><img alt="Screen Shot 2021-08-18 at 9.08.30 PM.png" src="Screen%20Shot%202021-08-18%20at%209.08.30%20PM.png"/><p></p><h2><strong>Implementation:</strong></h2><p>1. Modify your assignments-3-and-later repository to add a new directory “server”.</p><p>2. Create a socket based program with name aesdsocket in the “server” directory which:</p><p>     a. Is compiled by the “all” and “default” target of a Makefile in the “server” directory and supports cross compilation, placing the executable file in the “server” directory and named <strong>aesdsocket</strong>.</p><p>     b. Opens a stream socket bound to port 9000, failing and returning -1 if any of the socket connection steps fail.</p><p>     c. Listens for and accepts a connection</p><p>     d. Logs message to the syslog “Accepted connection from xxx” where XXXX is the IP address of the connected client. </p><p>     e. Receives data over the connection and appends to file /var/tmp/aesdsocketdata, creating this file if it doesn’t exist.</p><ul><li><p>Your implementation should use a newline to separate data packets received.  In other words a packet is considered complete when a newline character is found in the input receive stream, and each newline should result in an append to the /var/tmp/aesdsocketdata file.</p></li><li><p>You may assume the data stream does not include null characters (therefore can be processed using string handling functions).</p></li><li><p>You may assume the length of the packet will be shorter than the available heap size.  In other words, as long as you handle malloc() associated failures with error messages you may discard associated over-length packets.</p></li></ul><p>     f. Returns the full content of /var/tmp/aesdsocketdata to the client as soon as the received data packet completes.</p><ul><li><p>You may assume the total size of all packets sent (and therefore size of /var/tmp/aesdsocketdata) will be less than the size of the root filesystem, however you may <strong>not</strong> assume this total size of all packets sent will be less than the size of the available RAM for the process heap.</p></li></ul><p>     g. Logs message to the syslog “Closed connection from XXX” where XXX is the IP address of the connected client.</p><p>     h. Restarts accepting connections from new clients forever in a loop until SIGINT or SIGTERM is received (see below).</p><p>     i. Gracefully exits when SIGINT or SIGTERM is received, completing any open connection operations, closing any open sockets, and <strong>deleting the file /var/tmp/aesdsocketdata</strong>.</p><ul><li><p>Logs message to the syslog “Caught signal, exiting” when SIGINT or SIGTERM is received.</p></li></ul><p>3. Install the netcat utility on your Ubuntu development system using sudo apt-get install netcat</p><p>4. Verify the sample test script “<a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment5/sockettest.sh"><u>sockettest.sh</u></a>” successfully completes against your native compiled application each time your application is closed and restarted.  You can run this manually outside the ./full-test.sh script by:</p><ul><li><p>Starting your aesdsocket application</p></li><li><p>Executing the sockettest.sh script from the assignment-autotest subdirectory.</p></li><li><p>Stopping your aesdsocket application.</p></li></ul><p>5. Modify your program to support a -d argument which runs the aesdsocket application as a daemon. When in daemon mode the program should fork <strong>after</strong> ensuring it can bind to port 9000.</p><ul><li><p>You can now verify that the ./full-test.sh script from your aesd-assignments repository successfully verifies your socket application running as a daemon.</p></li></ul><p>6. Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a></p><h2><strong>Validation:</strong></h2><p>1. The full-test.sh  script should complete successfully against your assignments-3-and-later repository, validating your socket implementation.</p><p></p>
+  </div>
+</body>
+</html>

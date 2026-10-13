@@ -1,0 +1,963 @@
+1
+00:00:06,140 --> 00:00:10,215
+This video will go over
+part 2 of assignment 7,
+
+2
+00:00:10,215 --> 00:00:11,864
+where we're going to be building
+
+3
+00:00:11,864 --> 00:00:14,054
+and cross compiling
+kernel drivers
+
+4
+00:00:14,054 --> 00:00:18,735
+for our Buildroot or Yocto
+embedded system targets.
+
+5
+00:00:18,735 --> 00:00:21,240
+You'll start by
+creating an empty repo
+
+6
+00:00:21,240 --> 00:00:22,530
+using GitHub classroom,
+
+7
+00:00:22,530 --> 00:00:23,640
+and you're going to set up
+
+8
+00:00:23,640 --> 00:00:26,220
+this repository to include
+the default content
+
+9
+00:00:26,220 --> 00:00:31,515
+from the Linux device
+drivers sample repository.
+
+10
+00:00:31,515 --> 00:00:33,090
+You're going to make a
+really small change to
+
+11
+00:00:33,090 --> 00:00:36,750
+this repository to personalize
+with your GitHub username.
+
+12
+00:00:36,750 --> 00:00:38,780
+Because we're going
+to be building off
+
+13
+00:00:38,780 --> 00:00:41,705
+the same content we used
+for assignments 5 or 6,
+
+14
+00:00:41,705 --> 00:00:43,670
+you're just going to
+use the GitHub actions
+
+15
+00:00:43,670 --> 00:00:44,810
+that you've already set up for
+
+16
+00:00:44,810 --> 00:00:45,860
+either your Buildroot or
+
+17
+00:00:45,860 --> 00:00:48,050
+the Yocto assignment repository
+
+18
+00:00:48,050 --> 00:00:50,430
+depending on which
+one you're building.
+
+19
+00:00:50,690 --> 00:00:54,065
+Your repository setup's
+going to look like this.
+
+20
+00:00:54,065 --> 00:00:58,175
+Your assignment 3 repository,
+
+21
+00:00:58,175 --> 00:01:00,320
+you will have already
+merged in assignment
+
+22
+00:01:00,320 --> 00:01:04,275
+7 branches as part of part
+1 of this assignment.
+
+23
+00:01:04,275 --> 00:01:07,710
+You're going to add a
+faulty oops markdown file
+
+24
+00:01:07,710 --> 00:01:10,190
+that discusses the oops
+
+25
+00:01:10,190 --> 00:01:13,135
+that you get from running
+the faulty kernel module.
+
+26
+00:01:13,135 --> 00:01:15,500
+More about that in a second.
+
+27
+00:01:16,880 --> 00:01:21,065
+You're going to use your
+assignment 5 repository,
+
+28
+00:01:21,065 --> 00:01:23,270
+merging the assignment 7 branch,
+
+29
+00:01:23,270 --> 00:01:25,895
+which is going to pull in
+the unit test content.
+
+30
+00:01:25,895 --> 00:01:28,759
+That's going to reference
+your assignment 7 repository,
+
+31
+00:01:28,759 --> 00:01:30,170
+which again is going to contain
+
+32
+00:01:30,170 --> 00:01:32,110
+Linux device drivers
+source code with
+
+33
+00:01:32,110 --> 00:01:33,875
+that minor modification
+that you have
+
+34
+00:01:33,875 --> 00:01:36,895
+to personalize with
+your GitHub username.
+
+35
+00:01:36,895 --> 00:01:39,270
+In addition to setting up
+
+36
+00:01:39,270 --> 00:01:42,530
+Buildroot to build with
+this type of setup,
+
+37
+00:01:42,530 --> 00:01:45,320
+you can also take your
+assignment 6 repository,
+
+38
+00:01:45,320 --> 00:01:47,690
+merge the assignment 7 branch
+
+39
+00:01:47,690 --> 00:01:49,550
+from Yocto assignments base,
+
+40
+00:01:49,550 --> 00:01:52,450
+reference your same
+assignment 7 repository,
+
+41
+00:01:52,450 --> 00:01:55,575
+which contains that mixed
+device drivers source code
+
+42
+00:01:55,575 --> 00:02:00,130
+and build your QMU image
+for Yocto as well.
+
+43
+00:02:00,350 --> 00:02:03,310
+You'll start that
+assignment 7 repo with
+
+44
+00:02:03,310 --> 00:02:05,565
+the link's device
+drivers repository
+
+45
+00:02:05,565 --> 00:02:07,900
+and then depending on
+
+46
+00:02:07,900 --> 00:02:09,610
+whether you're building
+for Buildroot or Yocto,
+
+47
+00:02:09,610 --> 00:02:12,235
+you'll either use assignment
+5 or assignment 6,
+
+48
+00:02:12,235 --> 00:02:16,150
+the same repository
+you use to submit for
+
+49
+00:02:16,150 --> 00:02:17,665
+either one of those assignments
+
+50
+00:02:17,665 --> 00:02:21,050
+and put the associated
+changes in there.
+
+51
+00:02:21,110 --> 00:02:24,220
+Following the instructions here,
+
+52
+00:02:24,220 --> 00:02:27,490
+we'll set up your assignment
+7 repository again with
+
+53
+00:02:27,490 --> 00:02:30,280
+that Linux device
+drivers source code
+
+54
+00:02:30,280 --> 00:02:32,555
+so that you can make
+the minor modification.
+
+55
+00:02:32,555 --> 00:02:35,230
+Then the modification
+that's covered
+
+56
+00:02:35,230 --> 00:02:39,660
+here in the hello.c module,
+
+57
+00:02:39,660 --> 00:02:43,155
+which just simply
+prints hello world,
+
+58
+00:02:43,155 --> 00:02:45,410
+when it's loaded
+into the kernel,
+
+59
+00:02:45,410 --> 00:02:46,760
+you'll modify that to include
+
+60
+00:02:46,760 --> 00:02:50,130
+your GitHub username
+to personalize it.
+
+61
+00:02:50,390 --> 00:02:54,410
+Next, you're going to
+update the assignment 5
+
+62
+00:02:54,410 --> 00:02:58,340
+repo for your Buildroot
+build to support building,
+
+63
+00:02:58,340 --> 00:03:00,530
+installing the
+miscellaneous modules
+
+64
+00:03:00,530 --> 00:03:02,030
+and scull components.
+
+65
+00:03:02,030 --> 00:03:04,190
+There's some
+sub-directories inside
+
+66
+00:03:04,190 --> 00:03:06,140
+the Linux device
+driver repository
+
+67
+00:03:06,140 --> 00:03:08,270
+that contain either
+the scull driver
+
+68
+00:03:08,270 --> 00:03:10,715
+which talk about in the videos,
+
+69
+00:03:10,715 --> 00:03:12,890
+or miscellaneous modules that
+
+70
+00:03:12,890 --> 00:03:14,660
+include a few different
+modules that we'll
+
+71
+00:03:14,660 --> 00:03:19,510
+use for testing and
+verification purposes.
+
+72
+00:03:20,090 --> 00:03:22,100
+You'll want to look
+at the Buildroot
+
+73
+00:03:22,100 --> 00:03:24,005
+documentation to see
+how to build these.
+
+74
+00:03:24,005 --> 00:03:25,250
+But as a hint,
+
+75
+00:03:25,250 --> 00:03:27,680
+take a look at the
+MODULE_SUBDIRS option
+
+76
+00:03:27,680 --> 00:03:30,560
+because you want to build
+these from sub-directories.
+
+77
+00:03:30,560 --> 00:03:32,270
+The sub-directories
+specifically are
+
+78
+00:03:32,270 --> 00:03:35,610
+the misc modules and the
+scull sub-directories.
+
+79
+00:03:36,260 --> 00:03:38,760
+These instructions for Git
+
+80
+00:03:38,760 --> 00:03:41,390
+walk you through how to
+set up your assignment 5
+
+81
+00:03:41,390 --> 00:03:43,310
+repo such that
+you'll be ready to
+
+82
+00:03:43,310 --> 00:03:46,175
+test it with the
+assignment 7 content.
+
+83
+00:03:46,175 --> 00:03:49,295
+Bringing in the additional
+unit tests for assignment 7
+
+84
+00:03:49,295 --> 00:03:51,150
+into your assignment 5
+
+85
+00:03:51,150 --> 00:03:53,605
+repo and setting it
+up to test that.
+
+86
+00:03:53,605 --> 00:03:57,450
+Next you're going to add
+a new package called
+
+87
+00:03:57,450 --> 00:04:00,830
+LDD to your assignment 5
+base external directory.
+
+88
+00:04:00,830 --> 00:04:03,020
+You're going to make that
+package support building,
+
+89
+00:04:03,020 --> 00:04:05,960
+installing the misc modules
+and scull components.
+
+90
+00:04:05,960 --> 00:04:08,660
+Then make sure to add
+that to your image
+
+91
+00:04:08,660 --> 00:04:12,065
+the same way you added the
+ASD assignments package.
+
+92
+00:04:12,065 --> 00:04:17,060
+Then use a root file system
+overlay to add it in
+
+93
+00:04:17,060 --> 00:04:22,280
+a module script
+named S98lddmodules.
+
+94
+00:04:22,280 --> 00:04:26,645
+This is going to do the
+startup for your modules
+
+95
+00:04:26,645 --> 00:04:28,310
+similarly in the way that we did
+
+96
+00:04:28,310 --> 00:04:31,085
+the startup for your
+ASD socket server.
+
+97
+00:04:31,085 --> 00:04:34,010
+This one's going to
+start the modules
+
+98
+00:04:34,010 --> 00:04:36,020
+that you're compiling
+as a part of
+
+99
+00:04:36,020 --> 00:04:41,180
+the the package definition
+
+100
+00:04:41,180 --> 00:04:44,030
+that you created here in step 3.
+
+101
+00:04:44,480 --> 00:04:47,790
+The init scripts in that
+
+102
+00:04:47,790 --> 00:04:50,290
+you had inside your root
+file system overly are
+
+103
+00:04:50,290 --> 00:04:52,840
+going to perform the
+options on startup
+
+104
+00:04:52,840 --> 00:04:55,750
+to load the scull driver.
+
+105
+00:04:55,750 --> 00:04:58,585
+On shutdown, it's going to
+unload the scull driver.
+
+106
+00:04:58,585 --> 00:05:00,430
+There's some reference
+scripts you can use for
+
+107
+00:05:00,430 --> 00:05:02,425
+this in scull load and unload.
+
+108
+00:05:02,425 --> 00:05:05,200
+You probably need to make
+some customizations to this,
+
+109
+00:05:05,200 --> 00:05:06,340
+but you can get an idea of
+
+110
+00:05:06,340 --> 00:05:07,710
+what these scripts
+are going to do.
+
+111
+00:05:07,710 --> 00:05:11,410
+You might want to compile
+these drivers natively on
+
+112
+00:05:11,410 --> 00:05:13,720
+your Ubuntu host and
+load and unload them
+
+113
+00:05:13,720 --> 00:05:15,050
+there so that you get
+
+114
+00:05:15,050 --> 00:05:17,600
+an idea about what
+these scripts do.
+
+115
+00:05:17,600 --> 00:05:21,120
+Then you're going to also
+perform operations on
+
+116
+00:05:21,120 --> 00:05:23,100
+startup from inside
+this start script
+
+117
+00:05:23,100 --> 00:05:24,690
+to load the faulty driver,
+
+118
+00:05:24,690 --> 00:05:28,095
+and then on shutdown, you're
+going to unload that driver.
+
+119
+00:05:28,095 --> 00:05:29,790
+There's some module load and
+
+120
+00:05:29,790 --> 00:05:31,995
+unload scripts that you can use.
+
+121
+00:05:31,995 --> 00:05:35,430
+Based on what we're discussing
+in the video content,
+
+122
+00:05:35,430 --> 00:05:37,140
+you might either customize those
+
+123
+00:05:37,140 --> 00:05:39,480
+slightly in order
+to achieve this.
+
+124
+00:05:39,480 --> 00:05:43,334
+But you get an example
+
+125
+00:05:43,334 --> 00:05:45,030
+of some useful content
+
+126
+00:05:45,030 --> 00:05:47,490
+here from these load
+and unload scripts.
+
+127
+00:05:47,490 --> 00:05:49,680
+You can use mod probe on
+
+128
+00:05:49,680 --> 00:05:52,755
+the hello module to
+load it on startup.
+
+129
+00:05:52,755 --> 00:05:56,055
+Then you can use RM mod
+to remove on shutdown.
+
+130
+00:05:56,055 --> 00:05:57,270
+Again, the hello modules,
+
+131
+00:05:57,270 --> 00:05:58,530
+the one that you're
+going to customize with
+
+132
+00:05:58,530 --> 00:06:02,080
+that small change to add
+your GitHub username in it.
+
+133
+00:06:02,630 --> 00:06:05,955
+You can then run echo,
+
+134
+00:06:05,955 --> 00:06:09,315
+any command but something
+like hello world,
+
+135
+00:06:09,315 --> 00:06:12,735
+and send that to the
+dev faulty device.
+
+136
+00:06:12,735 --> 00:06:16,050
+You'll use run QEMU
+you to startup and
+
+137
+00:06:16,050 --> 00:06:19,905
+your faulty module is going
+to be loaded on startup.
+
+138
+00:06:19,905 --> 00:06:22,800
+If you run this echo hello
+world to dev faulty,
+
+139
+00:06:22,800 --> 00:06:25,660
+it's going to create
+a kernel loops.
+
+140
+00:06:25,790 --> 00:06:30,755
+What you need to do is turn
+that into a markdown file
+
+141
+00:06:30,755 --> 00:06:32,630
+using some of the hints
+
+142
+00:06:32,630 --> 00:06:36,090
+here in Mastering
+Markdown from GitHub.
+
+143
+00:06:37,960 --> 00:06:41,930
+Use the content in
+the lecture video
+
+144
+00:06:41,930 --> 00:06:48,630
+to discuss how you
+can analyze this,
+
+145
+00:06:48,630 --> 00:06:49,770
+oops, message that comes
+
+146
+00:06:49,770 --> 00:06:52,140
+out as a part of the
+faulty kernel module.
+
+147
+00:06:52,140 --> 00:06:53,970
+The faulty kernel
+module is going to
+
+148
+00:06:53,970 --> 00:06:57,660
+purposely create a kernel fault.
+
+149
+00:06:57,660 --> 00:07:00,060
+You'll use the instructions in
+
+150
+00:07:00,060 --> 00:07:02,880
+the video content to understand
+
+151
+00:07:02,880 --> 00:07:04,710
+how to troubleshoot
+that and how to
+
+152
+00:07:04,710 --> 00:07:07,800
+document the result of that,
+
+153
+00:07:07,800 --> 00:07:11,835
+oops file in your AST
+assignments repository.
+
+154
+00:07:11,835 --> 00:07:13,710
+This will ultimately
+be checked in
+
+155
+00:07:13,710 --> 00:07:16,770
+to your Assignment 3 repo.
+
+156
+00:07:16,770 --> 00:07:19,740
+Then you'll run the full
+test script and that
+
+157
+00:07:19,740 --> 00:07:20,910
+should successfully run against
+
+158
+00:07:20,910 --> 00:07:22,230
+your builder AT implementation.
+
+159
+00:07:22,230 --> 00:07:24,630
+That's just going to verify
+that you were able to
+
+160
+00:07:24,630 --> 00:07:27,330
+get these modules cross compiled
+
+161
+00:07:27,330 --> 00:07:29,460
+and installed and
+running automatically
+
+162
+00:07:29,460 --> 00:07:33,510
+in your QEMU image.
+
+163
+00:07:33,510 --> 00:07:36,390
+Then tag the assignment and
+
+164
+00:07:36,390 --> 00:07:39,600
+that way and push to the repo.
+
+165
+00:07:39,600 --> 00:07:42,540
+That way we'll know which
+assignment corresponds
+
+166
+00:07:42,540 --> 00:07:46,600
+to the completed version
+of Assignment 7.
+
+167
+00:07:47,080 --> 00:07:51,679
+For the Coursera section,
+
+168
+00:07:51,679 --> 00:07:53,345
+you have the option
+of implementing
+
+169
+00:07:53,345 --> 00:07:55,600
+either in Builder or in yocto.
+
+170
+00:07:55,600 --> 00:07:58,125
+If you want to
+implement in yocto,
+
+171
+00:07:58,125 --> 00:08:00,390
+follow these
+instructions instead.
+
+172
+00:08:00,390 --> 00:08:02,730
+If you're implementing in
+the on-campus section,
+
+173
+00:08:02,730 --> 00:08:06,240
+you can implement or you can
+
+174
+00:08:06,240 --> 00:08:08,654
+implement in both
+Builder and yocto
+
+175
+00:08:08,654 --> 00:08:11,640
+for some extra credit with
+the yocto implementation.
+
+176
+00:08:11,640 --> 00:08:14,040
+The instructions
+for actually adding
+
+177
+00:08:14,040 --> 00:08:15,480
+the startup script are
+
+178
+00:08:15,480 --> 00:08:17,310
+going to be slightly
+different from yocto.
+
+179
+00:08:17,310 --> 00:08:19,380
+But the same rules apply in
+
+180
+00:08:19,380 --> 00:08:21,300
+terms of the full test script is
+
+181
+00:08:21,300 --> 00:08:25,110
+just going to build your
+image and run your image,
+
+182
+00:08:25,110 --> 00:08:27,090
+verify that the kernel
+modules are loaded,
+
+183
+00:08:27,090 --> 00:08:28,920
+same as is going to
+do on Build rip.
+
+184
+00:08:28,920 --> 00:08:31,215
+There's a separate section here
+
+185
+00:08:31,215 --> 00:08:33,480
+of instructions you
+can use if you want to
+
+186
+00:08:33,480 --> 00:08:35,760
+get your builds rebuilds working
+
+187
+00:08:35,760 --> 00:08:40,570
+instead of or as well as your
+Build rid implementation.
+
+188
+00:08:41,030 --> 00:08:44,550
+Looking at the
+example run of this,
+
+189
+00:08:44,550 --> 00:08:47,610
+if I run full tests for
+my builder at repo,
+
+190
+00:08:47,610 --> 00:08:52,065
+I should see a build,
+my implementation.
+
+191
+00:08:52,065 --> 00:08:54,510
+Again, this will be fast
+
+192
+00:08:54,510 --> 00:08:57,970
+after you've completed
+at once successfully.
+
+193
+00:09:13,370 --> 00:09:17,650
+Start rebuilding, it
+should start QEMU.
+
+194
+00:09:20,840 --> 00:09:23,160
+After starting QEMU,
+you should see
+
+195
+00:09:23,160 --> 00:09:25,365
+messages like this showing that
+
+196
+00:09:25,365 --> 00:09:30,885
+the drivers all
+started successfully.
+
+197
+00:09:30,885 --> 00:09:32,850
+You've got those installed and
+
+198
+00:09:32,850 --> 00:09:35,955
+your start scripts started
+each one of those drivers.
+
+199
+00:09:35,955 --> 00:09:37,560
+You should see the
+customization and
+
+200
+00:09:37,560 --> 00:09:38,700
+the hello world line that would
+
+201
+00:09:38,700 --> 00:09:41,200
+include your GitHub username.
+
+202
+00:10:06,430 --> 00:10:09,175
+After startup completes,
+
+203
+00:10:09,175 --> 00:10:10,800
+you'll see a validation message,
+
+204
+00:10:10,800 --> 00:10:12,975
+is going to check to make
+sure the drivers are running.
+
+205
+00:10:12,975 --> 00:10:15,480
+Then if everything
+works correctly,
+
+206
+00:10:15,480 --> 00:10:17,370
+you'll see a message
+like this saying that
+
+207
+00:10:17,370 --> 00:10:20,530
+the test completed with success.

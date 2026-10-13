@@ -1,0 +1,232 @@
+In this video, we're
+going to be talking about building kernel modules. We're going to cover a kernel
+module layout and content. The end, how to construct a
+really simple kernel module. We'll talk about kernel module development and
+how that compares with the application and system
+level programming that we've done with the first
+part of this course. One of the first examples
+that you'll see in the book, in the Linux Device
+Drivers book, is the hello world driver. The classic introduction to whatever programming
+language you're using. We'll have a hello world driver that we do as our first step. When you're looking at the
+examples from the book, I wanted to point out
+there's some comments about an FTP site where
+you can find source code. Please instead of using that, use the repository
+that's linked here. This one is kept up to date and will work with the kernel that's used in your
+Ubuntu virtual machines. You can try this out on your
+Ubuntu virtual machine. There's also some content
+in the book about downloading a kernel from
+kernel.org and compiling it. You can certainly do that. But this repository, it should work with the
+kernel that's a part of your Ubuntu Linux
+virtual machine. If you just go into the misc-modules directory
+and run make and then do insmod as root with
+the hello.kao file. You'll see in /var/log/syslog, you'll see a message like this, saying Hello, World. Goodbye, cruel world. The goodbye, will come out
+during the rmmod stuff, but you'll be able to
+see that your driver was loaded and unloaded
+in the kernel. One of the other messages
+you noticed there was the tainted kernel message. It says, loading
+out-of-tree module taints kernel. What
+does this mean? It means that you've changed the content of a
+kernel while it's running, and you've loaded a
+module that wasn't a part of the standard
+kernel build. This is just warning you that if you have problems
+with your system, it's likely that
+it could be from the module that you just loaded that kernel developers
+don't know anything about. It's also a signal that would show up in
+the logs that would tell a kernel developer that maybe
+the reason that your system crashed might not be due
+to the code in the kernel, it might be due to this
+module that you added. The simple hello.c example, you can see how this is used in the file
+that's linked here. It's really just a couple parts that
+we'll talk about here. One is specifying the license of the module and then specifying the two different functions that are associated
+with loading and unloading the module with this module_init and
+module_exit macro. One other thing to
+highlight here is that we're using printk and not printf for the interactions in the prints that
+go to the syslog. The module_init with
+a function name is really just a macro that identifies the function
+that's called whenever the module's loaded from insmod. It's similar to int main, void, that you'd use
+for system programming. But it's different in that
+it's not going to stay running the way that int
+main, void, would. It's going to expect
+you to load something, get your kernel module setup and registered with the
+kernel, and then exit. It's similar to the way an event-driven
+application would work, where you're going
+to set something up and then you will wait
+for events to happen. Those events are going to be
+coming from the kernel based on the initialization that you set up in your module in it. The module_exit macro
+is going to identify the function that's called when module is unloaded from rmmod. That one is similar to the signal handler that
+you'd get from SIGTERM. But the difference is that
+it's actually going to completely exit your module. Another thing to
+note about kernel programming versus system
+programming, if you remember, we talked about how if
+you forget to free memory in application programming
+or system programming, the kernel can track
+that for you and can know that when
+the process exits, all the memory that's associated with the
+process can be freed. But now that we're
+working in kernel space, we don't have those
+protections anymore, and so if you forgot to free some memory
+that your driver had allocated and you don't
+release memory or other resources with your
+module_exit function, then those are just
+going to be lost and that's a permanent memory
+leak until reboot. The stakes become a
+little bit higher as we start working
+in kernel space. Why would we use
+printk and not printf? The answer is we
+don't have libc, so any of those functions
+that you're used to using, and you've probably used for any application
+development you've done in Linux in the past, most of those aren't
+going to be there. For instance, standard dio.h, the common header
+files that you'd use that are based on libc, those are not going to be
+available to us anymore. You're going to have to use the utility functions that are provided by the kernel instead and printk is one of those. The module license
+is just going to clarify that in this case, the module bears a free license, so one that's
+compatible with GPL. The reason for doing this is
+that I talked about before, the licensing considerations
+in whether or not a module can be licensed proprietary. That was left
+deliberately ambiguous. However, there are
+some calls into the kernel where developers
+have specifically said, in order to use this call, your driver definitely needs
+to have a GPL license. For those calls, what they're looking
+for you to do is specifically state in your module source code that your source
+is GPL compliant. Another thing to
+note about module versus application is
+with the application, the kernel will help clean up from something
+like a segfault, take a core file for us, and provide some
+debugging information, but it probably won't bring
+the entire system down. That changes now
+that we're working with kernel modules as well, we don't have that
+clean-up available for us. A lot of times, if you write
+a problem with your driver that turns into a segfault that may crash the
+entire system. Again, the stakes
+are a little bit higher now that we're
+working in kernel space. Another thing to know about developing a module
+versus an application, the kernel stack is really small compared to applications so the default stack
+you're probably working with an application is around
+two megabytes in size. You can throw huge variables in your local variables for
+your function and you probably won't
+notice you can have really deep call
+stacks and you won't notice with that
+large of stack size. However, depending on
+your architecture, the kernel stack size
+may be really small, maybe as small as 4,000
+bytes. What does that mean? It means that all
+active functions, including yours, the one that you're
+writing for your driver, plus anything that called within the kernel plus anything
+you're going to call, all of those functions
+are going to share that probably
+relatively small space. You really need to be
+careful about large allocated automatic
+stack variables, you don't want to define a 1k buffer as a local
+variable because there's a likelihood
+that if you use it in some specific scenario
+or on some architecture, you probably would
+run out of stack. Instead, the normal method for doing memory allocation in Linux driver development for any large variables would
+be to allocate dynamically. Another important
+thing to note is that floating-point is
+generally not supported. There are some exceptions
+but for the most part, you won't be using float or
+double or any of those types. This drawing from a book shows a little bit about how
+a module is actually linked into the kernel and
+the interaction that happens between the kernel and a module. When we do the insmod, the module entry macro has set up that init
+function for us, set up a pointer to
+the init function so that insmod interaction with a kernel can tell the kernel how to instantiate your module. So in this case, we're looking at a
+driver that would have call to a
+function that would do some setup for how future interaction with
+the kernel is going to work. You can see, there's a call to a block init_queue and there's a add_disk function that's being called from
+our init module. What these are doing
+is setting up data that's likely dynamically
+allocated by the driver, and then providing
+that data into kernel structures
+that will know how to later invoke your driver
+when some action occurs. Using this as an example
+for a block device driver, this would be when an
+interaction is happening from the kernel block
+layer and you need to actually read or write
+blocks from your device. In the block driver case, there's a block_device ops, that's really just a
+collection of pointers that points to information about how to interact
+with your module. When a request happens, there's an interaction
+that happens in the kernel that
+knows how to find the function pointers and the data that
+describes your module, and then be able to make
+these calls back into your module to handle
+specific events. Once we do the insmod and
+we set all of this up, we're basically event-driven
+from the kernel. Whenever some event happens that needs to interact
+with our driver, we'll be called with
+those functions that we registered during
+our insmod step. When it's time to
+unload the module, when there's no more
+work that we need to do. The cleanup function
+is going to have the link to the module exit. What we need to make
+sure of is that we undo everything that we
+did in the init function. We remove all those
+pointers that we set up, so that the kernel
+doesn't try to call our driver
+when it's unloaded. We do that in the opposite order of the way that we registered. If we started by
+blk_init_queue and add_disk, we would delete the disk and clean up the queue in
+the rmmod function. If you remember, we talked
+during application programming about the different ways
+you get into kernel space. The one that we focused on for the first part of the course
+is through system call. There's a system call handler
+and maybe that's going to be interacting with your
+device driver in some way, this would be, for instance, an operation with
+your device driver. Then the second way this could happen is an
+interrupt that occurs from inside kernel space. Then user space can
+come back and pull for some interaction later
+with your driver. In terms of user
+versus kernel space, we've already this briefly in the first part of the course, but modern processes are
+going to support enforcing protection against unauthorized
+access to resources. What does that mean?
+It means that you have a special privilege level
+that's associated with running kernel code
+versus running user mode. They do this via
+hardware support for different operating
+modalities or levels. Some operating levels aren't able to access certain
+regions of memory, for instance, and others are. You wanna make sure
+that when you're running user space code, you're in the mode
+that's not able to access the all areas of memory. When you're running
+in kernel mode, you probably need access
+to at least more memory, if not all areas of memory. This will be a separate
+address space that you can partition both program and data memory into in terms
+of who has access to what. The applications that
+we've talked about in the first part of
+the semester are going to use user space, that is the execution
+here, there, it's going to happen at the lowest privilege
+operating level. You're going to be
+limited on what hardware you can access and
+you're going to be limited in how you're
+able to access memory. Then drivers will
+use kernel space, and that's going to be the highest privileged
+operating level or supervisor mode
+often as referred to. In this case, you'll enter with the system caller hardware interrupt like we
+talked about before, and you'll remove those
+restrictions that you have on access to memory,
+for instance. When you're writing the code
+for your kernel driver, in comparison to what
+you'd be doing in user space over
+system programming. You need to keep in mind that the kernel is
+going to be running multiple processes and
+there might be a bunch of different things that
+are trying to use your driver at once. The interrupts that
+we mentioned before will all happen asynchronously, could happen anytime
+with respect to the code that you're
+driver's executing. Simultaneous multiprocessor
+systems are supported, so it's very possible
+that the same code in your module could be running at the same time on two
+different processors. You need to be cognizant
+of that when you're writing your driver code.
+What does that mean? It means that all kernel code, including the driver code
+that you're writing, needs to be reentrant, that you need to have data structures that can keep threads of
+execution separate. What does that mean? It means the same locking that
+we've talked about, or similar types of
+locking that we've talked about from the
+first part of the course. We're going to need to be
+careful about using that for pretty much everything we do with device driver development. It's important to
+note that reentrancy and the need to write
+reentrant code, you always have to
+think about that. It's not a case where
+you can say, well, I'm just going to execute this code from start to finish, I'm not gonna do any sleeps, so therefore I won't
+be interrupted. That's never a good assumption and that's not something
+that you can use. You always need to think about
+reentrancy and concurrency when you're doing kernel
+development in general.

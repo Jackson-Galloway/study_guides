@@ -1,0 +1,397 @@
+1
+00:00:00,940 --> 00:00:03,961
+This video is an overview and
+demo of assignment number two.
+
+2
+00:00:07,940 --> 00:00:11,511
+So looking at the content for assignment
+number two you'll start again with
+
+3
+00:00:11,511 --> 00:00:15,540
+a ghetto classroom link that's going
+to create an empty repository for you.
+
+4
+00:00:15,540 --> 00:00:20,473
+And then you're going to use Github
+get instructions here to set up
+
+5
+00:00:20,473 --> 00:00:22,960
+the content of this repository.
+
+6
+00:00:22,960 --> 00:00:27,100
+To start with the content of your previous
+submission for assignment number one.
+
+7
+00:00:27,100 --> 00:00:31,595
+So this will step you through all
+the process to get that updated on your,
+
+8
+00:00:31,595 --> 00:00:36,340
+to begin your assignment with
+your content from assignment one.
+
+9
+00:00:36,340 --> 00:00:40,270
+It's also going to bring in some content
+from our assignments based repository.
+
+10
+00:00:40,270 --> 00:00:43,036
+That's going to help set
+up unit testing for you and
+
+11
+00:00:43,036 --> 00:00:45,361
+help you with some stub implementations.
+
+12
+00:00:47,840 --> 00:00:52,762
+So what you should have as a part of this
+repository setup you should have your ASD
+
+13
+00:00:52,762 --> 00:00:56,509
+assignments repository that's
+going to have our source and
+
+14
+00:00:56,509 --> 00:01:00,639
+starter code will merge that
+content into your local repository.
+
+15
+00:01:00,639 --> 00:01:05,629
+And then you push that up into your get up
+classroom assignment to repository which
+
+16
+00:01:05,629 --> 00:01:07,961
+is where you'll do your submission.
+
+17
+00:01:09,540 --> 00:01:13,704
+So you can start by setting up Github
+actions for your repository and
+
+18
+00:01:13,704 --> 00:01:17,501
+use the same link and
+the instructions that we talked about for
+
+19
+00:01:17,501 --> 00:01:19,561
+assignment number one for this.
+
+20
+00:01:21,740 --> 00:01:26,293
+Then for the implementation you what
+you're going to do here is set up that arm
+
+21
+00:01:26,293 --> 00:01:31,058
+cross compiled toolchain that we just
+discussed with the embedded tool chains,
+
+22
+00:01:31,058 --> 00:01:31,918
+discussion.
+
+23
+00:01:31,918 --> 00:01:36,297
+And follow the instructions here will
+be slightly different depending on
+
+24
+00:01:36,297 --> 00:01:40,462
+the version of Arm compiler that
+we're using at the time you run this,
+
+25
+00:01:40,462 --> 00:01:44,981
+but it's basically going to be about
+again downloading the content from arm
+
+26
+00:01:44,981 --> 00:01:49,161
+installing it on your host system and
+setting up that cross compiler.
+
+27
+00:01:50,340 --> 00:01:52,840
+And just to show that you've
+got this set up correctly.
+
+28
+00:01:52,840 --> 00:01:57,385
+Run the r64 gcc command and
+use the dash print system that
+
+29
+00:01:57,385 --> 00:02:01,930
+option to show that that you've
+got the tool installed and
+
+30
+00:02:01,930 --> 00:02:07,051
+that your your sister it is located
+on your host root file system.
+
+31
+00:02:08,539 --> 00:02:12,398
+So then what we're going to do is
+take the writer application that we
+
+32
+00:02:12,398 --> 00:02:17,321
+implemented with assignment number one and
+replace it with a C based application.
+
+33
+00:02:17,321 --> 00:02:19,440
+That just does the same thing.
+
+34
+00:02:19,440 --> 00:02:23,682
+One difference though is that we're
+going to have cis log logging.
+
+35
+00:02:23,682 --> 00:02:28,631
+Set up for your application and you're
+going to log using the log user facility.
+
+36
+00:02:28,631 --> 00:02:33,484
+So using the instructions about setting
+up sys log will configure that to be
+
+37
+00:02:33,484 --> 00:02:36,422
+used in our simple writer
+dot c application.
+
+38
+00:02:36,422 --> 00:02:41,415
+So that you'll use that sys log capability
+to write a logging message saying
+
+39
+00:02:41,415 --> 00:02:46,640
+that it wrote a string to the file and
+write that with log debug level.
+
+40
+00:02:46,640 --> 00:02:48,684
+And if there are any errors that happen,
+
+41
+00:02:48,684 --> 00:02:50,861
+use log air to log those
+two sys log as well.
+
+42
+00:02:52,640 --> 00:02:56,697
+So you'll need a make file that includes
+the default target that builds writer
+
+43
+00:02:56,697 --> 00:02:58,840
+application, a clean target.
+
+44
+00:02:58,840 --> 00:03:01,720
+And then you're going to add support for
+cross compilation.
+
+45
+00:03:01,720 --> 00:03:05,440
+So you'll use the make
+variable cross compile.
+
+46
+00:03:05,440 --> 00:03:06,695
+And when that specified,
+
+47
+00:03:06,695 --> 00:03:10,301
+you're just going to prefix that
+directly before your gcc applications.
+
+48
+00:03:10,301 --> 00:03:15,340
+So we'll be able to use that define it
+to air at r64 non Lenox avenue dash.
+
+49
+00:03:15,340 --> 00:03:18,251
+And that will be prefixed
+onto the gcc command.
+
+50
+00:03:18,251 --> 00:03:21,290
+So if you define cross compile,
+you'll be cross compiling.
+
+51
+00:03:21,290 --> 00:03:25,013
+If you don't define cross compile,
+you'll just be native compiling and
+
+52
+00:03:25,013 --> 00:03:25,861
+using just gcc.
+
+53
+00:03:28,640 --> 00:03:32,483
+So then you'll you'll make
+the modifications to the finder,
+
+54
+00:03:32,483 --> 00:03:35,962
+test script that cleans any
+previous build artifacts and
+
+55
+00:03:35,962 --> 00:03:40,167
+then compiles your writer application
+using native compilation and
+
+56
+00:03:40,167 --> 00:03:45,440
+uses that writer utility instead
+of the writer.shh, shell script.
+
+57
+00:03:45,440 --> 00:03:48,673
+And you'll verify then that your finder
+test script works with your writer
+
+58
+00:03:48,673 --> 00:03:50,331
+application instead of your writer.
+
+59
+00:03:50,331 --> 00:03:52,140
+Shh shell script.
+
+60
+00:03:52,140 --> 00:03:54,318
+And using that full test shell script,
+
+61
+00:03:54,318 --> 00:03:57,948
+you should be able to prove that all
+of your scripts run and pass and
+
+62
+00:03:57,948 --> 00:04:01,880
+this will verify that your
+implementation meets the requirements.
+
+63
+00:04:01,880 --> 00:04:06,769
+Then one more step you'll do is you'll
+run the file utility that I showed
+
+64
+00:04:06,769 --> 00:04:09,000
+in the previous videos.
+
+65
+00:04:09,000 --> 00:04:13,251
+That's going to show you that you're using
+a r64 execute herbal when you build with
+
+66
+00:04:13,251 --> 00:04:14,570
+your cross compile tool.
+
+67
+00:04:14,570 --> 00:04:19,238
+So use the output of that file utility to
+write a file result dot text file in your
+
+68
+00:04:19,238 --> 00:04:22,861
+repo to to show that you've got
+that set up properly as well.
+
+69
+00:04:25,240 --> 00:04:29,841
+All right, so looking at a demo of of
+the assignment to if I run the full test
+
+70
+00:04:29,841 --> 00:04:33,034
+script, you can see it's
+running the unit tests,
+
+71
+00:04:33,034 --> 00:04:35,871
+there's nothing that
+we added in this case.
+
+72
+00:04:35,871 --> 00:04:38,040
+So there's no changes there.
+
+73
+00:04:38,040 --> 00:04:43,206
+Well, you'll see though when it goes
+through the finder app step is that
+
+74
+00:04:43,206 --> 00:04:48,390
+it's going to run your native build
+instead of the cross compile build.
+
+75
+00:04:48,390 --> 00:04:53,339
+And so it's going to use your writer
+application instead of your writer
+
+76
+00:04:53,339 --> 00:04:54,380
+dot shh file.
+
+77
+00:04:54,380 --> 00:04:57,101
+And you'll see that native
+compile step happening here.
+
+78
+00:04:57,101 --> 00:05:00,771
+So the unit test is going to compile and
+run natively.
+
+79
+00:05:00,771 --> 00:05:02,961
+It's not going to run with
+the cross compile defined.
+
+80
+00:05:02,961 --> 00:05:07,450
+So we won't really be testing the cross
+compile implementation quite yet.
+
+81
+00:05:07,450 --> 00:05:12,404
+We'll be testing that with assignment
+number three, you'll just use the output
+
+82
+00:05:12,404 --> 00:05:16,600
+text files to show that you've got
+your cross compile set up proper.
+
+83
+00:05:16,600 --> 00:05:20,251
+And that will make sure that assignment
+three is going to be successful.

@@ -1,0 +1,170 @@
+In this lecture, we're
+going to get into little more detail about
+sleeping in the kernel. We're going to understand rules for sleeping in the kernel, and some kernel sleep
+wake-up examples from Linux device
+driver source code. To get into the reason why we think about sleeping
+to begin with, a lot of times from a
+driver perspective, we're talking about blocking IO. What happens when there's
+a request from user space for something that the
+driver can't provide yet, and you're configured
+for blocking IO? Well, the default case would
+be the blocker process and sleep inside the kernel until
+that request can proceed. What does that mean when the process is going
+to be sleeping? It means that the scheduler is going to remove it
+from the run queue, and something else is
+going to run in its place. Then you're going to be
+waiting for some event to change state before the
+process runs again. There's a few rules that we've already discussed a little bit from the perspective of locking, but it's good to probably
+review those here again now when we're
+talking about sleeping. Never sleep when we're
+holding a spinlock, a seqlock, or RCU lock, which were the different
+locks that all use the essentially
+spinning or CPU spins tight loops to obtain processor, or to obtain specific resources. Why not do that? Because
+they're consuming the processor while
+they're waiting for those events to happen. If you have multiple processes
+that are waiting for some event to happen and
+they're using up all the CPU, it could be a recipe for
+deadlocking the process. Also never sleep if you've
+disabled interrupts, and that's probably
+pretty obvious. You wouldn't want
+interrupt latency to take the kind of hit that you'd
+have if you tried to do sleeps during interrupts. There's lots of code associated
+with sleep that assumes that you're never
+going to be calling it from interrupt context. We also want to avoid sleep or keep the sleep duration short when holding a
+semaphore or mutex. Remember when we talked about sleeping in the
+context of locking, but sometimes you just
+need to do operations, like malloc is one example, lot of times you just have to
+do that when you're locked. If that's the case, you just definitely need to be using
+a semaphore or mutex there, and you want to think
+about how to keep those durations as
+short as possible. Lot of times I'll see students that just know that
+they need to lock, and so they'll
+just put a lock at the beginning and unlock at
+the end of the function. You really want to be a
+little bit more careful about knowing when you need
+to lock and for what reason. It gets back to what
+we've talked about before about locking data
+and not locking code. Don't just lock a function
+from start to end, know what data you're trying to synchronize and lock just
+around access to that data. You want to consider
+whether you could introduce a deadlock with any sleep
+that you're adding. Really, the difference, as we talked about when
+we discussed locking, the reason that it's okay to
+sleep when you're holding a semaphore is because
+other threads, when they're blocked on a semaphore, aren't
+actually sleeping. How do you know
+that it's safe to sleep when you're holding
+a semaphore or mutex? It's really that you
+need to know that any code that's
+attempting to obtain the semaphore won't
+prevent whatever your wake-up condition is for waking your process back up. You might say, well, I'll
+review the code now, and I know that now the way my driver is used,
+this won't happen. But how do I know that this might not happen
+sometime in the future? The answer is really you don't. You can document
+your assumptions, but this is part of why
+the book recommends that avoiding sleep while holding a semaphore is
+really the best option here, so that you don't
+have to worry about that possible future scenario. The other thing that
+the book mentions is about state as
+associated with sleep. You need to assume that the state might be completely different when you
+come out of sleep, wake up, than it was
+when you entered sleep. For instance, if you check the state of a lock
+and then you go into sleep and you come
+back out of sleep, should you assume that
+that lock is still free? No, you shouldn't because
+anything could have happened during the time
+that you were sleeping, and so you have to often write loops that check some state, and maybe if some
+state isn't satisfied, but are only
+partially satisfied, and you need to go to sleep, make sure when you
+come back out, you re-evaluate all state that you care about
+before you proceed. It might sound obvious, but before you go to sleep, you have to make sure
+that some process interrupt or kernel event is
+going to wake you back up, based on your sleep condition. A simple sleep example
+is to use wait queues, and these are
+discussed in the book and shown in a couple
+of different examples. One of the things you'll
+notice here is that there's interruptible versions, there's interruptible
+timeout versions and these, you could probably guess
+what we're doing here based on our previous
+discussion with locking, where wait events are going to be interruptible by
+a signal, for instance, Control C. Typically
+you'll probably want to use those in your
+driver assuming that you can handle signals
+from user space like SGID. The first parameter
+here is the wait queue. The wait queue is
+initialized just like this with initialization of
+the wait queue head and just the wait
+queue structure. Then the second is
+a condition which is an arbitrary Boolean. In this case not
+a Boolean value, it looks like it's a parameter that we're passing
+to a function, but it's actually an arbitrary Boolean operation that's going to determine whether
+it's okay to wake up, and the interruptible
+versions are just going to exit on signals. A little bit more about
+what I mean about condition as opposed
+to a Boolean variable. If I look at this
+code in sleepy read, it looks like I want to wait
+until flag is not equals 0. If I think about what this
+would do in a function call, I would evaluate the flag naught equals 0 and pass a
+Boolean into the function, and I'd check that onetime
+inside the function, but I'd have no idea if flag is going to change
+outside the function. You might look at this and
+it looks a little strange at first of like how would you wait on this condition that
+you're passing in? The answer is, it's because there's actually some macro
+magic going on here that is going to be using this not as a Boolean value that
+gets evaluated, but that gets passed
+into a macro where it's re-evaluated over and over as
+a part of the sleep status. The way you can see this
+and other macro magic is really by digging into the source code for
+the Linux kernel. You can learn a lot about how
+macros are used and there's some really innovative
+and creative ways for using macros in
+Linux source code, so kind of walking
+through this one with wait event interruptible. You can see the
+second parameter here is a condition in this define macro and that condition
+just gets passed in through a couple
+of different layers to different macros. Ultimately, there's
+some logic here in the wait event macro that
+just says if condition break. This is essentially expanding
+into a block of code that's replacing this if check with whatever logic
+that I put here. Every time we're awakened
+by the scheduler, this macro is going to recheck
+whatever our condition was and just go directly back
+to sleep if it's not met. The process of waking up, if you are sleeping, if you're waiting on a
+specific wait queue, there's wake_up and wake_up interruptible
+versions that you can use to actually wake
+your process back up. This is what I mentioned before that if you're waiting
+on a wait queue, you need to make
+sure that something is going to wake you back up. You also need to
+make sure that it's a different process or
+a different interrupt. Because if you're
+sleeping in one process and you're expecting that
+process to wake you back up, that's not going to work because
+the process is not going to be running as you're
+currently sleeping. You have to make sure
+that a different process or an interrupt
+perhaps is going to call wake_up with
+your wait queue in order to wake your
+process back up. There's two different
+versions of this. One is the version wake_up here that's going to call all processes that are
+waiting on the queue, and the second would only call interruptible processes
+on the wait queue, so the ones that are using the wait interruptible version. You can call these
+when you know anybody that's waiting on your
+queue needs to wake up. Thinking about the example
+that we talked about with blocking IO and there's a scull_pipe example that
+shows this in practice. When would you want to use
+the wake_up functions? When would you want to
+signal that the driver should wake up from sleep if it was blocked
+on read or write? You'd want to wake_up
+a reader queue so someone that was blocked on a read if new data was available
+because a write came in. Part of your write function
+in your kernel should be to call wake_up on
+the wait queue for read, that way any readers
+that were stalled on that wait queue would
+get woken up automatically. Similarly, if you are handling a case where
+the write queue is full, you're out of buffer
+in the write queue, and the write queue is blocked, then you'd want to
+call wake_up on the writer queue head when new space was available
+because a read happened. If you handle a read and you pull some data
+out of the buffer and you free more
+data for new writes, you can call wake_up on that writer queue and any writer that stalled is going to be able to continue and write
+into the buffer.

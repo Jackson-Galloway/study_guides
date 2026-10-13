@@ -1,0 +1,1047 @@
+1
+00:00:01,650 --> 00:00:04,661
+In this video, we'll talk about
+critical sections and kernel code.
+
+2
+00:00:05,740 --> 00:00:10,104
+We're going to understand what a critical
+section is, we're going to understand some
+
+3
+00:00:10,104 --> 00:00:13,170
+options for handling critical
+sections in Linux kernel.
+
+4
+00:00:13,170 --> 00:00:16,829
+And we're going to introduce
+Linux kernel Semaphores.
+
+5
+00:00:16,829 --> 00:00:20,774
+So the concept of a critical
+section really goes along
+
+6
+00:00:20,774 --> 00:00:22,884
+with the concept of atomic.
+
+7
+00:00:22,884 --> 00:00:26,232
+And we talked about this already
+a little bit from user space, so
+
+8
+00:00:26,232 --> 00:00:27,490
+this is a bit of review.
+
+9
+00:00:27,490 --> 00:00:31,235
+What we're going to talk about atomic
+operations in semaphores now from
+
+10
+00:00:31,235 --> 00:00:34,140
+the perspective of Kernel development.
+
+11
+00:00:34,140 --> 00:00:38,502
+So the goal of a critical section is to
+make an operation atomic that might not be
+
+12
+00:00:38,502 --> 00:00:39,050
+atomic.
+
+13
+00:00:39,050 --> 00:00:45,351
+And you might remember from our discussion
+of user space code, by atomic what we mean
+
+14
+00:00:45,351 --> 00:00:51,122
+is that as far as different threads of
+operation of execution are concerned,
+
+15
+00:00:51,122 --> 00:00:56,440
+the operation happens all at once
+as if it was one instruction.
+
+16
+00:00:56,440 --> 00:01:03,410
+So if you think of just some common
+operations that could happen on variables,
+
+17
+00:01:03,410 --> 00:01:07,541
+the the a|=b would
+typically not be atomic.
+
+18
+00:01:07,541 --> 00:01:12,084
+If you think about what would happen
+from a hardware level in hardware
+
+19
+00:01:12,084 --> 00:01:16,861
+register level an or equals would load
+the current value into register or
+
+20
+00:01:16,861 --> 00:01:21,261
+with a different value and
+then store that back into the register.
+
+21
+00:01:21,261 --> 00:01:24,628
+So between the load, the or
+and the store instruction,
+
+22
+00:01:24,628 --> 00:01:27,440
+the underlying variable
+could have changed.
+
+23
+00:01:27,440 --> 00:01:30,763
+And if it did change then
+you have the possibility of
+
+24
+00:01:30,763 --> 00:01:35,711
+overwriting that changed value with
+the value that you took from the the load
+
+25
+00:01:35,711 --> 00:01:37,900
+operation that happened first.
+
+26
+00:01:37,900 --> 00:01:39,684
+Same thing with a++,
+
+27
+00:01:39,684 --> 00:01:45,770
+where that was kind of easy to see that it
+ends up being a load and store operation.
+
+28
+00:01:45,770 --> 00:01:53,600
+This one a=b might be harder to think
+about why would a=b not be atomic?
+
+29
+00:01:53,600 --> 00:01:58,366
+But you could think in terms of
+architecture sizes for instance, so
+
+30
+00:01:58,366 --> 00:02:03,725
+if you're using a 32 bit architecture
+which only has 32 bit registers.
+
+31
+00:02:03,725 --> 00:02:07,567
+And you're writing a 64 bit value, then
+you're probably going to be writing that
+
+32
+00:02:07,567 --> 00:02:10,420
+in multiple instructions
+depending on your architecture.
+
+33
+00:02:10,420 --> 00:02:15,388
+And so even just assigning one value
+into a register could be a not
+
+34
+00:02:15,388 --> 00:02:16,952
+atomic operation.
+
+35
+00:02:16,952 --> 00:02:21,496
+You could have a case where you
+overwrote one part of the variable and
+
+36
+00:02:21,496 --> 00:02:24,686
+then when you are overwriting
+the second part,
+
+37
+00:02:24,686 --> 00:02:29,020
+the first part got overwritten
+by a second threat of execution.
+
+38
+00:02:29,020 --> 00:02:35,077
+So the answer here is that all these
+depending on architecture may or
+
+39
+00:02:35,077 --> 00:02:36,690
+may not be atomic.
+
+40
+00:02:36,690 --> 00:02:41,285
+And if we care about access happening in
+multiple threads, if we need to make sure
+
+41
+00:02:41,285 --> 00:02:45,490
+that we have a consistent view of
+these resources that we're modifying.
+
+42
+00:02:45,490 --> 00:02:50,259
+Then it's up to us to make sure that their
+atomic through programming mechanisms that
+
+43
+00:02:50,259 --> 00:02:52,440
+we'll talk about here.
+
+44
+00:02:52,440 --> 00:02:56,058
+So when we're talking about how
+to protect a critical section,
+
+45
+00:02:56,058 --> 00:03:00,547
+first of all, the critical section means
+that we're talking about code that we
+
+46
+00:03:00,547 --> 00:03:04,260
+want to make sure that it's only
+executing in one thread at a time.
+
+47
+00:03:04,260 --> 00:03:08,462
+And if we want to know how to protect that
+we, what we really need to know is what's
+
+48
+00:03:08,462 --> 00:03:11,880
+the detail of what could happen
+during the critical section?.
+
+49
+00:03:11,880 --> 00:03:15,584
+So that will help us pick between
+some of the different primitives that
+
+50
+00:03:15,584 --> 00:03:17,740
+are available to us in the Linux Kernel.
+
+51
+00:03:17,740 --> 00:03:22,412
+So if there's some reason that we
+are going to sleep or might sleep during
+
+52
+00:03:22,412 --> 00:03:28,021
+a critical section, then we'd be looking
+at something like semaphore as in mutexes.
+
+53
+00:03:28,021 --> 00:03:34,777
+Because those will work be compatible
+with and operate with sleep.
+
+54
+00:03:34,777 --> 00:03:38,908
+And then an option when
+you are able to sleep or
+
+55
+00:03:38,908 --> 00:03:43,694
+when it's not safe to sleep
+when you're waiting for
+
+56
+00:03:43,694 --> 00:03:48,834
+mutex or when you're waiting for
+access to a variable.
+
+57
+00:03:48,834 --> 00:03:51,210
+You could use spin locks in that case and
+
+58
+00:03:51,210 --> 00:03:55,760
+we'll talk about these as a different
+locking mechanism in later videos.
+
+59
+00:03:55,760 --> 00:04:00,418
+So you need to think about is
+it safe to sleep before when I'm
+
+60
+00:04:00,418 --> 00:04:04,061
+attempting to access
+this critical section?
+
+61
+00:04:04,061 --> 00:04:07,770
+And there are several different reasons
+that it would not be safe to sleep.
+
+62
+00:04:07,770 --> 00:04:11,309
+One is that your code might be
+called from interrupt handlers so
+
+63
+00:04:11,309 --> 00:04:13,657
+you need to know if
+that could be the case.
+
+64
+00:04:13,657 --> 00:04:18,395
+You might have latency requirements
+in terms of what expectations
+
+65
+00:04:18,395 --> 00:04:22,886
+colors might have in terms of how
+long your function could run.
+
+66
+00:04:22,886 --> 00:04:24,550
+Or you could be holding or
+
+67
+00:04:24,550 --> 00:04:29,467
+accessing other critical resources in
+which case it wouldn't be safe for
+
+68
+00:04:29,467 --> 00:04:34,940
+you to sleep and block access from
+other call from handling that resource.
+
+69
+00:04:34,940 --> 00:04:39,602
+So it's important to think about
+will my critical function sleep or
+
+70
+00:04:39,602 --> 00:04:43,461
+would it possibly cause call
+a function that may sleep.
+
+71
+00:04:45,940 --> 00:04:49,144
+So going back to the example
+that we showed in the previous
+
+72
+00:04:49,144 --> 00:04:52,910
+video where we talked about a race
+condition here during Kmalloc.
+
+73
+00:04:52,910 --> 00:04:54,338
+And we ask the question,
+
+74
+00:04:54,338 --> 00:04:57,890
+are we already performing
+an operation which could sleep?.
+
+75
+00:04:57,890 --> 00:05:01,140
+And maybe you look at this code and you
+say well I don't see any calls to sleep
+
+76
+00:05:01,140 --> 00:05:03,740
+here or anything that looks
+like it's asleep function?.
+
+77
+00:05:03,740 --> 00:05:08,338
+But it turns out that if we look at
+the details of the Kmalloc call you,
+
+78
+00:05:08,338 --> 00:05:13,253
+what you'll find is that if you use
+the GFP curdle option, which is kind of
+
+79
+00:05:13,253 --> 00:05:18,610
+the default that we talked about using
+before that Kmalloc actually can sleep.
+
+80
+00:05:18,610 --> 00:05:22,211
+So you need to be careful for
+any time that you're accessing or
+
+81
+00:05:22,211 --> 00:05:25,950
+using Kmalloc in a critical section,
+you need to know that it's
+
+82
+00:05:25,950 --> 00:05:29,711
+possible that you might sleep
+while you're holding that lock.
+
+83
+00:05:29,711 --> 00:05:34,976
+And therefore using spin locks as a
+locking mechanism is not a good choice for
+
+84
+00:05:34,976 --> 00:05:39,351
+a critical section that includes
+a Kmalloc which might sleep.
+
+85
+00:05:41,440 --> 00:05:45,361
+So a semaphore would be the correct
+implementation when you need mutual
+
+86
+00:05:45,361 --> 00:05:50,340
+exclusion access and the process may
+sleep while the semaphore is held.
+
+87
+00:05:50,340 --> 00:05:55,065
+So it's ok for the code to sleep
+in the critical section and
+
+88
+00:05:55,065 --> 00:05:59,694
+the critical section might
+call functions that sleep and
+
+89
+00:05:59,694 --> 00:06:03,761
+that's okay as long if you
+are using a semaphore.
+
+90
+00:06:05,440 --> 00:06:10,404
+So the semaphore implementation
+generically speaking is
+
+91
+00:06:10,404 --> 00:06:14,860
+really just an integer value
+plus the functions P and
+
+92
+00:06:14,860 --> 00:06:19,540
+V as I will walk over the way
+that the book describes it.
+
+93
+00:06:19,540 --> 00:06:24,768
+So P is used when you call the P
+function on the integer and the integer
+
+94
+00:06:24,768 --> 00:06:31,034
+value is greater than zero, the value is
+documented and the process continues.
+
+95
+00:06:31,034 --> 00:06:34,506
+When you call P and
+the value is less than or equal to 0,
+
+96
+00:06:34,506 --> 00:06:38,811
+the process is going to block until
+the value is greater than zero, and
+
+97
+00:06:38,811 --> 00:06:41,860
+when you call V you always
+increment the value.
+
+98
+00:06:41,860 --> 00:06:46,587
+So a semaphore lets us control
+how many processes are accessing
+
+99
+00:06:46,587 --> 00:06:50,612
+a given resource based on
+this logic about calling P.
+
+100
+00:06:50,612 --> 00:06:55,666
+And blocking a process until the value
+is greater than zero or in other words,
+
+101
+00:06:55,666 --> 00:06:59,651
+until enough process is called
+the V to increment the value.
+
+102
+00:07:01,540 --> 00:07:05,878
+So talking about semaphores as mutex where
+we just want to protect the resource and
+
+103
+00:07:05,878 --> 00:07:08,990
+we want to give exactly one
+thread access to the resource.
+
+104
+00:07:08,990 --> 00:07:12,301
+In that case we would initialize
+the semaphore value to 1, and
+
+105
+00:07:12,301 --> 00:07:16,237
+that would ensure that we get exactly
+one caller that owns the semaphore and
+
+106
+00:07:16,237 --> 00:07:18,010
+the associated mutex resource.
+
+107
+00:07:18,010 --> 00:07:24,110
+So then we can consider the P operation as
+a lock and the V operation as an unlock.
+
+108
+00:07:24,110 --> 00:07:27,899
+And this is the way that you can
+use a generic semaphore that
+
+109
+00:07:27,899 --> 00:07:32,772
+could let multiple processes access
+a resource as what's called a mutex or
+
+110
+00:07:32,772 --> 00:07:36,090
+mutual exclusion allowing
+exactly one process.
+
+111
+00:07:36,090 --> 00:07:40,597
+And so this is the mechanism described
+in the book however, the Kernel now
+
+112
+00:07:40,597 --> 00:07:45,398
+has dedicated mutex operations which
+we'll talk about in the next video and so
+
+113
+00:07:45,398 --> 00:07:48,990
+you don't necessarily need to use this for
+mutex access.
+
+114
+00:07:48,990 --> 00:07:53,467
+But it's still good to talk about
+semaphores as a generic construct
+
+115
+00:07:53,467 --> 00:07:56,852
+because that's really
+the way mu taxes are built.
+
+116
+00:07:56,852 --> 00:08:02,161
+Mutex is essentially just a special case
+of a semaphore where the count is one.
+
+117
+00:08:03,540 --> 00:08:06,916
+So in terms of how we
+initialize semaphore in mutex,
+
+118
+00:08:06,916 --> 00:08:11,447
+there's a couple different options
+that are similar to the way we've
+
+119
+00:08:11,447 --> 00:08:15,151
+discussed options for
+initializing things in the past.
+
+120
+00:08:15,151 --> 00:08:20,309
+One is you can use these defined macros
+and you can declare a mutex directly and
+
+121
+00:08:20,309 --> 00:08:24,990
+a lot of times if you're going to be
+accessing from multiple functions,
+
+122
+00:08:24,990 --> 00:08:28,750
+this would mean that you're
+declaring a global value.
+
+123
+00:08:28,750 --> 00:08:33,917
+So that's one option, then a second
+option that there's probably more often
+
+124
+00:08:33,917 --> 00:08:38,927
+the way you'd see it done would be that
+you'd include inside a structure and
+
+125
+00:08:38,927 --> 00:08:43,465
+then initialize using some type of
+minute function like mutex in it or
+
+126
+00:08:43,465 --> 00:08:45,640
+semaphore in it.
+
+127
+00:08:45,640 --> 00:08:48,430
+So this is an example of what's used for
+
+128
+00:08:48,430 --> 00:08:52,680
+skull device implementation
+in our skull device example.
+
+129
+00:08:52,680 --> 00:08:57,547
+So we have a lock that's associated
+with the skull devices structure, and
+
+130
+00:08:57,547 --> 00:09:02,257
+we'll call based on will provide
+an address of that lock in our mutex in it
+
+131
+00:09:02,257 --> 00:09:05,690
+function and
+it will initialize that memory for us.
+
+132
+00:09:05,690 --> 00:09:08,922
+And again, this is important to
+make sure that we sequenced this.
+
+133
+00:09:08,922 --> 00:09:12,648
+Such that before we do any kind of set
+up that would notify the colonel we've
+
+134
+00:09:12,648 --> 00:09:16,197
+initialized are locked because as
+soon as we tell the colonel about it,
+
+135
+00:09:16,197 --> 00:09:19,720
+it's possible that another function
+could be called with that lock.
+
+136
+00:09:19,720 --> 00:09:23,712
+And if the lock weren't initialized,
+we could have the wrong state and
+
+137
+00:09:23,712 --> 00:09:27,251
+assume the lock was locked when
+it was not actually locked yet.
+
+138
+00:09:28,840 --> 00:09:34,119
+So if we mapped the P and
+V operations generically
+
+139
+00:09:34,119 --> 00:09:40,557
+back to how these work with semaphores,
+the P operation and
+
+140
+00:09:40,557 --> 00:09:45,579
+the mutex lock really map
+to the down operation
+
+141
+00:09:45,579 --> 00:09:50,761
+that's described in the book for
+semaphores.
+
+142
+00:09:50,761 --> 00:09:55,700
+So down is going to be blocking until the
+semaphore is available, if the semaphore
+
+143
+00:09:55,700 --> 00:10:00,440
+count is already high enough,
+it'll just document and return instantly.
+
+144
+00:10:00,440 --> 00:10:02,767
+But if the semaphore count was zero,
+
+145
+00:10:02,767 --> 00:10:08,540
+it's going to block until that V is called
+and increments the semaphore value.
+
+146
+00:10:08,540 --> 00:10:13,920
+So the book talks about down and
+down interruptible, the difference between
+
+147
+00:10:13,920 --> 00:10:18,901
+these two is that the interruptible
+one can be interrupted by the user.
+
+148
+00:10:18,901 --> 00:10:23,692
+And so if an interrupt occurs and
+you did not obtain the resource or
+
+149
+00:10:23,692 --> 00:10:28,658
+you did not obtain the semaphore,
+you'll have to look at the return
+
+150
+00:10:28,658 --> 00:10:33,539
+value here to know that you did
+not actually obtain the semaphore,
+
+151
+00:10:33,539 --> 00:10:36,444
+you just returned due to an interrupt.
+
+152
+00:10:36,444 --> 00:10:41,175
+So when would a process be interrupted?,
+it could be the SIGTERM, SIGKILL, for
+
+153
+00:10:41,175 --> 00:10:45,720
+instance, that we've talked about in
+terms of sending signals to a process.
+
+154
+00:10:45,720 --> 00:10:50,445
+And typically in most cases you'll
+want to use the interruptible versions
+
+155
+00:10:50,445 --> 00:10:54,103
+because otherwise you're not
+going to be able to interrupt
+
+156
+00:10:54,103 --> 00:10:57,321
+the process with things like SIGTERM or
+SIGKILL.
+
+157
+00:10:57,321 --> 00:11:00,749
+The downside here is that you have to be
+careful to check to return value to know
+
+158
+00:11:00,749 --> 00:11:02,345
+if you actually got the semaphore.
+
+159
+00:11:02,345 --> 00:11:05,573
+In that whereas in the down case you can
+assume that if it returned that means
+
+160
+00:11:05,573 --> 00:11:06,811
+you've got the semaphore.
+
+161
+00:11:09,240 --> 00:11:15,016
+So in terms of when to use interruptible
+or not to use interruptible,
+
+162
+00:11:15,016 --> 00:11:22,040
+there was some text in the book about
+how to do this in previous versions.
+
+163
+00:11:22,040 --> 00:11:26,820
+And it was basically saying don't
+use the non interruptible versions.
+
+164
+00:11:26,820 --> 00:11:30,949
+And then this was kind of
+softened in later articles and
+
+165
+00:11:30,949 --> 00:11:33,390
+later discussions about this.
+
+166
+00:11:33,390 --> 00:11:39,116
+And the reason is if you look
+through some of the history on this,
+
+167
+00:11:39,116 --> 00:11:44,429
+there were several Kernel modules and
+file store related.
+
+168
+00:11:44,429 --> 00:11:47,568
+Kernel accesses were
+one in particular where
+
+169
+00:11:47,568 --> 00:11:52,276
+out user applications were written
+with the idea that these particular
+
+170
+00:11:52,276 --> 00:11:56,740
+Kernel driver functions would
+not be signal interruptible.
+
+171
+00:11:56,740 --> 00:11:59,830
+And because they were
+written with that idea,
+
+172
+00:11:59,830 --> 00:12:04,818
+you would run the risk of breaking
+the user space application if you changed
+
+173
+00:12:04,818 --> 00:12:08,540
+the driver to use
+interruptible signal support.
+
+174
+00:12:08,540 --> 00:12:13,529
+And so the really the outcome here is
+that you need to think about how your
+
+175
+00:12:13,529 --> 00:12:16,370
+driver is used in a in the wider context.
+
+176
+00:12:16,370 --> 00:12:20,740
+And how if there are user space
+existing user space applications,
+
+177
+00:12:20,740 --> 00:12:23,159
+like anything related to file I/O or
+
+178
+00:12:23,159 --> 00:12:27,700
+file system drivers that are going to
+be interacting with your driver.
+
+179
+00:12:27,700 --> 00:12:31,488
+You need to think about how you're
+going to work with any expectations that
+
+180
+00:12:31,488 --> 00:12:34,180
+those user space applications
+I'll always have.
+
+181
+00:12:34,180 --> 00:12:39,160
+But if you are developing your own driver
+and you're writing your own application to
+
+182
+00:12:39,160 --> 00:12:43,440
+interact with it, which will be
+the case for our examples for instance,
+
+183
+00:12:43,440 --> 00:12:47,540
+then you're probably going to
+want to use interruptible.
+
+184
+00:12:47,540 --> 00:12:51,064
+And so this is just a little more
+background on why you make that choice or
+
+185
+00:12:51,064 --> 00:12:52,961
+why these different versions exist.
+
+186
+00:12:54,540 --> 00:12:59,231
+So one other function that we didn't
+talk about is down_ try lock,
+
+187
+00:12:59,231 --> 00:13:01,560
+in try_lock would never sleep.
+
+188
+00:13:01,560 --> 00:13:05,699
+So it's just going to obtain the mute
+text for it or the semaphore for
+
+189
+00:13:05,699 --> 00:13:10,440
+you If you can obtain it, if it's
+obtainable But it will just return one and
+
+190
+00:13:10,440 --> 00:13:15,340
+tell you that someone else is holding
+it if you're not able to obtain it.
+
+191
+00:13:15,340 --> 00:13:20,242
+So then the other thing to know
+about the way we talk about
+
+192
+00:13:20,242 --> 00:13:24,623
+semaphore is that if
+a thread has completed down,
+
+193
+00:13:24,623 --> 00:13:30,805
+that means that we will say that
+it's holding or holds the semaphore.
+
+194
+00:13:30,805 --> 00:13:34,869
+It's taken out the semaphore or
+it's acquired the semaphore or
+
+195
+00:13:34,869 --> 00:13:39,987
+the music's that's kind of like the way
+this is the terminology that we use for
+
+196
+00:13:39,987 --> 00:13:42,270
+mutex access or semaphore access.
+
+197
+00:13:42,270 --> 00:13:44,805
+So we've talked about down so far,
+
+198
+00:13:44,805 --> 00:13:49,369
+but there's also the up function
+which is the equivalent of the V
+
+199
+00:13:49,369 --> 00:13:54,300
+operation that's described in
+terms of generic semaphore access.
+
+200
+00:13:54,300 --> 00:13:58,790
+So on the return of up your thread
+no longer holds the semaphore and
+
+201
+00:13:58,790 --> 00:14:04,530
+you need to make sure that you're stopping
+any access to the associated resource.
+
+202
+00:14:04,530 --> 00:14:09,284
+And this is very important that
+one call to down should result in
+
+203
+00:14:09,284 --> 00:14:11,085
+exactly one called up.
+
+204
+00:14:11,085 --> 00:14:15,848
+Which might sound kind of obvious but the
+big thing to be careful with here is air
+
+205
+00:14:15,848 --> 00:14:20,250
+conditions because you might be used
+to if you try to do some operation and
+
+206
+00:14:20,250 --> 00:14:22,520
+it fails, I'm going to return early.
+
+207
+00:14:22,520 --> 00:14:26,567
+You have to make sure that in your return
+path you're going to be releasing whatever
+
+208
+00:14:26,567 --> 00:14:28,005
+some affords you required.
+
+209
+00:14:28,005 --> 00:14:32,475
+And this gets back to the conversation we
+had before about how go to is not really
+
+210
+00:14:32,475 --> 00:14:36,946
+frowned upon in kernel development, like
+it is in some type that you might have
+
+211
+00:14:36,946 --> 00:14:39,615
+learned in your other
+c programming courses.
+
+212
+00:14:39,615 --> 00:14:41,532
+And go to can be kind of useful for
+
+213
+00:14:41,532 --> 00:14:46,442
+this situation in terms of making certain
+that your cleaning up in an error paths.
+
+214
+00:14:46,442 --> 00:14:51,165
+So you don't necessarily need to use go
+to, but you need to have some strategy for
+
+215
+00:14:51,165 --> 00:14:53,317
+handling release and error paths and
+
+216
+00:14:53,317 --> 00:14:56,661
+make sure that you're releasing
+the associated locks.

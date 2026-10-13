@@ -1,0 +1,915 @@
+1
+00:00:00,740 --> 00:00:05,399
+This is the second video in the series
+about bootloaders and device trees.
+
+2
+00:00:05,399 --> 00:00:10,338
+So we're going to introduce some different
+bootloader options, U-Boot and UEFI.
+
+3
+00:00:10,338 --> 00:00:14,373
+We're going to understand some basic
+device tree modifications for Raspberry,
+
+4
+00:00:14,373 --> 00:00:15,404
+Pi and Beaglebone.
+
+5
+00:00:15,404 --> 00:00:19,246
+And go through how the device tree works
+with those particular components that you
+
+6
+00:00:19,246 --> 00:00:21,095
+might be using for your final project.
+
+7
+00:00:22,912 --> 00:00:27,392
+So, UEFI is the Universal
+Extensible Firmware Interface.
+
+8
+00:00:27,392 --> 00:00:32,769
+So this is something that's
+common on x86/x86_64 designs.
+
+9
+00:00:32,769 --> 00:00:34,648
+It's also available on some designs.
+
+10
+00:00:34,648 --> 00:00:39,469
+And if you're familiar with the old
+school bios that used to be a part or
+
+11
+00:00:39,469 --> 00:00:44,882
+a standard part of the boot process for
+PCs, UEFI is the replacement for that.
+
+12
+00:00:44,882 --> 00:00:49,624
+So, it's similar to the content we talked
+about in the previous video, it will use
+
+13
+00:00:49,624 --> 00:00:54,262
+the same three phase bootloader type of
+description that we talked about there.
+
+14
+00:00:54,262 --> 00:00:58,460
+So this might be one option
+that you have as a bootloader,
+
+15
+00:00:58,460 --> 00:01:04,773
+especially if you're using x86 or
+x86_64 as your embedded system platform.
+
+16
+00:01:06,440 --> 00:01:11,343
+The book also talks about several
+different other bootloader options in
+
+17
+00:01:11,343 --> 00:01:15,293
+Mastering Embedded Linux Programming,
+chapter three.
+
+18
+00:01:15,293 --> 00:01:21,229
+And here's a list that comes out of the
+book in terms of different bootloaders.
+
+19
+00:01:21,229 --> 00:01:24,980
+The ones I've used personally
+are U-Boot and GRUB 2.
+
+20
+00:01:24,980 --> 00:01:27,006
+I'm not familiar with the rest of these.
+
+21
+00:01:27,006 --> 00:01:30,583
+And so, the book talks about some
+of the ways that you would pick
+
+22
+00:01:30,583 --> 00:01:35,240
+a bootloader in the case that you have
+different bootloaders to pick from.
+
+23
+00:01:35,240 --> 00:01:39,441
+So you would figure out, first of all,
+does it support your platform?
+
+24
+00:01:39,441 --> 00:01:40,982
+Is it provided with your BSP?
+
+25
+00:01:40,982 --> 00:01:45,359
+This is a big one, because most likely
+whoever develops your hardware is going to
+
+26
+00:01:45,359 --> 00:01:46,833
+have a reference design.
+
+27
+00:01:46,833 --> 00:01:49,356
+And if you can start with
+whatever they're using,
+
+28
+00:01:49,356 --> 00:01:51,298
+that's often the best place to start.
+
+29
+00:01:51,298 --> 00:01:53,605
+Is source code available?
+
+30
+00:01:53,605 --> 00:01:55,816
+We've talked about that
+a lot in this class.
+
+31
+00:01:55,816 --> 00:01:59,232
+That is a nice thing to have
+the availability to modify the source,
+
+32
+00:01:59,232 --> 00:02:00,030
+if you need to.
+
+33
+00:02:00,030 --> 00:02:02,561
+Or to try to figure out the problem,
+if there is a problem.
+
+34
+00:02:03,640 --> 00:02:06,301
+And then especially,
+if you don't have source available,
+
+35
+00:02:06,301 --> 00:02:08,440
+are you able to get support if needed?
+
+36
+00:02:08,440 --> 00:02:13,665
+So again, a reason why you might
+consider open source solution,
+
+37
+00:02:13,665 --> 00:02:20,195
+and GRUB and U-Boot would both be
+open source options as well as UEFI.
+
+38
+00:02:20,195 --> 00:02:26,100
+So talking a little bit more about U-Boot,
+U-Boots, a pretty popular ARM bootloader.
+
+39
+00:02:26,100 --> 00:02:31,030
+It started as an open source bootloader
+for PowerPC, and then was ported to ARM.
+
+40
+00:02:31,030 --> 00:02:35,140
+So, it's pretty common to see
+that used on ARM platforms today.
+
+41
+00:02:35,140 --> 00:02:39,968
+And if you take a look at how U-Boot build
+works, it's again, using that kconfig,
+
+42
+00:02:39,968 --> 00:02:44,388
+defconfig type of setup that we've been
+familiar with in multiple different
+
+43
+00:02:44,388 --> 00:02:46,180
+parts of this course already.
+
+44
+00:02:46,180 --> 00:02:50,742
+So, it'll feel pretty similar to you with
+respect to building U-Boot as it would be
+
+45
+00:02:50,742 --> 00:02:53,440
+with working with the Linux kernel.
+
+46
+00:02:53,440 --> 00:02:58,596
+It builds uboot.bin an image file
+that's suitable for running directly on
+
+47
+00:02:58,596 --> 00:03:04,407
+the device or programming into flash, and
+then loading from flash to our own device.
+
+48
+00:03:04,407 --> 00:03:09,767
+And then depending on the architecture,
+it may also build that secondary program
+
+49
+00:03:09,767 --> 00:03:15,062
+loader or the first thing that we run out
+of a RAM, basically, also known as MLO.
+
+50
+00:03:15,062 --> 00:03:19,992
+Or so the really early stage bootloader
+is supported on several devices as well.
+
+51
+00:03:22,334 --> 00:03:27,151
+Usually to install U-Boot, you'll need
+hardware specific instructions, and
+
+52
+00:03:27,151 --> 00:03:30,520
+often, you'll need something
+like a JTAG programmer.
+
+53
+00:03:30,520 --> 00:03:34,227
+So, this is probably the initial installs,
+probably going to
+
+54
+00:03:34,227 --> 00:03:39,190
+happen during a factory programming step,
+an initial bring up of the hardware.
+
+55
+00:03:39,190 --> 00:03:44,385
+It's also possible in some cases or some
+hardware architectures to load directly
+
+56
+00:03:44,385 --> 00:03:49,141
+into RAM with JTAG, and then run out
+of RAM and bootstrap right into flash.
+
+57
+00:03:49,141 --> 00:03:52,969
+So, you'll have to read the details of
+a specific device to figure out how
+
+58
+00:03:52,969 --> 00:03:54,940
+you can get U-Boot installed.
+
+59
+00:03:54,940 --> 00:03:59,786
+But there are a couple different ways that
+you most likely be able to install it.
+
+60
+00:03:59,786 --> 00:04:02,729
+Once you have it installed and
+you're using it for
+
+61
+00:04:02,729 --> 00:04:05,060
+kind of troubleshooting and bring up.
+
+62
+00:04:05,060 --> 00:04:09,440
+There's a serial terminal you can
+use to access over a serial port.
+
+63
+00:04:09,440 --> 00:04:13,944
+And so, again, that access will vary
+depending on which device you're using.
+
+64
+00:04:13,944 --> 00:04:17,340
+But most devices are going to
+have some kind of capability for
+
+65
+00:04:17,340 --> 00:04:20,107
+a serial port input to
+interact with U-Boot.
+
+66
+00:04:20,107 --> 00:04:24,802
+And you'll be able to interact similar
+to the way you do from the Linux-Colonel
+
+67
+00:04:24,802 --> 00:04:25,450
+end type.
+
+68
+00:04:25,450 --> 00:04:27,669
+Except that the commands
+will be more limited,
+
+69
+00:04:27,669 --> 00:04:30,780
+you won't be using anything like
+Bash scripting, for instance.
+
+70
+00:04:30,780 --> 00:04:34,090
+There will just be a specific built-in
+set of commands that U-Boot supports.
+
+71
+00:04:34,090 --> 00:04:36,626
+You can type help to
+see all those commands.
+
+72
+00:04:36,626 --> 00:04:41,738
+And U-Boot ultimately, uses environment
+variables to either pass information or
+
+73
+00:04:41,738 --> 00:04:46,355
+to script a series of actions and commands
+in order to get the boot complete.
+
+74
+00:04:46,355 --> 00:04:50,657
+And those script commands are initially
+defined in header files for the platform,
+
+75
+00:04:50,657 --> 00:04:54,667
+that are part of what you compile when
+you compile U-Boot for your platform.
+
+76
+00:04:56,231 --> 00:04:59,261
+So, some of the basics of how
+to use U-Boot from the terminal.
+
+77
+00:04:59,261 --> 00:05:03,036
+You can set environment variables
+with the setenv command.
+
+78
+00:05:03,036 --> 00:05:06,560
+And you can save environment variables,
+then if you want to save them for
+
+79
+00:05:06,560 --> 00:05:09,540
+persistent memory with
+the saveenv command.
+
+80
+00:05:09,540 --> 00:05:15,054
+And then it also has commands that would
+let you load images into RAM from flash or
+
+81
+00:05:15,054 --> 00:05:15,940
+tftp.
+
+82
+00:05:15,940 --> 00:05:18,880
+It has commands to boot
+a kernel image from RAM.
+
+83
+00:05:18,880 --> 00:05:22,927
+So an example of how you use this,
+you'd say bootm, and
+
+84
+00:05:22,927 --> 00:05:27,090
+you'd give it the address of
+the kernel location in RAM.
+
+85
+00:05:27,090 --> 00:05:31,860
+The address of the RAM disk or
+where the ramdisk is stored in RAM and
+
+86
+00:05:31,860 --> 00:05:33,609
+the address of the dtb.
+
+87
+00:05:33,609 --> 00:05:38,096
+So, it would obviously assume that you've
+been able to load these all into memory
+
+88
+00:05:38,096 --> 00:05:39,538
+from some previous step.
+
+89
+00:05:39,538 --> 00:05:44,256
+And that's where these commands to load
+images from flash or tftp would be useful.
+
+90
+00:05:44,256 --> 00:05:45,306
+In the tftp case,
+
+91
+00:05:45,306 --> 00:05:50,075
+what you're saying is especially from
+a development perspective, you've got
+
+92
+00:05:50,075 --> 00:05:54,512
+a local server on your network that is
+able to serve up these binary images.
+
+93
+00:05:54,512 --> 00:05:58,321
+So that you don't have to get
+the flash interface working, or
+
+94
+00:05:58,321 --> 00:06:02,506
+you don't have to reprogram it every
+time you want to try a new image.
+
+95
+00:06:03,510 --> 00:06:07,951
+Then the boot command is a variable that
+is run at power up that you can define
+
+96
+00:06:07,951 --> 00:06:10,843
+with a series of commands
+that will ultimately,
+
+97
+00:06:10,843 --> 00:06:15,590
+be used to boot up your device, get to
+the point of running the Linux-Colonel.
+
+98
+00:06:18,040 --> 00:06:22,146
+So talking through some specific
+examples about how bootloader setup and
+
+99
+00:06:22,146 --> 00:06:25,985
+device tree works for some of
+the hardware components that will use or
+
+100
+00:06:25,985 --> 00:06:30,040
+you may be using this semester
+in your final projects.
+
+101
+00:06:30,040 --> 00:06:34,337
+Any time you're talking about bootloader
+and device tree, in order to get past much
+
+102
+00:06:34,337 --> 00:06:38,527
+more than generalities, you usually have
+to pick a specific hardware platform.
+
+103
+00:06:38,527 --> 00:06:41,470
+Because this is going to
+be hardware specific.
+
+104
+00:06:41,470 --> 00:06:45,473
+So, we'll go through a couple of
+specific hardware examples for
+
+105
+00:06:45,473 --> 00:06:47,940
+Raspberry Pi and BeagleBone Black.
+
+106
+00:06:47,940 --> 00:06:52,640
+Since those are some parts that you might
+want to use with your final projects.
+
+107
+00:06:52,640 --> 00:06:57,639
+So the Raspberry Pi has something
+that looks sort of like a bios type
+
+108
+00:06:57,639 --> 00:07:02,207
+of configuration that's driven
+by this config.txt file.
+
+109
+00:07:02,207 --> 00:07:07,055
+And it's up to you to specify any
+customization that you want to
+
+110
+00:07:07,055 --> 00:07:08,435
+the device tree.
+
+111
+00:07:08,435 --> 00:07:12,421
+For instance,
+to use things like I2C, or SPI, or
+
+112
+00:07:12,421 --> 00:07:18,661
+any hardware components that would be off
+by default in the Raspberry Pi build.
+
+113
+00:07:19,940 --> 00:07:21,469
+And there are some links here too,
+
+114
+00:07:21,469 --> 00:07:23,802
+some pages that talk about
+how you can configure it.
+
+115
+00:07:23,802 --> 00:07:27,489
+It's a pretty simple text based format
+that's going to customize the device
+
+116
+00:07:27,489 --> 00:07:28,201
+tree for you.
+
+117
+00:07:29,818 --> 00:07:34,612
+So again, that configuration file is the
+equivalent of the bios that you'd find on
+
+118
+00:07:34,612 --> 00:07:39,240
+a conventional PC or the equivalent
+of what's been replaced by UEFI.
+
+119
+00:07:39,240 --> 00:07:43,280
+And these are stored in this text file,
+config.txt.
+
+120
+00:07:43,280 --> 00:07:46,510
+And you can make the changes
+in that config.txt to change
+
+121
+00:07:46,510 --> 00:07:48,140
+the device configuration.
+
+122
+00:07:48,140 --> 00:07:53,154
+So for instance, if you wanted to change
+your device tree to turn on audio,
+
+123
+00:07:53,154 --> 00:07:56,347
+use I2C,
+with a specific bit rate turn on SPI.
+
+124
+00:07:56,347 --> 00:08:00,207
+That's an example, things you
+could do in that config.txt file,
+
+125
+00:08:00,207 --> 00:08:04,284
+that's going to customize the content
+of the device tree binary for you.
+
+126
+00:08:06,440 --> 00:08:10,194
+And there's a page we have
+in our hardware hints for
+
+127
+00:08:10,194 --> 00:08:16,740
+the class that talk about how you could
+change config.txt on a running system.
+
+128
+00:08:16,740 --> 00:08:21,376
+Using these mount commands to first
+create a location where you can mount
+
+129
+00:08:21,376 --> 00:08:22,445
+the partition.
+
+130
+00:08:22,445 --> 00:08:26,282
+And then mount this
+mmcblk0p1 to that location.
+
+131
+00:08:26,282 --> 00:08:29,178
+And change whatever you
+want to in the config.txt.
+
+132
+00:08:29,178 --> 00:08:33,788
+So, this hardware hints page
+talks about how to turn SPI on
+
+133
+00:08:33,788 --> 00:08:37,187
+by changing this dtparam in config.txt.
+
+134
+00:08:38,743 --> 00:08:41,935
+So, you might make a change to
+the device tree, and then wonder how
+
+135
+00:08:41,935 --> 00:08:45,993
+can you verify that the change is actually
+made successfully on the running system.
+
+136
+00:08:45,993 --> 00:08:49,774
+Or this might be a good way to
+troubleshoot, if you believe you've made
+
+137
+00:08:49,774 --> 00:08:54,201
+changes, but you aren't seeing something
+available that you expect to be there.
+
+138
+00:08:54,201 --> 00:08:57,515
+So this talks about
+the example of figuring
+
+139
+00:08:57,515 --> 00:09:00,375
+out whether you have a spy turned on.
+
+140
+00:09:00,375 --> 00:09:06,166
+And we talked about the device
+tree compiler as going from a text
+
+141
+00:09:06,166 --> 00:09:12,407
+file to a binary file or a flattened
+device tree or device tree blob.
+
+142
+00:09:12,407 --> 00:09:15,368
+But you can also go backwards
+with the device tree compiler,
+
+143
+00:09:15,368 --> 00:09:18,926
+you can take the output and turn that
+back into a human-readable input.
+
+144
+00:09:18,926 --> 00:09:20,358
+So, this is often useful for
+
+145
+00:09:20,358 --> 00:09:24,189
+figuring out what device tree content
+is currently running on your device.
+
+146
+00:09:24,189 --> 00:09:30,841
+So, if I take the dtc command and
+do a -I fs -O dts, what that saying?
+
+147
+00:09:30,841 --> 00:09:34,524
+Is that the input is the sys
+fs file system tree, and
+
+148
+00:09:34,524 --> 00:09:39,506
+the output is device tree source,
+so the human-readable content.
+
+149
+00:09:39,506 --> 00:09:41,939
+And then if you look at that content,
+
+150
+00:09:41,939 --> 00:09:47,206
+you can find the specific spy instance at
+a specific location in the memory map.
+
+151
+00:09:47,206 --> 00:09:53,005
+And you can see that the change should
+be that it goes from disabled to okay,
+
+152
+00:09:53,005 --> 00:09:58,183
+once you've configured it
+properly in your config.txt.
+
+153
+00:09:58,183 --> 00:10:01,286
+So switching gears a bit and
+going to Beaglebone.
+
+154
+00:10:01,286 --> 00:10:06,441
+There are some links here on this page
+that talked about what a student has done
+
+155
+00:10:06,441 --> 00:10:11,540
+in the past to make some configurations
+to enable that PARCH on Beaglebone.
+
+156
+00:10:11,540 --> 00:10:17,420
+And so, this is all shared as actually
+as a part of a extra credit step for
+
+157
+00:10:17,420 --> 00:10:22,126
+their final project, so
+students can use it currently.
+
+158
+00:10:22,126 --> 00:10:25,213
+But if you need to go
+through a similar process,
+
+159
+00:10:25,213 --> 00:10:30,078
+there's some links here that show you
+the process the student went through
+
+160
+00:10:30,078 --> 00:10:34,339
+in order to create the device
+tree modification for Beaglebone.
+
+161
+00:10:34,339 --> 00:10:38,647
+And so again, a lot of this gets into
+the specific details for the platform, but
+
+162
+00:10:38,647 --> 00:10:43,469
+it's ultimately, about making a change to
+the device tree, include file, this dtsi,
+
+163
+00:10:43,469 --> 00:10:45,367
+device tree source include file.
+
+164
+00:10:45,367 --> 00:10:48,187
+To include the specification for
+
+165
+00:10:48,187 --> 00:10:53,029
+enabling specific pins for
+this uart1 functionality.
+
+166
+00:10:53,029 --> 00:10:58,180
+And so, adding the definition
+of the pin control pins.
+
+167
+00:10:58,180 --> 00:11:01,980
+And then specifying that
+definition here in the uart1, and
+
+168
+00:11:01,980 --> 00:11:05,715
+specifically saying that we
+wanted to enable uart1 here.
+
+169
+00:11:07,343 --> 00:11:11,133
+And so, what does this look like in
+order to actually make the change,
+
+170
+00:11:11,133 --> 00:11:14,875
+or how do you figure out that this is
+where you need to make the change?
+
+171
+00:11:14,875 --> 00:11:19,829
+You can start by looking at the REPO_URL
+that's used by the build road configure to
+
+172
+00:11:19,829 --> 00:11:23,933
+see where the source codes coming
+from before they get kernel, or for
+
+173
+00:11:23,933 --> 00:11:25,084
+the Linux kernel.
+
+174
+00:11:25,084 --> 00:11:29,982
+And therefore, where the device tree
+include files are going to be built from.
+
+175
+00:11:29,982 --> 00:11:33,745
+And then once you look
+at the content of that,
+
+176
+00:11:33,745 --> 00:11:39,690
+you can see references to the dtsi,
+the device resource include file,
+
+177
+00:11:39,690 --> 00:11:44,172
+and the place where we needed
+to add patches for uart.
+
+178
+00:11:44,172 --> 00:11:48,544
+And within that you can see
+a reference to the uart1
+
+179
+00:11:48,544 --> 00:11:53,842
+definition that we've added in
+that previous include file.
+
+180
+00:11:53,842 --> 00:11:58,106
+And in order to understand what the
+different values are you can enter here in
+
+181
+00:11:58,106 --> 00:12:02,903
+this field for the device tree, there's
+a documentation directory under the kernel
+
+182
+00:12:02,903 --> 00:12:06,960
+source that talks about the different
+properties you can specify.
+
+183
+00:12:06,960 --> 00:12:10,940
+And so, this is where you can
+specify the list of names from
+
+184
+00:12:10,940 --> 00:12:13,867
+the documentation specific to this part,
+
+185
+00:12:13,867 --> 00:12:19,740
+that can reference the uart definition
+that we just declared in the dtsi file.
+
+186
+00:12:19,740 --> 00:12:24,951
+So again, you kind of have to read this
+with the idea of digging into how it works
+
+187
+00:12:24,951 --> 00:12:30,110
+on a specific platform, because all
+device trees are somewhat different.
+
+188
+00:12:30,110 --> 00:12:32,589
+But here's some high level
+steps you can go through,
+
+189
+00:12:32,589 --> 00:12:36,003
+if you find yourself in a place that you
+need to make device tree changes for
+
+190
+00:12:36,003 --> 00:12:38,060
+the hardware platform that you're using.

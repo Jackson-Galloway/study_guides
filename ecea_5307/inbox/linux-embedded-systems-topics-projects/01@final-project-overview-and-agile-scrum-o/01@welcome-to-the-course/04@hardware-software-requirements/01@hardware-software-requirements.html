@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hardware & Software Requirements</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h1><strong>System Requirements</strong></h1><p>You must have access to a computer configured with the following specifications to complete this specialization:</p><ul><li><p><strong>Operating System:</strong></p><ul><li><p>Ubuntu 22.04 (64-bit) is required.</p></li><li><p>Ubuntu 20.04 (64-bit) may also be used.</p></li><li><p>Other versions of Ubuntu, or other distributions, are not officially supported and may not work properly with assignment instructions.</p></li><li><p>The build system host must use an x86_64 (amd64) architecture. ARM-based systems are not supported.</p></li><li><p><strong>Windows Subsystem for Linux (WSL)</strong> is<strong> not supported</strong> for <em><strong>ECEA 5306: Linux Kernel Programming and Introduction to Yocto Project</strong></em>, which includes Linux kernel development and Yocto projects. If you plan to continue to this course, please prepare a dedicated build host or virtual machine.</p></li></ul></li><li><p><strong>Memory (RAM):</strong></p><ul><li><p>At least 8 GB RAM is recommended.</p></li><li><p>You may be able to complete assignments with less, but 4 GB or less may cause build failures.</p></li></ul></li><li><p><strong>Disk Space:</strong></p><ul><li><p>At least 200 GB of free disk space is recommended.</p></li></ul></li></ul><p>Environment setup instructions are provided later in the course.</p><h1><strong>Hardware Requirements</strong></h1><p><strong>Embedded hardware of a student’s choosing is required for the final project. </strong></p><ul><li><p>Supported boards include:</p><ul><li><p>Raspberry Pi<em> (suitable for Buildroot &amp; Yocto projects)</em></p><ul><li><p>Raspberry Pi 4 Model B</p><ul><li><p><a href="https://www.sparkfun.com/raspberry-pi-4-model-b-1gb.html">SparkFun</a> <em>(Approx. $55)</em></p></li></ul></li><li><p>Raspberry Pi 3 B+</p><ul><li><p><a href="https://www.sparkfun.com/raspberry-pi-3-b.html?src=raspberrypi">SparkFun</a> <em>(Approx. $44)</em></p></li></ul></li><li><p>Raspberry Pi ZeroW </p><ul><li><p><a href="https://www.sparkfun.com/raspberry-pi-zero-w.html?src=raspberrypi">SparkFun</a><em> (Approx. $17)</em></p></li></ul></li></ul></li></ul></li><li><p>BeagleBone Black <em>(suitable for Buildroot project)</em></p><ul><li><p>BeagleBone Black Rev C</p><ul><li><p><a href="https://www.sparkfun.com/beaglebone-black-rev-c.html">SparkFun</a> <em>(Approx. $70)</em></p></li></ul></li></ul></li></ul><p>More information on final project hardware is provided in the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Supported-Hardware-Platforms">Supported Hardware Platforms</a> reading in the course wiki on GitHub.</p>
+  </div>
+</body>
+</html>

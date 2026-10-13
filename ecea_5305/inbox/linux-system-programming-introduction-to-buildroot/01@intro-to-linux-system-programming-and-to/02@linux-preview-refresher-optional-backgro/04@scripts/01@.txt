@@ -1,0 +1,89 @@
+Building on our
+previous discussions about the command line, in this video, we're going to talk in detail
+about scripting. We're going to talk about how to use variables in scripts, how to use arguments, and how to do conditional
+handling in scripting. Scripting is great
+because it allows us to automate frequently
+used commands. To avoid having to retype
+things on the command line, or maybe even retype things with slight changes depending on specific things you're
+doing on the command line that might be a slight variation of what you do in other cases, scripting allows us to record a common series of operations
+and then fill in maybe some unique parts based on variables that
+were customized in the script either via command-line arguments or via variables we said in the script. I like to think about
+scripts as documentation. If you find yourself
+writing a bunch of commands in a series in
+order to perform some task, you should be thinking about turning that into
+a script instead. Because rather than
+telling someone, "Hey, run these five commands in a row," you could just say, "Hey, run the script I
+created that contains the commands that you need
+in order to do this task." Often the script files are
+in files ending with.sh, where.sh is short for shell, just to show that these
+files are script files. That's convention, but it doesn't necessarily
+need to be the case. The one thing you'll notice
+about scripts is that a lot of them start with
+this syntax at the top with what's
+called a shebang, with a number sign, the bang symbol,
+and then /bin/sh. What this is doing is telling the shell which
+shell interpreter to use when it executes
+the script file. /bin/sh is a path
+that represents where you could find in
+the root file system, a reference to the Bourne shell or the equivalent of the
+Bourne shell interpreter. This is known as the shebang
+portion of the script. It's also common
+in this location to see a number!/bin/bash. What this means is that the Bourne shell that we talked about earlier is available to this
+particular script. As an example of a more complicated
+script than the one I showed earlier
+with helloworld.sh, here we've got a variable that we can use to
+set the greeting. By default, the script
+will tell us hello world, and we have the option to
+customize the greeting here by changing the
+value of the variable. That's a simple example of
+using a script variable as a variable that we can define ourselves as shown in
+the previous slide, where we can customize
+the greeting. Another thing that we
+can do with variables is we can set them based on values that are passed
+into the script as arguments. If you use the $1 syntax, what this is saying is the first argument that's passed into the helloworldargs shell script will be set as the greeting. You can see if I do
+helloworldargs.sh hola, then I get hola world
+instead of hello world. Those are a couple options
+that you have to customize the flow of the script
+based on variables. There are several special
+built-in variables for scripts that you can use to customize your
+processing of the script. $0 is going to be the invoked
+name of the bash script. That includes the path that's specified to run the script. Then $1-$9 are going to be
+the first nine arguments. $ number gives you the number of arguments that were
+passed to the script. If you want to check
+for how many arguments were specified,
+you can use that. Then $? is going to give you the exit status of the
+most recent process. This one's useful
+for figuring out, did the last command
+that I issued in the script succeed or fail? In addition to using
+variables to control flow of the script, there's also
+conditional syntax that lets you pick sections
+of the script to execute based on things like location of files or
+values in variables. What you see with this often, is the bracket syntax here, where bracket is
+really a shorthand for use of the test command. If you do a man test, you can see all the options
+for the test that you can perform as part of
+a bash conditional. In this case, what I'm
+checking to do is to see if the writeDir variable here is a directory in
+the file system. You can see this if you
+look at the man page for test and see what
+the -d option is. This says if I use -d file, the test command's
+going to return a match success status if the file exists
+and is a directory. If -d writeDir is going to
+execute this part of the conditional if writeDir
+is a directory, and it's going to
+execute this part of the conditional if it
+was not a directory. You can see, in this case, we're going
+to exit with one, which is going to
+be an error status if the directory wasn't created. The exit 1 is an
+example of how you can communicate success and failure through the exit
+status of your script. Exit 0 is traditionally
+associated with a success response, and exit 1 is traditionally associated with some
+problem that occurred, or really any non-zero exit is associated with some
+problem that occurred. Then one thing to be
+aware of is you can use the output of your script to help direct the user
+how to actually use it. In this case, this
+is showing one of the scripts that you'll
+write for assignment number 1. When you write it
+with no arguments, it'll tell you that it
+needs some arguments, tells you which
+arguments it needs, and a little bit more about what you should
+specify in the arguments.

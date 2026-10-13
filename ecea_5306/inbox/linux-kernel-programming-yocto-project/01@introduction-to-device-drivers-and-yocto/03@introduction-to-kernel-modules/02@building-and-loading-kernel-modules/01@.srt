@@ -1,0 +1,867 @@
+1
+00:00:00,640 --> 00:00:03,556
+So in this video we're going to talk
+about how to actually build and
+
+2
+00:00:03,556 --> 00:00:05,640
+load your kernel module.
+
+3
+00:00:05,640 --> 00:00:10,296
+So we're going to talk about compiling
+modules using the kernel build framework
+
+4
+00:00:10,296 --> 00:00:13,962
+to compile module using our source code,
+and then loading and
+
+5
+00:00:13,962 --> 00:00:17,040
+unloading modules from user space.
+
+6
+00:00:17,040 --> 00:00:20,749
+So the build process for
+modules is different than for
+
+7
+00:00:20,749 --> 00:00:22,660
+user space applications.
+
+8
+00:00:22,660 --> 00:00:25,737
+And the details are always found in.
+
+9
+00:00:25,737 --> 00:00:29,207
+If you want to get into the detail
+about how this really works,
+
+10
+00:00:29,207 --> 00:00:33,036
+you can always find that in the latest
+kernel build directory tree.
+
+11
+00:00:33,036 --> 00:00:37,402
+And so these the documentation that comes
+out of the kernel build directory is
+
+12
+00:00:37,402 --> 00:00:41,098
+always going to be more up to date
+than what's written in your book or
+
+13
+00:00:41,098 --> 00:00:42,740
+even what's covered here.
+
+14
+00:00:42,740 --> 00:00:45,561
+So I encourage you to use this
+if you want to look at more of
+
+15
+00:00:45,561 --> 00:00:49,140
+the details about exactly
+how this process works.
+
+16
+00:00:49,140 --> 00:00:50,557
+But the makefile block for
+
+17
+00:00:50,557 --> 00:00:54,380
+your module that describes how to
+build your module is really simple.
+
+18
+00:00:54,380 --> 00:01:01,248
+It's just something that links a variable
+obj- something, in this case -m.
+
+19
+00:01:01,248 --> 00:01:04,617
+Because we're building a module,
+with a specific object file,
+
+20
+00:01:04,617 --> 00:01:07,321
+that's going to be an output
+of your build process.
+
+21
+00:01:07,321 --> 00:01:09,741
+So in our simple hello.c example,
+
+22
+00:01:09,741 --> 00:01:13,470
+we're going to be building
+one object file, hello.o.
+
+23
+00:01:13,470 --> 00:01:18,286
+And we're going to tell the kernel that,
+that is what's required to create our
+
+24
+00:01:18,286 --> 00:01:21,561
+module to load our kernel,
+hello, kernel module.
+
+25
+00:01:22,740 --> 00:01:27,555
+And then you would invoke this with
+make-C path to kernel source and
+
+26
+00:01:27,555 --> 00:01:30,870
+an M variable set up to
+the working directory.
+
+27
+00:01:30,870 --> 00:01:35,269
+And this pwd is just a command
+that you can use from the shell to
+
+28
+00:01:35,269 --> 00:01:39,000
+tell you where your current
+working directory is.
+
+29
+00:01:39,000 --> 00:01:43,649
+So this means that if you're running from
+the directory where your makefile resides,
+
+30
+00:01:43,649 --> 00:01:46,651
+you'll have this past as
+a part of the kernel argument.
+
+31
+00:01:46,651 --> 00:01:51,347
+So what we're telling here, what we're
+telling the kernel to make here is to
+
+32
+00:01:51,347 --> 00:01:55,469
+change into the kernel directory
+containing your kernel source and
+
+33
+00:01:55,469 --> 00:01:57,871
+pass in the location of your makefile.
+
+34
+00:01:57,871 --> 00:02:02,123
+To includes this really simple state.
+
+35
+00:02:02,123 --> 00:02:08,434
+So that the right process for
+doing this is typically encapsulated
+
+36
+00:02:08,434 --> 00:02:13,410
+as a recursive make step
+inside your kernel module.
+
+37
+00:02:13,410 --> 00:02:15,310
+And we'll go through this in detail.
+
+38
+00:02:15,310 --> 00:02:18,676
+If you want to walk through
+while we're going through it,
+
+39
+00:02:18,676 --> 00:02:22,261
+you can find the link to the latest
+makefile here in the slide.
+
+40
+00:02:23,640 --> 00:02:27,742
+So first problem is, how do we find
+the kernel source for our makefile.
+
+41
+00:02:27,742 --> 00:02:30,610
+And it turns out there
+are some tricks to do this.
+
+42
+00:02:30,610 --> 00:02:33,460
+If you look in your ls -la.
+
+43
+00:02:33,460 --> 00:02:38,211
+If you look at the content of your lib
+modules directory, you'll see that
+
+44
+00:02:38,211 --> 00:02:43,129
+there's a list of directories that
+are based on a version number like this.
+
+45
+00:02:43,129 --> 00:02:46,301
+And that version number corresponds
+to the number of your running kernel.
+
+46
+00:02:46,301 --> 00:02:50,736
+And you can see that in this case,
+I've had several different kernel's
+
+47
+00:02:50,736 --> 00:02:53,579
+installed in my operating
+system in the past.
+
+48
+00:02:53,579 --> 00:02:57,709
+And so there's still some old directories
+here with different versions of
+
+49
+00:02:57,709 --> 00:02:59,356
+the kernel that I might boot.
+
+50
+00:02:59,356 --> 00:03:02,248
+And if I want to look at
+what I'm currently booting,
+
+51
+00:03:02,248 --> 00:03:04,300
+I can use the uname command for this.
+
+52
+00:03:04,300 --> 00:03:10,570
+Uname -a will list information about all
+content related to the last kernel module.
+
+53
+00:03:10,570 --> 00:03:15,040
+And uname -r will specifically list
+the kernel version that I'm using.
+
+54
+00:03:15,040 --> 00:03:19,824
+And so if I plug that uname -r
+value into the lib modules path,
+
+55
+00:03:19,824 --> 00:03:24,243
+which is what I'm doing here
+with the shell, uname-r.
+
+56
+00:03:24,243 --> 00:03:29,622
+If I expand this, what I see is that
+there's a lib/modules directory for
+
+57
+00:03:29,622 --> 00:03:34,415
+the specific content corresponding
+to the kernel I'm running.
+
+58
+00:03:34,415 --> 00:03:37,751
+And there's a build some link that
+points us to usr/src/linux-headers.
+
+59
+00:03:37,751 --> 00:03:42,711
+So the reason this is set up is because
+I did install Linux headers with my
+
+60
+00:03:42,711 --> 00:03:44,380
+kernel source code.
+
+61
+00:03:44,380 --> 00:03:48,715
+And so that's part of what you need to do
+when you're going to be compiling source
+
+62
+00:03:48,715 --> 00:03:51,031
+based on your running on two Linux kernel.
+
+63
+00:03:52,740 --> 00:03:56,915
+But the content of the build
+directory based on this symbol, inc.
+
+64
+00:03:56,915 --> 00:04:01,442
+What we find is that there's a makefile
+within there that corresponds to the make
+
+65
+00:04:01,442 --> 00:04:06,123
+that's used to build the kernel source of
+the kernel that I'm currently running.
+
+66
+00:04:06,123 --> 00:04:10,792
+So the user source directory based on our
+kernel name is going to contain our kernel
+
+67
+00:04:10,792 --> 00:04:11,732
+header source.
+
+68
+00:04:11,732 --> 00:04:16,679
+And there's a makefile that exists in
+that kernel source directory that I
+
+69
+00:04:16,679 --> 00:04:19,251
+can invoke with that make -C option.
+
+70
+00:04:21,740 --> 00:04:24,679
+So the make -C option
+that I mentioned before,
+
+71
+00:04:24,679 --> 00:04:29,740
+we'll call that from recursive make
+as a step here for our modules build.
+
+72
+00:04:29,740 --> 00:04:34,654
+And so
+if we specify make -C with the kerneldir
+
+73
+00:04:34,654 --> 00:04:38,437
+that we just found using uname -r.
+
+74
+00:04:38,437 --> 00:04:42,869
+And then specify M of PWD, will be doing
+that step that I mentioned that at
+
+75
+00:04:42,869 --> 00:04:48,740
+the beginning of the video about how you
+can actually build your kernel module.
+
+76
+00:04:48,740 --> 00:04:53,891
+So the, if you kernel released
+note just tells us that we've
+
+77
+00:04:53,891 --> 00:05:00,767
+invoked the make without being called
+from the Linux kernel, kernel makefile.
+
+78
+00:05:00,767 --> 00:05:04,022
+So this means that it's
+the first execution of make and
+
+79
+00:05:04,022 --> 00:05:08,854
+we need to call recursive make in order
+to actually compile our makefile source.
+
+80
+00:05:11,440 --> 00:05:17,068
+So the recursive make process means
+that the makefile is read twice.
+
+81
+00:05:21,840 --> 00:05:26,255
+So an overview of the steps that we'll use
+for compiling modules with recursive make,
+
+82
+00:05:26,255 --> 00:05:29,540
+the makefile in your source
+directory is going to be read twice.
+
+83
+00:05:29,540 --> 00:05:34,304
+The first time KERNELRELEASE isn't set
+because you're not calling from or
+
+84
+00:05:34,304 --> 00:05:37,820
+you're not invoking from
+within the kernel makefile.
+
+85
+00:05:37,820 --> 00:05:39,302
+So it's going to read the,
+
+86
+00:05:39,302 --> 00:05:43,200
+it's going to find the kernel
+source Makefile using the Uname -r.
+
+87
+00:05:43,200 --> 00:05:46,669
+And it's going to specify
+the current working directory or
+
+88
+00:05:46,669 --> 00:05:49,830
+the location of your
+Makefile as that M variable.
+
+89
+00:05:49,830 --> 00:05:51,640
+It's going to call Recursive Make.
+
+90
+00:05:51,640 --> 00:05:56,099
+So the second time the kernel source
+makefile modules target is going to use
+
+91
+00:05:56,099 --> 00:05:58,390
+the M variable to find your makefile.
+
+92
+00:05:58,390 --> 00:06:01,340
+Read your makefile a second time.
+
+93
+00:06:01,340 --> 00:06:04,270
+This time when it's invoked,
+the KERNELDIR is going to be set.
+
+94
+00:06:04,270 --> 00:06:06,840
+So you won't do the recursive make again.
+
+95
+00:06:06,840 --> 00:06:11,565
+The kernel module build framework is going
+to understand what this simple obj-m
+
+96
+00:06:11,565 --> 00:06:12,684
+statement means.
+
+97
+00:06:12,684 --> 00:06:15,331
+It's going to know how to locate
+your code and build it and
+
+98
+00:06:15,331 --> 00:06:17,840
+knows how to build your module for you.
+
+99
+00:06:17,840 --> 00:06:20,090
+So you might say,
+well that seems pretty complicated.
+
+100
+00:06:20,090 --> 00:06:21,840
+Why would we do it that way?
+
+101
+00:06:21,840 --> 00:06:27,272
+It's turns out this,
+it's got a couple of benefits.
+
+102
+00:06:27,272 --> 00:06:30,808
+One is we can,
+rather than writing some custom scripts or
+
+103
+00:06:30,808 --> 00:06:34,060
+introducing some new
+dependency into the process.
+
+104
+00:06:34,060 --> 00:06:38,534
+We can use the same make tool
+that we're going to use to build
+
+105
+00:06:38,534 --> 00:06:40,610
+the kernel module source.
+
+106
+00:06:40,610 --> 00:06:44,600
+So, it's got a benefit of
+reusing that same tool.
+
+107
+00:06:44,600 --> 00:06:48,568
+The second benefit is that,
+the most of the logic that's happening,
+
+108
+00:06:48,568 --> 00:06:52,483
+because we're keeping the content
+that's specific to our module.
+
+109
+00:06:52,483 --> 00:06:55,900
+Really, simple there
+with that obj -m step.
+
+110
+00:06:55,900 --> 00:07:00,787
+All the details about how that actually
+gets built is provided to us by the Linux
+
+111
+00:07:00,787 --> 00:07:02,510
+kernel module build file.
+
+112
+00:07:02,510 --> 00:07:06,530
+So what that means is that, if something
+changes between kernel revisions about how
+
+113
+00:07:06,530 --> 00:07:07,844
+you need to build modules.
+
+114
+00:07:07,844 --> 00:07:10,694
+You don't have to go update
+all the different modules that
+
+115
+00:07:10,694 --> 00:07:12,460
+might be built based on the kernel.
+
+116
+00:07:12,460 --> 00:07:14,730
+So there's a bootstrap happening.
+
+117
+00:07:14,730 --> 00:07:18,867
+That means that all the details about how
+you actually build a module can be saved
+
+118
+00:07:18,867 --> 00:07:22,587
+in the source file corresponding to
+the current you need to build file.
+
+119
+00:07:22,587 --> 00:07:24,781
+As opposed to in
+an individual module file.
+
+120
+00:07:26,640 --> 00:07:30,120
+So once we've built the file
+you'll see an output of a .ko.
+
+121
+00:07:30,120 --> 00:07:35,920
+And that .ko file is what you can pass
+into insmod and load into the kernel.
+
+122
+00:07:35,920 --> 00:07:40,700
+So, insmod does function
+that's similar to the ld.
+
+123
+00:07:40,700 --> 00:07:45,728
+Application or the linker that
+you'd use with user space programs,
+
+124
+00:07:45,728 --> 00:07:51,210
+in that, it's going to link any
+unresolved symbols in your application.
+
+125
+00:07:51,210 --> 00:07:54,991
+So for instance the print K function,
+we didn't provide a print K function.
+
+126
+00:07:54,991 --> 00:07:57,050
+We need to call a print K
+function from the kernel.
+
+127
+00:07:57,050 --> 00:08:02,240
+So insmod going to locate that function
+for us and fill in that address for us.
+
+128
+00:08:02,240 --> 00:08:05,940
+Similar to what the linker
+would do when we call print F.
+
+129
+00:08:05,940 --> 00:08:12,244
+But one difference is that, when I do
+a link step with an application program,
+
+130
+00:08:12,244 --> 00:08:17,040
+I'll know at link time what
+address to use for that.
+
+131
+00:08:17,040 --> 00:08:22,940
+The address of the or
+the location of that function code.
+
+132
+00:08:22,940 --> 00:08:25,854
+But in the case where I'm
+compiling a kernel module,
+
+133
+00:08:25,854 --> 00:08:28,639
+I'm going to be dynamically
+loading at run time and
+
+134
+00:08:28,639 --> 00:08:32,615
+I won't know the address that would
+correspond to the print K function.
+
+135
+00:08:32,615 --> 00:08:35,018
+Or any other function that
+I'm coding from the function.
+
+136
+00:08:35,018 --> 00:08:40,725
+And so rather than modifying
+the content on disk of your .ko file.
+
+137
+00:08:40,725 --> 00:08:45,297
+What insmod going to do is load the file
+into memory and then change the copy,
+
+138
+00:08:45,297 --> 00:08:50,164
+the low table in memory corresponding to
+the function that you need to code from
+
+139
+00:08:50,164 --> 00:08:51,436
+within the kernel.
+
+140
+00:08:53,612 --> 00:08:57,791
+So when you're loading a module you
+can also optionally pass parameters.
+
+141
+00:08:57,791 --> 00:09:00,180
+So this is something you
+can support with insmod.
+
+142
+00:09:00,180 --> 00:09:04,425
+And we've also talked about an alternate
+way to load from insmod is that,
+
+143
+00:09:04,425 --> 00:09:06,150
+you can use modprobe as well.
+
+144
+00:09:06,150 --> 00:09:10,172
+So mobprobe is beneficial because
+it will handle dependencies and
+
+145
+00:09:10,172 --> 00:09:12,810
+load dependent modules automatically.
+
+146
+00:09:12,810 --> 00:09:17,362
+And so this would avoid unresolved
+symbol message that would exist because
+
+147
+00:09:17,362 --> 00:09:22,230
+the maybe the modules are available in
+the system but they haven't loaded yet.
+
+148
+00:09:22,230 --> 00:09:26,015
+So insmod can't find
+the functions to link us into,
+
+149
+00:09:26,015 --> 00:09:30,242
+if those functions aren't
+already loaded in the kernel.
+
+150
+00:09:30,242 --> 00:09:34,590
+So rmmod is what you can
+use to remove the module.
+
+151
+00:09:34,590 --> 00:09:37,875
+And if the modules currently in use
+you'll get an error message and
+
+152
+00:09:37,875 --> 00:09:39,938
+it won't allow you to remove the module.
+
+153
+00:09:42,440 --> 00:09:45,180
+Another useful function that
+you'll use from user space.
+
+154
+00:09:45,180 --> 00:09:48,230
+You can use lsmod to list
+the currently loaded modules.
+
+155
+00:09:48,230 --> 00:09:51,502
+And also whether there are any
+dependencies, in other words,
+
+156
+00:09:51,502 --> 00:09:53,797
+if they're going to be
+able to be unloaded.
+
+157
+00:09:53,797 --> 00:09:55,718
+And what lsmod is really doing.
+
+158
+00:09:55,718 --> 00:09:57,961
+So here's an example output of lsmod.
+
+159
+00:09:57,961 --> 00:10:03,611
+First if you look at the header row it's
+going to show the module, the size in,
+
+160
+00:10:03,611 --> 00:10:09,730
+loaded the size that it takes up in memory
+and then whether or not it's being used.
+
+161
+00:10:09,730 --> 00:10:11,984
+So if we do that and
+we grew up for our hello module,
+
+162
+00:10:11,984 --> 00:10:15,048
+we'll see there are hello modules there,
+the size of the module and
+
+163
+00:10:15,048 --> 00:10:17,551
+then it's not currently
+being used by anything else.
+
+164
+00:10:18,740 --> 00:10:23,728
+So if we do a, this same information
+that lsmod is reading can be found
+
+165
+00:10:23,728 --> 00:10:28,200
+in some combination of either
+the prod/modules directory or
+
+166
+00:10:28,200 --> 00:10:30,970
+the sys/module/ hello directory.
+
+167
+00:10:30,970 --> 00:10:32,423
+So we can look at that for
+
+168
+00:10:32,423 --> 00:10:35,561
+more information about
+our loaded kernel module.
+
+169
+00:10:37,140 --> 00:10:41,537
+So sys and proc, we haven't talked about
+those yet, but those are essentially
+
+170
+00:10:41,537 --> 00:10:45,630
+virtual filesystem trees that it can
+be used to interact with the kernel.
+
+171
+00:10:45,630 --> 00:10:48,996
+And so when you look at contents
+in the sys proc directory,
+
+172
+00:10:48,996 --> 00:10:51,201
+it looks like you're reading files.
+
+173
+00:10:51,201 --> 00:10:54,603
+But what you're really doing is,
+you're invoking methods in the kernel and
+
+174
+00:10:54,603 --> 00:10:57,272
+then the kernel is dynamically
+filling the content for you,
+
+175
+00:10:57,272 --> 00:10:58,961
+depending on the state of the system.
+
+176
+00:11:00,040 --> 00:11:03,735
+So you might say, well, we talked
+about filesystem hierarchy standard,
+
+177
+00:11:03,735 --> 00:11:06,690
+wouldn't this break the file
+system hierarchy standard.
+
+178
+00:11:06,690 --> 00:11:09,110
+Wouldn't the kernel need
+to know about sys and
+
+179
+00:11:09,110 --> 00:11:13,140
+proc being located at specific
+directories on the profile system.
+
+180
+00:11:13,140 --> 00:11:15,091
+And it turns out that if sys and
+
+181
+00:11:15,091 --> 00:11:19,720
+proc are special filesystem types
+that you can load to any directory.
+
+182
+00:11:19,720 --> 00:11:25,134
+It's just by convention,
+you always load them on /proc and /sys.

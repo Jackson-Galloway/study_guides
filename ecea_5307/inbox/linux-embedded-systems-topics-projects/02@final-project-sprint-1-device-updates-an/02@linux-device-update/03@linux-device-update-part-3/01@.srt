@@ -1,0 +1,1862 @@
+1
+00:00:00,020 --> 00:00:02,970
+In this video, we'll
+continue our discussion of
+
+2
+00:00:02,970 --> 00:00:05,400
+Linux device update
+and talk specifically
+
+3
+00:00:05,400 --> 00:00:08,820
+about how we might architect
+the device updates solution
+
+4
+00:00:08,820 --> 00:00:13,020
+for Linux device update
+of the root filesystem.
+
+5
+00:00:13,020 --> 00:00:15,030
+We want to understand
+
+6
+00:00:15,030 --> 00:00:17,160
+some embedded Linux device
+updates strategy and
+
+7
+00:00:17,160 --> 00:00:19,770
+tradeoffs and
+introduce a couple of
+
+8
+00:00:19,770 --> 00:00:21,090
+open source frameworks that you
+
+9
+00:00:21,090 --> 00:00:23,430
+can use for device update.
+
+10
+00:00:23,780 --> 00:00:27,210
+The first example I want to talk
+
+11
+00:00:27,210 --> 00:00:30,015
+about is a way you can update
+
+12
+00:00:30,015 --> 00:00:32,820
+Linux-based device using
+what's called an A/B
+
+13
+00:00:32,820 --> 00:00:34,890
+or you might hear this
+
+14
+00:00:34,890 --> 00:00:38,070
+discussed as a dual
+redundant update scheme.
+
+15
+00:00:38,070 --> 00:00:40,165
+If we start with the bootloader,
+
+16
+00:00:40,165 --> 00:00:41,210
+that's going to take a side of
+
+17
+00:00:41,210 --> 00:00:42,710
+the initial reset factor and get
+
+18
+00:00:42,710 --> 00:00:44,735
+us to the point that
+we're loading images.
+
+19
+00:00:44,735 --> 00:00:46,130
+The point where we decide
+
+20
+00:00:46,130 --> 00:00:48,350
+which Linux image and
+
+21
+00:00:48,350 --> 00:00:51,805
+which root filesystem
+we're going to boot from,
+
+22
+00:00:51,805 --> 00:00:54,380
+we can have some logic
+
+23
+00:00:54,380 --> 00:00:56,240
+in the bootloader
+that can help us pick
+
+24
+00:00:56,240 --> 00:00:59,360
+which of these root filesystems
+
+25
+00:00:59,360 --> 00:01:00,665
+that we want to boot from.
+
+26
+00:01:00,665 --> 00:01:03,185
+We can have two root
+filesystems that we support
+
+27
+00:01:03,185 --> 00:01:06,185
+as a part of our
+filesystem image.
+
+28
+00:01:06,185 --> 00:01:08,120
+Then when we're running out of
+
+29
+00:01:08,120 --> 00:01:09,995
+one of the two root filesystems,
+
+30
+00:01:09,995 --> 00:01:15,050
+if we have a request come
+in to update the system,
+
+31
+00:01:15,050 --> 00:01:17,435
+we can start writing
+that new update payload
+
+32
+00:01:17,435 --> 00:01:19,750
+into a new root
+filesystem partition,
+
+33
+00:01:19,750 --> 00:01:22,665
+that's our carrier
+inactive partition.
+
+34
+00:01:22,665 --> 00:01:24,710
+If something would
+happen and we were
+
+35
+00:01:24,710 --> 00:01:27,145
+interrupted while we're
+going through that process,
+
+36
+00:01:27,145 --> 00:01:28,505
+it wouldn't matter because
+
+37
+00:01:28,505 --> 00:01:30,710
+the current boot partition
+is the one that we're
+
+38
+00:01:30,710 --> 00:01:32,810
+currently using and it
+
+39
+00:01:32,810 --> 00:01:35,665
+won't ever be corrupted
+with this scenario.
+
+40
+00:01:35,665 --> 00:01:37,685
+As part of the step,
+
+41
+00:01:37,685 --> 00:01:40,430
+if you start writing the
+new update payload and then
+
+42
+00:01:40,430 --> 00:01:43,685
+you complete that
+process successfully,
+
+43
+00:01:43,685 --> 00:01:47,105
+you could at that point
+inform the bootloader that
+
+44
+00:01:47,105 --> 00:01:51,560
+the second partition is
+now available to be used,
+
+45
+00:01:51,560 --> 00:01:53,330
+and tell the bootloader that on
+
+46
+00:01:53,330 --> 00:01:56,035
+the next boot to use
+this new partition.
+
+47
+00:01:56,035 --> 00:01:57,860
+Then on the next
+boot, the bootloader
+
+48
+00:01:57,860 --> 00:01:59,315
+will go ahead and switch
+
+49
+00:01:59,315 --> 00:02:02,120
+the partition A to inactive
+
+50
+00:02:02,120 --> 00:02:06,090
+and start booting from
+partition B instead.
+
+51
+00:02:06,470 --> 00:02:10,310
+Then you can see this whole
+process would be repeated in
+
+52
+00:02:10,310 --> 00:02:11,660
+the case that there was
+
+53
+00:02:11,660 --> 00:02:13,640
+a new update that happened
+from partition B,
+
+54
+00:02:13,640 --> 00:02:16,400
+you just write over partition A,
+
+55
+00:02:16,400 --> 00:02:18,770
+tell the bootloader about
+the new back boot partition
+
+56
+00:02:18,770 --> 00:02:19,940
+and then the next boot would
+
+57
+00:02:19,940 --> 00:02:21,455
+boot back from
+partition A again.
+
+58
+00:02:21,455 --> 00:02:23,000
+You can just keep going back and
+
+59
+00:02:23,000 --> 00:02:25,010
+forth between these
+two partitions.
+
+60
+00:02:25,010 --> 00:02:27,590
+You can also build
+some redundancy logic
+
+61
+00:02:27,590 --> 00:02:28,910
+into your bootloader to say,
+
+62
+00:02:28,910 --> 00:02:33,380
+"If I don't boot far enough
+into the new partition,
+
+63
+00:02:33,380 --> 00:02:34,550
+then maybe that means there's
+
+64
+00:02:34,550 --> 00:02:36,095
+some problem with the update,
+
+65
+00:02:36,095 --> 00:02:38,510
+and I want to fail-safe and
+enroll back to what I know is
+
+66
+00:02:38,510 --> 00:02:41,900
+working before in the
+previous partition."
+
+67
+00:02:42,370 --> 00:02:45,300
+If the boot fails,
+
+68
+00:02:45,300 --> 00:02:47,810
+the bootloader can say, "I
+know I was able to boot
+
+69
+00:02:47,810 --> 00:02:49,790
+successfully to the last image,
+
+70
+00:02:49,790 --> 00:02:51,785
+so I'll just go ahead
+and roll back to that,
+
+71
+00:02:51,785 --> 00:02:54,050
+wait for another instruction
+
+72
+00:02:54,050 --> 00:02:57,195
+of how to boot to
+the new image."
+
+73
+00:02:57,195 --> 00:02:59,585
+This can be a really
+nice feature to have
+
+74
+00:02:59,585 --> 00:03:01,490
+with a headless embedded
+system, for instance,
+
+75
+00:03:01,490 --> 00:03:03,350
+where it's absolutely critical
+
+76
+00:03:03,350 --> 00:03:04,610
+that the device be able to boot
+
+77
+00:03:04,610 --> 00:03:05,990
+up and be able to
+communicate with
+
+78
+00:03:05,990 --> 00:03:08,320
+the server or else you're
+going to end up to the break.
+
+79
+00:03:08,320 --> 00:03:10,850
+Having this extra
+layer of protection,
+
+80
+00:03:10,850 --> 00:03:13,340
+to know that we booted
+back up successfully in
+
+81
+00:03:13,340 --> 00:03:16,370
+the redundant scheme
+can mean that we
+
+82
+00:03:16,370 --> 00:03:17,720
+can fully fall back to
+
+83
+00:03:17,720 --> 00:03:20,520
+whatever was working
+before as needed.
+
+84
+00:03:23,930 --> 00:03:26,330
+One thing to think about
+when we're talking
+
+85
+00:03:26,330 --> 00:03:28,115
+about a dual redundant scheme,
+
+86
+00:03:28,115 --> 00:03:29,960
+if we're booting from
+
+87
+00:03:29,960 --> 00:03:33,650
+these two different root
+filesystem partitions,
+
+88
+00:03:33,650 --> 00:03:36,050
+we're going to essentially
+be swapping out
+
+89
+00:03:36,050 --> 00:03:38,945
+the entire root filesystem
+with each boot,
+
+90
+00:03:38,945 --> 00:03:41,840
+and so pretty much
+
+91
+00:03:41,840 --> 00:03:43,700
+every device you will
+work with that'll
+
+92
+00:03:43,700 --> 00:03:45,785
+some amount of
+configuration that's
+
+93
+00:03:45,785 --> 00:03:48,190
+customizable for a
+given application.
+
+94
+00:03:48,190 --> 00:03:49,460
+If you think about,
+for instance,
+
+95
+00:03:49,460 --> 00:03:51,245
+a network connected device,
+
+96
+00:03:51,245 --> 00:03:52,940
+most of the time the user is
+
+97
+00:03:52,940 --> 00:03:54,620
+going to need to
+enter something like
+
+98
+00:03:54,620 --> 00:03:57,380
+which wireless access point
+
+99
+00:03:57,380 --> 00:03:58,580
+you're going to be connected to,
+
+100
+00:03:58,580 --> 00:04:00,050
+and maybe something
+about the password
+
+101
+00:04:00,050 --> 00:04:02,035
+for that wireless access point.
+
+102
+00:04:02,035 --> 00:04:03,570
+If we're going to be completely
+
+103
+00:04:03,570 --> 00:04:05,245
+replacing the root filesystem,
+
+104
+00:04:05,245 --> 00:04:06,650
+then obviously we won't be able
+
+105
+00:04:06,650 --> 00:04:08,340
+to place that in the
+root filesystem,
+
+106
+00:04:08,340 --> 00:04:10,130
+or when we boot it to
+the new root filesystem
+
+107
+00:04:10,130 --> 00:04:12,940
+that data would not
+be available anymore.
+
+108
+00:04:12,940 --> 00:04:15,440
+In order to handle
+configuration data that's
+
+109
+00:04:15,440 --> 00:04:17,180
+modified on the root filesystem,
+
+110
+00:04:17,180 --> 00:04:19,520
+you do that with a
+separate data partition.
+
+111
+00:04:19,520 --> 00:04:22,445
+Usually when you talk about
+an A/B dual redundant scheme,
+
+112
+00:04:22,445 --> 00:04:24,455
+you'll also have a separate
+data partition that
+
+113
+00:04:24,455 --> 00:04:27,535
+includes anything that's
+persistent about the product.
+
+114
+00:04:27,535 --> 00:04:31,080
+That's where you could
+place all the modifications
+
+115
+00:04:31,080 --> 00:04:34,430
+that you'd need to
+
+116
+00:04:34,430 --> 00:04:36,125
+keep across these
+different update
+
+117
+00:04:36,125 --> 00:04:38,780
+and different root
+filesystem images.
+
+118
+00:04:39,380 --> 00:04:44,505
+In addition to the
+dual A/B scheme,
+
+119
+00:04:44,505 --> 00:04:46,730
+then you can also consider doing
+
+120
+00:04:46,730 --> 00:04:49,895
+a single copy scheme where
+
+121
+00:04:49,895 --> 00:04:50,930
+instead of booting to
+
+122
+00:04:50,930 --> 00:04:53,719
+two different complete root
+filesystem partitions,
+
+123
+00:04:53,719 --> 00:04:56,210
+you might instead have
+an [inaudible] or
+
+124
+00:04:56,210 --> 00:04:58,760
+some dedicated update
+support partition
+
+125
+00:04:58,760 --> 00:05:02,030
+that maybe doesn't have all of
+
+126
+00:05:02,030 --> 00:05:05,180
+the logic that's in
+the root filesystem,
+
+127
+00:05:05,180 --> 00:05:07,520
+but has just enough
+to detect whether
+
+128
+00:05:07,520 --> 00:05:10,010
+the root filesystem
+partition is bootable,
+
+129
+00:05:10,010 --> 00:05:11,810
+so whether an update
+actually completed on
+
+130
+00:05:11,810 --> 00:05:15,435
+the partition and also
+to support updates.
+
+131
+00:05:15,435 --> 00:05:18,290
+In the case that we
+weren't able to complete
+
+132
+00:05:18,290 --> 00:05:20,900
+an update previously
+for whatever reason,
+
+133
+00:05:20,900 --> 00:05:22,520
+the logic would
+need to be here to
+
+134
+00:05:22,520 --> 00:05:24,815
+actually support a new update,
+
+135
+00:05:24,815 --> 00:05:28,130
+and sometimes this could
+be more limited like
+
+136
+00:05:28,130 --> 00:05:31,100
+maybe instead of
+being able to support
+
+137
+00:05:31,100 --> 00:05:34,430
+an update on Bluetooth
+or Wi-Fi connectivity,
+
+138
+00:05:34,430 --> 00:05:35,600
+maybe you could only support
+
+139
+00:05:35,600 --> 00:05:38,185
+an update of a Bluetooth
+or something like that.
+
+140
+00:05:38,185 --> 00:05:41,750
+It can tradeoff some
+
+141
+00:05:41,750 --> 00:05:45,245
+of the storage space
+requirements of having
+
+142
+00:05:45,245 --> 00:05:50,735
+a complete dual redundant root
+filesystem partition with
+
+143
+00:05:50,735 --> 00:05:53,330
+the ability to still be
+able to recover from
+
+144
+00:05:53,330 --> 00:05:55,010
+cases where we weren't able to
+
+145
+00:05:55,010 --> 00:05:57,425
+complete the previous
+update successfully.
+
+146
+00:05:57,425 --> 00:05:59,540
+In many cases, you'll
+still end up with
+
+147
+00:05:59,540 --> 00:06:01,640
+a separate Data
+Partition containing
+
+148
+00:06:01,640 --> 00:06:04,280
+the customizations that
+would happen as a part
+
+149
+00:06:04,280 --> 00:06:07,235
+of the root file system when
+the user's operating it.
+
+150
+00:06:07,235 --> 00:06:08,600
+Because again, you
+don't want to make your
+
+151
+00:06:08,600 --> 00:06:10,160
+update- replace
+
+152
+00:06:10,160 --> 00:06:13,890
+that content that was
+customized by the user.
+
+153
+00:06:14,290 --> 00:06:16,895
+In addition to
+those two schemes,
+
+154
+00:06:16,895 --> 00:06:19,040
+there's a third
+option where instead
+
+155
+00:06:19,040 --> 00:06:21,305
+of updating the entire
+root file system,
+
+156
+00:06:21,305 --> 00:06:24,440
+maybe you just update
+specific applications.
+
+157
+00:06:24,440 --> 00:06:27,230
+If you think about the way
+this works, for instance,
+
+158
+00:06:27,230 --> 00:06:29,270
+with your Ubuntu system
+
+159
+00:06:29,270 --> 00:06:30,845
+that you're using
+for development.
+
+160
+00:06:30,845 --> 00:06:32,975
+Even if you do a
+full system update,
+
+161
+00:06:32,975 --> 00:06:34,370
+what you're really
+doing is updating
+
+162
+00:06:34,370 --> 00:06:37,010
+a whole bunch of
+applications individually.
+
+163
+00:06:37,010 --> 00:06:39,380
+The individual applications
+can be updated with
+
+164
+00:06:39,380 --> 00:06:42,110
+packages like.deb and.rpm,
+
+165
+00:06:42,110 --> 00:06:44,120
+and using apt for instance,
+
+166
+00:06:44,120 --> 00:06:46,700
+where we use for it
+with Ubuntu or yum to
+
+167
+00:06:46,700 --> 00:06:50,480
+handle upgrades of each one
+of these individual packages.
+
+168
+00:06:50,480 --> 00:06:54,185
+The upgrades might include
+application binaries,
+
+169
+00:06:54,185 --> 00:06:58,685
+start and run scripts,
+configuration files, etc.
+
+170
+00:06:58,685 --> 00:07:01,460
+If you are using yocto,
+
+171
+00:07:01,460 --> 00:07:03,830
+yocto does build update packages
+
+172
+00:07:03,830 --> 00:07:06,710
+as a part of the full
+yocto image build.
+
+173
+00:07:06,710 --> 00:07:08,810
+This is something that is in
+
+174
+00:07:08,810 --> 00:07:11,420
+some ways natively
+supported by yocto.
+
+175
+00:07:11,420 --> 00:07:13,430
+It's also the standard
+scheme that you'd
+
+176
+00:07:13,430 --> 00:07:15,380
+use for Linux
+distribution updates.
+
+177
+00:07:15,380 --> 00:07:18,830
+Again, this is what we've been
+using for Ubuntu already.
+
+178
+00:07:18,830 --> 00:07:21,455
+Some trade-offs. This is, again,
+
+179
+00:07:21,455 --> 00:07:24,590
+a case where there's not really
+a right or wrong answer.
+
+180
+00:07:24,590 --> 00:07:26,300
+There's a lot of trade-offs
+you need to be aware
+
+181
+00:07:26,300 --> 00:07:28,220
+of with these different
+updates schemes.
+
+182
+00:07:28,220 --> 00:07:29,690
+You need to pick the right one
+
+183
+00:07:29,690 --> 00:07:32,210
+for whatever your
+application is.
+
+184
+00:07:32,210 --> 00:07:35,899
+Talking first about
+A/B update benefits,
+
+185
+00:07:35,899 --> 00:07:38,300
+it's really nice to being
+able to completely roll
+
+186
+00:07:38,300 --> 00:07:40,745
+back to a previously working
+and shipped release,
+
+187
+00:07:40,745 --> 00:07:41,780
+and even nicer,
+
+188
+00:07:41,780 --> 00:07:43,820
+if you can do that
+automatically.
+
+189
+00:07:43,820 --> 00:07:45,650
+If you can detect the fact that
+
+190
+00:07:45,650 --> 00:07:47,240
+the boot didn't
+succeed or complete
+
+191
+00:07:47,240 --> 00:07:48,530
+successfully and just go back to
+
+192
+00:07:48,530 --> 00:07:50,195
+whatever worked previously,
+
+193
+00:07:50,195 --> 00:07:51,920
+that's nice to have that option.
+
+194
+00:07:51,920 --> 00:07:54,080
+That's one nice thing about A/B.
+
+195
+00:07:54,080 --> 00:07:55,910
+It's also nice that
+you don't have to
+
+196
+00:07:55,910 --> 00:07:57,650
+worry about partial upgrades or
+
+197
+00:07:57,650 --> 00:07:59,330
+different application
+updates states
+
+198
+00:07:59,330 --> 00:08:01,520
+getting through different
+parts of the process.
+
+199
+00:08:01,520 --> 00:08:03,320
+It's always either you
+always made it all
+
+200
+00:08:03,320 --> 00:08:04,940
+the way through and
+now you're booting
+
+201
+00:08:04,940 --> 00:08:08,195
+from that image or something
+started a partial right,
+
+202
+00:08:08,195 --> 00:08:10,370
+and you don't really care
+because you never got to
+
+203
+00:08:10,370 --> 00:08:11,675
+the point of switching to that
+
+204
+00:08:11,675 --> 00:08:14,030
+as your new root file system.
+
+205
+00:08:14,030 --> 00:08:17,090
+There's a logical
+separation then between
+
+206
+00:08:17,090 --> 00:08:19,550
+the configuration data
+and update image.
+
+207
+00:08:19,550 --> 00:08:23,720
+In other words, all your
+configuration data is stored
+
+208
+00:08:23,720 --> 00:08:28,020
+outside the root file system
+and in some data partition,
+
+209
+00:08:28,020 --> 00:08:29,440
+which makes it much easier to
+
+210
+00:08:29,440 --> 00:08:31,000
+handle things like
+factory reset,
+
+211
+00:08:31,000 --> 00:08:33,190
+because you can just
+delete the contents of
+
+212
+00:08:33,190 --> 00:08:34,900
+the data partition and go back
+
+213
+00:08:34,900 --> 00:08:37,545
+to the default
+state of the image.
+
+214
+00:08:37,545 --> 00:08:40,820
+Some of the drawbacks of
+the A/B update scheme
+
+215
+00:08:40,820 --> 00:08:42,620
+are that it requires
+double the size
+
+216
+00:08:42,620 --> 00:08:44,465
+of the storage for
+the root file system.
+
+217
+00:08:44,465 --> 00:08:46,190
+Depending on how much
+storage you have,
+
+218
+00:08:46,190 --> 00:08:48,065
+that may or may not be an issue.
+
+219
+00:08:48,065 --> 00:08:50,750
+Oftentimes, because
+flash storage is getting
+
+220
+00:08:50,750 --> 00:08:54,350
+so cheap and raw file systems
+are comparatively small,
+
+221
+00:08:54,350 --> 00:08:57,980
+this is probably less of
+an issue for most devices.
+
+222
+00:08:57,980 --> 00:09:03,035
+It also requires the full
+update size for each image.
+
+223
+00:09:03,035 --> 00:09:04,610
+In other words,
+you're going to be
+
+224
+00:09:04,610 --> 00:09:07,160
+transferring over the
+wire, in most cases,
+
+225
+00:09:07,160 --> 00:09:09,680
+the full contents of the
+root file system partition,
+
+226
+00:09:09,680 --> 00:09:11,810
+even if it was a
+relatively small amount of
+
+227
+00:09:11,810 --> 00:09:14,600
+change that you made between
+two different releases.
+
+228
+00:09:14,600 --> 00:09:16,400
+There are exceptions to that.
+
+229
+00:09:16,400 --> 00:09:18,380
+There are delta update
+schemes that can help
+
+230
+00:09:18,380 --> 00:09:21,830
+you just send the
+changes over the wire.
+
+231
+00:09:21,830 --> 00:09:23,750
+But they become a
+little bit more
+
+232
+00:09:23,750 --> 00:09:26,990
+difficult to do with
+A/B updates schemes.
+
+233
+00:09:26,990 --> 00:09:30,650
+That's mostly important if
+you're talking about using
+
+234
+00:09:30,650 --> 00:09:34,535
+something like a low
+bandwidth connection,
+
+235
+00:09:34,535 --> 00:09:36,800
+especially if you're using
+something like Roller to
+
+236
+00:09:36,800 --> 00:09:39,230
+do updates or if you were
+
+237
+00:09:39,230 --> 00:09:42,935
+using something like LTE or
+
+238
+00:09:42,935 --> 00:09:44,360
+a connection that is
+
+239
+00:09:44,360 --> 00:09:47,760
+expensive to transfer
+large files over.
+
+240
+00:09:47,800 --> 00:09:51,724
+The application update scheme,
+
+241
+00:09:51,724 --> 00:09:53,390
+then the benefit
+would be that you can
+
+242
+00:09:53,390 --> 00:09:54,845
+have smaller updates sizes
+
+243
+00:09:54,845 --> 00:09:57,050
+and you don't need to have
+
+244
+00:09:57,050 --> 00:09:59,480
+this second copy of
+the file system,
+
+245
+00:09:59,480 --> 00:10:02,525
+so no additional storage
+space really required.
+
+246
+00:10:02,525 --> 00:10:04,040
+But the drawbacks is
+
+247
+00:10:04,040 --> 00:10:06,755
+that it's much more
+difficult to do rollback.
+
+248
+00:10:06,755 --> 00:10:07,820
+You have to think
+through what would
+
+249
+00:10:07,820 --> 00:10:08,900
+happen if I'm going to
+
+250
+00:10:08,900 --> 00:10:11,915
+update 50 applications as a
+part of my update process,
+
+251
+00:10:11,915 --> 00:10:13,460
+and only the first 25
+
+252
+00:10:13,460 --> 00:10:15,995
+succeeded and the rest of
+them failed for some reason.
+
+253
+00:10:15,995 --> 00:10:17,870
+How do you recover
+from that scenario
+
+254
+00:10:17,870 --> 00:10:20,945
+becomes a pretty
+complicated task.
+
+255
+00:10:20,945 --> 00:10:22,895
+You also might need
+to think about,
+
+256
+00:10:22,895 --> 00:10:24,815
+if I started an update and I got
+
+257
+00:10:24,815 --> 00:10:27,170
+half the way through
+and then I lost power,
+
+258
+00:10:27,170 --> 00:10:29,000
+how do I recover
+from that state?
+
+259
+00:10:29,000 --> 00:10:30,440
+Those two problems are
+
+260
+00:10:30,440 --> 00:10:31,940
+something you need to
+think through and have
+
+261
+00:10:31,940 --> 00:10:33,710
+a strategy to deal
+with if you're going
+
+262
+00:10:33,710 --> 00:10:36,480
+to go with an application
+update scheme.
+
+263
+00:10:38,920 --> 00:10:42,170
+I like to put together
+comparisons like this
+
+264
+00:10:42,170 --> 00:10:43,430
+when I'm looking at
+different options
+
+265
+00:10:43,430 --> 00:10:44,795
+so that I can understand,
+
+266
+00:10:44,795 --> 00:10:47,465
+depending on which criteria
+I care the most about,
+
+267
+00:10:47,465 --> 00:10:50,165
+which one might be
+the best solution.
+
+268
+00:10:50,165 --> 00:10:53,090
+Again, looking at storage
+size requirements space,
+
+269
+00:10:53,090 --> 00:10:54,950
+the A/B dual redundant
+is going to be
+
+270
+00:10:54,950 --> 00:10:56,840
+the most storage
+space requirement
+
+271
+00:10:56,840 --> 00:10:58,820
+because you need two
+times partition size.
+
+272
+00:10:58,820 --> 00:11:00,410
+Again, depending on
+your application
+
+273
+00:11:00,410 --> 00:11:01,670
+and the size of
+your file system,
+
+274
+00:11:01,670 --> 00:11:03,890
+this might actually not
+be that big of a problem.
+
+275
+00:11:03,890 --> 00:11:05,825
+But if it is, you need
+to be aware of that.
+
+276
+00:11:05,825 --> 00:11:08,120
+The nice thing about the
+single copy is you only
+
+277
+00:11:08,120 --> 00:11:11,915
+need smaller amount of storage
+for upgrade components.
+
+278
+00:11:11,915 --> 00:11:13,670
+Then if that's really an issue,
+
+279
+00:11:13,670 --> 00:11:15,830
+this is where application
+update might be a good choice
+
+280
+00:11:15,830 --> 00:11:18,890
+because you really don't
+need any additional space.
+
+281
+00:11:18,890 --> 00:11:22,295
+Talking about redundancy
+and rollback capabilities,
+
+282
+00:11:22,295 --> 00:11:24,845
+AB dual redundant is
+the best of all because
+
+283
+00:11:24,845 --> 00:11:28,520
+every component that you're
+updating can be rolled back.
+
+284
+00:11:28,520 --> 00:11:30,695
+In the single copy case,
+
+285
+00:11:30,695 --> 00:11:32,480
+most of the components
+and the most
+
+286
+00:11:32,480 --> 00:11:34,955
+important components
+specifically the ones
+
+287
+00:11:34,955 --> 00:11:37,490
+about update,
+
+288
+00:11:37,490 --> 00:11:41,450
+are always going to be available
+in a rollback scenario.
+
+289
+00:11:41,450 --> 00:11:43,834
+However, it may not be possible
+
+290
+00:11:43,834 --> 00:11:46,580
+or maybe difficult to
+update those components.
+
+291
+00:11:46,580 --> 00:11:49,040
+If you want to update your
+updater, for instance,
+
+292
+00:11:49,040 --> 00:11:53,030
+single copy becomes more of
+a challenge to pull off.
+
+293
+00:11:53,030 --> 00:11:55,759
+It definitely has some downsides
+
+294
+00:11:55,759 --> 00:11:57,815
+in terms of redundancy
+and rollback.
+
+295
+00:11:57,815 --> 00:12:00,230
+Then application for
+the reasons that we
+
+296
+00:12:00,230 --> 00:12:02,375
+discussed previously
+is the most limited
+
+297
+00:12:02,375 --> 00:12:04,910
+because rollbacks going to
+be pretty complicated and
+
+298
+00:12:04,910 --> 00:12:08,280
+scenarios that you got
+partially through an update.
+
+299
+00:12:08,350 --> 00:12:11,405
+Then talking about overall
+system complexity,
+
+300
+00:12:11,405 --> 00:12:14,690
+how complex is it to build
+and put the system together?
+
+301
+00:12:14,690 --> 00:12:17,090
+It's probably a
+little bit higher for
+
+302
+00:12:17,090 --> 00:12:20,285
+either the dual redundant
+or single copy.
+
+303
+00:12:20,285 --> 00:12:21,440
+It might get a
+little bit into the
+
+304
+00:12:21,440 --> 00:12:22,790
+specifics about how you do it,
+
+305
+00:12:22,790 --> 00:12:23,840
+but just given
+
+306
+00:12:23,840 --> 00:12:26,330
+an extra data partition
+and bootloader redundancy,
+
+307
+00:12:26,330 --> 00:12:28,580
+you might have a little bit
+more system complexity to set
+
+308
+00:12:28,580 --> 00:12:32,390
+up from the starting point.
+
+309
+00:12:32,390 --> 00:12:35,690
+You have additional
+complexity here related to
+
+310
+00:12:35,690 --> 00:12:39,470
+having the separate partition
+that handles updates.
+
+311
+00:12:39,470 --> 00:12:42,785
+There's probably less
+system complexity
+
+312
+00:12:42,785 --> 00:12:43,880
+for application update.
+
+313
+00:12:43,880 --> 00:12:45,470
+You're basically paying
+for the complexity
+
+314
+00:12:45,470 --> 00:12:48,780
+with how to handle
+redundancy and rollback.
+
+315
+00:12:49,930 --> 00:12:54,125
+Talking about a couple of
+Device Update Framework.
+
+316
+00:12:54,125 --> 00:12:56,510
+A lot of these pieces
+
+317
+00:12:56,510 --> 00:12:57,830
+that you're going to
+use for your device
+
+318
+00:12:57,830 --> 00:12:59,570
+update implementation on Linux
+
+319
+00:12:59,570 --> 00:13:01,715
+are common, everybody uses them.
+
+320
+00:13:01,715 --> 00:13:04,790
+Wouldn't it be great if
+we could leverage a bunch
+
+321
+00:13:04,790 --> 00:13:08,640
+of open source community
+work and of course we can.
+
+322
+00:13:08,770 --> 00:13:11,090
+These are just a
+couple of examples,
+
+323
+00:13:11,090 --> 00:13:12,860
+there are other projects
+out there as well,
+
+324
+00:13:12,860 --> 00:13:14,840
+but I'm more
+familiar with these,
+
+325
+00:13:14,840 --> 00:13:17,675
+so I'll cover two of the ones
+that I've used in the past.
+
+326
+00:13:17,675 --> 00:13:20,495
+First one I'll talk
+about is SWUpdate,
+
+327
+00:13:20,495 --> 00:13:23,330
+and SWUpdate like
+a building block
+
+328
+00:13:23,330 --> 00:13:24,860
+or a tool that you can use for
+
+329
+00:13:24,860 --> 00:13:27,575
+upgrades without
+really enforcing
+
+330
+00:13:27,575 --> 00:13:30,815
+or putting together a
+specific upgrade design.
+
+331
+00:13:30,815 --> 00:13:32,659
+This one, for instance,
+
+332
+00:13:32,659 --> 00:13:36,485
+works with AB single copy or
+application updates schemes.
+
+333
+00:13:36,485 --> 00:13:38,495
+You can do whatever
+you want with it.
+
+334
+00:13:38,495 --> 00:13:40,430
+There's maybe a little
+bit more setup work,
+
+335
+00:13:40,430 --> 00:13:42,080
+but it's probably
+more versatile and
+
+336
+00:13:42,080 --> 00:13:44,555
+flexible in terms
+of how you use it.
+
+337
+00:13:44,555 --> 00:13:48,500
+It again supports
+builder it or Yocto,
+
+338
+00:13:48,500 --> 00:13:49,970
+so it could be used with any of
+
+339
+00:13:49,970 --> 00:13:52,220
+the schemes that we've talked
+
+340
+00:13:52,220 --> 00:13:54,995
+about for application
+development in this class.
+
+341
+00:13:54,995 --> 00:13:57,635
+It supports the signing
+that we've talked about
+
+342
+00:13:57,635 --> 00:14:01,775
+before as an important part
+of securing device updates.
+
+343
+00:14:01,775 --> 00:14:04,040
+It integrates with
+Eclipse hawkbit
+
+344
+00:14:04,040 --> 00:14:05,555
+for cloud deployment scenarios.
+
+345
+00:14:05,555 --> 00:14:08,015
+You can have a cloud
+server that's hosting
+
+346
+00:14:08,015 --> 00:14:11,345
+and controlling your
+device update process.
+
+347
+00:14:11,345 --> 00:14:15,275
+Also a pretty cool feature
+of SWUpdate is that there's
+
+348
+00:14:15,275 --> 00:14:17,300
+integrated web
+server that you can
+
+349
+00:14:17,300 --> 00:14:19,475
+use for deploying your images.
+
+350
+00:14:19,475 --> 00:14:21,245
+If your devices
+Internet connected,
+
+351
+00:14:21,245 --> 00:14:25,130
+you can start SW updated
+a mode that brings up
+
+352
+00:14:25,130 --> 00:14:27,590
+a web server and its own
+webpage that you can use for
+
+353
+00:14:27,590 --> 00:14:30,350
+interacting and passing
+an update payloads.
+
+354
+00:14:30,350 --> 00:14:31,820
+That could be a pretty
+handy thing when
+
+355
+00:14:31,820 --> 00:14:34,560
+you're starting out
+with development.
+
+356
+00:14:34,600 --> 00:14:38,465
+A second device update
+framework is called Mender.
+
+357
+00:14:38,465 --> 00:14:40,310
+This one is specifically built
+
+358
+00:14:40,310 --> 00:14:42,590
+around Yocto and
+it has some layers
+
+359
+00:14:42,590 --> 00:14:44,630
+that provide u-boot and
+
+360
+00:14:44,630 --> 00:14:46,790
+other boot loader
+modifications directly.
+
+361
+00:14:46,790 --> 00:14:48,410
+It's a little more turn-key when
+
+362
+00:14:48,410 --> 00:14:50,570
+it's setup for a
+specific platform.
+
+363
+00:14:50,570 --> 00:14:53,270
+It also has some
+support for Builder,
+
+364
+00:14:53,270 --> 00:14:54,710
+but it's probably more tailored
+
+365
+00:14:54,710 --> 00:14:57,140
+towards a Yocto implementation.
+
+366
+00:14:57,140 --> 00:15:01,340
+Is built around the AB dual
+redundant image support.
+
+367
+00:15:01,340 --> 00:15:04,730
+There also is some support
+for application updates on
+
+368
+00:15:04,730 --> 00:15:08,540
+specific platforms as of
+more recent releases.
+
+369
+00:15:08,540 --> 00:15:10,400
+Its supports signing and it also
+
+370
+00:15:10,400 --> 00:15:13,800
+has the option to
+support delta updates.
+
+371
+00:15:13,810 --> 00:15:16,655
+One unique thing about
+
+372
+00:15:16,655 --> 00:15:18,680
+Mender as a framework
+is that they have
+
+373
+00:15:18,680 --> 00:15:20,465
+their own management server
+
+374
+00:15:20,465 --> 00:15:23,960
+that's both open source and
+available and hosted form.
+
+375
+00:15:23,960 --> 00:15:25,730
+Rather than having to deploy
+
+376
+00:15:25,730 --> 00:15:28,670
+your own management server
+
+377
+00:15:28,670 --> 00:15:31,955
+to deploy your update payloads,
+
+378
+00:15:31,955 --> 00:15:34,535
+you could use the one
+that they provided.
+
+379
+00:15:34,535 --> 00:15:38,360
+They have a starter plan
+that's free and then
+
+380
+00:15:38,360 --> 00:15:42,155
+a paid plan depending on
+how many devices you have.
+
+381
+00:15:42,155 --> 00:15:44,690
+This is a quick
+way to get started
+
+382
+00:15:44,690 --> 00:15:47,900
+with an update
+deployment scheme.
+
+383
+00:15:47,900 --> 00:15:50,675
+In terms of Mender specifically,
+
+384
+00:15:50,675 --> 00:15:52,550
+it's got all the components
+that we talked about at
+
+385
+00:15:52,550 --> 00:15:55,070
+the beginning of the
+class in terms of
+
+386
+00:15:55,070 --> 00:15:59,960
+how the devices laid out
+with two different kernels.
+
+387
+00:15:59,960 --> 00:16:04,205
+You can support two different
+kernels and file systems.
+
+388
+00:16:04,205 --> 00:16:06,630
+Then you'd have a bootloader,
+
+389
+00:16:06,630 --> 00:16:08,740
+U-boot is often one that's used
+
+390
+00:16:08,740 --> 00:16:11,530
+for the platforms
+that are supported,
+
+391
+00:16:11,530 --> 00:16:13,330
+and then some data
+partition with
+
+392
+00:16:13,330 --> 00:16:15,130
+your persistent settings
+that are going to be saved
+
+393
+00:16:15,130 --> 00:16:19,400
+across device updates
+and a interaction here
+
+394
+00:16:19,400 --> 00:16:21,920
+that supported with
+a management server
+
+395
+00:16:21,920 --> 00:16:24,860
+that either you host
+or is hosted online,
+
+396
+00:16:24,860 --> 00:16:28,430
+where you can upload
+your update files,
+
+397
+00:16:28,430 --> 00:16:32,640
+and communicate them down to
+your device to run updates.

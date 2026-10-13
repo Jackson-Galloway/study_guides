@@ -1,0 +1,87 @@
+In this video, I'll talk
+about the format of the Advanced Embedded
+Linux Development course. I'm going to talk about
+the prerequisites and expectations I have
+for you as a student covering this course
+and also some of the common content
+we learnt regarding assignments and build
+environments that you'll use in
+completing the course. I'll also mention the books that are used as the basis
+of this course. Talking about my expectations
+for you as a student, I do expect that you have
+some working knowledge already of C programming
+and Makefiles. Ideally, you'd also have
+a little bit of knowledge of Linux command line
+and shell scripting. I think if you don't
+have this knowledge, you're still able to complete
+this course successfully. It just may take a
+little bit more time and a little bit more
+work than if you already had some exposure
+to these topics. For the assignments
+in this course, we'll use a Linux-based
+build environment. This could be a virtual machine or it could be actual
+Linux hardware. The Assignment 1 document will have some links
+that talk about the version of Ubuntu Linux that we're currently using
+for the assignments. This will give you
+some setup ideas and setup instructions about how you can set up your
+build environment. But there's a few different
+options you could consider. One, is if you have a
+Windows or MacOS main PC, you could use VirtualBox
+for your build environment. If you do that, you'll want
+to make sure that you have at least four gigs RAM and
+100 gigs of disk space. Again, refer to the Assignment
+1 setup instructions for any more specific content that's more up-to-date
+than this video. But if you are using
+a virtual machine, you'll need to have roughly double that amount of space available on your host. So if you're using
+four gigs of RAM, you'll probably need about eight gigs of RAM on your host. If you're short on
+host disk space, you can use a USB
+3 hard disk drive or especially a solid-state disk for virtual machine images. That will work as
+well. Second option is that you can have a
+dedicated Linux laptop. If you do that,
+just make sure you find one with at
+least eight gigs of RAM and 100 gigabytes
+of disk space. The more performant, the faster you'll be able to
+build your assignments, but it's not a
+requirement to have a super performant machine
+to complete this course. You can think like
+pawn shops and eBay to come up with
+something that could work. If you are going to just pick up an arbitrary system or a laptop, it's a good idea to google the whatever hardware model
+that you're picking up in Ubuntu just to make
+sure that you can see some indication
+that it's supported. Typically, most machines these days are
+supported pretty well, so it's usually not an issue. Then Option 3, look for some links in the Wiki pages for the
+assignment base repository, but another option is to
+use a cloud hosted runner, either AWS or Google Compute as a place that you can host a Linux instance you can
+use to do your builds. We'll make extensive use
+of git in the course and you'll turn in assignments
+through GitHub Classroom. The assignments are
+going to start with some sample repository content that comes from
+base repositories. These base Repositories
+are going to depend on which
+application we're building and which build tool
+we're using But typically, an assignment's going to
+start with a git merge. When you do git merges, depending on which
+files you've modified, you may see git merge issues. When you see these, use Internet searches to help you
+figure out the next steps. There's lots of good git
+information online or use the appropriate help
+channels for your class. Use Slack channel or
+use the forum post for help from your peers and from the student
+facilitators. I also wanted to talk
+a little bit about the books that I
+used in this course. I originally based all the
+content in this course, the first section is based primarily off the
+Linux System Programming, 2nd Edition book, which I refer to in some
+cases by acronym LSP. This is talking about how the system program is going
+to interact with the kernel. This is where the
+processes, threading, and POSIX overview comes from. Part of the first
+course also covers the Mastering Embedded
+Linux Programming , 2nd Edition book. This has some more of the practical aspects of
+building embedded systems. Then in the later
+parts of the course, we talk about
+driver development. This, we'll get into the content from Linux Device
+Drivers, 3rd Edition. This is all about
+theory, practice related to developing
+device drivers. None of these books are required
+to complete the course. This is all background
+material that you can reference based
+on slide content.

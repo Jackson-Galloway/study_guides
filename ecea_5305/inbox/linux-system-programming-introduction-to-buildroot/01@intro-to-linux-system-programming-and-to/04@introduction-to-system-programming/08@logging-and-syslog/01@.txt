@@ -1,0 +1,47 @@
+This video will talk about logging and
+the syslog utility. So you're familiar with, at this point,
+printf debugging, probably use that for all your C development that you've done so
+far. And you know that print output is one of
+the simplest ways that you can use to troubleshoot and debug your application. And it really works great for
+interactive programs, but what about when you're working
+on a headless embedded system? What can you do for
+using the same kind of, what's a simple way that you could
+troubleshoot and debug in that case? So one of the things that you should think
+about in a headless embedded system is how to do logging. You need typically some way to store
+information in log files that you could go in and retrieve later, given that you don't have this interactive
+component of running an application like you would if you were just
+writing a standalone program. And there's several different
+logging frameworks out there, but one of the simplest and the one that we're going to cover in this
+course is syslog and syslogd, or rsyslogd. So this is really a daemon, which we'll
+talk about more later in the course, but it's basically an application
+that runs in the background. It uses configuration to configure logging
+that is written to the file system, and typically you'll find those log files
+written in the var/log directory. And there's a set of API calls for syslog that will automatically
+write the log messages. You send two files in this directory
+based on some rules that you set up. So if you do man syslog, you can see more information about
+the usage of this utility, but it's really about splitting your log
+message into facilities and priorities. And so with your facilities,
+you can say this is a user application so this is maybe something
+that would run interactive. This is a daemon application
+meaning something that's running in the background. Or you can have these LOCAL0 to LOCAL7,
+just your own defined facility that you use for your application to
+split up the type of log message. And then there's also a priority
+associated with the log message, so you can say there's an error
+warning info or debug. And then you can set different rules based
+on the priority to say maybe you don't log it at all. Maybe you log it to a specific location. Maybe you display it on the terminal,
+if it's an error message for instance, rather than just
+logging it to a file. The usage of syslog is really simple. It's just you open log with the facility
+that I mentioned earlier and then any time you want to use it, you just
+use syslog, specify the logging level, and then just use exactly
+like you would with printf. And so for this simple example that I'm
+showing here results in a message like this in /var/log/syslog where we're
+printing out the print if statement. But rather than going to the terminal,
+it's going to go to this log file. So in terms of how syslog is configured, it will be a little
+different on every system. But for the Ubuntu application or Ubuntu
+OS or virtual machine that we're using for this course, it's going to happen
+based on rules that are located in /etc/rsyslog.d, and
+then just some message default.conf. So what we can see here
+is that the facility and log level if it's not
+mentioned here specifically. So like the log user that we mentioned,
+because it's not mentioned here specifically, it's going to end up
+getting written into /var/log/syslog.

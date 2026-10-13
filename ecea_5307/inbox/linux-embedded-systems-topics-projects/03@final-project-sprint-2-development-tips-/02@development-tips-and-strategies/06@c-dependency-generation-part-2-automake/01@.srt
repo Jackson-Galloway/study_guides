@@ -1,0 +1,446 @@
+1
+00:00:00,940 --> 00:00:04,881
+In this video I'll continue with
+discussion of C dependency generation and
+
+2
+00:00:04,881 --> 00:00:06,061
+talk about Automake.
+
+3
+00:00:07,140 --> 00:00:10,182
+So we're going to introduce Autoconf and
+Automake, and
+
+4
+00:00:10,182 --> 00:00:14,361
+understand how to use Autoconf to make
+to perform dependency generation.
+
+5
+00:00:16,440 --> 00:00:20,789
+So ,Autoconf created in 1991,
+it's around for a while.
+
+6
+00:00:20,789 --> 00:00:24,620
+It produces configure scripts that
+are used for building, installing and
+
+7
+00:00:24,620 --> 00:00:28,510
+packaging software, and you've probably
+used this in one way or another,
+
+8
+00:00:28,510 --> 00:00:31,460
+if you've built any Lennox
+based projects from source.
+
+9
+00:00:31,460 --> 00:00:36,131
+The implementation leverages BASH scripts
+that run on the host build system.
+
+10
+00:00:36,131 --> 00:00:38,851
+So, it's kind of built
+around BASH script language.
+
+11
+00:00:40,240 --> 00:00:43,592
+It uses a configure.ac file
+that describes your project.
+
+12
+00:00:43,592 --> 00:00:47,852
+And that's going to be used to generate
+the configure script that can then
+
+13
+00:00:47,852 --> 00:00:53,540
+generate a make file with all the correct
+dependencies based on your build setup.
+
+14
+00:00:53,540 --> 00:00:58,209
+It also might generate a header file
+containing defined directives for
+
+15
+00:00:58,209 --> 00:00:59,950
+common configurations.
+
+16
+00:00:59,950 --> 00:01:03,055
+And so, really what you're going
+to be doing with Autoconf and
+
+17
+00:01:03,055 --> 00:01:06,347
+Automake is configuring you're billed for
+a specific platform.
+
+18
+00:01:06,347 --> 00:01:11,359
+And what I mentioned before about if
+you've probably used this, if you've
+
+19
+00:01:11,359 --> 00:01:16,779
+installed anything on Lennox from source,
+this is a really common install step.
+
+20
+00:01:16,779 --> 00:01:21,852
+And I think we may have already done
+this with early tools that we used
+
+21
+00:01:21,852 --> 00:01:27,029
+in the semester for setting up our
+build and cross tool development.
+
+22
+00:01:27,029 --> 00:01:31,381
+But the ./configure &&
+make && sudo make install
+
+23
+00:01:31,381 --> 00:01:36,240
+sequence is a common way to configure and
+install.
+
+24
+00:01:36,240 --> 00:01:38,193
+Source our programs from source and
+
+25
+00:01:38,193 --> 00:01:41,651
+when you're using that you're
+using Autoconf and Automake.
+
+26
+00:01:43,740 --> 00:01:48,637
+So, the Autoconf documentation goes into
+a lot of detail about all the different
+
+27
+00:01:48,637 --> 00:01:49,950
+inputs and outputs.
+
+28
+00:01:49,950 --> 00:01:51,631
+And it's actually pretty complex.
+
+29
+00:01:51,631 --> 00:01:56,362
+There's a lot of different scenarios
+where these tools are used and
+
+30
+00:01:56,362 --> 00:02:00,440
+different reasons that you'd
+use specific input files.
+
+31
+00:02:00,440 --> 00:02:04,223
+But ultimately there's a collection
+of input files that can be used by
+
+32
+00:02:04,223 --> 00:02:07,450
+a collection of binary tools
+to produce some output files.
+
+33
+00:02:07,450 --> 00:02:11,161
+And those output files can be then used
+to generate your configure script.
+
+34
+00:02:14,740 --> 00:02:17,591
+So, if you look at
+the documentation again,
+
+35
+00:02:17,591 --> 00:02:19,930
+it can be a little bit intimidating.
+
+36
+00:02:19,930 --> 00:02:24,833
+There's a lot of different things that you
+can do with the tool, and there are kind
+
+37
+00:02:24,833 --> 00:02:29,410
+of some non obvious ways that the
+different tools interact with each other.
+
+38
+00:02:29,410 --> 00:02:33,802
+So, what I've done with this slide
+deck is used a simple of scheme for
+
+39
+00:02:33,802 --> 00:02:38,424
+Autoconf projects in like a really
+specific way that you could just set up
+
+40
+00:02:38,424 --> 00:02:40,140
+a simple project.
+
+41
+00:02:40,140 --> 00:02:44,612
+And so, it's based on this blog
+post that I've linked here,
+
+42
+00:02:44,612 --> 00:02:46,682
+if you want to see the source.
+
+43
+00:02:46,682 --> 00:02:51,520
+But there's a repository here that I've
+shared in the slides that will give
+
+44
+00:02:51,520 --> 00:02:54,861
+you a working example of this
+if you want to try it out.
+
+45
+00:02:56,140 --> 00:03:01,279
+Ultimately, we're generating configure.ac
+with a bunch of text values in it,
+
+46
+00:03:01,279 --> 00:03:05,829
+telling us how we are configuring
+that we're using a make file project.
+
+47
+00:03:05,829 --> 00:03:10,153
+And that we're building a specific
+app with specific version and
+
+48
+00:03:10,153 --> 00:03:15,104
+the content here is coming from a file
+that I've created with the app name,
+
+49
+00:03:15,104 --> 00:03:18,661
+the version and
+the sources that we're going to build.
+
+50
+00:03:21,140 --> 00:03:24,290
+Then the script also will
+create a makefile.am.
+
+51
+00:03:24,290 --> 00:03:27,649
+That will again specify the program
+as being the app name and
+
+52
+00:03:27,649 --> 00:03:31,961
+specify all the sources that we're
+using here in this configuration file.
+
+53
+00:03:34,640 --> 00:03:39,200
+And then it will run auto re-conf that
+will take those two files that is
+
+54
+00:03:39,200 --> 00:03:44,161
+generating and build an output file for
+us capable of using with configure.
+
+55
+00:03:45,640 --> 00:03:49,039
+So after we do run
+the do-autoconf-automake-setup,
+
+56
+00:03:49,039 --> 00:03:51,103
+will now have a configure script.
+
+57
+00:03:51,103 --> 00:03:54,536
+So, we can now run the configure script
+and you'll see that part of what configure
+
+58
+00:03:54,536 --> 00:03:56,701
+script's going to do is
+figure out our environment.
+
+59
+00:03:56,701 --> 00:03:58,670
+So, I found that we had gcc.
+
+60
+00:03:58,670 --> 00:04:02,384
+It's going to figure out whether or
+not we're cross compiling, since we didn't
+
+61
+00:04:02,384 --> 00:04:06,164
+specify that as a part of our build setup
+or as part of the arguments to configure.
+
+62
+00:04:06,164 --> 00:04:08,829
+It's going to say no and
+it's going to use native compile.
+
+63
+00:04:08,829 --> 00:04:13,774
+And then it's going to determine that we
+have going to make and that we should be
+
+64
+00:04:13,774 --> 00:04:19,386
+using a Makefile based on our arguments,
+or our configuration of the input files.
+
+65
+00:04:19,386 --> 00:04:22,940
+And it'll create a Makefile for
+us with dependency generation.
+
+66
+00:04:22,940 --> 00:04:25,974
+So, if we look under the hood here
+at what was actually created for
+
+67
+00:04:25,974 --> 00:04:26,930
+us in the Makefile.
+
+68
+00:04:26,930 --> 00:04:30,819
+We can see those exact same
+commands that we're using with gcc,
+
+69
+00:04:30,819 --> 00:04:35,369
+were automatically generated for
+us as a part of the Makefile generation.
+
+70
+00:04:38,340 --> 00:04:43,057
+So, another thing to know about Autoconf
+and Automake is that it's natively
+
+71
+00:04:43,057 --> 00:04:47,274
+supported with buildroot and
+you can use eval autotools-package.
+
+72
+00:04:47,274 --> 00:04:50,165
+If you do that,
+when you create a buildroot package,
+
+73
+00:04:50,165 --> 00:04:52,415
+it's automatically going to configure for
+
+74
+00:04:52,415 --> 00:04:56,415
+cross compilation using common setup
+flags for configure and Automake.
+
+75
+00:04:56,415 --> 00:04:59,744
+And it will automatically
+install the target commands to
+
+76
+00:04:59,744 --> 00:05:02,400
+buildroot/output/target directory.
+
+77
+00:05:02,400 --> 00:05:06,182
+So again, it can use some common
+capabilities of Automake to do that for
+
+78
+00:05:06,182 --> 00:05:07,940
+us automatically.
+
+79
+00:05:07,940 --> 00:05:12,767
+So, we can skip the step of
+the install copying specific binaries
+
+80
+00:05:12,767 --> 00:05:16,561
+like we have to do with
+the new make based projects.
+
+81
+00:05:18,640 --> 00:05:21,496
+So, some of the pitfalls for
+Autoconf and Automake,
+
+82
+00:05:21,496 --> 00:05:23,730
+it can be a little intimidating to set up.
+
+83
+00:05:23,730 --> 00:05:27,485
+It's got a lot of documentation,
+that is pretty complex and
+
+84
+00:05:27,485 --> 00:05:29,740
+a lot of varied use-cases.
+
+85
+00:05:29,740 --> 00:05:31,398
+It's been around for a long time, so
+
+86
+00:05:31,398 --> 00:05:33,610
+it does have a little bit
+of historical baggage.
+
+87
+00:05:33,610 --> 00:05:37,148
+It's really tailored for
+gnu software defined workflows,
+
+88
+00:05:37,148 --> 00:05:40,833
+like in terms of the requirements
+of the setup of your project.
+
+89
+00:05:40,833 --> 00:05:44,667
+And it's not very well supported
+on non Unix/ Linux variants,
+
+90
+00:05:44,667 --> 00:05:46,380
+especially not on Windows.
+
+91
+00:05:46,380 --> 00:05:50,441
+So, it's not a good choice for a platform
+project that you wanted to be able to
+
+92
+00:05:50,441 --> 00:05:54,256
+build on Windows or be able to build
+in certain scenarios on Windows, for
+
+93
+00:05:54,256 --> 00:05:56,960
+instance, if you wanted
+to do automated testing.

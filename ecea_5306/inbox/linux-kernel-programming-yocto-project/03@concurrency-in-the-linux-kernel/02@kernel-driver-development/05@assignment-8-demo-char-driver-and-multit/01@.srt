@@ -1,0 +1,161 @@
+1
+00:00:01,010 --> 00:00:03,786
+In this video,
+I'll do a demo of assignment eight.
+
+2
+00:00:07,440 --> 00:00:11,871
+So when your assignment three repository
+where you're making the changes for
+
+3
+00:00:11,871 --> 00:00:14,170
+user space testing and native testing.
+
+4
+00:00:14,170 --> 00:00:18,183
+If your own test.sh here, what you'll
+notice is that it's not actually
+
+5
+00:00:18,183 --> 00:00:20,080
+going to do any testing in this case.
+
+6
+00:00:20,080 --> 00:00:24,458
+And the reason is getting
+the automated test portion of
+
+7
+00:00:24,458 --> 00:00:29,122
+the device driver load working
+reliably on native Linux is
+
+8
+00:00:29,122 --> 00:00:33,611
+more than we wanted to take on for
+the current semester.
+
+9
+00:00:33,611 --> 00:00:38,443
+So the way you'll test your assignment
+eight implementation is with
+
+10
+00:00:38,443 --> 00:00:41,440
+your doctor or build environment.
+
+11
+00:00:41,440 --> 00:00:47,009
+So what these instructions will step you
+through from your assignment repository
+
+12
+00:00:47,009 --> 00:00:52,680
+is how you can build and run natively to
+verify your native driver implementation.
+
+13
+00:00:52,680 --> 00:00:57,656
+And I absolutely suggest you do this,
+definitely go through these steps and
+
+14
+00:00:57,656 --> 00:01:01,858
+verify that your driver's working
+properly using native build
+
+15
+00:01:01,858 --> 00:01:03,740
+on your own to host system.
+
+16
+00:01:03,740 --> 00:01:06,533
+But the way we're actually going to
+validate it is through the build up
+
+17
+00:01:06,533 --> 00:01:07,121
+build again.
+
+18
+00:01:09,340 --> 00:01:13,746
+So using your build as an example,
+if you're implementing assignment eight in
+
+19
+00:01:13,746 --> 00:01:16,981
+builder the way you test is
+just with the test.sh script.
+
+20
+00:01:16,981 --> 00:01:21,848
+You'll see this does the same thing it's
+done in the past where it will start by
+
+21
+00:01:21,848 --> 00:01:23,713
+kicking off a build rebuild.
+
+22
+00:01:26,801 --> 00:01:30,214
+After it finishes doing the builder build,
+
+23
+00:01:30,214 --> 00:01:33,360
+it's going to kick off
+the run q mu script.
+
+24
+00:01:33,360 --> 00:01:38,386
+And then you're run q mu script
+should load your drivers as it did
+
+25
+00:01:38,386 --> 00:01:43,518
+with assignment seven and
+it should also load your as dhr driver.
+
+26
+00:01:43,518 --> 00:01:47,114
+And then what's going to happen
+with the automated test is that
+
+27
+00:01:47,114 --> 00:01:51,765
+driver test script will get copied into
+the root file system of the q mu target,
+
+28
+00:01:51,765 --> 00:01:54,961
+it will run the driver test
+against the driver on q mu.
+
+29
+00:01:54,961 --> 00:02:00,296
+You and then it will run the socket test,
+which should be using
+
+30
+00:02:00,296 --> 00:02:05,240
+your as dhr driver again against the q mu,
+you instance.
+
+31
+00:02:05,240 --> 00:02:10,024
+And if everything works properly,
+you'll see all the prints that come out of
+
+32
+00:02:10,024 --> 00:02:14,900
+your ASD socket implementation mapped
+through your driver implementation.
+
+33
+00:02:14,900 --> 00:02:19,552
+And you'll see this message test, complete
+with success to indicate that everything
+
+34
+00:02:19,552 --> 00:02:21,601
+worked inside your q mu you instance.

@@ -1,0 +1,174 @@
+In this video, we'll continue
+with our discussion of processes and talk
+more about daemons, which we introduced briefly
+in a previous video. The learning objectives here. We're going to talk about process user groups
+and permissions, we're going to talk
+about the PS utility, which you can use to
+examine process status, and we're going to talk about
+introduction to daemons. There's multiple user and group IDs that are
+associated with a process. You can track things
+like who originally ran the process or who originally
+started the process, so that would be referred to as the real
+user and group ID. Then you can track also who the process is
+currently running as, so that's the effective user ID, which is probably what
+you're most interested in, because you want to
+know what permissions the process would have. The effective user
+ID for a process. The reason we track
+them separately is because the effective
+user ID can be changed. There's SetUID or SetGID that can change the
+effective user ID for the process that's run. There are ways to
+get the real or the effective user and group ID through these project calls. You might think, if
+I have the option to run or change to use
+different effective user IDs, what user and group should
+I be using for my process? There's a couple of
+different options you have. One is you could use
+the root account. That would ensure that you have access to
+whatever you need. Basically, the root account
+is going to be able to view pretty much
+everything in the system, or you could use some
+specific other account. When you're trying to decide
+which you should use, there's the doctrine of least-privileged rights that you can use to help
+make this decision. The doctrine of
+least-privileged rights says that a process should ideally execute with the minimum level
+of rights possible. Why would we want to execute with a minimum level
+of rights possible? Isn't that going to make
+our lives more difficult? In some ways it
+will because it's easier to just run as root and be able to access anything. But the reason you want to
+use the minimum level of rights is because
+you're going to be less susceptible to exploit. In other words, if
+someone's able to make your process
+do the wrong thing, it's less likely that they're going to be
+able to do something malicious if you aren't running with right
+privileges than if you are. The second reason is that you're less susceptible to
+your own errors. We've given this
+example before of rm-rf of sum mistypedd var and slash. If you run that as a root, it's going to start
+deleting the contents out of your real file system, because mistypedd var is
+going to evaluate to nothing. This is just one example of a case where you can
+get yourself into trouble if you give yourself more provisions than
+you need in your process. You always want to
+try to execute with a minimum level of rights
+that are possible. The Chapter 5 talks a little bit about process
+groups and sessions. These are just ways to
+group process together. The process group
+is a collection of processes and then a session is a collection of
+process groups. A session is associated with
+a controlling terminal. What do we mean by a
+controlling terminal? It means the terminal
+that you're using for login in a text-based
+operation, for instance. Where you enter your
+login information, where you enter your
+shell commands. For historical reasons,
+this is known as a TTY, which stands for teletypewriter. You can see that that's
+a historical term. But a TTY is just a
+device terminal I/O. Think of keyboard interaction, login, command I/O. That's really what a
+session is all about. It's created for the login
+shell on a specific TTY. You might have different TTYs, you might have a serial
+port you can login over, and you might have virtual
+terminals that you can login over in a terminal
+window for instance. They'll be sessions associate
+with each of those. There's always one single foreground process
+group within a session. This is the one that
+if you hit Control C, you're going to interrupt
+whatever's running in that foreground process group for the session you
+sent the Control C to. Then there's also zero or more
+background process group. If you want to start something
+in the background shell, you can use the ampersand
+after the shell commands. If you have a long
+running command, you had to type the
+name of the command, and then a space, and put the ampersand,
+that's going to put it in the
+background process group, which means you'll
+still be able to use the foreground for shell activity or shell commands while the process is
+running in the background. How do I see what
+processes are running, including those processes from, let's say, different sessions
+or from the background? Ps is what we can use to show
+status about the process. This is the utility
+that we can use on the command line
+for this purpose. There are lots of different
+ways to use this. For whatever reason, I've
+always used this ps axu, probably just a force of habit, but there's a lot of
+information you can collect about this relative to
+current running processes. Depending on how you invoke it, you get something like
+this in terms of output. This will show you
+at a glance which user account is
+running which process. Here I had an ecen5013 user. That's where you can see
+there's some activity going on here related to a
+bash session and build. You could see all the
+different processes that are kicked off from my user account and you could also see these processes
+that are running as root. Incidentally these
+with the brackets, this is showing kernel threads. Those will always
+be running as root. Then one other thing that you
+might now think of but it's also going to show
+you the command that you execute here
+on the terminal. It's going to show us ps, aux, and less being the two
+commands that we entered here. When I pipe to less,
+what this is just doing is rather than rolling off the screen if I
+have a lot of output, it's going to do
+screen by screen. Daemons, originally
+the intention was to pronounce dee-men. It's also commonly
+pronounced day-men, you can hear that that's the way I've been
+pronouncing it. That's my force of habit there. A daemon is just a
+process that runs in the background and does not connect to your
+controlling terminal. It's typically started at
+boot time and it's run as either root or a special
+user depending on what permissions you
+need for your daemon. Often this ends with
+a d in the name, so sshd or crond are two examples of popular
+daemon names for ssh or cron. Often a daemon will run as a
+child of init just because the init process is
+going to be the one that starts these, each
+one of the deamons. The book goes through
+how you can create a daemon using the
+functions that we talked about in the previous video regarding starting
+a new process. Fork will create that new
+child process that's going to become the daemon
+and then exit in the parent is going to allow the grandparent in that
+case init to continue. You want to kick off the daemon and then continue running. Rather than wait for
+the daemon to complete, you'll want to exit so that the init process can keep
+starting new daemons. Then setsid is going to create a new session
+and that's going to ensure that there's no controlling terminal
+because again, we don't really
+want to associate a daemon with
+controlling terminal. But it's possible that it might be depending
+on how it started. Chdir/ is going to change
+the working directory. The main reason for doing that
+would be if you start from a directory and then later wanted to delete
+that directory, you might have an error saying
+the directory is in use. That could be confusing. Then close all the
+open file descriptors and then redirect standard in, standard out, and standard
+error to dev/null. Why would you want to
+redirect to dev/null? If you didn't
+redirect to dev/null, it will end up going
+to the terminal. That can also be a confusing
+thing if you've got this thing in the
+background that suddenly starts spitting
+content out to the terminal. That's the reason for
+redirecting nodes. Why would we not want to just
+redirect to a file instead? Well again, you can end up setting up a relationship
+there between the file system and the
+daemon that could be hard to expect or troubleshoot. What if the files that
+you're writing to is on a file system that
+is trying to be unmounted by the
+user, for instance? Then the user will get errors saying that the file
+system is in use. If I'm not going to use
+standard in standard out, what's the best way
+that I can give user status and errors about status or give feedback about errors that are happening within the daemon. You can use a logging
+framework like syslog, like we talked about in Week 1. I did want to point out when
+we're talking about daemons, that there are different
+ways to do daemons. Some of the newer ways
+are related to system d, which is a new way of
+starting init processes. But I think it's
+valuable to go through the init related or the daemon related content that's
+in the book because this is the classic way to do it and you're definitely
+going to see this. But I just wanted
+to bring this up so that you know that there
+are different schools of thought about how to
+create a daemon and it's not necessarily that this is the only way
+to create a daemon. There's a couple of links
+in here with people saying exactly the opposite
+things about how to start a daemon
+and there's good reasons to do them different ways. If you want, you could read more about the different schools of thought about how
+to use a daemon. But for our purposes
+in this class, we'll follow the book's
+example and we'll use the classic methods for creating a daemon that
+are discussed there.

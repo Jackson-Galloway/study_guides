@@ -1,0 +1,241 @@
+Now that we've built
+the Linux kernel, we're going to talk
+about the last step in our embedded Linux
+system build process, which is to build our
+root file system. Learning objectives. We're
+going to learn about what's in a minimal
+root filesystem. The file system
+hierarchy standard that dictates the contents
+of a root filesystem. Then we're going to
+talk about busy box, which is going to be useful for us in generating our
+minimal root filesystem. If you stop at the end of the last video and you
+try to start QEMU and use a command like the
+one that we specified earlier that we showed earlier that we're going
+to use for Assignment 3, what you'll note is something
+like this where you see a kernel panic unable
+to mount root fs. What's missing is because we
+need our root filesystem. We've built the kernel,
+we built the device tree, we've built modules, but we haven't actually built
+the root filesystem. You have a few different
+options for root filesystem. One option is initramfs, and this is really just a set of files that gets
+extracted into RAM. The typical use for this is to set up your real
+root filesystem. In other words, lot of times you might end up
+with a scenario where your real root filesystem
+is located on some type of hardware that needs
+additional drivers that aren't built
+into your kernel. Or there might be other
+reasons you have to prepare the storage that's really holding your
+root filesystem. Anytime you have a
+scenario like that, you can use initramfs
+as a way to hold a copy of the root filesystem
+in RAM that allows you to get further on
+in the boot process. In our case, we're just going
+to use it for simplicity. We're going to use it instead of having to try to
+create a disk image, just takes one step
+out of the process to use initramfs instead. The initramfs is just
+going to be extracted into RAM and that's going
+to be our filesystem. Another option here that
+you would typically use, possibly more likely use depending on whether
+or not you needed the initramfs would be just
+specifying a block device. If you had an image stored
+on disk and you can just point it to you that
+image as a block device, then that wouldn't be
+a second way you can use the root equals
+parameter to point to the device you want to move. The contents. What's
+going to go into our minimal root filesystem? Init, content is going to
+be what starts the system. Usually these are going
+to be startup scripts. Then the shell is going
+to be what handles shell scripts and runs
+our command prompt, our interactive command prompt. Then daemons that we mentioned that are the
+background programs, they kicked off that
+provides services. Other things that
+are going to be in our minimal root filesystem, we'll have shared libraries. Our applications are
+going to be using, we'll have configuration
+files which you usually live in etc sys. We'll have dev nodes under dev that we use to interact
+with the kernel. Then we'll have proc and
+sys pseudo file systems, again where we can do
+some kernel interaction. Then finally you'll also
+have kernel modules, which would live
+under /lib/modules, and then based on
+the kernel version. The reason for this is
+because kernel modules are going to be compiled
+for a specific version. If you want to support multiple kernel versions
+with your root filesystem, you'd have different directories under root modules
+for each kernel. Where does the kernel expect all these files to be located
+in the root filesystem? This is again, another
+trick question, because it turns out the
+kernel really doesn't have any expectations about the content and the
+root filesystem. This was a design goal to keep the kernel and the root file
+system completely decoupled, or decoupled as
+much as possible. Really the only thing
+that the kernel expects about the root
+filesystem is that it can call some application
+to initialize the system. That's what's specified on
+that kernel command line that we showed for
+QEMU earlier where we specified slash and slash
+SH as they enter program. What about programs? What expectations do programs have about the content
+of the root filesystem? There there're definitely
+are expectations that userspace programs have about how other
+userspace programs, for instance, will use the root filesystem or how you will configure
+their root filesystem. Those expectations are
+defining what's called the filesystem hierarchy
+standard or FHS. The content of the file
+system hierarchy standard defines what all the different directories
+in the root filesystem, how they should be used. /bin is the location for
+programs for all users, including programs
+that are used at boot. /dev would be for a device
+nodes and other files. This is where we're
+going to create nodes that will let
+us interact with devices in the Linux kernel and connect to specific modules. /etc is where all the system configuration files
+are going to live. /lib are the shared libraries. Proc and sys are the
+sysfs file systems, again, allow us to
+interact with the kernel. Then sbin is where programs for the system administrator
+that are used as boot again are going to live. If you see something in
+/sbin and not in /bin, it's because the /sbin one might be restricted
+in terms of use and expected to only be used
+by the root account. /tmp is where temporary
+files live in, depending on how that's bounded, it might actually be a RAM disk, and so these files might be automatically deleted
+every time you boot. Then /usr, usr/bin,
+and usr/sbin. These are additional programs, libraries, and utilities. Probably in the case of
+usr/bin and usr/sbin, these would be ones that
+aren't used as a part of boot. Then another directory specified in the file system
+hierarchy standard is /var, and this is for files
+modified at runtime. One common location
+here is /var/log, which is going to
+contain our logs. One difference between
+temp and var is that var is typically going to
+be retained after boot. There may be some
+subdirectories under var that don't meet
+this, but in general, tmp might be replaced
+every boot in var that at least some
+content probably is likely persistent across boots. Now that we know what's
+in a root file system, how would we want to create one? This is part of what we'll
+be doing with Assignment 3. We need to start by creating a folder tree where
+we're going to put all the contents that
+will ultimately be located in our root file system. That's really the list of
+directories right here. It's as simple as using mkdir and creating all this
+tree of directories. When all the mkdir
+step get done, you should see a tree that
+looks like this that would be located in essentially your
+skeleton root file system. You can create this
+anywhere on the system. In Assignment 3, we'll use a temp directory
+for this purpose. Now we've got the root file
+system structure setup in terms of the directories, but how about the files? How do we get the structure actually filled with the files that we need in the
+root file system? It turns out there's a
+really great utility that we can use for this,
+that's called BusyBox. BusyBox, what it is is
+essentially a single application. A single binary executable that implements a whole bunch of
+essential Linux programs. Rather than having each
+one of these programs individually compiled into
+a separate executable, BusyBox provides one
+executable that does them all. In order to understand which
+command it should run, it uses a symbolic link to the name of the command
+that you're trying to run. For instance, if I want to use the cat utility to
+cut out a file, I would just have
+a symbolic link from bin/cat to BusyBox, and then when I run bin/cat, BusyBox will be
+able to see how it was invoked and know
+that I've tried to run the cat
+command and then run a version of the cat command
+that's specific to BusyBox. One thing to know about
+BusyBox is that often not all the arguments
+are supported and not all the features for
+every command are supported. But for our case where
+we're just trying to bring up a really
+simple system. It's a much easier option
+than trying to pull the source for every one of these utilities and to
+file them individually. In order to make and
+install BusyBox, we'll do steps very similar to what we're doing
+with the kernel build. We'll do a distclean,
+a defconfig, and then we'll
+specify our arch and our cross-compile and do a make. Finally, we'll specify the location of our
+root directory, where we want it to populate, and do this make install step. When we do the
+make install step, the install step is
+going to not only copy BusyBox into our
+root file system, but create all those siblings
+for us so that the commands that we need to run will be Simulink back to the
+BusyBox executable. Next we need to, because we're running BusyBox on our root file system and BusyBox has
+some dependencies in terms of libraries
+that it needs, we need to find out what
+dependencies those are, and we need to add
+those dependencies into our root file system. The readelf command is very
+useful for this purpose. The readelf that we're going to use is going to be based
+on our cross-compiler. We'll prefix the
+readelf command with our cross-compile string
+that we're using with the, for instance, the
+compile commands. When we do that, we can look
+for the program interpreter. This is what's
+going to ultimately run the BusyBox executable. We can see a reference to a file that's needed for
+the program interpreter. We see that that's located
+in the lib directory. We'll need to populate
+this file from our Cicero and place it
+into our lib directory. Similarly, if we search in
+the output of readelf for the BusyBox utility and search
+for shared library we'll see a list of shared libraries that are needed for BusyBox. For each one of these files, we need to locate them in our Cicero for our
+cross-compile toolchain. So wherever you installed
+the tool chain, you need to locate those
+files in the Cicero and then you need to copy them
+into the library location. Now since we're using
+an AR-64 target, rather than placing
+in slash lib we'll place them in slash lib64. So that should take
+care of most of the content that we're
+going to need in the root file system. One other thing that
+we're going to need to add, however, our devices, and there aren't many
+devices we're going to need, since our system is
+a very simple one. But there are a couple of devices that we're
+going to need. One is a null device. This is just a device
+that provides zeros or essentially has a place to dump content that's unused, and some of our startup scripts are going to expect
+that to exist. So we'll want to create that. Then we'll also need
+a console device that is available for interacting
+through the terminal. So for each one of
+these, we'll use the make node command and
+we'll specify the name, the type, and the major
+and minor number. So looking for example, at the null device, we can do a make node -M 666. So this would be the access
+permissions of the node, and then /dev/null is the
+node that we're creating. C specifies that it's
+the character type, and then one and three are just known major and minor
+numbers for our null device. So we need to run
+this command to create the dev null device
+in our root file system. And similarly, we'll
+need to create a dev console device using swapping out the major
+numbers 5 and minor number 1. So now that we've got a
+root file system created, how do we actually
+use this with target? So there's a few
+different options that are kind of standard ways to use a root file
+system with the target. One is a RAM disk, which is essentially a disk
+image that's loaded in RAM by the bootloader
+at boot time. Second is a disk image, so something that's
+written to like an SD card or maybe an actual
+spinning disk. Then, a third option is
+network file system. So it's one that we can just
+access over the network. Again, in our simple scenario, we're going to use the
+RAM disk and a disk that's just loaded into
+RAM by our bootloader. Our bootloader is
+essentially going to be our qemu emulation
+environment. So to prepare our
+RAM disk will use the cpio utility to
+create a.cpio file. This cpio utility is just
+going to essentially bundle the content of
+our root file system in a format that's understood
+by qemu that we can pass to the qemu as a Run command. Qemu is going to know
+how to extract that into a RAM disk that
+we can then boot into. So you can use a command
+like this with cpio, this is just saying
+find everything in my root file system that I've set up as using the
+previous instructions. Then create a cpio file
+using an owner of root:root. Again, for our simple case, we're only going to have
+a single root user. So you need to make sure
+that you don't specify your user account on the root file system because that user is not going to exist. You'll use a command
+like this to create the initramfs.cpio file. Then you'll compress
+it with gzip to match the format that is expected
+for our qemu start command. To compress, you just
+use this gzip command. So now we should have all
+the pieces put together. We've got the kernel, we've got the root file system, and we've got the content that we need populated
+into the file system, and we've got that
+all into a cpio file and compressed into a gz file. Now we're ready to
+actually run in qemu. So there is a star
+qemu terminal script that's gonna be provided with
+your assignment resource, and that it will have
+a command line that will take all the
+components to be built and issue a qemu command
+that's going to start our emulator using the content that we built as a part of this in previous lectures source. You should now be ready
+to move on to Part 2 of Assignment 3 and actually build and boot your own custom embedded Linux distribution.

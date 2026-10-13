@@ -1,0 +1,785 @@
+1
+00:00:00,230 --> 00:00:02,550
+Hi, students. This video,
+
+2
+00:00:02,550 --> 00:00:05,110
+I'll be talking about
+processes and threads.
+
+3
+00:00:05,110 --> 00:00:07,140
+The objectives for this
+video we're going to
+
+4
+00:00:07,140 --> 00:00:10,065
+learn and understand
+about Linux processes,
+
+5
+00:00:10,065 --> 00:00:11,820
+understand about Linux threads,
+
+6
+00:00:11,820 --> 00:00:16,290
+and also introduce inter-process
+communication, or IPC.
+
+7
+00:00:16,290 --> 00:00:18,690
+A Linux process is
+
+8
+00:00:18,690 --> 00:00:21,535
+executable object code
+that's running on hardware.
+
+9
+00:00:21,535 --> 00:00:25,220
+Often the encapsulation
+of that object code is
+
+10
+00:00:25,220 --> 00:00:26,765
+in what's called ELF format
+
+11
+00:00:26,765 --> 00:00:29,185
+or executable and
+linkable format.
+
+12
+00:00:29,185 --> 00:00:31,055
+This is what the,
+
+13
+00:00:31,055 --> 00:00:33,050
+ultimately the binary
+that you're using to
+
+14
+00:00:33,050 --> 00:00:35,680
+execute and run on
+any operating system,
+
+15
+00:00:35,680 --> 00:00:37,315
+but in the case of Linux,
+
+16
+00:00:37,315 --> 00:00:39,620
+on Linux operating system.
+
+17
+00:00:40,160 --> 00:00:42,440
+For Linux process,
+
+18
+00:00:42,440 --> 00:00:44,120
+the necessary resources that are
+
+19
+00:00:44,120 --> 00:00:46,070
+needed to run are managed
+
+20
+00:00:46,070 --> 00:00:48,140
+and allocated by
+the kernel through
+
+21
+00:00:48,140 --> 00:00:49,550
+the system call
+interface that we've
+
+22
+00:00:49,550 --> 00:00:52,245
+discussed in previous lectures.
+
+23
+00:00:52,245 --> 00:00:54,710
+The first is timers
+
+24
+00:00:54,710 --> 00:00:57,455
+or files or any type
+of hardware access,
+
+25
+00:00:57,455 --> 00:00:59,420
+it's all organized and
+
+26
+00:00:59,420 --> 00:01:03,145
+managed by the kernel
+through these system calls.
+
+27
+00:01:03,145 --> 00:01:06,560
+All Linux processes
+reference by a process ID.
+
+28
+00:01:06,560 --> 00:01:07,910
+That's something
+that you can use
+
+29
+00:01:07,910 --> 00:01:09,470
+to interact with the process,
+
+30
+00:01:09,470 --> 00:01:13,325
+to send it signals to
+stop it, for instance.
+
+31
+00:01:13,325 --> 00:01:18,020
+The process is going to
+run on what's referred to
+
+32
+00:01:18,020 --> 00:01:19,760
+as a virtualized processor and
+
+33
+00:01:19,760 --> 00:01:22,260
+a virtualized view of
+memory. What does that mean?
+
+34
+00:01:22,260 --> 00:01:24,920
+It means that from the
+processes perspective,
+
+35
+00:01:24,920 --> 00:01:28,445
+it appears to have its own
+dedicated RAM and CPU,
+
+36
+00:01:28,445 --> 00:01:30,500
+it doesn't know about
+any other processes
+
+37
+00:01:30,500 --> 00:01:32,270
+that are running in the system,
+
+38
+00:01:32,270 --> 00:01:36,270
+but in reality it's being
+time-shared by the kernel.
+
+39
+00:01:36,710 --> 00:01:39,740
+A visual depiction
+here of what we mean
+
+40
+00:01:39,740 --> 00:01:42,500
+by having virtualized
+processor and memory.
+
+41
+00:01:42,500 --> 00:01:44,765
+Again, from the
+processes perspective,
+
+42
+00:01:44,765 --> 00:01:47,270
+it just sees a chunk of
+RAM that it has access to
+
+43
+00:01:47,270 --> 00:01:49,945
+for the storage of its data,
+
+44
+00:01:49,945 --> 00:01:53,930
+and it has access to a CPU
+and it's executing over
+
+45
+00:01:53,930 --> 00:01:55,340
+time and it doesn't
+know anything
+
+46
+00:01:55,340 --> 00:01:58,105
+about any time-shifting
+that's happening.
+
+47
+00:01:58,105 --> 00:02:01,430
+But in reality, what's
+happening is that the process
+
+48
+00:02:01,430 --> 00:02:02,990
+RAM might be physically split
+
+49
+00:02:02,990 --> 00:02:05,050
+in different locations
+in physical RAM,
+
+50
+00:02:05,050 --> 00:02:08,315
+and the process CPU is
+getting time split with
+
+51
+00:02:08,315 --> 00:02:10,340
+other processes that are
+running on the system and
+
+52
+00:02:10,340 --> 00:02:13,380
+it's not really running
+continuously in time.
+
+53
+00:02:14,230 --> 00:02:17,600
+A process is made of
+one or more threads,
+
+54
+00:02:17,600 --> 00:02:21,130
+and a thread is a unit of
+activity within a process.
+
+55
+00:02:21,130 --> 00:02:23,240
+If you use, by default,
+
+56
+00:02:23,240 --> 00:02:25,775
+if you just compile a
+Hello World application,
+
+57
+00:02:25,775 --> 00:02:28,025
+you have one process and
+you have one thread,
+
+58
+00:02:28,025 --> 00:02:31,160
+and your application is
+referred to as single-threaded.
+
+59
+00:02:31,160 --> 00:02:33,770
+If you specifically
+start other threads,
+
+60
+00:02:33,770 --> 00:02:36,680
+you'll be, as soon as you
+start the second thread,
+
+61
+00:02:36,680 --> 00:02:39,470
+you'll be what's called a
+multi-threaded application.
+
+62
+00:02:39,470 --> 00:02:41,300
+In a multithreaded application,
+
+63
+00:02:41,300 --> 00:02:43,250
+every thread is going
+to have its own stack,
+
+64
+00:02:43,250 --> 00:02:45,065
+which will be storing
+local variables,
+
+65
+00:02:45,065 --> 00:02:47,720
+it will be storing the
+call stack that's used.
+
+66
+00:02:47,720 --> 00:02:48,950
+For instance, if you call
+
+67
+00:02:48,950 --> 00:02:51,990
+a function or some
+set of functions,
+
+68
+00:02:51,990 --> 00:02:53,270
+that will be tracked inside
+
+69
+00:02:53,270 --> 00:02:55,895
+the call stack for
+that specific thread,
+
+70
+00:02:55,895 --> 00:02:57,980
+and so it'll have
+the processor state
+
+71
+00:02:57,980 --> 00:02:59,405
+and the current location
+
+72
+00:02:59,405 --> 00:03:05,160
+for a call tree in a specific
+call stack for that thread.
+
+73
+00:03:05,690 --> 00:03:08,375
+An important distinction between
+
+74
+00:03:08,375 --> 00:03:10,970
+Linux threads and Linux
+processes is that,
+
+75
+00:03:10,970 --> 00:03:12,440
+well I mentioned before
+
+76
+00:03:12,440 --> 00:03:14,930
+every process has its
+own virtualized view of
+
+77
+00:03:14,930 --> 00:03:15,950
+memory and appears to have
+
+78
+00:03:15,950 --> 00:03:19,640
+its own memory
+isolated to itself.
+
+79
+00:03:19,640 --> 00:03:21,650
+The memory for
+threads is shared,
+
+80
+00:03:21,650 --> 00:03:23,434
+so every thread within a process
+
+81
+00:03:23,434 --> 00:03:26,820
+has exactly the
+same memory space.
+
+82
+00:03:26,930 --> 00:03:30,065
+If every process has
+its own virtual memory,
+
+83
+00:03:30,065 --> 00:03:33,500
+but every thread
+shares virtual memory,
+
+84
+00:03:33,500 --> 00:03:36,520
+then how would you share
+memory access between threads?
+
+85
+00:03:36,520 --> 00:03:37,835
+If you wanted to access
+
+86
+00:03:37,835 --> 00:03:40,205
+a global variable between
+two different threads,
+
+87
+00:03:40,205 --> 00:03:42,800
+you can just access
+it directly, however,
+
+88
+00:03:42,800 --> 00:03:45,440
+you need to think about
+if you're modifying
+
+89
+00:03:45,440 --> 00:03:46,670
+it from one thread and
+
+90
+00:03:46,670 --> 00:03:48,170
+you're reading it
+from another thread,
+
+91
+00:03:48,170 --> 00:03:49,610
+iIf you want to make
+sure that you have
+
+92
+00:03:49,610 --> 00:03:51,740
+a consistent view
+of that memory,
+
+93
+00:03:51,740 --> 00:03:53,380
+you're going to have to
+use synchronization,
+
+94
+00:03:53,380 --> 00:03:56,825
+and we'll talk about different
+synchronization strategies
+
+95
+00:03:56,825 --> 00:03:59,230
+later in the semester.
+
+96
+00:03:59,960 --> 00:04:02,180
+By comparison, if you're sharing
+
+97
+00:04:02,180 --> 00:04:04,670
+memory between
+different processes,
+
+98
+00:04:04,670 --> 00:04:06,920
+that's not just built-in
+like it is with threads,
+
+99
+00:04:06,920 --> 00:04:08,180
+because every process has
+
+100
+00:04:08,180 --> 00:04:10,330
+its own virtualized
+view of memory.
+
+101
+00:04:10,330 --> 00:04:11,900
+You won't be able
+to, for instance,
+
+102
+00:04:11,900 --> 00:04:13,580
+access a global
+variable that's in
+
+103
+00:04:13,580 --> 00:04:15,460
+a different process by default.
+
+104
+00:04:15,460 --> 00:04:18,370
+However, there are different
+mechanisms for doing that,
+
+105
+00:04:18,370 --> 00:04:20,750
+and those are called
+inter-process communication,
+
+106
+00:04:20,750 --> 00:04:22,610
+which we'll cover a little
+bit today and we'll get into
+
+107
+00:04:22,610 --> 00:04:25,380
+a lot more detail
+later in the semester.
+
+108
+00:04:26,080 --> 00:04:29,050
+The Linux signal is one of
+
+109
+00:04:29,050 --> 00:04:32,795
+the simplest ways to do
+inter-process communication.
+
+110
+00:04:32,795 --> 00:04:35,980
+A signal is just a one-way
+asynchronous notification
+
+111
+00:04:35,980 --> 00:04:38,590
+that can be sent from
+the kernel to a process.
+
+112
+00:04:38,590 --> 00:04:41,140
+It could be sent from one
+process to another process,
+
+113
+00:04:41,140 --> 00:04:43,910
+or it could be sent from
+a process to itself.
+
+114
+00:04:43,910 --> 00:04:46,270
+The process can set up
+
+115
+00:04:46,270 --> 00:04:47,485
+a signal handler that
+
+116
+00:04:47,485 --> 00:04:49,540
+controls how a signal
+is responded to.
+
+117
+00:04:49,540 --> 00:04:52,285
+There's a chunk of code
+you can define that says,
+
+118
+00:04:52,285 --> 00:04:55,530
+if a specific signal
+occurs, do this action.
+
+119
+00:04:55,530 --> 00:04:57,805
+For example, a common signal
+
+120
+00:04:57,805 --> 00:04:59,720
+that you might want to
+handle will be Control C.
+
+121
+00:04:59,720 --> 00:05:01,855
+If you've ever run
+an application on
+
+122
+00:05:01,855 --> 00:05:04,285
+a Linux terminal before
+and wanted to stop,
+
+123
+00:05:04,285 --> 00:05:06,190
+you've probably use
+the Control C key.
+
+124
+00:05:06,190 --> 00:05:07,870
+What you're doing
+there is sending
+
+125
+00:05:07,870 --> 00:05:10,400
+a SIGINT to stop the process,
+
+126
+00:05:10,400 --> 00:05:12,020
+and your code can had
+
+127
+00:05:12,020 --> 00:05:14,540
+a signal handler that
+handles that SIGINT and
+
+128
+00:05:14,540 --> 00:05:19,560
+does things like shutdown
+resources and gracefully close.
+
+129
+00:05:20,090 --> 00:05:23,690
+If you write a signal handler
+or use a signal handler,
+
+130
+00:05:23,690 --> 00:05:25,250
+you must use signal say,
+
+131
+00:05:25,250 --> 00:05:26,855
+functions that are safe to call
+
+132
+00:05:26,855 --> 00:05:28,770
+asynchronously. Why is that?
+
+133
+00:05:28,770 --> 00:05:30,800
+It's because there's
+no guarantee
+
+134
+00:05:30,800 --> 00:05:32,645
+of any synchronous capability
+
+135
+00:05:32,645 --> 00:05:34,520
+when you hit Control C
+
+136
+00:05:34,520 --> 00:05:36,860
+relative to what's running
+in your current code.
+
+137
+00:05:36,860 --> 00:05:39,800
+If you're calling
+some function in
+
+138
+00:05:39,800 --> 00:05:42,470
+your running process and you hit
+
+139
+00:05:42,470 --> 00:05:43,760
+Control C and your signal
+
+140
+00:05:43,760 --> 00:05:45,620
+handler calls that
+same function,
+
+141
+00:05:45,620 --> 00:05:46,970
+you need to make sure that,
+
+142
+00:05:46,970 --> 00:05:48,470
+that function is safe to call in
+
+143
+00:05:48,470 --> 00:05:50,400
+two different contexts at once.
+
+144
+00:05:50,400 --> 00:05:53,960
+One of the easiest ways
+to do that would be to,
+
+145
+00:05:53,960 --> 00:05:55,370
+or one of the easiest
+ways to break
+
+146
+00:05:55,370 --> 00:05:58,765
+that capability would be to
+access global variables.
+
+147
+00:05:58,765 --> 00:06:01,310
+If you're accessing
+global variables in
+
+148
+00:06:01,310 --> 00:06:03,290
+a non consistent way
+
+149
+00:06:03,290 --> 00:06:06,650
+between two different functions
+that are asynchronous,
+
+150
+00:06:06,650 --> 00:06:07,910
+that wouldn't be a safe thing
+
+151
+00:06:07,910 --> 00:06:09,865
+to do from a signal handler.
+
+152
+00:06:09,865 --> 00:06:12,320
+You have to keep in mind
+when you write these,
+
+153
+00:06:12,320 --> 00:06:13,940
+that process code can
+be interrupted at
+
+154
+00:06:13,940 --> 00:06:16,010
+anytime by a signal
+
+155
+00:06:16,010 --> 00:06:19,140
+and your signal handler could
+be invoked at any time.
+
+156
+00:06:20,330 --> 00:06:23,120
+IPC, more generically,
+
+157
+00:06:23,120 --> 00:06:25,385
+or Linux processing
+or communication,
+
+158
+00:06:25,385 --> 00:06:27,530
+allows the processes to exchange
+
+159
+00:06:27,530 --> 00:06:30,120
+information without having
+that global memory space.
+
+160
+00:06:30,120 --> 00:06:32,825
+Processes keep their own
+virtualized view of memory,
+
+161
+00:06:32,825 --> 00:06:35,260
+but they can still exchange
+information with each other.
+
+162
+00:06:35,260 --> 00:06:38,570
+There are several
+different IPC mechanisms
+
+163
+00:06:38,570 --> 00:06:39,920
+that we'll get into
+
+164
+00:06:39,920 --> 00:06:41,270
+more detail about a couple
+
+165
+00:06:41,270 --> 00:06:42,560
+of these later in the semester.
+
+166
+00:06:42,560 --> 00:06:45,230
+But pipes, semaphores,
+message queues,
+
+167
+00:06:45,230 --> 00:06:47,000
+and shared memory
+are all examples of
+
+168
+00:06:47,000 --> 00:06:47,870
+ways that you can do
+
+169
+00:06:47,870 --> 00:06:50,310
+inter-process
+communication in Linux.

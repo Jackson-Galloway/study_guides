@@ -1,0 +1,67 @@
+This video is an overview and
+demo of assignment number two. So looking at the content for assignment
+number two you'll start again with a ghetto classroom link that's going
+to create an empty repository for you. And then you're going to use Github
+get instructions here to set up the content of this repository. To start with the content of your previous
+submission for assignment number one. So this will step you through all
+the process to get that updated on your, to begin your assignment with
+your content from assignment one. It's also going to bring in some content
+from our assignments based repository. That's going to help set
+up unit testing for you and help you with some stub implementations. So what you should have as a part of this
+repository setup you should have your ASD assignments repository that's
+going to have our source and starter code will merge that
+content into your local repository. And then you push that up into your get up
+classroom assignment to repository which is where you'll do your submission. So you can start by setting up Github
+actions for your repository and use the same link and
+the instructions that we talked about for assignment number one for this. Then for the implementation you what
+you're going to do here is set up that arm cross compiled toolchain that we just
+discussed with the embedded tool chains, discussion. And follow the instructions here will
+be slightly different depending on the version of Arm compiler that
+we're using at the time you run this, but it's basically going to be about
+again downloading the content from arm installing it on your host system and
+setting up that cross compiler. And just to show that you've
+got this set up correctly. Run the r64 gcc command and
+use the dash print system that option to show that that you've
+got the tool installed and that your your sister it is located
+on your host root file system. So then what we're going to do is
+take the writer application that we implemented with assignment number one and
+replace it with a C based application. That just does the same thing. One difference though is that we're
+going to have cis log logging. Set up for your application and you're
+going to log using the log user facility. So using the instructions about setting
+up sys log will configure that to be used in our simple writer
+dot c application. So that you'll use that sys log capability
+to write a logging message saying that it wrote a string to the file and
+write that with log debug level. And if there are any errors that happen, use log air to log those
+two sys log as well. So you'll need a make file that includes
+the default target that builds writer application, a clean target. And then you're going to add support for
+cross compilation. So you'll use the make
+variable cross compile. And when that specified, you're just going to prefix that
+directly before your gcc applications. So we'll be able to use that define it
+to air at r64 non Lenox avenue dash. And that will be prefixed
+onto the gcc command. So if you define cross compile,
+you'll be cross compiling. If you don't define cross compile,
+you'll just be native compiling and using just gcc. So then you'll you'll make
+the modifications to the finder, test script that cleans any
+previous build artifacts and then compiles your writer application
+using native compilation and uses that writer utility instead
+of the writer.shh, shell script. And you'll verify then that your finder
+test script works with your writer application instead of your writer. Shh shell script. And using that full test shell script, you should be able to prove that all
+of your scripts run and pass and this will verify that your
+implementation meets the requirements. Then one more step you'll do is you'll
+run the file utility that I showed in the previous videos. That's going to show you that you're using
+a r64 execute herbal when you build with your cross compile tool. So use the output of that file utility to
+write a file result dot text file in your repo to to show that you've got
+that set up properly as well. All right, so looking at a demo of of
+the assignment to if I run the full test script, you can see it's
+running the unit tests, there's nothing that
+we added in this case. So there's no changes there. Well, you'll see though when it goes
+through the finder app step is that it's going to run your native build
+instead of the cross compile build. And so it's going to use your writer
+application instead of your writer dot shh file. And you'll see that native
+compile step happening here. So the unit test is going to compile and
+run natively. It's not going to run with
+the cross compile defined. So we won't really be testing the cross
+compile implementation quite yet. We'll be testing that with assignment
+number three, you'll just use the output text files to show that you've got
+your cross compile set up proper. And that will make sure that assignment
+three is going to be successful.

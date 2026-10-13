@@ -1,0 +1,224 @@
+In this video, I'm going to
+do an overview and demo of Assignment 4 Part 2, the
+Buildroot implementation. Part 2 of Assignment
+4 is going to be all about taking all
+the work that we've done previously with our
+manual Linux kernel build, and putting all that
+work into buildroot. We're going take our application that was previously running through manual Linux kernel and root filesystem
+build we have, and we're going to get that
+running in buildroot instead. You'll start by using a
+GitHub Classroom link to create a repo for your
+buildroot assignment. This is going to be a case where you're going to reference your Assignment 3 repository from your buildroot repository. Your buildroot repository
+is going to point back to the Assignment
+3 repository to pull in your source code, compile it for the target, and deploy it on the buildroot image that
+we'll use with QEMU. The git instructions
+here are going to walk you through pulling in the reference example
+code we've got from the base repository
+for buildroot, and then this repository
+overview is going to show you how all these repositories are
+going to interact. It looks a little complicated, but once you get the hang of it, all the rest of the
+assignments are going to use this same type of format. I'll go over this in
+a little more detail, what we're going to cover here. From the base repository, you'll be able to merge
+in some content that has some starter code specific for Assignment 4 in buildroot, and that's really part of what your Assignment 3 repository
+is going to contain. Then inside your
+Assignment 4 repository, you're going to start
+with the content from the buildroot
+assignments base repository. This is going to be a
+bunch of scripts and other tools that
+are setup for you to be able to easily
+kick-off buildroot builds. That's going to be the basis of your Assignment 4 repository. You're also going to add
+buildroot as a submodule. The buildroot project
+has its own git repo, and you're just going
+to reference that inside your repo as
+a git submodule. If you're not familiar with submodules or haven't
+worked with them before, do some searches or
+follow the links in the assignment to read more about how git submodule works. But it's really just a
+reference to another repository that is going to be a subfolder
+inside your repository. Then the code that you add in your Assignment 4
+repository is going to reference back to your
+Assignment 3 repository. That's where your
+source code for your application's
+going to live, and it's where some scripts are going to be that you need to ultimately place into the
+target root filesystem using your buildroot setup. You'll need to set up
+Github Actions for your buildroot repo in order to do the automated
+testing for your repo. For starting with
+this assignment, the Github Actions needs to
+have access to your SSH key. The reason is if we look back at how this
+reference works, this repository is
+going to be private. Because you can only access this repository
+with your SSH key, you need to tell your
+Github repository for Assignment 4 how to be able to access that content in
+the Assignment 3 repo. To do that, you can use the SSH key as a
+repository secret. If you follow the
+instructions here in setting up Github Actions, there's a section on setting up a secret for SSH key access. That's what you'll need
+to do in order to make your Github Actions automated testing work with
+your buildroot repo. As I mentioned before, when you create your Github
+Classroom assignment, you'll ultimately setup
+your buildroot repository using some content that we provided for you in
+buildroot assignments base, and then you're going
+to add your buildroot as a git submodule. The branch that you use
+here is going to change, so make sure you look at
+the latest version of the assignment text to
+know which branch to use. When you do add that, make sure that you've saved
+the appropriate commit hash. If you just do a git add with this URL for the buildroot repo, you need to also
+change directory into that submodule and checkout
+this specific branch. After you do that, go back into the base of your repo and git
+add that submodule. That make sure that
+you've checked in the repo at the exact
+branch that you want to use as opposed to just using the master branch and whatever is the latest working
+tree for buildroot. Again, if you haven't had as much experience
+with git submodules, do a little bit of reading on about what those are all about. That might help clarify
+these instruction steps. What you need to
+ultimately do here is add an AESD assignment package, such that you can
+build and install the Finder test and Finder application
+that we've been working for so far
+in this class. One thing to know
+about, you want to use the SSH URL and not HTTPS. Reason for this is that we've standardize on using
+keys that will give us access and the GitHub automation that we were talking
+about previously, that's going to require
+SSH access and so that means that you need
+to use your SSH URL. If you look at an example here, what I mean by the SSH URL, you can see that the
+clone option here is to use HTTPS or SSH. Make sure you're using the
+version here that's used with SSH and not the version
+that's used with HTTPS. There's really very little
+that we need to change about our application
+from assignment 3. There's a couple
+of small changes here to make things work a little bit better with the builder
+implementation and QMU. You'll need to make
+a few small changes to your assignment
+3 repo for this. Then you're ultimately going to run build.sh the first time. When you do that, it's going
+to generate a configuration for you called QMU
+arch for deaf config. This is where your
+individual settings that select the package
+that you're using, in this case, ASD
+assignments and any other customizations are going to be saved in that file. In order to actually
+get that saved in the base external
+directory of your repo, you need to run the
+safe config script. That's going to save that out to this base external
+configs directory, and you should now be able to
+check that into your repo, that way if you clone the
+repo or if you push your repo up to run from your
+automated test, for instance, it's
+going to be using the right configuration that includes the package
+that you've added. You'll want to select that
+ASD assignments package, add it into your image using that main menu config from
+the builder subdirectory, and then save the
+configuration again. This time you should see that you are packaged was added to that configuration
+file that you've added initially with the
+first save config step, and you should be able
+to see the difference. It'll be added there in the
+text of that config file. Now run build a second time, and this time it's actually
+going to build the system. It's going to do
+all the downloads, it's going to do all
+the compile steps and this is going to
+take quite a bit of time to complete depending
+on how fast your system is, it's going to be anywhere
+from a half hour to several hours to complete. This is where I
+mentioned before, that you might want
+to kick off early, maybe even before you have
+everything implemented in your AST assignments repository just so you can get a
+start on this step. Then to run your image, you can use the run
+QMU script provided. If you want to see where the content of this
+file comes from, it's under the builder
+at tree in the board QMU Arch 64 virt file. You need to add a clean
+script that's going to run make disk clean from the
+builder and subdirectory, and that'll have
+provide a way that you can ensure that you can build successfully
+from a clean build. Then after your initial
+bill completes, you need to add the
+drop bear package in and that's going to allow
+you to support SSH. Once you do add the
+drop bear packaging, you need to save configuration again with the safe
+config script. You'll use make menu config
+the same way you did to add your AST assignments package and in order to search for
+the drop bear package, you can use the backslash from the menu config utility
+and then type drop bear. That'll tell you the pathway where the package is located. Next thing you need to do is
+save the default password. Again, in the
+buildroot menu config if you search for setting
+the root password, you'll see the option
+to set it there. Again, you need to
+make sure that you save that with the
+safe config script. Then you should
+be able to verify that you could use SSH to login to your host
+using port 10022, and the root user password and this part that was
+discussed in videos. You also then want to
+be able to transfer your temp assignment
+for result file, which is one of
+the modifications you're making to
+define your script. You want to transfer
+that out from your QMU instance back to
+your assignment 3 repository. Really this is proving that
+you can use SSH and SCP to interact with your
+QMU virtual machine from your host device. Tag your repo with the
+assignment complete tag. There's some instructions
+here showing you how to do a tag in GitHub if you
+haven't done this before. As I mentioned, the tips video, there's some links here
+talking about how to enable download directory
+and compiler cash. The download directory is
+probably the more important of these to speed up, especially builds
+from clean build. This will make a
+pretty big difference. Look into doing this to
+speed your builds up. What you should see with
+this assignment when you run the full test script
+from your builder repo, you should see it going through
+the builder build steps. Now, this is going to
+cache your previous runs, so it'll take much
+longer the very first time when it pulls in all the
+sources and does the build. After you run it
+completely once, you should notice that this
+part goes much faster. It's going to go through
+the steps of entering the buildroot
+directory and kicking off the build as a part
+of the build script. It's going to build the image. Then it's going to
+boot your QEMU image. What you should see
+here shortly after it boots the QEMU image, it's going to login over SSH. Using that dropbear SSH client. Then it's waiting a minute to ensure that all
+processes are started up. Then you should see it
+run your test script from inside QEMU. The results should match what you would expect
+if you run it natively. That your finder script, your brighter
+application, all work successfully when
+run inside QEMU. If you see this
+last message here, you should see that it completed your tests
+with a success. You can also run the
+components interactively. If you look at the content
+of this directory, you should see a run QEMU script that you can use to run
+QEMU independently. If I run QEMU script, this is going to bring
+me up to a login prompt. Now because I've set my root
+password in a buildroot, I can log in here as root, root. Now I can just run find a test. It should pick out my
+finder test and it should run the test
+independently. The reason all this is working is because
+we're putting it in a directory that
+includes the path. Then to exit, I
+can do Control A, C, and Q to exit QEMU. Second thing you'll
+notice here about the run QEMU script, I just look at the content. You can see here this
+line that's saying hostfwd 1022 to 22. What this is going to do is take the local host port 1022, and forward that into
+port 22 in the container. Twenty-two is our SSH port. That's going to
+allow us to access the QEMU virtual machine from
+the host using port 1022. Let me show you how that works. If I do a run QEMU in this window and I start
+my QEMU instance, and once it's boot up, I can take a new terminal
+window on the host and run my SSH command to
+SSH in on port 22. Make that a little bigger
+so it's easy to see. You can see here that
+I'm going to SSH in the dash p argument
+gives a port, so port 1022. I'm going to use username root, and I'm using localhost from
+the host build machine. This is just doing
+a loop back to my exact same IP
+address, my host. But because I've
+port forwarded 1022, I'm going to be logging into
+my QEMU instance over SSH. I do this, I'll get
+prompted for a password, enter the root password, I'll be inside the QEMU running instance of
+my embedded system. You can see I can run my
+finder tests then from SSH, everything works just like
+it would if I had logged in interactively through
+the QEMU script. One benefit of this
+implementation is that we can use
+this with SCP. If I want to pull a file
+off of the raw file system, I could do SCP. I need to use a capital
+dash p for port. But I can say root@localhost
+and then I can use user then finder test.sh. Let's just copy that
+into my local directory. It prompted for a
+password again. There you can see a copies
+that file in locally. This should match what was
+running on the device. This gives you some
+useful tools you can use for interactively
+working with the QEMU running image
+of your instance.

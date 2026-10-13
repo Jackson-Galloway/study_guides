@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Time</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>How does a Linux based system ensure wall time remains correct after being powered down for a long period of time?  Select any answer(s) which apply.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~yZxlQfrVEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>Uses a battery powered hardware clock </p></div></li>
+<li><input name="autoGradableResponseId~yZxlQfrVEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>Uses NTP (Network Time Protocol) </p></div></li>
+<li><input name="autoGradableResponseId~yZxlQfrVEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>Using Monotonic Time </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Kernel timer intervals measured in ticks or jiffies are the same frequency on all hardware platforms.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~5NAMe_rVEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~5NAMe_rVEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Systems using 32 bit processors and time_t data structures will experience a clock rollover event resulting in possible time errors in the year 2038.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~7peO8PrVEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~7peO8PrVEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You are writing software which is using the POSIX clock functions to calculate time between two events.  Which clock type should you use for timestamping the events?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~98TNCfrVEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>CLOCK_MONOTONIC </p></div></li>
+<li><input name="autoGradableResponseId~98TNCfrVEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>CLOCK_REALTIME </p></div></li>
+<li><input name="autoGradableResponseId~98TNCfrVEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>CLOCK_BETWEEN_EVENTS_TIMESTAMP </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You are writing software which is using POSIX clock functions to display the current system time in Mountain Standard Time.  Which clock type should you use for getting the current time?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~C-QEK_rWEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>CLOCK_REALTIME </p></div></li>
+<li><input name="autoGradableResponseId~C-QEK_rWEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>CLOCK_MONOTONIC </p></div></li>
+<li><input name="autoGradableResponseId~C-QEK_rWEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>CLOCK_MOUNTAIN_STANDARD_TIME </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your project is attempting to use <em>clock_settime</em> to set the time of day, however the time is not changing.  What troubleshooting steps may help isolate the problem?  Select any which apply.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~H7BgM_rWEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Ensure the clock_id argument specifies CLOCK_REALTIME </p></div></li>
+<li><input name="autoGradableResponseId~H7BgM_rWEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Ensure the clock_id argument specifies CLK_MONOTONIC </p></div></li>
+<li><input name="autoGradableResponseId~H7BgM_rWEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Ensure your program is running as a user with appropriate permissions </p></div></li>
+<li><input name="autoGradableResponseId~H7BgM_rWEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Check the return code from clock_settime </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select all of the true statements about the code below (select any statements which apply).  Consider all preemption durations referenced below to be significantly less than 1 second in length.</p><img alt="Question1_image.png" src="Question1_image.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~PW0jRfrWEeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>Both sleep1() and sleep2() execution time may be longer than 1 second depending on preemptive scheduling. </p></div></li>
+<li><input name="autoGradableResponseId~PW0jRfrWEeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>If the thread which calls sleep1() is preempted at line 3, sleep1() duration will be extended by the duration of the preemption.</p></div></li>
+<li><input name="autoGradableResponseId~PW0jRfrWEeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>If the thread which calls sleep2() is preempted at line 14, the sleep2() duration will be extended by the duration of the preemption.</p></div></li>
+<li><input name="autoGradableResponseId~PW0jRfrWEeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>CLOCK_REALTIME would be a better clock to use when sleeping a relative amount of time. </p></div></li>
+<li><input name="autoGradableResponseId~PW0jRfrWEeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>If the thread which calls sleep2() is preempted at line 12, the sleep2() duration will be extended by the duration of the preemption.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select any concerns with the code example below (select any which apply).  Assume the init() function was called at program initialization.</p><img alt="Question2_image.png" src="Question2_image.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~bK-uLPrWEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>rocket_fire_handler() may be called in response to another program</p></div></li>
+<li><input name="autoGradableResponseId~bK-uLPrWEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>fire_rocket() needs analysis for signal handler safety </p></div></li>
+<li><input name="autoGradableResponseId~bK-uLPrWEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>fire_rocket() will be called continuously every 5 seconds</p></div></li>
+<li><input name="autoGradableResponseId~bK-uLPrWEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>fire_rocket() will be called continuously after 5 seconds</p></div></li>
+<li><input name="autoGradableResponseId~bK-uLPrWEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>No problems with this code, ship it! </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Execution time for a process is _____________________</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~8MrQdSC3EeyzbgqYd8Jc7Q" type="radio"/> <div class="quiz-option-text"><p>Process time </p></div></li>
+<li><input name="autoGradableResponseId~8MrQdSC3EeyzbgqYd8Jc7Q" type="radio"/> <div class="quiz-option-text"><p>Wall time</p></div></li>
+<li><input name="autoGradableResponseId~8MrQdSC3EeyzbgqYd8Jc7Q" type="radio"/> <div class="quiz-option-text"><p>Monotonic Time</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is an example of Absolute time</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~bw5FLyC4EeyL8g6ME349Vw" type="radio"/> <div class="quiz-option-text"><p>10 mins</p></div></li>
+<li><input name="autoGradableResponseId~bw5FLyC4EeyL8g6ME349Vw" type="radio"/> <div class="quiz-option-text"><p>12:34:56 UTC 3rd August 2019</p></div></li>
+<li><input name="autoGradableResponseId~bw5FLyC4EeyL8g6ME349Vw" type="radio"/> <div class="quiz-option-text"><p>100 Hz</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

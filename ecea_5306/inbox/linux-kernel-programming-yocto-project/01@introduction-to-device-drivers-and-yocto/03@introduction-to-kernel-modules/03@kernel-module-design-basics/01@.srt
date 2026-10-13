@@ -1,0 +1,970 @@
+1
+00:00:00,140 --> 00:00:04,350
+in this video we'll go over some
+basics of kernel module design.
+
+2
+00:00:04,350 --> 00:00:09,743
+So we're going to talk about kernel
+module dependencies, the symbol table,
+
+3
+00:00:09,743 --> 00:00:14,060
+module in exit and air handling and
+also module parameters.
+
+4
+00:00:14,060 --> 00:00:18,401
+So, in terms of version dependencies
+in the previous discussion,
+
+5
+00:00:18,401 --> 00:00:22,057
+we talked about the location
+of different kernel modules
+
+6
+00:00:22,057 --> 00:00:25,280
+based on the kernel source
+that you're running.
+
+7
+00:00:25,280 --> 00:00:29,501
+Your driver is only going to be allowed
+to load against the specific kernel for
+
+8
+00:00:29,501 --> 00:00:30,850
+which it was compiled.
+
+9
+00:00:30,850 --> 00:00:34,509
+And in order to do that,
+it uses something that's called vermagic,
+
+10
+00:00:34,509 --> 00:00:37,979
+that uses things like the target kernel,
+the compiler version,
+
+11
+00:00:37,979 --> 00:00:42,017
+the processor and all the and some
+significant configuration variables for
+
+12
+00:00:42,017 --> 00:00:45,011
+the kernel and
+all those must match before you can load.
+
+13
+00:00:45,011 --> 00:00:47,500
+So it's more than just
+matching the kernel version.
+
+14
+00:00:47,500 --> 00:00:50,972
+It's also a bunch of other things about
+the way the kernel was compiled and
+
+15
+00:00:50,972 --> 00:00:52,885
+the way you're compiling your module.
+
+16
+00:00:52,885 --> 00:00:57,035
+If you have something wrong there and
+you don't have a good match between
+
+17
+00:00:57,035 --> 00:01:00,390
+the content of your kernel and
+the content of your driver.
+
+18
+00:01:00,390 --> 00:01:03,940
+When you try to load with its modern mod
+probe, you're going to get a message
+
+19
+00:01:03,940 --> 00:01:08,040
+saying, error inserted, whatever your
+module name is, invalid module format.
+
+20
+00:01:08,040 --> 00:01:11,176
+And so, this is your clue that it's
+probably built for the wrong kernel,
+
+21
+00:01:11,176 --> 00:01:13,270
+the wrong architecture,
+something like that.
+
+22
+00:01:13,270 --> 00:01:16,430
+And you need to rebuild with
+the appropriate kernel source.
+
+23
+00:01:16,430 --> 00:01:23,419
+So the in kernel space programming, it's
+often going to happen that an API that
+
+24
+00:01:23,419 --> 00:01:28,600
+you're using could change
+from one release to another.
+
+25
+00:01:28,600 --> 00:01:32,096
+And so,
+your code is going to break as a part of
+
+26
+00:01:32,096 --> 00:01:36,428
+the natural progression of
+the kernel to new versions.
+
+27
+00:01:36,428 --> 00:01:39,803
+And there's a kernel version
+macro you can use to help
+
+28
+00:01:39,803 --> 00:01:42,370
+deal with these compatibility issues.
+
+29
+00:01:42,370 --> 00:01:46,287
+If you're in a situation where you need
+to build and compile your kernel for
+
+30
+00:01:46,287 --> 00:01:47,480
+different versions.
+
+31
+00:01:47,480 --> 00:01:52,777
+And there's an example here that will go
+through that you can follow the link for
+
+32
+00:01:52,777 --> 00:01:57,920
+a case where the links driver development
+source code needed to be updated for
+
+33
+00:01:57,920 --> 00:02:00,140
+a later version of kernel.
+
+34
+00:02:00,140 --> 00:02:05,059
+So, here's an example of a case where
+the Linux kernel version changed and
+
+35
+00:02:05,059 --> 00:02:09,610
+a function that was previously a part
+of the kernel has disappeared.
+
+36
+00:02:09,610 --> 00:02:14,174
+And so, the way you can handle this
+with Linux kernel version macro,
+
+37
+00:02:14,174 --> 00:02:19,053
+you can have checks like this that say
+if the version is less than a specific
+
+38
+00:02:19,053 --> 00:02:24,200
+version number, you can define whether or
+not the function exists anymore.
+
+39
+00:02:24,200 --> 00:02:26,565
+And if the function doesn't exist anymore,
+
+40
+00:02:26,565 --> 00:02:30,320
+you can write your own function to
+deal with backwards compatibility.
+
+41
+00:02:30,320 --> 00:02:36,306
+And so, here I'm replacing the file I know
+function by just returning the location
+
+42
+00:02:36,306 --> 00:02:41,693
+where the file I know it is available
+in the file structure that is available
+
+43
+00:02:41,693 --> 00:02:47,451
+on releases after 391 but this particular
+function is no longer available.
+
+44
+00:02:47,451 --> 00:02:49,998
+So, in this case I'm
+just providing my own,
+
+45
+00:02:49,998 --> 00:02:53,370
+so that I can use the code below
+with either kernel version.
+
+46
+00:02:53,370 --> 00:02:57,927
+So, this is an example of the kind of
+work around that you can do to support
+
+47
+00:02:57,927 --> 00:03:03,840
+multiple kernel versions with your module
+build using the same kernel source.
+
+48
+00:03:03,840 --> 00:03:08,221
+So, as a kernel driver developer, how do I
+keep up with all the possible variations?
+
+49
+00:03:08,221 --> 00:03:12,915
+How do I know that my kernel is going to
+be able to compile on the entire range of
+
+50
+00:03:12,915 --> 00:03:15,520
+kernel versions that I need to support.
+
+51
+00:03:15,520 --> 00:03:19,443
+So, option one is you released
+under GPL compatible license and
+
+52
+00:03:19,443 --> 00:03:24,236
+you release your source code and you let
+your router using your driver module,
+
+53
+00:03:24,236 --> 00:03:26,800
+basically help take care of that for you.
+
+54
+00:03:26,800 --> 00:03:30,973
+When they want to use with the new
+version, they'll have the source code so
+
+55
+00:03:30,973 --> 00:03:33,220
+they can make the changes themselves.
+
+56
+00:03:33,220 --> 00:03:37,000
+And ideally the best case scenario here
+would be if you could get added to
+
+57
+00:03:37,000 --> 00:03:40,791
+the mainline kernel, if your driver
+was a part of the mainline kernel.
+
+58
+00:03:40,791 --> 00:03:44,610
+What this means is that if someone wanted
+to do that, re factoring of removing
+
+59
+00:03:44,610 --> 00:03:48,310
+a function like what I showed before,
+it would be their job to go through and
+
+60
+00:03:48,310 --> 00:03:51,400
+update your module to match
+the latest version of the kernel.
+
+61
+00:03:51,400 --> 00:03:55,507
+And so, you would just make that a part
+of the standard release whenever
+
+62
+00:03:55,507 --> 00:03:59,980
+anyone got kernel source code, they
+have the latest version of your module.
+
+63
+00:03:59,980 --> 00:04:02,731
+So, this isn't going to be an option for
+everybody.
+
+64
+00:04:02,731 --> 00:04:06,783
+There's a lot of drivers that just aren't
+going to be mainline in the kernel,
+
+65
+00:04:06,783 --> 00:04:10,983
+but if that's an option for your driver,
+that's definitely a great option.
+
+66
+00:04:10,983 --> 00:04:12,745
+So, option two would be,
+
+67
+00:04:12,745 --> 00:04:17,240
+you can distribute in source code
+form with scripts to compile it.
+
+68
+00:04:17,240 --> 00:04:20,204
+And this is not specifically
+mentioned in the book, but
+
+69
+00:04:20,204 --> 00:04:23,861
+there's if you ever get in this
+situation and you need to support it,
+
+70
+00:04:23,861 --> 00:04:26,790
+take a look at DKMS dynamic
+kernel modules, support.
+
+71
+00:04:26,790 --> 00:04:30,302
+So there's a great framework
+that's available for
+
+72
+00:04:30,302 --> 00:04:35,648
+helping to automate the rebuild of kernel
+sources and deployment of your source
+
+73
+00:04:35,648 --> 00:04:40,931
+that's not a part of the next kernel but
+released with an open source license.
+
+74
+00:04:41,940 --> 00:04:43,131
+And then option three.
+
+75
+00:04:43,131 --> 00:04:47,650
+This is one case where for us when we're
+building embedded systems a lot of times
+
+76
+00:04:47,650 --> 00:04:52,170
+this gets simpler for us because we might
+only have either a single target kernel
+
+77
+00:04:52,170 --> 00:04:56,370
+configuration or maybe a specific
+set of target kernel configurations.
+
+78
+00:04:56,370 --> 00:05:00,365
+So, we don't necessarily need to worry
+about supporting any possible kernel
+
+79
+00:05:00,365 --> 00:05:03,572
+version, will have really specific
+ones that will support and
+
+80
+00:05:03,572 --> 00:05:07,530
+we can just keep updating it ourselves
+as the kernel module version changes.
+
+81
+00:05:07,530 --> 00:05:12,039
+So the simple table is
+the thing that we'll use
+
+82
+00:05:12,039 --> 00:05:16,432
+to link into other
+functions in the kernel and
+
+83
+00:05:16,432 --> 00:05:20,592
+in small is going to do that for
+us at low time,
+
+84
+00:05:20,592 --> 00:05:25,370
+fill in the content in
+memory copy of our module.
+
+85
+00:05:25,370 --> 00:05:28,519
+And if you recall when we talked about
+mod probe we said that you could
+
+86
+00:05:28,519 --> 00:05:30,297
+have dependencies between modules.
+
+87
+00:05:30,297 --> 00:05:34,064
+So, I can have my module call
+a function from another module and
+
+88
+00:05:34,064 --> 00:05:36,490
+this is referred to as module stacking.
+
+89
+00:05:36,490 --> 00:05:40,653
+And if you set those dependencies up and
+you use mod pro for
+
+90
+00:05:40,653 --> 00:05:45,687
+loading mod pro will automatically
+load the modules that you need for
+
+91
+00:05:45,687 --> 00:05:50,150
+your device or for your driver
+as you try to load your driver.
+
+92
+00:05:50,150 --> 00:05:54,250
+So we've talked about how
+the module license macro
+
+93
+00:05:54,250 --> 00:05:58,755
+specifies what license you're using for
+your module.
+
+94
+00:05:58,755 --> 00:06:03,716
+The export symbol macro is used by
+the kernel to export functions or and
+
+95
+00:06:03,716 --> 00:06:08,508
+can be used by your driver to export
+specific functions that you want
+
+96
+00:06:08,508 --> 00:06:10,885
+other modules to be able to call.
+
+97
+00:06:10,885 --> 00:06:14,669
+And the export symbol GPL
+is telling us specifically
+
+98
+00:06:14,669 --> 00:06:19,500
+that those are only available to
+GPL compliant licensed modules.
+
+99
+00:06:19,500 --> 00:06:24,473
+And so, your module license needs to
+include GPL if you want to be able to
+
+100
+00:06:24,473 --> 00:06:26,171
+call those functions.
+
+101
+00:06:26,171 --> 00:06:31,348
+And that's basically the way that's
+enforced is through these export symbol
+
+102
+00:06:31,348 --> 00:06:36,370
+macros that either you define in your
+module file if you want to create files or
+
+103
+00:06:36,370 --> 00:06:39,640
+create functions other modules could call.
+
+104
+00:06:39,640 --> 00:06:41,251
+And these are also used in the kernel.
+
+105
+00:06:41,251 --> 00:06:42,511
+So, for instance, with print K or
+
+106
+00:06:42,511 --> 00:06:44,960
+any of the functions that you're
+going to call from, the kernel.
+
+107
+00:06:44,960 --> 00:06:51,007
+So, Linux/module.h is where the symbols
+needed for the common definitions and
+
+108
+00:06:51,007 --> 00:06:55,670
+the symbols that are needed for
+laudable modules are located.
+
+109
+00:06:55,670 --> 00:06:58,245
+The init.h functions where
+the initialization and
+
+110
+00:06:58,245 --> 00:06:59,891
+cleanup functions are located.
+
+111
+00:06:59,891 --> 00:07:04,081
+So, all these module license module,
+author description version,
+
+112
+00:07:04,081 --> 00:07:09,000
+there's a detail about, they're pretty
+self explanatory if you see them used.
+
+113
+00:07:09,000 --> 00:07:13,625
+But these are all going to be defined
+in these header files that you'll
+
+114
+00:07:13,625 --> 00:07:16,810
+include at the top of
+your module definition.
+
+115
+00:07:16,810 --> 00:07:21,554
+So, we've talked about the module in it
+function as the first thing that happens
+
+116
+00:07:21,554 --> 00:07:25,910
+when your modules in spotted and
+the book recommends that that be static.
+
+117
+00:07:25,910 --> 00:07:28,180
+And the reason is just enforcing,
+
+118
+00:07:28,180 --> 00:07:33,520
+it's not going to be used anywhere other
+than the main file that it's included in.
+
+119
+00:07:33,520 --> 00:07:37,520
+So, there's really no reason to have
+it any scope other than static.
+
+120
+00:07:37,520 --> 00:07:40,850
+And you also would notice
+this under init label.
+
+121
+00:07:40,850 --> 00:07:45,994
+And so, this looks a little strange what
+this is telling the module loader is that,
+
+122
+00:07:45,994 --> 00:07:50,404
+since this is only called on init as
+soon as your module is initialized,
+
+123
+00:07:50,404 --> 00:07:54,180
+there's no need to keep that
+code around in memory anymore.
+
+124
+00:07:54,180 --> 00:07:57,276
+And so, it turns out if you've
+got a lot of loaded modules and
+
+125
+00:07:57,276 --> 00:08:00,254
+you take all the functions that
+are included with every one
+
+126
+00:08:00,254 --> 00:08:04,111
+of those modules that ends up being
+a lot of memory that could be reclaimed.
+
+127
+00:08:04,111 --> 00:08:07,508
+And so, adding this optimization
+lets us free memory for
+
+128
+00:08:07,508 --> 00:08:12,070
+use dynamically when it's no longer
+needed after the modules been loaded.
+
+129
+00:08:12,070 --> 00:08:15,523
+So what are you going to do
+with your inner function?
+
+130
+00:08:15,523 --> 00:08:17,523
+You want to register for
+kernel facilities.
+
+131
+00:08:17,523 --> 00:08:22,980
+So, devices, filesystem, crypto transforms
+anything that's going to be interacting
+
+132
+00:08:22,980 --> 00:08:27,845
+with SFS process basically anything that
+you need for the user or the colonel to
+
+133
+00:08:27,845 --> 00:08:32,660
+interact with your module needs to get
+registered as a part of your function.
+
+134
+00:08:32,660 --> 00:08:35,120
+And you also need to initialize
+any data structures.
+
+135
+00:08:35,120 --> 00:08:39,747
+It's important to do that before you do
+the registration because you don't want
+
+136
+00:08:39,747 --> 00:08:44,580
+something to be calling your module that
+might reference the data structure that's
+
+137
+00:08:44,580 --> 00:08:45,480
+not set up yet.
+
+138
+00:08:45,480 --> 00:08:48,491
+And we've mentioned already that
+the data structure should be
+
+139
+00:08:48,491 --> 00:08:50,500
+located in general in allocated memory.
+
+140
+00:08:50,500 --> 00:08:54,296
+You wouldn't want to locate those
+on the stack because the stack for
+
+141
+00:08:54,296 --> 00:08:57,619
+the initialization function is
+going to disappear as soon as
+
+142
+00:08:57,619 --> 00:09:00,540
+the init completes based
+on that in a sense.
+
+143
+00:09:00,540 --> 00:09:04,040
+So, what would the exit function do?
+
+144
+00:09:04,040 --> 00:09:08,679
+It's going to unregistered all the
+interfaces that were previously registered
+
+145
+00:09:08,679 --> 00:09:09,452
+with init and
+
+146
+00:09:09,452 --> 00:09:13,550
+you usually do it in the reverse
+order as the way you registered them.
+
+147
+00:09:13,550 --> 00:09:18,198
+That just avoids a case where you
+would end up in a situation that you
+
+148
+00:09:18,198 --> 00:09:23,760
+unregistered a part of one particular
+portion and then the kernel ends up making
+
+149
+00:09:23,760 --> 00:09:29,504
+a call to that already unregistered as
+a part of registering a previous function.
+
+150
+00:09:29,504 --> 00:09:34,161
+And your exit function also needs to free
+any of the memory that was allocated
+
+151
+00:09:34,161 --> 00:09:34,756
+on init.
+
+152
+00:09:34,756 --> 00:09:38,896
+As I mentioned before, we don't have
+any kind of clean up like we have in
+
+153
+00:09:38,896 --> 00:09:43,037
+user space and if we forget to free
+stuff in kernel driver development,
+
+154
+00:09:43,037 --> 00:09:45,190
+it's just going to remain allocated.
+
+155
+00:09:45,190 --> 00:09:48,440
+So, why would you use this
+under under exit prefix?
+
+156
+00:09:48,440 --> 00:09:53,860
+It's similar to the under init,
+prefix that we talked about before.
+
+157
+00:09:53,860 --> 00:09:58,666
+This is a hint to the module
+loader that if I'm building
+
+158
+00:09:58,666 --> 00:10:02,950
+this kernel module directly
+into the kernel, so
+
+159
+00:10:02,950 --> 00:10:07,990
+I'm not actually going to be
+using it as a laudable module.
+
+160
+00:10:07,990 --> 00:10:13,350
+All the exit related code won't ever be
+executed and so we can again drop this
+
+161
+00:10:13,350 --> 00:10:18,910
+all from the in memory copy of the kernel,
+there's no reason to have it there.
+
+162
+00:10:18,910 --> 00:10:22,938
+So, an important thing
+about init functions
+
+163
+00:10:22,938 --> 00:10:26,651
+specifically is the handling of errors.
+
+164
+00:10:26,651 --> 00:10:30,018
+So, all the different registrations
+I talked about before,
+
+165
+00:10:30,018 --> 00:10:33,330
+almost all of those are going to
+be able to fail in some way.
+
+166
+00:10:33,330 --> 00:10:36,770
+And so, it's really important that
+you check for and handle failures.
+
+167
+00:10:36,770 --> 00:10:40,996
+So, what you see a lot of times in
+init functions as code like this,
+
+168
+00:10:40,996 --> 00:10:44,468
+you'll do some registration,
+if there's an error,
+
+169
+00:10:44,468 --> 00:10:48,994
+you'll go to a failure and each step
+through the process when you have so
+
+170
+00:10:48,994 --> 00:10:52,420
+let's say we fail at this
+second registration step.
+
+171
+00:10:52,420 --> 00:10:55,687
+If there's an error,
+we're going to a separate fail label and
+
+172
+00:10:55,687 --> 00:11:00,204
+we want to make sure that we unregistered
+anything that we've previously registered.
+
+173
+00:11:00,204 --> 00:11:03,588
+Because again there's nothing
+to clean up for us here,
+
+174
+00:11:03,588 --> 00:11:08,124
+if we register something and then
+a failure happens and we just exit without
+
+175
+00:11:08,124 --> 00:11:11,581
+registering the kernel's going to
+try to call our device or
+
+176
+00:11:11,581 --> 00:11:16,650
+our module that's been unregistered and
+we're probably going to crash the system.
+
+177
+00:11:16,650 --> 00:11:20,837
+So, it's really important to pay
+attention to the exit and error codes and
+
+178
+00:11:20,837 --> 00:11:25,050
+to handle them by undoing whatever you
+successfully done in the function.
+
+179
+00:11:25,050 --> 00:11:29,908
+And it turns out you might have learned
+in other programming courses that go
+
+180
+00:11:29,908 --> 00:11:32,940
+to is like bad form or
+not to use it in general.
+
+181
+00:11:32,940 --> 00:11:37,713
+In kernel programming and especially with
+init functions go to is widely used and
+
+182
+00:11:37,713 --> 00:11:42,207
+it's a really commonly used pattern
+because it makes these kind of recovery
+
+183
+00:11:42,207 --> 00:11:44,051
+scenario is really easy to do.
+
+184
+00:11:44,051 --> 00:11:46,576
+If you get through all the registrations,
+
+185
+00:11:46,576 --> 00:11:51,136
+then you can just have each one of the
+labels happen one right after another and
+
+186
+00:11:51,136 --> 00:11:53,821
+the registration can happen really easily.
+
+187
+00:11:53,821 --> 00:11:58,562
+So, this was an alternative to building
+a large nested if statements for
+
+188
+00:11:58,562 --> 00:12:03,560
+instance and a lot of kernel developers
+prefer this as being more readable.
+
+189
+00:12:03,560 --> 00:12:08,730
+So, one other content amount that we talk
+
+190
+00:12:08,730 --> 00:12:13,940
+about with respect to loading modules.
+
+191
+00:12:13,940 --> 00:12:17,562
+When you're loading a module, you can also
+define module parameters that you can
+
+192
+00:12:17,562 --> 00:12:21,201
+specify on load that will tell your driver
+more information about how to operate.
+
+193
+00:12:21,201 --> 00:12:25,500
+So, similar to what you provide as
+an argument to a command line program.
+
+194
+00:12:25,500 --> 00:12:28,848
+And you can define these with
+macros module program and
+
+195
+00:12:28,848 --> 00:12:33,020
+you can set things like whether
+the module is readable or writable.
+
+196
+00:12:33,020 --> 00:12:35,940
+And who is able to read or write it.
+
+197
+00:12:35,940 --> 00:12:42,059
+And if you want to see an example of this,
+Hello P module is allows you to specify
+
+198
+00:12:42,059 --> 00:12:48,020
+how many prints you have in what to say,
+who to say the print is coming from.
+
+199
+00:12:48,020 --> 00:12:51,090
+So, this is just a simple example
+of passing an integer and
+
+200
+00:12:51,090 --> 00:12:52,550
+a string into your module.
+
+201
+00:12:52,550 --> 00:12:56,515
+We'll get into more complicated ways to
+interact with your module in later weeks.

@@ -1,0 +1,93 @@
+This video we're going to continue
+our discussion of Linux File I/O, and cover the remaining portions
+that we haven't covered in Linux System Programming chapter two. So some of the learning objectives, we're going to talk about how
+to access file positionally. We're going to reintroduce the idea and
+concept of Sparse Files, which we've actually mentioned
+briefly in previous weeks. And then we're going to introduce
+the idea of Multiplexed I/O. So reading positionally,
+you might have had some experience with this already with the f versions
+of open read and write. So if you want to rather than just read
+from the beginning to the end of the file in sequence. If you need to change that up and need to
+read from different parts of the file, or need to write to different certain areas
+of the file, you can use lseek to do this. And there are a couple different options
+in terms of how to locate within the file with lseek. And these are the same options that
+are offered for the buffered I/O as well. So SEEK_SET means you're just
+going to use the byte offset you mentioned inside the file. You're going to just use that relative
+to the beginning of the file, that's going to be an absolute
+position that you want to stick to. The SEEK_CUR says wherever I'm at,
+I'm going to increment or decrement based on the offset
+I specify into the file. And then SEEK_END means I'm going to
+seek relative to the end of the file. So, if I say minus one, I'll be one
+byte before the end of the file. The book also mentioned some alternatives
+for positional reader, right? Based on the, and
+an alternative to the lseek command or the lseek function I mentioned
+earlier in period in pread. So, one benefit of these is if
+you're using a the lseek command, you're going to be
+modifying the position for any of the threads that
+are running in your process. So you're basically setting
+the position globally for your process on that file descriptor. But if you use the pread or pwrite
+versions, you're not going to specify the origin, you're not going to
+specify the location for all threads, you're going to be specifying the location
+based on this one particular read or write command and
+where it's going to go into the buffer. So, benefit would be if you're
+using a multithreaded application, it's not going to manipulate
+file position for other threads. And, in order to simplify this a bit,
+the origin argument is removed and you're always going to use
+the equivalent of six set. In other words, just an absolute
+position into the file for locating. So talking a little bit
+more about Sparse Files. If you use lseek and let's say you search
+into a gigabyte offset based on SEEK_END. So in other words, I'm going to locate
+from the end of the file, one gigabyte out on my current file descriptor and
+then maybe I just write one value. Unsigned integer value let's say,
+out to that location. This would extend the file, one gig past
+the end of the current file location. So what if there's less than one
+gigabyte of disk space available, would you expect this command to fail? And maybe you would,
+just thinking about what it's doing. But in reality, the links file system
+is smart enough to know that you didn't actually write a gigabyte of data. You just extended the file out that
+long and wrote one byte past the end. So the Linux file system is actually smart
+enough to not use disk space in this case. Instead it will create a hole to represent
+the space in the file that hasn't been written. And if you read the file, it'll look
+like it's a continuous block of values. But in reality when you're reading
+the hole that hasn't been written, it'll just be returning 0s. And this is what's referred
+to in Linux as a sparse file. So, if you want to see an example of
+this again you can follow the link from the lecture notes. But here's a case where you can create
+a sparse file using the sparse file dot c application, by doing an lseek relative to
+SEEK_END based on the parameter specified, and then writing a single
+byte at that location. So how can we see what's happened
+here in terms of disk space usage? What you'll notice is that that sparse
+file that we create, if you do ls- lh. So this is going to say list and give me a human readable
+representation of the file size. What you'll notice is that the ls
+command says that the file is 954 megabytes in size. So roughly one gigabyte offset that we
+specified here with sparse file parameter. But if I use du which is
+the disk usage command, and I list the human readable size for
+every file in the directory, I'll see that the sparse file is
+actually only using 4k of disk space. So this is a way that you can tell that
+the file is actually a sparse file. Okay, so if your,
+let's say your application needs to handle input from more than one
+file descriptor at once. And if you're using
+something like a FIFO or a pipe as one of those file descriptors. And you would normally have a behavior
+where you're blocking waiting for some input from the file descriptor. You have a couple of different
+ways to handle this. So, two of the ways are the ones
+that we've already talked about. One would be you just create a thread for
+every descriptor and you just do the typical blocking reads. So, if you have some other work to
+do you just spin up another thread. But you have a thread that's dedicated
+to doing blocking reads on the FIFO or the pipe. And it's okay that it's blocking and
+waiting for data. A second option would be that
+you use nonblocking IO, or O_NONBLOCK that we talked
+about in the previous video. And then you poll with your application. So you keep trying to read and
+if there's data you do something with it. If there's not, you do something
+else that the thread needs to do. But the book also mentions Multiplexed I/O
+as a better solution than polling, because what it allows you to do is sleep
+from one thread until a set of file descriptors is available. So in other words, rather than
+needing to have a dedicated thread for every file descriptor, maybe you're in a
+situation where you want to handle any of a bunch of different file descriptors. You want to handle IO and any of those
+file descriptors whenever they occur. But you'd rather not have to spin up
+a separate thread to monitor each one of them independently. And you'd rather not waste the cycles
+of continuously polling and doing nothing other than polling every
+one of the file descriptors forever. So there are three different options
+to do this, select, pselect, and poll. The book mentions that poll is actually
+the preferred mechanism of these, based on the flexibility that it offers. But all of them essentially
+do the same thing, which is take a list of file
+descriptors that you want to watch and sleep until something happens on one
+of those file descriptors, at which point you'll get a notification from your
+application that you need to handle it.

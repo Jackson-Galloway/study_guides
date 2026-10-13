@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 7 Part 2 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<p>Assignment 7 Part 2: Buildroot and Yocto Kernel Driver Builds</p><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><p>This link will create a new repository you will then setup with the default content from <a href="https://github.com/cu-ecen-aeld/ldd3"><u>https://github.com/cu-ecen-aeld/ldd3</u></a> which you will modify to personalize with your GitHub username (external link; opens in a new tab).</p><h1>Setup GitHub Actions</h1><ul><li><p>You’ll use GitHub actions as already setup on either your buildroot (assignment 5) or Yocto (assignment 6) repository.</p></li></ul><p>Note: The following links are external and will open in a new tab.</p><h1>Suggested Reading:</h1><ol type="1"><li><p>Module 2 content</p></li><li><p>Buildroot documentation, including:</p></li></ol><p>a.<a href="https://buildroot.org/downloads/manual/manual.html#_infrastructure_for_packages_building_kernel_modules"><u>https://buildroot.org/downloads/manual/manual.html#_infrastructure_for_packages_building_kernel_modules</u></a></p><p>b. <a href="https://buildroot.org/downloads/manual/manual.html#rootfs-custom"><u>https://buildroot.org/downloads/manual/manual.html#rootfs-custom</u></a></p><h2>Repository Setup</h2><p></p><img alt="Screenshot 2021-09-28 173801.png" src="Screenshot%202021-09-28%20173801.png"/><p></p><h1>Implementation:</h1><ol type="1"><li><p>Your assignment 7 repo needs to be set up with the <a href="https://github.com/cu-ecen-aeld/ldd3"><u>ldd</u></a> repository containing the required starter code (external link; opens in a new tab).  You will make changes to your Assignment 7 repository, your Assignment 5 repository (or assignment 6 repository if using yocto) and your assignment 3 repository to complete this assignment.  Your assignment 7 repository will contain ldd kernel modules you will cross compile for your qemu target.</p></li></ol><p>Note: The following links are external and will open in a new tab.</p><p><strong>Don’t follow the instructions on the associated assignment 7 github page to add a README commit</strong>. To setup your assignment 7 repo, instead use these commands:</p><ul><li><p>git remote add ldd-base https://github.com/cu-ecen-aeld/ldd3.git</p></li></ul><p>This specifies the base repository at <a href="https://github.com/cu-ecen-aeld/ldd3.git"><u>https://github.com/cu-ecen-aeld/ldd3.git</u></a>  with example starter code</p><ul><li><p>git fetch ldd-base</p></li><li><p>git merge ldd-base/master</p></li></ul><p>This command makes your main branch match the master branch of   <a href="https://github.com/cu-ecen-aeld/ldd3.git"><u>ldd3</u></a></p><ul><li><p>git push origin main</p></li></ul><p></p><p>2. Your assignment source code will now have contents for your assignment 7 repository with the content of the <a href="https://github.com/cu-ecen-aeld/ldd3"><u>ldd3 repository</u></a>.  Start by making a minor modification to include your github username in the hello.c module printk output inside the misc-modules folder.</p><p>3. Update your buildroot assignment submission repository for assignment 5 to include support for building and installing the <a href="https://github.com/cu-ecen-aeld/ldd3/tree/master/misc-modules"><u>misc-modules</u></a> and <a href="https://github.com/cu-ecen-aeld/ldd3/tree/master/scull"><u>scull</u></a> components on your qemu target based on your fork of the ldd3 repository.  Look in Buildroot documentation to find how to build these subdirectories with the MODULE_SUBDIRS option.</p><p>        a. git fetch buildroot-assignments-base</p><p>                i. This step assumes you’ve already created the remote using git remote add buildroot-assignments-base  https://github.com/cu-ecen-aeld/buildroot-assignments-base.git in assignment 5.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p><p>        b. git merge -X theirs buildroot-assignments-base/assignment7</p><p>                i. If you get merge conflicts on assignment-autotest, do a git checkout --theirs buildroot-assignment-base/assignment7 -- assignment-autotest  followed by git commit to use the assignment base assignment-autotest submodule revision.</p><p>        c. git submodule update --init --recursive</p><p>        d. Add a new package “ldd” to your assignment 5 base_external directory (base_external/package/ldd) which supports building and installing the misc-modules and scull components into the root filesystem.  Add this package to the image.</p><p>        e. Use a rootfs overlay in buildroot to add an init module script named “S98lddmodules”.  <strong>Be sure to specify a relative path in buildroot menuconfig to support builds outside your working directory</strong>.  For instance, use ../base_external/rootfs_overlay to locate in a rootfs_overlay directory you add to your base_external directory.  Add init scripts to the appropriate paths within this overlay to:</p><p>                i. Perform operations on startup to load the scull driver and on shutdown to unload.  See <a href="https://github.com/cu-ecen-aeld/ldd3/blob/master/scull/scull_load"><u>scull_load</u></a> and <a href="https://github.com/cu-ecen-aeld/ldd3/blob/master/scull/scull_unload"><u>scull_unload</u></a> scripts for reference and customize these as necessary.</p><p>                ii. Perform operations on startup to load the faulty driver and on shutdown to unload.  See <a href="https://github.com/cu-ecen-aeld/ldd3/blob/master/misc-modules/module_load"><u>module_load</u></a> and <a href="https://github.com/cu-ecen-aeld/ldd3/blob/master/misc-modules/module_unload"><u>module_unload</u></a> scripts for reference and customize these as necessary.</p><p>                iii. Run modprobe on the hello module to load on startup and use rmmod to remove on shutdown.</p><p>        f. Run echo “hello_world” &gt; /dev/faulty from the command line of your running qemu image and detail the resulting kernel oops to your assignment 3 repository in an assignments/assignment7/faulty-oops.md</p><p>                i. Add your analysis of this kernel oops in an assignments/assignment7/faulty-oops.md file, using the discussions in weekly lecture videos and the <a href="https://guides.github.com/features/mastering-markdown/"><u>Mastering Markdown</u></a> github instructions.</p><p>        g. Verify the ./full-test.sh script successfully runs against your buildroot implementation.</p><p>4. Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a></p><p>
+</p><h2>Validation:</h2><ol type="1"><li><p>You should be able to clone your final buildroot assignment repository to a new directory, run ./build.sh to build the system image and ./runqemu.sh to start the image with no other interaction necessary.</p></li></ol><p>        a. The image should include printk logs in /var/log/messages including your github user name from the hello module which is loaded automatically during startup.</p><p>        b. You should should have /dev/scull devices in the /dev directory as well as /dev/faulty</p><p>        c. Modules hello, faulty and scull should all be listed in lsmod after startup.</p><p>        d. Running /etc/init.d/S98lddmodules stop should unload all modules on the buildroot instance.</p><p>        e. Your analysis in your assignment 3 repository within assignments/assignment7/faulty-oops.md should explain the content and how you can use this to locate the faulty line in the kernel driver.</p><p>2. All automated tests should pass on your repository.  Note the limitation on the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions#re-using-a-previously-configured-runner">wiki page</a> about re-using a runner from assignment 5.  You will need to start with an empty runner work directory when you modify buildroot configuration.</p><h2>Extra Credit (+10 points) - On campus sections only - Optional implementation for Coursera Sections</h2><p>Suggested reading (external links; open in a new tab):</p><p>        a. <a href="https://docs.yoctoproject.org/kernel-dev/common.html?highlight=out+tree+modules#incorporating-out-of-tree-modules"><u>https://docs.yoctoproject.org/kernel-dev/common.html?highlight=out+tree+modules#incorporating-out-of-tree-modules</u></a></p><p>        b. <a href="https://docs.yoctoproject.org/ref-manual/devtool-reference.html#devtool-quick-reference"><u>https://docs.yoctoproject.org/ref-manual/devtool-reference.html#devtool-quick-reference</u></a></p><p></p><ol type="1"><li><p>Update your yocto submission repository for assignment 6 to include support for building and installing the <a href="https://github.com/cu-ecen-aeld/ldd3/tree/master/misc-modules"><u>misc-modules</u></a> and <a href="https://github.com/cu-ecen-aeld/ldd3/tree/master/scull"><u>scull</u></a> components on your qemu target (external links; open in a new tab).</p></li></ol><p>        a. git remote add yocto-assignments-base <a href="https://github.com/cu-ecen-aeld/yocto-assignments-base"><u>https://github.com/cu-ecen-aeld/yocto-assignments-base</u></a> (external link; opens in a new tab)</p><p>        b. git fetch yocto-assignments-base  </p><p>        c. git merge yocto-assignments-base/assignment7</p><p>        d. git submodule update --init --recursive</p><p>        e. Add an “ldd” package to your meta-aesd layer which supports building and installing the misc-modules and scull components into the root filesystem.  Add this package to the image.  Here are some hints about yocto steps you can take in order to complete this task:</p><p>                i. Use devtool add to add your assignment 7 ldd3 repository to your build using a recipe name scull</p><p>                ii. Modify the ldd3 makefile in the devtool working directory to include only scull and misc-modules components</p><p>                iii. Use devtool finish to save the corresponding .bb and Makefile patch files to your repository as a “scull” recipe in the meta-aesd layer.</p><p>                iv. Modify the task-install in the .bb file to use the correct module folder for the M argument and to use the correct directory for build working directory allowing the include paths to work properly.  You can do this with a modification to your recipe like  EXTRA_OEMAKE += " -C ${STAGING_KERNEL_DIR} M=${S}/scull"</p><p>                v. Add a “files” subfolder in your scull recipe and place an init script in this folder which does the portion of initialization specific to the scull module.</p><p>                vi. Use the update-rc.d framework used in the previous assignment to install the script.</p><p>                vii. Copy the scull recipe to a new “misc-modules” recipe.</p><p>                viii. Modify the misc-modules recipe to include an install script for misc-modules components.</p><p>                ix. Include both scull and misc-modules in your core-image-aesd image.</p><p>         f. Ensure to set a password for the root account. </p><p>        g. Verify the `./full-test.sh` script succeeds against your yocto image.</p><p>        h.  Push your changes to your assignment-6 repo and tag with assignment-7-complete</p><p>
+Extra Credit Troubleshooting:</p><p>1. Ensure your recipe uses inherit module and ensure this is placed at the top of your recipe and before any FILES:${PN}.</p><p>2. Look for the <strong>hello-mod_0.1.bb</strong> file in the same poky branch as a working example.</p><p>3. If using modprobe to load the faulty driver, you need a config framework to prevent a conflict with the CONFIG_MD_FAULTY kernel built-in driver.  You may notice a message ERROR: module faulty is builtin.  when attempting to modprobe without this change</p><p>To resolve, you can either create a <a href="https://docs.yoctoproject.org/kernel-dev/common.html#creating-configuration-fragments">kernel config fragment</a> with  # CONFIG_MD_FAULTY is not set or use insmod instead of modprobe to load the faulty driver in your startup script.</p><p> 4. If you define your own do_install function you must call module_do_install to do the module install portion.</p><p>5. It's easiest to have multiple recipes for scull and misc-modules.  If you want to write a single recipe for both modules you'll need your own custom call to oe_runmake, you can leverage module_do_install in the poky repo and module.bbclass as an example.</p><h2>Submission:</h2><ol type="1"><li><p>Your Assignment 7 repository should contain the minor changes to personalize the hello module, modified from the default sources of the ldd3 repository.</p></li><li><p>Your assignment 5 repository should be updated to include the ldd3 components in your image, and successfully build and run each driver, as discussed in the validation section.</p></li><li><p>Your assignment 3 repository should include your assignments/assignment7/faulty-oops.md analysis</p></li></ol><p>
+</p><p></p>
+  </div>
+</body>
+</html>

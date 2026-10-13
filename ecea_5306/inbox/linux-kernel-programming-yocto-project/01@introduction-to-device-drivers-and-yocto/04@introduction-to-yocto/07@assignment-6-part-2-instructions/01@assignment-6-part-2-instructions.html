@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 6 Part 2 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2><strong>Assignment 6 Part 2: Yocto Environment Bringup</strong></h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><p>This link will create a new repository with default content which needs to be based on <a href="https://github.com/cu-ecen-aeld/yocto-assignments-base/"><u>https://github.com/cu-ecen-aeld/yocto-assignments-base/</u></a> (external link; opens in a new tab) which you will modify to support building your aesdsocket utility from your existing assignment 3 repository.</p><h2><strong>Repository Setup:</strong></h2><img alt="assignment-6-part-2.PNG" src="assignment-6-part-2.PNG"/><p></p><h2><strong>Github Repository Start Instructions</strong></h2><p>Your assignment 6 repo needs to be initialized with the <a href="https://github.com/cu-ecen-aeld/yocto-assignments-base"><u>yocto-assignments-base</u></a> repository containing yocto starter code (external link; opens in a new tab).  You will use the assignment 6 repository for your Yocto implementation and reference your assignment 3 repository for the content of your yocto image.  Your assignment 6 repository will contain yocto scripts and related source assignments-bases.</p><p></p><p>Note: The following links are external and will open in a new tab.</p><p><strong>Don’t follow the instructions on the associated assignment 6 github page to add a README commit</strong>. To setup your assignment 6 repo, instead use these commands:</p><ul><li><p>git remote add yocto-assignments-base https://github.com/cu-ecen-aeld/yocto-assignments-base.git</p></li></ul><p>This specifies the base repository at <a href="https://github.com/cu-ecen-aeld/yocto-assignments-base.git"><u>https://github.com/cu-ecen-aeld/yocto-assignments-base.git</u></a>  with example starter code</p><ul><li><p>git fetch yocto-assignments-base</p></li><li><p>git merge yocto-assignments-base/master</p></li></ul><p>This command makes your master branch match the master branch of   <a href="https://github.com/cu-ecen-5013/yocto-assignments-base"><u>yocto-assignments-base</u></a></p><ul><li><p>git submodule update --init --recursive</p></li></ul><p>This command clones the <a href="https://github.com/cu-ecen-5013/assignment-autotest"><u>assignment-autotest submodule</u></a> and nested git repositories.</p><h2><strong>Suggested Reading:</strong></h2><ol type="1"><li><p>Associated lecture videos</p></li><li><p>Yocto documentation, including:</p><ol type="1"><li><p><a href="https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html"><u>https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html</u></a></p></li><li><p> <a href="https://docs.yoctoproject.org/dev-manual/layers.html#understanding-and-creating-layers"><u>https://docs.yoctoproject.org/dev-manual/layers.html#understanding-and-creating-layers</u></a></p></li><li><p><a href="https://docs.yoctoproject.org/sdk-manual/extensible.html#a-closer-look-at-devtool-add"><u>https://docs.yoctoproject.org/sdk-manual/extensible.html#a-closer-look-at-devtool-add</u></a></p></li><li><p>. <a href="https://docs.yoctoproject.org/dev-manual/customizing-images.html#customizing-images-using-custom-image-features-and-extra-image-features">https://docs.yoctoproject.org/dev-manual/customizing-images.html#customizing-images-using-custom-image-features-and-extra-image</a></p></li><li><p><a href="https://docs.yoctoproject.org/dev-manual/customizing-images.html#customizing-images-using-custom-image-features-and-extra-image-features">features</a><a href="https://wiki.yoctoproject.org/wiki/Building_your_own_recipes_from_first_principles#The_bbexample_recipe"><u>https://wiki.yoctoproject.org/wiki/Building_your_own_recipes_from_first_principles#The_bbexample_recipe</u></a></p></li></ol></li><li><p>Mastering Embedded Linux Programming Chapter 6</p></li></ol><p></p><p>Note: The following links are external and will open in a new tab.</p><h2><strong>Implementation:</strong></h2><h2><strong>Setup Github Actions:</strong></h2><ul><li><p>See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions</u></a></p></li></ul><p>For this and later yocto assignments you need to setup your SSH key as a repository secret.</p><h2><strong>Yocto Installation</strong></h2><ol type="1"><li><p>Install essential build packages on your build host as described in the <a href="https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#build-host-packages"><u>“Build Host Packages”</u></a> section of the yocto quick start guide.</p></li><li><p>Add yocto poky as a git submodule in the root of your project repository.</p><ol type="1"><li><p>Use <a href="https://git.yoctoproject.org/cgit/cgit.cgi/poky/"><u>https://git.yoctoproject.org/poky</u></a> as the source (see the clone reference at <a href="https://git.yoctoproject.org/poky">https://git.yoctoproject.org/poky/</a>)</p></li><li><p> Be sure to git add from the root of your project repository and git commit to save the appropriate commit hash for the buildroot directory before running ./build.sh</p></li><li><p>Use the branch kirkstone</p></li></ol></li><li><p>Update the recipe “aesd-assignments” in the meta-aesd/recipes-aesd folder of your project as discussed in class. This recipe should build your assignment 6 aesdsocket source using the git repository with appropriate commit specified via SRCREV and install associated files in the rootfs of the system.</p><ol type="1"><li><p>Remember to add your start script as well using the instructions discussed in lecture videos.</p></li></ol></li><li><p>Add your package to core-image-aesd as described in lecture videos.</p></li><li><p>Use the <strong>build.sh</strong> script to build your combined image</p></li><li><p>Use the <strong>runqemu.sh</strong> script in the root folder which:</p><ol type="1"><li><p>Runs source oe-init-build-env from the poky directory to setup your yocto build environment.</p></li><li><p>Uses runqemu nographic plus appropriate arguments to start QEMU with host port 9000 forwarded to your QEMU instance using slirp.</p></li></ol></li><li><p>If not already present, add ssh support to your image using CORE_IMAGE_EXTRA_INSTALL += " openssh" in your core-image-aesd.bb file.</p></li><li><p>Verify your socket is started automatically when starting qemu on the target. Verify your socket test scripts used for part 1 of your assignment work as expected when running against the qemu target, as they did with the assignment 5 buildroot implementation.</p><ol type="1"><li><p>The `./full-test.sh` script in your yocto repository should now complete successfully.  Ensure you have installed sshpass with `sudo apt-get update &amp;&amp; sudo apt-get install -y sshpass` as this is required for the test script.</p></li></ol></li><li><p>Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a></p></li></ol><p>
+</p><h2><strong>Validation:</strong></h2><ol type="1"><li><p>You should be able to clone your final yocto assignment repository to a new directory, run ./build.sh to build the system image and ./runqemu.sh to start the image.</p></li><li><p>When the QEMU image is started, it should pass port 9000 from the host into the guest image, the aesdsocket utility should be running in daemon mode, and all functionality should match the implementation section.</p></li><li><p>When the QEMU image is shutdown gracefully and restarted, the data returned over the connection (and content of /var/tmp/aesdsocketdata) should not contain content from a previous run (the shutdown script should have gracefully terminated the process during normal shutdown).</p></li><li><p>The sockettest.sh script should pass when run against your running qemu image.</p></li><li><p>When the QEMU image is started, it should pass port 9000 from the host into the guest image, the aesdsocket utility should be running in daemon mode, and all functionality should match the implementation section.</p><ol type="1"><li><p>The `./full-test.sh` script executed from your yocto repository should complete with success.</p></li></ol></li></ol><h2><strong>Submission:</strong></h2><ol type="1"><li><p>Your assignment submission repository should contain the yocto setup used to generate and run the qemu image described above.</p></li><li><p>Your yocto submission repository should reference your aesd-assignments repository, which will contain the assignment content referenced above.</p></li></ol><p>
+<strong>Troubleshooting:</strong></p><ol type="1"><li><p>You see an error about content mismatch on timestamp comparisons, with "Binary Files Differ" included in the output.</p><ol type="1"><li><p>This means the logic we have <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/83e5dfa52a482c76980e69e1f231c32a03c68910/test/assignment6/sockettest.sh#L61">here</a> to remove timestamps from the output file is failing, because the socket output file is being treated as a binary file instead of a text file (external link; opens in a new tab).  The reason the output file is treated as a binary file is typically because there are non-printable ASCII characters in the file.  There may be non printable ASCII characters in the file for a variety of reason but the most common is probably exceeding array bounds on strings which are missing null termination characters.  Look at the output file with a hex editor, find where the binary content is included, and fix your code to ensure you aren't writing anything other than the ASCII string content sent over the socket into your socket file.</p></li></ol></li><li><p>Use the cleanall task in bitbake (documentation <a href="https://docs.yoctoproject.org/ref-manual/tasks.html?highlight=cleanall#do-cleanall">here</a> (external link; opens in a new tab)) to recover from failures of recipe builds. This will help you clean build a specific recipe.  Use this method when a recipe fails for reasons which aren't easy to understand.  For instance, sometimes recipes fail to build if your build machine crashed when building due to out of disk space or out of memory conditions.  Search the error log for the recipe name (usually in the format recipename_x.x where x.x is the version.</p><ol type="1"><li><p>The cleanall task in BitBake is responsible for cleaning up the build artifacts and temporary files associated with a recipe.</p></li><li><p>When you run bitbake -c cleanall &lt;recipe&gt; it triggers the clean process for the specified recipe.</p></li></ol></li><li><p>Logs for troubleshooting: In case of debugging inside qemu, find the logs at "/var/log/messages"
+</p></li></ol><p>Note: The following links are external and will open in a new tab. 
+<strong>Reducing Disk Usage:</strong></p><p>If you find yourself out of disk space when building your yocto image, and are unable to free space by deleting content from previous assignments, here are some strategies you can try:</p><ol type="1"><li><p>Delete the build/tmp directory to clear out old build content.  The <a href="https://docs.yoctoproject.org/overview-manual/concepts.html#shared-state-cache">shared state cache</a> will allow you to rebuild this content quickly.</p></li><li><p> Add  INHERIT += "rm_work"   in your build.conf as referenced <a href="https://docs.yoctoproject.org/dev/dev-manual/disk-space.html">here</a>, either by manually editing the build/conf/local.conf file or editing the build script to add this to the file.</p><ol type="1"><li><p>Note that this means some files which are potentially useful for troubleshooting builds are missing, especially your local rootfs content in the build/tmp/work directory.  Use RM_WORK_EXCLUDE for specific recipes, if needed for troubleshooting, as described <a href="https://docs.yoctoproject.org/ref-manual/classes.html#ref-classes-rm-work">here</a>.  Adding the image recipe, core-image-aesd, to your RM_WORK_EXCLUDE will mean your work directory contains rootfs content.</p></li></ol></li></ol>
+  </div>
+</body>
+</html>

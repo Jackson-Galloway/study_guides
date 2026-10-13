@@ -1,0 +1,145 @@
+In this video, I'm going
+to talk about MQTT and some IoT platforms
+if you want to create a IoT-based Linux device. I'm going to introduce
+the MQTT protocol, understand how to use security
+with MQTT-based products, and we'll also introduce the JSON format
+and the concept of device shadows or digital
+twins that are common with some of the IoT platforms
+that are available today. MQTT stands for Message
+Queuing Telemetry Transport. It's a relatively old standard, it's been around since 1999. It consists of all
+lightweight publish and subscribe messaging
+transport that has some benefits in that it's
+low bandwidth and it's pretty efficient distribution
+to one or more devices. It's an efficient
+way to distribute common messages across
+different devices. It's pretty popular and
+used on many IoT platforms. It also uses a lot of the same transport
+that you use for HTTP. It can be securely
+transmitted using SSL and TLS and
+libraries that are typically available for
+web-connected devices. There are protocols that are available for
+establishing and authenticating the encrypted
+links between devices. Again, it's that same technology behind HTTPS and how you connect with your bank account over a web browser for instance. There are open-source
+applications, for instance, the Mosquito client-server
+open-source software is available at this link and able to be included in a build. I wanted to use as an example, maybe you'd have
+a door or window sensors in an embedded
+device implementation where there's a way that you're
+interacting with these through a custom Cloud server and a custom application
+on a mobile device. Talking through how you
+can use an IoT framework. This original set of slides was done to talk
+about Amazon IoT in particular but there are
+several frameworks you could use that all have
+really similar ways to interact with the device. If we have a scenario like this where we
+want to be able to communicate with either
+the mobile phone or the Cloud device, how can we leverage an IoT
+platform to help us do this? First of all, talking
+about how we will communicate between the
+IoT device and the server, there's what's called a basic security scheme that you
+would have with any device, IoT device, and server setup where the server would
+have a certificate and a private key that
+can be used to set up an encrypted communication
+channel with the IoT device. Then the IoT device
+would have some way to authenticate back over that
+channel to the server. The key transfer that
+you're doing here relies on the security of
+encrypted channel. If someone is able to obtain this key that's transferred over the channel,
+so for instance, a man in the middle
+attack where you are able to spoof the server and get
+you to pass the credentials, then you can emulate the device with the same permissions
+on the server. However, with MQTT, there's an SSL security scheme
+that allows you to set up a secure bi-directional
+pipe with identity verified by a certificate authority,
+signed certificate. The nice thing about
+this is that you can set up a trust relationship
+between the device and server without
+having to transmit any private key information. This is a way that you can do if a hacker was able to
+compromise this channel, they would not be able
+to view anything that would allow them to
+authenticate with the server because for
+that they'd really need the certificate that was
+stored on the IoT device. It's an additional level
+of security that's available to an
+MQTT implementation based on the way
+SSL can be set up. I'll talk a little bit
+about the JSON format as a way that you can
+communicate over MQTT. JSON stands for JavaScript
+Object Notation, and it was originally
+developed as part of the JavaScript programming
+language standard. However, it's
+language independent. It doesn't require you
+to use JavaScript. It was just developed for
+use with that standard. It's text-based, it's easier to read from a human
+being perspective. It's organized in
+objects so it's a set of name and value
+pairs surrounded by braces. There's a specific format
+with an object name followed by a colon and then
+separated by a comma. It's easy to parse by
+embedded software. Because of the fixed
+and predictable format, it's pretty easy to
+write parsers that are able to convert that text into instructions for software and especially embedded software,
+relatively low resource. Here's an example about
+how you could use Amazon IoT and MQTT to
+transfer JSON messages. Using our example implementation where we have this mansion here and we're going to detect
+whether a door is open, you could map this into a type of JSON response that
+looks something like this, where there's a state where we're going to
+report the state of the front door being
+open and you can read this as the content of JSON. This is all formatted in
+a way that is parsable by the embedded device or by the server and also
+human-readable. What this slide is showing
+is a case where we detected that the
+door was open but maybe the person who owns the mansion is flying
+in their private jet and they don't have connectivity
+with their mobile phone, so they aren't going to get the message that
+the device is open. However, with the IoT
+server in the Cloud, that state's going to
+get passed through to the server and it's
+going to get updated on the server and maybe send some notifications as
+needed from the server. What will happen is
+at some later point, the mobile device comes online. At that point, the mobile
+device could check in with the IoT server and it can
+get an update on the state. The IoT server can give an update that the state
+was reported as open and it can provide some
+additional metadata that says how long it's been open when it was originally
+reported by the device. One thing to note is that
+for this message to happen, there does not necessarily
+need to be connectivity here. It could be that the power is
+switched off, for instance, in the mansion but the fact that the AWS IoT endpoint is available means that
+we can still get the update from
+the mobile device. At this point, the
+mobile phone user might want to say, well, if we had control of the
+door through our device, then we'd want to issue a command to close the door
+from the mobile device. Note in this case,
+we still might not have connectivity
+for whatever reason to the device but if we can relay that
+message to the server, then the server can
+save this state for us. Then at some point later
+if the device comes back online and we're able to connect to it from
+the server again, we can pass along that information about state that we are desiring
+the front door closed and we can also have the server compute what's
+called a Delta for us. In other words, the
+server knows that the device reported that
+the door was open and it knows that there's a
+request to close it and so it can make it really easy for the device by
+specifically saying, I want you to do this Delta. I want you to change the front
+door from open to closed. The server can make it
+a little bit easier on the device to know exactly
+what to do in this scenario. Then, of course, the
+device can relay back the state as
+reported closed when it is closed
+and that message can go back into the mobile
+device and again, get a timestamp about
+when it was actually closed from the target device. That's just an example about how a IoT-based interaction could happen on a platform
+like Amazon IoT. There's several links here to
+AWS tutorials that you can use if you wanted to try to use AWS IoT for your platforms. There's also very similar
+services with similar concepts. Whereas Amazon refers to
+these as Device Shadows, the Google Cloud IoT calls
+this device registry, Watson IoT refers
+to Digital twins, Azure IoT refers to Device
+Shadows and they're all doing very similar things
+and they're all using either MQTT or something similar for their
+communication protocol. You can use the
+basic concepts here to implement a project that uses some other kind of IoT-based framework
+for your application. There's also, I wanted
+to bring your attention to a student implementation that implemented a full Azure IoT as part of their final project. This is something you could
+check out if you wanted to reuse any of their
+work for Azure IoT.

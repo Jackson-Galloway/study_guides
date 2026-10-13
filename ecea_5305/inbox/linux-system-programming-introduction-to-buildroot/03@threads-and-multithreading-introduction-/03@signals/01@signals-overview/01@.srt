@@ -1,0 +1,879 @@
+1
+00:00:00,590 --> 00:00:02,700
+In this video,
+we're going to talk
+
+2
+00:00:02,700 --> 00:00:04,530
+about signals in Linux.
+
+3
+00:00:04,530 --> 00:00:06,360
+We're going to
+introduce signals,
+
+4
+00:00:06,360 --> 00:00:08,550
+understand how defaults
+signal handling
+
+5
+00:00:08,550 --> 00:00:10,710
+works for user
+space applications,
+
+6
+00:00:10,710 --> 00:00:13,540
+and we're going to
+introduce core files.
+
+7
+00:00:13,610 --> 00:00:15,960
+Signals are software interrupts
+
+8
+00:00:15,960 --> 00:00:18,015
+for handling
+asynchronous events.
+
+9
+00:00:18,015 --> 00:00:20,055
+These can be events
+that are coming from
+
+10
+00:00:20,055 --> 00:00:22,770
+outside the current
+program, from the system,
+
+11
+00:00:22,770 --> 00:00:24,840
+Control C, it could
+
+12
+00:00:24,840 --> 00:00:27,300
+be events from the
+program or kernel itself,
+
+13
+00:00:27,300 --> 00:00:29,980
+for instance, divide by 0.
+
+14
+00:00:30,020 --> 00:00:32,640
+Signals can also be used as
+
+15
+00:00:32,640 --> 00:00:35,210
+a rudimentary form of
+inter-process communication,
+
+16
+00:00:35,210 --> 00:00:36,420
+how to communicate between
+
+17
+00:00:36,420 --> 00:00:38,755
+two different running processes.
+
+18
+00:00:38,755 --> 00:00:41,225
+An important thing to know
+about signals is that
+
+19
+00:00:41,225 --> 00:00:44,120
+the event that causes the
+signal is asynchronous,
+
+20
+00:00:44,120 --> 00:00:46,340
+and the handler is
+also asynchronous
+
+21
+00:00:46,340 --> 00:00:48,590
+with respect to
+program execution.
+
+22
+00:00:48,590 --> 00:00:50,240
+That has some
+important limitations
+
+23
+00:00:50,240 --> 00:00:52,615
+on how we handle signals.
+
+24
+00:00:52,615 --> 00:00:55,420
+The signal life-cycle.
+
+25
+00:00:55,730 --> 00:00:58,520
+A signal's first raised sent or
+
+26
+00:00:58,520 --> 00:00:59,810
+generated based on those events
+
+27
+00:00:59,810 --> 00:01:01,310
+that we talked about previously,
+
+28
+00:01:01,310 --> 00:01:02,840
+it's stored by the kernel,
+
+29
+00:01:02,840 --> 00:01:04,490
+and then it's handled
+by the kernel
+
+30
+00:01:04,490 --> 00:01:06,590
+based on the requests
+from the process.
+
+31
+00:01:06,590 --> 00:01:11,975
+The process can request how
+to handle specific signals,
+
+32
+00:01:11,975 --> 00:01:13,940
+and that can be changed based
+
+33
+00:01:13,940 --> 00:01:16,720
+on the preferences
+of the application.
+
+34
+00:01:16,720 --> 00:01:19,460
+Some of the signal handling
+options that can be
+
+35
+00:01:19,460 --> 00:01:21,785
+set up by the process,
+
+36
+00:01:21,785 --> 00:01:23,990
+you can ignore for most signals.
+
+37
+00:01:23,990 --> 00:01:26,615
+There's exceptions for
+SIGKILL and SIGSTOP,
+
+38
+00:01:26,615 --> 00:01:28,435
+which cannot be ignored,
+
+39
+00:01:28,435 --> 00:01:32,745
+or you can catch and
+handle the signal.
+
+40
+00:01:32,745 --> 00:01:35,340
+When you catch and
+handle a signal,
+
+41
+00:01:35,340 --> 00:01:37,250
+the kernel's going to suspend
+
+42
+00:01:37,250 --> 00:01:39,005
+execution of the
+current process,
+
+43
+00:01:39,005 --> 00:01:42,395
+and that includes execution
+of other signal handlers.
+
+44
+00:01:42,395 --> 00:01:44,210
+It's possible to get a signal
+
+45
+00:01:44,210 --> 00:01:46,720
+when you're inside
+a signal handler.
+
+46
+00:01:46,720 --> 00:01:48,360
+Then you're going to jump to
+
+47
+00:01:48,360 --> 00:01:50,525
+any previously
+registered function
+
+48
+00:01:50,525 --> 00:01:54,440
+that was set up to
+handle the signal,
+
+49
+00:01:54,440 --> 00:01:56,780
+and you're going to
+
+50
+00:01:56,780 --> 00:01:59,200
+execute the code in
+that signal handler.
+
+51
+00:01:59,200 --> 00:02:02,060
+Basically swapping out
+the current thread
+
+52
+00:02:02,060 --> 00:02:04,070
+or interrupting the
+current thread and
+
+53
+00:02:04,070 --> 00:02:07,115
+replacing the next instruction
+
+54
+00:02:07,115 --> 00:02:08,240
+with the instruction
+that's coming
+
+55
+00:02:08,240 --> 00:02:10,735
+from the signal handler.
+
+56
+00:02:10,735 --> 00:02:13,890
+Two example of signal handling
+
+57
+00:02:13,890 --> 00:02:18,310
+that are really common
+are SIGINT and SIGTERM.
+
+58
+00:02:18,670 --> 00:02:21,770
+The default action is
+
+59
+00:02:21,770 --> 00:02:24,980
+the third option of how
+to handle a signal.
+
+60
+00:02:24,980 --> 00:02:27,365
+If you don't set up a
+specific signal action,
+
+61
+00:02:27,365 --> 00:02:28,950
+you'll get the default action.
+
+62
+00:02:28,950 --> 00:02:30,770
+In a lot of cases,
+the default action
+
+63
+00:02:30,770 --> 00:02:32,495
+is just to terminate
+the process.
+
+64
+00:02:32,495 --> 00:02:33,755
+In some cases,
+
+65
+00:02:33,755 --> 00:02:35,530
+it'll terminate the process,
+
+66
+00:02:35,530 --> 00:02:37,395
+possibly with a core dump.
+
+67
+00:02:37,395 --> 00:02:39,650
+A core dump is just a capture
+
+68
+00:02:39,650 --> 00:02:40,880
+of the running process memory,
+
+69
+00:02:40,880 --> 00:02:42,935
+which we can use
+with tools like GDB
+
+70
+00:02:42,935 --> 00:02:46,225
+to help figure out what
+happened in the program.
+
+71
+00:02:46,225 --> 00:02:49,340
+Here's an example of
+signal default actions
+
+72
+00:02:49,340 --> 00:02:50,990
+based on the type of signal,
+
+73
+00:02:50,990 --> 00:02:53,150
+and you can get this from
+the signal man-page.
+
+74
+00:02:53,150 --> 00:02:55,075
+You can see here the signal,
+
+75
+00:02:55,075 --> 00:02:58,730
+and you can see in this column
+the default action where
+
+76
+00:02:58,730 --> 00:03:00,470
+Term means that it's going to
+
+77
+00:03:00,470 --> 00:03:02,875
+be sending SIGTERM
+to the process,
+
+78
+00:03:02,875 --> 00:03:05,115
+Ign means it's going
+to be ignored,
+
+79
+00:03:05,115 --> 00:03:09,000
+and Core is going to
+mean both that it sends
+
+80
+00:03:09,000 --> 00:03:11,025
+SIGTERM and it also dumps a core
+
+81
+00:03:11,025 --> 00:03:13,830
+if core file is
+configured properly.
+
+82
+00:03:13,830 --> 00:03:17,385
+Stop means that it
+will send SIGSTOP.
+
+83
+00:03:17,385 --> 00:03:19,430
+This is referencing some of
+
+84
+00:03:19,430 --> 00:03:20,930
+the signals that we can send,
+
+85
+00:03:20,930 --> 00:03:22,490
+and there are a whole
+list of signals
+
+86
+00:03:22,490 --> 00:03:24,800
+in Linux system
+programming Chapter 10,
+
+87
+00:03:24,800 --> 00:03:26,510
+but I want to go through some
+
+88
+00:03:26,510 --> 00:03:28,465
+of the more common ones here.
+
+89
+00:03:28,465 --> 00:03:33,805
+SIGABRT is what happens when
+you use the assert function.
+
+90
+00:03:33,805 --> 00:03:36,530
+When you put an assertion
+inside your code,
+
+91
+00:03:36,530 --> 00:03:40,895
+if your code can't continue
+due to some invalid input and
+
+92
+00:03:40,895 --> 00:03:45,350
+you can't handle that
+particular error
+
+93
+00:03:45,350 --> 00:03:47,560
+and you need to
+terminate the process,
+
+94
+00:03:47,560 --> 00:03:50,220
+the assert function will
+
+95
+00:03:50,220 --> 00:03:53,160
+result in a SIGABRT if
+the assertion fails.
+
+96
+00:03:53,160 --> 00:03:57,575
+SIGHUP is one that
+stands for hang-up,
+
+97
+00:03:57,575 --> 00:04:00,760
+is a carry-over from
+the old modem days,
+
+98
+00:04:00,760 --> 00:04:03,320
+but it's often used
+as a signal that
+
+99
+00:04:03,320 --> 00:04:06,980
+tells an application to reread
+its configuration files.
+
+100
+00:04:06,980 --> 00:04:08,510
+If you change something
+
+101
+00:04:08,510 --> 00:04:09,770
+in the configuration
+and you want it
+
+102
+00:04:09,770 --> 00:04:11,030
+to apply to a process that's
+
+103
+00:04:11,030 --> 00:04:12,535
+already running like a daemon,
+
+104
+00:04:12,535 --> 00:04:14,180
+a lot of times the
+
+105
+00:04:14,180 --> 00:04:16,520
+handling for that will
+be through SIGHUB.
+
+106
+00:04:16,520 --> 00:04:19,520
+SIGINT is Control
+C. If you've ever
+
+107
+00:04:19,520 --> 00:04:20,960
+stopped a program
+that's running in
+
+108
+00:04:20,960 --> 00:04:22,700
+the terminal by using Control C,
+
+109
+00:04:22,700 --> 00:04:24,965
+what you're really doing
+is sending SIGINT.
+
+110
+00:04:24,965 --> 00:04:27,785
+SIGKILL is something
+that you can send,
+
+111
+00:04:27,785 --> 00:04:28,850
+that can't be ignored,
+
+112
+00:04:28,850 --> 00:04:30,610
+and unconditionally
+terminates the process.
+
+113
+00:04:30,610 --> 00:04:33,050
+This is useful if you've
+got an application
+
+114
+00:04:33,050 --> 00:04:36,690
+that's not responding that
+you need to terminate.
+
+115
+00:04:36,950 --> 00:04:40,155
+Then SIGSEV is
+segmentation fault.
+
+116
+00:04:40,155 --> 00:04:42,430
+This happens on any null pointer
+
+117
+00:04:42,430 --> 00:04:44,825
+or invalid memory access,
+
+118
+00:04:44,825 --> 00:04:46,540
+and the default action
+for this one is
+
+119
+00:04:46,540 --> 00:04:48,700
+terminating and generating
+a core file which
+
+120
+00:04:48,700 --> 00:04:50,530
+can be useful for
+helping to find
+
+121
+00:04:50,530 --> 00:04:53,065
+where the segmentation
+fault's occurring.
+
+122
+00:04:53,065 --> 00:04:56,190
+SIGTERM will gracefully
+terminate a process.
+
+123
+00:04:56,190 --> 00:04:59,385
+This is the nice way of
+shutting down a daemon.
+
+124
+00:04:59,385 --> 00:05:01,570
+You can send SIGTERM
+and the daemon
+
+125
+00:05:01,570 --> 00:05:03,820
+will have the opportunity
+to catch that
+
+126
+00:05:03,820 --> 00:05:05,500
+and do whatever proper
+
+127
+00:05:05,500 --> 00:05:09,590
+close down that it needs to
+do to shut down gracefully.
+
+128
+00:05:09,590 --> 00:05:12,565
+SIGSTOP is similar to SIGKILL,
+
+129
+00:05:12,565 --> 00:05:15,910
+except it's pausing the
+process instead of killing it,
+
+130
+00:05:15,910 --> 00:05:17,320
+and it's similar in the state
+
+131
+00:05:17,320 --> 00:05:19,940
+that it sends that
+they can't be ignored.
+
+132
+00:05:20,810 --> 00:05:24,040
+A little bit more when we talk
+
+133
+00:05:24,040 --> 00:05:26,935
+about core dump
+files and SIGSEV,
+
+134
+00:05:26,935 --> 00:05:29,665
+how we can use the capabilities
+
+135
+00:05:29,665 --> 00:05:32,795
+of the core file to help figure
+out where the problem is.
+
+136
+00:05:32,795 --> 00:05:35,380
+Here's an example of a
+really simple application
+
+137
+00:05:35,380 --> 00:05:37,165
+that has a segmentation fault.
+
+138
+00:05:37,165 --> 00:05:40,120
+In order to create an
+invalid memory access,
+
+139
+00:05:40,120 --> 00:05:41,770
+we can just initialize
+a pointer to
+
+140
+00:05:41,770 --> 00:05:44,575
+zero and then try to
+do anything with it.
+
+141
+00:05:44,575 --> 00:05:46,970
+In this case, we're
+trying to add one to it.
+
+142
+00:05:46,970 --> 00:05:48,375
+We're trying to add
+
+143
+00:05:48,375 --> 00:05:50,980
+1 to 0 location in
+
+144
+00:05:50,980 --> 00:05:54,040
+memory which is not going to
+be allocated to our process.
+
+145
+00:05:54,040 --> 00:05:56,980
+That's going to result
+in a segmentation fault.
+
+146
+00:05:56,980 --> 00:06:01,235
+Attempts to access. Obviously,
+
+147
+00:06:01,235 --> 00:06:04,145
+with this really
+simple application,
+
+148
+00:06:04,145 --> 00:06:07,175
+it wouldn't be very
+hard to find the issue,
+
+149
+00:06:07,175 --> 00:06:11,675
+but in more complicated
+applications,
+
+150
+00:06:11,675 --> 00:06:15,110
+the built-in capabilities
+of the core file in GDB can
+
+151
+00:06:15,110 --> 00:06:18,710
+be used to take you
+directly to the issue,
+
+152
+00:06:18,710 --> 00:06:21,605
+which is very
+helpful debug tool.
+
+153
+00:06:21,605 --> 00:06:23,600
+There's a certain amount
+of setup that you need to
+
+154
+00:06:23,600 --> 00:06:26,705
+do in order to use
+the core file,
+
+155
+00:06:26,705 --> 00:06:29,075
+that's the default for SIGSEV.
+
+156
+00:06:29,075 --> 00:06:30,740
+Even though the
+default for the signal
+
+157
+00:06:30,740 --> 00:06:32,090
+is to create a core file,
+
+158
+00:06:32,090 --> 00:06:33,635
+depending on your distribution,
+
+159
+00:06:33,635 --> 00:06:35,270
+you might have
+some work to do to
+
+160
+00:06:35,270 --> 00:06:37,865
+set up to actually
+generate the core file.
+
+161
+00:06:37,865 --> 00:06:39,350
+These are the steps you can use
+
+162
+00:06:39,350 --> 00:06:43,350
+on Ubuntu to set up core files.
+
+163
+00:06:43,350 --> 00:06:44,750
+There's a link here
+at the bottom that
+
+164
+00:06:44,750 --> 00:06:46,370
+takes you through each
+one of these steps.
+
+165
+00:06:46,370 --> 00:06:48,620
+But basically, we're setting
+up the kernel to tell
+
+166
+00:06:48,620 --> 00:06:51,100
+it how and where to
+generate the core file,
+
+167
+00:06:51,100 --> 00:06:54,390
+and then we're running
+the application,
+
+168
+00:06:54,390 --> 00:06:56,535
+and you'll see here
+that there was
+
+169
+00:06:56,535 --> 00:06:59,335
+a segmentation fault
+core dump message.
+
+170
+00:06:59,335 --> 00:07:02,750
+If we look at the apport.log,
+
+171
+00:07:02,750 --> 00:07:05,780
+which is what Ubuntu uses
+for generating crash logs,
+
+172
+00:07:05,780 --> 00:07:08,420
+you can see that we've
+created a log with
+
+173
+00:07:08,420 --> 00:07:11,450
+a specific reference to
+
+174
+00:07:11,450 --> 00:07:13,100
+the core that we just
+
+175
+00:07:13,100 --> 00:07:15,320
+created with our
+segmentation fault.
+
+176
+00:07:15,320 --> 00:07:18,590
+If we use apport-unpack that,
+
+177
+00:07:18,590 --> 00:07:20,825
+we can unpack that
+back into a core file,
+
+178
+00:07:20,825 --> 00:07:24,575
+and then we can use GDB
+to look at the core dump.
+
+179
+00:07:24,575 --> 00:07:28,885
+If you look at this
+core dump and GDB,
+
+180
+00:07:28,885 --> 00:07:30,980
+you can see that it's
+going to point us right to
+
+181
+00:07:30,980 --> 00:07:32,840
+the place where the
+segmentation fault occurs.
+
+182
+00:07:32,840 --> 00:07:34,970
+It's going to show us
+that it was this line,
+
+183
+00:07:34,970 --> 00:07:36,485
+mem, equals men plus 1.
+
+184
+00:07:36,485 --> 00:07:38,440
+This can be a
+really useful tool.
+
+185
+00:07:38,440 --> 00:07:40,010
+Even though segmentation faults
+
+186
+00:07:40,010 --> 00:07:41,270
+might look a little scary when
+
+187
+00:07:41,270 --> 00:07:44,120
+you see this message
+that saying core dump,
+
+188
+00:07:44,120 --> 00:07:46,880
+you can use GDB
+and core tools to
+
+189
+00:07:46,880 --> 00:07:48,170
+really help you
+find these pretty
+
+190
+00:07:48,170 --> 00:07:50,790
+easily in a lot of cases.

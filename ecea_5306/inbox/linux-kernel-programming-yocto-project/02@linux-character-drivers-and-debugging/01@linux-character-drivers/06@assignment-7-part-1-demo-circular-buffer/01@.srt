@@ -1,0 +1,182 @@
+1
+00:00:06,410 --> 00:00:08,460
+In this assignment,
+we're going to go
+
+2
+00:00:08,460 --> 00:00:10,950
+over Part 1 of Assignment 7,
+
+3
+00:00:10,950 --> 00:00:13,185
+which is bringing in
+
+4
+00:00:13,185 --> 00:00:15,300
+the circular buffer
+implementation that
+
+5
+00:00:15,300 --> 00:00:18,225
+you'll use with Assignment 8.
+
+6
+00:00:18,225 --> 00:00:22,860
+You'll start with your
+Assignment 3 repository
+
+7
+00:00:22,860 --> 00:00:25,605
+and you'll bring in the
+assignment-7 branch
+
+8
+00:00:25,605 --> 00:00:27,930
+of ASD assignments.
+
+9
+00:00:27,930 --> 00:00:33,060
+What you'll see when you
+follow these steps to merge
+
+10
+00:00:33,060 --> 00:00:36,990
+is that this ASD
+
+11
+00:00:36,990 --> 00:00:39,660
+circular buffer file's
+going to be added.
+
+12
+00:00:39,660 --> 00:00:42,800
+You'll notice some
+stub functions in
+
+13
+00:00:42,800 --> 00:00:45,380
+here that match some of
+
+14
+00:00:45,380 --> 00:00:47,870
+the conversation in a video
+
+15
+00:00:47,870 --> 00:00:51,965
+content about how to
+implement a circular buffer.
+
+16
+00:00:51,965 --> 00:00:54,650
+We're going to be implement
+it in a way that will let
+
+17
+00:00:54,650 --> 00:00:57,250
+us reuse it with
+assignment number 8.
+
+18
+00:00:57,250 --> 00:01:00,665
+We'll essentially be
+starting assignment 8 with
+
+19
+00:01:00,665 --> 00:01:02,855
+this implementation
+of circular buffer
+
+20
+00:01:02,855 --> 00:01:04,790
+that we'll test natively first.
+
+21
+00:01:04,790 --> 00:01:06,260
+Well, so we'll get
+this all running
+
+22
+00:01:06,260 --> 00:01:07,925
+natively on our host,
+
+23
+00:01:07,925 --> 00:01:09,770
+and that way when we
+go to Assignment 8
+
+24
+00:01:09,770 --> 00:01:11,645
+and try to compile it
+into our Kernel Driver,
+
+25
+00:01:11,645 --> 00:01:15,035
+we'll already have a
+unit-tested implementation.
+
+26
+00:01:15,035 --> 00:01:18,560
+Follow the notes and lecture
+and the to-do messages
+
+27
+00:01:18,560 --> 00:01:20,720
+here to implement
+your circular buffer
+
+28
+00:01:20,720 --> 00:01:22,975
+such that it's going to
+pass through unit test.
+
+29
+00:01:22,975 --> 00:01:28,550
+Then tag the assignment
+3 repository with
+
+30
+00:01:28,550 --> 00:01:30,920
+a complete tag so that
+we know which commit
+
+31
+00:01:30,920 --> 00:01:35,040
+matched up with your
+Assignment 7 implementation.
+
+32
+00:01:35,090 --> 00:01:38,135
+Your implementation
+for Assignment 7,
+
+33
+00:01:38,135 --> 00:01:41,315
+if you run the full test script,
+
+34
+00:01:41,315 --> 00:01:44,450
+you should see it
+pulling in some tests of
+
+35
+00:01:44,450 --> 00:01:46,940
+your circular buffer
+and run those all
+
+36
+00:01:46,940 --> 00:01:48,170
+through the unit test script and
+
+37
+00:01:48,170 --> 00:01:49,805
+all of those tests should pass.
+
+38
+00:01:49,805 --> 00:01:52,040
+Once you get this complete
+with success message,
+
+39
+00:01:52,040 --> 00:01:54,720
+you're done with part one
+of assignment set up.

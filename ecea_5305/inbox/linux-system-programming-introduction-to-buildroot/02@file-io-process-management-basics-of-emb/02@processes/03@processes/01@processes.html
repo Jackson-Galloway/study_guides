@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Processes</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>A process ID (pid) may be re-used after a process terminates.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~CV6gYvrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~CV6gYvrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Other processes are started at system startup based on the work of this defined process.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~D0L1mPrQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>The init process </p></div></li>
+<li><input name="autoGradableResponseId~D0L1mPrQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>The idle process </p></div></li>
+<li><input name="autoGradableResponseId~D0L1mPrQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>The root process </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the true statement about the code snippet below:</p><img alt="2019-11-09 17_31_53-quiz-questions_Question1c at master  cu-ecen-5013_quiz-questions.png" src="2019-11-09%2017_31_53-quiz-questions_Question1c%20at%20master%20%20cu-ecen-5013_quiz-questions.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~JONN7vrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>If the call to execl() succeeds, the printf at line 3 will never be executed</p></div></li>
+<li><input name="autoGradableResponseId~JONN7vrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>The printf at line 3 will only be executed if the vi command completes successfully</p></div></li>
+<li><input name="autoGradableResponseId~JONN7vrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>The printf at line 3 will always execute as soon as the /bin/vi command completes</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The exec() family of commands support "p" types execlp() and execvp() which reference the PATH variable.  These are generally safer to use than exec() since they aren't succeptable to path injection.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WZN3JPrQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~WZN3JPrQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>System calls fork() and exec() are similar in that both create a new process and leave the existing process intact.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ZI2Fx_rQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~ZI2Fx_rQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A best practice in system programming is to use the maximum level of rights possible for your application, to ensure it has the privileges to complete any tasks it needs to perform.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~i4RYivrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~i4RYivrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>It is possible to change the effective user ID of a process after starting the process.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mY-fo_rQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~mY-fo_rQEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Sessions interact with a controlling terminal and may be associated with multiple processes.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~onx5FPrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~onx5FPrQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A Ctrl-C keyboard press sends a SIGINT signal to:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~rPzrT_rQEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>All processes associated with a session </p></div></li>
+<li><input name="autoGradableResponseId~rPzrT_rQEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>All processes in a foreground process group of a session </p></div></li>
+<li><input name="autoGradableResponseId~rPzrT_rQEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>All processes in a background process group of a session </p></div></li>
+<li><input name="autoGradableResponseId~rPzrT_rQEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>All processes associated with any active sessions </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A daemon is typically associated with a single terminal.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~yMr95frQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~yMr95frQEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A daemon should (select any which apply):</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Use setsid() to specify a new process group and session and disassociate from any controlling terminal</p></div></li>
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Change the working directory to the current directory with chdir() </p></div></li>
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Change the working directory to the root directory with chdir() </p></div></li>
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Use the parent process after fork(), which will become the daemon </p></div></li>
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Use the child process after fork(), which will become the daemon </p></div></li>
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Redirect standard in, standard out, and standard error to a log file</p></div></li>
+<li><input name="autoGradableResponseId~0vnNq_rQEeukfw7pd2Cm2Q" type="checkbox"/> <div class="quiz-option-text"><p>Redirect standard in, standard out, and standard error to /dev/null</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following function  replaces a process?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~aA701ghxEeyAChLV-v51qw" type="radio"/> <div class="quiz-option-text"><p>exec()</p></div></li>
+<li><input name="autoGradableResponseId~aA701ghxEeyAChLV-v51qw" type="radio"/> <div class="quiz-option-text"><p>fork()</p></div></li>
+<li><input name="autoGradableResponseId~aA701ghxEeyAChLV-v51qw" type="radio"/> <div class="quiz-option-text"><p>system()</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>which function launches a new child process and continues execution of parent.
+
+</p><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~QnnfrA3OEeyWQwrS6jE60w" type="radio"/> <div class="quiz-option-text"><p>exec()</p></div></li>
+<li><input name="autoGradableResponseId~QnnfrA3OEeyWQwrS6jE60w" type="radio"/> <div class="quiz-option-text"><p>fork()</p></div></li>
+<li><input name="autoGradableResponseId~QnnfrA3OEeyWQwrS6jE60w" type="radio"/> <div class="quiz-option-text"><p>system()</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A system() function is used to </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~fLc8bA3OEeyfdxKoM6tcwQ" type="radio"/> <div class="quiz-option-text"><p>Replace a process</p></div></li>
+<li><input name="autoGradableResponseId~fLc8bA3OEeyfdxKoM6tcwQ" type="radio"/> <div class="quiz-option-text"><p>Launch a new process and wait for termination</p></div></li>
+<li><input name="autoGradableResponseId~fLc8bA3OEeyfdxKoM6tcwQ" type="radio"/> <div class="quiz-option-text"><p>Launch a new child process and continue execution of parent</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About the Final Exam</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<p>The course final examination is similar in format to the homework quiz assignments, with the following important differences.</p><ul><li><p>The exam is <strong>proctored</strong>. You will need to arrange a time to take the proctored exam. Please see the <em>ProctorU Information</em> reading for scheduling details.</p></li><li><p>The exam is <strong>45 minutes long</strong>.</p></li><li><p>You are allowed<strong> 1 attempt</strong>.</p><ul><li><p>An attempt is one complete try at the exam within the given time limit. </p></li></ul></li><li><p>Each attempt allows <strong>1 submission</strong>.</p><ul><li><p>A submission occurs when you click “Submit” during an attempt. If multiple submissions are allowed, you may submit more than once within the time limit. Your last submission will determine your grade.  </p></li></ul></li><li><p>After the attempt window has ended, you will not be able to change or re-take the exam.</p></li></ul><h2><strong>Permitted Exam Materials</strong></h2><p>You <strong>may</strong> use the following when taking the exam:</p><ul><li><p>A notes sheet of paper, front and back, with 11pt or larger font if not hand-written. These notes must be your own and not copied from another student.</p></li><li><p>An electronic copy of your notes sheet, if you prefer this to a physical paper.</p></li><li><p>One URL containing your notes (for example, a Google Drive link or similar online editor).</p></li><li><p>Pens, pencils, blank paper as desired.</p></li></ul><h2><strong>Prohibited Exam Materials </strong></h2><p>You <strong>may not</strong> use the following when taking the exam:</p><ul><li><p>Course textbooks.</p></li><li><p>Lecture slides and lecture content.</p></li><li><p>AI Tools.</p></li></ul><p>You may drop or withdraw from this course at any time before accessing the final exam. Once you begin the exam, you will be assigned a course grade based on the announced grading formula, and this grade will appear on your university transcript after the eight-week session concludes. After the final exam has ended, you may continue submitting homework assignments until the conclusion of the eight-week session.</p>
+  </div>
+</body>
+</html>

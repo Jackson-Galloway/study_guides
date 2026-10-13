@@ -1,0 +1,61 @@
+This video contains a
+few additional tips and hints for implementing
+assignment 5. First, if you haven't been
+using this previously, I suggest turning
+on Wall and Werror. This is something that's covered in department coding guidelines, but it really helps in finding problems in
+your source code. There's an example here of using a segfaulter
+implementation to demonstrate the benefit
+of using warnings with your compiler and
+treating warnings as errors for some
+common warnings. I've got a main program
+here that calls segfaulter, which is a function located
+in a different file, and you can see here
+the segfaulter function itself expects you to pass some
+string in and then it's just going to calculate
+the length of the string. In the main application, there's a bug here in
+that we're not passing any string in as a part of
+the call to segfaulter. If I compile and run this
+without warnings and errors, I'll get a segmentation fault, and the reason I get
+a segmentation fault is because I'm not
+passing anything in to this somestring and if I attempt to access this variable, it's just going to pull
+something randomly off the heap and most likely crash. This could cause a confusing
+bug with your program. Alternatively, if
+I do include in my C flags Wall and Werror, I get a message like this
+telling me that there wasn't a declaration of the function before
+I tried to call it. So this is giving me
+the hint that I needed to supply the declaration
+of the function, and then I need to supply the right parameters in order to avoid a
+segmentation fault. A few other things to think
+about with assignment 5. You want to close all
+the file descriptors, both from the socket and the accept methods to
+avoid memory leaks. There are different
+ways to implement your signal handler
+strategy for shutdown, but I think the shutdown command is one that might
+particularly be useful. There's some links here at
+the bottom to check out, but this is one that I
+suggest taking a look at if you're trying to think of how to implement your signal
+handler strategy. In terms of bind failing with
+'Address Already in Use', this could happen
+sometimes if you close your application
+and immediately restart it so the
+SO_REUSEADDR option on bind is one way
+that you can make this less likely to occur and there's some links
+again here on the slide that you can look at for
+more detail about that. One other thing I wanted to talk about with respect to Assignment 5 is to help ensure that you don't have
+memory leaks in your program, you can use an application
+called Valgrind. This is a really super-useful
+application that essentially is a wrapper around your executable to look at the memory allocations you do
+and show that you've freed all the memory that you've
+allocated and the way we'd run this with our
+aesdsocket application, we could say valgrind
+leak check equal full, show leak kinds
+all, track origins, yes, verbose, and then
+you can specify dash, dash log file to
+output to a log file, and then just run your aesdsocket application
+like you would herewith to run
+it interactively. What you should see
+from that output file, you should see an output message here saying all heap
+blocks were freed, and no leaks are possible. So try this out and see if this is working with your assignment
+5 implementation. This will be a part of the unit test to the assignment 6, so implementing
+assignment 5 without memory leaks will help
+you with assignment 6.

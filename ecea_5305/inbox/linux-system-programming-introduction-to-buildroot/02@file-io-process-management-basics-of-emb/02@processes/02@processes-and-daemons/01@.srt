@@ -1,0 +1,1180 @@
+1
+00:00:00,080 --> 00:00:02,980
+In this video, we'll continue
+with our discussion of
+
+2
+00:00:02,980 --> 00:00:05,410
+processes and talk
+more about daemons,
+
+3
+00:00:05,410 --> 00:00:08,215
+which we introduced briefly
+in a previous video.
+
+4
+00:00:08,215 --> 00:00:11,205
+The learning objectives here.
+
+5
+00:00:11,205 --> 00:00:12,370
+We're going to talk about
+
+6
+00:00:12,370 --> 00:00:14,425
+process user groups
+and permissions,
+
+7
+00:00:14,425 --> 00:00:16,060
+we're going to talk
+about the PS utility,
+
+8
+00:00:16,060 --> 00:00:18,780
+which you can use to
+examine process status,
+
+9
+00:00:18,780 --> 00:00:22,320
+and we're going to talk about
+introduction to daemons.
+
+10
+00:00:22,320 --> 00:00:26,800
+There's multiple user and
+
+11
+00:00:26,800 --> 00:00:28,855
+group IDs that are
+associated with a process.
+
+12
+00:00:28,855 --> 00:00:30,880
+You can track things
+like who originally ran
+
+13
+00:00:30,880 --> 00:00:33,265
+the process or who originally
+started the process,
+
+14
+00:00:33,265 --> 00:00:34,960
+so that would be referred
+
+15
+00:00:34,960 --> 00:00:36,920
+to as the real
+user and group ID.
+
+16
+00:00:36,920 --> 00:00:38,605
+Then you can track also
+
+17
+00:00:38,605 --> 00:00:40,260
+who the process is
+currently running as,
+
+18
+00:00:40,260 --> 00:00:42,435
+so that's the effective user ID,
+
+19
+00:00:42,435 --> 00:00:44,840
+which is probably what
+you're most interested in,
+
+20
+00:00:44,840 --> 00:00:46,565
+because you want to
+know what permissions
+
+21
+00:00:46,565 --> 00:00:49,225
+the process would have.
+
+22
+00:00:49,225 --> 00:00:51,970
+The effective user
+ID for a process.
+
+23
+00:00:51,970 --> 00:00:53,600
+The reason we track
+them separately is
+
+24
+00:00:53,600 --> 00:00:55,670
+because the effective
+user ID can be changed.
+
+25
+00:00:55,670 --> 00:00:58,160
+There's SetUID or SetGID
+
+26
+00:00:58,160 --> 00:01:00,050
+that can change the
+effective user ID
+
+27
+00:01:00,050 --> 00:01:01,465
+for the process that's run.
+
+28
+00:01:01,465 --> 00:01:05,270
+There are ways to
+get the real or
+
+29
+00:01:05,270 --> 00:01:06,980
+the effective user and group
+
+30
+00:01:06,980 --> 00:01:10,020
+ID through these project calls.
+
+31
+00:01:10,220 --> 00:01:14,720
+You might think, if
+I have the option to
+
+32
+00:01:14,720 --> 00:01:19,145
+run or change to use
+different effective user IDs,
+
+33
+00:01:19,145 --> 00:01:22,285
+what user and group should
+I be using for my process?
+
+34
+00:01:22,285 --> 00:01:24,635
+There's a couple of
+different options you have.
+
+35
+00:01:24,635 --> 00:01:26,770
+One is you could use
+the root account.
+
+36
+00:01:26,770 --> 00:01:27,890
+That would ensure that you
+
+37
+00:01:27,890 --> 00:01:29,120
+have access to
+whatever you need.
+
+38
+00:01:29,120 --> 00:01:30,890
+Basically, the root account
+is going to be able
+
+39
+00:01:30,890 --> 00:01:33,100
+to view pretty much
+everything in the system,
+
+40
+00:01:33,100 --> 00:01:36,365
+or you could use some
+specific other account.
+
+41
+00:01:36,365 --> 00:01:39,860
+When you're trying to decide
+which you should use,
+
+42
+00:01:39,860 --> 00:01:41,630
+there's the doctrine of
+
+43
+00:01:41,630 --> 00:01:43,070
+least-privileged rights that you
+
+44
+00:01:43,070 --> 00:01:44,900
+can use to help
+make this decision.
+
+45
+00:01:44,900 --> 00:01:47,000
+The doctrine of
+least-privileged rights
+
+46
+00:01:47,000 --> 00:01:48,470
+says that a process should
+
+47
+00:01:48,470 --> 00:01:49,910
+ideally execute with
+
+48
+00:01:49,910 --> 00:01:52,435
+the minimum level
+of rights possible.
+
+49
+00:01:52,435 --> 00:01:54,650
+Why would we want to execute
+
+50
+00:01:54,650 --> 00:01:56,645
+with a minimum level
+of rights possible?
+
+51
+00:01:56,645 --> 00:01:58,825
+Isn't that going to make
+our lives more difficult?
+
+52
+00:01:58,825 --> 00:02:01,280
+In some ways it
+will because it's
+
+53
+00:02:01,280 --> 00:02:02,495
+easier to just run as root
+
+54
+00:02:02,495 --> 00:02:04,100
+and be able to access anything.
+
+55
+00:02:04,100 --> 00:02:07,280
+But the reason you want to
+use the minimum level of
+
+56
+00:02:07,280 --> 00:02:08,660
+rights is because
+you're going to be
+
+57
+00:02:08,660 --> 00:02:10,555
+less susceptible to exploit.
+
+58
+00:02:10,555 --> 00:02:12,200
+In other words, if
+someone's able to
+
+59
+00:02:12,200 --> 00:02:14,155
+make your process
+do the wrong thing,
+
+60
+00:02:14,155 --> 00:02:16,040
+it's less likely that
+
+61
+00:02:16,040 --> 00:02:17,180
+they're going to be
+able to do something
+
+62
+00:02:17,180 --> 00:02:18,710
+malicious if you aren't
+
+63
+00:02:18,710 --> 00:02:20,875
+running with right
+privileges than if you are.
+
+64
+00:02:20,875 --> 00:02:22,415
+The second reason is that you're
+
+65
+00:02:22,415 --> 00:02:24,170
+less susceptible to
+your own errors.
+
+66
+00:02:24,170 --> 00:02:27,100
+We've given this
+example before of rm-rf
+
+67
+00:02:27,100 --> 00:02:30,665
+of sum mistypedd var and slash.
+
+68
+00:02:30,665 --> 00:02:31,880
+If you run that as a root,
+
+69
+00:02:31,880 --> 00:02:33,350
+it's going to start
+deleting the contents
+
+70
+00:02:33,350 --> 00:02:34,645
+out of your real file system,
+
+71
+00:02:34,645 --> 00:02:38,230
+because mistypedd var is
+going to evaluate to nothing.
+
+72
+00:02:38,230 --> 00:02:40,580
+This is just one example of
+
+73
+00:02:40,580 --> 00:02:42,350
+a case where you can
+get yourself into
+
+74
+00:02:42,350 --> 00:02:44,030
+trouble if you give
+
+75
+00:02:44,030 --> 00:02:46,220
+yourself more provisions than
+you need in your process.
+
+76
+00:02:46,220 --> 00:02:47,540
+You always want to
+try to execute with
+
+77
+00:02:47,540 --> 00:02:50,430
+a minimum level of rights
+that are possible.
+
+78
+00:02:51,050 --> 00:02:54,290
+The Chapter 5 talks a
+
+79
+00:02:54,290 --> 00:02:56,615
+little bit about process
+groups and sessions.
+
+80
+00:02:56,615 --> 00:02:59,330
+These are just ways to
+group process together.
+
+81
+00:02:59,330 --> 00:03:01,250
+The process group
+is a collection of
+
+82
+00:03:01,250 --> 00:03:02,930
+processes and then a session
+
+83
+00:03:02,930 --> 00:03:04,735
+is a collection of
+process groups.
+
+84
+00:03:04,735 --> 00:03:07,475
+A session is associated with
+a controlling terminal.
+
+85
+00:03:07,475 --> 00:03:09,290
+What do we mean by a
+controlling terminal?
+
+86
+00:03:09,290 --> 00:03:11,510
+It means the terminal
+that you're using for
+
+87
+00:03:11,510 --> 00:03:14,320
+login in a text-based
+operation, for instance.
+
+88
+00:03:14,320 --> 00:03:16,055
+Where you enter your
+login information,
+
+89
+00:03:16,055 --> 00:03:17,845
+where you enter your
+shell commands.
+
+90
+00:03:17,845 --> 00:03:21,140
+For historical reasons,
+this is known as a TTY,
+
+91
+00:03:21,140 --> 00:03:23,075
+which stands for teletypewriter.
+
+92
+00:03:23,075 --> 00:03:25,930
+You can see that that's
+a historical term.
+
+93
+00:03:25,930 --> 00:03:29,490
+But a TTY is just a
+device terminal I/O.
+
+94
+00:03:29,490 --> 00:03:31,290
+Think of keyboard interaction,
+
+95
+00:03:31,290 --> 00:03:32,745
+login, command I/O.
+
+96
+00:03:32,745 --> 00:03:35,000
+That's really what a
+session is all about.
+
+97
+00:03:35,000 --> 00:03:38,310
+It's created for the login
+shell on a specific TTY.
+
+98
+00:03:38,310 --> 00:03:39,900
+You might have different TTYs,
+
+99
+00:03:39,900 --> 00:03:42,515
+you might have a serial
+port you can login over,
+
+100
+00:03:42,515 --> 00:03:44,870
+and you might have virtual
+terminals that you can
+
+101
+00:03:44,870 --> 00:03:47,860
+login over in a terminal
+window for instance.
+
+102
+00:03:47,860 --> 00:03:50,800
+They'll be sessions associate
+with each of those.
+
+103
+00:03:50,800 --> 00:03:52,820
+There's always one single
+
+104
+00:03:52,820 --> 00:03:55,175
+foreground process
+group within a session.
+
+105
+00:03:55,175 --> 00:03:57,365
+This is the one that
+if you hit Control C,
+
+106
+00:03:57,365 --> 00:03:59,000
+you're going to interrupt
+whatever's running in
+
+107
+00:03:59,000 --> 00:04:01,640
+that foreground process group
+
+108
+00:04:01,640 --> 00:04:03,790
+for the session you
+sent the Control C to.
+
+109
+00:04:03,790 --> 00:04:06,905
+Then there's also zero or more
+background process group.
+
+110
+00:04:06,905 --> 00:04:10,760
+If you want to start something
+in the background shell,
+
+111
+00:04:10,760 --> 00:04:13,120
+you can use the ampersand
+after the shell commands.
+
+112
+00:04:13,120 --> 00:04:15,655
+If you have a long
+running command,
+
+113
+00:04:15,655 --> 00:04:17,265
+you had to type the
+name of the command,
+
+114
+00:04:17,265 --> 00:04:18,180
+and then a space,
+
+115
+00:04:18,180 --> 00:04:19,700
+and put the ampersand,
+that's going
+
+116
+00:04:19,700 --> 00:04:21,335
+to put it in the
+background process group,
+
+117
+00:04:21,335 --> 00:04:22,670
+which means you'll
+still be able to
+
+118
+00:04:22,670 --> 00:04:24,860
+use the foreground for
+
+119
+00:04:24,860 --> 00:04:27,740
+shell activity or shell
+
+120
+00:04:27,740 --> 00:04:31,610
+commands while the process is
+running in the background.
+
+121
+00:04:31,610 --> 00:04:34,670
+How do I see what
+processes are running,
+
+122
+00:04:34,670 --> 00:04:36,425
+including those processes from,
+
+123
+00:04:36,425 --> 00:04:39,020
+let's say, different sessions
+or from the background?
+
+124
+00:04:39,020 --> 00:04:42,560
+Ps is what we can use to show
+status about the process.
+
+125
+00:04:42,560 --> 00:04:44,000
+This is the utility
+that we can use
+
+126
+00:04:44,000 --> 00:04:45,775
+on the command line
+for this purpose.
+
+127
+00:04:45,775 --> 00:04:48,800
+There are lots of different
+ways to use this.
+
+128
+00:04:48,800 --> 00:04:52,130
+For whatever reason, I've
+always used this ps axu,
+
+129
+00:04:52,130 --> 00:04:54,035
+probably just a force of habit,
+
+130
+00:04:54,035 --> 00:04:56,930
+but there's a lot of
+information you can collect
+
+131
+00:04:56,930 --> 00:05:00,425
+about this relative to
+current running processes.
+
+132
+00:05:00,425 --> 00:05:02,090
+Depending on how you invoke it,
+
+133
+00:05:02,090 --> 00:05:05,165
+you get something like
+this in terms of output.
+
+134
+00:05:05,165 --> 00:05:07,310
+This will show you
+at a glance which
+
+135
+00:05:07,310 --> 00:05:10,130
+user account is
+running which process.
+
+136
+00:05:10,130 --> 00:05:12,950
+Here I had an ecen5013 user.
+
+137
+00:05:12,950 --> 00:05:16,940
+That's where you can see
+there's some activity going
+
+138
+00:05:16,940 --> 00:05:21,380
+on here related to a
+bash session and build.
+
+139
+00:05:21,380 --> 00:05:23,240
+You could see all the
+different processes
+
+140
+00:05:23,240 --> 00:05:24,020
+that are kicked off from
+
+141
+00:05:24,020 --> 00:05:26,510
+my user account and you could
+
+142
+00:05:26,510 --> 00:05:29,915
+also see these processes
+that are running as root.
+
+143
+00:05:29,915 --> 00:05:32,135
+Incidentally these
+with the brackets,
+
+144
+00:05:32,135 --> 00:05:34,175
+this is showing kernel threads.
+
+145
+00:05:34,175 --> 00:05:36,695
+Those will always
+be running as root.
+
+146
+00:05:36,695 --> 00:05:40,550
+Then one other thing that you
+might now think of but it's
+
+147
+00:05:40,550 --> 00:05:42,200
+also going to show
+you the command that
+
+148
+00:05:42,200 --> 00:05:44,165
+you execute here
+on the terminal.
+
+149
+00:05:44,165 --> 00:05:45,815
+It's going to show us ps, aux,
+
+150
+00:05:45,815 --> 00:05:49,640
+and less being the two
+commands that we entered here.
+
+151
+00:05:49,640 --> 00:05:52,070
+When I pipe to less,
+what this is just doing
+
+152
+00:05:52,070 --> 00:05:53,900
+is rather than rolling
+
+153
+00:05:53,900 --> 00:05:55,760
+off the screen if I
+have a lot of output,
+
+154
+00:05:55,760 --> 00:05:58,710
+it's going to do
+screen by screen.
+
+155
+00:05:59,680 --> 00:06:03,620
+Daemons, originally
+the intention
+
+156
+00:06:03,620 --> 00:06:05,315
+was to pronounce dee-men.
+
+157
+00:06:05,315 --> 00:06:07,385
+It's also commonly
+pronounced day-men,
+
+158
+00:06:07,385 --> 00:06:08,855
+you can hear that that's
+
+159
+00:06:08,855 --> 00:06:10,340
+the way I've been
+pronouncing it.
+
+160
+00:06:10,340 --> 00:06:12,395
+That's my force of habit there.
+
+161
+00:06:12,395 --> 00:06:14,540
+A daemon is just a
+process that runs in
+
+162
+00:06:14,540 --> 00:06:15,710
+the background and does not
+
+163
+00:06:15,710 --> 00:06:17,300
+connect to your
+controlling terminal.
+
+164
+00:06:17,300 --> 00:06:20,990
+It's typically started at
+boot time and it's run as
+
+165
+00:06:20,990 --> 00:06:23,030
+either root or a special
+user depending on
+
+166
+00:06:23,030 --> 00:06:25,460
+what permissions you
+need for your daemon.
+
+167
+00:06:25,460 --> 00:06:27,740
+Often this ends with
+a d in the name,
+
+168
+00:06:27,740 --> 00:06:30,230
+so sshd or crond are
+
+169
+00:06:30,230 --> 00:06:34,205
+two examples of popular
+daemon names for ssh or cron.
+
+170
+00:06:34,205 --> 00:06:38,090
+Often a daemon will run as a
+child of init just because
+
+171
+00:06:38,090 --> 00:06:39,890
+the init process is
+going to be the one that
+
+172
+00:06:39,890 --> 00:06:43,160
+starts these, each
+one of the deamons.
+
+173
+00:06:43,160 --> 00:06:46,400
+The book goes through
+how you can create
+
+174
+00:06:46,400 --> 00:06:49,460
+a daemon using the
+functions that we talked
+
+175
+00:06:49,460 --> 00:06:52,400
+about in the previous video
+
+176
+00:06:52,400 --> 00:06:55,325
+regarding starting
+a new process.
+
+177
+00:06:55,325 --> 00:06:58,130
+Fork will create that new
+child process that's going
+
+178
+00:06:58,130 --> 00:07:00,590
+to become the daemon
+and then exit
+
+179
+00:07:00,590 --> 00:07:02,315
+in the parent is going to allow
+
+180
+00:07:02,315 --> 00:07:06,185
+the grandparent in that
+case init to continue.
+
+181
+00:07:06,185 --> 00:07:08,390
+You want to kick off the daemon
+
+182
+00:07:08,390 --> 00:07:10,670
+and then continue running.
+
+183
+00:07:10,670 --> 00:07:14,405
+Rather than wait for
+the daemon to complete,
+
+184
+00:07:14,405 --> 00:07:15,845
+you'll want to exit so that
+
+185
+00:07:15,845 --> 00:07:18,920
+the init process can keep
+starting new daemons.
+
+186
+00:07:18,920 --> 00:07:20,990
+Then setsid is going
+
+187
+00:07:20,990 --> 00:07:22,970
+to create a new session
+and that's going to
+
+188
+00:07:22,970 --> 00:07:23,630
+ensure that there's
+
+189
+00:07:23,630 --> 00:07:26,690
+no controlling terminal
+because again,
+
+190
+00:07:26,690 --> 00:07:28,100
+we don't really
+want to associate
+
+191
+00:07:28,100 --> 00:07:29,690
+a daemon with
+controlling terminal.
+
+192
+00:07:29,690 --> 00:07:31,130
+But it's possible that it
+
+193
+00:07:31,130 --> 00:07:32,915
+might be depending
+on how it started.
+
+194
+00:07:32,915 --> 00:07:37,430
+Chdir/ is going to change
+the working directory.
+
+195
+00:07:37,430 --> 00:07:40,610
+The main reason for doing that
+would be if you start from
+
+196
+00:07:40,610 --> 00:07:42,980
+a directory and then
+
+197
+00:07:42,980 --> 00:07:44,720
+later wanted to delete
+that directory,
+
+198
+00:07:44,720 --> 00:07:47,075
+you might have an error saying
+the directory is in use.
+
+199
+00:07:47,075 --> 00:07:49,235
+That could be confusing.
+
+200
+00:07:49,235 --> 00:07:52,145
+Then close all the
+open file descriptors
+
+201
+00:07:52,145 --> 00:07:53,930
+and then redirect standard in,
+
+202
+00:07:53,930 --> 00:07:56,465
+standard out, and standard
+error to dev/null.
+
+203
+00:07:56,465 --> 00:07:59,960
+Why would you want to
+redirect to dev/null?
+
+204
+00:07:59,960 --> 00:08:02,030
+If you didn't
+redirect to dev/null,
+
+205
+00:08:02,030 --> 00:08:03,515
+it will end up going
+to the terminal.
+
+206
+00:08:03,515 --> 00:08:05,900
+That can also be a confusing
+thing if you've got
+
+207
+00:08:05,900 --> 00:08:07,610
+this thing in the
+background that
+
+208
+00:08:07,610 --> 00:08:10,490
+suddenly starts spitting
+content out to the terminal.
+
+209
+00:08:10,490 --> 00:08:13,740
+That's the reason for
+redirecting nodes.
+
+210
+00:08:14,920 --> 00:08:19,745
+Why would we not want to just
+redirect to a file instead?
+
+211
+00:08:19,745 --> 00:08:21,440
+Well again, you can end up
+
+212
+00:08:21,440 --> 00:08:23,810
+setting up a relationship
+there between
+
+213
+00:08:23,810 --> 00:08:25,970
+the file system and the
+daemon that could be hard
+
+214
+00:08:25,970 --> 00:08:28,820
+to expect or troubleshoot.
+
+215
+00:08:28,820 --> 00:08:31,310
+What if the files that
+you're writing to is on
+
+216
+00:08:31,310 --> 00:08:32,810
+a file system that
+is trying to be
+
+217
+00:08:32,810 --> 00:08:34,550
+unmounted by the
+user, for instance?
+
+218
+00:08:34,550 --> 00:08:36,350
+Then the user will get errors
+
+219
+00:08:36,350 --> 00:08:39,360
+saying that the file
+system is in use.
+
+220
+00:08:40,540 --> 00:08:43,955
+If I'm not going to use
+standard in standard out,
+
+221
+00:08:43,955 --> 00:08:45,785
+what's the best way
+that I can give
+
+222
+00:08:45,785 --> 00:08:47,705
+user status and errors
+
+223
+00:08:47,705 --> 00:08:50,360
+about status or give
+
+224
+00:08:50,360 --> 00:08:51,290
+feedback about errors that are
+
+225
+00:08:51,290 --> 00:08:52,520
+happening within the daemon.
+
+226
+00:08:52,520 --> 00:08:54,605
+You can use a logging
+framework like syslog,
+
+227
+00:08:54,605 --> 00:08:57,480
+like we talked about in Week 1.
+
+228
+00:08:57,490 --> 00:09:00,650
+I did want to point out when
+we're talking about daemons,
+
+229
+00:09:00,650 --> 00:09:02,870
+that there are different
+ways to do daemons.
+
+230
+00:09:02,870 --> 00:09:07,250
+Some of the newer ways
+are related to system d,
+
+231
+00:09:07,250 --> 00:09:11,585
+which is a new way of
+starting init processes.
+
+232
+00:09:11,585 --> 00:09:14,090
+But I think it's
+valuable to go through
+
+233
+00:09:14,090 --> 00:09:17,150
+the init related or the daemon
+
+234
+00:09:17,150 --> 00:09:19,610
+related content that's
+in the book because this
+
+235
+00:09:19,610 --> 00:09:20,840
+is the classic way to do
+
+236
+00:09:20,840 --> 00:09:22,550
+it and you're definitely
+going to see this.
+
+237
+00:09:22,550 --> 00:09:24,230
+But I just wanted
+to bring this up so
+
+238
+00:09:24,230 --> 00:09:25,850
+that you know that there
+are different schools of
+
+239
+00:09:25,850 --> 00:09:27,965
+thought about how to
+create a daemon and
+
+240
+00:09:27,965 --> 00:09:29,480
+it's not necessarily that
+
+241
+00:09:29,480 --> 00:09:31,175
+this is the only way
+to create a daemon.
+
+242
+00:09:31,175 --> 00:09:33,380
+There's a couple of links
+in here with people saying
+
+243
+00:09:33,380 --> 00:09:35,390
+exactly the opposite
+things about
+
+244
+00:09:35,390 --> 00:09:37,370
+how to start a daemon
+and there's good reasons
+
+245
+00:09:37,370 --> 00:09:40,220
+to do them different ways.
+
+246
+00:09:40,220 --> 00:09:42,410
+If you want, you could read more
+
+247
+00:09:42,410 --> 00:09:44,510
+about the different schools
+
+248
+00:09:44,510 --> 00:09:46,085
+of thought about how
+to use a daemon.
+
+249
+00:09:46,085 --> 00:09:48,890
+But for our purposes
+in this class,
+
+250
+00:09:48,890 --> 00:09:51,140
+we'll follow the book's
+example and we'll use
+
+251
+00:09:51,140 --> 00:09:53,510
+the classic methods for
+
+252
+00:09:53,510 --> 00:09:56,460
+creating a daemon that
+are discussed there.

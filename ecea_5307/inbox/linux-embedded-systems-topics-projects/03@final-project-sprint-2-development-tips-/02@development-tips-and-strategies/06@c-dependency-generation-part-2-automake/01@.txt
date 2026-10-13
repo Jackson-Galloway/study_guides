@@ -1,0 +1,76 @@
+In this video I'll continue with
+discussion of C dependency generation and talk about Automake. So we're going to introduce Autoconf and
+Automake, and understand how to use Autoconf to make
+to perform dependency generation. So ,Autoconf created in 1991,
+it's around for a while. It produces configure scripts that
+are used for building, installing and packaging software, and you've probably
+used this in one way or another, if you've built any Lennox
+based projects from source. The implementation leverages BASH scripts
+that run on the host build system. So, it's kind of built
+around BASH script language. It uses a configure.ac file
+that describes your project. And that's going to be used to generate
+the configure script that can then generate a make file with all the correct
+dependencies based on your build setup. It also might generate a header file
+containing defined directives for common configurations. And so, really what you're going
+to be doing with Autoconf and Automake is configuring you're billed for
+a specific platform. And what I mentioned before about if
+you've probably used this, if you've installed anything on Lennox from source,
+this is a really common install step. And I think we may have already done
+this with early tools that we used in the semester for setting up our
+build and cross tool development. But the ./configure &&
+make && sudo make install sequence is a common way to configure and
+install. Source our programs from source and when you're using that you're
+using Autoconf and Automake. So, the Autoconf documentation goes into
+a lot of detail about all the different inputs and outputs. And it's actually pretty complex. There's a lot of different scenarios
+where these tools are used and different reasons that you'd
+use specific input files. But ultimately there's a collection
+of input files that can be used by a collection of binary tools
+to produce some output files. And those output files can be then used
+to generate your configure script. So, if you look at
+the documentation again, it can be a little bit intimidating. There's a lot of different things that you
+can do with the tool, and there are kind of some non obvious ways that the
+different tools interact with each other. So, what I've done with this slide
+deck is used a simple of scheme for Autoconf projects in like a really
+specific way that you could just set up a simple project. And so, it's based on this blog
+post that I've linked here, if you want to see the source. But there's a repository here that I've
+shared in the slides that will give you a working example of this
+if you want to try it out. Ultimately, we're generating configure.ac
+with a bunch of text values in it, telling us how we are configuring
+that we're using a make file project. And that we're building a specific
+app with specific version and the content here is coming from a file
+that I've created with the app name, the version and
+the sources that we're going to build. Then the script also will
+create a makefile.am. That will again specify the program
+as being the app name and specify all the sources that we're
+using here in this configuration file. And then it will run auto re-conf that
+will take those two files that is generating and build an output file for
+us capable of using with configure. So after we do run
+the do-autoconf-automake-setup, will now have a configure script. So, we can now run the configure script
+and you'll see that part of what configure script's going to do is
+figure out our environment. So, I found that we had gcc. It's going to figure out whether or
+not we're cross compiling, since we didn't specify that as a part of our build setup
+or as part of the arguments to configure. It's going to say no and
+it's going to use native compile. And then it's going to determine that we
+have going to make and that we should be using a Makefile based on our arguments,
+or our configuration of the input files. And it'll create a Makefile for
+us with dependency generation. So, if we look under the hood here
+at what was actually created for us in the Makefile. We can see those exact same
+commands that we're using with gcc, were automatically generated for
+us as a part of the Makefile generation. So, another thing to know about Autoconf
+and Automake is that it's natively supported with buildroot and
+you can use eval autotools-package. If you do that,
+when you create a buildroot package, it's automatically going to configure for cross compilation using common setup
+flags for configure and Automake. And it will automatically
+install the target commands to buildroot/output/target directory. So again, it can use some common
+capabilities of Automake to do that for us automatically. So, we can skip the step of
+the install copying specific binaries like we have to do with
+the new make based projects. So, some of the pitfalls for
+Autoconf and Automake, it can be a little intimidating to set up. It's got a lot of documentation,
+that is pretty complex and a lot of varied use-cases. It's been around for a long time, so it does have a little bit
+of historical baggage. It's really tailored for
+gnu software defined workflows, like in terms of the requirements
+of the setup of your project. And it's not very well supported
+on non Unix/ Linux variants, especially not on Windows. So, it's not a good choice for a platform
+project that you wanted to be able to build on Windows or be able to build
+in certain scenarios on Windows, for instance, if you wanted
+to do automated testing.

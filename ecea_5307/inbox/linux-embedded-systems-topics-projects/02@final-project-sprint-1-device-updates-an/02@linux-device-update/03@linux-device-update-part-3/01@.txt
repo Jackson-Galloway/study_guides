@@ -1,0 +1,276 @@
+In this video, we'll
+continue our discussion of Linux device update
+and talk specifically about how we might architect
+the device updates solution for Linux device update
+of the root filesystem. We want to understand some embedded Linux device
+updates strategy and tradeoffs and
+introduce a couple of open source frameworks that you can use for device update. The first example I want to talk about is a way you can update Linux-based device using
+what's called an A/B or you might hear this discussed as a dual
+redundant update scheme. If we start with the bootloader, that's going to take a side of the initial reset factor and get us to the point that
+we're loading images. The point where we decide which Linux image and which root filesystem
+we're going to boot from, we can have some logic in the bootloader
+that can help us pick which of these root filesystems that we want to boot from. We can have two root
+filesystems that we support as a part of our
+filesystem image. Then when we're running out of one of the two root filesystems, if we have a request come
+in to update the system, we can start writing
+that new update payload into a new root
+filesystem partition, that's our carrier
+inactive partition. If something would
+happen and we were interrupted while we're
+going through that process, it wouldn't matter because the current boot partition
+is the one that we're currently using and it won't ever be corrupted
+with this scenario. As part of the step, if you start writing the
+new update payload and then you complete that
+process successfully, you could at that point
+inform the bootloader that the second partition is
+now available to be used, and tell the bootloader that on the next boot to use
+this new partition. Then on the next
+boot, the bootloader will go ahead and switch the partition A to inactive and start booting from
+partition B instead. Then you can see this whole
+process would be repeated in the case that there was a new update that happened
+from partition B, you just write over partition A, tell the bootloader about
+the new back boot partition and then the next boot would boot back from
+partition A again. You can just keep going back and forth between these
+two partitions. You can also build
+some redundancy logic into your bootloader to say, "If I don't boot far enough
+into the new partition, then maybe that means there's some problem with the update, and I want to fail-safe and
+enroll back to what I know is working before in the
+previous partition." If the boot fails, the bootloader can say, "I
+know I was able to boot successfully to the last image, so I'll just go ahead
+and roll back to that, wait for another instruction of how to boot to
+the new image." This can be a really
+nice feature to have with a headless embedded
+system, for instance, where it's absolutely critical that the device be able to boot up and be able to
+communicate with the server or else you're
+going to end up to the break. Having this extra
+layer of protection, to know that we booted
+back up successfully in the redundant scheme
+can mean that we can fully fall back to whatever was working
+before as needed. One thing to think about
+when we're talking about a dual redundant scheme, if we're booting from these two different root
+filesystem partitions, we're going to essentially
+be swapping out the entire root filesystem
+with each boot, and so pretty much every device you will
+work with that'll some amount of
+configuration that's customizable for a
+given application. If you think about,
+for instance, a network connected device, most of the time the user is going to need to
+enter something like which wireless access point you're going to be connected to, and maybe something
+about the password for that wireless access point. If we're going to be completely replacing the root filesystem, then obviously we won't be able to place that in the
+root filesystem, or when we boot it to
+the new root filesystem that data would not
+be available anymore. In order to handle
+configuration data that's modified on the root filesystem, you do that with a
+separate data partition. Usually when you talk about
+an A/B dual redundant scheme, you'll also have a separate
+data partition that includes anything that's
+persistent about the product. That's where you could
+place all the modifications that you'd need to keep across these
+different update and different root
+filesystem images. In addition to the
+dual A/B scheme, then you can also consider doing a single copy scheme where instead of booting to two different complete root
+filesystem partitions, you might instead have
+an [inaudible] or some dedicated update
+support partition that maybe doesn't have all of the logic that's in
+the root filesystem, but has just enough
+to detect whether the root filesystem
+partition is bootable, so whether an update
+actually completed on the partition and also
+to support updates. In the case that we
+weren't able to complete an update previously
+for whatever reason, the logic would
+need to be here to actually support a new update, and sometimes this could
+be more limited like maybe instead of
+being able to support an update on Bluetooth
+or Wi-Fi connectivity, maybe you could only support an update of a Bluetooth
+or something like that. It can tradeoff some of the storage space
+requirements of having a complete dual redundant root
+filesystem partition with the ability to still be
+able to recover from cases where we weren't able to complete the previous
+update successfully. In many cases, you'll
+still end up with a separate Data
+Partition containing the customizations that
+would happen as a part of the root file system when
+the user's operating it. Because again, you
+don't want to make your update- replace that content that was
+customized by the user. In addition to
+those two schemes, there's a third
+option where instead of updating the entire
+root file system, maybe you just update
+specific applications. If you think about the way
+this works, for instance, with your Ubuntu system that you're using
+for development. Even if you do a
+full system update, what you're really
+doing is updating a whole bunch of
+applications individually. The individual applications
+can be updated with packages like.deb and.rpm, and using apt for instance, where we use for it
+with Ubuntu or yum to handle upgrades of each one
+of these individual packages. The upgrades might include
+application binaries, start and run scripts,
+configuration files, etc. If you are using yocto, yocto does build update packages as a part of the full
+yocto image build. This is something that is in some ways natively
+supported by yocto. It's also the standard
+scheme that you'd use for Linux
+distribution updates. Again, this is what we've been
+using for Ubuntu already. Some trade-offs. This is, again, a case where there's not really
+a right or wrong answer. There's a lot of trade-offs
+you need to be aware of with these different
+updates schemes. You need to pick the right one for whatever your
+application is. Talking first about
+A/B update benefits, it's really nice to being
+able to completely roll back to a previously working
+and shipped release, and even nicer, if you can do that
+automatically. If you can detect the fact that the boot didn't
+succeed or complete successfully and just go back to whatever worked previously, that's nice to have that option. That's one nice thing about A/B. It's also nice that
+you don't have to worry about partial upgrades or different application
+updates states getting through different
+parts of the process. It's always either you
+always made it all the way through and
+now you're booting from that image or something
+started a partial right, and you don't really care
+because you never got to the point of switching to that as your new root file system. There's a logical
+separation then between the configuration data
+and update image. In other words, all your
+configuration data is stored outside the root file system
+and in some data partition, which makes it much easier to handle things like
+factory reset, because you can just
+delete the contents of the data partition and go back to the default
+state of the image. Some of the drawbacks of
+the A/B update scheme are that it requires
+double the size of the storage for
+the root file system. Depending on how much
+storage you have, that may or may not be an issue. Oftentimes, because
+flash storage is getting so cheap and raw file systems
+are comparatively small, this is probably less of
+an issue for most devices. It also requires the full
+update size for each image. In other words,
+you're going to be transferring over the
+wire, in most cases, the full contents of the
+root file system partition, even if it was a
+relatively small amount of change that you made between
+two different releases. There are exceptions to that. There are delta update
+schemes that can help you just send the
+changes over the wire. But they become a
+little bit more difficult to do with
+A/B updates schemes. That's mostly important if
+you're talking about using something like a low
+bandwidth connection, especially if you're using
+something like Roller to do updates or if you were using something like LTE or a connection that is expensive to transfer
+large files over. The application update scheme, then the benefit
+would be that you can have smaller updates sizes and you don't need to have this second copy of
+the file system, so no additional storage
+space really required. But the drawbacks is that it's much more
+difficult to do rollback. You have to think
+through what would happen if I'm going to update 50 applications as a
+part of my update process, and only the first 25 succeeded and the rest of
+them failed for some reason. How do you recover
+from that scenario becomes a pretty
+complicated task. You also might need
+to think about, if I started an update and I got half the way through
+and then I lost power, how do I recover
+from that state? Those two problems are something you need to
+think through and have a strategy to deal
+with if you're going to go with an application
+update scheme. I like to put together
+comparisons like this when I'm looking at
+different options so that I can understand, depending on which criteria
+I care the most about, which one might be
+the best solution. Again, looking at storage
+size requirements space, the A/B dual redundant
+is going to be the most storage
+space requirement because you need two
+times partition size. Again, depending on
+your application and the size of
+your file system, this might actually not
+be that big of a problem. But if it is, you need
+to be aware of that. The nice thing about the
+single copy is you only need smaller amount of storage
+for upgrade components. Then if that's really an issue, this is where application
+update might be a good choice because you really don't
+need any additional space. Talking about redundancy
+and rollback capabilities, AB dual redundant is
+the best of all because every component that you're
+updating can be rolled back. In the single copy case, most of the components
+and the most important components
+specifically the ones about update, are always going to be available
+in a rollback scenario. However, it may not be possible or maybe difficult to
+update those components. If you want to update your
+updater, for instance, single copy becomes more of
+a challenge to pull off. It definitely has some downsides in terms of redundancy
+and rollback. Then application for
+the reasons that we discussed previously
+is the most limited because rollbacks going to
+be pretty complicated and scenarios that you got
+partially through an update. Then talking about overall
+system complexity, how complex is it to build
+and put the system together? It's probably a
+little bit higher for either the dual redundant
+or single copy. It might get a
+little bit into the specifics about how you do it, but just given an extra data partition
+and bootloader redundancy, you might have a little bit
+more system complexity to set up from the starting point. You have additional
+complexity here related to having the separate partition
+that handles updates. There's probably less
+system complexity for application update. You're basically paying
+for the complexity with how to handle
+redundancy and rollback. Talking about a couple of
+Device Update Framework. A lot of these pieces that you're going to
+use for your device update implementation on Linux are common, everybody uses them. Wouldn't it be great if
+we could leverage a bunch of open source community
+work and of course we can. These are just a
+couple of examples, there are other projects
+out there as well, but I'm more
+familiar with these, so I'll cover two of the ones
+that I've used in the past. First one I'll talk
+about is SWUpdate, and SWUpdate like
+a building block or a tool that you can use for upgrades without
+really enforcing or putting together a
+specific upgrade design. This one, for instance, works with AB single copy or
+application updates schemes. You can do whatever
+you want with it. There's maybe a little
+bit more setup work, but it's probably
+more versatile and flexible in terms
+of how you use it. It again supports
+builder it or Yocto, so it could be used with any of the schemes that we've talked about for application
+development in this class. It supports the signing
+that we've talked about before as an important part
+of securing device updates. It integrates with
+Eclipse hawkbit for cloud deployment scenarios. You can have a cloud
+server that's hosting and controlling your
+device update process. Also a pretty cool feature
+of SWUpdate is that there's integrated web
+server that you can use for deploying your images. If your devices
+Internet connected, you can start SW updated
+a mode that brings up a web server and its own
+webpage that you can use for interacting and passing
+an update payloads. That could be a pretty
+handy thing when you're starting out
+with development. A second device update
+framework is called Mender. This one is specifically built around Yocto and
+it has some layers that provide u-boot and other boot loader
+modifications directly. It's a little more turn-key when it's setup for a
+specific platform. It also has some
+support for Builder, but it's probably more tailored towards a Yocto implementation. Is built around the AB dual
+redundant image support. There also is some support
+for application updates on specific platforms as of
+more recent releases. Its supports signing and it also has the option to
+support delta updates. One unique thing about Mender as a framework
+is that they have their own management server that's both open source and
+available and hosted form. Rather than having to deploy your own management server to deploy your update payloads, you could use the one
+that they provided. They have a starter plan
+that's free and then a paid plan depending on
+how many devices you have. This is a quick
+way to get started with an update
+deployment scheme. In terms of Mender specifically, it's got all the components
+that we talked about at the beginning of the
+class in terms of how the devices laid out
+with two different kernels. You can support two different
+kernels and file systems. Then you'd have a bootloader, U-boot is often one that's used for the platforms
+that are supported, and then some data
+partition with your persistent settings
+that are going to be saved across device updates
+and a interaction here that supported with
+a management server that either you host
+or is hosted online, where you can upload
+your update files, and communicate them down to
+your device to run updates.

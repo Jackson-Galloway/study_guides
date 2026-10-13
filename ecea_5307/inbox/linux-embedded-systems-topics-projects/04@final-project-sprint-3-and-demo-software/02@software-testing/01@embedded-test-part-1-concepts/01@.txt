@@ -1,0 +1,181 @@
+This video is a first of a
+series of videos where I want to talk about embedded
+software testing. This one we're going to go over some introduction to
+software testing, talking about some
+concepts, strategies, and nomenclature associated
+with software testing, and understand the role of manual and automated testing
+for embedded devices. My experience is that
+manual testing is almost always required on
+embedded systems in at least some areas. That's just given the
+fact that most of the time we're working
+on hardware devices, and human interaction is often hard to completely
+replace with those devices, and so depending on the size of your team and the capabilities
+your automation platform, there's some level typically of manual testing that
+you'll need to do. In a lot of cases, what
+you'll do is start with manual testing for the
+hardest portions to automate. Then perhaps some of those
+you might be able to automate later as you have more time
+to run automated testing, but automated testing
+has obvious benefits from the perspective of
+repeatability and speed. If you don't have to
+designate someone from your development or test
+team to run manual tests, then obviously you can
+run them more often. Automated tests don't care
+if you run them at midnight. For instance, they
+can run anytime, and so there's a lot
+of flexibility and the more automated testing
+you can get in general, the better that's going
+to make your code. There's an international
+software testing and qualifications board that has
+some documentation I'll go over when I'm talking about general software test
+concepts and principles. A few things that document
+mentions that I think are important to keep in mind when you're talking
+about software testing. Testing can show the presence of defects but not their absence. What that means is
+that it's not possible to say that there are no
+defects based on testing, and this is an important concept to understand and to make
+sure everybody on your team, especially your
+management understands, that it's not possible
+to exhaustively test to the point that
+you know there's no bugs. You need to be strategic
+about what you test to know where you're most
+likely to find bugs, and ensure that you've got adequate coverage
+to ensure there aren't bugs in the
+areas that are the most important for your
+particular application. Another testing principal is that the earlier that you test, the more time and money
+in general you can save, the less times you need to replace products in
+the field because you didn't catch some bug related to your update
+process, for instance, or the less time you have to
+spend from your support team supporting a customer
+that hit a bug that you didn't catch in your
+development process, the more money you're going
+to save in the long-term, the earlier you catch
+those problems. Defects are often clustered, if you find one bug they
+usually have friends. The developers are
+force of habit, and if they make one
+mistake in one place, it's pretty likely that they or another
+developer that they copied source code from could've made a similar mistake
+in another place. Usually when you find one bug, it's a good idea to
+go in and look for similar bugs in other areas. As a developer, it's
+definitely something to think about when
+you're fixing a bug, where could I have made
+this mistake before? Tests need to be continually developed to continue
+to find defects, and it's what they call
+the pesticide paradox, which is an interesting
+way to think about it, but they talk about how when you're developing
+a pesticide, the bugs will eventually thrive that are resistant to whatever pesticide
+you've created, and so it's a constant
+cat and mouse game to keep creating
+pesticides that are able to resist pests that have developed immunity
+to previous pesticides, and it works similarly with testing in the sense
+that if you focus only on one particular area to test with your
+automated testing, and you ignore new areas, then you'll never
+have bugs in the area that you've been
+focusing on testing, but you'll have all kinds of bugs in the new areas
+that aren't covered. You need to be continually
+developing your tests to match the implementation that you're adding are the features that you're adding to your software. You need to think about
+the context when you're deciding the scope of the
+test and how to test. A safety critical software
+for an airliner is not going to be tested the same as a commercial mobile application. If you can live with defects in some areas that might influence the amount of test-time that
+you want to devote to it, the amount of retest you do, and new releases et cetera. Absence of errors is a fallacy, in other words if you're
+finding and fixing bugs, but it doesn't really
+tell you anything about whether or not the software achieves it
+is the actual objectives. In order to know that you need to know that the tests were actually designed to catch
+those problems to begin with. A couple of
+definitions that we'll use when we're talking
+about software testing. The first is a test case. A test case is a set
+of preconditions. How do you set up the test run? A set of inputs and actions
+that you would take in order to create scenarios and
+unexpected results, what you should
+see as a result of those inputs and actions and
+then the post-conditions, how should the system be set
+up after the test completes? A test execution is an activity that would
+run that test case on a specific component or a system and
+produce those results. That could be linked to a specific version
+of the software. In our case, since we're often working with hardware devices, it could also be linked to a specific version
+of the hardware, and it's probably related to specific versions of
+external dependencies. Some of the examples
+that we've given this class where you're
+interacting with a Cloud server. Maybe it's the version
+of software running on that Cloud server or interacting
+with any other device. For instance, the version
+of the software running on those devices might also be important to link to your
+test case and execution. Then a test suite is a
+set of scripts or tests procedures to be executed
+for a specific test run. A lot of times you'll
+see tests functionally grouped into the specific
+area they're targeting. If you're making a
+change to the web UI, there might be a test suite
+that you can run that's a set of tests that test everything related
+to the web UI. If you're doing a major
+overhaul of web UI, it's probably important that
+you retest every one of those specific test cases
+in that test suite. Some of the different levels
+that you can test to. The first one is
+component testing. This is where you can test individual software
+components in isolation. A lot of times the
+developer that wrote the code is
+going to do it. It's like the testing that you perform on your bench before you decide that your code is
+ready to share with others. Then the integration testing would be the interaction between individual components
+and or larger systems. How does your code
+interact once you put it in use with the larger
+overall system? Then system testing is the
+behavior and capabilities of an entire system of products so end-to-end tasks and
+functional behaviors. In other words, if I'm interacting
+with the Cloud server, how does it look from
+my user perspective if I'm actually interacting with the device through
+the Cloud server? What does the user see? What is the end result of the interaction with the device? Then acceptance testing is
+the system testing that's used to gauge by the customer. Rather than a tester hired by you or maybe someone in your development team
+running a test case. This would be a customer that's actually using
+your product in a real-world
+environment and giving you feedback on the
+implementation. You've been trying
+to assimilate how a customer might use
+it with a test case, but the customer is going to
+have their own way of using it that might be
+slightly different than what you were expecting. This would be an
+example of where the customer could
+provide feedback on whether it's working
+in their specific use example and if there's ways to improve the user experience. You often hear this referred to as Alpha and Beta testing. Getting your device
+in customers hands and getting some feedback from them about the functionality. Some of the strategies that I'd suggest in terms
+of manual testing, you want to use the test case to record what you're
+going to plan to do. A lot of times it's helpful to write these while
+you're actually going through the test yourself and think about a
+step-by-step detail. Rather than just writing, doing some action, put down the steps that are associated with
+doing that action. Open some specific
+page on the UI, click on some
+specific button and write down that level of detail. What, you don't want to do
+is require someone to have your level of experience with the software in order
+to run the test case, you want to have
+someone other than you as a developer be able
+to run this test case. If you don't do
+this, then you will likely be the only one who
+can run the test case. It's probably not what you want to always be on the hook
+for running this test case. You need to think
+about how you can design the software and
+also how you can design a test case such that
+anyone's going to be able to help verify the implementation. Then use the test case execution to record what you did and when. Which software where you using, which versions of any
+of the dependencies or the external devices or applications that
+you use to test, record that and keep
+a history of when this particular action last succeeded or if it
+failed, how did it fail? Shifting gears and talking about automated testing
+instead of manual test. The first step, usually
+with automated testing is to make the build
+automated because it's maybe less useful to
+have an automated test if you need to do manual deployment
+and update of your code. A lot of times,
+the way you start automated testing is by getting an automated build
+framework going. We'll talk about some
+strategies for doing that. Then you'll also merge code from developers onto
+a shared mainline branch. Whatever your main branch
+of development is, you want to make
+sure that you're constantly and
+consistently updating from different developers
+into that branch so that you're always testing the latest work from everybody as it gets
+merged together. That concept is called
+continuous integration. We'll talk more about
+that in a later video. You want to try to
+integrate testing into the development
+environment as many of the tests automated as possible, and whenever any
+new code is added, especially if it's added
+to the mainline branch, you want to rerun all those automated
+tests automatically.

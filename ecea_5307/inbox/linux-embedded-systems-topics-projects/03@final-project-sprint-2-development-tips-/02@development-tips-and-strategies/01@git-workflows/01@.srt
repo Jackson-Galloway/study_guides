@@ -1,0 +1,905 @@
+1
+00:00:00,000 --> 00:00:03,975
+In this video, I'm going to
+talk about Git workflows.
+
+2
+00:00:03,975 --> 00:00:07,685
+I want to introduce the Git
+Feature Branch Workflow
+
+3
+00:00:07,685 --> 00:00:11,320
+and also introduce
+what's called GitFlow.
+
+4
+00:00:11,690 --> 00:00:14,640
+The Git feature
+branch workflow is
+
+5
+00:00:14,640 --> 00:00:18,330
+just a way that you can
+
+6
+00:00:18,330 --> 00:00:20,460
+use Git such that all
+
+7
+00:00:20,460 --> 00:00:22,290
+your feature development would
+
+8
+00:00:22,290 --> 00:00:24,330
+take place on a
+dedicated branch.
+
+9
+00:00:24,330 --> 00:00:27,435
+You would use the master
+branch, not for development,
+
+10
+00:00:27,435 --> 00:00:30,390
+but just for tracking
+
+11
+00:00:30,390 --> 00:00:33,910
+every time a specific
+feature is completed.
+
+12
+00:00:34,220 --> 00:00:37,010
+The nice thing about this
+implementation is that
+
+13
+00:00:37,010 --> 00:00:38,870
+you can have multiple
+developers that are
+
+14
+00:00:38,870 --> 00:00:41,270
+working on specific
+or different features
+
+15
+00:00:41,270 --> 00:00:43,750
+without disturbing
+that main codebase.
+
+16
+00:00:43,750 --> 00:00:46,265
+You can have these developers
+
+17
+00:00:46,265 --> 00:00:49,100
+working on same feature
+branch, for instance,
+
+18
+00:00:49,100 --> 00:00:50,660
+and sharing that feature branch,
+
+19
+00:00:50,660 --> 00:00:53,090
+but not breaking anything
+
+20
+00:00:53,090 --> 00:00:55,285
+that's working in
+the master branch.
+
+21
+00:00:55,285 --> 00:00:57,140
+A key concept here is that
+
+22
+00:00:57,140 --> 00:00:58,820
+the master branch
+is never broken.
+
+23
+00:00:58,820 --> 00:01:01,325
+You don't actually
+merge in any changes to
+
+24
+00:01:01,325 --> 00:01:04,190
+your development branches until
+
+25
+00:01:04,190 --> 00:01:07,400
+you complete and tested
+with that change,
+
+26
+00:01:07,400 --> 00:01:11,705
+and you've had some level
+of verification that you
+
+27
+00:01:11,705 --> 00:01:13,600
+aren't going to break anything
+
+28
+00:01:13,600 --> 00:01:16,805
+that's already working
+in the master branch.
+
+29
+00:01:16,805 --> 00:01:18,650
+The feature will end with
+
+30
+00:01:18,650 --> 00:01:20,330
+a pull request or
+a merge request
+
+31
+00:01:20,330 --> 00:01:21,575
+from the feature branch,
+
+32
+00:01:21,575 --> 00:01:24,170
+and the pull or merge request is
+
+33
+00:01:24,170 --> 00:01:26,970
+a great opportunity to
+put in code reviews.
+
+34
+00:01:26,970 --> 00:01:29,030
+Other people on the
+team who maybe weren't
+
+35
+00:01:29,030 --> 00:01:31,040
+as involved with development can
+
+36
+00:01:31,040 --> 00:01:33,800
+review the work that you
+did and ask questions
+
+37
+00:01:33,800 --> 00:01:37,920
+or ask for changes
+based on what they see.
+
+38
+00:01:38,540 --> 00:01:41,480
+An example of how you'd use
+
+39
+00:01:41,480 --> 00:01:43,790
+Git for feature branch workflow.
+
+40
+00:01:43,790 --> 00:01:45,785
+You'd start by checking
+out the master.
+
+41
+00:01:45,785 --> 00:01:48,020
+You would pull origin master,
+
+42
+00:01:48,020 --> 00:01:49,400
+you'd make sure you are in sync
+
+43
+00:01:49,400 --> 00:01:51,355
+with the origin master branch.
+
+44
+00:01:51,355 --> 00:01:53,460
+Then you can do git checkout -b
+
+45
+00:01:53,460 --> 00:01:55,305
+for your feature branch name.
+
+46
+00:01:55,305 --> 00:01:57,710
+That feature branch
+name is often something
+
+47
+00:01:57,710 --> 00:02:00,440
+like issue-25 or so.
+
+48
+00:02:00,440 --> 00:02:03,080
+For instance, if you're
+using GitHub issue tracking,
+
+49
+00:02:03,080 --> 00:02:06,200
+or it could be something
+like feature/foo,
+
+50
+00:02:06,200 --> 00:02:08,525
+where foo describes the
+name of the feature,
+
+51
+00:02:08,525 --> 00:02:12,690
+or maybe it's fix-foo
+if you're fixing a bug.
+
+52
+00:02:14,260 --> 00:02:16,430
+My personal preference of these,
+
+53
+00:02:16,430 --> 00:02:18,245
+is something like issue-25.
+
+54
+00:02:18,245 --> 00:02:20,870
+The reason is if you
+
+55
+00:02:20,870 --> 00:02:24,200
+use some words to describe
+your feature or your fix,
+
+56
+00:02:24,200 --> 00:02:25,460
+it might not be obvious to
+
+57
+00:02:25,460 --> 00:02:29,220
+other people what
+exactly you're fixing.
+
+58
+00:02:29,220 --> 00:02:31,970
+Whereas if you link back to
+an issue tracking database,
+
+59
+00:02:31,970 --> 00:02:33,650
+you can put all the detail
+that you want about
+
+60
+00:02:33,650 --> 00:02:35,600
+that and you can
+update that easily
+
+61
+00:02:35,600 --> 00:02:37,700
+to include additional
+description
+
+62
+00:02:37,700 --> 00:02:40,630
+about what you're
+changing or implementing.
+
+63
+00:02:40,630 --> 00:02:42,410
+But your development
+team will have
+
+64
+00:02:42,410 --> 00:02:43,940
+its own guidelines about how
+
+65
+00:02:43,940 --> 00:02:45,410
+to do this and you should follow
+
+66
+00:02:45,410 --> 00:02:47,680
+whatever your team is
+suggesting to use.
+
+67
+00:02:47,680 --> 00:02:50,105
+But you'll ultimately
+check out a branch,
+
+68
+00:02:50,105 --> 00:02:52,175
+do all your commits
+on that branch.
+
+69
+00:02:52,175 --> 00:02:54,080
+Then when you're
+ready to share with
+
+70
+00:02:54,080 --> 00:02:56,375
+others or when you're
+ready to do a code review,
+
+71
+00:02:56,375 --> 00:02:57,740
+you would do git push origin
+
+72
+00:02:57,740 --> 00:03:00,060
+with your feature branch name.
+
+73
+00:03:00,250 --> 00:03:03,110
+At that point, you'll
+be ready to do
+
+74
+00:03:03,110 --> 00:03:06,620
+a code review on
+the feature branch.
+
+75
+00:03:06,620 --> 00:03:08,390
+This would typically
+be assigned to
+
+76
+00:03:08,390 --> 00:03:11,450
+some other person on the team
+that would add comments,
+
+77
+00:03:11,450 --> 00:03:13,370
+questions, or suggestions based
+
+78
+00:03:13,370 --> 00:03:15,940
+on the code that you
+put in the branch.
+
+79
+00:03:15,940 --> 00:03:17,510
+It will go back to
+the developer then to
+
+80
+00:03:17,510 --> 00:03:19,295
+respond to those questions,
+
+81
+00:03:19,295 --> 00:03:22,890
+make new changes based on
+the pull request comments.
+
+82
+00:03:22,900 --> 00:03:24,950
+At that point, you can merge
+
+83
+00:03:24,950 --> 00:03:27,490
+the feature into
+the master branch.
+
+84
+00:03:27,490 --> 00:03:29,240
+Once you've verified
+that it works,
+
+85
+00:03:29,240 --> 00:03:31,640
+that you haven't broken
+anything in the master branch,
+
+86
+00:03:31,640 --> 00:03:33,980
+you could merge
+these changes here
+
+87
+00:03:33,980 --> 00:03:36,290
+in purple that were done
+on your development branch
+
+88
+00:03:36,290 --> 00:03:38,180
+back into the master
+branch and have
+
+89
+00:03:38,180 --> 00:03:39,860
+the equivalent
+functionality here
+
+90
+00:03:39,860 --> 00:03:41,195
+now in the master branch.
+
+91
+00:03:41,195 --> 00:03:42,770
+But one thing that
+you might notice is
+
+92
+00:03:42,770 --> 00:03:44,660
+this extra little
+white dot here,
+
+93
+00:03:44,660 --> 00:03:46,955
+meaning that after
+we did our branch,
+
+94
+00:03:46,955 --> 00:03:49,965
+there's another change
+here on the master.
+
+95
+00:03:49,965 --> 00:03:51,915
+Why would this
+commit be present?
+
+96
+00:03:51,915 --> 00:03:53,400
+Well, it'd be present
+
+97
+00:03:53,400 --> 00:03:55,670
+because some other
+feature was merged in
+
+98
+00:03:55,670 --> 00:03:58,070
+after we started our development
+
+99
+00:03:58,070 --> 00:04:00,010
+on this development branch.
+
+100
+00:04:00,010 --> 00:04:01,910
+How do we handle this scenario
+
+101
+00:04:01,910 --> 00:04:04,370
+that there was a change
+on the master branch?
+
+102
+00:04:04,370 --> 00:04:07,625
+Git will take care of this
+for us with a merge commit.
+
+103
+00:04:07,625 --> 00:04:11,750
+The merge that happens
+from git will align
+
+104
+00:04:11,750 --> 00:04:13,760
+these histories for us and merge
+
+105
+00:04:13,760 --> 00:04:16,700
+the changes inappropriately
+on the master branch.
+
+106
+00:04:16,700 --> 00:04:18,905
+But one downside is that
+
+107
+00:04:18,905 --> 00:04:20,510
+this commit then hasn't
+
+108
+00:04:20,510 --> 00:04:22,760
+really been tested
+with this commit.
+
+109
+00:04:22,760 --> 00:04:25,445
+Git can combine
+those two together,
+
+110
+00:04:25,445 --> 00:04:28,280
+but you won't really be sure
+that this change didn't
+
+111
+00:04:28,280 --> 00:04:29,330
+break something that wasn't
+
+112
+00:04:29,330 --> 00:04:31,780
+this commit unless you
+specifically test it.
+
+113
+00:04:31,780 --> 00:04:33,770
+One way you can
+avoid this scenario
+
+114
+00:04:33,770 --> 00:04:36,070
+is to use what's
+called git-rebase.
+
+115
+00:04:36,070 --> 00:04:37,925
+If you git rebase,
+
+116
+00:04:37,925 --> 00:04:39,530
+what you're doing
+is you're taking
+
+117
+00:04:39,530 --> 00:04:42,320
+the feature branch that you
+did originally develop off
+
+118
+00:04:42,320 --> 00:04:44,210
+this commit and you're moving it
+
+119
+00:04:44,210 --> 00:04:46,960
+back onto a later
+commit from the master.
+
+120
+00:04:46,960 --> 00:04:49,100
+You're essentially
+replaying each of
+
+121
+00:04:49,100 --> 00:04:52,060
+these commits on a new
+commit from master.
+
+122
+00:04:52,060 --> 00:04:54,710
+That would mean that
+this commit here,
+
+123
+00:04:54,710 --> 00:04:56,255
+rather than being based on
+
+124
+00:04:56,255 --> 00:04:58,655
+the original commit for master,
+
+125
+00:04:58,655 --> 00:05:02,050
+it would then be based on this
+commit for master instead.
+
+126
+00:05:02,050 --> 00:05:05,330
+The drawback potentially of
+
+127
+00:05:05,330 --> 00:05:08,120
+doing this change is that
+when you're going to rewrite
+
+128
+00:05:08,120 --> 00:05:09,530
+the history of this branch
+
+129
+00:05:09,530 --> 00:05:11,120
+because you're going
+to be basing it off on
+
+130
+00:05:11,120 --> 00:05:12,320
+a different commit than what you
+
+131
+00:05:12,320 --> 00:05:14,210
+originally based it off of.
+
+132
+00:05:14,210 --> 00:05:16,655
+If you're sharing work with
+someone else on the branch,
+
+133
+00:05:16,655 --> 00:05:19,340
+it would mean that they'd
+need to force update,
+
+134
+00:05:19,340 --> 00:05:21,935
+to match the changes
+in the branch.
+
+135
+00:05:21,935 --> 00:05:23,795
+You just need again,
+
+136
+00:05:23,795 --> 00:05:25,325
+a policy with how to deal
+
+137
+00:05:25,325 --> 00:05:27,220
+with this based on
+your development team
+
+138
+00:05:27,220 --> 00:05:28,880
+and a common strategy that
+
+139
+00:05:28,880 --> 00:05:30,725
+everybody uses for
+handling this scenario,
+
+140
+00:05:30,725 --> 00:05:32,850
+but either one can work.
+
+141
+00:05:34,850 --> 00:05:41,180
+Talking specifically about
+another git workflow
+
+142
+00:05:41,180 --> 00:05:42,980
+that's based on feature branch
+
+143
+00:05:42,980 --> 00:05:46,385
+that you might hear
+about is called GitFlow.
+
+144
+00:05:46,385 --> 00:05:48,170
+GitFlow again is based on
+
+145
+00:05:48,170 --> 00:05:50,570
+the basic Git feature
+branch workflow where
+
+146
+00:05:50,570 --> 00:05:54,980
+we move development of features
+onto a specific branch,
+
+147
+00:05:54,980 --> 00:05:56,800
+but it also moves,
+
+148
+00:05:56,800 --> 00:06:00,005
+in general, all development
+onto a development branch.
+
+149
+00:06:00,005 --> 00:06:01,880
+The master branch,
+rather than being
+
+150
+00:06:01,880 --> 00:06:03,814
+the target of the
+mergers of features,
+
+151
+00:06:03,814 --> 00:06:06,710
+the master branch really
+only tracks release history.
+
+152
+00:06:06,710 --> 00:06:08,360
+The only time you're changing
+
+153
+00:06:08,360 --> 00:06:09,920
+the master branch is
+when you're building
+
+154
+00:06:09,920 --> 00:06:14,130
+a new release for customers
+or for release to QA.
+
+155
+00:06:14,130 --> 00:06:16,070
+The development branch is always
+
+156
+00:06:16,070 --> 00:06:17,540
+used for the integration of
+
+157
+00:06:17,540 --> 00:06:18,920
+features before you're ready to
+
+158
+00:06:18,920 --> 00:06:21,785
+do a release to customers or QA.
+
+159
+00:06:21,785 --> 00:06:24,200
+You can look at the definition
+
+160
+00:06:24,200 --> 00:06:25,970
+of the different
+branches like this,
+
+161
+00:06:25,970 --> 00:06:29,060
+where the master is
+in blue here and
+
+162
+00:06:29,060 --> 00:06:32,870
+the release branch
+here is in this light,
+
+163
+00:06:32,870 --> 00:06:36,485
+bluish-green and the
+develop here is in purple.
+
+164
+00:06:36,485 --> 00:06:39,185
+Then each one of the feature
+branches, are in green.
+
+165
+00:06:39,185 --> 00:06:41,150
+You can see that in these case
+
+166
+00:06:41,150 --> 00:06:43,670
+we've started new branches
+to work on features.
+
+167
+00:06:43,670 --> 00:06:44,810
+In this case, we've merged
+
+168
+00:06:44,810 --> 00:06:47,165
+the feature back into
+the development branch.
+
+169
+00:06:47,165 --> 00:06:50,455
+Here's where we decide we're
+ready to do a release build.
+
+170
+00:06:50,455 --> 00:06:52,490
+We might have done
+one release build to
+
+171
+00:06:52,490 --> 00:06:55,190
+internal QA that
+failed and tried to do
+
+172
+00:06:55,190 --> 00:06:57,140
+a new release build with
+some additional patches
+
+173
+00:06:57,140 --> 00:06:59,980
+here and ultimately done
+or released to customers.
+
+174
+00:06:59,980 --> 00:07:02,440
+It's only after we
+do that release to
+
+175
+00:07:02,440 --> 00:07:03,830
+customers that we actually do
+
+176
+00:07:03,830 --> 00:07:06,590
+the merge into the
+master branch.
+
+177
+00:07:06,590 --> 00:07:10,190
+One nice thing that this allows
+
+178
+00:07:10,190 --> 00:07:13,055
+us to do when we base
+on the GitFlow workflow
+
+179
+00:07:13,055 --> 00:07:15,230
+like this is we can have
+
+180
+00:07:15,230 --> 00:07:16,790
+a separate parallel set of
+
+181
+00:07:16,790 --> 00:07:19,145
+development that's happening
+on our develop branch.
+
+182
+00:07:19,145 --> 00:07:20,540
+Then maybe we find out there was
+
+183
+00:07:20,540 --> 00:07:21,800
+a critical bug with one of
+
+184
+00:07:21,800 --> 00:07:24,590
+the releases that we did
+in our master branch.
+
+185
+00:07:24,590 --> 00:07:27,950
+Well, what we can do then is
+create a branch off master,
+
+186
+00:07:27,950 --> 00:07:29,710
+that fixes that
+one critical bug,
+
+187
+00:07:29,710 --> 00:07:33,105
+do another release
+of version 0.2,
+
+188
+00:07:33,105 --> 00:07:35,190
+merge that back into
+the development branch,
+
+189
+00:07:35,190 --> 00:07:36,810
+and have not interrupted
+
+190
+00:07:36,810 --> 00:07:38,120
+any of the development
+work that we've
+
+191
+00:07:38,120 --> 00:07:41,510
+done in process on our
+development branch.
+
+192
+00:07:41,510 --> 00:07:43,460
+It's just a way to
+
+193
+00:07:43,460 --> 00:07:47,120
+make an easy place that everybody
+can go to to see what's
+
+194
+00:07:47,120 --> 00:07:49,715
+been released to
+customers and handle
+
+195
+00:07:49,715 --> 00:07:51,920
+this rather common scenario
+
+196
+00:07:51,920 --> 00:07:54,840
+of needing to do
+a hot fix match.

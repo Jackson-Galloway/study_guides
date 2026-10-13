@@ -1,0 +1,108 @@
+In this video, I'm going to talk about C dependency generation. This is a sequence of videos
+that'll talk about how to do dependency generation
+for C projects. I'm going to start by
+talking about GNU make. We're going to
+learn how to handle incremental builds using
+GNU make and how to automate dependency
+tracking with makefile generation
+using the GNU make. First of all, why do we need
+to worry about dependencies? Well, when a C source file
+references header files, then there's a chance
+that you need to rebuild the object file when either the header file or the
+source file changes. One way that you can
+do this is by adding header files as prerequisites
+to your make targets. If you only have a few C and a few H
+files in your project, it's pretty easy to just always make the build depend
+on any change to any of the files and to track for specific files which ones include
+which header files. However, once you get to pretty much any
+reasonably sized project, that becomes pretty difficult to track and to keep track of and understanding
+from header files that include other header files, getting all those
+dependencies right and tracking it manually would be very error prone and tedious and not something
+you'd ever want to do. What you can do instead, if you're planning
+to use GNU make, is you can use GCC plus GNU make to automatically generate
+dependency files for you. Here's an example of what I mean when I'm talking about
+dependency generation. If you take a really
+simple example where you have two
+different files, file 1 and 2 dot c, that each have their
+own header file and then you have
+a main file that calls functions in each one
+of those separate C files. It'll include file 1, file 2 and it'll call file 1 and file 2 hello
+functions two, in this case, just print
+a simple Hello World from each of the files. If anything changes
+about the file 1 or file 2 header file, we need to recompile
+the main file. The way we know that is because the main file
+includes both of those files. In other words, we have
+a dependency between the main.c and either
+one of the header files. However, if we look at
+file 1 and file 2 dot c, we only have
+dependencies on file 1 or file 2 dot c header files. We do not need to rebuild these if the opposite
+header file changes. We can use GCC and GNU make to automatically build
+dependencies for us. GCC can output GNU make compatible dependency files with a few command options
+that are available. Dash MMD will generate the
+dependency files for us, dash MT sets the target name
+of the dependency files and dash MF tells it where
+to write the files. This was not an
+original feature of GCC before and you might see this if you look at some
+older projects. This was previously
+done with sed commands, where sed is a stream
+editor that's able to generate dependencies
+based on text manipulation. If you see that implemented on an old project it
+was probably done before GNU make had
+support for these flags. Here's an example of
+the dependency files that GCC can generate for us. If I look at these
+file dot ds files, what I can see is that
+I've got a dot o that's dependent on either a
+dot c or a dot h file. I can see that the map here for file 1 and file 2 dot o matches the header files
+that I've already referenced in each
+one of those files. Similarly for main dot o, I'm dependent on main C, file one h and file two h. Each one of these
+were automatically generated for me based
+on the arguments to GCC. How can you make this a part of your overall make
+and build process? It's a little bit
+complicated to setup. There's a couple of links that I've
+included here and I've got an actual working example if you want to go through it. I've annotated the steps here but you can do this
+in a generic way using the framework that
+I've provided here in the automatic
+template generation or dependency
+generation example, where you could just
+list source files and list the application
+that you're going to build and the rest of the
+macros here in the makefile will take care of automatically generating dependencies for you. It's using a rule here to automatically create
+the object files from the sources and
+define the all in default build types based on the app time that
+we specified here. This command is going to do
+the link step for us to take all the object files and build them into the app
+that we've specified. In terms of how we actually do the dependency generation, we're going to create a hidden directory where we'll put all our
+dependency files. A benefit of making a
+hidden directory here is that we typically wouldn't
+be looking at these files, we won't want to check them into revision control, for instance. Then we'll have depth flags, a parameter that will
+pass to GCC that will use the empty MMD and MF arguments
+to tell it where to write the auto-generated
+dependency files. Then you can see the
+compile C command that we're specifying here, just specifies doing
+the compile step with all the dependent flags and any other flags that
+were specified. Then we can generate
+rules here that use our compile C to generate
+the output dot o file based on both the dependencies in the dependency
+directory that we're creating plus the dot c file that we're actually compiling. Then we'll include all
+the dependency files in the list of files that we
+include in our makefile. That we'll pull in all those dependencies mentioned in each one of the
+dependency files, as a part of the rules for doing make right here with
+this wildcard option. There's a test script that verifies that only the files you expect are going
+to be recompiled on when touching one of
+the two header files. You can go through this
+if you want without a make dependency
+generation example. You can definitely do this, but there are some
+pitfalls to be aware of if you're going to try to
+use GNU make for this. One is dependency
+tracking isn't automatic. The example that I gave covers most of the
+dependencies you'll care about, but there are still
+some that are missing. For instance, the makefile, if the makefile changes, you probably need to
+rebuild the entire project. That's not in the dependencies
+that I shared with that simple example and I'm
+sure there are other ones. Also the makefile
+implementation details are probably platform specific. Definitely the case that I
+just showed is GCC specific, it's only going to work
+with the GCC compiler. It assumes that binary utilities are present in the
+root file system. The utilities that are using for the dependency generation
+step have to be installed. It probably means that your code won't build on other platforms. For instance, one that
+didn't have GCC installed.

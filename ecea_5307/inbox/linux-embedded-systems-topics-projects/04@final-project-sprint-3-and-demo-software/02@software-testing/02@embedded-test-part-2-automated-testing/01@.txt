@@ -1,0 +1,194 @@
+In this video, I'll continue
+the discussion about embedded testing and talk specifically about
+automated testing. We want to understand
+the components of an automated test
+framework, introduce mocks, and introduce the unity
+and GoogleTest as two possible automated
+test frameworks. The components of an
+automated test setup. The first one is the framework. What do I mean by
+a test framework? I mean it's something that's
+able to create executables on whatever platform you
+plan to run the tests on. It often includes
+features like grouping tests by whatever feature
+the specific test covers, selecting specific tests to run, maybe in allowing
+for selection of specific tests and
+reporting status back about which steps failed and some
+detail about what failed so that it's easy to go and find the problem and fix
+it when it happens. A lot of times the test framework will
+be set up such that the executables and
+the testing that you perform is going to be run on a development platform instead
+of the target platform. That's a lot of just
+convenience so that you maybe don't have the
+extra interaction required with setting up your test on the
+development platform. Similar to what we've done with the assignments this
+semester where we start out implementing our tests on native Ubuntu system
+for instance. Then a second test component from automated test
+is test mocks. I'll talk more about
+these in the next slides. A test mock can simulate
+the behavior of a real object in controlled
+ways that you can control in your test definition. A mock is really important
+and necessary when you have things like
+non-deterministic results. For instance, if you have
+code that's trying to read current time or
+current temperature, that's going to vary every single time you
+run the test case. It'll be difficult to get
+deterministic results where something always passes or fails in specific scenarios. Same with states that are
+difficult to reproduce. Let's say you've got
+some handling for the case where a device
+returns an error condition. Well, how do you make the device return an error condition depending on what you're
+doing for an error condition, it might be difficult to do that from a device perspective. But a mock can help you
+simulate that case. We'll talk about
+that in a minute. Other cases where mocks
+are useful are when the interaction is either
+slow or requires setup. You can think about
+an interaction with a database, for instance, that in order to have
+some specific state, you might need to
+set up a database and get that database
+in some specific state. The procedure for doing
+that might be complicated, might take a lot of work to do, so simulating the database instead might be a faster
+option through a mock. The other cases would be that the thing you're interacting with doesn't actually exist yet. Often it's common that two different development
+teams will be working on developing
+something for a product. Neither one of the features
+will be complete yet, you can use a mock to simulate the feature that's in
+development from another test or another development group
+while you're developing your feature or in the case that you're modeling what
+it's going to look like if a feature changes behavior from the way
+it is currently now. Again, maybe that's
+something that's in development on a different
+development team. It's also really
+useful for testing software components and
+isolating dependency. If you're seeing a bug
+that's happening in some interaction between two different
+software components. Having a mock helps
+you prove that if I try to mock
+this same scenario, I either can or can't reproduce this with my component
+in isolation. I can give you a
+lot of clues about where the problem
+ultimately lies. I'm going to go through
+some examples of how you can use automated testing, specifically with
+the unity framework. This is all going to reference a project that's linked
+here in the bottom of the slide that goes
+through some content from a previous lecture
+about time functions. First, in order to do
+automated testing, you got to start with something that's interesting to test. What I'm starting
+with, in this case, is a time spec diff, that's just going
+to return a result that's the difference
+between two different times. It's going to handle rollover. That sounds like something
+that will be able to test to make sure it's
+working properly. If I wanted to use
+this with unity, I could add some
+test functions and just prefix those with
+names test underscore. That includes some assertions. Those assertions you
+probably noticed in other test case definitions
+you've used for the class already there going
+to be defined in UD assertions reference and just are things
+like test assert, and then check for
+conditions like equal, less than, greater than something about two
+different values. In this time-space diff case, I'm going to first create a time spec that's
+based on one second. Then at time spec that
+is based on 1.1 second, take the difference of
+those two and expect to get 0.1 for the time
+spec difference. You can see that part
+of the assertion. I can provide a
+message here that says what I'm expecting in Y. If the test fails, this assertion is
+printed and I'll have more information
+about what failed. Then the next step, once you have the test case to find is you need a
+test case runner. The runner is going
+to be the thing that can actually create the
+main entry point for your executable so
+that you can build this an executable
+and it'll find all the test cases and
+run them all for you. Every test framework is slightly different in how this works, for unities there is a Ruby generate
+test runner command that you can use for this step. This just requires
+you to install Ruby, which is a one-line apt-get. I've to get step 4
+Ubuntu, for instance. Then you can run it something
+like this where you specify the content that
+you're going to test, and then the shared
+runner that you wanted to create that pulls
+those test functions out and runs them for you. Then you can include this all in a CMake configuration to
+create a new project, and then add the
+Unity submodule. The Unity submodule itself includes a separate CMake step, so CMake already will
+know how to build that just from adding
+the subdirectory. Then add all the
+include directories so that reference includes from Unity for things
+like assertions. Then create that new
+executable Unity test here that will build based
+on the C source files, the test files, and
+the test runner that we generated through
+that Ruby script. Then link it with the
+Unity library that gets built based on adding
+this subdirectory here. These lines here to your CMake project configuration will set up a Unity unit test. Then you can build and
+run the Unity unit test and see here an output
+based on success or fail, and you've probably
+seen this already from your assignment
+implementations. That covers the basics
+of how you can use Unity with automated testing. You can also use
+CMock as an extension for Unity that will create mocks and stubs for
+C functions for you. This is a cool feature of Unity, specifically, in the way
+that they do their mocks. But what they essentially do, is create fake versions
+of functions that are outside whatever C
+module you're testing. If you're testing a
+specific file and you're calling another function
+that's outside that file, CMock can create mocks
+for you that can handle the function in
+specific ways that you define. It uses the Ruby scripts to auto-generate C source that corresponds to whatever you've
+defined in a header file. For instance, if you
+had a file 1.c and that pound included NeatStuff.h, and NeatStuff define
+these header files. Then there will be auto-generated sources
+that CMock will create for you that will
+give you a bunch of ways to interact with
+each one of these functions. Each of these functions
+you can call, will set up how the
+mock is going to handle calls to these functions from whatever file you're
+testing that uses them. If you're testing
+code in a C file, and that C file pound
+includes NeatStuff.h, and then let's say
+it calls ParseStuff, then instead of calling the real ParseStuff
+in your real file, it will get redirected
+to the mock. In that case, the test case, before it calls
+whatever function is going to be
+called ParseStuff, can set up how it wants
+the mock to behave. ExpectAndReturn,
+will say that it expects your code to
+pass something in, and it will simulate some value to return in
+this toReturn value, so you can set up both how
+you expect the interaction to be with the function as well as what you want the function
+to return back as a mock. IgnoreAndReturn could
+ignore whatever was passed in and always
+return the same value. Then StubAndCallback could just take a function pointer
+that it calls to do whatever logic you
+wanted custom based on whenever that code is called inside your test and
+see if function. We can combine the Unity
+implementation with CMock in another Unity extension
+called Ceedling. Ceedling is a wrapper
+around CMock and Unity and also CException; a way to do exceptions
+in C. It will automate all the steps associated with generating those
+individual tests files so that Ruby command that
+I mentioned previously. It also brings in what's
+called the Rake framework, which is a way to automatically generate dependencies
+and build dependencies based on Ruby files. There is an example project in the Ceedling example if
+you want to look at it, but it is basically just a more turn-key
+way of doing unit based testing where
+you can install Ceedling, create a new Ceedling project, add any of your project files
+in the source directory, and then use the test files
+in a test directory with this specific pattern using test filename and the tests like we just discussed before. Then just run Ceedling
+tests:all and that will go out, build all the runners for you, auto detect all your
+automated tests, and update, and run every
+single time you call it. This is a great tool to use with automation to automatically
+pull in new tests based on your source
+code and verify that all of your unit tests are passing as a part of an
+automated build test. A second unit test framework that I wanted to
+mention I've used in the past is GoogleTest. This one is a little
+more C++ centric, so you have a project
+that's already using C++, it might be a good
+one to consider, whereas Unity kit is pure C and can be used on
+pure C projects, GoogleTest to C++ centric, but it can also be
+used to test C files. It uses C++ streams
+for little bit more verbose exception handling
+and for error handling. In my opinion, that's a little
+bit easier to enumerate errors and make
+more verbose errors talking about what
+the failures are. It has a similar google mock
+framework for C++ mocks. It's not maybe quite as
+automated as Unity is, but it's still very functional. It's used on OpenCV
+and ROS code bases, so it's pretty popular, and it's widely used, likely to be around for awhile.

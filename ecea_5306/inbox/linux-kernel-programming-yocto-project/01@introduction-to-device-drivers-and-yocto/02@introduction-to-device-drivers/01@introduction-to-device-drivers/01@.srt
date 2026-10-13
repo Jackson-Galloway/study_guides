@@ -1,0 +1,707 @@
+1
+00:00:01,240 --> 00:00:05,877
+In this video, we'll do
+an Introduction to Device Drivers.
+
+2
+00:00:05,877 --> 00:00:09,680
+So the learning objectives, we're going to
+understand the role of device drivers.
+
+3
+00:00:09,680 --> 00:00:13,370
+We're going to talk a little bit
+about device driver design, and
+
+4
+00:00:13,370 --> 00:00:15,394
+we're going to introduce modules.
+
+5
+00:00:15,394 --> 00:00:19,576
+So starting off with the structure
+of operating systems and
+
+6
+00:00:19,576 --> 00:00:23,140
+some common operating systems structures.
+
+7
+00:00:23,140 --> 00:00:28,027
+Talking about how this interaction
+works between the system or user space,
+
+8
+00:00:28,027 --> 00:00:30,701
+application and the operating system and
+
+9
+00:00:30,701 --> 00:00:34,226
+how that varies based on
+the operating system design.
+
+10
+00:00:34,226 --> 00:00:38,918
+So there's three basic designs that
+you can have for an operating system.
+
+11
+00:00:38,918 --> 00:00:44,056
+One would be monolithic where
+you have the the entire
+
+12
+00:00:44,056 --> 00:00:51,545
+content of the kernel running in
+a protective mode in the operating system.
+
+13
+00:00:51,545 --> 00:00:55,351
+And your all applications
+then live in user space.
+
+14
+00:00:56,710 --> 00:01:00,896
+The second is a micro kernel type
+of set up where you have some
+
+15
+00:01:00,896 --> 00:01:04,581
+applications running in
+the system user space, and
+
+16
+00:01:04,581 --> 00:01:08,951
+then you have user mode extending
+into the operating system.
+
+17
+00:01:08,951 --> 00:01:13,922
+And so there's a set of kernel
+capabilities that are run at
+
+18
+00:01:13,922 --> 00:01:16,163
+higher privilege level.
+
+19
+00:01:16,163 --> 00:01:18,700
+But there's also a set of operating system
+
+20
+00:01:18,700 --> 00:01:21,456
+capabilities that
+are served from user mode.
+
+21
+00:01:21,456 --> 00:01:27,544
+And so
+an example of micro kernel is FreeRTOS.
+
+22
+00:01:27,544 --> 00:01:30,656
+And then there's also the hybrid
+kernel where there is some combination
+
+23
+00:01:30,656 --> 00:01:31,173
+of the two.
+
+24
+00:01:31,173 --> 00:01:36,700
+That there's some basic functionality
+that's in kernel mode, there's also
+
+25
+00:01:36,700 --> 00:01:42,160
+some device drivers and other capability
+that is implemented in kernel mode.
+
+26
+00:01:42,160 --> 00:01:47,144
+But there's also pieces that
+are provided by the operating system
+
+27
+00:01:47,144 --> 00:01:49,822
+that are implemented in user mode.
+
+28
+00:01:49,822 --> 00:01:54,130
+So for this class, what we're talking
+about is the monolithic kernel-based
+
+29
+00:01:54,130 --> 00:01:56,492
+operating system that we have with Linux.
+
+30
+00:01:56,492 --> 00:02:01,881
+Where everything that's running
+in as a part of the operating
+
+31
+00:02:01,881 --> 00:02:07,592
+system is running in kernel mode
+at that higher privilege level.
+
+32
+00:02:07,592 --> 00:02:10,943
+So what do we mean when we
+talk about a device driver?
+
+33
+00:02:10,943 --> 00:02:15,741
+The goal or the function of the device
+driver is to make a hardware respond to
+
+34
+00:02:15,741 --> 00:02:18,343
+a well defined abstraction interface.
+
+35
+00:02:18,343 --> 00:02:23,110
+And so all those system calls that
+we talked about in the first part of
+
+36
+00:02:23,110 --> 00:02:27,878
+this course, we're going to take
+some subset of those system calls,
+
+37
+00:02:27,878 --> 00:02:30,710
+read write, for instance.
+
+38
+00:02:30,710 --> 00:02:36,023
+And we're going to map those into
+functions that interact with the hardware.
+
+39
+00:02:36,023 --> 00:02:39,640
+And that's really going to be
+the purpose of the device driver.
+
+40
+00:02:39,640 --> 00:02:42,570
+The device driver can be built
+separately from the kernel and
+
+41
+00:02:42,570 --> 00:02:45,230
+it could be added dynamically
+whenever it's needed.
+
+42
+00:02:45,230 --> 00:02:48,818
+So this is useful because if
+the device is not a part of the system,
+
+43
+00:02:48,818 --> 00:02:51,641
+there would be no reason
+to load it into the kernel.
+
+44
+00:02:54,660 --> 00:02:59,447
+The book also talks about mechanism
+versus policy that a driver should
+
+45
+00:02:59,447 --> 00:03:01,990
+provide mechanism and not policy.
+
+46
+00:03:01,990 --> 00:03:05,517
+And when we talk about mechanisms,
+what we mean is that
+
+47
+00:03:05,517 --> 00:03:09,593
+we're providing access to
+the capabilities of the hardware.
+
+48
+00:03:09,593 --> 00:03:14,339
+And when we talk about policy, we're
+talking about how would you use those
+
+49
+00:03:14,339 --> 00:03:16,911
+capabilities for a specific instance?
+
+50
+00:03:16,911 --> 00:03:22,246
+So some examples of the book gives
+a TCP/IP socket as an example
+
+51
+00:03:22,246 --> 00:03:27,278
+of a capability and a policy and
+how it would actually be used
+
+52
+00:03:27,278 --> 00:03:32,440
+would be specific services or
+specific serving of content.
+
+53
+00:03:32,440 --> 00:03:36,764
+Similarly for hard disk drive,
+the blocks of a hard disk drive,
+
+54
+00:03:36,764 --> 00:03:41,891
+it would be a driver that would provide
+the mechanism to access the blocks and
+
+55
+00:03:41,891 --> 00:03:44,640
+store binary data on blocks of the disk.
+
+56
+00:03:44,640 --> 00:03:48,014
+And it would be a file
+system that would provide
+
+57
+00:03:48,014 --> 00:03:52,002
+the policy of how you can
+use those particular blocks.
+
+58
+00:03:52,002 --> 00:03:56,904
+So the driver that's driving
+the hardware would be responsible for
+
+59
+00:03:56,904 --> 00:04:02,677
+the capability and the filesystem driver
+would be responsible for the policy.
+
+60
+00:04:05,741 --> 00:04:10,278
+So in order to write a policy
+free driver for hardware,
+
+61
+00:04:10,278 --> 00:04:14,718
+what you want to do is basically
+make the least amount of
+
+62
+00:04:14,718 --> 00:04:19,375
+restrictions as possible on
+a user space application.
+
+63
+00:04:19,375 --> 00:04:23,311
+Or another driver that's that's
+attempting to use your hardware device.
+
+64
+00:04:24,540 --> 00:04:28,257
+So that means that you want to
+support both synchronous and
+
+65
+00:04:28,257 --> 00:04:32,601
+asynchronous operation,
+be able to open multiple times at once.
+
+66
+00:04:32,601 --> 00:04:37,216
+You want to allow multiple user
+space applications to access your
+
+67
+00:04:37,216 --> 00:04:39,017
+device at the same time.
+
+68
+00:04:39,017 --> 00:04:43,110
+The book warns against adding additional
+layers to try to simplify things.
+
+69
+00:04:43,110 --> 00:04:48,063
+A lot of times that basically
+turns into enforcing policy
+
+70
+00:04:48,063 --> 00:04:50,760
+on how your device can be used.
+
+71
+00:04:50,760 --> 00:04:56,606
+And what the book recommends is
+if you want to give an example
+
+72
+00:04:56,606 --> 00:05:01,512
+about how you can simplify
+things in user space.
+
+73
+00:05:01,512 --> 00:05:06,837
+A lot of times you'll bundle your
+driver with application that
+
+74
+00:05:06,837 --> 00:05:12,371
+runs in user space that can give
+you an example about how to use it.
+
+75
+00:05:12,371 --> 00:05:16,541
+So some of the roles that are going to
+be provided for us by the kernel, and
+
+76
+00:05:16,541 --> 00:05:19,723
+we've talked about these
+already in the first part of
+
+77
+00:05:19,723 --> 00:05:23,850
+this course from the perspective of
+writing user space code as well.
+
+78
+00:05:23,850 --> 00:05:28,582
+So the process management is
+going to provide for us creating and
+
+79
+00:05:28,582 --> 00:05:33,405
+destroying processes,
+handling the I/O for processes, and
+
+80
+00:05:33,405 --> 00:05:37,420
+scheduling processes to be run or
+stop or replaced.
+
+81
+00:05:37,420 --> 00:05:38,990
+And also memory management.
+
+82
+00:05:38,990 --> 00:05:41,837
+So that virtual address space for
+processes,
+
+83
+00:05:41,837 --> 00:05:44,770
+that's all going to be
+controlled by the kernel.
+
+84
+00:05:44,770 --> 00:05:49,410
+And when we call malloc and free from user
+space, kernel is going to be responsible
+
+85
+00:05:49,410 --> 00:05:53,861
+for either allocating or freeing
+the memory that's associated with that.
+
+86
+00:05:53,861 --> 00:05:58,744
+The everything is a file
+paradigm that we've talked about,
+
+87
+00:05:58,744 --> 00:06:05,077
+the place where we will locate our device
+nodes will be part of the file system.
+
+88
+00:06:05,077 --> 00:06:07,712
+And then all the rest of the files
+that you would interact with,
+
+89
+00:06:07,712 --> 00:06:10,570
+the normal files are all going to be
+located in the file system as well.
+
+90
+00:06:10,570 --> 00:06:15,317
+There are lots of different
+file systems supported, ext4,
+
+91
+00:06:15,317 --> 00:06:18,339
+fat, NTFS are just a handful of those.
+
+92
+00:06:18,339 --> 00:06:22,565
+And then device control is also a part
+of what the kernel is going to provide.
+
+93
+00:06:22,565 --> 00:06:25,264
+So the endpoint of system operations,
+
+94
+00:06:25,264 --> 00:06:30,008
+meaning the way that you would
+interact with the device through those
+
+95
+00:06:30,008 --> 00:06:34,115
+read write Actel type of methods
+that I mentioned earlier.
+
+96
+00:06:34,115 --> 00:06:39,724
+And there's going to be a device driver
+for every active device in the system
+
+97
+00:06:39,724 --> 00:06:45,810
+that will essentially provide
+the functionality for that endpoint.
+
+98
+00:06:45,810 --> 00:06:48,830
+The other kernel role is networking.
+
+99
+00:06:48,830 --> 00:06:52,647
+So collecting, identifying,
+dispatching network packets,
+
+100
+00:06:52,647 --> 00:06:56,394
+routing address resolution,
+everything that gets us into and
+
+101
+00:06:56,394 --> 00:07:00,721
+out of the network is happening because
+of functionality in the kernel.
+
+102
+00:07:00,721 --> 00:07:04,114
+So what's happening from user space,
+that's really where all the applications
+
+103
+00:07:04,114 --> 00:07:07,380
+are, everything that we've talked about
+from the beginning of this course.
+
+104
+00:07:07,380 --> 00:07:12,232
+So if you're thinking about an FTP server,
+for example, that wouldn't be implemented
+
+105
+00:07:12,232 --> 00:07:15,360
+in the kernel,
+that would be implemented in user space.
+
+106
+00:07:15,360 --> 00:07:17,679
+Same with the graphics session manager,
+
+107
+00:07:17,679 --> 00:07:21,531
+that would not be something that
+would be implemented in the kernel.
+
+108
+00:07:21,531 --> 00:07:24,723
+That's an application that will
+be implemented in user space.
+
+109
+00:07:24,723 --> 00:07:30,583
+And then as I mentioned before, the policy
+around access of device drivers or
+
+110
+00:07:30,583 --> 00:07:33,829
+examples about how to use device drivers,
+
+111
+00:07:33,829 --> 00:07:38,972
+those utility applications that
+would interact with your driver,
+
+112
+00:07:38,972 --> 00:07:42,691
+those would all be running
+in user space as well.
+
+113
+00:07:42,691 --> 00:07:47,605
+So we talked about drivers being kernel
+code that's controlling hardware
+
+114
+00:07:47,605 --> 00:07:50,186
+that may or may not be added at runtime.
+
+115
+00:07:50,186 --> 00:07:53,852
+When we're talking about
+adding driver at runtime,
+
+116
+00:07:53,852 --> 00:07:57,370
+what we're talking about
+in that case is a module.
+
+117
+00:07:57,370 --> 00:08:02,970
+And so module is just another name for
+a kernel code that's added at runtime.
+
+118
+00:08:02,970 --> 00:08:06,557
+And often this is used for
+device drivers and it's useful for
+
+119
+00:08:06,557 --> 00:08:10,567
+device drivers because your system
+may not have specific devices,
+
+120
+00:08:10,567 --> 00:08:14,034
+in that case there's no reason
+to load it into the kernel.
+
+121
+00:08:14,034 --> 00:08:18,800
+So you can use the dynamic
+features to only load the kernel
+
+122
+00:08:18,800 --> 00:08:21,688
+modules that you need at runtime.
+
+123
+00:08:21,688 --> 00:08:27,150
+There are several user space utilities
+that are used to add modules to a running
+
+124
+00:08:27,150 --> 00:08:32,545
+kernel, insmod is one that would link
+a module file into the running kernel.
+
+125
+00:08:32,545 --> 00:08:36,102
+Rmmod would remove the file
+from the running kernel, and
+
+126
+00:08:36,102 --> 00:08:39,807
+modprobe is another one that
+works similar to insmod in that
+
+127
+00:08:39,807 --> 00:08:43,087
+it can link a kernel module
+into the running kernel.
+
+128
+00:08:43,087 --> 00:08:47,789
+But it will also include dependencies,
+and so if your driver references
+
+129
+00:08:47,789 --> 00:08:52,566
+other drivers, for instance, modprobe
+can track that and it can load any
+
+130
+00:08:52,566 --> 00:08:57,595
+dependencies that you have in addition
+to driver that you've asked to load.
+
+131
+00:08:57,595 --> 00:09:01,753
+So the book also shows this
+split view of the kernel.
+
+132
+00:09:01,753 --> 00:09:04,190
+All the things that the kernel
+is responsible for.
+
+133
+00:09:04,190 --> 00:09:08,367
+We've talked about the system call
+interface being the the interface into
+
+134
+00:09:08,367 --> 00:09:09,110
+the kernel.
+
+135
+00:09:09,110 --> 00:09:12,283
+And what you'll notice
+here is this small box
+
+136
+00:09:12,283 --> 00:09:17,230
+is listed as the features that
+are typically implemented as modules.
+
+137
+00:09:17,230 --> 00:09:21,230
+And so you see a lot of these
+lined up here along the bottom
+
+138
+00:09:21,230 --> 00:09:23,971
+that are interacting with hardware.
+
+139
+00:09:23,971 --> 00:09:28,527
+Because as I mentioned, the fact that
+you're interacting with hardware means
+
+140
+00:09:28,527 --> 00:09:32,010
+that the hardware might be
+different on different systems.
+
+141
+00:09:32,010 --> 00:09:35,140
+So these are cases the block
+character devices and
+
+142
+00:09:35,140 --> 00:09:40,286
+interface drivers since there's going to
+be interacting with specific hardware,
+
+143
+00:09:40,286 --> 00:09:42,832
+they are often implemented as modules.
+
+144
+00:09:42,832 --> 00:09:46,831
+So that they can be dynamically loaded at
+runtime to match whatever hardware you're
+
+145
+00:09:46,831 --> 00:09:47,540
+running on.
+
+146
+00:09:47,540 --> 00:09:51,884
+And filesystem types are another case
+where these are optionally loaded
+
+147
+00:09:51,884 --> 00:09:56,811
+at runtime, depending on which file system
+you happen to be using on your device.

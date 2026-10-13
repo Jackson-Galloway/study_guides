@@ -1,0 +1,240 @@
+All right, so in this video,
+we're going to start getting into the details about how to
+build your first Yocto Image. So I want to go through
+Yocto build by example. So there's tons of documentation
+online about how to use Yocto. There's probably a lot of
+different documentation or sites you could find that tell you
+about different ways to use it. What I'm going to try to do with
+this assignment is set up a way to build the Yocto for you. That's got some combination of needing to
+understand the little bit of the details. But also a lot of things just chosen for
+you and working out of the box so that you can hopefully get up and running
+with a working example pretty quickly. So part of what I want to do is go
+over some of the Yocto build helper scripts that I'm going to provide you for
+use with assignment six. And I'm going to give you some of
+the details about how this was set up so that way you actually need to
+start a project from scratch, you'll know how to do that as well. But also just give you the option to
+take the work that I've already done and started for you to get you up to
+speed quicker for assignment six. So one of the things that I've added in
+the Yocto assignments based repository that you can leverage for
+assignment six is this build.sh script and you can look through the content
+of the script to see what it does. There are several things
+that it's going to do for you in order to automate the build
+process and set some things up for you. So the first thing it's going to
+do is it's going to init and update your git submodules. And so this is related to,
+you'll find some assignment, instruction steps that talk
+to you about setting up, for instance, the pocky submodule for
+use with Yocto. And this is going to just make sure
+that if you clone the assignment repo to a different directory, you're
+going to end up with the a version that matches what you used when you updated or
+added the pocky submodule. Now, this does require you to make sure
+that you have either used git dd or git commit to commit the changes to
+your submodule when you make them. So, for instance, if you clone the pocky
+submodule and you find out that you've cloned the wrong branch and
+you need to switch to a new branch. You'll need to make sure
+that you git add or git commit that change before
+you run the build script. If you don't, the build scripts,
+going to just go back to whatever you had the last
+time you checked out the submodule. So this is one of the things that
+the build scripts going to do for you. The second thing and you'll see a lot of references to
+this in the Yocto help guides. But one of the first steps when
+using pocky is usually to source the oe-init-build environment script. And so this is just going to set up
+environment variables that are used to direct your Yocto build and the build scripts going to
+automatically do this for you. If you were going to build Yocto
+without this build script, you just do this step yourself
+from the command line. Then there are a few things in here that
+check to see whether your local.conf file, which will also see lots of
+references to in Yocto documentation, check to see whether that's
+configured appropriately. And so one of the things
+that we're going to look for in that is whether we've specified
+qemu-64 as the machine type since that's the machine that we want to build. And if that's not specified the build
+scripts, going to add that for you automatically to local.conf. And again, if you were not using the build
+script and just building this project yourself, you would just make this
+change yourself to the local.conf file. The next thing that the build script is
+going to do is check to see if our layer where we're defining our changes similar
+to what we did with the base external directory in Yocto we're going to
+put everything in a meta-aesd layer. And the bit baked layers show layers,
+command is going to check to make sure that we've included that layer and if we
+haven't, it's going to add it for you. And again, if you didn't have this build
+script, you would just perform this step yourself when you were
+setting up your local.conf file. And then finally, the last command is
+going to do bitbake core-image-aesd, and this is going to build the content
+of the image that we're defining, that's specific to our assignment. So one thing to note is that although
+there's no directory change here, part of sourcing this
+pocky/oe-int-build-env script, it's going to create a build directory and it's going to change your directory
+into that build directory. And so everything that's run after
+this source command is actually going to be run from a build subdirectory
+inside your repository directory. So again, you can follow this
+link to look at the details about what the build.sh script does. So when it's time to
+actually run your image. So once the build completes and
+the builds will definitely take a while. I think I've mentioned this before
+when we've talked about Yocto, but you'll notice a difference in build
+time between buildroot and Yocto. Depending on the performance
+of your machine, it's probably going to take
+hours to complete the build. But hopefully there's not
+much work you need to do. That can be something you kick off and
+just run overnight, for instance. But once your build is done,
+you'll want to run it on qmu, similar to the way we did it
+when we ran with builroot. And in order to do this, you start
+with the same step that we did before of pocky/oe- build-env and
+then you say runqmu nographic. And this is going to, if you remember when
+we were using buildroot, we had to specify a bunch of parameters on the command
+line about how we wanted to start qmu. This command is going to use
+the environment that's set up for your project build in order to figure
+a lot of those parameters out. There are different things you
+can customize with qmu and there's some help options that
+show you what you can customize. So the default login on
+the Yocto qmu based machine image is root with no password. However, there are some
+changes in the base repo that set this up to use root
+with root password just so that we can match exactly what we
+were doing with our buildroot setup. So similar to the build.sh script, there's a runqmu.sh script that
+automates a lot of this setup for you. And a couple of things that
+are done in that script for you is we also use what's
+called slirp network interface. And the reason we do this is so
+that you can run without root access. Makes it easier for
+us to test an automated test and it will also match what we do for
+buildroot assignments. So all the target ports will be
+available at the localhost address. In this case, 10.0.2.15. That's where you'll access when you
+access localhosts from the target. And sockettest.sh then should be able
+to reach that target qemu instance. So next, I wanted to go through
+adding the recipe to build your aesd-assignments repository and
+these steps are already performed for you. So once again, I'm trying to set you up
+with something that's easy to get started. And I'm giving you a little bit of the
+background here about if you were going to start from scratch,
+what you would need to do. So there's several different ways you
+can start by adding your recipe for your package. But I'm going to go over
+the easiest beginner option, which is to use a tool called a devtool. So similar to what we did with the build
+script and what we're doing with runqmu. The first step is always this source
+pocky/oe-init-build-env to set up your build environment. And then you can just simply say,
+devtool add and specify the package name
+that you want to add. So in this case, it's aesd-assignments and then you specify the path to
+your aesd-assignments repo. And this would generate a recipe based
+on the content of your git repo and write it into a location
+in your workspace and it would put the details
+in about what it's doing. So it's essentially analyzing the content
+of the source that you want to build. In our case, looking at its makefile and
+then setting up a recipe stub that's appropriate for
+you to customize to build that package. Now, once we have that setup, we can
+do devtool, build aaesd-assignments, which is going to build the source code
+and verify it builds successfully. The customization is that you need to
+do in order to configure the recipe, of course, you'll still need to
+make that in your workspace layer. But this is the way you can iterate and
+build the aesd-assignments repo. Once you have everything working, you can
+say devtool finish aesd-assignments and then give a path to
+the layer that we added. So if you remember during the build script
+step, our custom layers called meta-aesd. And so we'll give the relative
+path to that relative, the build directory where we're
+building and running devtool. And this is going to place a .bb file in
+the Yocto recipes tree within your layer. So one other thing to know about
+building with Yocto is that a lot of the makefile variables that
+we're using currently, Yocto is going to expect
+to override those. The biggest one is this CC variable. So one way you can let
+Yocto handle this for you is just to use this question
+equal inside your makefile. And if you do that, then anything that
+you specify in the Yocto recipe or the Yocto framework specifies
+as part of the make command is going to override
+any of your defaults. If you build outside of Yocto,
+that assignment will still happen. And so you'll still get the behavior that
+you had previously when building native. So this applies to several
+different variables. You can optionally append to these
+variables if you want from within your makefile or you can specify them in your
+recipe file, your CC for your package. So in order to take
+the example that we've got. Now again, I started the aesd-assignments_git.bb
+file using devtool for you. So there's already a start
+there that you can work with. So the main thing you have to do are all
+documented in to do items inside this aesd-assignments_git.bb item, which you'll
+see from the Yocto assignments base repo. So the main thing you're going to have to
+do is set up your assignments repo and follow the instructions there
+about how to format that. And then use SSH agent, which we've talked about previously
+about how to build with SSH keys. If you try to use a key that needs
+a password and you aren't using SSH agent, your Yocto build is going to fail
+when it gets to that step because it doesn't have any way to get
+the information about your password. The next thing you're going to need to
+do is set up your commit hash in SRCREV. Very similar to what we
+did with buildroot and you'll see the to do items for
+doing that in the Yocto recipe. So then you'll also need to include all
+the files that you're adding to the rootfs in the FILES:${PN} variable. And if you are setting the LDFLAGS
+in your BB file recipe, you'll also do that
+through TARGET_LDFLAGS. And finally, there's a do_install step
+where you're going to add the commands that will be used to install the content
+into your target rootfile system. Again, very similar to what
+we did with buildroot. One other thing I wanted to note about
+a difference between buildroot and Yocto implementation has to do with
+the startup sequence that's used. So if you remember when we did
+our buildroot implementation, we talked about Busybox init. There's a very similar but
+slightly different mechanism that Yocto uses by default,
+which is called system V. And in order to use the system
+V setup scripts with the Yocto, there's a class called update-rc.d,
+which is going to help us install the startup script that we need to run
+our application automatically at startup. So the basics about what
+you need to do for that, you need to first inherit
+the update-rc.d class. And this is going to
+bring in a capability for installing INITSCRIPT for you. And this is again the class that's going
+to handle everything that we need to do in in order to install our INITSCRIPTS. And then you need to define INITSCRIPT
+packages equals your package name. And this just flags your package
+as one which uses INISCRIPTS for the build system. And then finally, you'd say,
+INITSCRIPT_NAME:${PN} and set that value to your start-script-name. So similar to what we did with buildroot,
+we will define a start-script that does the start-stop commands and just reference
+that here within INITSCRIPT_NAME. And then similarly in the do install, you're going to have to install
+the start-script init.d directory. And note here, we do an install -d of
+the SC init.d directory just to make sure we've got that set up in our target root
+of S before we try to install the file. Your start-script, to that location. And I included a link here
+about the update-rc.d class. And I wanted to note that some of
+the documentation online still references some of
+the old override syntax. So in the interim, while this is
+changing this INITSCRIPT_NAME:${PN}, in previous builds of Yocto,
+this was actually an underscore. And so, while we're in the transition, you might find documents that reference
+either a colon or an underscore. We'll use colon going forward for
+this course and all the base assignment
+content that we're using. All right, and then once you have
+your package defined, building and running in a part of your layer,
+you'll want to add that to your image. And what this comes down
+to is just simply adding a CORE_IMAGE_EXTRA_INSTALL+= on
+your core-image-aesd.bb file. So our core-image-aesd is where we're
+going to define the content of the image. And removing the comment here
+on CORE_IMAGE_EXTRA_INSTALL, we'll just mean that we'll bring in
+that recipe that we just defined core aesd-assignments in our layer. And you can space separate on this line or
+add multiple lines to add more packages and customize your image with
+additional content as you desire. Very similar to what we did when we
+use menu-config on buildroot and change the content of the buildroot image. This would be where you can customize
+what goes into your specific image. So one other thing I wanted to point you
+at in case you're having problems getting started, if you want to just start with
+a reference example that's built and tested and working,
+that just includes a really simple app. In this case, it's just an app
+that prints out, hello-world. The branch and repo here for
+yocto-hello-world, is a reference that you can see
+exactly what changes you need to make to the default assignment content in order
+to build and test a hello-world example. See, this might be a helpful reference. If you're having trouble
+getting your build to work, it might also be one that you
+might want to just spin up and build yourself to prove that your
+environment works correctly. So when we were building with buildroot, we talked about iterative changes and
+the OVERIDE_SRCDIR. Option for building that lets us
+specify where to build from instead of needing to change a commit harsh, and referencing an upstream repo every
+time we did a change to source code. There's a similar thing that you
+can do with the devtool command. And the devtool command is
+the one I went over earlier. That is also useful in helping you
+set up your initial package recipe. So using devtool, we can say again,
+starting with source pocky/oe-init-build environment, we can say devtools
+modify and then specify a recipe. And devtool will help us with
+modifications to that recipe. So if I say devtool modify
+aesd-assignments, it's going to spit out a workspace location where
+it's copied all of the code. And you can just do all your editing
+from that workspace location and any of the edits that you make there are going to
+automatically get reflected in your build. So once you make any changes and
+have everything working, you can do the next bitbake,
+build or build.sh to use the source instead of the commit
+hash that you've specified. Once you've got everything working,
+you can commit and push your changes from
+that working directory, which again is specified here in
+the output of the devtool command. You'll make all your changes there. You'll commit and
+push from that location and then go back to your main recipe and
+update the hash in your aesd-assignments .bb file to point to the latest
+working and tested changes. Then, if you do devtool,
+reset with your recipe that says ignore the changes in my workspace and go back
+to the content that I have in my layer. So this will let you switch back from
+a mode where you're only building and testing locally to one that you're
+changing in the image content and what you're sharing on
+your assignment repo. So that's pretty much it for the overview
+of the Yocto build sequence for assignment six. We'll get into some of the other specific
+details to assignment six in follow up videos. But this should give you an overview and
+idea about how you're going to be able to do your first
+Yocto build for assignment six.

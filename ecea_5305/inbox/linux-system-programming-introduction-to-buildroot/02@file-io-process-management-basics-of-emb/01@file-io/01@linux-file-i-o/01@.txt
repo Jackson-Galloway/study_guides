@@ -1,0 +1,101 @@
+Hi, students. In this video, we're going to be talking about Linux File I/O and some of the basics of how to use File
+I/O in user space in Linux. We're going to introduce
+Linux File I/O, we're going to talk about buffered I/O versus
+system calls, and we're going to deal with
+the most basic operation that you're going to do on
+files, which is opening them. In terms of how you're
+interacting with the kernel, files are also
+going to be opened via what's called
+file descriptors. You often see this
+abbreviated as FDs. An FD is really just
+represented by an integer. Both the kernel and user
+space are ultimately referring to files based on an integer value that's
+tracked in the kernel. The kernel is going to maintain a per process list of
+files in a file table. Every process is going to have its own custom list of files based on which file it's opened. That list of files
+is going to be indexed by the file descriptor, which again is just an integer. Every process in Linux
+is going to have at least three file descriptors open when it is created that is. The first is standard in which is the standard
+input and this is by historical precedent,
+file descriptor 0. This is your terminal
+input device. If you're using the terminal to interact with your program, this is where you're
+going to be typing input in from the keyboard. The second is standard out, which is file descriptor 1. This is the terminal display. If you're looking
+at print f output, this is where your print
+f output's going to be going to file descriptor 1. Then the third is standard
+error or file descriptor 2. This is also going to be redirected to the
+terminal display, but it allows you to
+separate which print output goes to possibly
+different targets. This is useful because if you're having an error occur
+in your program, you can send that to
+a different path than normal standard output and then possibly capture
+that separately. The output file descriptor 2 is where the error
+messages are typically sent. If you've done any type of
+POSIX programming before, you're probably used to fopen, fwrite, and fread. That's typically what
+you'll use if you're just writing a Hello World type programming and
+looking at examples. One of the things that
+you'll notice when we're talking about Linux
+system programming, is that we're using the ones that don't have the f prefix. We're using open read,
+write and close. The reason we are using the ones without the "f" prefix is that the "f" prefix functions relate to buffered I/O
+and not system calls. Again in this class, we're going to be
+talking about is the interaction between user
+space and kernel space. F calls are one step above the system call level interface and interaction with the kernel. There's another layer of buffering that's
+happening there. Those are useful. You would typically
+use them in programs, but we're going to
+talk about the open or the non "f" prefix versions of file I/O just because that's where the interaction is
+happening with the kernel. The non "f" prefix are the ones that are going to be
+using system calls. One other thing that you'll
+notice when you look at a call signature of
+open versus fopen, fopen is going to return
+a file pointer and the syscall version
+of open is going to return that file descriptor
+that we mentioned. This is what's
+actually happening in terms of the kernel and
+user space interaction, is an integer tracking
+and that gets abstracted into a file pointer when you're using buffered I/O. One other way that you
+can see the difference for this using the man
+pages that I've described, if you remember
+when we originally talked about man pages, I talked about the fact
+that you can look at the corner here and
+see references to the original Linux
+programmer specification from back in the 1970s. One thing that you'll
+notice when you look at these two different man pages is the fopen is actually in a different
+section of the manual. Because it's not a part of
+this syscall interface, it's actually in section
+3 of the manual, whereas the open functions are in section 2 of the manual. Again, just an indication that we're dealing with a
+different layer when we're looking at the fopen or the "f" prefix
+version of file I/O. If you dig into the
+source code for glibc, you can trace it
+down to the point that you can convince yourself that fopen calls actually are working with open
+calls under the hood. Here's an example of
+following the path through from where fopen is actually defined and used in glibc and where it's
+actually calling the under open command that maps to a system call under the hood. We can verify that
+fopen is really just a wrapper on open that's
+going to add buffering. Again, the difference between the fopen and open is just that the "f" prefix functions
+from the standard I/O are going to provide the platform
+independent user buffering. There's more details on this in Linux system
+programming Chapter 3, but ultimately file buffering just means that rather than reading and writing
+a full block, you're going to be reading and
+writing copies and memory, and that can improve
+performance. But what do we
+specifically mean when we say userspace file buffering? We mean that in the
+f's function cases, that buffering is
+actually happening in the userspace rather
+than in the kernel. One benefit there is
+that you can reduce the amount of system calls
+made into the kernel. There's more details on this again in Linux system
+programming Chapter 3, if you want to probe into
+this in a little more detail. It's fine to use the f based functions in your
+programming assignments. Again, we're talking about the non "f" prefix one just
+because we want to talk about the details of the userspace and kernel interaction for the
+purpose of this course. The open function
+again maps really close to what you're used to if you've already used fopen. We're just matching a path
+name to a file descriptor. When we pass in open to a path name of a file
+that we want to open, we're going to be returned
+a file descriptor we can use to reference that file
+from within our process. The flags that we can include
+are related to access, whether we want
+read-only, read-write. If we want to create append. There's a bunch of
+other things we can do like synchronous
+I/O that we'll talk about in later videos. Then when you are
+creating the file, there's a mode
+argument that you can use that gives read, write, or execute permissions for
+a user group or other, as we've already discussed using the Linux
+permission scheme.

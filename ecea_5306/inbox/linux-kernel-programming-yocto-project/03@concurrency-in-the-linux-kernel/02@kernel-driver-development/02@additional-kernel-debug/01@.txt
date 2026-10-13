@@ -1,0 +1,114 @@
+In this video, we'll talk
+about kernel debug strategies. A lot of this is going to be review because we've
+already talked about kernel debug
+in earlier sections. But what I found is that assignment 8 is really
+the first chance you have to try out a lot of the things that
+we've talked about in terms of kernel debug, so it's helpful to
+go back over these maybe with some
+specific Assignment 8 examples to help you get through Assignment 8 implementation
+more easily. Going back to what
+we talked about when we first talked about debugging, you might normally think
+of debugging applications using an interactive
+debugger, like GDB. Unfortunately, it's not
+that easy to deal with the driver and it's not typically what you
+do to debug your driver. It's possible to
+do some of this, you compile with debug info, but it's generally
+time-consuming and for the simple application
+that we're doing here, it's not something you'll
+probably want to look into. Part of the reason for this is, Linux is not really a fan of
+interactive debuggers and has not made a design goal of the Linux kernel to support interactive
+debugging generally. Again, there are
+some times that you can do interactive debugging, but it's complicated
+enough to set up and generally less useful for the simple case that
+we're talking about here. The KDB and KGDB, you'll see this
+reference in the book, and there are ways to use it and ways to enter debug mode, but I suggest that
+you know these exist, but don't plan to try
+to use these for any of the debug for
+assignment number 8. There's other debugging
+tools that are mentioned in the documentation or in the
+book about how to debug. User mode Linux is no longer really
+maintained and updated, that one's not really
+an option anymore. Linux Trace Toolkit
+is pretty useful, you can use it to trace events in the kernel for
+debugging and performance, and there's dynamic probing that was replaced by
+SystemTap and that's also a really useful
+framework to hook into Linux kernel and get some
+advanced debug information, but they're in the same
+category as GDB and KGDB that they're more difficult
+to set up and more complicated and probably
+not what you'll want to use for
+assignment number 8. There also is debugfs available as a way
+for developers to make information
+available to userspace. There's the proc
+file system that is intended for process information ended up having a whole bunch of other stuff thrown into it, and it's out of favor
+for new development. There's sysfs, which is
+a bit more organized and structured in a better
+way to do a driver debug, but this again is going
+to take some setup, not really something
+that you'd want to do with assignment number 8. One thing that you will potentially want to do
+with assignment number 8 is validate that
+your implementation doesn't have memory leaks. How can you do this? It turns out there's a
+kernel memory leak detector that does this for us and there's some details in the assignment document
+about how to configure this, but here's some example from build wrote about where you can configure kernel
+memory leak detector from the Linux
+Kernel menu config. Then here's some instructions
+about how you can get scan for memory leaks in your driver and
+then get a report, very similar to
+what you're able to do with Valgrind from userspace. Another thing I want to
+bring up that will be useful in terms of debug
+for assignment number 8 is bash -x or sh -x if
+you're running from QMU, and what this does is
+prints out the content of the command that's being executed in the shell before
+it actually implements it. This is really helpful
+if you're getting some obscure error
+message showing up and you don't know
+which command it's happening in from your driver. You can run with bash -x, and you could run with
+a redirect like this to save to a file and then
+you could attach the file, for instance, to Slack, to ask for help in trying to figure out
+what the problem is. But you can see that
+this is showing you exactly where we're
+getting this error, write error cannot
+allocate memory. It was right after
+we did an echo of the write 11 command. It really helps isolate where the problems are occurring
+in your driver and helps you figure out where you probably have an issue to
+resolve in your device driver. Where bash -x is really
+useful for scripts, strace is going to
+be really useful for interactions between userspace
+and your device driver, so that would include
+either the script or the aesdsocket application. Using them as an example where the script does a
+write onto the device, you can use strace to trace exactly what's happening
+here in this sequence. The open here is going to be opening the device and getting
+the file descriptor 3. In these next commands
+where you see the three, you're going to be
+referencing the device, dev aesdchar, this
+dup2 of 3 to 1 means that we're
+going to redirect standard out into fd 3, which is our device
+driver endpoint. That's going to be taking
+the output from standard out of echo and redirecting that
+into our device driver. Then because we're
+using our file descriptor 1 here
+for the dup command, the write command here, write1, is going to be the one that
+writes into our driver, and what you can
+see here is that, the return value is -1 ENOMEM
+or cannot allocate memory. Why do we get -1 ENOMEM here? It was because we return that from our write
+function in our device driver. This can be telling us exactly what's
+happening in terms of the interaction between user
+and kernel space and really helpful for figuring
+out why your driver is not doing what you
+expect it to do. If you use the -o option, you can write a text file that you could
+then again post on Slack to share with other students to help get some input about what
+might be going wrong. Here's an example of what a strace output looks like
+from a working driver. You can see that if we run strace on our
+aesdsocket application, we'll be tracing what's actually occurring between aesdsocket and our device driver by looking
+at the output of strace. This opener, you can
+see where we did our open from within
+aesdsocket and you can see that we got a file handle of seven for our dev
+aesdchar device. You can look at the right
+options to see that a right issue to file descriptor 7 is ultimately going to be what's written
+into our device, so in this case,
+socket test script was writing abcdefg\n, total of eight bytes, and our device driver returned
+eight bytes here. This can be, again, really
+valuable to see what's happening under the hood and where maybe problems
+are arising, especially in terms
+of what's being passed in and what's being returned from your read or write functions in
+your device driver.

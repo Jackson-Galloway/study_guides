@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Final Project Sprint 2</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h1>Github Classroom Link (see final project proposal link)</h1><p>There is no video for Sprint 2 or 3.  Refer to the video for Sprint 1, each Sprint will use the same format.</p><h1>Implementation:</h1><p>1. Check in all code for the project to your project repositories.  Your code should build and run, and status of the build should match the status given in issues on your project repositories.</p><p>2. Update your Project Overview wiki page with any changes since the last sprint or since the original project proposal.   See <a href="https://github.com/cu-ecen-aeld/final-project-assignment-dwalkes/wiki/Project-Overview">Project Overview</a> for the template (same one used for the project proposal assignment).  If/when editing, add an edit message describing the reason for the change.</p><img alt="AOAl-_j2HSR4L9ICGDwUMAZWQEszw1sUJYpzcGXI4XgKIa5f0dKN7tQTzdUTANOv12B_1J4uLdLhvehuiVdVNPoUP2WuhuM0Ny66pTpBORnwwdgLzrCq2oVoj6c1qKyMG43jHYvyTHoC8tQUsMk52d4" src="AOAl-_j2HSR4L9ICGDwUMAZWQEszw1sUJYpzcGXI4XgKIa5f0dKN7tQTzdUTANOv12B_1J4uLdLhvehuiVdVNPoUP2WuhuM0Ny66pTpBORnwwdgLzrCq2oVoj6c1qKyMG43jHYvyTHoC8tQUsMk52d4"/><p>3. Update your Schedule page (based on <a href="https://github.com/orgs/cu-ecen-aeld/projects/17">Project Template</a>), linked from your Project Overview wiki page, to schedule issues for the next upcoming Sprint and close any issues completed in the previous sprint.  For multi-person groups, each group member is responsible for ensuring sprint issues are assigned to them and ensuring they’ve closed issues assigned to them resolved in the current sprint with appropriate detail included.  When necessary (if project overview sections have become out of date), students must update the project overview wiki page based on issues assigned to them.</p><ul><li><p>Closed issues should be assigned to the group member who closed them, and updated by this group member.  At least one closed issue should be assigned to each member to track what they accomplished in the current sprint.</p></li><li><p>A comment in closed issues should mention that Definition of Done is verified, with any relevant details including a general description or link to code changes made and description of testing which was performed.  The Definition of Done should be updated, if necessary, to match what was completed in the sprint.</p></li><li><p>If a sprint item is partially done, you should redefine the issue to include the portions already done, mark the item resolved in the sprint, move undone portions to a new item, and reference this item in the resolved issue as the follow-on task.</p></li><li><p>Issues should be assigned for each group member in the upcoming sprint with DoD defined.</p></li><li><p>Blockers should be identified and updated for closed and updated/new issues.</p></li><li><p>Use the “edit” option to edit the description and ensure it is up to date for each issue before closing.</p></li></ul><img alt="jPS79IYj0x3Nnr99EIPEfP7uccAH04Ck6edwrPV1EerKTgLoIvYFQ3NsVz1PfUwrm0XObRjgNE1Jm9P_1v4ttmHxEplgFR1QUStcHMrj5B4WFxIZEl07oMsIMJ1YeSB9W0Rywr73BCg1sS8FZjVgNWE" src="jPS79IYj0x3Nnr99EIPEfP7uccAH04Ck6edwrPV1EerKTgLoIvYFQ3NsVz1PfUwrm0XObRjgNE1Jm9P_1v4ttmHxEplgFR1QUStcHMrj5B4WFxIZEl07oMsIMJ1YeSB9W0Rywr73BCg1sS8FZjVgNWE"/><h2>Submission:</h2><ol type="1"><li><p>Your Peer Review Submission Must Include a Link to your (individual student) Final Project Repository which links to the overall project overview. This is necessary for peer review assignment, also necessary so your reviewer can find your project.</p></li><li><p>Code should be checked in corresponding to closed issues.</p></li><li><p>At least one closed issue should be assigned (solely) to each project member.</p></li><li><p>The Project Overview page should be updated as described above.</p></li><li><p>Closed issues should include the detail mentioned above</p></li><li><p>The Schedule Page should be up to date and accurate.</p></li><li><p>For sprints 1 and 2: </p></li></ol><ul><li><p>Issues for the next sprint should be created as described in the schedule page, and include the content referenced above.</p></li><li><p>Issues should be assigned to each group member for the upcoming sprint.</p></li></ul>
+  </div>
+</body>
+</html>

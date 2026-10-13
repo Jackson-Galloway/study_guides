@@ -1,0 +1,288 @@
+In this video, I'm
+going to talk about device driver file operations. Learning objectives,
+we're going to talk about driver data structures, file operations, and file. We're going to talk
+about the open and release method for drivers. file_operations is one of the
+data structures that we've mentioned in the
+previous video when we were talking about
+registering a char device. It's something that connect driver operations
+to devise numbers. So open, read, write, a lot of the functions that
+we are talking about from system programming for the
+first part of the semester, the file_operations table is
+going to tell the kernel for a specific device
+number when you get a reference from
+userspace that's attempting to do one
+of these operations, here's the function
+you should call inside the driver to actually
+perform that operation. The fine operations table or structure and other
+structures that are using the kernel use an
+object-oriented paradigm, which when you think
+object oriented, you might not immediately
+think C programming. You might think if you've taken C++ courses, for instance, that this is something that's unique when
+you're coming from C++, that C++ has the
+object-oriented features built into the language. But it turns out, you
+can do the same thing with C if you just use structures and you
+have functions that pass pointers
+to the structures. It's really the same thing
+that's happening in C++. It's just in C++, the
+compiler is doing it for you. This can be a neat
+thing to learn and to bring into
+your C programming, if you haven't been
+exposed to it yet. The file_operations table is
+also abbreviated as fops. We'll use that
+abbreviation here, and the book does in
+some cases as well. The second structure that will reference is the file structure, and you might already be
+used to a file pointer and a file reference for buffered
+IO from like f open, f write, etc., that you've probably used
+in the past from Gypsy. But it's not really related
+to that in the file. The capital file
+pointer is really all talking about buffering IO
+happening in userspace. This is an access to a
+file that's associated with a specific device end
+point in kernel space. It's going to
+represent an open file or a specific open
+and close instance. When someone opens your driver
+based on your device node, there'll be a file structure
+that's associated with that, that's going to be passed
+around in the kernel, tracking things like
+where you're reading to or writing from on-device
+at any given instant. This happens in response
+to a driver open of your slash dev,
+your dev endpoint. You can open this just like
+you could open a file, and when you do, you'll have a file structure that's
+associated with it. You can really think of this as an access to a specific
+file on the file system. This is referred to as either as a file or a filp, file pointer. Then there's also inode
+that represents a file. An inode is really just a representation
+of a specific file, so not necessarily an
+open file descriptor. We're going to register our
+file_operations structure with register_chrdev. You can see that as one of the parameters that
+we're going to pass in the sleepy_init for
+the sleepy module that we used in the last video. One of the things
+you'll notice about the definition in the
+file_operations structure. First, if you look
+into the kernel source and you look at how the file operation
+structure is defined, you'll see a whole bunch
+of functions in here. However, if you look in
+a driver implementation, you'll typically only see
+a few functions to find. Like in this case, in
+the sleepy module, we just defined read and write inside the file
+operation structure. How does this work? It works because
+of what's called C tagged structure
+initialization syntax. What this says with this dot read and dot
+write is you're just specifying what the
+callback functions are for read and write, and for everything else, it's going to be initialized
+to a null pointer. The kernel is smart
+enough to know that when the table includes a null
+pointer for a given function, callback, just do the
+default action in the kernel and don't
+expect this to be actually implemented
+in the driver. In a lot of case, this would
+be an error coming back to userspace to say not
+implemented, for instance. But this is the basic
+way that we can map a table of file of function pointers
+into the major number that's associated
+with our device. If you look at the sleepy read function
+here that's defined, this function signature is going to match the
+signature that's defined in the file_operations
+function pointer table for the read function, so defined right here. We'll talk more about
+how these parameters are used when we get
+into the details of what a read and write is. If you look at the
+definitions for all the different file
+operation functions, there's a bunch of them
+that are listed in the book and all of them are out of date. At a high level, they describe what the function does but in terms
+of the parameters, they're all based on an
+old version of the kernel. How would you find versions that are
+matching your kernel? This is a really important
+thing that we're going to keep repeating a lot when we talk about source
+code but really, the strategy here is our TSL
+or read the source loop, if you've ever heard
+that expression, like a bad StarWars reference to use of the [inaudible]
+But Read The Source Luke, meaning that Linux
+kernel developers, in a lot of cases, are going to expect you to go in and read the source code to know how you should
+define certain things. Not everything is
+going to be documented in a separate document. Books, in general, aren't going to be able to
+keep up and this class, unfortunately, probably isn't going to be able
+to keep up either. You always are going to
+have to use the source code as the standard of what you
+need to do to implement. Unfortunately, the changes
+between versions are usually pretty minor and
+even more importantly, the changes are all tracked
+in Git and you'll be able to see exactly what was changed and the reasons
+for the change. You can sleuth around and figure out what you need to do based on access to
+the source code. There's a couple different
+references I like to use. You can get kernel source
+from lots of different ways. What I'll use in this class is a combination of two
+different places. One is the Linux kernel
+Git source tree, so we're just going to be using Linus Torvalds actual
+GitHub repository where kernel development is going
+on and where the tags associated with Git
+kernel releases are actually happening. This is just a mirror of the Git repository that he's
+using, for development. Pretty cool that we actually
+have access to this, the person that
+originally designed the OS and it's
+available for us. This is really useful
+for doing things like searching through
+commit history, if you want to figure out where a specific line came from, you can use the blame
+feature of Git and figure out which commit was
+associated with it, go back and read the
+commit comments. A Lot of times the commit
+comments are really detailed, they have a lot of
+useful information. There's a lot of
+information you can mine from GitHub that's
+really useful. Another one that I use is
+Linux kernel Cross-Reference, and it's located at this URL. Incidentally, the
+folks at Bootlin here are some of the ones that
+are behind the Buildroot OS. They've got a lot of
+experience in embedded and this is a really useful
+site for cross-referencing. Meaning like if you have a
+structure, for instance, to file a operations
+structure that I see before, you can enter that into the search box here and it'll show you where it's defined,
+where it's referenced. It's better than just a grep because it's
+intelligent parsing of the code and it helps you find references to things like
+structures or functions. A combination of these two
+are typically what I use for understanding how
+the kernel source works. That and just searching it if I have the kernel source
+downloaded on my machine. The latest list from the cross-reference site that's linked below is shown here, and what you'll notice is that
+most of those functions in the file operation structure use a file object as the
+passed parameter. This is what I was
+talking about, what the object-oriented
+paradigm, we're using the file as the object and all these
+functions can be called with different file pointer
+values and they'll operate differently as in on a
+specific file object. This is another
+key thing to know about Linux kernel functions. You typically don't want to use global variables because you want to write it such that you can have multiple files open at a time and you can do different things on
+different files. If you're using globals that probably means
+that you are going to be not keeping
+that separation. You're going to be doing
+something globally based on something that happens
+with one file operation, and then that's going
+to change the behavior for another second file. The best option is usually to have a structure that
+contains information about state and link
+that somehow into the structure that's passed into the function you're using
+with file operations. Talking specifically
+about the file structure, there are several parameters in here that will probably
+make sense to you when you think
+about what type of operation you're going to
+be doing with file access. The f mode is going
+to talk about whether the files readable and writable. The f pos is going to show the current read/write
+position so the same thing you do with setting file position
+from user space, f flags is going to have
+things like read only, non-blocking, sync, that we've talked
+about from user space. The f op is going to be a pointer to
+the file operations table. This will tell you where the file operations
+table comes from, basically that
+you've provided when you created the device. There's also a private
+data which you'll see in some different
+structures in the kernel. The point behind the private
+data structures is that if your kernel needs to allocate some memory associated with
+a given file instance, you're free to use this in your kernel to hold a
+pointer to that memory. You can malloc the memory and change the private data
+to point to that memory, and then you'll be
+able to access it for every function that passes
+the file parameter, you just have to
+remember to free it when you do the release call. Going back to chart
+device registration, we showed one example, actually we showed a
+couple of examples in the last video but
+there's really a couple of methods that are used to register a device or a
+chart device in this case. One is you could just
+have the kernel allocated for you as a chunk of
+memory with cdev_ alloc. In this case we just
+have a pointer, we have the kernel do
+the allocation for us, and then we set
+up the ops table. That's one way to do it but a more typical way
+to do it would be to place a cdev structure inside your own custom structure
+that's used for your driver and then
+just pass a pointer to the function
+that's cdev in it, and then call cdev add with
+that same cdev structure, and the device
+number that you get from the register step, and the number of devices
+that are associated with it. You cdev del, when you're ready to delete the device when there's
+no more accesses. For example, the scull device driver
+that we talked about, there's a char device
+structure that's embedded inside the
+scull device structure. This is a pretty
+common way to do it. For instance, when
+you open the device node from User space that will ultimately map to this
+open function pointer that you'll implement and
+set up in your f_ops table. The common things that
+you do an open method, you check for device error. If there's some reason
+that you shouldn't allow operations to happen on your device you
+check for that here and you return the
+appropriate error. If it was the first open
+that was happening, you might want to do some
+initialization on the device. You would update
+the f_ops pointer to point to file operations. Then if needed you
+could allocate and fill the private data
+member of the file pointer. Here's what the function
+prototype looks like. It's passing in an inode its
+structure and struct file. One thing that's
+notably missing from that prototype is
+the c_dev structure, the character device
+structure that we registered. How did we get from an open that takes a struct
+inode and the struct file, how do we get the
+c_dev pointer that we originally registered
+for a specific device? This is a pretty common
+thing that you do with Linux Kernel
+programming as well. You end up doing a
+little bit of a where's Waldo type of following? Looking at the
+details of whatever structure you're provided with a function call and figuring out how to get from there to
+whatever structure you want, when I look at the definition
+of the inode structure, I'll see a union in there. One of the items in the
+union is this i_cdev. I can see that there's a
+pointer to a struct cdev here and I can
+dereference inode, i_cdev, and get a pointer
+to my c_dev structure. Let's say I have a pointer
+to the c_dev structure and I use this option
+where I embedded this c_dev structure in my scull_dev structure that is associated with my device, how would I get a reference then to my scull_dev structure? It turns out there's
+a pretty cool tool that you can use for
+this that's based of the fact that you can
+do pointer math in c to figure out where a structure is based on the
+structure definition. This container of macro is going to take a
+pointer and a type, in this case, the structure, and then a field
+within this structure, so the c_dev field. If I have a pointer
+to this element, and I know that this
+element is that this specific location
+in the structure, the container of macro can
+do the math to figure out, okay, where's the first byte of this structure based
+on the offset here. The container of macro can take in this case
+the inode, i_cdev, or the pointer to the
+cdev so pointer to this particular location and it can take struck scull_dev, so it's the overall
+structure definition and it takes cdev which
+is the particular entry that matches this
+pointer that we passed and the value that
+we get back is the pointer to the
+scull device structure. What this would be
+if you wanted to use that to hold the private data, you could then use the scull_dev as a pointer
+into private data. If you wanted to, you could
+use it as private data, but you could also just use this to do general operations. If something in my open needed to access one of
+these variables, I'd be able to just
+do that through the local variable I
+reference here in-depth. Another common thing that
+we're going to see with Linux Kernel functions is
+there's always a balance. Or a lot of times there's a
+balance with things like, we've already seen this
+within it and exit. Everything you do in it
+you need to undo an exit. Releases the same way with open. Everything you
+allocate and open, you have to make sure you
+release in the release method. Really release is what you do to deallocate
+anything that was up. If you use, for instance, the file pointer private
+data and you set up some private database
+on allocated memory, you'd want to make sure you're deallocating that and release. But the scull implementation, there's actually nothing that needs to happen in release, you'll see, you'll see
+an empty function here. The reason is just because
+the data that was pointed to in the file PE private
+data structure was allocated init_module. You'll notice that it was
+referencing the scull device, but that was actually
+allocated here in init_module, so that'll be freed
+and in module exit. Again, you have to look at where your memory allocation
+is and take whatever is basically the opposite of
+that implementation and put your release memory or you're free of
+memory in that case. If we need to
+deallocate anything in open that was allocated, what would happen if the
+User space programmer forgets to close the file? It turns out the Kernel
+is going to clean this up automatically for
+you at process exit. When the process exits, you're going to be
+guaranteed to get exactly one release per open. Multiple processes might close if a fork or a doop
+happen for instance. Like what we used for
+creating daemons. Multiple process might close, but only the last clause is
+going to result in a release. All this is handled for you
+by the Kernel framework and you're going to be
+guaranteed that you get exactly one release open.

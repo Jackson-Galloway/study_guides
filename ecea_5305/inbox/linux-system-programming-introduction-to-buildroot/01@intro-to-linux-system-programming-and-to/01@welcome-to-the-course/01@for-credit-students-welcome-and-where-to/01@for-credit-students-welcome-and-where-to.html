@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For-Credit Students: Welcome and Where to Find Help</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h1>Welcome, students! </h1><p>We are excited to have you with us here at the University of Colorado Boulder and we look forward to supporting you throughout your time with us! </p><h1><strong>Course Content Support </strong></h1><ol type="1"><li><p>Attend your Course Facilitator’s Office Hours</p><ol type="1"><li><p>You can access these via the Live Events tab on the left-hand side of the Course home page</p></li></ol></li><li><p>Reach out to your Course Facilitator via the course support email: <a href="mailto:msece-support@colorado.edu">msece-support@colorado.edu</a></p><ol type="1"><li><p>Please include the ECEA XXXX where XXXX is your course number in the subject line</p></li></ol></li><li><p>Ask your peers for support or suggestions in a discussion forum</p><ol type="1"><li><p>Note that Course Facilitators do not monitor discussion forums</p></li></ol></li></ol><h1><strong>Technical Support </strong></h1><ol type="1"><li><p>Reach out to your Course Facilitator via the course support email: <a href="mailto:msece-support@colorado.edu">msece-support@colorado.edu</a></p><ol type="1"><li><p>Please include the ECEA XXXX where XXXX is your course number in the subject line</p></li></ol></li><li><p><a href="https://www.coursera.support/s/article/learner-000001031?language=en_US"><u>Contact Coursera's technical support team</u></a></p></li><li><p><a href="https://www.coursera.support/s/article/learner-000001489?language=en_US"><u>Flag the issue</u></a> in the course (<em>non-urgent issues only</em>)</p><ol type="1"><li><p>Course Facilitators check flags weekly, but an email to the course support email is preferred! </p></li></ol></li></ol><h1><strong>Any other degree related support</strong></h1><ol type="1"><li><p>Please include the reason you are reaching out in the subject line</p><ol type="1"><li><p>Reach out to Program Staff via the course support email: <a href="mailto:msece-support@colorado.edu">msece-support@colorado.edu</a></p></li></ol></li></ol>
+  </div>
+</body>
+</html>

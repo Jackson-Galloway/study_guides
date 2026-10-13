@@ -1,0 +1,207 @@
+In this video, I wanted
+to add a few tips beyond just getting
+the basic build done to describe some more tips for using Buildroot
+for your project. The learning objectives
+here we'll just be giving additional tips
+for using Buildroot, and also for completing
+assignment Number 4. First is you might
+notice in some of the scripts that they
+start with their name $0. I wanted to describe
+what this was. You can use $0 to reference the full path and name of the executable
+that was started. If you started a script.sh
+from some path and you use /path/toscript.sh, then $0 would have that /pathtoscript.sh
+as the full name of the path that we executed. The dirname strips out
+just the directory path. That would give us /pathto. When we do cd `dirname $0, what this is doing
+is that we change directory into the path
+where the script is located. This allows us to
+ensure that when we're calling a script
+from some other path, we always cd into the directory containing the
+script before we run it. This way, if we have other scripts that we're
+going to reference, we can reference that knowing
+that we're running from the directory where
+the script is located. I also wanted to talk about single package rebuilds
+and local builds. You might be used to, as a brute force every time
+you make an executable, you do a clean step and
+then you do a build step. Well, it turns out that clean
+steps are really painful when you're building an
+entire embedded system. Because if you think about all the different things
+that you're building as a part of a make operation, it's going to take probably
+hours to get the build done depending on the capabilities
+of your host system. You really want to
+avoid doing clean builds in terms of
+cleaning the entire image. You want to be able to iterate on changes to an
+individual package easily. There's several different ways
+to do this with Buildroot. One is, if you
+just want to build a specific package, you can say, make the package name-rebuild or make the package
+name reconfigure, from the Buildroot directory, in order to do just that build stuff for that
+particular package. If you remember in our
+package,.makefile, we specify an
+individual commit hash that maps to the source
+that we want to use. Well, what happens when you're trying to fix something with your code and you're making
+a whole bunch of changes. You don't want to have
+to push those up to the Git repository and go in and change that commit hash
+over and over again. You can use local
+builds for that. You can use a make argument that specifies the
+name of your package, and then uses
+OVERRIDE_SRCDIR equals, and then just give it a path
+to the local directory. What this will do is ignore the Git URL that you
+specified for this build, and instead, find
+the source code at the location that you specified
+here at pathto local. You combine the AESD assignments override SRCDIR with the make AESD assignments rebuild or make AESD assignments
+reconfigure, to iterate really quickly on changes that you have
+to your local source. I encourage you to
+read about these, and test the model
+with this assignment, get used to using them. Because as we get more
+complicated assignments later, it's going to be
+important that you use this as part
+of your workflow. Whatever you do, do not do a clean build
+every time you make a change because
+it's going to take you forever to get
+the assignment done, waiting for your
+builds to complete. The other thing I mentioned, the builds are going to take
+a long time to complete. You're probably
+half-hour to hour range depending on the
+capabilities of your hardware. What if, if you're using SSH as a part of
+your workflow and your screen session dies or
+is closed for some reason, like for instance, maybe if you lost network
+connectivity or something, what would happen to your build? Your build actually
+stops in that case. If you are using SSH as part
+of your workflow and you're SSHing into the system that
+you're using for build, one alternative is
+that you can have a dedicated screen
+session for your Build. You can use this like this, you can define a
+build screen session, then you can start the build
+from within the session, and then you can use
+Control ID to disconnect. To reconnect you
+can use screen-r. This just helps keep
+long-running tasks happening in the background and not end
+on you and your SSH session. You can read more about
+the screen command in the link that
+I provided here. Another thing that
+I'll provide as a tip, I mentioned before that we
+need to use the SSH URL, based on the fact
+that we want to automate the build and we are using a private repository, which is typically
+probably going to be the case for your
+production builds as well. If you kick off a normal build, there's a bunch of work
+that the builds are going to do first
+install a toolchain. It'll be quite a while
+before it actually gets to the point that it needs
+to compile your package. When it gets to that point, that needs to compile
+your package, if you have a password
+associated with your SSH key, then it's going to stall
+there waiting for you to enter your key so
+that it can continue. What I suggest instead is
+either use a passwordless key or use SSH agent in
+your terminal session. In the same window that
+you're using to do the build, you'd run these commands,
+eval SSH agent, and then SSH add with
+a path to your key. It'll ask you for your key and you'll enter your
+key at that time. Then, after that point, any of the SSH-related commands that happen after that
+will automatically use your key and the credentials
+that you've already stored in that particular
+terminal session. Another thing I
+wanted to mention, students have had
+weird errors in the past because
+they've used spaces in paths and you can get some really confusing
+errors out of Buildroot if you do this. This is not something
+that's typically done. If you're coming from Windows, this might be more normal
+to you to have a space in a path or in a directory
+name for instance. That's not a very
+common thing on Linux, and it's not something that's well-supported by any
+tools, including Buildroot. Please avoid doing that
+and don't use a space, use an underscore or
+a hyphen or something like that if you need to separate words in a
+file or directory path. The other thing I
+wanted to mention, we've talked about SSH already and some of you might
+be using SSH as part of your workflow for accessing
+a Linux system for builds. I wanted to talk about using
+SSH passthrough for QEMU. Starting with Assignment 4, we'll use SSH to interact
+with our QEMU system. With Assignment 3 we had a
+really simple environment where we just booted
+right into a terminal and we interacted through
+that terminal. With Assignments 4 and later
+we're going to set up SSH, since Buildroot makes
+that easy for us to do. Then we're going to SSH
+into our QEMU instance. The way that we're going to
+start our QEMU instance, we're going to use a
+version of networking that essentially shares networking
+with the host system. If you're using a Linux
+system and you're using SSH communication
+over TCP port 22, your QEMU is not going to
+be able to use that port because that's already in
+use by the host system. We need to modify our QEMU start script to
+forward port a random port to our QEMU port 22 inside the virtual machine or
+inside the test image. We've picked 10022 for that. You can pick any
+number that you want. This is just going to be
+the standard for the class. The important thing to know
+about this is that when you're using SSH to interact, you're going to use
+the -p argument for SSH to specify
+that port number. That's going to map
+to port 22 inside your embedded QEMU instance. This is another
+important thing to note, I'm not sure why it
+works this way but the scp command that you'd use for copying
+files in and out, for that one you actually use a P instead of a
+lowercase p. You can get some confusing error message
+if you use a p with scp. I just want to make
+you aware of this. I mentioned before that
+you don't want to just do clean builds by default
+with Buildroot. However, sometimes
+it is necessary to do a clean build
+for Buildroot. This is one of the ways
+that Buildroot can be a little bit more confusing
+than a tool like Akta. If you read through
+the Buildroot manual, what it says is that it's
+the responsibility of the user to know when a
+full rebuild is necessary. Then it gives some examples of when a full rebuild
+is necessary. One is when a target architecture or toolchain
+configuration change. If you ever change something fundamental
+like the toolchain, if we switched from glibc to musl or
+something like that, that would be a case where you definitely
+need a full rebuild. If you remove a
+package in order to actually remove that package
+from the root file system, you can either delete it
+out of the root file system yourself or you have
+to do a full rebuilt. This part can be a little bit confusing to people
+starting out. Sometimes when packages are added that reference
+other packages, you can get into
+a scenario where you need to do a full rebuild. It's more complicated
+scenarios than what we're going to get with
+this first assignment, but wanted to let you know
+that this was coming up. If you're changing options on a package that's already
+included in the image, this can be a case
+where you need to do a full rebuild to pick those changes up or you need to rebuild that individual package. I bring this all
+up because running a clean step and then
+running build usually is actually a troubleshooting step that you'll want to
+use with Buildroot. Especially if you've
+done anything that might have been
+something in this list. But you definitely don't want to use this for
+incremental changes. If all you're changing is
+the content of your package, then a clean build is
+not going to help you and it's going to take a
+long time to complete. We already mentioned
+the single package rebuild and local
+Build instructions. That's what you should
+be using when you're iterating our changes
+to your package. But if you change something
+globally in configuration, I just want to make you
+aware that there are times you will need to do a
+clean build in that case. I mentioned that you could
+manually remove the content from the root file system. This is one handy
+thing about Buildroot. There's this Buildroot
+output directory that contains a
+target sub directory. Inside that target directory you see this message that says, "This is not your
+root file system." What this is telling you is that your root file system is not
+an exact replica of this. By manipulating this,
+you aren't necessarily manipulating things
+like permissions of the content of your
+root file system. However, this does contain the content that's used to build your root file system image. You can go in here and manually remove packages if you have removed them from your
+image and they will be reflected in the image
+that shows up ultimately. You can sometimes use this as a shortcut so that you
+don't have to clean build. It's also a good
+troubleshooting step. If you know that you're missing a file in your
+image for some reason, rather than having to completely build the image and then
+boot it up and QEMU, you can just run your
+package Build and look to see if it's been
+installed in this directory. If it hasn't been, then you
+know it's not going to be there when you complete
+the imaging step as well.

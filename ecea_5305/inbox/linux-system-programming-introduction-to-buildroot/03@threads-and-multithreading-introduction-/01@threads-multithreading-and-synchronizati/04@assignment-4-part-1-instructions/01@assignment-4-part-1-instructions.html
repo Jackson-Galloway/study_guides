@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 4 Part 1 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2><strong>Assignment 4 Part 1: Threading</strong></h2><h2><strong>GitHub Repository Start Instructions</strong></h2><p>Your assignment 3 repository will contain source code used in previous assignments, which will ultimately be placed in your embedded images built using buildroot and yocto in later assignments.  With this assignment, you will add some threading related test code implementation to your assignment 3 repository.  To pull in this code you’ll need to start by merging in the latest content from assignments-base, including new test content.  From your assignment 3 repository:</p><p>git fetch assignments-base</p><ul><li><p>Fetch the latest content from the starter code remote added during previous assignments</p></li><li><p>This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in assignment 2.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p></li></ul><p>git merge assignments-base/assignment4</p><ul><li><p>Merge the assignment 4 starter code from the assignment4 branch of the aesd-assignments repository into your main branch</p></li></ul><p>git submodule update --init --recursive</p><ul><li><p>Update automated testing source</p></li></ul><p>git push origin main</p><ul><li><p>This pushes your main branch, including previous assignment source and content merged from assignments-base to your working repository for this assignment.</p></li></ul><h2><strong>Repository Setup:</strong></h2><p></p><img alt="assignment-4-part-1.PNG" src="assignment-4-part-1.PNG"/><p>Note: The following links are external and will open in a new tab.</p><h2><strong>Implementation:</strong></h2><ol type="1"><li><p>Make modifications in the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment4/examples/threading/threading.c"><u>examples/threading/threading.c</u></a> file to implement the TODO there related to lecture content and  start_thread_obtaining_mutex() as described in <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment4/examples/threading/threading.h"><u>examples/threading/threading.h</u></a>.  See provided test code in <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment4/Test_threading.c"><u>https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment4/Test_threading.c</u></a> which will verify your implementation.  Run <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment4/unit-test.sh"><u>./unit-test.sh</u></a> to test your implementation using unity unit tests.</p></li></ol><p>Tag your repository assignment-4-part-1 using <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Tagging-a-Release"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Tagging-a-Release</u></a></p>
+  </div>
+</body>
+</html>

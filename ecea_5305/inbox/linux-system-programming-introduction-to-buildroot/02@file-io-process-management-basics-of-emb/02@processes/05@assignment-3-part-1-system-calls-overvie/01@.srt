@@ -1,0 +1,336 @@
+1
+00:00:00,290 --> 00:00:03,210
+In this video, we'll
+do an overview of
+
+2
+00:00:03,210 --> 00:00:05,700
+the first part of Assignment 3,
+
+3
+00:00:05,700 --> 00:00:07,500
+where we're going to implement
+
+4
+00:00:07,500 --> 00:00:10,080
+some system calls functions.
+
+5
+00:00:10,080 --> 00:00:12,060
+This assignment is
+going to start with
+
+6
+00:00:12,060 --> 00:00:13,620
+a GitHub Classroom link again.
+
+7
+00:00:13,620 --> 00:00:16,440
+You'll use the Git
+instructions here to take
+
+8
+00:00:16,440 --> 00:00:17,670
+your previous content from
+
+9
+00:00:17,670 --> 00:00:21,030
+Assignment 2 and push it
+into your Assignment 3 repo,
+
+10
+00:00:21,030 --> 00:00:23,340
+also to pull in some
+example content that we've
+
+11
+00:00:23,340 --> 00:00:26,700
+got in starter code for
+assignment Number 3.
+
+12
+00:00:26,700 --> 00:00:29,445
+Your repository setup
+will look like this.
+
+13
+00:00:29,445 --> 00:00:30,960
+You'll have your
+local repository
+
+14
+00:00:30,960 --> 00:00:32,550
+for the previous assignment and
+
+15
+00:00:32,550 --> 00:00:33,780
+you're going to point it to your
+
+16
+00:00:33,780 --> 00:00:35,730
+new Assignment 3 repository.
+
+17
+00:00:35,730 --> 00:00:36,990
+You're also going to pull in
+
+18
+00:00:36,990 --> 00:00:39,930
+the base repository starter code
+
+19
+00:00:39,930 --> 00:00:42,450
+from the Assignment 3 branch.
+
+20
+00:00:42,450 --> 00:00:45,145
+You'll set up GitHub Actions
+
+21
+00:00:45,145 --> 00:00:47,440
+again so that you have
+automated testing of
+
+22
+00:00:47,440 --> 00:00:50,590
+your repository using the
+same Wiki instructions
+
+23
+00:00:50,590 --> 00:00:53,105
+that you use for the
+previous assignment.
+
+24
+00:00:53,105 --> 00:00:55,050
+Then you're going to modify
+
+25
+00:00:55,050 --> 00:00:56,800
+your finder-app/finder-test
+script to
+
+26
+00:00:56,800 --> 00:00:58,450
+remove that make step that you
+
+27
+00:00:58,450 --> 00:01:00,890
+added with the
+previous assignment.
+
+28
+00:01:00,890 --> 00:01:03,550
+Then you'll make some
+modifications in
+
+29
+00:01:03,550 --> 00:01:06,250
+the systemcalls.c file,
+
+30
+00:01:06,250 --> 00:01:07,570
+that's provided as a part of
+
+31
+00:01:07,570 --> 00:01:10,525
+these assignment base reference,
+
+32
+00:01:10,525 --> 00:01:12,970
+that'll implement
+the TODOs regarding
+
+33
+00:01:12,970 --> 00:01:15,100
+the content that we discussed in
+
+34
+00:01:15,100 --> 00:01:18,130
+the videos with system
+and exec functions.
+
+35
+00:01:18,130 --> 00:01:21,745
+If you want to see how this
+code is going to be tested,
+
+36
+00:01:21,745 --> 00:01:23,110
+you can see the
+reference here to
+
+37
+00:01:23,110 --> 00:01:25,550
+the test system calls function.
+
+38
+00:01:25,550 --> 00:01:28,580
+But if we just look
+at the implementation
+
+39
+00:01:28,580 --> 00:01:30,170
+here of systemcalls.c,
+
+40
+00:01:30,170 --> 00:01:31,895
+this file that
+you'll be provided,
+
+41
+00:01:31,895 --> 00:01:34,040
+there's TODO sections in
+
+42
+00:01:34,040 --> 00:01:36,120
+here that describe what
+you need to implement,
+
+43
+00:01:36,120 --> 00:01:37,790
+but it's all just about using
+
+44
+00:01:37,790 --> 00:01:39,890
+the system call that
+we discussed in
+
+45
+00:01:39,890 --> 00:01:42,560
+previous videos
+and then replacing
+
+46
+00:01:42,560 --> 00:01:47,520
+the system call
+with calls to fork,
+
+47
+00:01:47,520 --> 00:01:49,620
+execv, and wait.
+
+48
+00:01:49,620 --> 00:01:51,590
+Then finally, you'll
+have a version
+
+49
+00:01:51,590 --> 00:01:53,360
+of this that uses execv,
+
+50
+00:01:53,360 --> 00:01:56,075
+but redirects the
+standard out to a file.
+
+51
+00:01:56,075 --> 00:01:59,490
+This file is specified
+in the output file.
+
+52
+00:01:59,810 --> 00:02:02,120
+In order to test
+this, you'll be able
+
+53
+00:02:02,120 --> 00:02:06,230
+to run your./unit-test of
+
+54
+00:02:06,230 --> 00:02:08,900
+the repository and
+that'll run all the unit
+
+55
+00:02:08,900 --> 00:02:10,205
+tests including this one
+
+56
+00:02:10,205 --> 00:02:12,445
+that will verify
+your implementation.
+
+57
+00:02:12,445 --> 00:02:14,570
+Here's an example of what
+you should see when you
+
+58
+00:02:14,570 --> 00:02:17,070
+run your unit test application.
+
+59
+00:02:17,840 --> 00:02:23,830
+You should see it compiling
+the files that the
+
+60
+00:02:23,830 --> 00:02:26,000
+file that you implemented
+in systemcall.c
+
+61
+00:02:26,000 --> 00:02:29,265
+and creating the
+test application.
+
+62
+00:02:29,265 --> 00:02:31,445
+Then you should see
+a message here,
+
+63
+00:02:31,445 --> 00:02:34,055
+an OK status saying
+that all tests passed.
+
+64
+00:02:34,055 --> 00:02:36,050
+One of the things you
+notice is that you will see
+
+65
+00:02:36,050 --> 00:02:38,405
+some errors printed
+out and the reason
+
+66
+00:02:38,405 --> 00:02:42,635
+is we're testing for error
+handling of your application,
+
+67
+00:02:42,635 --> 00:02:43,970
+making sure that you return
+
+68
+00:02:43,970 --> 00:02:46,370
+appropriate errors
+when errors happen in
+
+69
+00:02:46,370 --> 00:02:51,085
+invocation of the
+associated commands.
+
+70
+00:02:51,085 --> 00:02:54,440
+As long as you see
+this okay message,
+
+71
+00:02:54,440 --> 00:02:57,290
+your tests should be passing
+and that should also
+
+72
+00:02:57,290 --> 00:03:00,710
+show up at your GitHub
+Actions result for your repo.
+
+73
+00:03:00,710 --> 00:03:05,070
+That's really it for
+Assignment 3, Part 1.

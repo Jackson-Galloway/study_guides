@@ -1,0 +1,247 @@
+1
+00:00:00,170 --> 00:00:03,360
+In this video, I'll be talking
+about users and groups
+
+2
+00:00:03,360 --> 00:00:05,760
+and how users and groups
+are used in Linux.
+
+3
+00:00:05,760 --> 00:00:09,090
+We'll want to understand
+Linux users and groups and
+
+4
+00:00:09,090 --> 00:00:10,800
+understand users and groups and
+
+5
+00:00:10,800 --> 00:00:13,720
+how they interact with
+Linux permissions.
+
+6
+00:00:13,880 --> 00:00:18,185
+When you created your
+initial Linux system image,
+
+7
+00:00:18,185 --> 00:00:20,750
+you gave it a username
+and a password.
+
+8
+00:00:20,750 --> 00:00:22,760
+When you're accessing
+that system,
+
+9
+00:00:22,760 --> 00:00:24,110
+you're logging in
+with that username
+
+10
+00:00:24,110 --> 00:00:25,250
+and password and that's
+
+11
+00:00:25,250 --> 00:00:27,560
+the authentication
+that can be used
+
+12
+00:00:27,560 --> 00:00:30,185
+to map a specific user account.
+
+13
+00:00:30,185 --> 00:00:32,720
+Every user account on
+the system is going to
+
+14
+00:00:32,720 --> 00:00:35,760
+be associated with a
+specific user ID or UID.
+
+15
+00:00:35,760 --> 00:00:38,060
+This is just a number that
+
+16
+00:00:38,060 --> 00:00:41,365
+corresponds to that particular
+user on the system.
+
+17
+00:00:41,365 --> 00:00:43,760
+Every process that is
+
+18
+00:00:43,760 --> 00:00:45,800
+started is associated
+with the UID of
+
+19
+00:00:45,800 --> 00:00:47,840
+the user that either started or
+
+20
+00:00:47,840 --> 00:00:50,525
+is now the owner
+of that process.
+
+21
+00:00:50,525 --> 00:00:55,670
+The etc/passwd, etc/password
+file is what's used to
+
+22
+00:00:55,670 --> 00:00:58,400
+map username to UIDs that
+
+23
+00:00:58,400 --> 00:01:02,080
+are used in a given
+Linux system.
+
+24
+00:01:02,080 --> 00:01:05,900
+UID 0 is a special
+UID that always is
+
+25
+00:01:05,900 --> 00:01:07,220
+the root user and
+
+26
+00:01:07,220 --> 00:01:09,500
+the root user can do almost
+anything on the system.
+
+27
+00:01:09,500 --> 00:01:11,960
+We talked about
+Ubuntu's philosophy
+
+28
+00:01:11,960 --> 00:01:14,405
+of how it uses root with pseudo.
+
+29
+00:01:14,405 --> 00:01:16,190
+Once you authenticate as pseudo,
+
+30
+00:01:16,190 --> 00:01:17,300
+you're essentially running as
+
+31
+00:01:17,300 --> 00:01:18,905
+the root user and you can do
+
+32
+00:01:18,905 --> 00:01:22,085
+pretty much anything that
+
+33
+00:01:22,085 --> 00:01:26,795
+you're allowed to do via
+userspace permissions.
+
+34
+00:01:26,795 --> 00:01:29,300
+Every user belongs to
+one or more group,
+
+35
+00:01:29,300 --> 00:01:32,840
+and every group has a
+corresponding group ID or GID.
+
+36
+00:01:32,840 --> 00:01:35,510
+So etc group similar to
+
+37
+00:01:35,510 --> 00:01:39,065
+etc password is going to
+map group names to GIDs.
+
+38
+00:01:39,065 --> 00:01:43,480
+We already mentioned Linux
+file permissions in Week 1.
+
+39
+00:01:43,480 --> 00:01:46,480
+But the permission structure
+is such that you can
+
+40
+00:01:46,480 --> 00:01:49,630
+associate a file with the
+owning user and owning group.
+
+41
+00:01:49,630 --> 00:01:53,525
+We've mentioned the UID
+and GID and in high notes.
+
+42
+00:01:53,525 --> 00:01:55,450
+In addition to associate
+
+43
+00:01:55,450 --> 00:01:57,220
+the owning user
+and owning group,
+
+44
+00:01:57,220 --> 00:02:00,400
+you can also set permissions
+based on the user,
+
+45
+00:02:00,400 --> 00:02:02,710
+that's the owner of
+the file and the group
+
+46
+00:02:02,710 --> 00:02:05,605
+access for the file for
+the group ownership,
+
+47
+00:02:05,605 --> 00:02:07,960
+as well as the
+access for everyone.
+
+48
+00:02:07,960 --> 00:02:11,110
+That is done through
+specific bits for read,
+
+49
+00:02:11,110 --> 00:02:13,390
+write, and execute for
+each of these groups.
+
+50
+00:02:13,390 --> 00:02:17,380
+You can mask these bits
+with given octal values.
+
+51
+00:02:17,380 --> 00:02:19,900
+So adding 4 and 2 together or
+
+52
+00:02:19,900 --> 00:02:22,980
+600 octal value would add
+
+53
+00:02:22,980 --> 00:02:27,430
+in read and write for
+the user or owner.

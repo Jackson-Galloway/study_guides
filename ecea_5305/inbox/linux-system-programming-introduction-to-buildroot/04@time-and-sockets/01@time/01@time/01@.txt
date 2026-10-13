@@ -1,0 +1,146 @@
+In this video, we're going
+to be talking about using time with your user
+space programs. We're going to talk about
+different time measurements and formats that are
+supported by Linux, we're going to talk about different clock
+types you can use for obtaining time
+and setting time, and then we're going to talk
+about the functions you can use for getting and setting
+time from user space. There's three different
+measurement types that the book discusses. There's wall time, process
+time, and monotonic time. The wall time is the actual time and date to real-world clocks, so what you see in the clock on your system, for instance. That one's often useful
+for user interaction, so when you're
+talking to the user about some specific event, the time that it happened, when you're giving the time now, this is the time measurement
+that you'd want to use. It's going to be
+localized so that means time zone information
+is going to be relevant. That means daylight
+savings time, for instance, it's
+going to be relevant. It might be saved
+and restored using battery-powered hardware and
+special hardware support so a real-time
+clock for instance. It's often updated with
+Network Time Protocol or NTP, which allows us to synchronize
+with clocks that are available and known
+good references times. The other types of time measurements that
+we can get from Linux besides wall time
+is process time. This would be the time that's spent executing on a processor. The total time that your process spends
+executing on a processor, could be less than wall time because your process is
+going to get interrupted. Or it actually could be more than wall time
+because if you have multiprocessors and
+you're splitting your process across
+multiple processors, the total amount of
+process time could actually be more than the
+amount of wall clock time. Then monotonic time which
+is always increasing. You can think of that
+as system up time, the amount of time that the
+system has been running. The time measurement
+formats that we'll use with these different
+time measurements are relative time
+or absolute time. Relative time is going
+to be relative to some specific time so now would be an example
+of a relative time. Then you can have
+a relationship to the current time being something like five seconds from
+now, 10 minutes ago. For this you would typically
+want to use monotonic time because wall clock time we could be adjusting
+that, for instance, due to NTP or due to an
+adjustment from the user, or due to something like
+daylight savings time, and we wouldn't want
+our relative time to change based on changes
+made to a specific clock. Then absolute time measurements
+aren't relative to a benchmark they describe a certain point in
+wall clock time. September 24th at 3:00 PM, Mountain Daylight Time would be an example of an absolute time. It's something that you
+would see in a calendar. In Linux these are all tract
+relative to the epoch. The epoch was midnight,
+January 1st, 1970. When they're writing
+the POSIX library, they figured no computer
+was going to need to deal with a current clock time
+earlier than January 1st, 1970 based on when the
+standard was written, so they use this as the
+time zero essentially for calculating when an absolute
+time event is occurring. How does this actually get calculated by
+the Linux kernel? Turns out there's a system timer that we'll talk in
+more detail about when we get into the specifics
+of kernel programming, and it's using a specific
+interval frequency. It's going to increment the
+elapsed time by one unit every time there's an
+interval that ends, and those intervals
+are referred to in the kernel as
+ticks or jiffies. A jiffy counter in the kernel is going to be a 64-bit value that is incremented every hertz frequency
+of the system timer. The hertz value is
+going to be platform independent but
+historical x86 values which is probably what you're
+using if you're using a PC, for instance, would range from 100 hertz to 1,000 hertz so that's typically the interval that the software clock
+is going to be updated. What about jiffies
+time rollover? If you have a 64-bit
+jiffies timer, and you're using x86 and
+the Jiffy is 0.004 seconds, then the rollover would be
+at about 5.8 billion years, so nothing that we need to
+worry about in our lifetimes. The frequency of the system
+timer is called hertz, and that's architecture
+specific as mentioned before. The POSIX time APIs are going to convert it
+for us so when we're in user space we don't care
+about the value of hertz. We'll talk more about
+that when we get in the kernel driver development. The simplest time representation
+in Linux is the time_t, which is defined as
+typedef long time_t. This is going to
+represent the number of seconds since the epoch which was that January
+1st, 1970 time. One thing to note about this, we talked about 64-bit
+jiffies rollover, but if we're counting
+seconds since the epoch, it turns out if we only
+have a 32-bit long value, then we're going to roll over that 32 value on Monday the
+18th of January in 2038. If you remember reading
+about the Y2K problem, or if you're like me and
+you live through it, we have another one of
+those coming up for 32-bit systems in
+January of 2038. Hopefully most of
+the 32-bit systems will be phased out by that time. But no doubt, some group of us
+is probably going to be dealing with
+this problem in 2038. One thing that you might ask is if we're only counting
+seconds with this, how do I get sub-second
+precision with timing? There's a solution for that that we'll mention in a future slide. The clock real-time is one of the clock types
+that's going to be the system wide wall clock time. That's the one you can
+actually set or update based on information about the
+correct current time. Then clock monotonic is the one that's not
+settable it's going to be elapsed time since the
+starting point like boot. There are other clocks that your book covers as
+well but these are the main two that
+we're going to discuss for the purpose of this course. When would you use clock
+monotonic over clock real-time? You wouldn't want to use clock real-time when you're measuring intervals that are depending
+on system time not changing. Remember, if clock real-time can change and you're using a
+measurement in relative time, you wouldn't want daylight
+savings event, for instance, to make you think
+that you waited an hour when you
+actually didn't. The system might be
+setting that time ahead or backwards depending on the time correction that
+you're trying to perform. How do you get more
+accurate representations then no single digits seconds? You can use timeval
+or timespec to get microsecond or
+nanosecond resolution. There's a set of functions that you can use
+with each one of these to obtain or to set based
+on higher precisions. There's also a TM, a representation which is going to give you the
+human-readable time. This will give you
+seconds, minutes, hours, the absolute time
+that we referenced when we talked about an
+example of absolute time. There's a whole list of functions here that
+you can use with this, and they're some suggestions about which of these you should use in terms of
+being thread-safe, for instance, or being
+generally safer to use for obtaining the time
+representation as TM. Talking specifically
+about how we can get clock time using the timespec structure which is the higher precision that
+we mentioned before. The clock time or the get clock time function is going to take
+o'clock Id argument. That's going to be
+one of the clocks that we mentioned before so real-time and monotonic
+are two examples. Then the timespec structure
+that needs to fill in. You'd want to use
+clock real-time with clock set time when you're actually using
+it to set the time. Again, because clock monotonic isn't going
+to be settable. It's important to note
+that you might need elevated permissions
+to set the clock time, you wouldn't want
+unprivileged user to be able to
+arbitrarily served. There's also a add adjust time function
+that can be used by the NTP daemon that begins slowly adjusting
+the system time. The benefit of this one
+is that it wouldn't move the clock backwards
+which could be disruptive to programs that are referencing absolute time. This is another option
+for setting the time.

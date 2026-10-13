@@ -1,0 +1,419 @@
+1
+00:00:00,000 --> 00:00:03,240
+This video contains a
+few additional tips
+
+2
+00:00:03,240 --> 00:00:05,865
+and hints for implementing
+assignment 5.
+
+3
+00:00:05,865 --> 00:00:09,570
+First, if you haven't been
+using this previously,
+
+4
+00:00:09,570 --> 00:00:12,315
+I suggest turning
+on Wall and Werror.
+
+5
+00:00:12,315 --> 00:00:13,620
+This is something that's covered
+
+6
+00:00:13,620 --> 00:00:15,255
+in department coding guidelines,
+
+7
+00:00:15,255 --> 00:00:17,235
+but it really helps in
+
+8
+00:00:17,235 --> 00:00:19,875
+finding problems in
+your source code.
+
+9
+00:00:19,875 --> 00:00:21,960
+There's an example here of
+
+10
+00:00:21,960 --> 00:00:28,170
+using a segfaulter
+implementation
+
+11
+00:00:28,170 --> 00:00:33,330
+to demonstrate the benefit
+of using warnings with
+
+12
+00:00:33,330 --> 00:00:35,610
+your compiler and
+treating warnings
+
+13
+00:00:35,610 --> 00:00:38,475
+as errors for some
+common warnings.
+
+14
+00:00:38,475 --> 00:00:42,205
+I've got a main program
+here that calls segfaulter,
+
+15
+00:00:42,205 --> 00:00:45,140
+which is a function located
+in a different file,
+
+16
+00:00:45,140 --> 00:00:47,900
+and you can see here
+the segfaulter function
+
+17
+00:00:47,900 --> 00:00:48,980
+itself expects
+
+18
+00:00:48,980 --> 00:00:50,720
+you to pass some
+string in and then
+
+19
+00:00:50,720 --> 00:00:52,910
+it's just going to calculate
+the length of the string.
+
+20
+00:00:52,910 --> 00:00:55,485
+In the main application,
+
+21
+00:00:55,485 --> 00:00:57,380
+there's a bug here in
+that we're not passing
+
+22
+00:00:57,380 --> 00:01:00,365
+any string in as a part of
+the call to segfaulter.
+
+23
+00:01:00,365 --> 00:01:04,880
+If I compile and run this
+without warnings and errors,
+
+24
+00:01:04,880 --> 00:01:06,500
+I'll get a segmentation fault,
+
+25
+00:01:06,500 --> 00:01:08,210
+and the reason I get
+a segmentation fault
+
+26
+00:01:08,210 --> 00:01:09,980
+is because I'm not
+passing anything
+
+27
+00:01:09,980 --> 00:01:11,900
+in to this somestring and if I
+
+28
+00:01:11,900 --> 00:01:14,000
+attempt to access this variable,
+
+29
+00:01:14,000 --> 00:01:15,650
+it's just going to pull
+something randomly off
+
+30
+00:01:15,650 --> 00:01:17,825
+the heap and most likely crash.
+
+31
+00:01:17,825 --> 00:01:24,040
+This could cause a confusing
+bug with your program.
+
+32
+00:01:25,460 --> 00:01:27,860
+Alternatively, if
+I do include in
+
+33
+00:01:27,860 --> 00:01:30,170
+my C flags Wall and Werror,
+
+34
+00:01:30,170 --> 00:01:32,810
+I get a message like this
+telling me that there
+
+35
+00:01:32,810 --> 00:01:34,280
+wasn't a declaration of
+
+36
+00:01:34,280 --> 00:01:35,890
+the function before
+I tried to call it.
+
+37
+00:01:35,890 --> 00:01:38,495
+So this is giving me
+the hint that I needed
+
+38
+00:01:38,495 --> 00:01:42,405
+to supply the declaration
+of the function,
+
+39
+00:01:42,405 --> 00:01:43,675
+and then I need to supply
+
+40
+00:01:43,675 --> 00:01:45,200
+the right parameters in
+
+41
+00:01:45,200 --> 00:01:47,850
+order to avoid a
+segmentation fault.
+
+42
+00:01:48,530 --> 00:01:53,205
+A few other things to think
+about with assignment 5.
+
+43
+00:01:53,205 --> 00:01:56,150
+You want to close all
+the file descriptors,
+
+44
+00:01:56,150 --> 00:01:57,770
+both from the socket and the
+
+45
+00:01:57,770 --> 00:02:02,370
+accept methods to
+avoid memory leaks.
+
+46
+00:02:02,840 --> 00:02:05,240
+There are different
+ways to implement
+
+47
+00:02:05,240 --> 00:02:08,705
+your signal handler
+strategy for shutdown,
+
+48
+00:02:08,705 --> 00:02:10,790
+but I think the shutdown command
+
+49
+00:02:10,790 --> 00:02:14,250
+is one that might
+particularly be useful.
+
+50
+00:02:14,250 --> 00:02:16,640
+There's some links here at
+the bottom to check out,
+
+51
+00:02:16,640 --> 00:02:19,580
+but this is one that I
+suggest taking a look at if
+
+52
+00:02:19,580 --> 00:02:20,780
+you're trying to think of how to
+
+53
+00:02:20,780 --> 00:02:23,185
+implement your signal
+handler strategy.
+
+54
+00:02:23,185 --> 00:02:26,685
+In terms of bind failing with
+'Address Already in Use',
+
+55
+00:02:26,685 --> 00:02:28,130
+this could happen
+sometimes if you
+
+56
+00:02:28,130 --> 00:02:29,720
+close your application
+and immediately
+
+57
+00:02:29,720 --> 00:02:33,005
+restart it so the
+SO_REUSEADDR option
+
+58
+00:02:33,005 --> 00:02:35,780
+on bind is one way
+that you can make
+
+59
+00:02:35,780 --> 00:02:39,345
+this less likely to occur and
+
+60
+00:02:39,345 --> 00:02:41,300
+there's some links
+again here on the slide
+
+61
+00:02:41,300 --> 00:02:43,945
+that you can look at for
+more detail about that.
+
+62
+00:02:43,945 --> 00:02:46,010
+One other thing I wanted to talk
+
+63
+00:02:46,010 --> 00:02:47,540
+about with respect to Assignment
+
+64
+00:02:47,540 --> 00:02:49,355
+5 is to help
+
+65
+00:02:49,355 --> 00:02:51,470
+ensure that you don't have
+memory leaks in your program,
+
+66
+00:02:51,470 --> 00:02:54,035
+you can use an application
+called Valgrind.
+
+67
+00:02:54,035 --> 00:02:56,795
+This is a really super-useful
+application that
+
+68
+00:02:56,795 --> 00:02:59,240
+essentially is a wrapper around
+
+69
+00:02:59,240 --> 00:03:01,490
+your executable to look at
+
+70
+00:03:01,490 --> 00:03:04,970
+the memory allocations you do
+and show that you've freed
+
+71
+00:03:04,970 --> 00:03:08,130
+all the memory that you've
+allocated and the way
+
+72
+00:03:08,130 --> 00:03:11,325
+we'd run this with our
+aesdsocket application,
+
+73
+00:03:11,325 --> 00:03:14,055
+we could say valgrind
+leak check equal full,
+
+74
+00:03:14,055 --> 00:03:15,920
+show leak kinds
+all, track origins,
+
+75
+00:03:15,920 --> 00:03:18,680
+yes, verbose, and then
+you can specify dash,
+
+76
+00:03:18,680 --> 00:03:21,170
+dash log file to
+output to a log file,
+
+77
+00:03:21,170 --> 00:03:22,580
+and then just run your
+
+78
+00:03:22,580 --> 00:03:24,680
+aesdsocket application
+like you would
+
+79
+00:03:24,680 --> 00:03:29,580
+herewith to run
+it interactively.
+
+80
+00:03:29,630 --> 00:03:33,050
+What you should see
+from that output file,
+
+81
+00:03:33,050 --> 00:03:34,730
+you should see an output message
+
+82
+00:03:34,730 --> 00:03:36,350
+here saying all heap
+blocks were freed,
+
+83
+00:03:36,350 --> 00:03:37,595
+and no leaks are possible.
+
+84
+00:03:37,595 --> 00:03:39,725
+So try this out
+
+85
+00:03:39,725 --> 00:03:41,480
+and see if this is working
+
+86
+00:03:41,480 --> 00:03:43,295
+with your assignment
+5 implementation.
+
+87
+00:03:43,295 --> 00:03:44,540
+This will be a part of the unit
+
+88
+00:03:44,540 --> 00:03:45,680
+test to the assignment 6,
+
+89
+00:03:45,680 --> 00:03:47,870
+so implementing
+assignment 5 without
+
+90
+00:03:47,870 --> 00:03:51,630
+memory leaks will help
+you with assignment 6.

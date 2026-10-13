@@ -1,0 +1,331 @@
+1
+00:00:00,000 --> 00:00:06,225
+All right, so this video I'm going to take
+you through an overview of assignment 9.
+
+2
+00:00:06,225 --> 00:00:11,392
+So when you run the full test on your
+assignment 9 repo, you'll see a sequence
+
+3
+00:00:11,392 --> 00:00:16,326
+of steps very similar to what you saw
+with assignment 8 talking to you about
+
+4
+00:00:16,326 --> 00:00:21,054
+how you can manually test your
+assignment 9 on your native build host.
+
+5
+00:00:21,054 --> 00:00:25,134
+And I recommend doing this before
+trying to run on qemu do just
+
+6
+00:00:25,134 --> 00:00:29,455
+because it's going to be easier to
+kind of troubleshoot and debug this,
+
+7
+00:00:29,455 --> 00:00:31,866
+running independently like this.
+
+8
+00:00:31,866 --> 00:00:38,121
+So following these steps, we'll go
+into the aesd char driver directory.
+
+9
+00:00:38,121 --> 00:00:43,394
+We'll do a sudo aesd
+
+10
+00:00:43,394 --> 00:00:49,205
+char load unload.
+
+11
+00:00:49,205 --> 00:00:55,438
+Aesdchar will do unload first,
+and then we'll load.
+
+12
+00:00:55,438 --> 00:01:00,739
+So now we've got the driver loaded and
+
+13
+00:01:00,739 --> 00:01:09,189
+restarted, and now we can run
+the driver test application.
+
+14
+00:01:09,189 --> 00:01:15,497
+So we'll go up one directory,
+and then run driver test.
+
+15
+00:01:15,497 --> 00:01:20,347
+So, the driver test outputs what we
+should see based on the commands that
+
+16
+00:01:20,347 --> 00:01:22,346
+we're sending for the seek.
+
+17
+00:01:22,346 --> 00:01:26,660
+So you can see that it said it should
+show write one with the first two bytes
+
+18
+00:01:26,660 --> 00:01:30,861
+missing, and it did, and then it
+showed all the rest of the commands.
+
+19
+00:01:30,861 --> 00:01:34,873
+And then this one says the output should
+show the 9 from write 9 followed by
+
+20
+00:01:34,873 --> 00:01:35,582
+write 10.
+
+21
+00:01:35,582 --> 00:01:40,303
+So you can see that we essentially reset
+the file pointer to the last byte of
+
+22
+00:01:40,303 --> 00:01:43,667
+write 9, and
+then printed write 9 and write 10.
+
+23
+00:01:43,667 --> 00:01:45,708
+So this looks good,
+our driver is looking good.
+
+24
+00:01:45,708 --> 00:01:51,040
+So now we can test our driver with
+our aesd socket application or
+
+25
+00:01:51,040 --> 00:01:53,362
+aesd server application.
+
+26
+00:01:53,362 --> 00:01:57,857
+So to do that, I'm going to go back
+
+27
+00:01:57,857 --> 00:02:02,352
+into the driver directory, and
+
+28
+00:02:02,352 --> 00:02:07,687
+I'll unload my driver and reload it.
+
+29
+00:02:07,687 --> 00:02:12,671
+And then I'll open a new window
+in the server directory, and
+
+30
+00:02:12,671 --> 00:02:18,355
+I'll do a make on the server application,
+so that's all up to date.
+
+31
+00:02:18,355 --> 00:02:20,402
+And I'll run aesd socket.
+
+32
+00:02:20,402 --> 00:02:24,000
+So aesd socket is going to be
+running in the background here.
+
+33
+00:02:24,000 --> 00:02:29,098
+Now, I'll go back to this window, and
+
+34
+00:02:29,098 --> 00:02:35,444
+I'll execute the assignment
+test socket test.
+
+35
+00:02:45,550 --> 00:02:51,713
+So this should route to
+the socket application,
+
+36
+00:02:51,713 --> 00:02:59,244
+and through our driver,
+then through our running driver.
+
+37
+00:02:59,244 --> 00:03:03,328
+So we're doing a very similar thing here,
+
+38
+00:03:03,328 --> 00:03:07,299
+we're seeking to a specific location for
+
+39
+00:03:07,299 --> 00:03:11,506
+the second byte of
+the first write command.
+
+40
+00:03:11,506 --> 00:03:15,120
+And then we're seeking to the last
+byte of the 9th write command.
+
+41
+00:03:15,120 --> 00:03:18,712
+In this case we're doing it though
+through the aesd socket application.
+
+42
+00:03:18,712 --> 00:03:22,981
+So we're issuing the seek
+to command over the socket.
+
+43
+00:03:22,981 --> 00:03:27,596
+And then we're having the socket issue the
+I octal and we're getting the same result
+
+44
+00:03:27,596 --> 00:03:31,567
+that we got when we ran the driver test,
+so things are looking good here.
+
+45
+00:03:31,567 --> 00:03:36,361
+So now we're ready to try it on target.
+
+46
+00:03:36,361 --> 00:03:40,952
+So to verify our driver in qemu and
+buildroat, we'll go into our
+
+47
+00:03:40,952 --> 00:03:45,897
+buildroat directory, and
+then we'll run the full test from there.
+
+48
+00:03:45,897 --> 00:03:52,085
+And so this assumes that you've updated
+your buildroat packages to point to your
+
+49
+00:03:52,085 --> 00:03:58,276
+latest content from your repo for your
+character driver and your socket server.
+
+50
+00:03:58,276 --> 00:04:04,270
+But that should be probably about
+all that you're going to need to do.
+
+51
+00:04:04,270 --> 00:04:13,153
+All right, so
+after I remember to enter my ssh key,
+
+52
+00:04:13,153 --> 00:04:19,361
+should get a build kicked off here.
+
+53
+00:04:19,361 --> 00:04:24,422
+Just going to pull in the latest content,
+build the assignments repo,
+
+54
+00:04:39,694 --> 00:04:43,370
+And actually you have to make sure
+to stop your aesd socket application
+
+55
+00:04:43,370 --> 00:04:45,442
+running if it's running on your host.
+
+56
+00:04:45,442 --> 00:04:49,503
+This could not set up forwarding rule,
+that's where that's coming from,
+
+57
+00:04:49,503 --> 00:04:50,776
+so I'm going to fix that.
+
+58
+00:04:50,776 --> 00:04:54,472
+All right, so I stopped my aesd socket
+application I had running locally for
+
+59
+00:04:54,472 --> 00:04:56,393
+test, let's give this one more shot.
+
+60
+00:05:08,323 --> 00:05:10,263
+All right, so now qemu is starting up.
+
+61
+00:05:14,859 --> 00:05:17,530
+We're waiting to start the test from ssh.
+
+62
+00:05:48,984 --> 00:05:50,198
+Kicked off the test,
+
+63
+00:05:59,988 --> 00:06:02,831
+And we're going to be writing the same
+
+64
+00:06:02,831 --> 00:06:07,017
+commands into the socket
+through the test scripts.
+
+65
+00:06:07,017 --> 00:06:10,511
+And you should see this test
+pass message here at the end.
+
+66
+00:06:10,511 --> 00:06:16,784
+So this verifies that we were able
+to load the same kernel driver,
+
+67
+00:06:16,784 --> 00:06:21,576
+and socket application on
+our qemu instance, and
+
+68
+00:06:21,576 --> 00:06:28,790
+then route the content from the test
+scripts through into the qemu device.
+
+69
+00:06:28,790 --> 00:06:32,222
+And so this is verifying everything
+including the build rebuild.
+
+70
+00:06:32,222 --> 00:06:35,997
+If you're implementing on yocto
+procedure is very similar,
+
+71
+00:06:35,997 --> 00:06:39,780
+you'll just be using your yocto
+repo obviously builder one.

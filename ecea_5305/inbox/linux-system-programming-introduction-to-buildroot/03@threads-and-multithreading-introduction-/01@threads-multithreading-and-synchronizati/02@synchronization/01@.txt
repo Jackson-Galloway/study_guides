@@ -1,0 +1,202 @@
+In this video,
+we're going to talk about synchronization. So we talked about threading and multi
+threading and now we're going to talk about how we can keep our code that uses
+threads safe from synchronization issues. So we want to understand race
+conditions what a race condition is. And then we're going to understand how we
+can do synchronization with the threat to avoid race conditions. So the race condition, the book defines
+us as different program behavior depending on which thread gets
+to a particular chunk of code. First and more generically stated. It's in the case that unsupervised
+access of a shared resource leads to erroneous program behavior. So the shared resource that's
+talking about could be hardware, it could be a Colonel resource or
+in our case. And in a lot of cases it's
+going to be access to memory. And because we're sharing memory in a
+multithreaded application, that's a lot of times where the race condition and
+concurrent issues are going to. And so the if we are talking about memory
+race conditions, that would be also known as a data race and that's probably one of
+the most common forms of race conditions. So a couple more terms that are important
+when we're talking about race condition, the critical region is the regional
+code that needs some synchronization. And we're going to eliminate races race
+conditions by synchronizing threat access to those critical regions. So in other words, making sure that
+only exactly one thread has access and is using that critical region
+at one at a given time. So here's an example of a function
+that would be not thread safe in some implementations. So here's a case that we've
+got a function that's doing a withdrawal from a bank account. So it's passing in a structure
+that's describing the account and the amount that it wants to withdraw. We're going to check the current balance
+and then we're going to say if the balance is greater than the amount that
+withdrawal is going to be approved and we're going to disperse the money, we're going to detriment from
+the account from the current balance and then disperse the money through
+the disperse money about here. So when is this code? Not thread safe? It would be not thread safe if there's
+the account structure is shared and a multithreaded program might be
+calling this with the same account structure at the same time. So in that case these operations could be
+happening in two different threads at once and we'll talk about how that could
+cause a problem in a few slides here. So is this code thread safe when
+hardware does not support parallelism? So what if we only have one processor? Does that mean that we don't have to worry
+about thread safety then anymore for this withdraw function? And the answer is no. And the reason is we talked about
+a couple different mechanisms where we can essentially have execution happening
+at what appears to be the same time and one of those was concurrency in
+a multithreaded application. And so concurrency is still
+an issue in this case and we'll talk about that
+in the upcoming slides. So the using an even simpler example about
+how we can demonstrate a race condition if we have some function that works on
+a structure that has a single value and we just increment that particular
+variable here in the some funk. So here we're doing an X
+plus plus operation. So what does that look like if we look at
+how the what the assembly code is actually doing in order to implement
+this X plus plus operation? And what would happen in the case
+that two different threads were both calling some funk on the same memory
+here pointed to by the simple structure. So in a normal case where we
+didn't have a race condition or or a data race thread one in
+order to do the X plus plus operation from some funk,
+it would load the value of S. X into a register, it would add one to
+it and then it would store it back. And the same thing. If there wasn't a day to race happening, the same thing would happen in a second
+thread and there'd be no problems. The problem would happen if we had
+either parallelism or concurrency that occurred and we had a thread switch
+that occurred between thread one and two while we were in the middle of
+the operation of the X plus plus. So here's an example of when
+you could have this problem, they thread one loads the value
+of X into a register. It adds one to the register, but
+then before it stores it again, it would get interrupted
+by thread number two. So threat to loads SX into the register,
+but it's loading the old value
+before it got implemented, Then it adds 1 to the register and
+then it stores the register in SX. However, that happens
+after thread one stored, it's old copy of Of the registry and SX. So what this means is that rather than
+implementing SX twice between these two threads, we're going to implement it and
+we're going to implement it only one time. And the reason is the value that we
+implemented here is going to be one more than the original value. And the value we implemented
+here is going to be one more. And the reason is the load happened from
+thread to before the store happened from the Red one. So whether we're using parallelism or
+concurrency, we can still have this kind of race condition issue that
+happens in this simple example. So why did we have the problem
+with that particular code? It's because the plus plus
+operation is not atomic. So an atomic operation is one that's
+indivisible and unable to be interviewed with any other operation and
+essentially appears instantaneous. And so if the processor is able to
+handle in one execution cycle or in one uninterruptible cycle, that would
+essentially be an atomic operation. But you can see that Plus plus is
+typically not an atomic operation because of the load store that's going to happen
+in order to copy the value back out to memory. So to make these kind of
+shared memory operations safe, we have to make the sequence atomic. And that's what we're
+going to do with locking. So we make the sequence of atomic using
+a mutually exclusive locker mu tex. And if we're using the p
+thread library for this, which is the politics, you text library, we can use p threaten you tex lock and
+third music's unlocked for this. So by adding a mute text
+to the account structure, we can make our withdraw
+function thread safe. Using P threaten you tex lock and
+P thread music's unlock around accesses. So where before we were doing
+the operation here where we were adding the amount to withdrawal total and
+documenting the current balance. Now we're doing locks around that to make
+sure that there's exactly one thread that's going to have access to
+that code at any given time. So you might look at this and say, well it looks like we didn't put
+the unlock in the right place, right? Because we're doing disperse money down
+here and we don't have a lock around that. So why wouldn't we need a lock
+around the disperse money operation? Well the reason is we aren't accessing
+shared memory with this first money. So if the way this code is written,
+we are keeping the amount or we are using the amount not as a shared memory,
+not anything pointing to shared memory but just as a variable that's
+passed into the function. And so that variable is not going to be
+affected by a multi a different thread running and sharing memory the way
+the account structure would be. So that's the that's the reason that we
+don't have to have mu tex unlock after disperse money and we can do it only
+around access to the account structure. So another important thing to talk
+about when we're talking about synchronization is the idea of deadlocks. So deadlock can happen when there are two
+threads that are both waiting for each other to finish. Or it could happen when there's
+one thread that's blocked on you tex that already holds. So in order to avoid this,
+what we need to do or what the book suggests is to data and
+not code. So you need to think about if you
+are designing you're locking structure such that you're locking based
+on access to a data resource or are you trying to lock based
+on what some function does? And if you're trying to lock based on some
+function does what some function does, you can end up confusing yourself and ending up in scenarios like this
+where you could have deadlocked. So one important concept to try to
+implement in your programs is to make sure locks are tied to a specific
+data structure or chunk of data. And that way it's less likely to be the
+case that you'll confuse yourself about which lock you need to hold when
+you're doing some specific operation. The second is if you do actually need
+to hold locks for multiple structures that wants for instance, would be to have
+a specific order for obtaining the locks when multiple data locks are required and
+then release in the opposite order. So if we're talking about
+synchronization issues in the multiple multithreaded program, we need to talk about how we're going to
+create those threats in the first place. So if we're using the P thread library
+will use P thread create to create our threads. The three thread is going to be created
+and start execution with whatever is passed here as this start
+routine out function pointer. So in our case it's start withdrawal
+thread and the R that you pass here with this parameter is going to get passed into
+the function pointer as the argument. So in our case we have a parameter
+structure that gets passed in here. And if you look at the link
+at the bottom of the slide, you could see the reference code
+where I'm pulling this from. The attribute that you can specify with
+the thread create can specify things like stack size scheduling parameters and
+whether or not the threat is detached, which we'll talk about in a minute. Or you can specify null
+to use the defaults, which is what I'm doing here in my case. And then the thread is either the a null
+value or a location that you can use to that the P thread create function can use
+to store the threat I'd for use later. There's a few different ways then to
+terminate the thread once you've started it, one is you can just return from
+whatever threat you passed in as the start thread routine function pointer. The second is that the threat itself
+could invoke the threat exit. And then the third is that another
+threat could call P threat cancel. And another thing to know about threading
+is that when a process executes all the threads of that process are going
+to be automatically killed.N So we talked before about
+the having a detached state that's really related to how
+you detect a threat has ended and how you free up the resources that
+were associated with that threat. And when we talk about detecting
+that a threat has ended and freeing up resources, what we're talking
+about in most cases is joining a threat. So when we join a thread were essentially
+blocking in one thread, waiting for another threat to terminate. So if you have a parent thread
+that creates a child thread and you want to wait and
+know when that child threads complete, you'd use P threat joint for
+that and you'd use the thread id. That was the one that was set up for
+you in P thread create. So if this is a reference to a pointer
+that contains the thread attribute, You'll use that particular
+threat attribute in your P. Three joint call to tell it which
+thread you want to wait to terminate. So the option to specify detached thatched
+threads mean that you're creating a threat that is enjoyable, and you can
+do that through the thread detached or based on the attributes to use when you
+create the thread, it's important to note that threads are going to consume
+system resources until joined. And so if you don't use a detached thread
+that and you forget to join a thread, then you're going to end up with
+a memory leak in your application. And if you invoked enough threads and
+didn't join any of them and didn't create them detached, then you would eventually
+run out of memory in your process. So combining this with what we
+talked about before with mu texas, how would you use you
+text then in a thread? So the using the example before but
+a little bit more generalized, you start with you text in it
+where you would initialize the mute texts that we defined
+in our structure and knowledge. Just initialize is with
+the default setting of unlocked. And then inside your
+code you'd call P thread, music's unlock with the address
+of the music's to lock it. You do a critical section. Once you know that you've got the locks or
+whatever code you're trying to protect in this case the account structure and
+then you do a P threaten you tex unlock after the critical section to release
+the lock and let another thread run. So why would we want to store the mute
+checks in with the account structure? Again, this is the suggestion from the
+book about designing in a way that you're locking data and not code. So for locking data and this mu text is associated with
+the data in the account structure. It probably makes sense to locate that mu
+text directly in the structure itself. So this is just kind of a design decision
+that makes that relationship really apparent. The other thing that the book mentions,
+that's kind of an interesting way to do locking is to use that you
+can use scope blocks with C. Plus Plus, so I'm not sure how much
+familiarity you have with C Plus Plus, but I wanted to mention this in
+case you see this in practice. So the scope lock uses C plus
+plus allocation constructors. And destructor is to acquire mu text on,
+create and then releasing you text when it's falling out of scope and when and
+so the create part would happen in the constructor and the release part
+would happen in the destructor. So each one of these are going to
+be called for us in C Plus Plus, when a particular variable goes
+in scope or falls out of scope. And so this is really just doing
+the lock when it comes in scope and the unlocked when it
+falls out of scope and the design of this class is
+such that when we create and give it a reference to mu text, we'll
+save that value here as the private mu text attribute that we can reference
+later here in the destructor. And this strategy is known as aria or
+resource acquisition, is initialization. So here's an example of how you could use
+this in a scope lock in the withdrawal application and you can use the link at the bottom
+to to look at this code yourself. But if we use this C Plus plus trick and
+then we just do scope mu text and pass in a reference to the mute
+text that we want to lock here. You can see that we don't
+need to remember to put a any kind of unlocked
+statement at the end. What's going to happen here is
+because we declare this scope. C Plus Plus is going to
+call the destructor for us as we're exiting this scope right
+here and we'll do the p thread music's unlock based on the reference that
+we set up here with politics.

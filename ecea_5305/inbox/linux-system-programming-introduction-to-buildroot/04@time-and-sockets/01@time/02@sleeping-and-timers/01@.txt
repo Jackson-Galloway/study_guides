@@ -1,0 +1,123 @@
+So in this video will expand on our
+previous discussion of timing and Linux. And we'll talk about sleeping and
+using timers in your program. To retire about sleeping in your program
+alternatives to sleeping and using timers. So this simplest sleep function
+is this one right here, you're going to pass in the number
+of seconds you want to sleep and you're going to get a return value for
+the number of seconds not slept. So why would sleep not sleep as many
+seconds as you told it to sleep? It turns out it wouldn't because if it
+gets a signal like the signals that we've discussed in previous videos,
+if a signal occurs, you're going to exit early
+from this sleep function. So in addition to the sleep
+function that's passed seconds, you can also use you sleep to sleep
+with microsecond precision and the execution is suspended for
+at least that number of microseconds. In other words, it's not going to
+actually have microsecond precision, but it's going to guarantee that you'll sleep
+at least that number of microseconds, but most likely more. Nano sleep gives you further
+resolution in nanoseconds in terms of the amount of minimum sleep. But it has the same limitations as you
+sleep that you're going to sleep actually more than that. And there's also slightly
+different in that it sets up the return value in the past argument as
+opposed to returning from the function. So the clock nanosleep function is another
+that you can use that supports a timer, abs time feature. And what this allows you to do is specify
+the absolute time that you want to sleep in the request. And this is useful for more precise
+sleep sequences because it allows you to specify the time that you want to
+wake up, as opposed to just sleeping for the amount of time
+specified in the argument. So if your timing based on
+some specific event and you want to sleep that amount of time,
+you don't have to worry about what might have happened between that event and
+the time you're trying to sleep. So any of the things that could happen in
+your program between getting the time and the time you call clock nanosleep, will be compensated for
+the time that you can specify and request here the absolute time that you
+want to get the wake up from sleep. So here's an example of a simple
+use of the sleep function where we're getting at the clock based
+on the type into TS start and then we are sleeping for
+a specified number of time in seconds. And then we're re getting
+the clock after the sleep completes to calculate how long we slept. So how long would we or what clock
+should we use for this duration for calculating the duration
+of time that we slept? We'd want to use clock monotonic because
+we wouldn't want to consider the case where the real time clock
+changed during the sleep. So you run this function, here that's
+linked below, this example code. You can see the comparison between
+how much time we requested. In this case we requested one second for
+each sleep and how much time we actually slept. And the difference between those two. So this is using different functions for
+sleep. So using sleep, micro sleep and nanosleep, like we talked about in the previous
+slides and also using clock nanosleep. So what you can see with these is that the
+accuracy ranges here based on each call. And if in this particular capture,
+it looks like the clock nanosleep for some reason would be less
+accurate than the rest, right? Because we slept slightly
+longer than the others. But it turns out if you just run this
+enough, you'll see that it varies and in general you can't count on accuracy
+below one millisecond on this system. And it will vary based on eat whatever
+system you happen to be using and whatever architecture is in use. So if you want to see the benefit of using
+the clock get time and clock nanosleep abstime that we discussed previously,
+what you can do is specify an additional delay to add between the time you get the
+clock and the time that you do the sleep. So this would simulate some
+action that the threat is taking. That took a little bit of time and therefore shifted the amount
+of time that you slept. So what you can see is that in each of the
+sleep cases other than clock nanosleep, you'll see about 100 milliseconds of
+difference that was added based on that additional sleep time that we added. But in clock down to sleep because we're
+calculating it based on an absolute time, we still get our sub millisecond
+precision on the sleep. So this just demonstrates
+the benefit of clock nanosleep and time ABSTIME for more accuracy. So once we talk about sleep we should talk
+about what we could do instead of sleeping or when it's appropriate, the book
+recommends sleep as appropriate for short, less than one second and
+infrequent events. And usually you can tell that
+code is poorly written if you see sleeps scattered everywhere
+throughout the code. So you usually don't want to use sleep for
+busy wait. There's almost always a better way
+that you should be waiting for things than sleeping. So for instance, if it's something file
+descriptor related would be better to be using a function that blocks on the file
+descriptor, let the kernel sleep for you and let the kernel decide when to
+wake you up will be a lot more efficient. It'll probably make your code
+a lot easier to read as well. So avoid the urge to use band-aids as
+sleep for a poorly understood problem. I've seen a lot of this where the comment
+about why it was added was well, it didn't work and
+then I added to sleep and started to work. Well, it's usually much better to figure
+out why it's not working instead because there's no guarantee that that sleep that
+works today is going to keep working in the future. It would be better to understand what's
+the reason that a sleep was needed and wait for that reason instead. And also you can consider using timers,
+which we'll talk about next. So the simplest interface for
+timers is the alarm function. This one is just going to
+send the signal for SIGALRM after the specified number of
+seconds that are specified in the alarm. So one thing to notice note about this is
+that SIGALRM is a signal like any other one and could actually be sent outside
+the process as well from from SIGKILL. So some of the concerns with alarm, we've got the signal handler that has
+a reentry limitations and these relatively short list of functions that's safe
+to call like we talked about before. SIGALRM can be sent by a bunch
+of different functions. So sleep, you sleep set a timer. They all might send SIGALRM. So you need to be careful about what your
+entire application or how your entire processes using sleep before you can
+know that you can use this mechanism. And as I mentioned before,
+SIGALRM can be sent outside the process. So that could get confusing
+maybe in some scenarios. So it's fine for
+a simple program like this, where we're just going to wait for
+two seconds here for an alarm signal and then just set a boolean to show
+that we had a signal occur. But for more complicated scenarios, you might want to use
+a different timing mechanism. So one alternate timing mechanism,
+you can use interval timers. It's still going to use
+SIGALRM to the process, but it's going to potentially
+optionally re-arm itself. So you can specify here the interval,
+if that interval specified, it will re-arm and continue to interrupt on and
+continue to alarm on a periodic interval. And it's got the similar signals
+each handlers issue that we've talked about because
+it's just using SIGALRM. So, an alternative to avoid some
+of the issues with the SIGALRM implementation is to use Posix timers and use threads instead of signal
+handlers with SGEV THREAD. So there's a way you can
+specify with Posix timers, you can use absolute timers to get
+more accuracy in terms of when the timing event or
+when the timing handler will be called. And you can use SGEV THREAD to allow you
+to use threads instead of signal handlers. So you don't have the reentrancy issues
+that you have with signal handlers. So here's an example of using
+the Posix timer went with SGEV THREAD. So setting up this structure,
+sigevent structure with SGEV THREAD and we can specify our notify
+a function here for time or thread. And timer threat is just a function
+that's going to be passed. A sigevent that will tell
+us what signal occurred and more information about the state of
+the system when the signal happened. So you can run this one using the time or
+threat example here from lecture nine. And this is just a simple example that
+will show you that you're getting the expected number of timers that
+occurred in a some period that specified. So, an important thing to note about the
+timer threat handler because this isn't happening in a signal handler,
+we can do things that aren't signal safe. So p threaten you text lock and unlock is
+an example of something that would not be signal safe, but it is thread safe. And so we can use that in our
+Posix time or handler, but we wouldn't be able to use
+it if we were using signals.

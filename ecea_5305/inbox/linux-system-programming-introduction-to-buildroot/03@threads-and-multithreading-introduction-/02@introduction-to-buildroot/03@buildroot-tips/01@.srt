@@ -1,0 +1,1357 @@
+1
+00:00:00,000 --> 00:00:02,715
+In this video, I wanted
+to add a few tips
+
+2
+00:00:02,715 --> 00:00:04,890
+beyond just getting
+the basic build done
+
+3
+00:00:04,890 --> 00:00:07,050
+to describe some more tips for
+
+4
+00:00:07,050 --> 00:00:10,350
+using Buildroot
+for your project.
+
+5
+00:00:10,840 --> 00:00:13,380
+The learning objectives
+here we'll just be
+
+6
+00:00:13,380 --> 00:00:15,110
+giving additional tips
+for using Buildroot,
+
+7
+00:00:15,110 --> 00:00:17,910
+and also for completing
+assignment Number 4.
+
+8
+00:00:17,910 --> 00:00:20,520
+First is you might
+notice in some of
+
+9
+00:00:20,520 --> 00:00:23,980
+the scripts that they
+start with their name $0.
+
+10
+00:00:24,320 --> 00:00:27,930
+I wanted to describe
+what this was.
+
+11
+00:00:27,930 --> 00:00:31,170
+You can use $0 to reference
+
+12
+00:00:31,170 --> 00:00:32,805
+the full path and
+
+13
+00:00:32,805 --> 00:00:35,325
+name of the executable
+that was started.
+
+14
+00:00:35,325 --> 00:00:38,190
+If you started a script.sh
+from some path and
+
+15
+00:00:38,190 --> 00:00:41,280
+you use /path/toscript.sh,
+
+16
+00:00:41,280 --> 00:00:44,895
+then $0 would have that
+
+17
+00:00:44,895 --> 00:00:50,340
+/pathtoscript.sh
+as the full name
+
+18
+00:00:50,340 --> 00:00:52,905
+of the path that we executed.
+
+19
+00:00:52,905 --> 00:00:55,690
+The dirname strips out
+just the directory path.
+
+20
+00:00:55,690 --> 00:00:57,895
+That would give us /pathto.
+
+21
+00:00:57,895 --> 00:01:02,710
+When we do cd `dirname $0,
+
+22
+00:01:02,710 --> 00:01:04,300
+what this is doing
+is that we change
+
+23
+00:01:04,300 --> 00:01:07,265
+directory into the path
+where the script is located.
+
+24
+00:01:07,265 --> 00:01:10,090
+This allows us to
+ensure that when
+
+25
+00:01:10,090 --> 00:01:13,030
+we're calling a script
+from some other path,
+
+26
+00:01:13,030 --> 00:01:14,590
+we always cd into
+
+27
+00:01:14,590 --> 00:01:16,870
+the directory containing the
+script before we run it.
+
+28
+00:01:16,870 --> 00:01:17,920
+This way, if we have
+
+29
+00:01:17,920 --> 00:01:19,600
+other scripts that we're
+going to reference,
+
+30
+00:01:19,600 --> 00:01:22,090
+we can reference that knowing
+that we're running from
+
+31
+00:01:22,090 --> 00:01:25,670
+the directory where
+the script is located.
+
+32
+00:01:25,670 --> 00:01:27,940
+I also wanted to talk about
+
+33
+00:01:27,940 --> 00:01:31,505
+single package rebuilds
+and local builds.
+
+34
+00:01:31,505 --> 00:01:33,630
+You might be used to,
+
+35
+00:01:33,630 --> 00:01:39,250
+as a brute force every time
+you make an executable,
+
+36
+00:01:39,250 --> 00:01:42,635
+you do a clean step and
+then you do a build step.
+
+37
+00:01:42,635 --> 00:01:45,550
+Well, it turns out that clean
+steps are really painful
+
+38
+00:01:45,550 --> 00:01:48,250
+when you're building an
+entire embedded system.
+
+39
+00:01:48,250 --> 00:01:49,270
+Because if you think about all
+
+40
+00:01:49,270 --> 00:01:50,440
+the different things
+that you're building
+
+41
+00:01:50,440 --> 00:01:53,225
+as a part of a make operation,
+
+42
+00:01:53,225 --> 00:01:57,520
+it's going to take probably
+hours to get the build done
+
+43
+00:01:57,520 --> 00:02:02,205
+depending on the capabilities
+of your host system.
+
+44
+00:02:02,205 --> 00:02:04,570
+You really want to
+avoid doing clean
+
+45
+00:02:04,570 --> 00:02:08,210
+builds in terms of
+cleaning the entire image.
+
+46
+00:02:08,210 --> 00:02:11,015
+You want to be able to iterate
+
+47
+00:02:11,015 --> 00:02:14,705
+on changes to an
+individual package easily.
+
+48
+00:02:14,705 --> 00:02:19,340
+There's several different ways
+to do this with Buildroot.
+
+49
+00:02:19,340 --> 00:02:21,575
+One is, if you
+just want to build
+
+50
+00:02:21,575 --> 00:02:23,530
+a specific package, you can say,
+
+51
+00:02:23,530 --> 00:02:26,085
+make the package name-rebuild
+
+52
+00:02:26,085 --> 00:02:28,320
+or make the package
+name reconfigure,
+
+53
+00:02:28,320 --> 00:02:29,775
+from the Buildroot directory,
+
+54
+00:02:29,775 --> 00:02:31,550
+in order to do just that
+
+55
+00:02:31,550 --> 00:02:34,350
+build stuff for that
+particular package.
+
+56
+00:02:37,250 --> 00:02:41,390
+If you remember in our
+package,.makefile,
+
+57
+00:02:41,390 --> 00:02:44,345
+we specify an
+individual commit hash
+
+58
+00:02:44,345 --> 00:02:46,880
+that maps to the source
+that we want to use.
+
+59
+00:02:46,880 --> 00:02:48,410
+Well, what happens when you're
+
+60
+00:02:48,410 --> 00:02:49,820
+trying to fix something with
+
+61
+00:02:49,820 --> 00:02:53,465
+your code and you're making
+a whole bunch of changes.
+
+62
+00:02:53,465 --> 00:02:55,160
+You don't want to have
+to push those up to
+
+63
+00:02:55,160 --> 00:02:57,320
+the Git repository and go in and
+
+64
+00:02:57,320 --> 00:03:00,235
+change that commit hash
+over and over again.
+
+65
+00:03:00,235 --> 00:03:02,415
+You can use local
+builds for that.
+
+66
+00:03:02,415 --> 00:03:04,835
+You can use a make argument
+
+67
+00:03:04,835 --> 00:03:07,190
+that specifies the
+name of your package,
+
+68
+00:03:07,190 --> 00:03:10,760
+and then uses
+OVERRIDE_SRCDIR equals,
+
+69
+00:03:10,760 --> 00:03:13,270
+and then just give it a path
+to the local directory.
+
+70
+00:03:13,270 --> 00:03:15,210
+What this will do is ignore
+
+71
+00:03:15,210 --> 00:03:18,105
+the Git URL that you
+specified for this build,
+
+72
+00:03:18,105 --> 00:03:20,660
+and instead, find
+the source code at
+
+73
+00:03:20,660 --> 00:03:23,360
+the location that you specified
+here at pathto local.
+
+74
+00:03:23,360 --> 00:03:29,820
+You combine the AESD assignments
+
+75
+00:03:29,820 --> 00:03:32,070
+override SRCDIR with the make
+
+76
+00:03:32,070 --> 00:03:33,630
+AESD assignments rebuild or
+
+77
+00:03:33,630 --> 00:03:35,670
+make AESD assignments
+reconfigure,
+
+78
+00:03:35,670 --> 00:03:37,190
+to iterate really quickly on
+
+79
+00:03:37,190 --> 00:03:39,800
+changes that you have
+to your local source.
+
+80
+00:03:39,800 --> 00:03:43,310
+I encourage you to
+read about these,
+
+81
+00:03:43,310 --> 00:03:45,845
+and test the model
+with this assignment,
+
+82
+00:03:45,845 --> 00:03:47,375
+get used to using them.
+
+83
+00:03:47,375 --> 00:03:50,525
+Because as we get more
+complicated assignments later,
+
+84
+00:03:50,525 --> 00:03:51,740
+it's going to be
+important that you
+
+85
+00:03:51,740 --> 00:03:53,240
+use this as part
+of your workflow.
+
+86
+00:03:53,240 --> 00:03:54,590
+Whatever you do, do not
+
+87
+00:03:54,590 --> 00:03:56,090
+do a clean build
+every time you make
+
+88
+00:03:56,090 --> 00:03:57,830
+a change because
+it's going to take
+
+89
+00:03:57,830 --> 00:03:59,735
+you forever to get
+the assignment done,
+
+90
+00:03:59,735 --> 00:04:02,160
+waiting for your
+builds to complete.
+
+91
+00:04:03,350 --> 00:04:05,475
+The other thing I mentioned,
+
+92
+00:04:05,475 --> 00:04:08,010
+the builds are going to take
+a long time to complete.
+
+93
+00:04:08,010 --> 00:04:10,240
+You're probably
+half-hour to hour
+
+94
+00:04:10,240 --> 00:04:12,620
+range depending on the
+capabilities of your hardware.
+
+95
+00:04:12,620 --> 00:04:14,320
+What if, if you're using
+
+96
+00:04:14,320 --> 00:04:17,260
+SSH as a part of
+your workflow and
+
+97
+00:04:17,260 --> 00:04:23,020
+your screen session dies or
+is closed for some reason,
+
+98
+00:04:23,020 --> 00:04:24,700
+like for instance, maybe if
+
+99
+00:04:24,700 --> 00:04:27,880
+you lost network
+connectivity or something,
+
+100
+00:04:27,880 --> 00:04:30,700
+what would happen to your build?
+
+101
+00:04:30,700 --> 00:04:33,125
+Your build actually
+stops in that case.
+
+102
+00:04:33,125 --> 00:04:36,340
+If you are using SSH as part
+of your workflow and you're
+
+103
+00:04:36,340 --> 00:04:39,760
+SSHing into the system that
+you're using for build,
+
+104
+00:04:39,760 --> 00:04:41,860
+one alternative is
+that you can have
+
+105
+00:04:41,860 --> 00:04:44,785
+a dedicated screen
+session for your Build.
+
+106
+00:04:44,785 --> 00:04:46,090
+You can use this like this,
+
+107
+00:04:46,090 --> 00:04:48,730
+you can define a
+build screen session,
+
+108
+00:04:48,730 --> 00:04:50,750
+then you can start the build
+from within the session,
+
+109
+00:04:50,750 --> 00:04:53,185
+and then you can use
+Control ID to disconnect.
+
+110
+00:04:53,185 --> 00:04:55,410
+To reconnect you
+can use screen-r.
+
+111
+00:04:55,410 --> 00:04:59,150
+This just helps keep
+long-running tasks happening in
+
+112
+00:04:59,150 --> 00:05:03,685
+the background and not end
+on you and your SSH session.
+
+113
+00:05:03,685 --> 00:05:05,600
+You can read more about
+the screen command
+
+114
+00:05:05,600 --> 00:05:08,280
+in the link that
+I provided here.
+
+115
+00:05:08,870 --> 00:05:12,275
+Another thing that
+I'll provide as a tip,
+
+116
+00:05:12,275 --> 00:05:15,110
+I mentioned before that we
+need to use the SSH URL,
+
+117
+00:05:15,110 --> 00:05:16,370
+based on the fact
+that we want to
+
+118
+00:05:16,370 --> 00:05:17,720
+automate the build and we
+
+119
+00:05:17,720 --> 00:05:21,035
+are using a private repository,
+
+120
+00:05:21,035 --> 00:05:22,460
+which is typically
+probably going to be
+
+121
+00:05:22,460 --> 00:05:25,705
+the case for your
+production builds as well.
+
+122
+00:05:25,705 --> 00:05:28,180
+If you kick off a normal build,
+
+123
+00:05:28,180 --> 00:05:30,080
+there's a bunch of work
+that the builds are
+
+124
+00:05:30,080 --> 00:05:32,060
+going to do first
+install a toolchain.
+
+125
+00:05:32,060 --> 00:05:33,830
+It'll be quite a while
+before it actually gets to
+
+126
+00:05:33,830 --> 00:05:36,685
+the point that it needs
+to compile your package.
+
+127
+00:05:36,685 --> 00:05:38,765
+When it gets to that point,
+
+128
+00:05:38,765 --> 00:05:40,475
+that needs to compile
+your package,
+
+129
+00:05:40,475 --> 00:05:45,890
+if you have a password
+associated with your SSH key,
+
+130
+00:05:45,890 --> 00:05:47,810
+then it's going to stall
+there waiting for you to
+
+131
+00:05:47,810 --> 00:05:50,335
+enter your key so
+that it can continue.
+
+132
+00:05:50,335 --> 00:05:53,899
+What I suggest instead is
+either use a passwordless
+
+133
+00:05:53,899 --> 00:05:57,410
+key or use SSH agent in
+your terminal session.
+
+134
+00:05:57,410 --> 00:06:00,605
+In the same window that
+you're using to do the build,
+
+135
+00:06:00,605 --> 00:06:03,260
+you'd run these commands,
+eval SSH agent,
+
+136
+00:06:03,260 --> 00:06:05,810
+and then SSH add with
+a path to your key.
+
+137
+00:06:05,810 --> 00:06:07,400
+It'll ask you for your key
+
+138
+00:06:07,400 --> 00:06:09,050
+and you'll enter your
+key at that time.
+
+139
+00:06:09,050 --> 00:06:11,045
+Then, after that point,
+
+140
+00:06:11,045 --> 00:06:13,490
+any of the SSH-related commands
+
+141
+00:06:13,490 --> 00:06:15,950
+that happen after that
+will automatically use
+
+142
+00:06:15,950 --> 00:06:18,290
+your key and the credentials
+that you've already stored
+
+143
+00:06:18,290 --> 00:06:21,810
+in that particular
+terminal session.
+
+144
+00:06:21,810 --> 00:06:24,385
+Another thing I
+wanted to mention,
+
+145
+00:06:24,385 --> 00:06:26,260
+students have had
+weird errors in
+
+146
+00:06:26,260 --> 00:06:28,780
+the past because
+they've used spaces
+
+147
+00:06:28,780 --> 00:06:30,130
+in paths and you can get
+
+148
+00:06:30,130 --> 00:06:31,480
+some really confusing
+errors out of
+
+149
+00:06:31,480 --> 00:06:33,295
+Buildroot if you do this.
+
+150
+00:06:33,295 --> 00:06:35,710
+This is not something
+that's typically done.
+
+151
+00:06:35,710 --> 00:06:37,255
+If you're coming from Windows,
+
+152
+00:06:37,255 --> 00:06:40,300
+this might be more normal
+to you to have a space in
+
+153
+00:06:40,300 --> 00:06:44,560
+a path or in a directory
+name for instance.
+
+154
+00:06:44,560 --> 00:06:47,560
+That's not a very
+common thing on Linux,
+
+155
+00:06:47,560 --> 00:06:48,745
+and it's not something that's
+
+156
+00:06:48,745 --> 00:06:51,640
+well-supported by any
+tools, including Buildroot.
+
+157
+00:06:51,640 --> 00:06:55,300
+Please avoid doing that
+and don't use a space,
+
+158
+00:06:55,300 --> 00:06:57,280
+use an underscore or
+a hyphen or something
+
+159
+00:06:57,280 --> 00:06:59,260
+like that if you need
+
+160
+00:06:59,260 --> 00:07:04,310
+to separate words in a
+file or directory path.
+
+161
+00:07:05,520 --> 00:07:08,244
+The other thing I
+wanted to mention,
+
+162
+00:07:08,244 --> 00:07:10,150
+we've talked about SSH already
+
+163
+00:07:10,150 --> 00:07:12,610
+and some of you might
+be using SSH as part
+
+164
+00:07:12,610 --> 00:07:17,665
+of your workflow for accessing
+a Linux system for builds.
+
+165
+00:07:17,665 --> 00:07:22,060
+I wanted to talk about using
+SSH passthrough for QEMU.
+
+166
+00:07:22,060 --> 00:07:23,995
+Starting with Assignment 4,
+
+167
+00:07:23,995 --> 00:07:27,325
+we'll use SSH to interact
+with our QEMU system.
+
+168
+00:07:27,325 --> 00:07:30,670
+With Assignment 3 we had a
+really simple environment
+
+169
+00:07:30,670 --> 00:07:32,320
+where we just booted
+right into a terminal and
+
+170
+00:07:32,320 --> 00:07:34,180
+we interacted through
+that terminal.
+
+171
+00:07:34,180 --> 00:07:37,615
+With Assignments 4 and later
+we're going to set up SSH,
+
+172
+00:07:37,615 --> 00:07:41,245
+since Buildroot makes
+that easy for us to do.
+
+173
+00:07:41,245 --> 00:07:45,890
+Then we're going to SSH
+into our QEMU instance.
+
+174
+00:07:46,740 --> 00:07:50,680
+The way that we're going to
+start our QEMU instance,
+
+175
+00:07:50,680 --> 00:07:53,980
+we're going to use a
+version of networking that
+
+176
+00:07:53,980 --> 00:07:58,580
+essentially shares networking
+with the host system.
+
+177
+00:07:59,160 --> 00:08:03,310
+If you're using a Linux
+system and you're
+
+178
+00:08:03,310 --> 00:08:07,885
+using SSH communication
+over TCP port 22,
+
+179
+00:08:07,885 --> 00:08:10,465
+your QEMU is not going to
+be able to use that port
+
+180
+00:08:10,465 --> 00:08:13,720
+because that's already in
+use by the host system.
+
+181
+00:08:13,720 --> 00:08:15,370
+We need to modify
+
+182
+00:08:15,370 --> 00:08:22,660
+our QEMU start script to
+forward port a random port
+
+183
+00:08:22,660 --> 00:08:26,365
+to our QEMU port 22 inside
+
+184
+00:08:26,365 --> 00:08:32,185
+the virtual machine or
+inside the test image.
+
+185
+00:08:32,185 --> 00:08:36,070
+We've picked 10022 for that.
+
+186
+00:08:36,070 --> 00:08:37,840
+You can pick any
+number that you want.
+
+187
+00:08:37,840 --> 00:08:40,315
+This is just going to be
+the standard for the class.
+
+188
+00:08:40,315 --> 00:08:42,490
+The important thing to know
+about this is that when
+
+189
+00:08:42,490 --> 00:08:44,515
+you're using SSH to interact,
+
+190
+00:08:44,515 --> 00:08:46,930
+you're going to use
+the -p argument
+
+191
+00:08:46,930 --> 00:08:49,135
+for SSH to specify
+that port number.
+
+192
+00:08:49,135 --> 00:08:51,430
+That's going to map
+to port 22 inside
+
+193
+00:08:51,430 --> 00:08:54,445
+your embedded QEMU instance.
+
+194
+00:08:54,445 --> 00:08:56,935
+This is another
+important thing to note,
+
+195
+00:08:56,935 --> 00:08:59,050
+I'm not sure why it
+works this way but
+
+196
+00:08:59,050 --> 00:09:00,970
+the scp command that
+
+197
+00:09:00,970 --> 00:09:03,130
+you'd use for copying
+files in and out,
+
+198
+00:09:03,130 --> 00:09:04,510
+for that one you actually use
+
+199
+00:09:04,510 --> 00:09:07,390
+a P instead of a
+lowercase p. You can
+
+200
+00:09:07,390 --> 00:09:11,605
+get some confusing error message
+if you use a p with scp.
+
+201
+00:09:11,605 --> 00:09:14,420
+I just want to make
+you aware of this.
+
+202
+00:09:15,180 --> 00:09:18,070
+I mentioned before that
+you don't want to just do
+
+203
+00:09:18,070 --> 00:09:20,650
+clean builds by default
+with Buildroot.
+
+204
+00:09:20,650 --> 00:09:23,499
+However, sometimes
+it is necessary
+
+205
+00:09:23,499 --> 00:09:26,230
+to do a clean build
+for Buildroot.
+
+206
+00:09:26,230 --> 00:09:29,410
+This is one of the ways
+that Buildroot can be a
+
+207
+00:09:29,410 --> 00:09:32,530
+little bit more confusing
+than a tool like Akta.
+
+208
+00:09:32,530 --> 00:09:34,330
+If you read through
+the Buildroot manual,
+
+209
+00:09:34,330 --> 00:09:36,220
+what it says is that it's
+the responsibility of
+
+210
+00:09:36,220 --> 00:09:38,905
+the user to know when a
+full rebuild is necessary.
+
+211
+00:09:38,905 --> 00:09:40,900
+Then it gives some examples of
+
+212
+00:09:40,900 --> 00:09:43,225
+when a full rebuild
+is necessary.
+
+213
+00:09:43,225 --> 00:09:45,010
+One is when a target
+
+214
+00:09:45,010 --> 00:09:47,860
+architecture or toolchain
+configuration change.
+
+215
+00:09:47,860 --> 00:09:49,120
+If you ever change
+
+216
+00:09:49,120 --> 00:09:51,280
+something fundamental
+like the toolchain,
+
+217
+00:09:51,280 --> 00:09:52,765
+if we switched from
+
+218
+00:09:52,765 --> 00:09:55,315
+glibc to musl or
+something like that,
+
+219
+00:09:55,315 --> 00:09:57,790
+that would be a case
+
+220
+00:09:57,790 --> 00:10:00,130
+where you definitely
+need a full rebuild.
+
+221
+00:10:00,130 --> 00:10:02,260
+If you remove a
+package in order to
+
+222
+00:10:02,260 --> 00:10:04,810
+actually remove that package
+from the root file system,
+
+223
+00:10:04,810 --> 00:10:06,940
+you can either delete it
+out of the root file system
+
+224
+00:10:06,940 --> 00:10:09,625
+yourself or you have
+to do a full rebuilt.
+
+225
+00:10:09,625 --> 00:10:10,870
+This part can be a little bit
+
+226
+00:10:10,870 --> 00:10:13,540
+confusing to people
+starting out.
+
+227
+00:10:13,540 --> 00:10:17,380
+Sometimes when packages are
+
+228
+00:10:17,380 --> 00:10:19,104
+added that reference
+other packages,
+
+229
+00:10:19,104 --> 00:10:20,620
+you can get into
+a scenario where
+
+230
+00:10:20,620 --> 00:10:22,285
+you need to do a full rebuild.
+
+231
+00:10:22,285 --> 00:10:24,520
+It's more complicated
+scenarios than what
+
+232
+00:10:24,520 --> 00:10:26,545
+we're going to get with
+this first assignment,
+
+233
+00:10:26,545 --> 00:10:29,845
+but wanted to let you know
+that this was coming up.
+
+234
+00:10:29,845 --> 00:10:32,380
+If you're changing options on
+
+235
+00:10:32,380 --> 00:10:35,050
+a package that's already
+included in the image,
+
+236
+00:10:35,050 --> 00:10:36,700
+this can be a case
+where you need to
+
+237
+00:10:36,700 --> 00:10:38,260
+do a full rebuild to pick
+
+238
+00:10:38,260 --> 00:10:39,640
+those changes up or you need to
+
+239
+00:10:39,640 --> 00:10:42,340
+rebuild that individual package.
+
+240
+00:10:42,340 --> 00:10:47,190
+I bring this all
+up because running
+
+241
+00:10:47,190 --> 00:10:49,890
+a clean step and then
+running build usually is
+
+242
+00:10:49,890 --> 00:10:51,300
+actually a troubleshooting step
+
+243
+00:10:51,300 --> 00:10:52,665
+that you'll want to
+use with Buildroot.
+
+244
+00:10:52,665 --> 00:10:54,285
+Especially if you've
+done anything
+
+245
+00:10:54,285 --> 00:10:57,410
+that might have been
+something in this list.
+
+246
+00:10:57,410 --> 00:10:59,050
+But you definitely don't want
+
+247
+00:10:59,050 --> 00:11:00,370
+to use this for
+incremental changes.
+
+248
+00:11:00,370 --> 00:11:02,845
+If all you're changing is
+the content of your package,
+
+249
+00:11:02,845 --> 00:11:04,750
+then a clean build is
+not going to help you
+
+250
+00:11:04,750 --> 00:11:07,610
+and it's going to take a
+long time to complete.
+
+251
+00:11:08,490 --> 00:11:11,050
+We already mentioned
+the single package
+
+252
+00:11:11,050 --> 00:11:13,195
+rebuild and local
+Build instructions.
+
+253
+00:11:13,195 --> 00:11:14,860
+That's what you should
+be using when you're
+
+254
+00:11:14,860 --> 00:11:16,750
+iterating our changes
+to your package.
+
+255
+00:11:16,750 --> 00:11:19,375
+But if you change something
+globally in configuration,
+
+256
+00:11:19,375 --> 00:11:21,340
+I just want to make you
+aware that there are times
+
+257
+00:11:21,340 --> 00:11:24,415
+you will need to do a
+clean build in that case.
+
+258
+00:11:24,415 --> 00:11:28,060
+I mentioned that you could
+manually remove the content
+
+259
+00:11:28,060 --> 00:11:31,795
+from the root file system.
+
+260
+00:11:31,795 --> 00:11:34,855
+This is one handy
+thing about Buildroot.
+
+261
+00:11:34,855 --> 00:11:36,865
+There's this Buildroot
+output directory
+
+262
+00:11:36,865 --> 00:11:38,995
+that contains a
+target sub directory.
+
+263
+00:11:38,995 --> 00:11:40,705
+Inside that target directory
+
+264
+00:11:40,705 --> 00:11:42,070
+you see this message that says,
+
+265
+00:11:42,070 --> 00:11:43,960
+"This is not your
+root file system."
+
+266
+00:11:43,960 --> 00:11:46,330
+What this is telling you is that
+
+267
+00:11:46,330 --> 00:11:51,415
+your root file system is not
+an exact replica of this.
+
+268
+00:11:51,415 --> 00:11:54,235
+By manipulating this,
+you aren't necessarily
+
+269
+00:11:54,235 --> 00:11:55,885
+manipulating things
+like permissions
+
+270
+00:11:55,885 --> 00:11:57,895
+of the content of your
+root file system.
+
+271
+00:11:57,895 --> 00:12:00,085
+However, this does contain
+
+272
+00:12:00,085 --> 00:12:01,360
+the content that's used to build
+
+273
+00:12:01,360 --> 00:12:02,935
+your root file system image.
+
+274
+00:12:02,935 --> 00:12:05,440
+You can go in here and manually
+
+275
+00:12:05,440 --> 00:12:08,110
+remove packages if you have
+
+276
+00:12:08,110 --> 00:12:10,450
+removed them from your
+image and they will be
+
+277
+00:12:10,450 --> 00:12:13,150
+reflected in the image
+that shows up ultimately.
+
+278
+00:12:13,150 --> 00:12:15,070
+You can sometimes use this as
+
+279
+00:12:15,070 --> 00:12:17,185
+a shortcut so that you
+don't have to clean build.
+
+280
+00:12:17,185 --> 00:12:19,405
+It's also a good
+troubleshooting step.
+
+281
+00:12:19,405 --> 00:12:21,490
+If you know that you're
+
+282
+00:12:21,490 --> 00:12:23,665
+missing a file in your
+image for some reason,
+
+283
+00:12:23,665 --> 00:12:26,290
+rather than having to completely
+
+284
+00:12:26,290 --> 00:12:28,540
+build the image and then
+boot it up and QEMU,
+
+285
+00:12:28,540 --> 00:12:30,550
+you can just run your
+package Build and
+
+286
+00:12:30,550 --> 00:12:32,695
+look to see if it's been
+installed in this directory.
+
+287
+00:12:32,695 --> 00:12:34,960
+If it hasn't been, then you
+know it's not going to be
+
+288
+00:12:34,960 --> 00:12:38,360
+there when you complete
+the imaging step as well.

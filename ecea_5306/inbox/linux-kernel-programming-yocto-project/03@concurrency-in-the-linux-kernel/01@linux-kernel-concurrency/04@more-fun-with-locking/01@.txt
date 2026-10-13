@@ -1,0 +1,243 @@
+Just in case you haven't had enough fun with
+kernel locking yet, we're going to have more fun
+with locking in this video. This is really just
+a continuation of the previous series that
+we've got about locking. We're going to
+introduce spinlocks and we're going to talk more about locking strategies and
+dealing with lock ordering. Spinlocks are an
+important type of locking mechanism that can be used in code
+that cannot sleep. An example of code that can't sleep is interrupt handlers. If you need to do some
+locking in interrupt handler, then the locking option that you have is really
+spinlocks and nothing else. It's not safe for you to sleep within interrupt
+handler contexts. They're very important
+for that reason. They're also very useful in cases where there's
+something short and simple that you need
+to do because they're higher performance
+than semaphores, and therefore probably
+a better choice for that type of situation. Conceptually, what
+a spinlock is, is just a single bit in integer value plus a
+type loop spin that happens waiting for that
+bit to get set or cleared. There's an atomic test and set of the bit that can
+happen all in one operation. In other words,
+there's essentially a single cycle
+operation that says, "If the bits not set yet,
+I'm going to set it." That way if two
+different threads were attempting to do
+that at the same time, only one of those two threads
+would actually be able to see that the bit
+wasn't set and set it. The other one would continue waiting to be able
+to set the bit. An important thing to know
+about spinlocks though, is that any of the
+processes that are waiting on access to a spinlock, are executing in a tight loop just calling that
+over and over again, waiting to see if the
+bit is still set or not. This is another reason why there's the caveat here
+about being properly used, because if you hold a spinlock for a very
+large amount of time, what it means is that
+any other CPU that's waiting is just
+burning CPU cycles, pulling spinlock
+over and over again. In which case it's probably not a very good performance
+solution at all. The other thing that
+we have with spinlocks are irqsave and
+irqrestore variance. These might sound similar to the interruptible things that we've talked about
+with semaphores, but they're actually
+completely different so you shouldn't get
+these confused. The irqsave and
+irqrestore versions; remember we talked
+about the fact that spinlocks are
+really your option for doing locking in
+kernel interrupts. If you're going to have
+a lock that you use both inside kernel interrupts and outside kernel interrupts, it's important that you use the irqsave versions for
+accessing those spinlocks. The irqsave and
+irqrestore versions are always safe in either interrupt or non
+interrupt contexts. If I'm using a locking
+either context, it's always safe for me to
+use the irqsave version. The difference between
+these two versions is the irqsave version
+is going to have an extra argument
+here with flags, and the flags can just be a local value that you
+store on the stack. Here I'm showing a simple
+example where I've got a value that I'm incrementing
+in a data structure, and I've got a lock
+that's a spinlock that's associated with
+that data structure. I've initialized that already
+here with spinlock in it. The irqsave, what
+this is going to do is check to see if
+interrupts are enabled, if they are enabled, it's
+going to disable interrupts, and it's going to
+set up the flag to track whether interrupts
+we're enabled. So then I can access my
+variable and then I can use irqrestore to look at
+the flags value and decide if interrupts
+were initially enabled, then it will re-enable them at the completion
+of the irqrestore call. The difference between these
+two is really this check for interrupts enabled and
+disable re-enable step. If I use the base
+spinlock versions that don't have the
+irqsave and irqrestore, I'm not passing that flag value and I'm never going to
+be disabling interrupts. Interrupts are free
+to happen even though I have obtained
+the spinlock. The spinlock version again, the generic one without
+irqsave and restore, it doesn't disable or
+re-enable interrupts. It's only safe to use this if you are never using the
+spinlock in an interrupt, or if you happen to know
+that interrupts are blocked for some other reason when
+this code is executing. If you think about
+what could happen if an interrupt happens on the same CPU and it attempts to access data lock
+that's held with spinlock- In that case, you're
+going to deadlock because the code is just going to spin
+in a tight loop attempting to access
+the spinlock, but the spinlock's already accessed with a thread
+that stalled on the same CPU and so
+you're never going to be able to continue
+in that case. You have to be careful about the way you're using spinlocks to know if you're not
+going to use the IRQ; one, you have to be sure that your code's never going to
+be called from an interrupt. In terms of using spinlocks, there are some restrictions
+then that we have in terms of what we can do while
+we're holding a spinlock. Again, because spinlocks are
+going to be used in cases like interrupts where you
+aren't able to sleep. The code rule is really
+just that any code that is holding a spinlock needs to be what we're
+going to call atomic. When we talk about
+atomic in this context, is maybe a little
+different than when we're talking about
+atomic access to variables so we're creating an atomic section with
+a critical section. But when we talk about atomic
+context for spinlocks, what we really mean is that
+the code cannot sleep, and it also can't relinquish the processor for anything
+other than interrupts and the only way that it can relinquish the processor
+for interrupts is if you know that there's no interrupt that's going
+to access your lock. You might ask, "Well,
+how would I know? I know that I can't call sleep, if I'm calling another
+kernel function, how would I know if that kernel function
+doesn't call sleep?" That's the biggest issue
+with using spinlock. It's difficult to know
+that because you really need to know a lot about the function
+that you're calling. It could be that the function
+you call doesn't sleep, but maybe that function calls
+another function that under some specific scenarios might came out like a block of memory. In that case, eventually, you could get in this
+situation where it's sleeping. Most functions that might allocate memory
+also might sleep. If you're looking at
+doing something even remotely complex to
+where it's difficult to map what kernel functions you're going to be calling or the state of those functions with respect to sleep is
+not clearly documented, you're probably
+not in a position that you should be
+using spinlocks. The second rule here
+is that it must be held for a minimum time possible because anyone
+waiting for the lock is spinning in tight
+CPU wait loops. Again, if you have a
+lot of work to do, you're calling a bunch
+of kernel functions or you're calling anything
+that might delay, for instance,
+waiting on hardware, spinlock is not going to be
+the right primitive to use. You should be using semaphores
+or something like it. The book talks a lot about
+defining locking rules as an important design part of
+designing your kernel driver. Locking rules need
+to be explicit and they need to be defined
+from the beginning. You need to plan out for your driver what needs to
+be locked and exactly when I'm going to be locking
+and when I'm going to be freeing access to whatever
+resources that need locking. The general strategy here
+is to define lock that controls access
+to specific data, designing it in
+from the beginning. Don't wait for
+locking problems to happen and then figure
+out how to solve them. Think from the beginning
+about what needs locking and how you can design it in. Then clearly enforce rules because you don't want
+to end up in a situation where there's any ambiguity about who needs to hold
+and acquire the lock. Because if there is,
+you could end up with nested function call
+where two calls in a row attempt to
+obtain the same lock, which could end up in
+a deadlock scenario. You always want to write
+functions that would assume that the caller has allocated the lock and then this
+is really important, when you do assume that, you want to document that
+explicitly in your function. Don't make your
+users read through every single function to know
+what your assumptions were. Make sure you're documenting
+that with your code. The book talks a little
+bit about how to handle multiple locks and
+the sequencing and ordering for multiple locks. You can think of a
+case where you've got multiple locks and you need to acquire them from two
+different threads. Thinking of a case
+where we happen to catch the system
+at a snapshot in time as shown here where we've got
+one thread that holds lock1 and the instruction pointer is currently getting ready
+to execute this line of code here that's about
+to grab lock number 2. Then we think of another thread that doesn't hold
+any locks yet and the instruction pointer is also at the point
+where it's just getting ready to hold lock2. What would happen in this case when the thread number 2 here executes this instruction
+right before thread number 1? What would happen in last case? We acquire lock number
+2 and thread number 2, we would still hold lock
+number 1 and thread number 1, and each thread would
+be waiting for the other to release its lock, which, of course, isn't
+going to happen because they're both waiting
+on mutex_lock. This is an example
+of a deadlock. The real-time
+embedded course goes into a lot more
+detail about this, we're just bringing it up
+because it's relevant to our discussion about locking and specifically about multiple
+locks and lock ordering. Some rules we can use for lock ordering when we're talking
+about multiple locks. Lock should always be acquired in the same order and then they should be released in
+the opposite order that they were required. A lot of times the
+lock ordering rules, if you're talking
+about how to use locks that are already
+used by the kernel, are not very well-documented. There's an expectation
+that you're going to read the
+kernel code and understand any lock ordering of multiple locks if you need
+to obtain multiple locks. It's really to read the Source Luke that we've talked about, in other cases, that the kernel developers
+are going to expect you to read the source. In the case that you're
+designing something that's using multiple
+locks you define, then you'll need to explicitly state that in your
+own documentation. General rules of
+thumb about how to do lock ordering and how
+to use multiple locks. Number 1 is if you can design such that you
+don't need to use multiple locks and you
+don't ever need to acquire multiple locks,
+that's the best case. When you get to the
+point where you think you need multiple locks, maybe one step would be to
+step back and evaluate; is that really what I need? Or is there some way I could do this that wouldn't
+require multiple locks? The book also
+suggests you should obtain your own
+driver locks before you obtain locks that are
+used in other part of the kernel. Why would
+you want to do this? Well, it's because you've
+got more control over your lock than the kernel lock and there might
+be other drivers. Essentially, the lock that the kernel defines might
+be a more popular lock, there might be more drivers that are going to try
+to use that lock. You want to minimize
+the chance that you're going to be blocking someone when you're holding that more popular kernel lock. Always hold semaphores before spinlocks based on what
+we already talked about. In terms of the
+difference between semaphores and spinlocks, you can probably guess that
+it'd be important to do that. Because if you remember
+our rule about spinlock and the contexts that you have when you're
+holding a spinlock, it's important not to sleep, but a semaphore can sleep when you're
+attempting to access it. Therefore, it's
+not safe to try to acquire a semaphore when
+you're holding a spinlock. The book also wraps up Chapter 5 with some talk about
+alternatives to locking. One of them is atomic
+variables and bit operations. If you're just worried
+about the case that we talked about at the
+very beginning where you're assigning or doing incrementing or simple
+operations on variables, and you just need to know that
+that operation is atomic, there are atomic types that take care of that for
+you so that you can know across platforms that the access to the variable
+is going to be atomic. That's a way you can
+solve problems like that without having to resort
+to locking at all. There's also bit operations or similar way that you can do the checks that we talked about that happen under the hood for semaphores like
+atomic test-and-set. All that stuff is
+provided for you. This is another way
+that you could maybe accomplish your goals without having to use locking at all. Then there are
+also ways that you can use lock-free algorithms. The book talks about if you carefully design a
+circular buffer with atomic count values there can be two different
+threads accessing it, a reader and writer. It turns out you actually
+don't need locks in that case, and the book
+describes how you can implement that particular
+type of circular buffer. Then there's also read-copy update that the
+book talks about, which is an interesting
+concept where you have old copies of variables
+that remain valid. As a new value is written, there's new accesses
+to the variable. We'll use that new value. When old accesses are released, the old variable values will be cleaned up and the memory
+will be deallocated. This is another way that
+you could handle access to or concurrent shared access to resource without
+resorting to locking.

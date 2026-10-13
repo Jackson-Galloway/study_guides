@@ -1,0 +1,70 @@
+This video I'm going to continue the
+discussion of C Dependency Generation and talk about CMake. So I want to introduce CMake and
+help you understand. How do you see make for
+platform dependency generation. And then we'll do a comparison of
+the different tools we've talked about. So far for out of dependency
+generation GNUMake, AutoMake and CMake. So CMake is a cross platform open source
+system to manage build processes in a compiler independent manner. So it's meant to be agnostic of compiler
+and also agnostic of build platform. The sea make lists that text
+files contain the information about the project that's used
+to build the control files. And it's going to generate standard build
+files for whatever platform you're using. So the new make files on Linux and
+Unix and for Microsoft or for windows, it would generate visual
+studio projects or workspace. And for recent visual studio versions
+you can just use CMake directly without the intermediate
+step of generating projects. So again, the sea make lists. Text contains the details
+about the project. And this is a really simple file where
+you're defining what's the minimum version of CMake required the project
+that you're building. >> So this is the executable in this case. And then the files that are used to
+build the executable in this case, just the source files. Because it'll do all
+the dependency generation for the header files automatically. So in order to use this, it's as simple
+as Sudo apt install see make if you're using Obuntu if you're using windows
+you download using the CMake installer. So in order to use CMake with
+a project that supports it. You start by creating a build directory
+and this is just the location that the build files are going to be
+generated for your platform. So this would be something that you would
+not check into revision control a lot of times. That's just called with scenic projects. You just use the build sub directory for
+that called build that. You don't execute CMake with a relative
+path to the location of CMake list text from inside that bill directory. And this will generate all
+the build files for you, which if we're talking about building for
+Lenux would be make files. Then you'd run make and that would build
+all the projects with dependencies. And then you can run your application. So here's an example of the steps and
+how you'd use to make on Lenux for a simple example project. And you can see the example
+project linked here in the slide if you want to
+try it out yourself. But you can just make a directory name,
+build again, it could be called anything build is
+kind of the convention for CMake projects. You see the end of that directory and then
+you say CMake dot dot where dot dot is specifying that CMake lists dot text file
+is located at the CMake example directory. When you do that, you'll see a bunch of
+auto discovery that looks similar to what we saw with auto camp. And automaker where it figures
+out which compiler you have and what system you're on. And builds a make file for
+you based on your target. So if I look at what's in the output
+after I do the build step, I'll see that there is a make
+file located in that directory. And I can do a make step here and it'll automatically build the target for
+me the CMake example. And then I can run it and
+it'll run the output file on compiled from my native build system. So the kind of cool and unique thing about
+CMake compared to the other ones that we've talked about so
+far with the GNUMake. And with auto tools or autoMake is CMakes
+native support for Windows is much better. So, for instance, with recent studios
+of recent versions of visual studio, you can just open a folder
+that contains a CMake project. And it will automatically be able to
+build and run directly for Windows. It also is Scenic is natively
+supported in builder with eval. See make package in the package,
+not make file and for your octo it's also
+natively supported as well. So some build two comparisons then
+of everything that we've discussed. So far in terms of auto
+dependency generation, the going to make is kind of like the
+traditional way to do builds in general. It's kind of like the general build
+tool and it has some support for auto dependency generation. But the cross platform
+supports limited and it's relatively complex
+to configure it yourself. Auto confident auto tools has some
+better cross platform support, it has some nice built in support for
+cross compile things like that, it's maybe a little bit easier
+to configure than GNUMake. But still not the easiest
+possibly to configure. CMake has probably the best cross platform
+support especially important if you need Windows support. And it probably has the easiest in terms
+of configuration complexity, unless there's some specific thing you're doing
+that lends itself better to auto comfort, auto tools. So for new projects, I would probably
+tend to look towards CMake first. And make sure there's some
+reason that that won't work. But probably use that by
+default as my choice for any kind of project that we want to do. Auto dependency generation.

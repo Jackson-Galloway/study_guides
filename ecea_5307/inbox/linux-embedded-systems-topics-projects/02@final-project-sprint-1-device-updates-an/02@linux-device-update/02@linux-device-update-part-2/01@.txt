@@ -1,0 +1,185 @@
+This video is the
+second in a series of videos about
+Linux device update. We'll talk about the
+function and role of cryptographic signing within
+Device Update and how you can use cryptographic signing to improve security of your
+device update process. First, we'll talk a little
+bit about signing as a general overview and
+how signing works. This is not intended to replace any class
+on cryptography, but just to give
+you a little bit of background and
+overview about how cryptography can work from
+the sense of signing. When you think about cryptography from a
+sense of signing, you could think what we're talking about are
+really large numbers. For instance, something
+like 256 bits, which would turn into
+approximately 77 decimal digits, so really huge numbers. It turns out there
+are some special mathematical properties you can use with these really large
+numbers that make it really difficult to brute force
+these specific relationships. But I'll make it easy to generate numbers that have
+certain properties between them that you can then use
+and exploit for purposes of ensuring that a payload came from the place that you
+expected it to come from. That's what we'll
+talk about because that's an important part of how to get security in your
+device update process. These very large 77
+decimal digit numbers, these numbers are so large that they're
+hard to think about, but with 77 decimal digits, it's approximately
+enough to assign one number to every
+atom in the universe. Again, just like an
+astronomically large number. When you're talking
+about numbers that big computers are fast, but they can't do even really simple
+mathematical operations on numbers that are huge, just because there's
+not enough time to try every possible value given
+numbers that enormous. Like if you even just tried to take the fastest
+supercomputer in the world and just tried to do an addition with that many
+possible combinations, it would take multiple
+universe lifetimes for that supercomputer
+to get through it. We can use the fact that
+these numbers are really huge plus some non-trivial
+mathematic transforms to make it basically impossible for someone to brute force
+guess our key values. Fundamentally,
+what we'll have is a random number generator
+that just picks some numbers at random and
+a key generation algorithm. There's a couple
+of popular ones, RSA and ECC, that you can
+use for key generation. But what you'll
+ultimately get as a step of this process is a public
+key and a private key. What you can do for
+signature generation is take a really large number
+of a specific length, so a separate one from the one that you use to
+generate the keys. But take that number that has a specific length and
+combine that with a private key and use a signature or
+encryption algorithm, again from RSA or ECC, depending on how you
+generate the key to give you a signature that is essentially just
+another large number. You might think, well, I'm trading one large number
+for another large number, what's really the benefit? We'll talk about it in a couple slides where
+this comes into play. But you can take the very
+large number that you generated in the previous slide to generate the certificate, you can combine that
+with the public key, take the signature
+encryption algorithm that use to generate
+the certificate. What you'll get is the same large number of those input with the private key at the previous signature
+generation step. In other words, you get
+this number back here that you used with the private key
+to generate the signature. How can we use this to actually create or maybe taking
+a step back here, what are some of the
+relationships then between the public key, private key signature
+and the input number? You can see here that
+with the private key plus the input number, I can generate a signature. Then with the signature
+plus the public key, I can generate that
+same input number back. More important perhaps than the relationships of how
+these can be generated are again these mathematical
+properties of these very large numbers and
+what that means in terms of how each one of these values are related and what they tell
+you about other components. The key thing here
+to understand is that input number that
+you started with, that you generated,
+that signature value and the public key, all three of these together, if you have all three
+of these values, mathematically, you are
+not able to determine anything about the content
+of the private key based on, again, on these
+mathematical transforms. What this means is you could publish every one of these on your website and any hacker
+could look at these values. It's not going to get them
+any closer to being able to generate the content
+of your private key. How can we use these, practically speaking to actually deliver security as a part of
+our device updates scheme. Remember, we talked
+about a value of a specific length being an input into the encryption algorithm. Well, in our case, we don't necessarily
+have a number of a specific length
+that's associated with our device update payload. We're really starting
+with a binary file that could be any length. It'll depend on the device, it might depend on
+the specific content of the update your
+plan to perform. The first thing we have to do is figure out how to turn this into something that's an input
+number of a fixed length. It turns out there's
+a whole class of cryptographic functions
+that are available to do this for us called hashes. One of those common ones that
+you'll hear about is SHA. A SHA hash can take
+a binary file of any length and generate a
+number of a specific length. The important thing about
+a hash transform is that if you just make one
+really small modification to the binary file, due to the properties
+of this hash function, it's going to create, again a number of
+a specific length, but of completely
+different content. It will have no real
+relationship to this number here generated
+with the top hash function. We'll be able to use the
+property of the hash to help us verify that we have the
+correct formal payload, that it was generated by us as a part of our
+development process. We talked before about the properties and
+the relationships between the different keys. If you talk about a private key, this is the one that's
+not able to be generated from any of the content that you use for securing or
+used with security and encryption of keys. The private key is one that would never actually leave your development
+environment. Because that one can't
+be generated from the content that's the output
+of our encryption steps, this one if it never leaves
+your development environment, you know that anybody
+who's able to sign with that private key necessarily is working on your development or in your
+development environment. As long as a hacker doesn't have access to your
+development environment, they also won't be able to create output that is
+signed by your private key. Then as I mentioned
+before, the public key, the certificate, and the input number or hash can be saved
+on every device. It's okay if a hacker
+were to get access to your device and find the
+content of the private key. It's not going to
+mean anything other than they'd also
+be able to verify that your update assigned
+as you expected it to be. In terms of how you would
+create a signed update file, it's really just combining all the things that we
+talked about before. You have the private key that's part of your development
+environment, you combine that with
+the device update file and you do a hashing and a
+public key cryptography step, and you get a signature. You'll end up with a signature and a device update
+file that you can combine together in
+a device update package. Then in terms of how this is
+verified on the device side, if you take the public key from the device and you
+add the signature, do the RSA or ECC step, you'll get assigned
+hash back out. That gives you the content that the signature set is included in the
+device update file. Then since you also have
+update to the device or have access to the
+device update file, you do the show of the
+device update file and you get a computed hash. Only if these two numbers are
+the same do you know that the device update file
+was actually signed with the private key here in this step at the
+development workstation. This provides us a way to use components that we
+can again share publicly. There's no risk of disclosure
+with the signature, the signed hash or,
+the public key. But we can use this
+to figure out, was this device update file signed by our
+development server? If you take the device
+update payload, and let's say we go through the scenario
+we talked about in the previous slide where a
+hacker gets access to this, somehow hacks into
+your Cloud server, and changes content
+of the update file such that it would have some
+malicious payload on it, they wouldn't be
+able to regenerate the hash because the hash was generated with
+the private key that only came from your
+development environment. The fact that they could
+access your public key wouldn't make any difference
+because they wouldn't have the private key used to
+generate the signed hash. Another thing that often
+comes up when we talk about signing schemes is
+people mentioned, well, what about, is it safe to use encryption algorithms given the fact that
+quantum computing is coming up soon and quantum computers
+are going to be able to break encryption algorithms. This is something that you're
+definitely going to have to think about during your career. But I think the main thing I would do to think
+about this is to pay attention and keep up with the latest
+security standards. The type of schemes that
+I'm talking about here, especially RSA, are used
+all over on the Internet. It's part of why you're
+able to log into your bank account over a
+website, for instance. There's a lot of motivation to keep ahead of the curve
+here on being able to have encryption
+algorithms that can handle things like
+quantum computing. The standards are likely to change and you'll need to change your implementations to match
+as well as that happens. The advent of quantum
+computing really means that it's probably somewhere
+between 5-15 years from now. The current
+encryption algorithms that I'm talking about here, RSA and ECC are probably
+going to be possible to be broken with something like billion-dollar supercomputers. You have enough of a security risk that someone would be willing
+to pay that kind of money, then there's a chance
+that it could be broken in the relatively
+short time-frame. However, there's
+our active programs from NIST and others that are targeting quantum
+resistance standards in 2022-2024 time-frame. In a couple years
+there will probably be some new standards that we could use to do the same purposes that'll be quantum
+attack resistant. The main thing here is
+just to keep up with the technology and use as much as you can of existing solutions rather than trying to implement your own.

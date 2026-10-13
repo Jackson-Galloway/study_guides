@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 9 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2>Assignment 9: Advanced Char Driver Operations</h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h1>Suggested Reading:</h1><ol type="1"><li><p>Linux Device Drivers book chapters 3-6</p></li></ol><h1>GitHub Repository Start Instructions</h1><p>You will start with an empty project submission repository, and fill it with the content of your assignment 8 local repository using these commands on your local buildroot-assignments repository or yocto assignments repository</p><p></p><ol type="1"><li><p>git remote rename origin assignment-8-remote</p></li><li><p>git remote add origin &lt;your github classroom submission repo created with the link above&gt;</p></li><li><p>git push origin main</p></li></ol><h2>Repository Setup:</h2><p></p><img alt="2022-08-14 16_32_03-Assignment 9_ Advanced Char Driver Operations - Google Docs.png" src="2022-08-14%2016_32_03-Assignment%209_%20Advanced%20Char%20Driver%20Operations%20-%20Google%20Docs.png"/><p></p><p>Note: The following links are external and will open in a new tab. </p><h1>Implementation:</h1><ol type="1"><li><p>Pick either the Buildroot or Yocto implementation from Assignment 8 (which are located in assignment 5 or 6 repositories respectively) to use as the basis for your assignment and push to your submission repository.  You can use either Buildroot or Yocto for this assignment.  For a buildroot implementation, use</p><ol type="1"><li><p>git fetch buildroot-assignments-base</p><ol type="1"><li><p>This step assumes you’ve already created the remote using <em>git remote </em>add buildroot-assignments-base  <a href="https://github.com/cu-ecen-aeld/buildroot-assignments-base.git">https://github.com/cu-ecen-aeld/buildroot-assignments-base.git</a> in assignment 5.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p></li></ol></li><li><p>git merge -X theirs buildroot-assignments-base/assignment9</p><ol type="1"><li><p>If you notice merge conflicts during the merge step with the assignment-autotest submodule, use:</p><ol type="1"><li><p>git checkout --theirs aesd-assignments/assignment9 -- assignment-autotest</p></li><li><p>git commit</p></li></ol></li><li><p>git submodule update --init --recursive</p></li></ol></li></ol></li><li><p>Using your assignment 3 repository, complete the following steps to pull in content from the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/tree/assignment8">aesd-assignments repository assignment-8 branch</a></p><p>        a.  git fetch assignments-base</p><p>                This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in the previous assignment.  If you started from a new repo you’ll need to re-run the git remote add step before attempting to fetch.</p><p>        b. git merge -X theirs assignments-base/assignment9</p><p>                i. If you notice merge conflicts during the merge step with the assignment-autotest submodule, use:</p><p>                        1. git checkout --theirs git assignments-base/assignment9 -- assignment-autotest</p><p>                        2. git commit</p><p>        c. git submodule update --init --recursive</p></li><li><p>Update your “aesd-char-driver” implementation in your assignment 3 and later repository to add the following features:</p><ol type="1"><li><p>Add custom seek support to your driver using the llseek file_operations function.  Your seek implementation should:</p><ol type="1"><li><p>Support all positional types (SEEK_SET, SEEK_CUR, and SEEK_END) and update the file position accordingly.</p><ol type="1"><li><p>For instance, if your driver is storing writes of 5, 7, and 9 bytes each, an file position of 0-5 would represent a byte within the first write, a file position of 6-13 would represent a byte within the second write, and a file position  of 14 through 23 would a byte within represent the 3rd write.</p></li></ol></li></ol></li></ol><p>For instance: Consider the content in the table below as handled by your driver, where each string ends with a newline character.  An offset of 15 would set the pointer to the second byte of the word “Singapore”, byte "i"</p><p>			Grass</p><p>			Sentosa</p><p>			Singapore</p></li><li><p>Add ioctl command support for AESDCHAR_IOCSEEKTO as defined in <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment9/aesd-char-driver/aesd_ioctl.h">aesd_ioctl.h</a> which is passed a  buffer from user space containing two 4 byte values.  Use unlocked_ioctl to implement your ioctl command </p><ol type="1"><li><p> The first value represents the command to seek into, based on a zero referenced number of commands currently stored by the driver in the command circular buffer.  The command reference is relative to the number of commands currently stored in your circular buffer.  You will need to translate into the appropriate offset within your circular buffer based on the current location of the output index.</p><ol type="1"><li><p>For instance, in the example above a value of 0 refers to the command “Grass\n”  </p></li></ol></li><li><p>The second value represents the zero referenced offset within this command to seek into.  All offsets are specified relative to the start of the request.</p><ol type="1"><li><p>For instance, if the offset was 2 in the command “Grass”, the seek location should be the letter “a”</p></li></ol></li><li><p>The two parameters above will seek to the appropriate place and update the file pointer as described in the seek support details within the previous step.</p></li><li><p>If the two parameters are out of range of the number of write commands/command length, the ioctl cmd should return -EINVAL  </p></li></ol></li><li><p> Add special handling for socket write commands to your aesdsocket server application</p><ol type="1"><li><p>When the string sent over the socket equals AESDCHAR_IOCSEEKTO:X,Y where X and Y are unsigned decimal integer values, the X should be considered the write command to seek into and the Y should be considered the offset within the write command.  </p></li><li><p>These values should be sent to your driver using the AESDCHAR_IOCSEEKTO ioctl described earlier.  The ioctl command should be performed before any additional writes to your aesdchar device.</p></li><li><p>Do not write this string command into the aesdchar device as you do with other strings sent to the socket.</p></li><li><p>Send the content of the aesdchar device back over the socket, as you do with any other string received over the socket interface.  We will use this to test the seek command.</p></li><li><p>Ensure the read of the file and return over the socket uses the same (not closed and re-opened) file descriptor used to send the ioctl, to ensure your file offset is honored for the read command.</p></li></ol></li></ol><p></p><img alt="2022-08-14 16_49_51-Assignment 9_ Advanced Char Driver Operations - Google Docs.png" src="2022-08-14%2016_49_51-Assignment%209_%20Advanced%20Char%20Driver%20Operations%20-%20Google%20Docs.png"/><p>6. Tag the assignment with assignment-&lt;assignment number&gt;-complete once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit">here</a></p><h1>Validation:  </h1><ol type="1"><li><p>Your qemu instance should pass the modified sockettest script which includes tests for ioctl command sends.</p></li><li><p>Your implementation should not crash or have memory leaks.</p></li><li><p>Your implementation should use proper locking methods to ensure safe access from multiple threads or processes.</p></li><li><p>Your driver should include custom seek and ioctl commands as described in the implementation section.</p><ol type="1"><li><p>When behavior in a specific scenario is not specified in your driver requirements, you should use any best practices mentioned in the Linux Device Drivers book.</p></li></ol></li><li><p>Your aesdsocket application should include support for custom socket commands as described in the implementation section.</p></li><li><p>Your implementation should pass when running with the full-test.sh script</p></li></ol><p> </p><h1>Troubleshooting:</h1><p>1. Attempts to issue ioctl returns "Inappropriate ioctl for device".</p><ul><li><p>Ensure your driver is connected to the /dev/aesdchar endpoint through mknod.   Ensure you aren't deleting or attempting to create the /dev/aesdchar endpoint within your aesdsocket application.</p></li><li><p>Ensure you've implemented the unlocked_ioctl call in your driver (implementing compat_ioctl is not sufficient).</p></li><li><p>Double check your buildroot submodule and linux kernel version.  If you are using a 6.x kernel version through a later buildroot submodule revision than the branch currently recommended for assignments you must define compat_ioctl.  Using a definition  .compat_ioctl = compat_ptr_ioctl  should resolve the issue, or you can move back to the buildroot branch recommended in assignment 5.</p></li></ul><p>  2. Attempts to run full-test on qemu fails with rmmod: Can't unload aesdchar resource temporarily unavailable</p><ul><li><p> If your test script fails during the driver test step due to failure to unload your driver, please ensure you are not opening the file descriptor for your driver endpoint from aesdsocket until it is accessed.  </p></li><li><p>If your sockettest application opens the file descriptor at startup and does not close it, this will prevent the script from successfully testing your driver in isolation by unloading/reloading it.  Please modify your aesdsocket application to only open the file descriptor for your  /dev/aesdchar  device when reading/writing and otherwise close it when not in use or before initial use</p></li></ul><p></p>
+  </div>
+</body>
+</html>

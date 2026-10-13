@@ -1,0 +1,1456 @@
+1
+00:00:00,120 --> 00:00:03,325
+In this video, we'll
+do an overview of
+
+2
+00:00:03,325 --> 00:00:06,515
+Agile as a software
+development methodology.
+
+3
+00:00:06,515 --> 00:00:11,500
+We want to do an overview of
+what agile development is
+
+4
+00:00:11,500 --> 00:00:13,135
+and also how we will map
+
+5
+00:00:13,135 --> 00:00:17,540
+Agile roles for the
+course final project.
+
+6
+00:00:18,670 --> 00:00:20,890
+Agile is described in
+
+7
+00:00:20,890 --> 00:00:23,545
+the Agile Manifesto for
+software development.
+
+8
+00:00:23,545 --> 00:00:25,750
+There are a few different
+things that are described in
+
+9
+00:00:25,750 --> 00:00:28,930
+the manifesto in terms
+of what the goal
+
+10
+00:00:28,930 --> 00:00:29,950
+of Agile is or
+
+11
+00:00:29,950 --> 00:00:32,890
+what the motivations methodology
+
+12
+00:00:32,890 --> 00:00:34,790
+for Agile development are.
+
+13
+00:00:34,790 --> 00:00:37,000
+Agile favors individuals and
+
+14
+00:00:37,000 --> 00:00:39,340
+interactions over
+processes and tools,
+
+15
+00:00:39,340 --> 00:00:42,155
+so trying to keep things
+more lightweight.
+
+16
+00:00:42,155 --> 00:00:43,640
+It favors
+
+17
+00:00:43,640 --> 00:00:46,520
+working software over
+comprehensive documentation.
+
+18
+00:00:46,520 --> 00:00:48,710
+Again, you'll have
+documentation about what you're
+
+19
+00:00:48,710 --> 00:00:51,095
+doing for a given activity,
+
+20
+00:00:51,095 --> 00:00:52,970
+but it's less about
+
+21
+00:00:52,970 --> 00:00:54,950
+trying to create that from
+the beginning and try to
+
+22
+00:00:54,950 --> 00:00:56,090
+implement to that and more
+
+23
+00:00:56,090 --> 00:00:57,470
+about trying to
+keep things fluid
+
+24
+00:00:57,470 --> 00:01:00,725
+and flexible as you're
+doing the implementation.
+
+25
+00:01:00,725 --> 00:01:03,350
+It's more about
+customer collaboration
+
+26
+00:01:03,350 --> 00:01:04,819
+over contract negotiation.
+
+27
+00:01:04,819 --> 00:01:08,180
+It's a realization that things
+
+28
+00:01:08,180 --> 00:01:11,510
+change and your interaction
+with your customers,
+
+29
+00:01:11,510 --> 00:01:13,010
+internal or external,
+
+30
+00:01:13,010 --> 00:01:15,635
+is going to change as
+the project progresses.
+
+31
+00:01:15,635 --> 00:01:17,600
+As people see
+things implemented,
+
+32
+00:01:17,600 --> 00:01:18,650
+they're going to
+change their mind
+
+33
+00:01:18,650 --> 00:01:19,910
+about what they actually wanted.
+
+34
+00:01:19,910 --> 00:01:22,880
+Agile tries to be able
+to take advantage
+
+35
+00:01:22,880 --> 00:01:26,270
+of the shorter
+iteration times and
+
+36
+00:01:26,270 --> 00:01:30,229
+less predefined work and more
+
+37
+00:01:30,229 --> 00:01:31,910
+ability to change and adapt as
+
+38
+00:01:31,910 --> 00:01:34,190
+you continue with the project.
+
+39
+00:01:34,190 --> 00:01:36,485
+It's more about
+responding to change
+
+40
+00:01:36,485 --> 00:01:37,550
+over building
+
+41
+00:01:37,550 --> 00:01:40,295
+a really detailed plan
+and following the plan.
+
+42
+00:01:40,295 --> 00:01:44,930
+Agile is not necessarily
+something that I would say
+
+43
+00:01:44,930 --> 00:01:46,520
+you definitely want to do on
+
+44
+00:01:46,520 --> 00:01:48,995
+every project or that you
+definitely want to follow.
+
+45
+00:01:48,995 --> 00:01:51,350
+The main reason I'm talking
+about Agile in this course is
+
+46
+00:01:51,350 --> 00:01:55,505
+because it's a popular software
+development methodology.
+
+47
+00:01:55,505 --> 00:01:57,110
+A lot of people use some parts
+
+48
+00:01:57,110 --> 00:01:58,730
+of Agile in software development
+
+49
+00:01:58,730 --> 00:01:59,930
+and so it's a
+common thing to get
+
+50
+00:01:59,930 --> 00:02:01,970
+asked about in interviews.
+
+51
+00:02:01,970 --> 00:02:02,990
+I'm really just
+trying to give you
+
+52
+00:02:02,990 --> 00:02:04,475
+a little bit of an overview here
+
+53
+00:02:04,475 --> 00:02:05,960
+and a little bit of
+an experience in
+
+54
+00:02:05,960 --> 00:02:08,460
+an Agile like environment.
+
+55
+00:02:09,290 --> 00:02:12,580
+One of the parts of Agile
+that we'll be using in
+
+56
+00:02:12,580 --> 00:02:16,195
+the final project is the
+Daily Stand-up or Scrum.
+
+57
+00:02:16,195 --> 00:02:18,850
+The idea behind the
+Scrum is really
+
+58
+00:02:18,850 --> 00:02:22,840
+just a process framework
+for addressing problems.
+
+59
+00:02:22,840 --> 00:02:24,205
+Problems are going to happen
+
+60
+00:02:24,205 --> 00:02:25,885
+as part of a
+development process.
+
+61
+00:02:25,885 --> 00:02:27,580
+The Scrum is where
+you talk about what
+
+62
+00:02:27,580 --> 00:02:30,830
+the problems are and how you're
+going to deal with them.
+
+63
+00:02:30,830 --> 00:02:33,820
+A Scrum team is meant
+to be a small team
+
+64
+00:02:33,820 --> 00:02:36,085
+of people that's
+flexible and adaptable,
+
+65
+00:02:36,085 --> 00:02:38,725
+can change based on what
+the new problems are for
+
+66
+00:02:38,725 --> 00:02:43,010
+a given day and can reorient
+their priorities quickly.
+
+67
+00:02:43,010 --> 00:02:46,960
+A Scrum team is made up of
+a few different people.
+
+68
+00:02:46,960 --> 00:02:48,805
+One is the product owner,
+
+69
+00:02:48,805 --> 00:02:51,015
+and the product owner
+is really the one that
+
+70
+00:02:51,015 --> 00:02:52,580
+figures out all the backlog
+
+71
+00:02:52,580 --> 00:02:53,915
+of things that
+you're going to do,
+
+72
+00:02:53,915 --> 00:02:55,745
+what's the most important
+thing to be doing?
+
+73
+00:02:55,745 --> 00:02:56,840
+What's the most
+important thing to
+
+74
+00:02:56,840 --> 00:02:58,610
+include in the next sprint?
+
+75
+00:02:58,610 --> 00:02:59,750
+Really is going to be providing
+
+76
+00:02:59,750 --> 00:03:01,070
+the voice of the end users.
+
+77
+00:03:01,070 --> 00:03:03,185
+Whoever is going to be
+using your product,
+
+78
+00:03:03,185 --> 00:03:06,080
+the product owner is responsible
+for knowing what they
+
+79
+00:03:06,080 --> 00:03:09,310
+collectively want or what
+their highest priorities are.
+
+80
+00:03:09,310 --> 00:03:11,030
+Then there's the
+development team,
+
+81
+00:03:11,030 --> 00:03:13,490
+which is probably going to
+be you as the developer
+
+82
+00:03:13,490 --> 00:03:14,960
+and the goal of
+
+83
+00:03:14,960 --> 00:03:16,560
+the development team
+is to deliver "Done."
+
+84
+00:03:16,560 --> 00:03:19,260
+We'll talk more about what it
+means to deliver it "Done."
+
+85
+00:03:19,260 --> 00:03:21,170
+Usually on a Scrum
+team that's going to
+
+86
+00:03:21,170 --> 00:03:23,165
+be between three
+and nine members.
+
+87
+00:03:23,165 --> 00:03:24,560
+If you get to more
+than nine members,
+
+88
+00:03:24,560 --> 00:03:25,790
+it gets a little
+harder to make it
+
+89
+00:03:25,790 --> 00:03:27,320
+flexible and adaptive and so
+
+90
+00:03:27,320 --> 00:03:28,400
+a lot of times you'll split into
+
+91
+00:03:28,400 --> 00:03:30,450
+different Scrum
+teams at that point.
+
+92
+00:03:30,450 --> 00:03:32,330
+If there's less
+than three members,
+
+93
+00:03:32,330 --> 00:03:34,250
+it might be a little bit
+more overhead than you need
+
+94
+00:03:34,250 --> 00:03:37,015
+in order to really
+do Agile Scrum.
+
+95
+00:03:37,015 --> 00:03:39,740
+Then there's also
+a Scrum master who
+
+96
+00:03:39,740 --> 00:03:41,720
+is the one that's
+enforcing the rules and
+
+97
+00:03:41,720 --> 00:03:43,655
+coaching all the members on how
+
+98
+00:03:43,655 --> 00:03:47,280
+you want to do Agile process.
+
+99
+00:03:47,570 --> 00:03:50,985
+When you talk about Agile,
+
+100
+00:03:50,985 --> 00:03:54,450
+there's analogy that
+gets brought up often,
+
+101
+00:03:54,450 --> 00:03:56,475
+that's about pigs and chickens.
+
+102
+00:03:56,475 --> 00:03:59,000
+There's a way to think
+
+103
+00:03:59,000 --> 00:04:01,640
+about who the
+different roles are on
+
+104
+00:04:01,640 --> 00:04:03,590
+an Agile team in terms of
+
+105
+00:04:03,590 --> 00:04:06,535
+this cartoon that relates
+to a pig and a chicken.
+
+106
+00:04:06,535 --> 00:04:08,390
+In the cartoon, there's
+
+107
+00:04:08,390 --> 00:04:10,970
+a chicken that's
+talking to a pig about,
+
+108
+00:04:10,970 --> 00:04:13,730
+hey, let's get together
+and open a restaurant.
+
+109
+00:04:13,730 --> 00:04:15,080
+A pig saying, okay, well, what
+
+110
+00:04:15,080 --> 00:04:16,745
+would you want to call it?
+
+111
+00:04:16,745 --> 00:04:18,140
+The chicken says,
+well, how about
+
+112
+00:04:18,140 --> 00:04:19,730
+if we call it Ham and Eggs?
+
+113
+00:04:19,730 --> 00:04:22,430
+The pig says, no,
+that's not a good idea.
+
+114
+00:04:22,430 --> 00:04:24,710
+I don't like that because
+I'd be committed,
+
+115
+00:04:24,710 --> 00:04:25,810
+but you'd only be involved.
+
+116
+00:04:25,810 --> 00:04:28,010
+In other words, the
+pig is committed in
+
+117
+00:04:28,010 --> 00:04:30,450
+that there's no coming
+back from the ham.
+
+118
+00:04:30,450 --> 00:04:32,600
+But the chicken's just
+
+119
+00:04:32,600 --> 00:04:35,300
+involved because it's
+involved with making the egg,
+
+120
+00:04:35,300 --> 00:04:38,395
+but not necessarily as
+committed as the pig is.
+
+121
+00:04:38,395 --> 00:04:40,610
+The pigs and chicken analogy
+
+122
+00:04:40,610 --> 00:04:41,900
+describes the different roles of
+
+123
+00:04:41,900 --> 00:04:43,400
+the people that are
+on the Scrum team.
+
+124
+00:04:43,400 --> 00:04:45,950
+The product owner,
+the development team,
+
+125
+00:04:45,950 --> 00:04:48,305
+and the Scrum master
+are usually all pigs,
+
+126
+00:04:48,305 --> 00:04:50,915
+in the sense that if
+the project goes south,
+
+127
+00:04:50,915 --> 00:04:53,225
+their jobs are on the line.
+
+128
+00:04:53,225 --> 00:04:56,970
+It's directly going
+to reflect on them.
+
+129
+00:04:58,030 --> 00:05:00,320
+This might be counterintuitive,
+
+130
+00:05:00,320 --> 00:05:04,790
+but the management is often
+a chicken in this process,
+
+131
+00:05:04,790 --> 00:05:07,430
+so they have a
+reason to weigh in,
+
+132
+00:05:07,430 --> 00:05:08,990
+but they are
+probably involved in
+
+133
+00:05:08,990 --> 00:05:10,490
+multiple projects or they're
+
+134
+00:05:10,490 --> 00:05:12,370
+not directly involved
+in this one.
+
+135
+00:05:12,370 --> 00:05:15,845
+They're in the
+Agile methodology.
+
+136
+00:05:15,845 --> 00:05:20,000
+Their weight is
+somewhat less than
+
+137
+00:05:20,000 --> 00:05:21,770
+the people who are the pigs that
+
+138
+00:05:21,770 --> 00:05:25,050
+are committed to the project.
+
+139
+00:05:27,200 --> 00:05:31,175
+If we try to map these Agile
+roles to our final project,
+
+140
+00:05:31,175 --> 00:05:33,110
+it's not going to be
+perfect because we're
+
+141
+00:05:33,110 --> 00:05:35,075
+not really an Agile
+development team.
+
+142
+00:05:35,075 --> 00:05:37,700
+But if you'd want
+to try to map them
+
+143
+00:05:37,700 --> 00:05:40,535
+to what it would be in
+the final project role,
+
+144
+00:05:40,535 --> 00:05:42,290
+the product owner
+would essentially
+
+145
+00:05:42,290 --> 00:05:44,060
+be a combination of you,
+
+146
+00:05:44,060 --> 00:05:47,150
+student assistants,
+and peer reviewers.
+
+147
+00:05:47,150 --> 00:05:48,875
+The development team
+is going to be you,
+
+148
+00:05:48,875 --> 00:05:50,360
+you're going to be
+doing the development.
+
+149
+00:05:50,360 --> 00:05:51,920
+Then the Scrum master will
+
+150
+00:05:51,920 --> 00:05:53,840
+be myself or the
+student assistants,
+
+151
+00:05:53,840 --> 00:05:57,085
+whoever's hosting the Scrum
+and enforcing the rules.
+
+152
+00:05:57,085 --> 00:05:58,550
+A lot of times what
+you're doing as
+
+153
+00:05:58,550 --> 00:06:01,745
+a Scrum master is just cutting
+people off and saying,
+
+154
+00:06:01,745 --> 00:06:03,409
+let's just keep to the details,
+
+155
+00:06:03,409 --> 00:06:06,305
+keep the report short
+and to the point,
+
+156
+00:06:06,305 --> 00:06:08,730
+and move on to the next report.
+
+157
+00:06:09,510 --> 00:06:13,420
+We talked before about a
+backlog and organizing
+
+158
+00:06:13,420 --> 00:06:15,190
+the backlog as something
+
+159
+00:06:15,190 --> 00:06:17,425
+that the product
+owner would be doing.
+
+160
+00:06:17,425 --> 00:06:19,285
+When we talk about
+a product backlog,
+
+161
+00:06:19,285 --> 00:06:20,620
+it's really an ordered list of
+
+162
+00:06:20,620 --> 00:06:22,585
+everything that needs
+to be in the product.
+
+163
+00:06:22,585 --> 00:06:24,160
+That could be
+features, functions,
+
+164
+00:06:24,160 --> 00:06:27,025
+requirements,
+enhancements, fixes.
+
+165
+00:06:27,025 --> 00:06:30,100
+It's going to include things
+like the description,
+
+166
+00:06:30,100 --> 00:06:32,275
+what needs to get
+done, the order,
+
+167
+00:06:32,275 --> 00:06:34,480
+which things are the
+highest priority
+
+168
+00:06:34,480 --> 00:06:35,560
+to do and what should be done
+
+169
+00:06:35,560 --> 00:06:38,905
+first and then estimate which
+would be development time,
+
+170
+00:06:38,905 --> 00:06:43,135
+cost, in terms of materials,
+or personnel cost.
+
+171
+00:06:43,135 --> 00:06:44,620
+Then the ultimate value,
+
+172
+00:06:44,620 --> 00:06:47,215
+which is going to help
+prioritize things like order.
+
+173
+00:06:47,215 --> 00:06:50,155
+Again, the product owner is
+responsible for the backlog,
+
+174
+00:06:50,155 --> 00:06:52,315
+responsible for keeping
+that backlog up to date,
+
+175
+00:06:52,315 --> 00:06:54,250
+deciding what should be worked
+
+176
+00:06:54,250 --> 00:06:57,100
+on next in the current sprint.
+
+177
+00:06:57,100 --> 00:06:59,785
+This might seem
+counterintuitive,
+
+178
+00:06:59,785 --> 00:07:01,105
+but a product backlog,
+
+179
+00:07:01,105 --> 00:07:02,290
+as long as a product is still
+
+180
+00:07:02,290 --> 00:07:03,925
+alive is actually
+never complete.
+
+181
+00:07:03,925 --> 00:07:05,680
+You always have
+more things to do
+
+182
+00:07:05,680 --> 00:07:07,930
+in a product backlog than
+you can ever get done.
+
+183
+00:07:07,930 --> 00:07:09,415
+As you're completing a sprint,
+
+184
+00:07:09,415 --> 00:07:12,025
+you've got two or three
+sprints at least ahead
+
+185
+00:07:12,025 --> 00:07:14,830
+of items in the backlog
+that you're organizing,
+
+186
+00:07:14,830 --> 00:07:16,810
+adding detail to, and
+
+187
+00:07:16,810 --> 00:07:20,870
+you're never actually
+completing your backlog.
+
+188
+00:07:21,530 --> 00:07:24,705
+In the whole list of
+the product backlog,
+
+189
+00:07:24,705 --> 00:07:26,100
+I mentioned sprints as
+
+190
+00:07:26,100 --> 00:07:29,505
+these subsets of intervals
+where you're going to be doing
+
+191
+00:07:29,505 --> 00:07:32,370
+some specific development
+task or you're going
+
+192
+00:07:32,370 --> 00:07:34,540
+to aim toward implementing
+
+193
+00:07:34,540 --> 00:07:36,820
+some specific part
+of the project.
+
+194
+00:07:36,820 --> 00:07:38,620
+You take some subset of
+
+195
+00:07:38,620 --> 00:07:39,850
+your product backlog and you'd
+
+196
+00:07:39,850 --> 00:07:41,740
+select that for a given sprint.
+
+197
+00:07:41,740 --> 00:07:43,555
+The sprint length would be
+
+198
+00:07:43,555 --> 00:07:45,910
+some varied time
+based on project,
+
+199
+00:07:45,910 --> 00:07:48,715
+but usually measured
+in one or two weeks,
+
+200
+00:07:48,715 --> 00:07:51,820
+usually not a month or longer.
+
+201
+00:07:51,820 --> 00:07:54,160
+The sprint backlog really has
+
+202
+00:07:54,160 --> 00:07:55,390
+the functionality
+that you want to
+
+203
+00:07:55,390 --> 00:07:56,830
+deliver in the next increment,
+
+204
+00:07:56,830 --> 00:07:58,675
+where that increment
+is the sprint.
+
+205
+00:07:58,675 --> 00:08:00,640
+It's the work that's needed to
+
+206
+00:08:00,640 --> 00:08:02,650
+deliver a new done increment.
+
+207
+00:08:02,650 --> 00:08:05,080
+I mentioned what done
+means in a second.
+
+208
+00:08:05,080 --> 00:08:07,180
+There's enough detail then in
+
+209
+00:08:07,180 --> 00:08:09,895
+the sprint backlog for
+each one of the tasks,
+
+210
+00:08:09,895 --> 00:08:11,530
+such that in the daily Scrum,
+
+211
+00:08:11,530 --> 00:08:14,920
+you can say, I made this amount
+of progress on this task.
+
+212
+00:08:14,920 --> 00:08:16,960
+In other words, we're
+breaking up tasks into
+
+213
+00:08:16,960 --> 00:08:19,000
+small enough pieces that
+
+214
+00:08:19,000 --> 00:08:21,399
+in a week or a
+two-week timeframe,
+
+215
+00:08:21,399 --> 00:08:23,680
+we're going to have
+measurable progress
+
+216
+00:08:23,680 --> 00:08:25,705
+on each one of the tasks.
+
+217
+00:08:25,705 --> 00:08:27,370
+We'll be able to report
+
+218
+00:08:27,370 --> 00:08:29,305
+the status of that
+progress in daily Scrum.
+
+219
+00:08:29,305 --> 00:08:30,520
+You don't want your tasks to
+
+220
+00:08:30,520 --> 00:08:31,990
+be so long that
+they're going to take
+
+221
+00:08:31,990 --> 00:08:33,430
+months to complete and it's
+
+222
+00:08:33,430 --> 00:08:35,050
+really hard to measure
+what you're doing.
+
+223
+00:08:35,050 --> 00:08:36,250
+You want to try to
+split them up into
+
+224
+00:08:36,250 --> 00:08:37,630
+something smaller that you can
+
+225
+00:08:37,630 --> 00:08:40,750
+measure whether you're
+progressing in a daily Scrum.
+
+226
+00:08:40,750 --> 00:08:43,650
+I've mentioned a couple times
+
+227
+00:08:43,650 --> 00:08:46,380
+about done and what
+done means in Agile.
+
+228
+00:08:46,380 --> 00:08:48,795
+There's a definition of done,
+
+229
+00:08:48,795 --> 00:08:52,410
+which we'll refer to with
+DOD as an abbreviation.
+
+230
+00:08:52,410 --> 00:08:55,305
+Where it's really important
+that all the team members
+
+231
+00:08:55,305 --> 00:08:57,090
+understand what done means
+
+232
+00:08:57,090 --> 00:08:58,935
+in the context of
+a backlog item.
+
+233
+00:08:58,935 --> 00:09:01,505
+You as a developer
+might have one idea
+
+234
+00:09:01,505 --> 00:09:04,855
+what done means for your
+code implementation,
+
+235
+00:09:04,855 --> 00:09:06,190
+but the product owner might have
+
+236
+00:09:06,190 --> 00:09:08,410
+a different idea of
+what done means in
+
+237
+00:09:08,410 --> 00:09:09,820
+terms of what they expect to
+
+238
+00:09:09,820 --> 00:09:12,070
+see in the product
+functionality.
+
+239
+00:09:12,070 --> 00:09:13,360
+You need to make
+sure that there's
+
+240
+00:09:13,360 --> 00:09:15,175
+no disagreement there or
+
+241
+00:09:15,175 --> 00:09:17,350
+the product owner is not
+going to be happy with
+
+242
+00:09:17,350 --> 00:09:20,095
+the result that comes out
+of the development team.
+
+243
+00:09:20,095 --> 00:09:22,600
+Having a definition of done
+
+244
+00:09:22,600 --> 00:09:24,250
+of what's going to be
+delivered is really
+
+245
+00:09:24,250 --> 00:09:26,635
+important for that transparency
+
+246
+00:09:26,635 --> 00:09:28,840
+and avoiding miscommunication.
+
+247
+00:09:28,840 --> 00:09:30,820
+Another thing to keep
+in mind about Agile
+
+248
+00:09:30,820 --> 00:09:32,500
+is that every sprint increment,
+
+249
+00:09:32,500 --> 00:09:33,610
+we want it to be usable.
+
+250
+00:09:33,610 --> 00:09:35,920
+We don't want to have
+a feature that we
+
+251
+00:09:35,920 --> 00:09:38,980
+had in the last sprint be
+
+252
+00:09:38,980 --> 00:09:42,190
+affected by some other feature
+that we tried to add that
+
+253
+00:09:42,190 --> 00:09:43,420
+was partially added that
+
+254
+00:09:43,420 --> 00:09:45,595
+broke something that
+used to be working.
+
+255
+00:09:45,595 --> 00:09:47,530
+The idea is every sprint we
+
+256
+00:09:47,530 --> 00:09:49,270
+deliver something
+new that's usable,
+
+257
+00:09:49,270 --> 00:09:50,530
+that the product owner who's
+
+258
+00:09:50,530 --> 00:09:51,775
+interacting with the product,
+
+259
+00:09:51,775 --> 00:09:53,530
+with the voice of
+the end user can
+
+260
+00:09:53,530 --> 00:09:56,960
+actually use and is functional.
+
+261
+00:09:57,150 --> 00:10:00,610
+You need to define your
+definition of done such
+
+262
+00:10:00,610 --> 00:10:01,900
+that you'll end up with a usable
+
+263
+00:10:01,900 --> 00:10:03,265
+product at the end
+of the sprint.
+
+264
+00:10:03,265 --> 00:10:06,310
+Even if a complete feature
+is not implemented,
+
+265
+00:10:06,310 --> 00:10:08,425
+you'd have some subset of
+the feature implemented,
+
+266
+00:10:08,425 --> 00:10:09,970
+and more importantly,
+you won't have
+
+267
+00:10:09,970 --> 00:10:11,560
+broken something that was
+
+268
+00:10:11,560 --> 00:10:12,970
+implemented in a previous
+
+269
+00:10:12,970 --> 00:10:15,745
+release or in a previous sprint.
+
+270
+00:10:15,745 --> 00:10:19,540
+As you get further
+along in the project,
+
+271
+00:10:19,540 --> 00:10:21,250
+in the beginning of the
+project, your definition
+
+272
+00:10:21,250 --> 00:10:22,780
+of done might be pretty loose.
+
+273
+00:10:22,780 --> 00:10:24,910
+But as the project
+gets further along,
+
+274
+00:10:24,910 --> 00:10:27,010
+it's a little bit more
+easy to add detail
+
+275
+00:10:27,010 --> 00:10:29,860
+about what actually
+is it means to be
+
+276
+00:10:29,860 --> 00:10:32,080
+done given this current state of
+
+277
+00:10:32,080 --> 00:10:33,880
+the feature and what needs
+
+278
+00:10:33,880 --> 00:10:36,770
+to be added in this
+particular sprint.
+
+279
+00:10:37,740 --> 00:10:40,990
+The daily stand-up that
+will incorporate as
+
+280
+00:10:40,990 --> 00:10:43,915
+a part of our Agile review
+for the final project.
+
+281
+00:10:43,915 --> 00:10:46,315
+You really need to think
+about what did I do,
+
+282
+00:10:46,315 --> 00:10:48,310
+if you're thinking about from
+
+283
+00:10:48,310 --> 00:10:49,750
+a full-time work perspective and
+
+284
+00:10:49,750 --> 00:10:51,535
+you're working five days a week;
+
+285
+00:10:51,535 --> 00:10:55,555
+what did I do yesterday toward
+my current sprint goal?
+
+286
+00:10:55,555 --> 00:10:57,490
+Also, what am I
+going to do today
+
+287
+00:10:57,490 --> 00:10:59,485
+towards the current sprint goal?
+
+288
+00:10:59,485 --> 00:11:02,050
+Then importantly,
+what, if anything,
+
+289
+00:11:02,050 --> 00:11:03,550
+is blocking my progress
+
+290
+00:11:03,550 --> 00:11:05,890
+towards achieving my
+portion of the sprint goal.
+
+291
+00:11:05,890 --> 00:11:07,660
+This is part of where the Scrum
+
+292
+00:11:07,660 --> 00:11:09,520
+turns into the
+problem-solving session.
+
+293
+00:11:09,520 --> 00:11:12,580
+Because if someone's
+blocked on something else,
+
+294
+00:11:12,580 --> 00:11:13,930
+then you work as a team to
+
+295
+00:11:13,930 --> 00:11:15,505
+figure out how to get
+people unblocked.
+
+296
+00:11:15,505 --> 00:11:18,955
+Maybe it's part of the
+work that's blocking them,
+
+297
+00:11:18,955 --> 00:11:20,155
+they could do it themselves,
+
+298
+00:11:20,155 --> 00:11:21,385
+or maybe they could
+work on something
+
+299
+00:11:21,385 --> 00:11:22,660
+else that's blocking
+
+300
+00:11:22,660 --> 00:11:23,740
+the person that needs to get
+
+301
+00:11:23,740 --> 00:11:25,975
+the task done that's
+blocking them.
+
+302
+00:11:25,975 --> 00:11:28,840
+That's part of the conversation
+
+303
+00:11:28,840 --> 00:11:32,090
+that you have in
+the Scrum stand-up.
+
+304
+00:11:32,190 --> 00:11:34,870
+The blocking issue
+could be something
+
+305
+00:11:34,870 --> 00:11:37,090
+like a portion that's
+not yet complete.
+
+306
+00:11:37,090 --> 00:11:39,730
+It could be a bug, that
+means you can't test or
+
+307
+00:11:39,730 --> 00:11:41,680
+implement whatever part of
+
+308
+00:11:41,680 --> 00:11:43,435
+code that you need
+to for your sprint.
+
+309
+00:11:43,435 --> 00:11:46,090
+Or it also could be like
+an external problem,
+
+310
+00:11:46,090 --> 00:11:48,580
+like I placed an order and
+it hasn't gotten here yet,
+
+311
+00:11:48,580 --> 00:11:50,425
+and so I can't do
+whatever testing or
+
+312
+00:11:50,425 --> 00:11:52,435
+implementation I needed to do.
+
+313
+00:11:52,435 --> 00:11:54,190
+Or maybe if you're
+in the software team
+
+314
+00:11:54,190 --> 00:11:55,495
+and the hardware is not working,
+
+315
+00:11:55,495 --> 00:11:57,115
+this is something that
+you're blocked on,
+
+316
+00:11:57,115 --> 00:12:00,080
+an external thing from
+a different team.

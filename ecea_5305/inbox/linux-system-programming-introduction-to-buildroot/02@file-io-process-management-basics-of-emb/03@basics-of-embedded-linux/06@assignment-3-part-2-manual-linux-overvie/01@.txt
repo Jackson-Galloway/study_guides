@@ -1,0 +1,108 @@
+This video is an overview
+of assignment 3 part 2, where we're going to be building a manual Linux file
+system and kernel. For part 2, you'll just be building onto
+the same repo that you implemented with
+part 1 of assignment 3. You'll need to set
+up GitHub actions so that you can prove that your test is working or your code is working in
+an automated fashion. We'll start by completing
+the system calls assignment to set
+up the repository. You'll use that exact same link for this part of the assignment. You're going to
+add a bash script finder app manual Linux.SH, that's going to build
+your Linux system. This is going to include
+compiling the kernel. It's going to include setting up the root file system with your application content,
+your finder app. It's also going to
+include setting up the roof file system with all the content that
+you need to run, including the dynamic
+link libraries. The manual Linux script
+needs to do a bunch of things to set up
+an output directory with all this content. You should be able to specify
+the output directory as a variable to your script. You can reference that in
+bold here below to see every time that
+we're going to be placed in this content
+in the output directory. If you don't specify
+an output directory, you could use slash temp slash
+a TLD is that directory. Your script should start by
+creating that directory of it couldn't be created and then you'll build the
+kernel image using all the content that
+we discussed in the lecture content
+and the instructions. The version of the
+Linux kernel that you build is going to change. Refer to your assignment
+documentation for the most recent notes, but you'll really just clone that version of the Linux
+repository or download that tarball corresponding to that version and then build it using the instructions
+we discussed in lecture. Those resulting files will get copied into the
+output directory. It should also then set
+up a root file system again using the content we discussed in the
+previous videos. A lot of this is implemented for you in
+the manual Linux script, you can look for all the to-do sections that you
+could fill in to perform the steps you need to complete building the
+roof file system. The end result though, should be that you'll
+have an outdoor image. That's going to be
+your kernel image. An outer in it Ram
+fs.cpo.gzfile. This CPO gz file is going to be the compressed content of your staging directory
+tree that you set up. One of the things that
+you need to include in your staging directory tree, in the root FS home directory. The slash home directory
+of your root file system, you need to include your writer application from assignment 2, and you need to make
+sure that you've cross-compile that
+for the target. With assignment 2 we've verified we had the
+cross-compiler setup properly. We were able to cross-compile
+for the target. Now is where we need
+to actually take that executable and put it
+in the slash home directory. You'll copy your finder
+SH, your username.text, and the finder.test scripts with slight modifications into the outer root FS
+home directory. That's what you'll
+use to create this initramfs.cpio.output.gzfile. Once you have all
+that put together, you should be able
+to use the Start QMU terminal.sh file to start up your QMU image using the kernel and init Ram
+fs file that you created. Based on that out Directory you use to build the assignment. You should also be able to
+use the Start QMU app.sh to not only kick off
+your QMU instance, but also run your Finder
+application on the QMU instance. A demo of what you should see in your
+assignment three repository. If you're on the
+full test script, it'll run through the
+system test unit test that you implemented as the
+first part of the assignment. Then some of the steps
+that you need to perform will need
+to run as root. You might have a prompt here
+to enter your sudo password. If you follow the instructions in the manual Linux script, you should get some hints
+about how to make your script. Not need to re-download and start from scratch every
+time you rerun it. Some of the steps are
+going to be missing here because I've already
+compiled the kernel. But what you'll see is
+the steps used to install the curdle and the
+raw file system into the root file system tree. Then now you can see that it's booting my QMU application. Once it boots up with QMU
+and starts my kernel, it'll run the test script. You should see this message saying that it
+completed with success, meaning that all of the content was placed in the
+root directory, and everything worked when we
+ran from the QMU terminal. Looking at a little
+more detail about what's happening
+under the hood here, I go into my finder app. I should see the Start
+QMU terminal and start QMU App Script
+that's mentioned in the test overview document. If I run Start QMU terminal, this should start
+the terminal or the QMU using the files for the cpio.gz and the kernel instance that I built in the temp directory or
+the output directory. This should bring
+me to a prompt. If I do an ls under
+the home directory, this should list all of the content that I
+needed to copy in, as mentioned in the
+assignment document to run my Finder application. You should be able to, from here run your finder and writer script should be able to cd into the home directory
+and run Finder tests. See that you get
+successful output here running your finder test. If I want to exit QMU, I could do Control A, C and then Q. I mentioned
+there's a couple of different scripts here under the Finder app directory that you'll get as a part of
+the assignment start. One of them is start QMU
+terminal that I just showed you that would allow
+you to start a QMU Terminal. The second one is the
+Start QMU app that actually runs your
+Finder application. If we look at the difference
+between those two, if I cut out start QMU app, what you see here is that RD init command that
+we use to start QMU that we talked about before we
+discussed Assignment 2. Instead of running bin SH here, I'm just running
+home autorun QMU. This is a script that we're
+providing as a part of the assignment
+implementation that will automatically run your
+finder app on startup. If I compare that to what I
+see with Start QMU terminal, this just uses rdinitbin.sh. It's going to start us up in interactive shell terminal after we start the QMU instance. But what you can see
+referenced here is the init RD specified by aided RD image and
+the root file system, tar.gz, I'm sorry, the kernel specified by the kernel image and
+the root file system, cpio.gz referenced by
+the init RD image. Both of those are
+going to default to the temp ASD directory if you haven't specified a
+different output directory.

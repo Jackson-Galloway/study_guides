@@ -1,0 +1,1327 @@
+1
+00:00:00,840 --> 00:00:04,140
+This video is about
+the Embedded Linux Toolchain.
+
+2
+00:00:04,140 --> 00:00:07,626
+So we're going to understand
+the components of the Linux toolchain,
+
+3
+00:00:07,626 --> 00:00:09,214
+understand how to set one up and
+
+4
+00:00:09,214 --> 00:00:11,990
+understand what we mean
+by toolchain sysroot.
+
+5
+00:00:11,990 --> 00:00:15,361
+And this will all be useful for
+your assignment to implementation.
+
+6
+00:00:17,240 --> 00:00:21,246
+So when we talk about a Toolchain,
+what we really mean is a combination of
+
+7
+00:00:21,246 --> 00:00:25,255
+a bunch of different components
+including the compiler, the linker and
+
+8
+00:00:25,255 --> 00:00:27,140
+the runtime libraries.
+
+9
+00:00:27,140 --> 00:00:31,489
+So there are two popular options
+that the book discusses as likely
+
+10
+00:00:31,489 --> 00:00:34,340
+Toolchain options, GCC and Clang.
+
+11
+00:00:34,340 --> 00:00:37,289
+And we're going to go over and
+cover GCC in this book and
+
+12
+00:00:37,289 --> 00:00:40,251
+we'll use that as part of
+assignments to and later.
+
+13
+00:00:43,340 --> 00:00:45,822
+So some of the components
+of the GCC Toolchain,
+
+14
+00:00:45,822 --> 00:00:49,121
+there's been you tills which is
+really the binary utilities.
+
+15
+00:00:49,121 --> 00:00:52,792
+And so those are including
+the assembler and the linker,
+
+16
+00:00:52,792 --> 00:00:56,480
+the components that make up
+the compiler applications.
+
+17
+00:00:56,480 --> 00:01:00,446
+And then there's GCC itself,
+which is the abbreviation for
+
+18
+00:01:00,446 --> 00:01:05,269
+new compiler collection and this is
+the compiler that supports different
+
+19
+00:01:05,269 --> 00:01:10,733
+programming languages and in our case will
+be using the C version of this compiler.
+
+20
+00:01:10,733 --> 00:01:14,864
+And then the other part of
+the toolchain that that will be using
+
+21
+00:01:14,864 --> 00:01:19,313
+is the C library and this is going to
+be using possesses definitions to
+
+22
+00:01:19,313 --> 00:01:23,461
+have API implementations that
+will access from our program.
+
+23
+00:01:23,461 --> 00:01:25,186
+So ways for us to get into and
+
+24
+00:01:25,186 --> 00:01:28,861
+out of the Linux Kernel through
+that API defined by POSIX.
+
+25
+00:01:30,940 --> 00:01:32,151
+So there are a couple different options.
+
+26
+00:01:32,151 --> 00:01:36,321
+The book goes over for setting up a
+Toolchain number one, you can do manually
+
+27
+00:01:36,321 --> 00:01:41,240
+by downloading building and
+installing all the components yourself.
+
+28
+00:01:41,240 --> 00:01:45,630
+And option two is to use a builder
+build system to generate it.
+
+29
+00:01:45,630 --> 00:01:48,899
+And this is part of what we'll talk about
+later in the course with Children and
+
+30
+00:01:48,899 --> 00:01:49,461
+young octo.
+
+31
+00:01:51,240 --> 00:01:55,121
+So why would you want to hand download and
+build your own toolchain?
+
+32
+00:01:55,121 --> 00:02:00,040
+Well, there are cases where it might be
+useful to do this in general, though,
+
+33
+00:02:00,040 --> 00:02:03,929
+if you're talking about building
+embedded system project.
+
+34
+00:02:03,929 --> 00:02:07,112
+And you're able to leverage one of
+the frameworks, we're going to talk about
+
+35
+00:02:07,112 --> 00:02:10,639
+later, like Bilad and Jacto,
+you probably don't need to do this step.
+
+36
+00:02:10,639 --> 00:02:14,669
+So the reason we're going to do the it was
+assignment to is just to understand and
+
+37
+00:02:14,669 --> 00:02:16,343
+kind of demystify the process,
+
+38
+00:02:16,343 --> 00:02:19,761
+understand more about what these
+tools are going to be doing for us.
+
+39
+00:02:22,440 --> 00:02:26,440
+So there's two different types of
+toolchains that are discussed in the book.
+
+40
+00:02:26,440 --> 00:02:30,795
+One is the native toolchain and the native
+toolchain is going to run on the same
+
+41
+00:02:30,795 --> 00:02:33,540
+system as the program it generates.
+
+42
+00:02:33,540 --> 00:02:37,527
+And then there's a cross toolchain,
+so in the case of a cross toolchain,
+
+43
+00:02:37,527 --> 00:02:41,454
+you're going to ultimately run
+the executable you generate on a different
+
+44
+00:02:41,454 --> 00:02:43,081
+architecture than the host.
+
+45
+00:02:43,081 --> 00:02:45,603
+And so this is what's referred
+to as cross compiling and
+
+46
+00:02:45,603 --> 00:02:47,651
+this is what we'll be doing for
+this course.
+
+47
+00:02:47,651 --> 00:02:52,025
+So typically will be building
+on a Intel X 86 Machine, but
+
+48
+00:02:52,025 --> 00:02:56,330
+we'll be compiling and
+building for an ARM based target.
+
+49
+00:02:56,330 --> 00:03:01,149
+So the output that we generate from
+our compile step won't actually run on
+
+50
+00:03:01,149 --> 00:03:02,410
+our host machine.
+
+51
+00:03:02,410 --> 00:03:04,961
+It'll be built specifically for
+an armed target.
+
+52
+00:03:06,040 --> 00:03:09,267
+While the applications that
+were running GCC for instance,
+
+53
+00:03:09,267 --> 00:03:13,940
+those obviously need to run on our host
+machine in order to do the compile step.
+
+54
+00:03:13,940 --> 00:03:17,751
+So that's what we mean when
+we say cross compiling.
+
+55
+00:03:19,540 --> 00:03:21,510
+So why would you use a cross toolchain?
+
+56
+00:03:21,510 --> 00:03:23,451
+There's a couple different
+reasons the book goes into.
+
+57
+00:03:23,451 --> 00:03:27,677
+But you're in general, your host is
+probably going to be more powerful than,
+
+58
+00:03:27,677 --> 00:03:28,750
+than your target.
+
+59
+00:03:28,750 --> 00:03:33,720
+And so your builds are probably going to
+be faster to build from your host machine
+
+60
+00:03:33,720 --> 00:03:37,924
+and you probably also don't want
+to have the image that you use for
+
+61
+00:03:37,924 --> 00:03:40,040
+your embedded target.
+
+62
+00:03:40,040 --> 00:03:42,621
+You probably don't need all of your
+development tools hosted there.
+
+63
+00:03:42,621 --> 00:03:46,224
+So there's probably no reason
+to necessarily to ship a full
+
+64
+00:03:46,224 --> 00:03:51,050
+compiler with your embedded device and
+maybe you don't even have the space to,
+
+65
+00:03:51,050 --> 00:03:54,340
+to fit that in your in
+your device to begin with.
+
+66
+00:03:54,340 --> 00:03:59,834
+So having this cross compile set up from
+our host means that we have the option to
+
+67
+00:03:59,834 --> 00:04:05,640
+use the most likely additional resources
+of the host compared to the target.
+
+68
+00:04:05,640 --> 00:04:10,405
+Two have this a compile setup that's
+going to give us additional performance or
+
+69
+00:04:10,405 --> 00:04:14,804
+have additional space to store programs
+that we don't actually need on
+
+70
+00:04:14,804 --> 00:04:17,751
+the target for
+shipment of an embedded device.
+
+71
+00:04:20,140 --> 00:04:24,237
+So in terms of the way you
+specify across compiled target,
+
+72
+00:04:24,237 --> 00:04:30,256
+there's a specific syntax for canoe where
+a prefix to the command that you're trying
+
+73
+00:04:30,256 --> 00:04:36,540
+to to invoke in this case GCC specifies
+what you're trying to cross compile for.
+
+74
+00:04:36,540 --> 00:04:42,293
+So example of the QEMU system that we're
+going to target with assignment two and
+
+75
+00:04:42,293 --> 00:04:47,441
+later is what's called aarch64 or
+the ARM 64 bit architecture.
+
+76
+00:04:47,441 --> 00:04:50,461
+And an example command
+line that you'll see for
+
+77
+00:04:50,461 --> 00:04:56,440
+your toolchain target is something
+like this aarch-64-none-linux-gnu-gcc.
+
+78
+00:04:56,440 --> 00:04:58,860
+What you see here is this last GCC part.
+
+79
+00:04:58,860 --> 00:05:00,641
+This is the part you're
+familiar with right.
+
+80
+00:05:00,641 --> 00:05:04,694
+As a part of just normally native
+compiling an application for for
+
+81
+00:05:04,694 --> 00:05:09,042
+a host and all this prefix that gets
+appended onto the beginning of it is
+
+82
+00:05:09,042 --> 00:05:13,050
+all about telling the identifying
+what you're compiling for.
+
+83
+00:05:13,050 --> 00:05:17,910
+And so the CPU here at the beginning aarch
+64 indicates that we're compiling for
+
+84
+00:05:17,910 --> 00:05:19,240
+ARM 64 bit.
+
+85
+00:05:19,240 --> 00:05:22,970
+The vendor is none, maybe if there was
+a specific vendor that we were targeting
+
+86
+00:05:22,970 --> 00:05:25,231
+here, instead of just
+a generic QEMU Machine,
+
+87
+00:05:25,231 --> 00:05:28,540
+there might be a specific vendor for
+the CPU listed here.
+
+88
+00:05:28,540 --> 00:05:31,360
+The Kernel type is Linux because
+we're targeting Linux Kernel.
+
+89
+00:05:31,360 --> 00:05:37,451
+And then the operating system support
+here is the GNU GCC, last step here.
+
+90
+00:05:39,840 --> 00:05:41,540
+So, the instructions for
+
+91
+00:05:41,540 --> 00:05:46,487
+building a toolchain with ARM cross
+compiler are linked to this page that you
+
+92
+00:05:46,487 --> 00:05:51,540
+could find in the reference material
+associated with the slide deck.
+
+93
+00:05:51,540 --> 00:05:54,240
+And this will change from
+semester to semester.
+
+94
+00:05:54,240 --> 00:05:58,740
+But what we're really doing here
+is going out to the ARM website.
+
+95
+00:05:58,740 --> 00:06:03,150
+We're pulling out the pre
+compiled binaries for Linux and
+
+96
+00:06:03,150 --> 00:06:08,921
+we're just using those pre compiled
+binaries to implement our toolchain.
+
+97
+00:06:08,921 --> 00:06:12,730
+And this is the same thing that
+the builder up framework will do as well.
+
+98
+00:06:12,730 --> 00:06:16,684
+So these instructions might change in
+terms of version from year to year,
+
+99
+00:06:16,684 --> 00:06:20,851
+but that's generally the, the format
+that will follow with the steps here.
+
+100
+00:06:23,040 --> 00:06:27,795
+So once you do those steps,
+what you should see is that you
+
+101
+00:06:27,795 --> 00:06:32,451
+can export a path to your path
+variable that will point to
+
+102
+00:06:32,451 --> 00:06:37,231
+the binary directory where
+these tools were installed.
+
+103
+00:06:37,231 --> 00:06:41,200
+And once you do that, you should be
+able to run that command that I showed
+
+104
+00:06:41,200 --> 00:06:44,400
+previously aarch-64-none-linux-gnu-gcc 4.
+
+105
+00:06:44,400 --> 00:06:49,075
+So this part is essentially the same thing
+you do if you were cross compiling but,
+
+106
+00:06:49,075 --> 00:06:51,481
+and you'll generate that dot file,
+
+107
+00:06:51,481 --> 00:06:56,040
+just like you would if you were
+if you were compiling natively.
+
+108
+00:06:56,040 --> 00:06:59,945
+And the what you notice if you run
+the file utility is that the output
+
+109
+00:06:59,945 --> 00:07:00,800
+is going to say?
+
+110
+00:07:00,800 --> 00:07:03,960
+Rather than say that it's built for
+your host machine.
+
+111
+00:07:03,960 --> 00:07:06,721
+You can see this one's built for
+ARM aarch64.
+
+112
+00:07:06,721 --> 00:07:10,499
+So this will tell you that you've
+got a working cross compiler for
+
+113
+00:07:10,499 --> 00:07:13,461
+aarch64 that's able to
+cross compile sys file.
+
+114
+00:07:15,840 --> 00:07:20,167
+The other thing to know when we're
+talking about cross compiling and
+
+115
+00:07:20,167 --> 00:07:24,719
+toolchains is that the Toolchain is
+going to be dependent on what's called
+
+116
+00:07:24,719 --> 00:07:29,940
+a sysroot that will be installed as
+a part of the toolchain installation.
+
+117
+00:07:29,940 --> 00:07:35,482
+And one way you can see your sysroot path
+is to use this GCC command with the dash,
+
+118
+00:07:35,482 --> 00:07:38,140
+print, dash sysroot option.
+
+119
+00:07:38,140 --> 00:07:42,092
+And this is going to show you a path
+to a location on your host file
+
+120
+00:07:42,092 --> 00:07:44,741
+system where the sysroot is installed.
+
+121
+00:07:44,741 --> 00:07:49,730
+And what the sysroot is really the root
+file system of that cross toolchain.
+
+122
+00:07:49,730 --> 00:07:53,731
+So the files that are going to be in this
+are all specific to the target type.
+
+123
+00:07:53,731 --> 00:07:57,073
+So if we're compiling for
+an aarch 64 type,
+
+124
+00:07:57,073 --> 00:08:02,216
+the files that are located in this
+directory are all going to be the content
+
+125
+00:08:02,216 --> 00:08:07,840
+that would be on the host root file
+system if we were compiling natively.
+
+126
+00:08:07,840 --> 00:08:11,663
+But instead of being binary
+files that are intended for
+
+127
+00:08:11,663 --> 00:08:17,140
+the host will be the Binary files for
+the target in this case aarch64.
+
+128
+00:08:17,140 --> 00:08:21,619
+So for instance, if there's libraries
+you need to link to as a part of your
+
+129
+00:08:21,619 --> 00:08:26,560
+application, those libraries would be
+located here in the sysroot directory.
+
+130
+00:08:26,560 --> 00:08:31,419
+So this lib C library is a library
+that would link to in order to
+
+131
+00:08:31,419 --> 00:08:36,378
+access those eight possess a piece
+that I mentioned before and
+
+132
+00:08:36,378 --> 00:08:40,693
+this file will be compiled for
+the aarch 64 target.
+
+133
+00:08:40,693 --> 00:08:44,512
+And so some of the files are going to
+be needed to compile programs and
+
+134
+00:08:44,512 --> 00:08:48,192
+other of those files are going to be
+needed to be are going to need to be
+
+135
+00:08:48,192 --> 00:08:50,361
+installed on the target at runtime.
+
+136
+00:08:51,740 --> 00:08:54,591
+So some of the different
+directories in your sysroot
+
+137
+00:08:54,591 --> 00:08:58,023
+lib directory is going to be
+the shared objects for C library and so
+
+138
+00:08:58,023 --> 00:09:02,340
+this is content that's going to be
+need to be installed on target.
+
+139
+00:09:02,340 --> 00:09:07,241
+The user lib directory is for
+static library, archive files.
+
+140
+00:09:07,241 --> 00:09:10,369
+So this is used as a part of
+the C library compiled steps and
+
+141
+00:09:10,369 --> 00:09:13,251
+user include is where the header
+files are going to be.
+
+142
+00:09:13,251 --> 00:09:15,980
+So what you do stdio.h.
+
+143
+00:09:15,980 --> 00:09:18,751
+This is where that file is going to
+map to when you're cross compiling.
+
+144
+00:09:20,340 --> 00:09:22,927
+And then user (s)bin is where
+the utility programs for
+
+145
+00:09:22,927 --> 00:09:24,840
+the cross toolchain would be located.
+
+146
+00:09:24,840 --> 00:09:28,633
+So this would be as a part
+of your build step or
+
+147
+00:09:28,633 --> 00:09:32,540
+after to analyze the output of your build.
+
+148
+00:09:32,540 --> 00:09:36,914
+If you need to run host tools that
+know how to analyze ARM executables,
+
+149
+00:09:36,914 --> 00:09:40,561
+this is where those files will
+be located in your sysroot.
+
+150
+00:09:42,640 --> 00:09:47,876
+So what do we mean when we say we're
+going to have runtime target files,
+
+151
+00:09:47,876 --> 00:09:52,540
+So, files that are located
+on your target at runtime.
+
+152
+00:09:52,540 --> 00:09:57,980
+So if I use the example here of a path
+to a dot S O shared library file,
+
+153
+00:09:57,980 --> 00:10:02,951
+and I use the file command to
+look at the content of that file.
+
+154
+00:10:04,440 --> 00:10:09,119
+What I see here is once again that
+this is an ARM aarch64 library.
+
+155
+00:10:09,119 --> 00:10:14,125
+So this is a library that's not going to
+be used or useful for my X 86 hosts
+
+156
+00:10:14,125 --> 00:10:19,966
+that I'm using for compiling, it's really
+going to be specific to the toolchain and
+
+157
+00:10:19,966 --> 00:10:23,651
+it's going to ultimately
+be installed on the target.
+
+158
+00:10:24,840 --> 00:10:29,001
+And this will be the case even when
+it's built on a different architecture.
+
+159
+00:10:29,001 --> 00:10:32,779
+So even though I'm building from
+X 86 this particular file is
+
+160
+00:10:32,779 --> 00:10:37,651
+is the file that goes on my target when
+I'm running on an aarch 64 based system.
+
+161
+00:10:40,340 --> 00:10:45,301
+So will the aarch4 non Linux,
+new GCC compiler be in the sysroot?
+
+162
+00:10:46,440 --> 00:10:49,601
+And the answer is no,
+it won't be in the sysroot.
+
+163
+00:10:49,601 --> 00:10:51,501
+And the reason is because
+we're cross compiling.
+
+164
+00:10:51,501 --> 00:10:56,550
+So this one is in your host system,
+file system, it's run by your host system
+
+165
+00:10:56,550 --> 00:11:01,461
+because it's a part of the pile step
+that you'd run for your host machine.
+
+166
+00:11:03,940 --> 00:11:08,761
+Some of the other tools that are going to
+be located in the toolchain are going to
+
+167
+00:11:08,761 --> 00:11:12,441
+be GCC the and G++, so
+the different compiler types.
+
+168
+00:11:12,441 --> 00:11:15,710
+So this would be the one you'd use for
+C++ gdc.
+
+169
+00:11:15,710 --> 00:11:18,394
+So you're crossed debugger
+would be located here and
+
+170
+00:11:18,394 --> 00:11:19,951
+ld would be your cross linker.
+
+171
+00:11:21,440 --> 00:11:26,810
+There's also a few other utilities
+the book goes over addr2line can convert
+
+172
+00:11:26,810 --> 00:11:32,370
+the program address into file names and
+numbers for debug and obdump or obdump.
+
+173
+00:11:32,370 --> 00:11:36,244
+We'll get into this one
+in later assignment, but
+
+174
+00:11:36,244 --> 00:11:39,415
+this is useful for
+taking an object file and
+
+175
+00:11:39,415 --> 00:11:44,349
+relating the content of an output
+object file to associated source
+
+176
+00:11:44,349 --> 00:11:49,220
+code strip is another one that's
+going to be used for us by default.
+
+177
+00:11:49,220 --> 00:11:53,655
+In some of our later when we're getting,
+when we're getting into application,
+
+178
+00:11:53,655 --> 00:11:56,140
+build tools like bildred and yacto.
+
+179
+00:11:56,140 --> 00:12:00,204
+And this is going to remove debugging
+information from executables and
+
+180
+00:12:00,204 --> 00:12:05,540
+make your binary files smaller so
+that they'll use less space on target.
+
+181
+00:12:05,540 --> 00:12:09,165
+There's also a retail futility that's
+going to just have additional information
+
+182
+00:12:09,165 --> 00:12:12,161
+about executables,
+like location in memory map, for instance.
+
+183
+00:12:14,740 --> 00:12:19,078
+So one of the concept to understand when
+we're talking about cross compiling and
+
+184
+00:12:19,078 --> 00:12:22,540
+toolchains is static
+versus dynamic linking.
+
+185
+00:12:22,540 --> 00:12:29,270
+So gcc or g++, as I mentioned before,
+we're going to be invoking possesses APIs.
+
+186
+00:12:29,270 --> 00:12:35,491
+And the way we'll do that with gcc or
+g++ is using the glibc,
+
+187
+00:12:35,491 --> 00:12:40,051
+which is the the GCC
+version of the C library.
+
+188
+00:12:41,340 --> 00:12:45,731
+There's two different options
+about how you would link with GCC.
+
+189
+00:12:45,731 --> 00:12:50,721
+One is using static linkage and in
+static linkage, all of the dependencies.
+
+190
+00:12:50,721 --> 00:12:54,657
+So everything that you need from the glibc
+would be pulled out of that archive and
+
+191
+00:12:54,657 --> 00:12:56,551
+placed directly in your executable.
+
+192
+00:12:57,640 --> 00:13:02,421
+And this is contrast with with dynamic
+linking, where in dynamic linking,
+
+193
+00:13:02,421 --> 00:13:07,294
+your executables doesn't actually have
+that content of the glibc library.
+
+194
+00:13:07,294 --> 00:13:11,668
+Instead at runtime it needs to know
+where it can find a copy of that
+
+195
+00:13:11,668 --> 00:13:14,989
+code locally and
+when it's loaded into memory,
+
+196
+00:13:14,989 --> 00:13:19,710
+the content that it needs from that
+library will also be accessible.
+
+197
+00:13:19,710 --> 00:13:24,617
+So the benefit being here that you don't
+need a separate copy on disk for every
+
+198
+00:13:24,617 --> 00:13:30,100
+application that uses glibc, which pretty
+much every application is going to use.
+
+199
+00:13:30,100 --> 00:13:34,522
+They can all use one shared file that's
+located in one spot on the file system,
+
+200
+00:13:34,522 --> 00:13:37,551
+not need to duplicate that
+copy that content on disk.
+
+201
+00:13:39,440 --> 00:13:44,211
+So if you have a way to reduce
+the usage of filesystem space through
+
+202
+00:13:44,211 --> 00:13:50,240
+dynamic linking, then why would you
+ever want to use static linking?
+
+203
+00:13:50,240 --> 00:13:54,564
+Well, one reason that you might want
+to use static linking is when you have
+
+204
+00:13:54,564 --> 00:13:59,380
+relatively few applications or maybe if
+you have only a single application in your
+
+205
+00:13:59,380 --> 00:14:01,507
+embedded system implementation.
+
+206
+00:14:01,507 --> 00:14:06,044
+And you might say, well that seems
+unlikely that you'd only have a single
+
+207
+00:14:06,044 --> 00:14:11,019
+application, but it turns out there's a
+really useful tool that we're going to be
+
+208
+00:14:11,019 --> 00:14:13,962
+using a lot this in this
+course called Busybox.
+
+209
+00:14:13,962 --> 00:14:18,259
+That it does exactly that that's really
+it's just a single application that
+
+210
+00:14:18,259 --> 00:14:22,690
+includes a whole bunch of useful Linux
+command line functions all compiled into
+
+211
+00:14:22,690 --> 00:14:24,540
+one single application.
+
+212
+00:14:24,540 --> 00:14:28,379
+So if you only have a single application,
+there's really less benefit to using
+
+213
+00:14:28,379 --> 00:14:32,351
+dynamic linking because you can just
+include the content directly and executed.
+
+214
+00:14:34,040 --> 00:14:37,119
+And the second reason you might want to
+use static linkage would be if you need to
+
+215
+00:14:37,119 --> 00:14:39,940
+run an application before the root
+file system is available.
+
+216
+00:14:39,940 --> 00:14:43,490
+So when would you not have the full
+root file system available?
+
+217
+00:14:43,490 --> 00:14:46,766
+Typically that would happen if
+you're booting up the device and
+
+218
+00:14:46,766 --> 00:14:50,407
+maybe you weren't able to access
+the file system content because it was
+
+219
+00:14:50,407 --> 00:14:54,540
+stored on some other device that
+needed specific drivers to access it.
+
+220
+00:14:54,540 --> 00:14:58,441
+So we'll talk about this more in
+later versions of the course as well.
+
+221
+00:14:58,441 --> 00:15:03,235
+But you'd be able to do this through a
+small program that ran at boot that didn't
+
+222
+00:15:03,235 --> 00:15:07,673
+have access to the full root file system
+yet, but allowed you to start some
+
+223
+00:15:07,673 --> 00:15:13,040
+applications that that would give you
+access and load the appropriate drivers.
+
+224
+00:15:13,040 --> 00:15:16,489
+And in that case those applications would
+need to be static linked since the full
+
+225
+00:15:16,489 --> 00:15:18,561
+root file system content is not yet
+available.
+
+226
+00:15:22,940 --> 00:15:26,473
+So on this side I'm showing some
+commands that are useful for
+
+227
+00:15:26,473 --> 00:15:30,990
+understanding some of what we're going to
+be covering an assignment 2 and 3.
+
+228
+00:15:30,990 --> 00:15:36,440
+In terms of the use of shared libraries
+and dynamic linking with an application.
+
+229
+00:15:36,440 --> 00:15:40,856
+So what I'm showing here, we're using
+the finder app that you'll implement with
+
+230
+00:15:40,856 --> 00:15:43,740
+assignment 2, an assignment 3.
+
+231
+00:15:43,740 --> 00:15:47,400
+And really it's the same application that
+you implemented as a part of assignment
+
+232
+00:15:47,400 --> 00:15:48,521
+one with shell scripts.
+
+233
+00:15:49,540 --> 00:15:53,739
+But we're going to be building
+an application here using a cross compile
+
+234
+00:15:53,739 --> 00:15:54,315
+prefix.
+
+235
+00:15:54,315 --> 00:15:58,052
+And so you can see here that this cross
+compiled prefix that I'm specifying is
+
+236
+00:15:58,052 --> 00:16:01,732
+just exactly that prefix on the GCC
+execute a bill that we talked about before
+
+237
+00:16:01,732 --> 00:16:03,940
+that specifies your toolchain.
+
+238
+00:16:03,940 --> 00:16:06,834
+So I'm specifying this cross compiled
+prefix I'm doing a clean and
+
+239
+00:16:06,834 --> 00:16:08,070
+I'm removing everything.
+
+240
+00:16:08,070 --> 00:16:10,619
+I specify the same cross
+compiled prefects and
+
+241
+00:16:10,619 --> 00:16:13,109
+I use the all target to
+build my application.
+
+242
+00:16:13,109 --> 00:16:18,111
+And so you can see what this is doing
+is running GCC just like you would from
+
+243
+00:16:18,111 --> 00:16:23,359
+native but pre fixing with what I
+specified for cross compile and generating
+
+244
+00:16:23,359 --> 00:16:28,451
+a an application that is going to be
+cross compiled for my aarch64 target.
+
+245
+00:16:30,240 --> 00:16:35,124
+If I then use that ridelf utility to
+look for information about the writer
+
+246
+00:16:35,124 --> 00:16:40,240
+application and look for specifically for
+great for shared library.
+
+247
+00:16:40,240 --> 00:16:44,951
+What I can see here is that it's
+using the libc.so.6 shared library.
+
+248
+00:16:44,951 --> 00:16:49,511
+So this is going to need to be on the file
+system of the target in order for
+
+249
+00:16:49,511 --> 00:16:52,071
+my application to run successfully.
+
+250
+00:16:53,440 --> 00:16:57,927
+And if I look at the program interpreter,
+this would be a second reference to
+
+251
+00:16:57,927 --> 00:17:02,440
+a library that I'm going to need in order
+to run my application on the target.
+
+252
+00:17:02,440 --> 00:17:07,466
+So if I use the same readelf utility and
+look for the requirements of the writer
+
+253
+00:17:07,466 --> 00:17:12,910
+application, I'm I'm and then grab
+this for for programming interpreter.
+
+254
+00:17:12,910 --> 00:17:17,839
+I can see here that there's a reference
+to lib ld-linux-aarch64.so.
+
+255
+00:17:17,839 --> 00:17:22,207
+These values might change depending
+on what version you have, but
+
+256
+00:17:22,207 --> 00:17:26,419
+this general pattern here should
+allow you to find the necessary
+
+257
+00:17:26,419 --> 00:17:32,240
+files that you're going to need on
+target in order to run your application.
+
+258
+00:17:32,240 --> 00:17:38,060
+So why is the ld-linux-aarch64
+listed here.
+
+259
+00:17:38,060 --> 00:17:41,170
+This is really one of the shared libraries
+is going to be referenced by writer.
+
+260
+00:17:41,170 --> 00:17:43,350
+And what does it mean that
+glibc is listed here?
+
+261
+00:17:43,350 --> 00:17:46,577
+This is the file that needs to be
+available in the root file system to run
+
+262
+00:17:46,577 --> 00:17:47,901
+that writer successfully.
+
+263
+00:17:47,901 --> 00:17:52,625
+So both of these files are going to need
+to be located on your target in order to
+
+264
+00:17:52,625 --> 00:17:54,161
+run your application.
+
+265
+00:17:55,640 --> 00:17:57,320
+So where would these be located?
+
+266
+00:17:57,320 --> 00:18:02,076
+The linker is going to check for
+shared libraries in Lib Lib 64,
+
+267
+00:18:02,076 --> 00:18:04,440
+user Lib or User Lib 64.
+
+268
+00:18:04,440 --> 00:18:08,850
+There's also an LD library path
+environment variable that you could set to
+
+269
+00:18:08,850 --> 00:18:10,461
+specify other locations.
+
+270
+00:18:10,461 --> 00:18:14,364
+But for our purposes,
+you'll follow the instructions,
+
+271
+00:18:14,364 --> 00:18:16,770
+the the details In the assignment.
+
+272
+00:18:16,770 --> 00:18:20,187
+This will be mostly relevant when
+you get to assignment 3, but
+
+273
+00:18:20,187 --> 00:18:24,376
+you'll want to make sure that your lib and
+lib64 directories are set up with
+
+274
+00:18:24,376 --> 00:18:27,161
+the appropriate content
+to run your application.

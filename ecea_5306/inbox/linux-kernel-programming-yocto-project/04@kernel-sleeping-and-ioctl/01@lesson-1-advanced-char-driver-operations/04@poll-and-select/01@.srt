@@ -1,0 +1,660 @@
+1
+00:00:01,240 --> 00:00:03,923
+In this video,
+we're going to talk about poll and select.
+
+2
+00:00:03,923 --> 00:00:08,320
+So understand the use of poll and
+select in kernel drivers.
+
+3
+00:00:08,320 --> 00:00:13,002
+Understand how to do seeking in your
+kernel driver and associate read,
+
+4
+00:00:13,002 --> 00:00:17,851
+write open function implementation
+controlling access to your driver.
+
+5
+00:00:19,840 --> 00:00:23,877
+So poll and select can be used to
+determine whether a device can be opened
+
+6
+00:00:23,877 --> 00:00:28,471
+without blocking or whether you need to
+wait for the descriptor to become ready.
+
+7
+00:00:28,471 --> 00:00:33,476
+So these are implementing the poll
+function that you'd use from user
+
+8
+00:00:33,476 --> 00:00:38,320
+space to figure out is there data
+available on my driver endpoint.
+
+9
+00:00:38,320 --> 00:00:41,749
+Is my reader right command going to block?
+
+10
+00:00:41,749 --> 00:00:45,811
+And it's supported by a poll method in
+the device driver which looks like this.
+
+11
+00:00:45,811 --> 00:00:50,588
+That takes a poll table structure that's
+provided to you by the kernel and
+
+12
+00:00:50,588 --> 00:00:55,443
+a file pointer that references the
+particular open command that was used to
+
+13
+00:00:55,443 --> 00:00:57,151
+open the file operation.
+
+14
+00:00:58,740 --> 00:01:02,732
+So looking at an example of
+poll implementation in scull,
+
+15
+00:01:02,732 --> 00:01:07,210
+we can see that the kernel really
+does a lot of the heavy lifting for
+
+16
+00:01:07,210 --> 00:01:12,343
+us there poll weight functions here
+that do whatever needs to get done based
+
+17
+00:01:12,343 --> 00:01:17,069
+on these wait queues that we've
+talked about in previous lectures or
+
+18
+00:01:17,069 --> 00:01:22,240
+in previous videos where we talked
+about how to wait on device operations.
+
+19
+00:01:22,240 --> 00:01:26,857
+So you're just going to call
+poll_wait with inq and outqs and
+
+20
+00:01:26,857 --> 00:01:31,671
+pass in the poll_table that is
+passed to you from the kernel.
+
+21
+00:01:31,671 --> 00:01:36,732
+So this is going to take care of
+the details of what the kernels are,
+
+22
+00:01:36,732 --> 00:01:42,545
+what the user's actually waiting for
+and just fill in based on the current
+
+23
+00:01:42,545 --> 00:01:48,943
+state of your waitq that you've set up for
+waiting on data and input or output qs.
+
+24
+00:01:48,943 --> 00:01:54,843
+So then after calling poll_wait
+the bit mask that you return from poll
+
+25
+00:01:54,843 --> 00:02:00,443
+needs to be set based on some rules
+about the availability of read or
+
+26
+00:02:00,443 --> 00:02:05,543
+write on your driver and
+we'll talk about those in a minute,
+
+27
+00:02:05,543 --> 00:02:09,743
+but again these wait qs
+are just going to be defined,
+
+28
+00:02:09,743 --> 00:02:13,443
+they're the same ones that we're using for
+
+29
+00:02:13,443 --> 00:02:18,464
+waiting on read or
+write availability inside your driver.
+
+30
+00:02:18,464 --> 00:02:23,021
+So the rules that you need to use to
+handle both the read and the poll or read
+
+31
+00:02:23,021 --> 00:02:28,179
+write and poll implementations when there
+is data available in the input buffer,
+
+32
+00:02:28,179 --> 00:02:32,920
+so when you're asking for data from
+the device and that data is available.
+
+33
+00:02:32,920 --> 00:02:36,100
+The read should always return
+immediately with at least 1 byte.
+
+34
+00:02:36,100 --> 00:02:39,531
+So you don't need to return
+the full length of the request but
+
+35
+00:02:39,531 --> 00:02:42,780
+you need to return something
+if there is data available.
+
+36
+00:02:42,780 --> 00:02:46,340
+This is kind of like the rule that you
+need when you implement your read handler.
+
+37
+00:02:46,340 --> 00:02:51,178
+And also poll should return poll in and
+read normally in other words there's
+
+38
+00:02:51,178 --> 00:02:55,504
+data available that and
+you're signaling that back to user space.
+
+39
+00:02:55,504 --> 00:03:00,487
+When there's no data in the buffer,
+the read should either block
+
+40
+00:03:00,487 --> 00:03:05,016
+until at least 1 byte is there
+if you're in blocking mode or
+
+41
+00:03:05,016 --> 00:03:09,638
+if you specify non blocking mode
+it should return -EAGAIN to
+
+42
+00:03:09,638 --> 00:03:14,620
+say that you need to poll later for
+data available and the read q and
+
+43
+00:03:14,620 --> 00:03:18,470
+then poll should report
+unreadable in this case.
+
+44
+00:03:18,470 --> 00:03:22,651
+And so the read flags that you return
+in that mask value should all be 0.
+
+45
+00:03:23,840 --> 00:03:30,548
+And at the end of file, the read should
+return immediately with a value of 0.
+
+46
+00:03:30,548 --> 00:03:37,741
+And poll should report this POLLHUP which
+means there's no data left in the buffer.
+
+47
+00:03:37,741 --> 00:03:42,152
+So there's a distinguish here
+between there's no data left in
+
+48
+00:03:42,152 --> 00:03:46,733
+the buffer because there's nothing
+written to the device yet but
+
+49
+00:03:46,733 --> 00:03:49,741
+there's something that will be written.
+
+50
+00:03:49,741 --> 00:03:54,039
+So this is all based on the design of your
+device driver as opposed to there's not
+
+51
+00:03:54,039 --> 00:03:58,017
+going to be anything else in the buffer
+because you're at the end of file,
+
+52
+00:03:58,017 --> 00:04:01,418
+this is all based on how you've
+designed your device driver and
+
+53
+00:04:01,418 --> 00:04:04,151
+what you're trying to
+signal back to user space.
+
+54
+00:04:05,740 --> 00:04:10,612
+So, similarly to read we have rules
+on write on how we should handle
+
+55
+00:04:10,612 --> 00:04:15,919
+the write when there's either space
+available or no space available and
+
+56
+00:04:15,919 --> 00:04:21,250
+how poll should indicate what the current
+status of the write buffer is.
+
+57
+00:04:21,250 --> 00:04:24,233
+So when there is space available
+in the output buffer and
+
+58
+00:04:24,233 --> 00:04:28,293
+you have a way that you can handle write,
+write should always return without
+
+59
+00:04:28,293 --> 00:04:32,311
+delay accepting at least 1 byte and
+writing at least 1 byte in the buffer.
+
+60
+00:04:32,311 --> 00:04:36,040
+Again similar to read if you've been
+asked to write a large amount of data,
+
+61
+00:04:36,040 --> 00:04:38,310
+you don't necessarily
+have to write it all.
+
+62
+00:04:38,310 --> 00:04:43,073
+But you should write at least 1 byte
+if you have the ability to write 1
+
+63
+00:04:43,073 --> 00:04:45,221
+byte into your device buffer.
+
+64
+00:04:45,221 --> 00:04:50,136
+And then poll should report POLLOUT or
+[INAUDIBLE] Normally
+
+65
+00:04:50,136 --> 00:04:54,960
+in other words you would not
+block on a write in this case.
+
+66
+00:04:54,960 --> 00:04:59,395
+But conversely when there is no space in
+the output buffer, so the buffer is full,
+
+67
+00:04:59,395 --> 00:05:03,831
+then a write needs to block until space is
+freed if you're in blocking mode or if you
+
+68
+00:05:03,831 --> 00:05:08,719
+specified O_NONBLOCK do the same thing, it
+doesn't read and return -EAGAIN saying you
+
+69
+00:05:08,719 --> 00:05:12,880
+need to keep calling this waiting for
+space available in the output buffer.
+
+70
+00:05:12,880 --> 00:05:16,972
+And similarly poll should
+report that the file is not
+
+71
+00:05:16,972 --> 00:05:20,700
+writable by setting
+the return flags all to 0.
+
+72
+00:05:20,700 --> 00:05:26,473
+So one thing that might be a little bit
+confusing about write is that it mentioned
+
+73
+00:05:26,473 --> 00:05:32,075
+before that as long as there's data
+available room available in the buffer,
+
+74
+00:05:32,075 --> 00:05:35,607
+you want to write at least
+1 byte immediately and
+
+75
+00:05:35,607 --> 00:05:40,516
+you might think that if O_NONBLOCK
+is not set and we want to block and
+
+76
+00:05:40,516 --> 00:05:45,516
+there's some type of operation that
+needs to happen to transfer data
+
+77
+00:05:45,516 --> 00:05:49,565
+from a buffer to the device
+that we might want to buffer or
+
+78
+00:05:49,565 --> 00:05:54,171
+we might want to block for
+that actual data transfer to happen.
+
+79
+00:05:54,171 --> 00:05:58,680
+In other words so we might want to wait
+until the data is written all the way
+
+80
+00:05:58,680 --> 00:06:01,840
+from the buffer directly into the device.
+
+81
+00:06:01,840 --> 00:06:07,577
+But it turns out that's not really the way
+that write should be handled in the Linux
+
+82
+00:06:07,577 --> 00:06:12,817
+kernel because we want to optimize for
+the case where we buffer by default and
+
+83
+00:06:12,817 --> 00:06:16,726
+so that transfer from the right
+buffer into the device,
+
+84
+00:06:16,726 --> 00:06:19,840
+most likely takes a lot
+of time to complete.
+
+85
+00:06:19,840 --> 00:06:22,775
+And we don't we don't
+want to have to make users or
+
+86
+00:06:22,775 --> 00:06:25,870
+user space applications wait for
+that by default.
+
+87
+00:06:25,870 --> 00:06:29,965
+So regardless of the setting of blocker or
+nonblock,
+
+88
+00:06:29,965 --> 00:06:34,242
+you don't want to typically
+make a device driver wait for
+
+89
+00:06:34,242 --> 00:06:38,740
+transfer to complete all
+the way out to the device.
+
+90
+00:06:38,740 --> 00:06:42,884
+And the reason is we've already talked
+about the fsync call that you can make
+
+91
+00:06:42,884 --> 00:06:46,261
+from user space and so
+you can implement fsync in your driver.
+
+92
+00:06:46,261 --> 00:06:50,214
+And if the user space application cares
+whether the data has been written all
+
+93
+00:06:50,214 --> 00:06:54,350
+the way out to the device, they can use
+that fsync call to determine whether that
+
+94
+00:06:54,350 --> 00:06:56,161
+is or is not the case or to force it.
+
+95
+00:06:59,051 --> 00:07:02,300
+So in addition to handling read and write,
+
+96
+00:07:02,300 --> 00:07:08,370
+you can think of the case where we want to
+seek to a particular position in a file.
+
+97
+00:07:08,370 --> 00:07:10,072
+So this is the seek commands and
+
+98
+00:07:10,072 --> 00:07:13,480
+the llseek command that we've
+talked about from user space.
+
+99
+00:07:13,480 --> 00:07:17,673
+And in that case the default case here
+is just that we use that file pointer
+
+100
+00:07:17,673 --> 00:07:21,661
+that we're passing as the first
+argument to read or write and just set
+
+101
+00:07:21,661 --> 00:07:25,820
+a position in that that determines
+where we want to seek to in the device.
+
+102
+00:07:25,820 --> 00:07:30,883
+So the default implementation that
+the kernel provides simply just
+
+103
+00:07:30,883 --> 00:07:36,330
+sets that value and then read and
+write can operate on that as necessary.
+
+104
+00:07:36,330 --> 00:07:41,444
+But if you have some type of custom
+operation that you need to do with seek,
+
+105
+00:07:41,444 --> 00:07:46,910
+you can implement your own llseek file
+operation in the file operation table.
+
+106
+00:07:46,910 --> 00:07:50,567
+And you can also say that for
+my particular device it doesn't make
+
+107
+00:07:50,567 --> 00:07:53,958
+sense to try to seek to different
+locations and so you can just
+
+108
+00:07:53,958 --> 00:07:58,450
+call nonseekable_open which would prevent
+seek from being supported at all.
+
+109
+00:07:58,450 --> 00:08:03,139
+And that often make sense if you
+are working with data flow as opposed to
+
+110
+00:08:03,139 --> 00:08:05,771
+mapping to some kind of memory buffer.
+
+111
+00:08:05,771 --> 00:08:09,919
+And the kernel gives examples of serial
+port and keyboard where it doesn't really
+
+112
+00:08:09,919 --> 00:08:13,885
+make sense to try to seek to a particular
+location in the serial port because you're
+
+113
+00:08:13,885 --> 00:08:18,212
+just processing characters as they come in
+one after another and same for a keyboard,
+
+114
+00:08:18,212 --> 00:08:20,830
+your processing keystrokes,
+one after another.
+
+115
+00:08:20,830 --> 00:08:24,190
+It doesn't really make sense to
+seek back to old keystrokes.
+
+116
+00:08:24,190 --> 00:08:28,612
+And so for those type of devices you
+just call nonseekable_open in your open
+
+117
+00:08:28,612 --> 00:08:32,066
+function and that would get rid
+of this default behavior and
+
+118
+00:08:32,066 --> 00:08:35,961
+just return a failure if there
+are attempts to seek on your driver.
+
+119
+00:08:37,039 --> 00:08:39,939
+Another thing mentioned
+in chapter six has to do
+
+120
+00:08:39,939 --> 00:08:43,000
+with the access control
+that you can do from open.
+
+121
+00:08:43,000 --> 00:08:47,110
+So, there's a couple of different
+examples that are provided in the next
+
+122
+00:08:47,110 --> 00:08:51,419
+device driver example code that show how
+you can control access to your device
+
+123
+00:08:51,419 --> 00:08:53,040
+through the open command.
+
+124
+00:08:53,040 --> 00:08:58,003
+So they give a single open example
+where there's only one process that can
+
+125
+00:08:58,003 --> 00:09:02,804
+open at a time and so there's atomic
+value that you obtain in the open and
+
+126
+00:09:02,804 --> 00:09:04,830
+you release that in release.
+
+127
+00:09:04,830 --> 00:09:11,480
+So you can block in the open command
+based on any requirements of your driver.
+
+128
+00:09:11,480 --> 00:09:16,087
+There's also a single user one that
+compares the process uID to determine
+
+129
+00:09:16,087 --> 00:09:17,573
+whether there's one or
+
+130
+00:09:17,573 --> 00:09:21,744
+more users using the driver and
+you can return -EBUSY when in use.
+
+131
+00:09:21,744 --> 00:09:26,042
+So really the book is just showing you
+that you have a couple different ways to
+
+132
+00:09:26,042 --> 00:09:30,471
+control access to your driver and you can
+do that in open and you can do the kind of
+
+133
+00:09:30,471 --> 00:09:34,400
+blocking or non blocking that we've
+talked about and read or write.
+
+134
+00:09:34,400 --> 00:09:38,337
+You can also do that and just prevent
+access in open if that's desirable for
+
+135
+00:09:38,337 --> 00:09:39,726
+your particular driver.

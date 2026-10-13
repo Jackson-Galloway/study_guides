@@ -1,0 +1,123 @@
+In this video, I'm going to
+talk about Git workflows. I want to introduce the Git
+Feature Branch Workflow and also introduce
+what's called GitFlow. The Git feature
+branch workflow is just a way that you can use Git such that all your feature development would take place on a
+dedicated branch. You would use the master
+branch, not for development, but just for tracking every time a specific
+feature is completed. The nice thing about this
+implementation is that you can have multiple
+developers that are working on specific
+or different features without disturbing
+that main codebase. You can have these developers working on same feature
+branch, for instance, and sharing that feature branch, but not breaking anything that's working in
+the master branch. A key concept here is that the master branch
+is never broken. You don't actually
+merge in any changes to your development branches until you complete and tested
+with that change, and you've had some level
+of verification that you aren't going to break anything that's already working
+in the master branch. The feature will end with a pull request or
+a merge request from the feature branch, and the pull or merge request is a great opportunity to
+put in code reviews. Other people on the
+team who maybe weren't as involved with development can review the work that you
+did and ask questions or ask for changes
+based on what they see. An example of how you'd use Git for feature branch workflow. You'd start by checking
+out the master. You would pull origin master, you'd make sure you are in sync with the origin master branch. Then you can do git checkout -b for your feature branch name. That feature branch
+name is often something like issue-25 or so. For instance, if you're
+using GitHub issue tracking, or it could be something
+like feature/foo, where foo describes the
+name of the feature, or maybe it's fix-foo
+if you're fixing a bug. My personal preference of these, is something like issue-25. The reason is if you use some words to describe
+your feature or your fix, it might not be obvious to other people what
+exactly you're fixing. Whereas if you link back to
+an issue tracking database, you can put all the detail
+that you want about that and you can
+update that easily to include additional
+description about what you're
+changing or implementing. But your development
+team will have its own guidelines about how to do this and you should follow whatever your team is
+suggesting to use. But you'll ultimately
+check out a branch, do all your commits
+on that branch. Then when you're
+ready to share with others or when you're
+ready to do a code review, you would do git push origin with your feature branch name. At that point, you'll
+be ready to do a code review on
+the feature branch. This would typically
+be assigned to some other person on the team
+that would add comments, questions, or suggestions based on the code that you
+put in the branch. It will go back to
+the developer then to respond to those questions, make new changes based on
+the pull request comments. At that point, you can merge the feature into
+the master branch. Once you've verified
+that it works, that you haven't broken
+anything in the master branch, you could merge
+these changes here in purple that were done
+on your development branch back into the master
+branch and have the equivalent
+functionality here now in the master branch. But one thing that
+you might notice is this extra little
+white dot here, meaning that after
+we did our branch, there's another change
+here on the master. Why would this
+commit be present? Well, it'd be present because some other
+feature was merged in after we started our development on this development branch. How do we handle this scenario that there was a change
+on the master branch? Git will take care of this
+for us with a merge commit. The merge that happens
+from git will align these histories for us and merge the changes inappropriately
+on the master branch. But one downside is that this commit then hasn't really been tested
+with this commit. Git can combine
+those two together, but you won't really be sure
+that this change didn't break something that wasn't this commit unless you
+specifically test it. One way you can
+avoid this scenario is to use what's
+called git-rebase. If you git rebase, what you're doing
+is you're taking the feature branch that you
+did originally develop off this commit and you're moving it back onto a later
+commit from the master. You're essentially
+replaying each of these commits on a new
+commit from master. That would mean that
+this commit here, rather than being based on the original commit for master, it would then be based on this
+commit for master instead. The drawback potentially of doing this change is that
+when you're going to rewrite the history of this branch because you're going
+to be basing it off on a different commit than what you originally based it off of. If you're sharing work with
+someone else on the branch, it would mean that they'd
+need to force update, to match the changes
+in the branch. You just need again, a policy with how to deal with this based on
+your development team and a common strategy that everybody uses for
+handling this scenario, but either one can work. Talking specifically about
+another git workflow that's based on feature branch that you might hear
+about is called GitFlow. GitFlow again is based on the basic Git feature
+branch workflow where we move development of features
+onto a specific branch, but it also moves, in general, all development
+onto a development branch. The master branch,
+rather than being the target of the
+mergers of features, the master branch really
+only tracks release history. The only time you're changing the master branch is
+when you're building a new release for customers
+or for release to QA. The development branch is always used for the integration of features before you're ready to do a release to customers or QA. You can look at the definition of the different
+branches like this, where the master is
+in blue here and the release branch
+here is in this light, bluish-green and the
+develop here is in purple. Then each one of the feature
+branches, are in green. You can see that in these case we've started new branches
+to work on features. In this case, we've merged the feature back into
+the development branch. Here's where we decide we're
+ready to do a release build. We might have done
+one release build to internal QA that
+failed and tried to do a new release build with
+some additional patches here and ultimately done
+or released to customers. It's only after we
+do that release to customers that we actually do the merge into the
+master branch. One nice thing that this allows us to do when we base
+on the GitFlow workflow like this is we can have a separate parallel set of development that's happening
+on our develop branch. Then maybe we find out there was a critical bug with one of the releases that we did
+in our master branch. Well, what we can do then is
+create a branch off master, that fixes that
+one critical bug, do another release
+of version 0.2, merge that back into
+the development branch, and have not interrupted any of the development
+work that we've done in process on our
+development branch. It's just a way to make an easy place that everybody
+can go to to see what's been released to
+customers and handle this rather common scenario of needing to do
+a hot fix match.

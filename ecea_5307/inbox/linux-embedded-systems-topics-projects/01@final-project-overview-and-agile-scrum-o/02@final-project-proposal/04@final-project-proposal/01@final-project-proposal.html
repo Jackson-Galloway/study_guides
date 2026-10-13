@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Final Project Proposal</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h1><strong>GitHub Repository Links</strong></h1><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h1>Implementation:</h1><ol type="1"><li><p>You may implement the final project on your own, or organize in groups of up to 3 for this assignment.  All grading will be done individually based on your individual contribution to the project.  The total scope of the project should be the equivalent of at least 3 assignments (30-45 hours of implementation time per person) split as evenly between 3 sprints as possible.</p></li><li><p>The link above will create an empty GitHub repository to store the individual portion of your assignment.</p><ol type="1"><li><p>For the Final Project Proposal submission you do not need to check any code into this repository.  However, you will add wiki pages and issues for each topic below.  </p></li><li><p>Your final project repository will be publicly accessible (required for peer reviews).  </p></li></ol></li><li><p>The README.md in each student submission repository should link to a single “Project Overview” page in a single group member’s submission repository.  This is where the shared content related to the project will be created.</p></li><li><p>The shared Project Overview wiki page should contain the following content, using <a href="https://github.com/cu-ecen-5013/final-project-assignment-dwalkes/wiki/Project-Overview">this page</a> (external link; opens in a new tab) as a template:</p><ol type="1"><li><p>An overview of the project goals and motivation.  Includes at least one diagram relevant to the overall project design which, at minimum, identifies the associated hardware.</p></li><li><p>The target build system for the project, Buildroot or Yocto.</p></li><li><p>The hardware platform selected. </p><ol type="1"><li><p>If using a hardware platform other than a platform listed as supported, links which detail how this platform can be supported by the build system of choice.</p></li></ol></li><li><p>Any open source projects (other than the current base platform Yocto/Buildroot packages used with assignments) intended to be used with the project.  If you intend to use no open source projects/packages please state this. Also add a link for each reference.</p></li><li><p>Any previous assignment content intended to be used with the project.  If you do not intend to use previous assignment content, please state this.</p></li><li><p>Previously discussed course content intended to be covered by the project implementation, and how this will be used in the project.  If you do not intend to use previous assignment content, please state this.</p></li><li><p>Content not yet discussed or not covered in the course which is intended to be included in the project implementation and how this will be used in the project.</p></li><li><p>If using the project with another course, the specific portions of the project which will be specific to this course (and implemented completely by you or your group).</p></li><li><p>How you intend to organize the source code related to your project, especially for group projects:</p><ol type="1"><li><p>Which repository will hold the Buildroot or Yocto implementation (the suggestion is to use the project containing the Project Overview wiki page for this).</p></li><li><p>Which repository/repositories will hold implementation scripts/source code for various project components</p></li><li><p>Any additional repositories needed to store project content.</p></li><li><p>Include the links to all repositories in your wiki with your submission.</p></li></ol></li><li><p>The team project members and the high level role of each project member in the overall project (group submissions only)</p></li><li><p>A link to the shared schedule page (see detail below)</p></li></ol></li><li><p>A Schedule page linked from the Project Overview page and containing this content:</p><ol type="1"><li><p>Add your team members as collaborators to your final project GitHub repository created through the coursera instructions. Find instructions on <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository">GitHub</a> (external link; opens in a new tab).</p></li><li><p>One of the team members on your final project team should use the instructions in this <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Creating-and-organising-your-final-project-on-GitHub">Wiki page</a> (external link; opens in a new tab) to create an Public empty repository in their personal GitHub account used to host a GitHub "Projects" page for your project.  The Wiki page linked here should </p><ol type="1"><li><p>Please refer to this <a href="https://github.com/orgs/cu-ecen-aeld/projects/17">Reference Project</a> (external link; opens in a new tab) for an example of the final layout of your Projects" page.</p></li><li><p>All students in the team should be added to this repository as well to allow them to collaborate on the Projects page design.  Find instructions for this step on <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository">GitHub</a> (external link; opens in a new tab).</p></li><li><p>Please link the Project created in this step to the Project Overview page for your final project</p></li><li><p>Add links to issues in either the main project repository or individual student repositories tracking deliverables related to Sprint 1 items.</p></li></ol></li><li><p> At least one issue assigned to each student related to Sprint 1.</p></li><li><p>All issues assigned include a complete Definition of Done (DoD), with sufficient detail to be understood by someone who is not a member of the project team.</p></li><li><p>Any blockers between assigned issues are identified and linked.</p></li><li><p>Tasks which have started include details about status.</p></li><li><p>The top level schedule table is up to date with the content and status of individual issues.</p></li></ol></li></ol><h2>Submission:</h2><ol type="1"><li><p>Your submission in peer review must Include a Link to your (individual student) Final Project Repository which links to the overall project overview.</p></li><li><p>Each student’s submission repository should contain a README.md pointing to the project overview page.</p></li><li><p>The Project Overview page should contain all points referenced above (see the Assignment Peer Review rubric).</p></li><li><p>Issues for at least Sprint 1 should be created as described in the schedule page, and include the content referenced above.</p></li><li><p>The Schedule Page should be up to date and accurate.</p></li></ol>
+  </div>
+</body>
+</html>

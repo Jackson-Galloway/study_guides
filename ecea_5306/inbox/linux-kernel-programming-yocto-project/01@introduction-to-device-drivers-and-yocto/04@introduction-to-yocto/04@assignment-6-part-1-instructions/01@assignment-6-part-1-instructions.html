@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 6 Part 1 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<p><strong>This assignment (and all assignments in this course) build on the Linux System Programming and Introduction to Buildroot course.  It is a requirement to complete the Linux System Programming and Introduction to Buildroot course before attempting this assignment or any others in the course.</strong></p><h2><strong>Assignment 6 Part 1: Native Socket Server Threading Support</strong></h2><p>Note that this assignment will require changes to your assignment 3 repository (referred to as your aesd-assignments repository below), and will also require some additional code for this assignment.</p><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h2><strong>Setting up your Assignment Repository</strong></h2><p>Execute the following instructions in your aesd-assignments assignment 3 repository local repository folder:</p><ol type="1"><li><p>git fetch assignments-base</p></li></ol><p>This step assumes you’ve already created the remote using <em>git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git</em> in assignment 2.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p><ol type="1"><li><p>git merge assignments-base/assignment6</p></li><li><p>git submodule update --init --recursive</p></li></ol><p>Also make sure your aesd-assignments repository origin still points to your assignment 3 repository using git remote get-url origin
+</p><p>The following links are external and will open in a new tab.</p><h2><strong>Suggested Reading:</strong></h2><ol type="1"><li><p>Associated video content</p></li><li><p>Linked List Documentation:</p></li></ol><p>        a. <a href="https://blog.taborkelly.net/programming/c/2016/01/09/sys-queue-example.html"><u>https://blog.taborkelly.net/programming/c/2016/01/09/sys-queue-example.html</u></a></p><p>        b. <a href="http://cslibrary.stanford.edu/103/LinkedListBasics.pdf"><u>https://web.archive.org/web/20260429190109/http://cslibrary.stanford.edu/103/LinkedListBasics.pdf</u></a></p><h2><strong>Implementation:</strong></h2><p><strong>Continuation of Assignment 5:</strong></p><ol type="1"><li><p>Modify your socket based program to accept multiple simultaneous connections, with each connection spawning a new <strong>thread</strong> to handle the connection.</p><ol type="1"><li><p>Writes to /var/tmp/aesdsocketdata should be synchronized between threads using a mutex, to ensure data written by synchronous connections is not intermixed, and not relying on any file system synchronization.</p><ol type="1"><li><p>For instance, if one connection writes “12345678” and another connection writes “abcdefg” it should not be possible for the resulting /var/tmp/aesdsocketdata file to contain a mix like “123abcdefg456”, the content should always be “12345678”, followed by “abcdefg”.  However for any simultaneous connections, it's acceptable to allow packet writes to occur in any order in the socketdata file.</p></li></ol></li><li><p>The thread should exit when the connection is closed by the client or when an error occurs in the send or receive steps.</p></li><li><p>Your program should continue to gracefully exit when SIGTERM/SIGINT is received, after requesting an exit from each thread and waiting for threads to complete execution.</p></li><li><p> Use the singly linked list APIs discussed in the video (or your own implementation if you prefer) to manage threads.</p><ol type="1"><li><p>Use pthread_join() to join completed threads, do not use detached threads for this assignment.</p></li></ol></li></ol></li><li><p>Modify your aesdsocket source code repository to:</p><ol type="1"><li><p>Append a timestamp in the form “timestamp:<em>time</em>” where <em>time</em> is specified by the <a href="http://man7.org/linux/man-pages/man3/strftime.3.html"><u>RFC 2822 compliant strftime format</u></a>, followed by newline (external link; opens in a new tab).  This string should be appended to the /var/tmp/aesdsocketdata file every 10 seconds, where the string includes the year, month, day, hour (in 24 hour format) minute and second representing the system wall clock time.</p></li><li><p>Use appropriate locking to ensure the timestamp is written atomically with respect to socket data <em>Hint: </em> <em>Think where should the timer be initialized. Should it be initialized in parent or child?</em></p></li></ol></li><li><p>Use the updated sockettest.sh script (in the assignment-autotest/test/assignment6 subdirectory) . You can run this manually outside the `./full-test.sh` script by:</p><ol type="1"><li><p>Starting your aesdsocket application</p></li><li><p>Executing the sockettest.sh script from the assignment-autotest subdirectory.</p></li><li><p>Stopping your aesdsocket application.</p></li></ol></li><li><p>The `./full-test.sh` script in your aesd-assignments repository should now complete successfully.</p></li><li><p>Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto your repository. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a> (external link; opens in a new tab)</p></li></ol><p></p><h2><strong>Validation:</strong></h2><ol type="1"><li><p>The automated test environment should pass when running against your assignment implementation.</p></li></ol><p>2. You should not have any memory leaks or errors identified when running valgrind.</p><p>        a. You may see one possibly lost message which looks like this, which it’s OK to ignore:</p><pre><code language="plain_text">272 bytes in 1 blocks are possibly lost in loss record 1 of 2
+==6362==    at 0x4C33B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6362==    by 0x4013646: allocate_dtv (dl-tls.c:286)
+==6362==    by 0x4013646: _dl_allocate_tls (dl-tls.c:530)
+==6362==    by 0x504E227: allocate_stack (allocatestack.c:627)
+==6362==    by 0x504E227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
+==6362==    by 0x4E4351A: __start_helper_thread (timer_routines.c:176)
+==6362==    by 0x5055906: __pthread_once_slow (pthread_once.c:116)
+==6362==    by 0x4E423BA: timer_create@@GLIBC_2.3.3 (timer_create.c:101)
+==6362==    by 0x10A157: init_timer_sec (aesdsocket.c:222)
+==6362==    by 0x10995B: main (aesdsocket.c:88)</code></pre><p></p><h2><strong>Troubleshooting:</strong></h2><h3>Blocked Multithreaded Sockets with valgrind</h3><p>You may notice that your multithread socket test fails and your multithreaded sockets threads aren't actually running.  You may notice that if you add --fair-sched=yes to the valgrind command line arguments the test succeeds.</p><p>This typically happens because you are using polling instead of non-blocking calls for accept and have a tight while(1) loop or similar in the main thread which is waiting for threads to complete.  In this case with the added valgrind overhead the socket threads may not run at all.</p><ul><li><p>One solution is to follow the assignment recommendations to block on accept in the main loop and free completed threads only after starting the next thread.</p></li><li><p>An alternative solution is to add a delay in the non-blocking accept implementation and ideally to block on an fd you can signal when the thread exits or something similar.</p></li></ul>
+  </div>
+</body>
+</html>

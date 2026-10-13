@@ -1,0 +1,27 @@
+In this video, I'll do an
+overview of Assignment 4, Part 1 of threading
+implementation. For Assignment 4, Part 1, you're going to
+implement a unit test that implements
+threading functions, and you're going to start with
+your Assignment 3 content. You're going to merge
+in content from the base repository for Assignment 4 unit
+test framework, and then your modifications
+are going to go in the example threading file. In the assignment
+based repository, you can see these
+two to-do methods in thread function and start
+thread obtaining mutex, and your task here is to implement the logic
+that's associated with these functions based on the comments in
+the to-do section. If you want to see the unit test that's going to run
+against your code, you can follow this link to
+see the testthreading.c file. But ultimately you just
+need to run unit-test.sh to compile and build your
+example unit test. Showing you a demo of what it should look like when you have your Assignment 4
+completed for Part 1, you should be able to run this unit test script from
+the root of your repository. You should see it
+compile and run your unit test functions, and this is the type of
+output you should see. It should ultimately end up
+with the test results saying that all tests succeeded. Here's an example
+of what you should see with your unit test output. You should see here
+that it compiles and runs all of your unit tests, and all tests pass. If you get a passing
+result on the unit test, that is it for the first
+part of Assignment 4.

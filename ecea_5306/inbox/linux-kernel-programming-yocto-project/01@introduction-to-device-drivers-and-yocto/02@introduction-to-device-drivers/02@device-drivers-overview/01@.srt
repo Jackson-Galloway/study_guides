@@ -1,0 +1,848 @@
+1
+00:00:01,040 --> 00:00:04,365
+This video will continue our
+discussion about device drivers and
+
+2
+00:00:04,365 --> 00:00:07,157
+we'll do a general overview
+of device driver design.
+
+3
+00:00:07,157 --> 00:00:12,953
+So we'll talk about common Linux device
+classes that device driver fits into.
+
+4
+00:00:12,953 --> 00:00:16,247
+We'll talk about security concerns
+when you're writing a driver, and
+
+5
+00:00:16,247 --> 00:00:18,797
+also about how kernel versioning and
+licensing works.
+
+6
+00:00:18,797 --> 00:00:25,853
+So devices that you'd write drivers for
+belong to one of a set of classes.
+
+7
+00:00:25,853 --> 00:00:29,021
+And then those classes can share
+common access code and methods.
+
+8
+00:00:29,021 --> 00:00:33,097
+So that applications that use those
+particular classes can easily
+
+9
+00:00:33,097 --> 00:00:37,693
+switch between different devices that
+provide that type of class access.
+
+10
+00:00:37,693 --> 00:00:41,745
+So the three common types of
+classes are character device,
+
+11
+00:00:41,745 --> 00:00:45,402
+character class, block class,
+and network class.
+
+12
+00:00:45,402 --> 00:00:51,233
+So the character device class is the one
+that will focus on for our implementations
+
+13
+00:00:51,233 --> 00:00:55,983
+for this class, it's one of
+the simpler types of device classes.
+
+14
+00:00:55,983 --> 00:00:59,131
+In a character device class, everything's
+accessed as a stream of bytes.
+
+15
+00:00:59,131 --> 00:01:03,429
+So it looks exactly like a file
+to the user space applications,
+
+16
+00:01:03,429 --> 00:01:07,984
+you can open, close, read, and
+write like you could from a file.
+
+17
+00:01:07,984 --> 00:01:13,178
+So some examples of this would be
+dev/console, which is the console that
+
+18
+00:01:13,178 --> 00:01:18,228
+you'd interact with, that you'd
+see in your terminal for instance.
+
+19
+00:01:18,228 --> 00:01:23,037
+Or dev/ttyS0 would be interaction with
+the serial port that would also be
+
+20
+00:01:23,037 --> 00:01:27,250
+essentially just a stream of bytes
+sent out over the serial port.
+
+21
+00:01:27,250 --> 00:01:29,482
+It may or may not be possible to seek or
+
+22
+00:01:29,482 --> 00:01:32,077
+map memory like you can
+do with real files.
+
+23
+00:01:32,077 --> 00:01:35,757
+So you might not be able to access
+them exactly like real files.
+
+24
+00:01:35,757 --> 00:01:37,404
+But the basics of read and
+
+25
+00:01:37,404 --> 00:01:42,126
+write is going to work very similar to
+what you would do with a normal file.
+
+26
+00:01:42,126 --> 00:01:44,855
+Second class ii block device class.
+
+27
+00:01:44,855 --> 00:01:50,301
+And this is really for
+disk devices that can host a file system.
+
+28
+00:01:50,301 --> 00:01:53,344
+And rather than being on byte boundaries,
+
+29
+00:01:53,344 --> 00:01:58,257
+the transfers that happen in
+the kernel are all on block boundaries.
+
+30
+00:01:58,257 --> 00:02:02,075
+And usually those blocks are 512 bytes or
+larger.
+
+31
+00:02:02,075 --> 00:02:05,922
+And you actually can,
+through the device drivers,
+
+32
+00:02:05,922 --> 00:02:11,965
+still access at less than one block sizes
+and the kernel will split blocks for you.
+
+33
+00:02:11,965 --> 00:02:17,599
+So the interaction from user space again
+looks very similar to a normal file.
+
+34
+00:02:17,599 --> 00:02:20,582
+But when you're writing the device driver,
+
+35
+00:02:20,582 --> 00:02:24,042
+you would need to be accessing
+the device in blocks.
+
+36
+00:02:24,042 --> 00:02:28,844
+So a typical block device
+would be /dev/sdc something,
+
+37
+00:02:28,844 --> 00:02:33,058
+for instance,
+this would be your scuzzy device and
+
+38
+00:02:33,058 --> 00:02:38,350
+the a1 references a specific device and
+a specific partition.
+
+39
+00:02:38,350 --> 00:02:44,235
+So sda1 is often your file system for
+your Linux system.
+
+40
+00:02:47,353 --> 00:02:48,648
+The third class is
+network interface class.
+
+41
+00:02:48,648 --> 00:02:53,450
+This maybe a hardware device or it could
+just be something like a loop back
+
+42
+00:02:53,450 --> 00:02:57,324
+interface, a software network
+interface essentially.
+
+43
+00:02:57,324 --> 00:03:02,284
+And the network interface class is
+slightly different because instead of
+
+44
+00:03:02,284 --> 00:03:06,290
+byte or block streams,
+it's going to be working on packets.
+
+45
+00:03:06,290 --> 00:03:11,303
+And, instead of accessing through
+/dev/ some name of a device,
+
+46
+00:03:11,303 --> 00:03:14,806
+we'll just use a name
+like eth0 to access it.
+
+47
+00:03:14,806 --> 00:03:19,220
+So why does it not have
+an entry in the file system?
+
+48
+00:03:19,220 --> 00:03:23,462
+It's kind of breaking our rule about
+everything is a file in Linux.
+
+49
+00:03:23,462 --> 00:03:26,227
+It turns out the use
+case with networks and
+
+50
+00:03:26,227 --> 00:03:30,574
+the way packet IO works with
+verification and retransmissions.
+
+51
+00:03:30,574 --> 00:03:34,751
+It doesn't really work, doesn't really map
+as well to the read and write paradigm.
+
+52
+00:03:34,751 --> 00:03:37,464
+So for that reason network interfaces and
+
+53
+00:03:37,464 --> 00:03:41,817
+network class kind of breaks that
+rule about everything is a file.
+
+54
+00:03:43,399 --> 00:03:47,430
+So also included as a part of
+the kernel our kernel file systems.
+
+55
+00:03:47,430 --> 00:03:50,314
+And those are going to sit
+on top of block devices,
+
+56
+00:03:50,314 --> 00:03:53,345
+map those low level block
+on disc to directories or
+
+57
+00:03:53,345 --> 00:03:57,405
+files that we interact with through
+user space in the file system.
+
+58
+00:03:57,405 --> 00:04:02,623
+And the file system is independent
+of the transfer mechanism,
+
+59
+00:04:02,623 --> 00:04:05,970
+it's just going to work on a block device,
+
+60
+00:04:05,970 --> 00:04:10,410
+it doesn't care how those
+blocks are stored on disk.
+
+61
+00:04:10,410 --> 00:04:15,480
+So SATA, USB or SD card,
+all that is abstracted away below
+
+62
+00:04:15,480 --> 00:04:21,486
+in the block layer and the kernel
+file system is independent of that.
+
+63
+00:04:21,486 --> 00:04:25,866
+The device and the device drivers
+going to actually perform the transfer to
+
+64
+00:04:25,866 --> 00:04:30,908
+correspond to whatever hardware you're
+ultimately storing your file system on.
+
+65
+00:04:32,981 --> 00:04:36,732
+So when we're talking about kernel code,
+it's important to talk about security.
+
+66
+00:04:36,732 --> 00:04:41,443
+The kernel can be, because it's
+running at a higher privilege level,
+
+67
+00:04:41,443 --> 00:04:43,809
+it's a critical point of exploit.
+
+68
+00:04:43,809 --> 00:04:48,428
+If you mess up in your kernel code,
+you have the potential for essentially
+
+69
+00:04:48,428 --> 00:04:53,440
+giving it hacker complete access,
+unrestricted access to the entire system.
+
+70
+00:04:53,440 --> 00:04:58,471
+So it's important that only
+an authorized user can load modules.
+
+71
+00:04:58,471 --> 00:05:02,356
+And then it's important that the driver
+author, as a device driver author,
+
+72
+00:05:02,356 --> 00:05:06,422
+you take extra special care when you're
+writing your code to ensure that you're
+
+73
+00:05:06,422 --> 00:05:09,503
+not going to introduce some
+security problem into the system.
+
+74
+00:05:09,503 --> 00:05:13,916
+So usually the drivers don't
+encode security policy.
+
+75
+00:05:13,916 --> 00:05:18,674
+In other words,
+they don't require authentication or
+
+76
+00:05:18,674 --> 00:05:22,227
+some special permission to do some role.
+
+77
+00:05:22,227 --> 00:05:26,048
+Usually the device endpoint is
+going to have specific read, write,
+
+78
+00:05:26,048 --> 00:05:27,695
+execute permissions on it.
+
+79
+00:05:27,695 --> 00:05:31,320
+And that's the way the security
+policy would be handled and
+
+80
+00:05:31,320 --> 00:05:32,998
+set up by the system admin.
+
+81
+00:05:32,998 --> 00:05:36,629
+There are some exceptions to this,
+the book talks about like for
+
+82
+00:05:36,629 --> 00:05:40,194
+instance, interaction with interrupts or
+firmware update,
+
+83
+00:05:40,194 --> 00:05:42,969
+something that could
+affect the entire system.
+
+84
+00:05:42,969 --> 00:05:46,572
+There are ways that device driver can
+check to make sure that the user is
+
+85
+00:05:46,572 --> 00:05:48,112
+the right user for instance.
+
+86
+00:05:48,112 --> 00:05:53,016
+But that's typically not where that is
+enforced from device driver perspective.
+
+87
+00:05:53,016 --> 00:05:57,369
+So several of the security best
+practices that you need to keep in mind
+
+88
+00:05:57,369 --> 00:05:59,848
+when you're writing kernel drivers,
+
+89
+00:05:59,848 --> 00:06:04,672
+you don't want to trust anything that
+user data sends without verifying it.
+
+90
+00:06:04,672 --> 00:06:10,190
+So you especially want to watch out for
+cases where the user could be sending
+
+91
+00:06:10,190 --> 00:06:15,984
+content that would write areas of memory
+that should not be allowed to write.
+
+92
+00:06:15,984 --> 00:06:20,798
+So one way that can happen is
+with a buffer that's too long,
+
+93
+00:06:20,798 --> 00:06:27,461
+that you copy based on a null terminator
+and you would implement a buffer overrun.
+
+94
+00:06:27,461 --> 00:06:31,820
+You should also be cognizant of zeroing
+the memory that's obtained in the kernel
+
+95
+00:06:31,820 --> 00:06:33,369
+before you pass it outside.
+
+96
+00:06:33,369 --> 00:06:38,471
+When you just ask the kernel for a block
+of memory and you don't zero before that
+
+97
+00:06:38,471 --> 00:06:43,594
+block might have been used by some other
+process to store something like a key.
+
+98
+00:06:43,594 --> 00:06:48,295
+And if you just blindly return it to
+the user, their security exploits where
+
+99
+00:06:48,295 --> 00:06:52,409
+unprivileged application can just
+keep asking for memory over and
+
+100
+00:06:52,409 --> 00:06:56,383
+over again until it finally get
+something that looks like a key.
+
+101
+00:06:56,383 --> 00:07:01,791
+And this could be a away that a hacker
+could get access into your system.
+
+102
+00:07:02,883 --> 00:07:08,067
+So when we talk about buffer
+overruns what you really mean
+
+103
+00:07:08,067 --> 00:07:14,336
+is a way that we can send executable
+code as a part of a user operation.
+
+104
+00:07:14,336 --> 00:07:21,332
+And overwrite the content that would
+ultimately be used as a return address,
+
+105
+00:07:21,332 --> 00:07:26,077
+2.2 instead this user code
+that can be executed.
+
+106
+00:07:26,077 --> 00:07:30,494
+So there's an example here in user
+space about how this can happen.
+
+107
+00:07:30,494 --> 00:07:35,004
+So you can see in this dangerous function,
+the main function here
+
+108
+00:07:35,004 --> 00:07:39,603
+takes an argument and just passes
+it into the dangerous function.
+
+109
+00:07:39,603 --> 00:07:44,315
+And you can see the dangerous function
+here creates a array that's called
+
+110
+00:07:44,315 --> 00:07:48,276
+too small and then just string
+copies in whatever was passed.
+
+111
+00:07:48,276 --> 00:07:53,257
+So if you pass in a string to
+this function that's longer than
+
+112
+00:07:53,257 --> 00:07:58,056
+100 bytes you'll overwrite
+that too small variable.
+
+113
+00:07:58,056 --> 00:08:02,597
+And based on the way that
+stack allocates that variable,
+
+114
+00:08:02,597 --> 00:08:05,729
+you may overwrite the return address.
+
+115
+00:08:05,729 --> 00:08:11,288
+So what a carefully crafted
+string in this case,
+
+116
+00:08:11,288 --> 00:08:17,255
+could actually contain
+a chunk of malicious code and
+
+117
+00:08:17,255 --> 00:08:21,609
+could overwrite the return address.
+
+118
+00:08:21,609 --> 00:08:26,461
+Such that instead of returning from
+the dangerous function when what should
+
+119
+00:08:26,461 --> 00:08:29,871
+have been the return addresses
+pulled off the stack,
+
+120
+00:08:29,871 --> 00:08:34,829
+will instead pull off a return address
+that points us back inside the string.
+
+121
+00:08:34,829 --> 00:08:40,064
+It has some type of often a NOP sled
+in other words, a series of no ops just
+
+122
+00:08:40,064 --> 00:08:45,237
+to help make sure that you're going to
+be able to hit the malicious code.
+
+123
+00:08:45,237 --> 00:08:50,232
+And a section of malicious code
+that's crafted to do something that
+
+124
+00:08:50,232 --> 00:08:52,169
+it's not supposed to do.
+
+125
+00:08:52,169 --> 00:08:56,094
+So this is just an example of what
+you need to be careful of and
+
+126
+00:08:56,094 --> 00:09:01,041
+the reason you need to care about watching
+things like links of content that
+
+127
+00:09:01,041 --> 00:09:05,223
+you get provided from the user
+before you use it in your driver.
+
+128
+00:09:05,223 --> 00:09:07,572
+[MUSIC]
+
+129
+00:09:07,572 --> 00:09:12,361
+So the book has a whole section on
+kernel versioning and where there wasn't
+
+130
+00:09:12,361 --> 00:09:16,705
+even odd numbering scheme for
+the kernel that was used previously.
+
+131
+00:09:16,705 --> 00:09:21,837
+And that is no longer in use and
+now uses a simpler major.minor number and
+
+132
+00:09:21,837 --> 00:09:24,290
+it's not feature based anymore.
+
+133
+00:09:24,290 --> 00:09:27,672
+All the releases that are done on
+the Linux kernel are based on time.
+
+134
+00:09:27,672 --> 00:09:31,979
+And basically simpler scheme
+that's discussed in the kernel and
+
+135
+00:09:31,979 --> 00:09:34,806
+if you look at this
+mailing list post here.
+
+136
+00:09:34,806 --> 00:09:38,218
+Linus Torvalds said that the reason he
+did it was because he was running out of
+
+137
+00:09:38,218 --> 00:09:39,085
+fingers and toes.
+
+138
+00:09:39,085 --> 00:09:44,265
+So this is just a difference between
+what's written in the book and
+
+139
+00:09:44,265 --> 00:09:48,213
+how Linux kernel versioning
+actually works today.
+
+140
+00:09:48,213 --> 00:09:52,846
+We've also talked about licensing
+as it applies to Linux kernel.
+
+141
+00:09:52,846 --> 00:09:58,302
+So the Linux kernel in general is
+licensed with new general public license,
+
+142
+00:09:58,302 --> 00:09:59,590
+GPL version two.
+
+143
+00:09:59,590 --> 00:10:03,215
+So that means that anyone can
+redistribute and you can sell and
+
+144
+00:10:03,215 --> 00:10:06,572
+make money off a product that
+includes the Linux kernel.
+
+145
+00:10:06,572 --> 00:10:10,758
+As long as the recipient of your
+product has access to the source and
+
+146
+00:10:10,758 --> 00:10:13,616
+has the ability to
+exercise the same rights.
+
+147
+00:10:13,616 --> 00:10:18,188
+So in other words,
+they're able to take the source code
+
+148
+00:10:18,188 --> 00:10:22,177
+that you use to build your kernel and
+modify it and
+
+149
+00:10:22,177 --> 00:10:28,032
+you make their own changes to it and
+build their own product based on it.
+
+150
+00:10:28,032 --> 00:10:32,516
+So, any software products derived
+from a product covered by the GPL,
+
+151
+00:10:32,516 --> 00:10:36,316
+if it's redistributed,
+must also be released under GPL.
+
+152
+00:10:36,316 --> 00:10:41,480
+And this is what we talked about before
+with the copy left type of license
+
+153
+00:10:41,480 --> 00:10:46,058
+where it's going to apply not
+only to you as you're developing.
+
+154
+00:10:46,058 --> 00:10:50,781
+But it has implications on
+the additional code that you're
+
+155
+00:10:50,781 --> 00:10:55,324
+adding also needs to be licensed
+in this particular way.
+
+156
+00:10:57,143 --> 00:10:59,997
+So the book goes over the reason for
+this and
+
+157
+00:10:59,997 --> 00:11:02,864
+the idea was to allow growth of knowledge.
+
+158
+00:11:02,864 --> 00:11:08,603
+Basically enforce the requirement
+that this code is shared and
+
+159
+00:11:08,603 --> 00:11:13,914
+that it would be essentially
+given back to the community.
+
+160
+00:11:13,914 --> 00:11:16,198
+So that others can see the changes and
+
+161
+00:11:16,198 --> 00:11:20,028
+that there would be some level
+of collaboration happening and
+
+162
+00:11:20,028 --> 00:11:24,830
+growing this common code base, but
+also still allowing for commercial use.
+
+163
+00:11:24,830 --> 00:11:29,416
+So, the book also talks about
+whether a kernel module can be
+
+164
+00:11:29,416 --> 00:11:31,626
+shared only in binary form.
+
+165
+00:11:31,626 --> 00:11:36,729
+And this is actually something that's
+been left deliberately ambiguous.
+
+166
+00:11:36,729 --> 00:11:41,362
+But what the book also mentions
+is that there are a lot of
+
+167
+00:11:41,362 --> 00:11:45,413
+ways that binary kernel
+modules can be broken.
+
+168
+00:11:45,413 --> 00:11:50,276
+And kernel developers have
+no real motivation to try
+
+169
+00:11:50,276 --> 00:11:54,375
+to keep binary drivers working correctly.
+
+170
+00:11:54,375 --> 00:11:58,952
+And so you should kind of expect
+an uphill battle if you wanted to release
+
+171
+00:11:58,952 --> 00:12:00,720
+the driver in binary form.
+
+172
+00:12:00,720 --> 00:12:04,106
+And beyond that, you need to really
+understand the legal ramifications.
+
+173
+00:12:04,106 --> 00:12:07,542
+And so the other suggestion is if you,
+for some reason,
+
+174
+00:12:07,542 --> 00:12:12,298
+did want to release a kernel module in
+binary form, you should definitely seek
+
+175
+00:12:12,298 --> 00:12:16,566
+legal advice to confirm that you can
+meet the obligations of the GPL.

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Git Workflows</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>What are some characteristics of Git Feature Branch workflows?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~7UeBGE4nEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Code reviews happen after code is merged to the master branch</p></div></li>
+<li><input name="autoGradableResponseId~7UeBGE4nEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>The master branch may be broken while a feature is in progress.</p></div></li>
+<li><input name="autoGradableResponseId~7UeBGE4nEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Feature development takes place on feature branches</p></div></li>
+<li><input name="autoGradableResponseId~7UeBGE4nEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Multilpe developers can work on different features without disturbing the main code base</p><p></p></div></li>
+<li><input name="autoGradableResponseId~7UeBGE4nEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Feature development takes place on the master branch</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>With git feature branch workflow, features can be merged into the master branch at any time relative to when they were started</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~iMKqmk4oEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~iMKqmk4oEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What mechanisms can a git feature branch workflow use handle cases where features were merged into the master branch out of order?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~vWdh2k4oEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Rebase the feature branch</p></div></li>
+<li><input name="autoGradableResponseId~vWdh2k4oEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Rewrite master branch history</p></div></li>
+<li><input name="autoGradableResponseId~vWdh2k4oEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Add a merge commit</p></div></li>
+<li><input name="autoGradableResponseId~vWdh2k4oEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>It's not safe to merge features out of order with git feature branch workflow</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a difference between git feature branch workflow and gitflow workflows?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~E0YcBE4pEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>With gitflow the master branch is reserved for releases and hotfixes</p></div></li>
+<li><input name="autoGradableResponseId~E0YcBE4pEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>With git feature branch workflow all feature development happens on a single development branch</p></div></li>
+<li><input name="autoGradableResponseId~E0YcBE4pEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>With gitflow a develop branch is used for releases and hotfixes.</p></div></li>
+<li><input name="autoGradableResponseId~E0YcBE4pEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>With gitflow, feature branches are used for development instead of the master branch</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

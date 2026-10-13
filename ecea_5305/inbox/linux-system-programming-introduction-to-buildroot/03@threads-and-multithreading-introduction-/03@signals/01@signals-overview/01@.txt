@@ -1,0 +1,121 @@
+In this video,
+we're going to talk about signals in Linux. We're going to
+introduce signals, understand how defaults
+signal handling works for user
+space applications, and we're going to
+introduce core files. Signals are software interrupts for handling
+asynchronous events. These can be events
+that are coming from outside the current
+program, from the system, Control C, it could be events from the
+program or kernel itself, for instance, divide by 0. Signals can also be used as a rudimentary form of
+inter-process communication, how to communicate between two different running processes. An important thing to know
+about signals is that the event that causes the
+signal is asynchronous, and the handler is
+also asynchronous with respect to
+program execution. That has some
+important limitations on how we handle signals. The signal life-cycle. A signal's first raised sent or generated based on those events that we talked about previously, it's stored by the kernel, and then it's handled
+by the kernel based on the requests
+from the process. The process can request how
+to handle specific signals, and that can be changed based on the preferences
+of the application. Some of the signal handling
+options that can be set up by the process, you can ignore for most signals. There's exceptions for
+SIGKILL and SIGSTOP, which cannot be ignored, or you can catch and
+handle the signal. When you catch and
+handle a signal, the kernel's going to suspend execution of the
+current process, and that includes execution
+of other signal handlers. It's possible to get a signal when you're inside
+a signal handler. Then you're going to jump to any previously
+registered function that was set up to
+handle the signal, and you're going to execute the code in
+that signal handler. Basically swapping out
+the current thread or interrupting the
+current thread and replacing the next instruction with the instruction
+that's coming from the signal handler. Two example of signal handling that are really common
+are SIGINT and SIGTERM. The default action is the third option of how
+to handle a signal. If you don't set up a
+specific signal action, you'll get the default action. In a lot of cases,
+the default action is just to terminate
+the process. In some cases, it'll terminate the process, possibly with a core dump. A core dump is just a capture of the running process memory, which we can use
+with tools like GDB to help figure out what
+happened in the program. Here's an example of
+signal default actions based on the type of signal, and you can get this from
+the signal man-page. You can see here the signal, and you can see in this column
+the default action where Term means that it's going to be sending SIGTERM
+to the process, Ign means it's going
+to be ignored, and Core is going to
+mean both that it sends SIGTERM and it also dumps a core if core file is
+configured properly. Stop means that it
+will send SIGSTOP. This is referencing some of the signals that we can send, and there are a whole
+list of signals in Linux system
+programming Chapter 10, but I want to go through some of the more common ones here. SIGABRT is what happens when
+you use the assert function. When you put an assertion
+inside your code, if your code can't continue
+due to some invalid input and you can't handle that
+particular error and you need to
+terminate the process, the assert function will result in a SIGABRT if
+the assertion fails. SIGHUP is one that
+stands for hang-up, is a carry-over from
+the old modem days, but it's often used
+as a signal that tells an application to reread
+its configuration files. If you change something in the configuration
+and you want it to apply to a process that's already running like a daemon, a lot of times the handling for that will
+be through SIGHUB. SIGINT is Control
+C. If you've ever stopped a program
+that's running in the terminal by using Control C, what you're really doing
+is sending SIGINT. SIGKILL is something
+that you can send, that can't be ignored, and unconditionally
+terminates the process. This is useful if you've
+got an application that's not responding that
+you need to terminate. Then SIGSEV is
+segmentation fault. This happens on any null pointer or invalid memory access, and the default action
+for this one is terminating and generating
+a core file which can be useful for
+helping to find where the segmentation
+fault's occurring. SIGTERM will gracefully
+terminate a process. This is the nice way of
+shutting down a daemon. You can send SIGTERM
+and the daemon will have the opportunity
+to catch that and do whatever proper close down that it needs to
+do to shut down gracefully. SIGSTOP is similar to SIGKILL, except it's pausing the
+process instead of killing it, and it's similar in the state that it sends that
+they can't be ignored. A little bit more when we talk about core dump
+files and SIGSEV, how we can use the capabilities of the core file to help figure
+out where the problem is. Here's an example of a
+really simple application that has a segmentation fault. In order to create an
+invalid memory access, we can just initialize
+a pointer to zero and then try to
+do anything with it. In this case, we're
+trying to add one to it. We're trying to add 1 to 0 location in memory which is not going to
+be allocated to our process. That's going to result
+in a segmentation fault. Attempts to access. Obviously, with this really
+simple application, it wouldn't be very
+hard to find the issue, but in more complicated
+applications, the built-in capabilities
+of the core file in GDB can be used to take you
+directly to the issue, which is very
+helpful debug tool. There's a certain amount
+of setup that you need to do in order to use
+the core file, that's the default for SIGSEV. Even though the
+default for the signal is to create a core file, depending on your distribution, you might have
+some work to do to set up to actually
+generate the core file. These are the steps you can use on Ubuntu to set up core files. There's a link here
+at the bottom that takes you through each
+one of these steps. But basically, we're setting
+up the kernel to tell it how and where to
+generate the core file, and then we're running
+the application, and you'll see here
+that there was a segmentation fault
+core dump message. If we look at the apport.log, which is what Ubuntu uses
+for generating crash logs, you can see that we've
+created a log with a specific reference to the core that we just created with our
+segmentation fault. If we use apport-unpack that, we can unpack that
+back into a core file, and then we can use GDB
+to look at the core dump. If you look at this
+core dump and GDB, you can see that it's
+going to point us right to the place where the
+segmentation fault occurs. It's going to show us
+that it was this line, mem, equals men plus 1. This can be a
+really useful tool. Even though segmentation faults might look a little scary when you see this message
+that saying core dump, you can use GDB
+and core tools to really help you
+find these pretty easily in a lot of cases.

@@ -1,0 +1,173 @@
+In this sort of videos we're
+going to talk about Yocto and give you an introduction to Yocto that you
+can use to complete assignment number six. So the learning objectives for this video,
+we're going to introduce the BitBake tool, introduce the Poky distribution,
+the Yocto layer model and some basic Yocto terminology. So first of all, what is Yocto? Yocto is similar to what we've
+already discussed with but it's really a way to roll your own Linux
+distribution for embedded devices. So as kind of implied by the name is
+all about building ripped file systems. Yocto is a little bit more ambitious,
+in this case, you're actually just building an entire
+distribution for your embedded project. So as part of building your Yocto image,
+you're going to actually build re distributable packages for every piece of
+software that you include in your image. Very similar to if you are building
+your own distribution like Debian or something like one of the standard
+Linux distributions does already. It was launched in 2011, so it's relatively new compared to build
+up which was in the early 2000s. And it includes embedded build tools and
+a distribution called Poky. And I pronounce this wrong until I
+started researching how to say this, but the right way to pronounce it
+as Poky sounds like hockey. So that's really like
+the equivalent of of Debian but or any Linux distribution but
+it's customized for embedded projects. So if you just want a distribution you can
+use to get started with for your embedded project, you can use Poky and
+that's what we'll use for our assignment. The build system is licensed MIT,
+which is a more permissive license than licensed used by if you
+remember is licensed GPL. And so what this means is that there's no
+expectation from the developers that you would share the source code that's
+related to building your device or any of the customization you
+make to the Yocto itself. It uses textile configurations and
+the bitbake tool which is based on a combination of Python and
+Bash in order to do the builds. And it builds almost
+everything from source, including all the build tools themselves. Whereas build it defaults
+to using binary built for some of the build tools. And part of the reason Yocto builds
+everything from sources that one of the goals of the tool is to
+support binary reproducibility. In other words, they want you to be able
+to check in of your build system and have anybody be able to build from
+scratch and get the exact same build output correspondent,
+that particular commit hash. And so by building all the source
+tools from scratch, you're less likely to have a slight variations
+between different build systems. So the basic steps for setting up
+the Yocto environment come from. There's a quick start guide here that's
+length, you can look at in more details. But the basic steps are outlined
+in the assignment document and they are to clone the poky project as
+a sub mile module in your repository. And there will be a branch specified in
+your assignment corresponding to the most recent stable build of Yocto that we're
+going to use for the current semester. And then you'll use get add and get commit to add the sub
+module at the correct branch. So this is going to seem very similar
+to what we did with Bill dread and checking out a specific
+version of Build dread. Then you're going to do source
+poky-en-init-build-env, and what this is doing is using
+the source command to pull in a bunch of variables and
+other content related to bash. That set up your build environment for
+you based on this poky distribution. Then you'll use the bitbake command and
+bitbake core image minimal, which will build a minimal image
+that's defined in the poky project. And then you go and
+work on something else for a few hours because this will
+take quite a while to do it. As I mentioned before, if it's
+building all the tools from scratch, the initial build takes a very long
+time Yocto even more than then build it. You can expect this to take hours
+depending on how fast your system is. So a little more detail on what the source
+step does for the poky/oe-unit-build-env. It uses the source command for
+bash which is a synonym for the dot. So if you've seen dot space and then the name of the script before,
+that's exactly the same syntax. And what this really just means is that
+any of the variables that are created or modified by the script that you
+source is going to remain available after the script edits. So it's going to run in the same
+sub shell, in other words, everything defined inside
+oe-init-build-env in terms of environment variables is going to be
+defined for our current terminal session. So this script is going to set up
+environment variables that are going to be used for bitbake or whatever other commands we run from the
+terminal after we call this source step. And part of what's going to happen for you
+after you source poky/oe-init-build-env is a build directory is going to
+be created at the root folder. And this is where all the build output and
+the log files will be generated, this directory will get very large in
+the tens to close to 100 gigabytes depending on how many builds you do and
+what kind of build you do. But this is where all the build output and
+the log files for your Yocto build is going to get generated
+inside this building [INAUDIBLE]. So a little bit more about
+some Yocto terminology. We mentioned the bitbake utility as
+the utility that performs built. How would you bake bits? You make bits using recipes just
+the same way that as you bake bread. So the Yocto terminology for the instructions to build a package
+is that you call that a recipe. And the recipe is really just a set
+of instructions that are processed by the build engine. Those python, bash based scripts
+that I talked about before, and the recipes can be defined in
+files that end with .bb and .inc. And these are really just text files
+with some combination of bash and python syntax. So the bb file contains the source and
+the version information. So it tells you how to build
+a specific version of a package, where to find the source. Maybe it's a Git hub repo
+maybe it's an FTP site, and the version information
+corresponding to that. And then if it exists the .inc
+file contains common build and deploy instructions that might be similar
+between different versions of the source. And may contain the python or
+the bash fragments to actually perform the building and
+install steps for your package. So the packages are going to contain
+binary artifacts from the build and then the build outputs
+are referred to as images. And so this is the same terminology
+that build it uses as well. There's a binary file system
+image that's like an EXT four or an EXT file system based image
+that contains your profile system. There's the Linux kernel image, and
+then if you have a bootloader, if you're running on hardware for instance,
+you have a bootloader like u-boot or grub. That bootloader image will
+also be part of the build up. So here's one thing that's different
+about Yocto when we're talking about differences between the Yocto and
+build it. The Yocto is kind of unique and that
+supports what's called the layer model. In build it we talked about having
+an external branch where we could define our own content that was
+outside the build it project itself. Yocto is is a little bit more
+full featured, more complex, it allows you to do slightly
+different things than build routes. Be our external model where you can really
+just set up arbitrary sets of directories that are combined together with this layer
+concept into one equivalent file system. And so for example, if you have,
+let's say we're defining our own meta aesd layer that has some specific
+recipes and images that we define in it. And maybe we have a recipe in here that modifies something about
+the way busy boxes built. Then there's the meta/oe recipes
+that are from part of the open embedded project itself that define
+the basics about how busy box normally gets built and
+to find some base images. When we introduced the layer concept and we add both of these
+directories as layers. Essentially the Yocto build system, or
+bit bake build system builds a file system equivalent that combines all
+these different layers into one. And the combination is based
+on a hierarchy of which layer proceeds a different layer. But ultimately we combine those two into
+one and make the file system equivalent of one directory that contains all
+the different recipes, paths. And so for instance the meta
+asd recipes core build box, busy box to be a pen that
+customize the busy box recipe. That's going to show up under
+recipes core busy box and it's going to get merged in with
+the content that came from me to you. So we can use this layer model to
+arbitrarily add to existing recipes, and we can also include new
+recipes that are custom. So we can use the layers to make the build
+work in a slightly different way. We could for instance at a patch that's
+only specific to our hardware for a given package. We could configure a package to use
+GUI instead of using terminal only. We can add support for brand new recipes. So in our case will do that for
+aesd assignment and we can add support for
+brand new image types. In our case we use that for core image aesd that we're
+going to have a custom image. So in order to add a Yocto layer, you
+start by doing the same thing you do for a build where you source poky or
+the unit build in. And then you can use the bit
+bake layers command to create a layer based on some source. In our case we have a meta
+aesd directory that's going to contain all of our layer content. And then we're going to add that layer
+based on the layer that we've created. And this is actually already done for you
+in the starter repository that you use for assignment six. So this is just some
+background information. This is all actually handled by
+as a part of the build.sh script. So if you want to look at more
+about how this is actually done, you can look at the details
+of the build.sh script. But ultimately what that's going to do is
+figure out if we've already added a meta aesd layer to our Yocto build and
+if I hadn't, it's going to add it for you. So then in addition to adding
+the layer that we defined for meta aesd were also defining our own
+image type called core image aesd. So this just allows us to customize
+what's going to be in our embedded image. And there are lots of different
+ways to customize this, I picked this way because this is probably
+one of the simplest to understand. There are better ways if you want to build
+the whole project based on Yocto, but we'll just use this as
+a simple example here. So you can start by just inheriting
+core image, and this is something that's defined by the build framework and
+the build distribution in this case, poky, which is just a set of packages that you
+would probably want in a base image. And so, for instance, busy box that we use
+in build in, that's going to be part of the image that we create here with core
+image, that we pull in with core image. And then we can define image, install,
+append and add whatever packages we want. And in this case the image install pen
+command is going to be adding an asd assignments package that we're going to
+define with our custom assignment. So if you remember back to how we specify
+the target architecture in build it, we reference to defconfig file, which in
+this case was QMUaarch64 avert defconfig. And then we use that as part of the make
+command to build it with defconfig. So this was done for you as part
+of the build script for build it. And Yocto in instead of using
+a defconfig and config format, like build it does,
+Yocto uses a machine variable. And the machine variables defined
+in build conf and local.com, you'll see lots of references to
+this file if you're looking online. Our build conf, local.com, in our case, is going to be managed
+by our build.sh script. But in a lot of cases you would
+start by customizing this to control how your
+local build setup works. One problem with this file though, is that it typically isn't
+checked into revision control. So you want to have some kind
+of strategy for managing that, that's what we're doing in our
+case with the build.sh script.

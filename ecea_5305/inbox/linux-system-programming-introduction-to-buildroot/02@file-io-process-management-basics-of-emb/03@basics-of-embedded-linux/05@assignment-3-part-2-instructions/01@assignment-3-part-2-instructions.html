@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment-3 Part-2 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2><strong>Assignment 3 Part 2:  Manual Kernel and Root Filesystem Build</strong> </h2><h2><strong>GitHub Repository Link</strong> </h2><p>Use the same repository as assignment-3-part-1.</p><h2><strong>GitHub Repository Start Instructions</strong></h2><p>For this assignment, start with the git repo created for the previous assignment-3-part-1.  </p><p></p><p><strong>Use these commands in git bash to prepare your assignment repository:</strong> </p><p> git merge assignments-base/assignment3-part-2</p><p>Merge the assignment 3 starter code from the assignment3 branch of the aes0d-assignments repository into your master branch </p><p>git submodule update --init --recursive </p><p>Update automated testing source </p><p>git push origin main</p><p>This pushes your main branch, including previous assignment source and content merged from assignments-base to your working repository for this assignment. </p><h2><strong>Repository Setup:</strong> </h2><img alt="assignment-3-part-2.PNG" src="assignment-3-part-2.PNG"/><h2><strong>Suggested Videos:</strong> </h2><p>Module 2 Content </p><p>Note: The following links are external and will open in a new tab. </p><h2><strong>Setup Github Actions</strong> </h2><p>No need to setup Github actions explicitely as this part is done in assignment-3-part-1.  </p><p><strong>Implementation:</strong> </p><ol type="1"><li><p>Update a BASH script “<strong>finder-app/manual-linux.sh</strong>” which uses ARM cross-compile toolchain to build a barebones kernel and rootfs and boots using QEMU by completing the TODO references. <strong>Your manual-linux.sh</strong> <strong>script</strong> should do the following:  </p></li></ol><p>        a. Take a single argument <strong>outdir</strong> which is the location on the filesystem where the output files should be placed. Replace all references to “outdir” in the remainder of the assignment with the absolute path to this directory. </p><p>                i. If not specified, your script should use /tmp/aeld as <strong>outdir</strong> </p><p>        b. Create a directory <strong>outdir </strong>if it doesn’t exist.  Fail if the directory could not be created. </p><p>        c. Build a kernel image using instructions in Module 2 lecture series.  Note that you may need a few additional packages on your build host to complete the linux build.  For the full and latest list of packages needed you may refer to the Dockerfile used to build the automated test container in https://github.com/cu-ecen-aeld/aesd-autotest-docker/blob/master/docker/Dockerfile</p><p>            i. Use git to clone the linux kernel source tree if it doesn’t exist in <strong>outdir</strong>.  Checkout the tag specified in the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment3-part-2/finder-app/manual-linux.sh">manual-linux.sh</a> script</p><p>                1. Use <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"><u>https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git</u></a> for the linux kernel source directory. </p><p>                        1.a. Use the `--depth 1` command line argument with git if you’d like to minimize download time </p><p>                2. You may alternatively download and unzip from the corresponding kernel version tarball obtained from <a href="https://mirrors.edge.kernel.org/pub/linux/kernel"><u>https://mirrors.edge.kernel.org/pub/linux/kernel</u></a> (useful for slow Internet connections). </p><p>        d. Copy resulting files generated in step 1.c to <strong>outdir.</strong> </p><p>        e. Your script should build a root filesystem in <strong>outdir/</strong>rootfs as described in the Module 2 content, performing all of these operations in an automated fashion and completing the TODO items in the “<strong>finder-app/manual-linux.sh</strong>” script.  The end result should be a <strong>outdir</strong>/Image kernel image and <strong>outdir</strong>/initramfs.cpio.gz file based on the content of a staging directory tree. </p><p>                i. Skip the <strong>modules_install</strong> step discussed in the video content.  The modules generated with the default kernel build are too large to fit in the initramfs with default memory.  Alternatively you can increase the -m  argument in the start qemu scripts to a value large enough to fit (currently must be &gt;512m).  You don't need modules for the simple example we use in assignment 3.</p><p>                 ii. Your writer application from Assignment 2 should be cross compiled and placed in the <strong>outdir</strong>/rootfs/home directory for execution on target. </p><p>        f. Copy your finder.sh, conf/username.txt, conf/assignment.txt and finder-test.sh scripts from Assignment 2 into the <strong>outdir/</strong>rootfs/home directory.</p><p>                i. Modify the finder-test.sh script to reference conf/assignment.txt instead of ../conf/assignment.txt.</p><p>        g. Copy the autorun-qemu.sh script into the<strong> outdir/</strong>rootfs/home directory</p><p>        h. Create a standalone initramfs and <strong>outdir</strong>/initramfs.cpio.gz file based on the contents of the staging directory tree. </p><p>2. Use the provided script “<strong>start-qemu-terminal.sh</strong>” to start qemu using the kernel,and initramfs files in <strong>outdir</strong> based on the passed argument.  Use the provided script “start-qemu-app.sh” to start your application on the target. </p><p>3. Tag your repository assignment-3-part-2 using <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Tagging-a-Release"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Tagging-a-Release</u></a> </p><h2>Validation: </h2><ol type="1"><li><p>Your <strong>manual-linux.sh </strong>script should completely build or rebuild all components in a new directory/existing directory <strong>outdir</strong> with the installed kernel.  It should not require or use interactive content from the user other than the <strong>outdir</strong> command line argument when run the first time on a new outdir.  It will be graded by an automated script with no manual interaction. </p></li></ol><p>        a. Interactive sudo input is allowed for root operations </p><p>2. You should be able to run ./start-qemu-terminal.sh to start a QEMU instance on the build directory. </p><p>3. After booting, you should be able to login with no username and password and then run ./finder-test.sh from your QEMU console prompt, getting a success response. </p><p>        a. Your writer application should run successfully (after being cross compiled successfully) inside QEMU. </p><p>4. You should submit your modified <strong>manual-linux.sh</strong> script and any necessary scripts called from it in your assignment repository. </p><p>5. The ./full-test.sh script should run with success, validating implementation in systemcalls.c unit tests code as well as the <strong>manual-linux.sh</strong> script content and qemu operation. </p><p>6. Your github actions automated test script should pass on your repository and the “Actions” tab should show a successful run on your last commit. </p><h2>Troubleshooting:</h2><h4> Issue: multiple definition of `yylloc'  </h4><ol type="1"><li><p>This happens when building with old linux kernel source before https://github.com/cu-ecen-aeld/aesd-assignments/commit/21f5f747b806cd6f6b2a74fb07085a5f95e53405 was merged.  Please update to a more recent kernel version, `v5.15.163` or later.</p></li></ol><h4> General issues with boot</h4><ol type="1"><li><p>Using course discussion forums, ask students who have completed a successful boot to share their initramfs file with you.  Verify boot of their initramfs works with your qemu setup to verify your kernel and qemu setup is correct. Compare their file with yours and look for differences to help isolate the problem with boot.</p></li></ol><p><strong>Issue: finder.sh not found</strong></p><p>You may notice a confusing error message "finder.sh not found" if your finder.sh script references /bin/bash in your shebang portion of your script.  This happens because /bin/bash isn't included in your simple busybox rootfs.  The simplest option to resolve is to use /bin/sh in your shebang line of your finder.sh script (and remove any bash specific components in your script not supported by /bin/sh.  Alternatively, you can modify busybox configuration to add /bin/bash to your root filesystem.</p><p><strong>Issue: Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)</strong></p><p>Suspect an issue with your .cpio file creation.  Search for commands you can use to extract the .cpio file and extract contents.  Make sure the .cpio file is created at the root directory of the target filesystem (not the root directory of the host filesystem, or any other directory on the host filesystem).  See the example cpio command from the Linux Root Filesystems lecture content and video.</p><p>
+</p><p></p>
+  </div>
+</body>
+</html>

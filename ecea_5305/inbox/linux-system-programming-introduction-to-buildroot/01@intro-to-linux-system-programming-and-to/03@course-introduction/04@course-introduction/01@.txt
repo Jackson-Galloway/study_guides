@@ -1,0 +1,51 @@
+This video is an introduction
+to the course, Advanced Embedded Linux Development. So we're going to do
+an introduction to the course. Talk about why you'd
+bother to learn Linux, and talk about what this course is and isn't. So, first of all, who is this guy? My name is Dan Walkes and I currently work
+full time in industry and teach part-time. My current gig is Vice President of
+Embedded Engineering at Sighthound. I began teaching at CU in
+the spring 2019 semester, and I'm a former CU Boulder Embedded Systems
+student from the early 2000s. And during that time, I was ta for
+ECEN 5623, real time embedded. So I've spent quite a bit of time
+learning about embedded systems, and it's been a great pleasure of mind
+to put this course together and to be able to share it with all of you. So my 20th year of industry experience
+was in 2019, and most of my of the previous 12 or 10 or 12 years have
+been Linux embedded systems related. I am not a doctor and I'm not a professor. So you can refer to me as Dan. And the attitude that
+I try to approach this course with is really kind of like as
+a team lead on your development team. So if you can think of me in that respect. So talking about why
+should we learned Linux? There's a EETimes Embedded Market Study
+from 2019 that kind of showed the responses
+from folks working as electrical engineers and
+what they were using for their operating system in
+their development projects. And if you bundle a bunch of the different
+Linux based variants together, and if you include platforms like android
+that are based on Linux, what you see is that a huge percent percentage of
+respondents are either actively using or planning to use Linux on
+projects in the short term. So it's one of the most popular
+embedded systems out there. It's one that if you
+know something about it, there's a pretty good chance you're
+going to be able to apply it in your work. So what do I want to do with this course? I want to give you the tools that you
+need to understand how to configure and deploy Linux based embedded systems. And so, I want to give you some experience
+with some of the common system build tools and components. So that will include BASH and
+shell scripting. It will include Buildroot and Yocto as build frameworks to build
+your own embedded Linux distribution. I use QEMU for virtualization for
+emulation of your embedded environment. So I want to make sure that this course
+is about gaining experience with Linux driver development in the follow-on
+portion of the course and general improvement in your resume interview
+skills in relation to embedded Linux. And really the part of the reason I
+developed this course is there's a lot of things in here that I wish I would have
+had as part of my graduate studies, and in a lot of cases they
+didn't really exist yet. So, especially some of the build
+frameworks that we'll talk about here in this course. So it might be important to talk a little
+bit about what this course is not. It's not really data structures or
+an algorithms course. So we might cover a little bit about
+data structures or algorithms, but it's mostly about how to
+use existing libraries and software in the case
+that we do cover them. It's also not really about low resource
+microcontroller or anything like FreeRTOS is not going to cover event loops or
+anything like Bluetooth protocol. We are not specifically covering sensors,
+although in the following portion of this course where you do a final project,
+you'll be able to select a sensor potentially to integrate
+as part of your final project. And we're not really covering embedded
+libraries for low resource processors. It'll all just be about Linux and
+Linux application development.

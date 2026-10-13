@@ -1,0 +1,424 @@
+1
+00:00:00,540 --> 00:00:05,464
+This video I'm going to continue the
+discussion of C Dependency Generation and
+
+2
+00:00:05,464 --> 00:00:06,684
+talk about CMake.
+
+3
+00:00:06,684 --> 00:00:10,353
+So I want to introduce CMake and
+help you understand.
+
+4
+00:00:10,353 --> 00:00:13,932
+How do you see make for
+platform dependency generation.
+
+5
+00:00:13,932 --> 00:00:18,585
+And then we'll do a comparison of
+the different tools we've talked about.
+
+6
+00:00:18,585 --> 00:00:23,870
+So far for out of dependency
+generation GNUMake, AutoMake and CMake.
+
+7
+00:00:23,870 --> 00:00:28,343
+So CMake is a cross platform open source
+system to manage build processes in
+
+8
+00:00:28,343 --> 00:00:30,390
+a compiler independent manner.
+
+9
+00:00:30,390 --> 00:00:37,243
+So it's meant to be agnostic of compiler
+and also agnostic of build platform.
+
+10
+00:00:37,243 --> 00:00:42,560
+The sea make lists that text
+files contain the information
+
+11
+00:00:42,560 --> 00:00:47,997
+about the project that's used
+to build the control files.
+
+12
+00:00:47,997 --> 00:00:51,603
+And it's going to generate standard build
+files for whatever platform you're using.
+
+13
+00:00:51,603 --> 00:00:56,704
+So the new make files on Linux and
+Unix and for Microsoft or for
+
+14
+00:00:56,704 --> 00:01:02,416
+windows, it would generate visual
+studio projects or workspace.
+
+15
+00:01:02,416 --> 00:01:07,348
+And for recent visual studio versions
+you can just use CMake directly
+
+16
+00:01:07,348 --> 00:01:11,442
+without the intermediate
+step of generating projects.
+
+17
+00:01:11,442 --> 00:01:12,931
+So again, the sea make lists.
+
+18
+00:01:12,931 --> 00:01:16,592
+Text contains the details
+about the project.
+
+19
+00:01:16,592 --> 00:01:21,237
+And this is a really simple file where
+you're defining what's the minimum version
+
+20
+00:01:21,237 --> 00:01:24,301
+of CMake required the project
+that you're building.
+
+21
+00:01:24,301 --> 00:01:26,396
+>> So this is the executable in this case.
+
+22
+00:01:26,396 --> 00:01:30,134
+And then the files that are used to
+build the executable in this case,
+
+23
+00:01:30,134 --> 00:01:31,433
+just the source files.
+
+24
+00:01:31,433 --> 00:01:33,785
+Because it'll do all
+the dependency generation for
+
+25
+00:01:33,785 --> 00:01:35,343
+the header files automatically.
+
+26
+00:01:36,841 --> 00:01:42,301
+So in order to use this, it's as simple
+as Sudo apt install see make if you're
+
+27
+00:01:42,301 --> 00:01:47,944
+using Obuntu if you're using windows
+you download using the CMake installer.
+
+28
+00:01:47,944 --> 00:01:51,393
+So in order to use CMake with
+a project that supports it.
+
+29
+00:01:51,393 --> 00:01:54,795
+You start by creating a build directory
+and this is just the location that
+
+30
+00:01:54,795 --> 00:01:57,550
+the build files are going to be
+generated for your platform.
+
+31
+00:01:57,550 --> 00:02:01,261
+So this would be something that you would
+not check into revision control a lot
+
+32
+00:02:01,261 --> 00:02:01,783
+of times.
+
+33
+00:02:01,783 --> 00:02:04,555
+That's just called with scenic projects.
+
+34
+00:02:04,555 --> 00:02:09,301
+You just use the build sub directory for
+that called build that.
+
+35
+00:02:09,301 --> 00:02:13,670
+You don't execute CMake with a relative
+path to the location of CMake
+
+36
+00:02:13,670 --> 00:02:16,472
+list text from inside that bill directory.
+
+37
+00:02:16,472 --> 00:02:19,095
+And this will generate all
+the build files for you,
+
+38
+00:02:19,095 --> 00:02:22,701
+which if we're talking about building for
+Lenux would be make files.
+
+39
+00:02:22,701 --> 00:02:26,743
+Then you'd run make and that would build
+all the projects with dependencies.
+
+40
+00:02:26,743 --> 00:02:30,304
+And then you can run your application.
+
+41
+00:02:30,304 --> 00:02:34,294
+So here's an example of the steps and
+how you'd use to make on Lenux for
+
+42
+00:02:34,294 --> 00:02:35,858
+a simple example project.
+
+43
+00:02:35,858 --> 00:02:38,939
+And you can see the example
+project linked here
+
+44
+00:02:38,939 --> 00:02:41,951
+in the slide if you want to
+try it out yourself.
+
+45
+00:02:41,951 --> 00:02:44,658
+But you can just make a directory name,
+build again,
+
+46
+00:02:44,658 --> 00:02:48,647
+it could be called anything build is
+kind of the convention for CMake projects.
+
+47
+00:02:48,647 --> 00:02:53,832
+You see the end of that directory and then
+you say CMake dot dot where dot dot is
+
+48
+00:02:53,832 --> 00:02:59,683
+specifying that CMake lists dot text file
+is located at the CMake example directory.
+
+49
+00:02:59,683 --> 00:03:03,439
+When you do that, you'll see a bunch of
+auto discovery that looks similar to what
+
+50
+00:03:03,439 --> 00:03:04,497
+we saw with auto camp.
+
+51
+00:03:04,497 --> 00:03:08,059
+And automaker where it figures
+out which compiler you have and
+
+52
+00:03:08,059 --> 00:03:09,506
+what system you're on.
+
+53
+00:03:09,506 --> 00:03:13,040
+And builds a make file for
+you based on your target.
+
+54
+00:03:13,040 --> 00:03:16,560
+So if I look at what's in the output
+after I do the build step,
+
+55
+00:03:16,560 --> 00:03:20,163
+I'll see that there is a make
+file located in that directory.
+
+56
+00:03:20,163 --> 00:03:22,688
+And I can do a make step here and
+
+57
+00:03:22,688 --> 00:03:28,254
+it'll automatically build the target for
+me the CMake example.
+
+58
+00:03:28,254 --> 00:03:32,959
+And then I can run it and
+it'll run the output file on
+
+59
+00:03:32,959 --> 00:03:36,585
+compiled from my native build system.
+
+60
+00:03:36,585 --> 00:03:41,029
+So the kind of cool and unique thing about
+CMake compared to the other ones that
+
+61
+00:03:41,029 --> 00:03:43,678
+we've talked about so
+far with the GNUMake.
+
+62
+00:03:43,678 --> 00:03:51,234
+And with auto tools or autoMake is CMakes
+native support for Windows is much better.
+
+63
+00:03:51,234 --> 00:03:56,162
+So, for instance, with recent studios
+of recent versions of visual studio,
+
+64
+00:03:56,162 --> 00:03:59,756
+you can just open a folder
+that contains a CMake project.
+
+65
+00:03:59,756 --> 00:04:04,634
+And it will automatically be able to
+build and run directly for Windows.
+
+66
+00:04:08,442 --> 00:04:12,606
+It also is Scenic is natively
+supported in builder with eval.
+
+67
+00:04:12,606 --> 00:04:15,531
+See make package in the package,
+not make file and for
+
+68
+00:04:15,531 --> 00:04:18,261
+your octo it's also
+natively supported as well.
+
+69
+00:04:19,740 --> 00:04:24,168
+So some build two comparisons then
+of everything that we've discussed.
+
+70
+00:04:24,168 --> 00:04:27,227
+So far in terms of auto
+dependency generation,
+
+71
+00:04:27,227 --> 00:04:31,901
+the going to make is kind of like the
+traditional way to do builds in general.
+
+72
+00:04:31,901 --> 00:04:35,958
+It's kind of like the general build
+tool and it has some support for
+
+73
+00:04:35,958 --> 00:04:37,891
+auto dependency generation.
+
+74
+00:04:37,891 --> 00:04:41,187
+But the cross platform
+supports limited and
+
+75
+00:04:41,187 --> 00:04:45,204
+it's relatively complex
+to configure it yourself.
+
+76
+00:04:45,204 --> 00:04:48,935
+Auto confident auto tools has some
+better cross platform support,
+
+77
+00:04:48,935 --> 00:04:52,731
+it has some nice built in support for
+cross compile things like that,
+
+78
+00:04:52,731 --> 00:04:56,014
+it's maybe a little bit easier
+to configure than GNUMake.
+
+79
+00:04:56,014 --> 00:04:59,808
+But still not the easiest
+possibly to configure.
+
+80
+00:04:59,808 --> 00:05:04,423
+CMake has probably the best cross platform
+support especially important if you need
+
+81
+00:05:04,423 --> 00:05:05,469
+Windows support.
+
+82
+00:05:05,469 --> 00:05:09,679
+And it probably has the easiest in terms
+of configuration complexity, unless
+
+83
+00:05:09,679 --> 00:05:14,337
+there's some specific thing you're doing
+that lends itself better to auto comfort,
+
+84
+00:05:14,337 --> 00:05:15,056
+auto tools.
+
+85
+00:05:15,056 --> 00:05:20,299
+So for new projects, I would probably
+tend to look towards CMake first.
+
+86
+00:05:20,299 --> 00:05:23,093
+And make sure there's some
+reason that that won't work.
+
+87
+00:05:23,093 --> 00:05:26,272
+But probably use that by
+default as my choice for
+
+88
+00:05:26,272 --> 00:05:28,666
+any kind of project that we want to do.
+
+89
+00:05:28,666 --> 00:05:30,551
+Auto dependency generation.

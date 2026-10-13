@@ -1,0 +1,202 @@
+In this video, we're going to be
+talking about an intro to Threads and Multithreading. So the learning objectives, we've already
+talked about threads a little bit in this class, so
+we're going to do a little bit overview, a little bit of review of what
+we've already talked about. Then we're going to talk specifically
+about multithreading and some of the trade offs associated with
+different multi threading strategies. And some of the different models
+that you can use for threading. So threads,
+when we're talking about threads, we're talking about how are your running
+an application inside a specific process. And we've already talked
+about the binaries being essentially the programs
+that are living on storage. So somewhere in the root filesystem,
+probably an l file and then the process is being the binaries and
+action. So that's the binary when it's
+actually running on the system and the process is going to contain one or
+more threads. If you have one thread,
+it's a single threaded process, if you have more than one
+thread it's multithreaded. And as we've mentioned already, the process is going to have
+a dedicated virtualized memory. That it believes that it basically has its
+own copy of a dedicated virtualized memory instance. So then threads are going to be units of
+execution within that process by default. That will always be one when
+you create the process, but you'll have the opportunity to create more
+and create a multithreaded applications. So the threat is going to have
+a virtualized processor and stack. So it's going to have its own
+execution state within the program. And its own program state, but it's going to share that virtualized
+memory with the process. So here's an example, here is a drawing that shows a little
+bit more of what this looks like. So we have two different processes running
+each of them has their own dedicated map of processed memory
+inside physical memory. And then each one of the threads
+inside the process is going to share that process memory. And since we're talking about
+multithreaded application, we're talking about at least
+two threads in a given process. So the threat scheduler is going
+to schedule the threats from these processes onto any of
+the CPUs that are available. And time slice that over
+a given period of time. So why would we bother using
+multithreading at all? Multithreading is really
+an alternative to state machines. So you've probably already covered
+state machines in other courses and you've probably used them already on
+low recess resource microcontrollers. So if we don't really have
+a way to do threading. Then you always have to use a state
+machine anytime you want to have some process running while another
+process is waiting for input. So you've probably used this already
+where you have a state set up that requests some input from a device. If you want to do more processing
+at that point you need some way to do the processing. And then come back and resume where
+you were when the wait is complete. So an alternative to that would be to
+have a dedicated thread that's handling the wait for you. And spin off a second thread that's
+that's going to continue on and do more processing. Another reason that you want to use
+multithreaded is for parallelism. So if you have multiple
+processors in your system. Multithreading allows you to potentially
+get more speed out of your application by letting multiple threads of your process
+run at once on these different processors. So you can also improve responsiveness
+relative to blocking in a single thread. So you wouldn't want to put long running
+operations in the UI handling thread for instance. Because if those threads took
+a long time to complete or if actions with them thread
+took a long time to complete. Then the UI would probably freeze
+up waiting for the user in. So that's an example of where you'd want
+two different threads running one to be responsive to the user requests in the UI. And maybe one to handle some kind of long
+running computational or other task. And also blocking I/O wouldn't
+belong in UI thread so you wouldn't want to be waiting for
+a hardware device or something like that. So, talking a little bit
+more about multi threading, we should give a little bit of background
+on what we mean when we say parallelism. And what's the difference between
+concurrency and parallelism? So first,
+concurrency is the ability of two or more threats to execute
+an overlapping time periods. And this is essentially a programming
+pattern that we can use to have it appear that multiple things are happening
+at once from the perspective of a process. And so you can see here when we
+have thread one, two and three. Each one of these are time sliced and each one of them appear to be executing at
+the same time when in reality they're just getting time sliced across
+different processors. But the switch between thread one,
+two and three is all being handled for us and the kernel. And that can happen at any time from the
+perspective of our code that's running. When we talk about parallelism, what we
+talk about there is that we are actually able to execute two or
+more threads simultaneously. So here we have some
+actual hardware support, we have multiple processors in hardware
+that are enabling us to do this. And so the kernels's going to schedule
+threads on different processors. And rather than having to time slice,
+like we're doing up here. All three of our threads are going to in
+this example are going to execute at once. And essentially complete on
+separate processors all at once. So more reasons why you'd
+use multi threading for the purpose of context switching. This would be why you'd use multi
+threading instead of multiple processes. If you need to to wait for some process
+and do some other processing and there's a context switch
+that would need to happen. You do either a threat or a process thread
+context switching is usually cheaper than process context switching. From a perspective of system resources. And the reason for that is because
+threads are going to share that virtual memory space so
+you don't have the additional overhead of the process swapping out the what it
+needs to swap out in order to swap. Memory spaces when it switches
+to the different process. And then also you can have memory
+savings because most likely your process doesn't need that entire virtualized
+memory that's allocated to it. So the more threads you have
+running on that same process, the less total system memory you'll use. Because each threat is going to
+be sharing that process memory. So why wouldn't we just always use
+multithreading with every application? Well, there's some complexity that
+comes with multithreading and that complexity comes out
+when we're writing the code. When we're trying to
+understand how the code works. So when we're reading someone else's code,
+for instance or something, we wrote long enough
+ago that we forgot it. Or when we're debugging and
+trying to figure out a problem, all those things become more difficult
+when we're using multithreading. So the alternatives that we could use
+instead of using multithreading we could use non-blocking I/O. So we could kick off some task in
+one thread and then come back and pull for it later. That would be an example of using that
+in a state machine implementation. Or we can use multiple processes
+instead of multiple threads. And the drawback there would be
+we wouldn't be able to use shared memory to communicate or
+at least not the process shared memory. We'd have to use some
+kind of IPC mechanism. So the link 6 to programming book Chapter
+seven talks about a couple different models you can use for thread design
+in a multithreaded application. One of them is the thread
+per connection model. So it's using connection as an idea
+of a different unit of work that gets invoked on your specific process. So it uses the example of a web server
+where the user might be opening web pages and making requests of your web server. So every unit of work that comes in so every page request in the thread per
+connection model would get a thread. And then if there's blocking I/O that
+has to happen in order to complete that request, that particular thread
+would block waiting for the I/O. So in that particular case
+you might need more threads than CPU processors in order
+to have maximum parallelism. And the reason is the thread that's
+handling the request is going to be blocked. And this means that another
+thread will be able to execute at the same time
+if it were available. So the more threads you have, the more
+likely you are to be able to keep that process busy and get the maximum
+parallelism out of all your CPU cores. This model tends to break down as
+a number of requests becomes very large. And that has to do with the fact
+that every every one of the unit of work is going to get a thread. And so
+the larger the number of requests are, the more dedicated resources you
+have waiting to handle that request. And consuming resources in the way so,
+the Apache web server is kind of a traditional implementation of
+this particular model of threat. As an alternative, the book talks about
+an event driven threading model which, instead of blocking. And waiting for I/O it uses asynchronous
+I/O and callbacks and an event loop. And there are newer web
+servers like NGINX and Node.js that are examples of this model. In this case since we're not actually
+waiting for I/O within our threads, then there's really no reason to have
+more threads than CPU processors. So everyone of the threats that we
+invoke is always going to be running and not not going to be blocked. And so
+there's no real chance to improve or increase parallelism by adding
+more threads, than processors. So the author's suggestion is to try
+the event driven threat model first for your application. And only used the older or
+traditional method of thread for connection, if that doesn't map well for
+some reason. So here's a visual drawing that
+shows a little bit more about what we're talking about with
+thread per connection. Versus event driven threading as
+the book example goes through. So if you think about a client
+making requests of a web server and maybe the web server is going to be
+making requests itself out of a database. And that database could
+be slow to respond. So here with the blue, green and
+red bars, you can see three different requests that came from the client
+before the first request finished. And then that turns into
+three different request for a database with varying times
+returned from the database. And you can see the blue line is the one
+that took the longest green line took the second longest and the red line
+took the the shortest amount of time. So what we see here in the thread per
+connection cases, that the request comes into the web server that turns
+into a request for the database. And that thread just keeps waiting for
+the database to to return and then finally returns your response. And similarly the same thing happens for
+request B and C. The thread from the web server
+is going to block waiting for that response to complete. By comparison though for the event driven
+threading case, if we're going to schedule a callback that happens after the I/O
+is complete rather than blocking. Then when we make request a of the web
+server, it's just going to fire off this request with a callback to the database
+and then the threat is going to terminate. There's not anything else for
+it to do at this case. So even though the database
+threat is going to be, the database process is going to be
+working on handling this request. There won't be a threat in our web server
+again until the request completes. At which point it will
+call this call back and that'll be the response
+back to our client. So the the difference here that is,
+you can see that there's cases where we had three different threads
+running at once in our web server here. And in this case we're going to have
+several points where there's no threads running. And nothing is blocked waiting on I/O so
+because in each one of the cases that we have a thread running,
+it's actually doing work and not blocking. This is the way that we can essentially
+maximize the amount of parallelism we can get based on the number of
+CPUs we have in the system. So how the max number of threads and the thread duration compares the max
+number of threads here is three. And in the event driven threading case, it's only two just based on
+the way the the I/O worked out. And the fact that request
+c came before requests b issued it's database request here. And the duration actually is the same
+because the duration is waiting on the database. And the database was presumably doing
+some kind of processing there that that's taking a longer time to complete. So I want to talk a little bit about
+Amdahl's law as well because it relates to this. And it relates to how you can
+these different threading models relate to the amount
+of parallelism you can get. So Amdahl's law said that this
+theoretical speed up you can get on a given section of code is or the
+theoretical speed up being the multiplier. Like the number of times faster you can
+make code is based on the part of the code that benefits from improved resources. And the proportion of the execution
+time that the part benefiting from the improved resources originally applied. So if you look at two different
+parts of the process or a thread where some specific part A that took this
+long in some part B that took this long. If you can make be five
+times faster than that, will shorten the total
+execution by this amount. If you can make A two times faster, you
+can see that that's ultimately a better performance change here in terms of
+the total performance of the application. So how does what we just talked about
+related to event driven threading and the statement of there's no reason to
+have more threats than processors. How does that relate to Amdahl's law? It means that because we're using event
+driven threading and we aren't waiting. If there's no waiting,
+that's happening in threads and you're already using a number of threads
+that matches the number of processors. Then that means that there's no more
+parallelization that is possible to be obtained in that case. So the book makes the comment that threads
+only need to be added an event driven case to provide true parallelism. And there's no reason to have
+more threads and processors. And that's just because we can't add more
+threats to paralyze if every one of them that we've already got is
+assigned to a processor and none of the threads are blocking.

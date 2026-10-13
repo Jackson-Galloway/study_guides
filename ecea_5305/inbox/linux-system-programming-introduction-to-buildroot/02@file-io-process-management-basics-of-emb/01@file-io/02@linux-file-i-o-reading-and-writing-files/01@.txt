@@ -1,0 +1,180 @@
+In this video, we're
+going to continue on the theme of Linux file IO, but move past open and talk about actually
+reading and writing files. The learning objectives here, we're going to discuss
+reading and writing files. We're going to learn
+how umask influences file permissions that we've talked about that Linux
+has and uses today. We're also going to
+get an introduction to a really useful tool
+that we're going to use throughout the semester
+called strace. In terms of reading
+file content, once you've got that file
+descriptor from open, you can use it with read, very similar to the way
+you'd use the filehandle that you use with F read
+and buffered IO today. The return value from read
+is going to be the number of bytes read or minus
+one on error. If there is an error, it's going to set errono and
+this relates to the Linux, the discussion that
+we talked about in previous weeks' videos
+regarding Linux error handling. If there is a return
+value less than count, that means that there's no
+more bytes available now. This would be if it's less
+than count but not negative. Some reasons that
+there might not be any bytes available
+now it would be maybe you've read all the
+way to the end of the file, or maybe your read got
+interrupted by a signal like the signals that we talked
+about in previous weeks. I've got a really simple
+example here that's linked from this lecture
+slide that you can go over, that illustrates a combination
+of create on Open and also the functionality
+of read related to returning when there's no bytes available
+to read in the file. This is really
+simple application, just tries to read
+the first byte of a file but if the
+file doesn't exist, it creates it with zero size. This can help us just investigate how
+permission handling is handled relative to open and also how read deals with
+files that are zeroing. One of the things that
+you'll notice if you look at this code and if
+you try to run it, if you run it with no file, the application's going
+to try to operate on this empty file based on the parameters passed in
+the run empty file script. One of the things
+you'll notice is, despite the fact that I'm
+opening it here with read, write, and execute
+permissions for others. If you look at the
+empty file permissions for the file that gets
+created in Open Stack, on your virtual-box VM, or on your Linux machine, what you'll notice is that the write permission is actually missing for
+the others group, even though we've specified it here in the open permissions. What happened to that,
+right permission? It was actually
+cleared by the umask. That begs the question,
+what is umask? Umask is really just
+a per-process way that you can restrict the
+permission set on files. If you can basically
+make it so that even if an application is trying to open a file with some
+set of permissions, as a system administrator, restrict the level of permissions that a
+person could give by default from that process on
+any files that were created. There are reasons why
+you might not want a default application to be creating files that
+anyone could write. By having the default
+umask set to 0002, what this essentially does
+is a bitwise invert or a bitwise mask off of the bit two which of course would
+be the write permission. This is a way that you
+can set four processes. Don't give new file
+creation permission for right by default
+using umask 2, and that happens to be
+the default for Ubuntu, that's why we're seeing
+this particular behavior. What would happen if I
+change my umask to three? Then instead of just
+masking off the right bit, I'm also going to
+mask off execute bit. If you can use the umask command to do
+this, and when you do, you'll see that creating that empty file results in
+neither the right nor the execute bit set clear or neither right nor
+execute bit itself. One other thing I wanted to introduce here now
+that we're talking about little more about the interaction between
+kernel space and userspace. I want to introduce
+the tool Strace, and this is a really useful tool that we'll be using throughout
+the semester because it helps us see exactly
+what's happening between user space
+and kernel space. It's like a protocol
+analyzer for the system call traces that are happening from userspace, showing exactly what's getting called and what's getting
+returned from the kernel. If you run the Strace with the read-file execution
+application that I mentioned earlier and the
+parameter empty file, you can see that the open
+command, so open app, in this case, the
+actual system call for open is occurring and
+it's returning three. Three is going to be our file descriptor and then you can see the call that's going to check
+that the file for content, there's a read on that same three file
+descriptor that we opened here in
+the previous step, and you can see that it's
+returning zero bytes. One thing to know
+about this is this did not require any source
+code for read file. This could work on
+anyone, any application, including just a binary that you got from a closed source
+application for instance. Again, it's a really useful tool that we'll use throughout
+the semester and it can help illustrate how the interaction is working between user
+and kernel space. In addition to file data, we can also use the
+open command with. With fifos or pipes, and fifos and pipes have additional option of 0_NONBLOCK, which can be used to open
+in non-blocking mode. When you use in
+non-blocking mode, rather than the default behavior for fifo or a pipe,
+which is the block, waiting for access or waiting
+for data from the pipe, you'll get a return of
+EAGAIN to mean that there's no data available which
+you can then pull from your application to wait
+for data available. There's an example of this, creating a pipe and using
+this with readfile. It's also attached
+to this slide deck. What you can see if
+you run this example, if you start one thread, you'll see that by
+default it's going to block waiting for access to the pipe that's created in the current
+directory called pipe. If you open another
+terminal window and you just echo anything, write anything into that pipe, you'll get the response and the application will come back with the byte that
+was written into the pipe. That's the default
+behavior that you get without specifying
+0_NONBLOCK. But if you specify 0_NONBLOCK, what you'll see when
+you run this example is that instead of
+blocking and waiting for this command to be executed
+from the terminal, you'll get a EAGAIN
+returned back from read, indicating that there's no
+data available to read, and you can just call read
+as many times as you want. We've talked about
+reading files and some of the modes related
+to read access. You can of course
+also write a file. This again is going to
+look really similar to what you do with f
+write where you're going to specify the
+file descriptor and then give it a buffer and
+the size of bytes to write, and it's going to return the
+number of bytes written. One thing to know, and I've mentioned before that
+there are options for synchronized operation on
+the mode option for open. So synchronized IO becomes important when we talk
+about write behavior. By default, if you write to a file and that file is ultimately
+located on disk, one thing that might
+be a little confusing is that when you complete the write command and let's say the write command
+completes successfully, that does not actually mean that the bits were
+manipulated on disk. What that just means is
+that you've written it into a buffer somewhere in the kernel and it's intended to be destined for
+the disk ultimate. Why would we do it this way? Why wouldn't you wait until the write returns
+with success and actually is written
+completely out to the disk in order to know
+that that was successful? Well, the main reason for that is because disks are slow. Relative your program seek times on a spinning hard
+drive, for instance, are in probably tens to
+hundreds of milliseconds, which is an eternity
+when you're talking about code running on
+a gigahertz processor. That's really the main reason
+that by default you won't have writes waiting for
+data to be written to disk. But we can control this
+when we're opening based on how we flag for
+synchronized IO. If we don't use synchronized IO, which again is the default, when would it be a problem
+that we hadn't actually flushed all the file
+contents of disc? This would be a problem
+on unclean shut down because we might have
+an application that thinks that it wrote successfully
+some output to a file, maybe updated some
+other thread or some other application
+or wrote something out to the Internet that said, some action was performed
+on its local file system. But then let's say
+we lose power, and we lost power
+before the kernel had a chance to write
+the content and it's buffers out to disk. Well, in that case, there'll be a mismatch between whoever was notified about the state of the file on the
+local file system, and actual state that's going to be on the disk
+the next time you boot up. How can we manage this risk? We really have to
+know about it as application programmers
+and we have to know that we need to do a synchronization on specific
+steps where it's important. There's different ways
+to do synchronization. There's fsync,
+there's fdatasync, and there's also 0_SYNC, which is the option
+that you could pass into the open command. There's also an
+option where you can configure disk write caching to set the rules
+about when a write from disk is reported
+as successful relative to when it was actually physically written
+to the medium disk. The Linux system programming
+Chapter 2 also talks about the sync command
+as one way to do this. But it mentions that you
+typically don't want to use this for
+performance reasons. The reason is where fsync and fdatasync are going to
+work on a file descriptor, sync is just going
+to work globally and tell the OS to
+synchronize everything. What that means is that
+any application that's writing to a file descriptor
+that is not synchronized, it's going to try to synchronize
+all those files at once. You can imagine
+that that would be a pretty heavy
+performance penalty.

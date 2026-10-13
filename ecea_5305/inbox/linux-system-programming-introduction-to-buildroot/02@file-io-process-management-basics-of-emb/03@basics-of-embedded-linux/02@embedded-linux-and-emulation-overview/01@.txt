@@ -1,0 +1,96 @@
+In this video, we're
+going to talk more specifically about
+embedded Linux and also about emulating embedded Linux
+platforms with QEMU. Learning objectives,
+we want to understand the different elements
+of embedded Linux. Talk a little bit more about Linux hardware support and
+what it means for embedded, and introduce QEMU for emulation
+of embedded platforms. The elements of embedded Linux, the first one is the toolchain, that's the compiler linker all the different
+tools that we've talked about already in previous
+weeks and for instance, the cross-compiler
+that we set up in week 2 in assignment 2. This is everything that
+you need to create code for your specific device. There's the bootloader that's
+going to be initializing the board and loading the
+initial Linux kernel. Then there's a kernel that
+is going to be managing system resources and all the
+interface with hardware. Finally, there's the
+root filesystem, which is where all of the userspace content's
+going to exist. Libraries, the programs, everything that runs after the kernel completes
+initialization, it's going to live in
+the root filesystem. Linux, in terms of
+hardware support, it supports 30 plus
+architectures today. All the architectures today
+are at least 32 bits, most of them include a
+Memory Management Unit, MMU. There is an exception in MicroClinux where you
+can run without an MMU, but it's pretty common to have MMU and any hardware
+that would run Linux today and that hardware continues to get cheaper and
+cheaper as time goes on, so it's easier to support
+Linux requirements. It does require a large
+amount of RAM than maybe what you've worked on with really
+simple microcontroller. So 16 megabytes is a pretty
+good minimum for RAM, it might be possible to
+use the less than that, but this is a typical value. It also is going to
+require some type of non-volatile storage and
+at least eight megabytes is probably a good suggestion. Again, you could get less
+than that if you tried, but that's probably around a lower bar that you
+want to look for. Unfortunately, both of
+those are pretty easy to meet these days too, hardware is getting
+powerful enough that those are not really high
+bars to clear anymore. If we want to talk about using something that
+emulate hardware that can have some benefits because, for instance, we can
+start developing before hardware is
+even available. We can also do things like test or run on systems that aren't
+really hardware devices, so this could make
+our lives easier in terms of validating
+the software that we write and decoupling some of the software rewrite from hardware limitations
+and requirements. A tool that we're going to use in this class for
+emulation is called QEMU. QEMU emulates a specific
+product architecture, and it can even emulate
+a specific board that uses that architecture. For instance, qemu-system-arm simulates ARM
+architecture devices, which is what we're going
+to focus on in this class, and is also a
+common architecture for some of the lower-cost
+Linux platforms. Here's an example of
+how you would start an ARM QEMU system
+using qemu-system-arm. We'll go through each one of these arguments in later slides. QEMU system or QEMU in general uses command-line
+arguments for most of the, that's pretty much the
+way that you invoke it. Sometimes this can get
+a little intimidating, but if you go
+through and piece by piece and look through
+the documentation, it's pretty easy to figure
+out what it's doing. If we look at the -m 256, we're saying we're emulating a board that has 256
+megabytes of RAM on it. Then if we use -M versatilepb, what this means is
+that we're emulating a specific development board
+forearm called versatilepb. The reason we are
+using this is just because it aligns with the mastering embedded
+Linux programming concept that we're using for
+assignment number 3. The next couple of arguments
+are related to how we load the kernel and how we tell
+QEMU to load the kernel. If you remember we mentioned before that there's typically a bootloader as one of the components of your
+embedded system toolchain, what QEMU allows us to do is essentially bypass
+the bootloader. Rather than having to go through a bootloader to
+bring up the system, with QEMU, we can just tell it, "Start with this kernel image." That's what we're doing
+here with this command. We're saying this zImage
+will be the image that we built from source
+of our kernel image, so we're telling QEMU to
+boot with that image. Then this -append line is
+what we're going to pass into the kernel once
+it's loaded into memory to tell the
+kernel how to start. This is telling where the
+console is going to be, where the user is
+going to interact, where the login prompt
+going to be shown. This init is telling what application to run
+as an initialization. In this case, bin/sh is just
+going to give us a login through a shell
+script login tunnel that we can use to
+enter shell commands. Then dtb is describing how the kernel is
+connected to hardware, and in this case,
+it's virtual hardware because we're emulating it. We'll get into more
+information about this, what's called the device tree. We'll get into more information about that especially later in the semester when we start
+dealing with real hardware. Then finally, the
+last parameter here is telling QEMU where the root file system
+is coming from. With the -initrd option, we're going to use
+a root filesystem in what's called a ramdisk. In other words,
+we're going to take content that's
+wrapped up in what's called a cpio file and
+we're going to extract that into RAM and we're going to use that as a root filesystem.

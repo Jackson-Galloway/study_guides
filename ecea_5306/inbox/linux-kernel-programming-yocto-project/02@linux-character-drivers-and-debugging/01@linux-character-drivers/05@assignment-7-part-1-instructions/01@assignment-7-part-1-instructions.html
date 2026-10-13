@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 7 Part 1 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h1>Advanced Embedded Linux Development</h1><h2>Assignment 7 Part 1: Circular Buffer Implementation</h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h1>Repository Setup:</h1><p></p><img alt="Screenshot 2021-09-28 173150.png" src="Screenshot%202021-09-28%20173150.png"/><p></p><h1>Implementation:</h1><ol type="1"><li><p>Modify your assignment 3 repository to start the unit testable implementation portion of  Assignment 8, by implementing a circular buffer in the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment7/aesd-char-driver/aesd-circular-buffer.c"><u>aesd-char-driver/aesd-circular-buffer.c</u></a> file.</p></li></ol><p>        a. git fetch assignments-base</p><p>                i. This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in assignment 2.  If you started from a new repo you’ll need to re-run the git remote-add step before attempting to fetch.</p><p>        b. git merge assignments-base/assignment7</p><p>        c. git submodule update --init --recursive</p><p>        d. Implement the circular buffer in aesd-circular-buffer.c as discussed in the module video content, and based on comments in each function stub.</p><p>        e. Test with the ./full-test.sh unit test script.</p><p>        f. Push all changes to the master branch of your assignment 3 repository</p><p>2. Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a> (external link; opens in a new tab)</p><p>
+</p><h2>Validation:</h2><ol type="1"><li><p>Your assignment 3 repository master branch should contain a working circular buffer implementation which passes unit tests.</p></li></ol>
+  </div>
+</body>
+</html>

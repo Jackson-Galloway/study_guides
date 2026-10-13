@@ -1,0 +1,821 @@
+1
+00:00:00,000 --> 00:00:01,890
+In this video,
+we're going to talk
+
+2
+00:00:01,890 --> 00:00:03,945
+about building the Linux kernel.
+
+3
+00:00:03,945 --> 00:00:06,480
+We'll do an introduction
+to KConfig,
+
+4
+00:00:06,480 --> 00:00:08,790
+talk about kernel
+defconfigs and go through
+
+5
+00:00:08,790 --> 00:00:10,050
+the steps that we take to build
+
+6
+00:00:10,050 --> 00:00:12,070
+the Linux kernel from source.
+
+7
+00:00:12,070 --> 00:00:14,850
+We'll use a QEMU example kernel
+
+8
+00:00:14,850 --> 00:00:16,320
+build that will be part of
+
+9
+00:00:16,320 --> 00:00:18,970
+what you use for
+assignment number 3.
+
+10
+00:00:19,760 --> 00:00:23,045
+First we talk about
+the KConfig format.
+
+11
+00:00:23,045 --> 00:00:26,810
+This is a popular format
+used for Linux development,
+
+12
+00:00:26,810 --> 00:00:28,370
+especially with the
+kernel, but also
+
+13
+00:00:28,370 --> 00:00:30,245
+with utilities like BusyBox.
+
+14
+00:00:30,245 --> 00:00:34,540
+This is a text format that
+controls kernel configuration.
+
+15
+00:00:34,540 --> 00:00:36,900
+Here's an example of
+what it looks like.
+
+16
+00:00:36,900 --> 00:00:38,295
+Pretty easy to read.
+
+17
+00:00:38,295 --> 00:00:42,395
+There's a item describing a
+menu item and then a config
+
+18
+00:00:42,395 --> 00:00:47,220
+label that describes a
+specific configuration.
+
+19
+00:00:47,220 --> 00:00:48,920
+Like in this case, it's talking
+
+20
+00:00:48,920 --> 00:00:52,050
+about device memory
+virtual support.
+
+21
+00:00:52,250 --> 00:00:56,600
+The type here defined is
+Boolean, the default value,
+
+22
+00:00:56,600 --> 00:00:59,840
+and some help that can
+be used by a program to
+
+23
+00:00:59,840 --> 00:01:05,100
+show what this value does
+when it's turned on or off.
+
+24
+00:01:05,780 --> 00:01:08,450
+The graphical tool that
+
+25
+00:01:08,450 --> 00:01:10,520
+usually parses these
+KConfig files,
+
+26
+00:01:10,520 --> 00:01:11,720
+there are a few
+different options,
+
+27
+00:01:11,720 --> 00:01:14,195
+but one of them is
+called menuconfig.
+
+28
+00:01:14,195 --> 00:01:17,760
+That's a terminal based
+utility that you could
+
+29
+00:01:17,760 --> 00:01:21,230
+use if you just type make
+menuconfig in the kernel tree,
+
+30
+00:01:21,230 --> 00:01:23,630
+you'll see a utility
+like this that lets you
+
+31
+00:01:23,630 --> 00:01:26,510
+use the space bar
+to go select one
+
+32
+00:01:26,510 --> 00:01:29,030
+or more of the configurations
+
+33
+00:01:29,030 --> 00:01:31,550
+for the kernel and you
+can see a map here
+
+34
+00:01:31,550 --> 00:01:34,280
+between the KConfig text file
+
+35
+00:01:34,280 --> 00:01:37,945
+and what shows up here
+in the menuconfig tool.
+
+36
+00:01:37,945 --> 00:01:39,960
+This text file
+essentially just drives
+
+37
+00:01:39,960 --> 00:01:43,300
+the content of the
+menuconfig tool.
+
+38
+00:01:43,310 --> 00:01:46,265
+Once we make changes
+with menuconfig,
+
+39
+00:01:46,265 --> 00:01:48,100
+our changes are going
+to be stored in
+
+40
+00:01:48,100 --> 00:01:50,995
+a.config file at the kernel
+source root directory.
+
+41
+00:01:50,995 --> 00:01:54,610
+That.config file won't show
+
+42
+00:01:54,610 --> 00:01:57,345
+up with the ls because
+it's a hidden file,
+
+43
+00:01:57,345 --> 00:02:00,160
+but you'll see it if you
+search for it specifically,
+
+44
+00:02:00,160 --> 00:02:03,760
+or if you use the
+dash a option for ls.
+
+45
+00:02:03,760 --> 00:02:06,400
+Using the example that
+we showed before of
+
+46
+00:02:06,400 --> 00:02:08,525
+that DEVMEM character device,
+
+47
+00:02:08,525 --> 00:02:11,635
+if we turn that on inside
+the kernel config,
+
+48
+00:02:11,635 --> 00:02:13,300
+we'll see an entry in our.config
+
+49
+00:02:13,300 --> 00:02:15,860
+file that says CONFIG_DEVMEM=y.
+
+50
+00:02:16,320 --> 00:02:19,930
+This is setting the Boolean
+true to say we want to
+
+51
+00:02:19,930 --> 00:02:23,830
+turn on character device
+support in our kernel build.
+
+52
+00:02:25,250 --> 00:02:29,600
+For most of the kernel drivers,
+
+53
+00:02:29,600 --> 00:02:31,190
+there are a few
+different options you
+
+54
+00:02:31,190 --> 00:02:33,270
+can select at KConfig.
+
+55
+00:02:33,270 --> 00:02:34,850
+The first is off
+
+56
+00:02:34,850 --> 00:02:37,100
+saying that you're not
+going to build and it's not
+
+57
+00:02:37,100 --> 00:02:38,480
+going to be included in
+your kernel and you can
+
+58
+00:02:38,480 --> 00:02:40,010
+see this in menuconfig with this
+
+59
+00:02:40,010 --> 00:02:43,715
+empty not selected for you.
+
+60
+00:02:43,715 --> 00:02:45,365
+The second is on.
+
+61
+00:02:45,365 --> 00:02:47,900
+When it's on, it's going to
+be built into the kernel
+
+62
+00:02:47,900 --> 00:02:51,470
+and no need to load
+it at runtime,
+
+63
+00:02:51,470 --> 00:02:52,970
+it'll just be directly built in,
+
+64
+00:02:52,970 --> 00:02:55,900
+and you can notice that
+with the asterisk here.
+
+65
+00:02:55,900 --> 00:02:58,425
+Then the final is the module.
+
+66
+00:02:58,425 --> 00:03:01,485
+In this case, it's going
+to be loadable at runtime.
+
+67
+00:03:01,485 --> 00:03:03,869
+You'll be able to use
+
+68
+00:03:03,869 --> 00:03:06,980
+modprobe or other
+commands to load it
+
+69
+00:03:06,980 --> 00:03:09,710
+dynamically into the
+kernel and that's shown
+
+70
+00:03:09,710 --> 00:03:13,620
+by this m here in
+the menuconfig view.
+
+71
+00:03:13,870 --> 00:03:19,310
+Second thing to know about
+kernel configs is that
+
+72
+00:03:19,310 --> 00:03:21,140
+you want to start based on
+
+73
+00:03:21,140 --> 00:03:22,580
+whatever machine you're using
+
+74
+00:03:22,580 --> 00:03:24,080
+or whatever architecture
+you're using,
+
+75
+00:03:24,080 --> 00:03:25,430
+you typically want to start with
+
+76
+00:03:25,430 --> 00:03:27,755
+a default configuration
+for your kernel.
+
+77
+00:03:27,755 --> 00:03:30,570
+That's often referred to
+as a kernel defconfig.
+
+78
+00:03:30,570 --> 00:03:32,360
+This is really just a
+file that sets up your
+
+79
+00:03:32,360 --> 00:03:34,460
+initial.config to have a set
+
+80
+00:03:34,460 --> 00:03:36,020
+of known defaults that work with
+
+81
+00:03:36,020 --> 00:03:38,480
+a specific hardware
+platform and typically,
+
+82
+00:03:38,480 --> 00:03:39,920
+this is something that you get
+
+83
+00:03:39,920 --> 00:03:41,690
+like four-year
+development board,
+
+84
+00:03:41,690 --> 00:03:45,020
+a base configuration setup
+for you and you'd use
+
+85
+00:03:45,020 --> 00:03:49,630
+this as the basis for your
+own custom kernel.config.
+
+86
+00:03:49,630 --> 00:03:53,720
+In our case, we're going to
+do something a little bit
+
+87
+00:03:53,720 --> 00:03:55,400
+different than what's
+discussed in Mastering
+
+88
+00:03:55,400 --> 00:03:57,455
+Embedded Linux
+Programming Chapter 4,
+
+89
+00:03:57,455 --> 00:03:59,855
+and the reason is we're
+going to take advantage of
+
+90
+00:03:59,855 --> 00:04:02,540
+the arm cross-compiler
+tools that
+
+91
+00:04:02,540 --> 00:04:05,135
+we used with
+Assignment 2, and so,
+
+92
+00:04:05,135 --> 00:04:08,580
+instead of using
+the instructions
+
+93
+00:04:08,580 --> 00:04:11,505
+in Mastering Embedded Linux
+Programming Chapter 4,
+
+94
+00:04:11,505 --> 00:04:14,610
+we're going to use
+the QEMU virt target.
+
+95
+00:04:14,610 --> 00:04:17,580
+That, you can specify it with
+
+96
+00:04:17,580 --> 00:04:20,910
+the virt machine
+target defconfig,
+
+97
+00:04:20,910 --> 00:04:23,120
+or you could just
+make defconfig with
+
+98
+00:04:23,120 --> 00:04:27,935
+no arguments to use this
+default QEMU virtual machine.
+
+99
+00:04:27,935 --> 00:04:30,425
+There are a bunch more
+options that you can use,
+
+100
+00:04:30,425 --> 00:04:32,030
+and you can find these here
+
+101
+00:04:32,030 --> 00:04:36,190
+in the Linux source
+directory under configs.
+
+102
+00:04:36,980 --> 00:04:40,380
+We're going to compile with
+
+103
+00:04:40,380 --> 00:04:44,590
+Kbuild using the
+KConfig framework.
+
+104
+00:04:44,590 --> 00:04:46,640
+The examples that we showed
+
+105
+00:04:46,640 --> 00:04:48,640
+before about built-in or module,
+
+106
+00:04:48,640 --> 00:04:51,065
+you can see references here to
+
+107
+00:04:51,065 --> 00:04:54,245
+the object files that are
+included with your driver,
+
+108
+00:04:54,245 --> 00:04:55,640
+and whether they're
+going to be built into
+
+109
+00:04:55,640 --> 00:04:57,420
+the kernel with this -y,
+
+110
+00:04:57,420 --> 00:04:59,735
+or if they're going
+to be selectable,
+
+111
+00:04:59,735 --> 00:05:01,490
+either built into the kernel,
+
+112
+00:05:01,490 --> 00:05:04,325
+not built into the kernel
+or included as module.
+
+113
+00:05:04,325 --> 00:05:08,360
+Looking back at what we
+did with the.config file,
+
+114
+00:05:08,360 --> 00:05:10,190
+that reference there to
+
+115
+00:05:10,190 --> 00:05:12,470
+the config value is
+
+116
+00:05:12,470 --> 00:05:14,725
+going to just be
+filled into the obj-,
+
+117
+00:05:14,725 --> 00:05:17,480
+and it's going to
+essentially build a list of
+
+118
+00:05:17,480 --> 00:05:18,860
+objects that we're going to
+
+119
+00:05:18,860 --> 00:05:21,645
+compile as a part of
+our kernel build.
+
+120
+00:05:21,645 --> 00:05:23,580
+You can see here if I don't have
+
+121
+00:05:23,580 --> 00:05:27,215
+CONFIG_TTY_PRINTK defined as Y,
+
+122
+00:05:27,215 --> 00:05:29,765
+it's not going to end
+up in the obj-y list,
+
+123
+00:05:29,765 --> 00:05:33,390
+and we're not going to
+compile TTY_PRINTK.C.
+
+124
+00:05:33,550 --> 00:05:36,485
+The other thing you
+can see here is that
+
+125
+00:05:36,485 --> 00:05:39,545
+the mem and random.o
+
+126
+00:05:39,545 --> 00:05:45,365
+are requirements for the
+kernel build of TTY_PRINTK,
+
+127
+00:05:45,365 --> 00:05:48,670
+and so those are just going
+to be set by default.
+
+128
+00:05:48,670 --> 00:05:52,100
+But the TTY_PRINTK itself
+will be turned on or
+
+129
+00:05:52,100 --> 00:05:55,770
+off based on that configuration
+in the.config file.
+
+130
+00:05:56,320 --> 00:05:58,340
+Another thing to talk about are
+
+131
+00:05:58,340 --> 00:06:01,165
+the build artifacts or
+the output of the build.
+
+132
+00:06:01,165 --> 00:06:04,205
+In our case, we're going to
+be using the VM Linux file,
+
+133
+00:06:04,205 --> 00:06:05,690
+which is an ELF binar.
+
+134
+00:06:05,690 --> 00:06:08,645
+It's a executable linker format,
+
+135
+00:06:08,645 --> 00:06:12,560
+a binary file and depending
+on how you build the kernel,
+
+136
+00:06:12,560 --> 00:06:15,750
+this may also include
+debugging symbols.
+
+137
+00:06:16,280 --> 00:06:20,070
+Another set of build artifacts,
+
+138
+00:06:20,070 --> 00:06:23,344
+underneath the architecture
+boot directory,
+
+139
+00:06:23,344 --> 00:06:25,595
+there'll be some
+bootloader files used
+
+140
+00:06:25,595 --> 00:06:28,520
+if you're going to be
+working with hardware.
+
+141
+00:06:28,520 --> 00:06:30,410
+We'll get into these
+later when we get into
+
+142
+00:06:30,410 --> 00:06:33,020
+the final project
+portion of the course.
+
+143
+00:06:33,020 --> 00:06:36,890
+For this assignment, we won't
+need to get into these,
+
+144
+00:06:36,890 --> 00:06:40,850
+but there's binary version of
+VM Linux in the image file,
+
+145
+00:06:40,850 --> 00:06:43,430
+there's a compressed image
+and a compressed image that
+
+146
+00:06:43,430 --> 00:06:46,655
+specifically meant for use
+with U-Boot bootloaders.
+
+147
+00:06:46,655 --> 00:06:48,800
+For our Assignment
+3 build steps,
+
+148
+00:06:48,800 --> 00:06:51,150
+we could start out
+with a clean command.
+
+149
+00:06:51,150 --> 00:06:53,870
+The example would look
+like something like this,
+
+150
+00:06:53,870 --> 00:06:56,780
+where we say make
+ARCH equals arm64 and
+
+151
+00:06:56,780 --> 00:06:58,280
+cross-compile we'd use that same
+
+152
+00:06:58,280 --> 00:07:01,115
+cross-compile for prefix that
+we used for Assignment 2,
+
+153
+00:07:01,115 --> 00:07:03,035
+and then specify the mrproper.
+
+154
+00:07:03,035 --> 00:07:05,465
+That's going to deep clean
+the kernel build tree,
+
+155
+00:07:05,465 --> 00:07:08,765
+removing.config file and
+any existing configuration.
+
+156
+00:07:08,765 --> 00:07:10,490
+Next step, we'll
+do the defconfig
+
+157
+00:07:10,490 --> 00:07:12,730
+build and set up
+our default config.
+
+158
+00:07:12,730 --> 00:07:15,060
+This is the same
+make ARCH equals
+
+159
+00:07:15,060 --> 00:07:18,315
+arm64 cross-compile string
+that we use previously,
+
+160
+00:07:18,315 --> 00:07:20,745
+and then we'll use
+the target defconfig.
+
+161
+00:07:20,745 --> 00:07:22,460
+This is going to configure for
+
+162
+00:07:22,460 --> 00:07:25,130
+our "virt" arm device
+
+163
+00:07:25,130 --> 00:07:27,870
+that we're going to
+simulate in QEMU.
+
+164
+00:07:27,950 --> 00:07:30,965
+Then we're going to build
+our VM Linux target.
+
+165
+00:07:30,965 --> 00:07:35,600
+If we say make our ARCH equals
+arm64 CROSS_COMPILE all.
+
+166
+00:07:35,600 --> 00:07:40,145
+The j4 will just allow running
+multiple compiles at once,
+
+167
+00:07:40,145 --> 00:07:43,820
+which could speed up things
+if you have multiple CPUs on
+
+168
+00:07:43,820 --> 00:07:46,250
+your system and this
+is going to build
+
+169
+00:07:46,250 --> 00:07:50,310
+our kernel image that we
+use for booting QEMU.
+
+170
+00:07:51,140 --> 00:07:54,770
+Finally, we can build
+the modules and
+
+171
+00:07:54,770 --> 00:07:58,760
+devicetree file
+using the same make
+
+172
+00:07:58,760 --> 00:08:00,890
+commands or the
+same make arguments
+
+173
+00:08:00,890 --> 00:08:02,660
+we used before and using
+
+174
+00:08:02,660 --> 00:08:04,640
+the targetmodules to
+build modules and
+
+175
+00:08:04,640 --> 00:08:07,890
+building dtbs to
+build the devicetree.

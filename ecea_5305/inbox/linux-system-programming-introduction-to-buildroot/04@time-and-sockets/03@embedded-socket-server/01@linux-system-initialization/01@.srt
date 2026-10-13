@@ -1,0 +1,396 @@
+1
+00:00:00,040 --> 00:00:03,980
+In this video, we're going to talk
+about Linux system initialization.
+
+2
+00:00:03,980 --> 00:00:08,135
+So starting up the system and
+getting our initial daemos and
+
+3
+00:00:08,135 --> 00:00:10,230
+tasks started on the system.
+
+4
+00:00:10,230 --> 00:00:12,773
+So we're going to talk about
+Linux initialization and
+
+5
+00:00:12,773 --> 00:00:14,120
+startup manager options.
+
+6
+00:00:14,120 --> 00:00:16,346
+It's the basics of writing
+Linux in its scripts,
+
+7
+00:00:16,346 --> 00:00:18,157
+which will also use in assignment five.
+
+8
+00:00:18,157 --> 00:00:23,542
+So, there are a few different
+mechanisms for initialization,
+
+9
+00:00:23,542 --> 00:00:28,341
+Busybox is going to be the default for
+buildroot projects.
+
+10
+00:00:28,341 --> 00:00:31,490
+So that's the one that we're
+going to use for assignment five.
+
+11
+00:00:31,490 --> 00:00:38,730
+There's also system five, it's a system
+V where V is a Roman numeral for five.
+
+12
+00:00:38,730 --> 00:00:42,960
+System 5 in it, which is the default for
+Yocto projects and
+
+13
+00:00:42,960 --> 00:00:46,520
+systemd is more sophisticated
+startup manager.
+
+14
+00:00:46,520 --> 00:00:49,524
+That we're not going to really
+cover in this course, but
+
+15
+00:00:49,524 --> 00:00:51,960
+I just wanted to let you
+know that it exists.
+
+16
+00:00:51,960 --> 00:00:57,176
+And of these three different options,
+system five and busy box are both very
+
+17
+00:00:57,176 --> 00:01:02,440
+similar, and systemd is kind of
+a completely different in its system.
+
+18
+00:01:02,440 --> 00:01:06,142
+So for system 5 Init,
+this was a 1980s era Unix system,
+
+19
+00:01:06,142 --> 00:01:09,350
+it introduced and
+included a concept of run levels.
+
+20
+00:01:09,350 --> 00:01:14,322
+And there were different run levels
+happened based on whether you were in
+
+21
+00:01:14,322 --> 00:01:18,580
+single multi user mode,
+whether you had graphical support.
+
+22
+00:01:18,580 --> 00:01:21,036
+And then there was
+a concept of startup and
+
+23
+00:01:21,036 --> 00:01:25,970
+shutdown tasks that would happen when the
+system was starting up or shutting down.
+
+24
+00:01:25,970 --> 00:01:30,362
+So, in both system 5 and
+Busybox cases, the startup and
+
+25
+00:01:30,362 --> 00:01:36,325
+shutdown initialization related
+functions are driven with shell scripts.
+
+26
+00:01:36,325 --> 00:01:39,298
+And in the Busybox case specifically,
+
+27
+00:01:39,298 --> 00:01:44,440
+this happens through a script
+that's located at etc Init.d rcS.
+
+28
+00:01:44,440 --> 00:01:49,395
+So this is going to be invoked on startup
+and it's going to have really simple logic
+
+29
+00:01:49,395 --> 00:01:54,371
+that looks in the etc Init.d directory and
+looks for files that start with S.
+
+30
+00:01:54,371 --> 00:01:58,495
+And whatever those files are, it's
+going to try to run them as a script and
+
+31
+00:01:58,495 --> 00:02:03,130
+it's going to run them in the order that
+specified based on the number after the S.
+
+32
+00:02:03,130 --> 00:02:08,062
+So this really simple logic is
+just going to first find all
+
+33
+00:02:08,062 --> 00:02:10,836
+the different shell scripts and
+
+34
+00:02:10,836 --> 00:02:16,397
+then it's going to execute here
+the shell script that have found.
+
+35
+00:02:17,517 --> 00:02:24,816
+So similar on shutdown,
+the kill script is going to stop so,
+
+36
+00:02:31,580 --> 00:02:33,411
+So in either the system 5 or
+Busybox cases,
+
+37
+00:02:33,411 --> 00:02:35,794
+the initialization is going to
+be driven by shell scripts.
+
+38
+00:02:35,794 --> 00:02:37,132
+In a Busybox case,
+
+39
+00:02:37,132 --> 00:02:42,170
+etc Init.d rcS is going to be a really
+simple script that looks like this.
+
+40
+00:02:42,170 --> 00:02:45,830
+That's going to look for
+any scripts that start with an S and
+
+41
+00:02:45,830 --> 00:02:49,940
+list them based on the number
+that's lifted after the S.
+
+42
+00:02:49,940 --> 00:02:51,360
+And based on the order,
+
+43
+00:02:51,360 --> 00:02:55,489
+is going to just call each script
+with a start argument as shown here.
+
+44
+00:02:58,640 --> 00:03:03,958
+Similarly, on shutdown Busybox is
+going to invoke etc Init.d rcK and
+
+45
+00:03:03,958 --> 00:03:05,960
+that's just going to list.
+
+46
+00:03:05,960 --> 00:03:11,200
+Look through each of the etc Init.d start
+scripts again, it's going to list them
+
+47
+00:03:11,200 --> 00:03:15,982
+in order and in this case it's going to
+use the reverse order with Ls dash r.
+
+48
+00:03:15,982 --> 00:03:18,626
+So in the opposite order
+that they started,
+
+49
+00:03:18,626 --> 00:03:21,922
+it's just going to call
+the script with a stop argument.
+
+50
+00:03:24,740 --> 00:03:31,442
+So if your script that you place etc
+Init.d just needs to start with an S.
+
+51
+00:03:31,442 --> 00:03:35,653
+And a specific number giving the sequence
+that you wanted to start up relative
+
+52
+00:03:35,653 --> 00:03:38,330
+to the other scripts that
+are in that directory.
+
+53
+00:03:38,330 --> 00:03:40,838
+The script needs to support the start and
+
+54
+00:03:40,838 --> 00:03:45,730
+stop parameters to work with the rc
+scripts that I just mentioned previously.
+
+55
+00:03:45,730 --> 00:03:49,285
+And the usual way to implement this
+is to use it in a case statement,
+
+56
+00:03:49,285 --> 00:03:53,241
+there is a good example of this in
+mastering embedded links programming.
+
+57
+00:03:53,241 --> 00:03:57,668
+Where you take the parameter that was
+provided here as the first argument and
+
+58
+00:03:57,668 --> 00:04:00,240
+you look to see whether it was start or
+stop.
+
+59
+00:04:00,240 --> 00:04:03,846
+And then depending on which one it was,
+you call start,
+
+60
+00:04:03,846 --> 00:04:07,560
+stop daemon with either the dash S or
+the dash K argument.
+
+61
+00:04:07,560 --> 00:04:10,416
+And you specify here the example
+showing simple server,
+
+62
+00:04:10,416 --> 00:04:13,822
+this is where you specify what your
+application is going to be called.
+
+63
+00:04:13,822 --> 00:04:19,191
+And this is where you specify where it
+can be found in the root file system.
+
+64
+00:04:19,191 --> 00:04:23,230
+So all the Init scripts
+should you start stop daemon,
+
+65
+00:04:23,230 --> 00:04:26,115
+except these arguments Dash S dash K.
+
+66
+00:04:26,115 --> 00:04:31,640
+To set up whether you're starting or
+killing the daemon and
+
+67
+00:04:31,640 --> 00:04:36,400
+with the dash K argument
+it's going to send sig term.
+
+68
+00:04:36,400 --> 00:04:40,859
+So that was the signal that we mentioned
+earlier that will allow graceful
+
+69
+00:04:40,859 --> 00:04:42,560
+termination of a process.
+
+70
+00:04:42,560 --> 00:04:46,255
+So this gives your daemon a chance to
+do any kind of clean up it needs and
+
+71
+00:04:46,255 --> 00:04:47,550
+then gracefully exit.
+
+72
+00:04:47,550 --> 00:04:52,014
+And we've already talked in a week four
+about how you can write the daemon.
+
+73
+00:04:52,014 --> 00:04:57,050
+So you can use that to write
+your daemon that you'd reference
+
+74
+00:04:57,050 --> 00:05:01,601
+here in the dash S version of start,
+stopping daemon.
+
+75
+00:05:01,601 --> 00:05:05,177
+You probably also for test purposes,
+rather than needing to boot up the system,
+
+76
+00:05:05,177 --> 00:05:07,880
+you probably want to test starting and
+stopping your script.
+
+77
+00:05:07,880 --> 00:05:11,692
+So that's just as easy
+as doing etc Init.d and
+
+78
+00:05:11,692 --> 00:05:16,101
+then S whatever your daemon
+script is named in start.
+
+79
+00:05:16,101 --> 00:05:19,988
+Or etc Init.d S whatever your
+system daemon is called stop and
+
+80
+00:05:19,988 --> 00:05:24,111
+that will test that you're starting and
+stopping it correctly.
+
+81
+00:05:24,111 --> 00:05:27,143
+So you can use the PS command for instance
+to make sure that it's either running or
+
+82
+00:05:27,143 --> 00:05:28,668
+that it's been stopped successfully.

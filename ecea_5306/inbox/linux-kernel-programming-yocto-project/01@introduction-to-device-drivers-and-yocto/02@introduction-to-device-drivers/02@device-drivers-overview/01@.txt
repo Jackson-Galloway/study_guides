@@ -1,0 +1,150 @@
+This video will continue our
+discussion about device drivers and we'll do a general overview
+of device driver design. So we'll talk about common Linux device
+classes that device driver fits into. We'll talk about security concerns
+when you're writing a driver, and also about how kernel versioning and
+licensing works. So devices that you'd write drivers for
+belong to one of a set of classes. And then those classes can share
+common access code and methods. So that applications that use those
+particular classes can easily switch between different devices that
+provide that type of class access. So the three common types of
+classes are character device, character class, block class,
+and network class. So the character device class is the one
+that will focus on for our implementations for this class, it's one of
+the simpler types of device classes. In a character device class, everything's
+accessed as a stream of bytes. So it looks exactly like a file
+to the user space applications, you can open, close, read, and
+write like you could from a file. So some examples of this would be
+dev/console, which is the console that you'd interact with, that you'd
+see in your terminal for instance. Or dev/ttyS0 would be interaction with
+the serial port that would also be essentially just a stream of bytes
+sent out over the serial port. It may or may not be possible to seek or map memory like you can
+do with real files. So you might not be able to access
+them exactly like real files. But the basics of read and write is going to work very similar to
+what you would do with a normal file. Second class ii block device class. And this is really for
+disk devices that can host a file system. And rather than being on byte boundaries, the transfers that happen in
+the kernel are all on block boundaries. And usually those blocks are 512 bytes or
+larger. And you actually can,
+through the device drivers, still access at less than one block sizes
+and the kernel will split blocks for you. So the interaction from user space again
+looks very similar to a normal file. But when you're writing the device driver, you would need to be accessing
+the device in blocks. So a typical block device
+would be /dev/sdc something, for instance,
+this would be your scuzzy device and the a1 references a specific device and
+a specific partition. So sda1 is often your file system for
+your Linux system. The third class is
+network interface class. This maybe a hardware device or it could
+just be something like a loop back interface, a software network
+interface essentially. And the network interface class is
+slightly different because instead of byte or block streams,
+it's going to be working on packets. And, instead of accessing through
+/dev/ some name of a device, we'll just use a name
+like eth0 to access it. So why does it not have
+an entry in the file system? It's kind of breaking our rule about
+everything is a file in Linux. It turns out the use
+case with networks and the way packet IO works with
+verification and retransmissions. It doesn't really work, doesn't really map
+as well to the read and write paradigm. So for that reason network interfaces and network class kind of breaks that
+rule about everything is a file. So also included as a part of
+the kernel our kernel file systems. And those are going to sit
+on top of block devices, map those low level block
+on disc to directories or files that we interact with through
+user space in the file system. And the file system is independent
+of the transfer mechanism, it's just going to work on a block device, it doesn't care how those
+blocks are stored on disk. So SATA, USB or SD card,
+all that is abstracted away below in the block layer and the kernel
+file system is independent of that. The device and the device drivers
+going to actually perform the transfer to correspond to whatever hardware you're
+ultimately storing your file system on. So when we're talking about kernel code,
+it's important to talk about security. The kernel can be, because it's
+running at a higher privilege level, it's a critical point of exploit. If you mess up in your kernel code,
+you have the potential for essentially giving it hacker complete access,
+unrestricted access to the entire system. So it's important that only
+an authorized user can load modules. And then it's important that the driver
+author, as a device driver author, you take extra special care when you're
+writing your code to ensure that you're not going to introduce some
+security problem into the system. So usually the drivers don't
+encode security policy. In other words,
+they don't require authentication or some special permission to do some role. Usually the device endpoint is
+going to have specific read, write, execute permissions on it. And that's the way the security
+policy would be handled and set up by the system admin. There are some exceptions to this,
+the book talks about like for instance, interaction with interrupts or
+firmware update, something that could
+affect the entire system. There are ways that device driver can
+check to make sure that the user is the right user for instance. But that's typically not where that is
+enforced from device driver perspective. So several of the security best
+practices that you need to keep in mind when you're writing kernel drivers, you don't want to trust anything that
+user data sends without verifying it. So you especially want to watch out for
+cases where the user could be sending content that would write areas of memory
+that should not be allowed to write. So one way that can happen is
+with a buffer that's too long, that you copy based on a null terminator
+and you would implement a buffer overrun. You should also be cognizant of zeroing
+the memory that's obtained in the kernel before you pass it outside. When you just ask the kernel for a block
+of memory and you don't zero before that block might have been used by some other
+process to store something like a key. And if you just blindly return it to
+the user, their security exploits where unprivileged application can just
+keep asking for memory over and over again until it finally get
+something that looks like a key. And this could be a away that a hacker
+could get access into your system. So when we talk about buffer
+overruns what you really mean is a way that we can send executable
+code as a part of a user operation. And overwrite the content that would
+ultimately be used as a return address, 2.2 instead this user code
+that can be executed. So there's an example here in user
+space about how this can happen. So you can see in this dangerous function,
+the main function here takes an argument and just passes
+it into the dangerous function. And you can see the dangerous function
+here creates a array that's called too small and then just string
+copies in whatever was passed. So if you pass in a string to
+this function that's longer than 100 bytes you'll overwrite
+that too small variable. And based on the way that
+stack allocates that variable, you may overwrite the return address. So what a carefully crafted
+string in this case, could actually contain
+a chunk of malicious code and could overwrite the return address. Such that instead of returning from
+the dangerous function when what should have been the return addresses
+pulled off the stack, will instead pull off a return address
+that points us back inside the string. It has some type of often a NOP sled
+in other words, a series of no ops just to help make sure that you're going to
+be able to hit the malicious code. And a section of malicious code
+that's crafted to do something that it's not supposed to do. So this is just an example of what
+you need to be careful of and the reason you need to care about watching
+things like links of content that you get provided from the user
+before you use it in your driver. [MUSIC] So the book has a whole section on
+kernel versioning and where there wasn't even odd numbering scheme for
+the kernel that was used previously. And that is no longer in use and
+now uses a simpler major.minor number and it's not feature based anymore. All the releases that are done on
+the Linux kernel are based on time. And basically simpler scheme
+that's discussed in the kernel and if you look at this
+mailing list post here. Linus Torvalds said that the reason he
+did it was because he was running out of fingers and toes. So this is just a difference between
+what's written in the book and how Linux kernel versioning
+actually works today. We've also talked about licensing
+as it applies to Linux kernel. So the Linux kernel in general is
+licensed with new general public license, GPL version two. So that means that anyone can
+redistribute and you can sell and make money off a product that
+includes the Linux kernel. As long as the recipient of your
+product has access to the source and has the ability to
+exercise the same rights. So in other words,
+they're able to take the source code that you use to build your kernel and
+modify it and you make their own changes to it and
+build their own product based on it. So, any software products derived
+from a product covered by the GPL, if it's redistributed,
+must also be released under GPL. And this is what we talked about before
+with the copy left type of license where it's going to apply not
+only to you as you're developing. But it has implications on
+the additional code that you're adding also needs to be licensed
+in this particular way. So the book goes over the reason for
+this and the idea was to allow growth of knowledge. Basically enforce the requirement
+that this code is shared and that it would be essentially
+given back to the community. So that others can see the changes and that there would be some level
+of collaboration happening and growing this common code base, but
+also still allowing for commercial use. So, the book also talks about
+whether a kernel module can be shared only in binary form. And this is actually something that's
+been left deliberately ambiguous. But what the book also mentions
+is that there are a lot of ways that binary kernel
+modules can be broken. And kernel developers have
+no real motivation to try to keep binary drivers working correctly. And so you should kind of expect
+an uphill battle if you wanted to release the driver in binary form. And beyond that, you need to really
+understand the legal ramifications. And so the other suggestion is if you,
+for some reason, did want to release a kernel module in
+binary form, you should definitely seek legal advice to confirm that you can
+meet the obligations of the GPL.

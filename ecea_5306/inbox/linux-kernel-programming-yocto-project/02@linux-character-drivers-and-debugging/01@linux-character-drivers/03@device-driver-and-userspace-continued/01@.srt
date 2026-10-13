@@ -1,0 +1,636 @@
+1
+00:00:02,040 --> 00:00:07,038
+In this video will continue on the
+previous video topics discussing device
+
+2
+00:00:07,038 --> 00:00:10,370
+driver design and
+interaction with user space and
+
+3
+00:00:10,370 --> 00:00:15,940
+the more details into how the file
+ops table maps to device operations.
+
+4
+00:00:15,940 --> 00:00:19,696
+So in terms of summarizing the kernel
+module load process will go over what
+
+5
+00:00:19,696 --> 00:00:23,635
+we've already covered and then we'll
+talk more about memory allocation and
+
+6
+00:00:23,635 --> 00:00:26,561
+how that relates to read and
+write access to your driver.
+
+7
+00:00:28,140 --> 00:00:32,472
+So I put together this slide
+series to get more background
+
+8
+00:00:32,472 --> 00:00:37,708
+information about how you get from
+a C file containing your driver's
+
+9
+00:00:37,708 --> 00:00:42,674
+source code into a module that's
+loaded into the Linux Kernel and
+
+10
+00:00:42,674 --> 00:00:47,340
+one that you can interact with for
+file operations.
+
+11
+00:00:47,340 --> 00:00:49,890
+So this kind of just steps through
+the process interactively.
+
+12
+00:00:49,890 --> 00:00:57,760
+So your word to use, make to compile our
+my driver dot c file when we do that.
+
+13
+00:00:57,760 --> 00:01:01,690
+We'll have references in here to
+functions that we won't know where
+
+14
+00:01:01,690 --> 00:01:05,212
+they're going to be located
+ultimately in the kernel because
+
+15
+00:01:05,212 --> 00:01:09,740
+we've just created a dot ko file that
+isn't loaded into the kernel yet.
+
+16
+00:01:09,740 --> 00:01:13,240
+So things like register charred ev, which
+is this function here into the Lennox
+
+17
+00:01:13,240 --> 00:01:16,181
+colonel, we won't know yet
+what the address of that function is.
+
+18
+00:01:16,181 --> 00:01:19,715
+And so the linker is just going to
+essentially leave that open for for
+
+19
+00:01:19,715 --> 00:01:22,140
+it to be filled in during load time.
+
+20
+00:01:22,140 --> 00:01:26,165
+Same with the open function that we define
+in our driver that won't be available yet
+
+21
+00:01:26,165 --> 00:01:30,151
+because we won't know where our modules
+actually going to be loaded into memory.
+
+22
+00:01:31,240 --> 00:01:34,654
+So the next step at this point is to use
+into modern mod probe to actually load our
+
+23
+00:01:34,654 --> 00:01:36,240
+driver into the kernel.
+
+24
+00:01:36,240 --> 00:01:41,020
+Once that happens, we'll have we have an
+option first to specify driver prams if we
+
+25
+00:01:41,020 --> 00:01:45,460
+want to so we can communicate something
+into the driver that will be stored and
+
+26
+00:01:45,460 --> 00:01:47,061
+available as part of in it.
+
+27
+00:01:48,540 --> 00:01:53,268
+And what's this step happens the address
+of the register charred of is going to be
+
+28
+00:01:53,268 --> 00:01:56,848
+known so that's going to be filled
+in that will be filled in for
+
+29
+00:01:56,848 --> 00:01:58,295
+us by inspired mod pro.
+
+30
+00:01:58,295 --> 00:02:02,635
+And the my driver funk start open well
+now I know where that is located as
+
+31
+00:02:02,635 --> 00:02:06,534
+well because we'll know where our
+ko file is going to be located in
+
+32
+00:02:06,534 --> 00:02:09,639
+memory after the load is complete.
+
+33
+00:02:09,639 --> 00:02:13,451
+And so we'll have this address down here
+for open that we can actually access.
+
+34
+00:02:15,440 --> 00:02:19,517
+So inside our module entry function
+we'll call register charred
+
+35
+00:02:19,517 --> 00:02:22,035
+eV with the pointer to
+my driver F apps and
+
+36
+00:02:22,035 --> 00:02:26,051
+that's going to call this function
+inside the limits colonel.
+
+37
+00:02:27,640 --> 00:02:32,281
+So the register chart of functions going
+to allocate a new charter for us and
+
+38
+00:02:32,281 --> 00:02:36,996
+that's going to update the proxy fs
+devices virtual file in the project file
+
+39
+00:02:36,996 --> 00:02:39,521
+system to include this entry like this.
+
+40
+00:02:39,521 --> 00:02:44,163
+That's with our new major number and
+our driver name and
+
+41
+00:02:44,163 --> 00:02:46,739
+then we're going to register R.
+
+42
+00:02:46,739 --> 00:02:51,353
+F ops table with the charred eV and
+in that case that they will be essentially
+
+43
+00:02:51,353 --> 00:02:56,347
+a geological mapping here in the kernel
+between our major number for our driver.
+
+44
+00:02:56,347 --> 00:03:00,856
+And the driver F ops that correspond to
+this table that we have inside of our
+
+45
+00:03:00,856 --> 00:03:03,695
+driver here with
+the function pointer spilled
+
+46
+00:03:03,695 --> 00:03:07,351
+in appropriately based on
+the actual locations in memory.
+
+47
+00:03:09,440 --> 00:03:13,141
+So at this point we're ready to read
+with our module load script and
+
+48
+00:03:13,141 --> 00:03:15,201
+figure out what our major number is.
+
+49
+00:03:15,201 --> 00:03:17,276
+So we use that command
+on product devices and
+
+50
+00:03:17,276 --> 00:03:19,320
+we figure out what our major number is.
+
+51
+00:03:19,320 --> 00:03:24,258
+And then we use make node with to make a
+driver note called deV my driver as a char
+
+52
+00:03:24,258 --> 00:03:29,040
+device with that major number that
+we found in a minor number of zero.
+
+53
+00:03:29,040 --> 00:03:29,904
+So when we do that,
+
+54
+00:03:29,904 --> 00:03:33,160
+we'll have an entry In the file system
+that looks something like this.
+
+55
+00:03:33,160 --> 00:03:36,961
+A charge device major to 41
+minor zero at dev my driver.
+
+56
+00:03:38,240 --> 00:03:42,341
+So now from our user space application,
+if we call open on DEV my driver,
+
+57
+00:03:42,341 --> 00:03:46,645
+what this is what's going to happen
+here will access the right file System,
+
+58
+00:03:46,645 --> 00:03:50,771
+know that we created that to 40 one
+mapping is going to link us to this f.
+
+59
+00:03:50,771 --> 00:03:51,720
+ops table.
+
+60
+00:03:51,720 --> 00:03:55,750
+And the fact that we're calling open
+is going to link us to the open member
+
+61
+00:03:55,750 --> 00:03:56,291
+of the F.
+
+62
+00:03:56,291 --> 00:04:00,140
+Ops table and
+to our actual source code in our driver.
+
+63
+00:04:00,140 --> 00:04:05,133
+So this is how we get to kind of like the
+full cycle of starting with the C file,
+
+64
+00:04:05,133 --> 00:04:09,361
+getting it loaded into the kernel,
+getting it set up with the F.
+
+65
+00:04:09,361 --> 00:04:14,551
+Ops pointer and than being able to
+access it from a user space application.
+
+66
+00:04:16,740 --> 00:04:21,259
+So talking a little bit more about kernel
+memory allocation kmalloc is kind of
+
+67
+00:04:21,259 --> 00:04:23,623
+a fundamental way to allocate memory and
+
+68
+00:04:23,623 --> 00:04:26,920
+the Colonel similar to what
+you'd expect with malloc.
+
+69
+00:04:26,920 --> 00:04:29,240
+The you'll specify a size in bytes.
+
+70
+00:04:29,240 --> 00:04:33,740
+There's one additional parameter that you
+don't see with malloc which is flags,
+
+71
+00:04:33,740 --> 00:04:36,503
+which we'll discuss later
+in later lectures, but
+
+72
+00:04:36,503 --> 00:04:38,961
+for now you can just use GFP colonel for
+this.
+
+73
+00:04:40,240 --> 00:04:44,581
+And similar to malloc there's a K free
+that you need to make sure you call in
+
+74
+00:04:44,581 --> 00:04:45,930
+order to free memory.
+
+75
+00:04:45,930 --> 00:04:48,130
+So why wouldn't you just use Malik and
+free?
+
+76
+00:04:48,130 --> 00:04:52,156
+It's because these are the Lipsey
+functions and we don't have access to
+
+77
+00:04:52,156 --> 00:04:56,842
+the UFC in kernel space, as we mentioned
+before, we're going to completely separate
+
+78
+00:04:56,842 --> 00:05:00,538
+environment then from these are space and
+want to make sure that for
+
+79
+00:05:00,538 --> 00:05:03,980
+large buffers we want to
+definitely use dynamic allocation.
+
+80
+00:05:03,980 --> 00:05:06,580
+So this is another
+difference from user space,
+
+81
+00:05:06,580 --> 00:05:10,750
+it's a little bit easier to allocate
+kilobytes sized buffers on the stack.
+
+82
+00:05:10,750 --> 00:05:13,403
+We definitely don't want to do
+that in in kernel space for
+
+83
+00:05:13,403 --> 00:05:15,351
+reasons that we've already discussed.
+
+84
+00:05:17,240 --> 00:05:18,842
+So read and write,
+
+85
+00:05:18,842 --> 00:05:24,161
+handling the FFS function pointer
+table has entries for both.
+
+86
+00:05:24,161 --> 00:05:26,880
+Read and write and
+here's what the signatures look like.
+
+87
+00:05:26,880 --> 00:05:29,410
+So one of the things that's going
+to be passed in as the buff.
+
+88
+00:05:29,410 --> 00:05:32,690
+And you see the under
+under user prefects here.
+
+89
+00:05:32,690 --> 00:05:36,609
+So this is pointing to a user space
+pointer and the user space pointer
+
+90
+00:05:36,609 --> 00:05:41,147
+is something that is a pointer that you've
+set up in your user space program for
+
+91
+00:05:41,147 --> 00:05:41,870
+instance.
+
+92
+00:05:41,870 --> 00:05:45,550
+And it's important to note that it cannot
+be directly access by Colonel code.
+
+93
+00:05:45,550 --> 00:05:46,811
+So why would that be?
+
+94
+00:05:46,811 --> 00:05:49,740
+Why couldn't we directly
+access it from Colonel code?
+
+95
+00:05:49,740 --> 00:05:54,367
+It turns out in some architectures the
+pointer might not even be a reference to
+
+96
+00:05:54,367 --> 00:05:59,450
+valid memory, it might just be a reference
+to a way to access memory from the kernel.
+
+97
+00:05:59,450 --> 00:06:03,540
+So it might be like in a page of
+RAM that's not currently available.
+
+98
+00:06:03,540 --> 00:06:07,747
+And another reason why we want to have
+a separate access to this is because we
+
+99
+00:06:07,747 --> 00:06:10,465
+want to identify this as
+a separate chunk of memory
+
+100
+00:06:10,465 --> 00:06:15,160
+that's provided by user space program that
+shouldn't just be implicitly trusted.
+
+101
+00:06:15,160 --> 00:06:20,162
+And so we've got this a possibility for
+privilege escalation to happen here.
+
+102
+00:06:20,162 --> 00:06:25,046
+Because we have a user space application
+that might have less permissions
+
+103
+00:06:25,046 --> 00:06:28,589
+then look for instance that's
+going to be able to read or
+
+104
+00:06:28,589 --> 00:06:31,660
+that's going to be able to
+write to our device and
+
+105
+00:06:31,660 --> 00:06:36,890
+that buffer might contain information
+that could be potentially exploited.
+
+106
+00:06:36,890 --> 00:06:38,951
+So we have to be careful
+about how we access it.
+
+107
+00:06:40,540 --> 00:06:44,164
+So in order to access user
+space user pointers again,
+
+108
+00:06:44,164 --> 00:06:46,708
+this is all references to user memory so
+
+109
+00:06:46,708 --> 00:06:51,670
+you can use copy to user and copy from
+user to handle these accesses from you.
+
+110
+00:06:51,670 --> 00:06:55,387
+So they're really just kind of like
+a specialized version of copy but
+
+111
+00:06:55,387 --> 00:06:59,140
+rather than just copying from one
+void pointer to another void.
+
+112
+00:06:59,140 --> 00:07:00,669
+There's the difference here,
+
+113
+00:07:00,669 --> 00:07:03,630
+is that one of these pointers is
+going to be user space memory.
+
+114
+00:07:03,630 --> 00:07:08,501
+And so copy from user is going to handle
+any architecture specific differences
+
+115
+00:07:08,501 --> 00:07:13,461
+that need to be handled in order to how to
+get memory either to or from user space.
+
+116
+00:07:14,640 --> 00:07:18,273
+So here's an example of what
+the implementation looks like for
+
+117
+00:07:18,273 --> 00:07:19,960
+a read implementation.
+
+118
+00:07:19,960 --> 00:07:24,561
+So in the case of a redirection read
+is from the perspective of user space.
+
+119
+00:07:24,561 --> 00:07:29,083
+So when we call read on a driver,
+what we're saying is we want to take
+
+120
+00:07:29,083 --> 00:07:32,701
+memory out of kernel space and
+place it into user space.
+
+121
+00:07:32,701 --> 00:07:36,240
+We want to read the content from
+the driver into user space.
+
+122
+00:07:36,240 --> 00:07:40,540
+So the buffer that we pass is going
+to be a user space application.
+
+123
+00:07:40,540 --> 00:07:43,740
+And this is where we ultimately
+want the data to be copied into.
+
+124
+00:07:43,740 --> 00:07:47,540
+And the the count is going to
+match the size of that buffer.
+
+125
+00:07:47,540 --> 00:07:51,157
+The position that we specify is going
+to get filled into that struck file
+
+126
+00:07:51,157 --> 00:07:52,440
+information.
+
+127
+00:07:52,440 --> 00:07:58,008
+And the struck file is again kind of
+like the object that's going to tell
+
+128
+00:07:58,008 --> 00:08:04,632
+the read operation which which file we're
+currently operating on which thread or
+
+129
+00:08:04,632 --> 00:08:08,961
+style handle is specifically in use for
+this access.
+
+130
+00:08:10,040 --> 00:08:13,515
+So the copy of the users in this
+case is going to handle getting from
+
+131
+00:08:13,515 --> 00:08:17,713
+a buffer that is either already available
+in the driver or one that we set up as
+
+132
+00:08:17,713 --> 00:08:21,211
+a part of the read function and
+handle copying that into users.

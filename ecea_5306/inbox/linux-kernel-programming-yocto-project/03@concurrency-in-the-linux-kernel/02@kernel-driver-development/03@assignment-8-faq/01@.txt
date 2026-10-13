@@ -1,0 +1,174 @@
+In this video, we'll talk about some specific Assignment 8
+frequently asked questions, go through some common
+issues I've seen with Assignment 8 in the
+past and hopefully help you avoid
+making mistakes that have been made by students in the past on
+Assignment number 8. You're going to learn tips
+and strategies to use when troubleshooting the
+Assignment 8 implementation. Here's an example of
+a question that I've got in the past
+with Assignment 8. "Why is it that the read function count
+value equals 131072." Looks like a weird number. Well, if you punch that into a calculator and convert the 0x, you'll see that that's 0x20000. The answer is, I don't exactly know where
+that comes from, but it's probably the
+default buffer size of whatever underlying
+system call is happening as a part
+of the echo command. The easy place to see
+where this is coming in is again using [inaudible]. If we look at this
+simple example of writing hi to your
+/dev/aesdchar, you can see that the read that's happening on the file descriptor
+here that we opened for dev/aesdchar is using a 131072 parameter as the
+request size for the read. This is again just like some default that's
+coming in from userspace. That would show you why that value's showing up in
+your kernel driver. It's because it was issued by the read command from userspace. Here you can see that
+you actually return three bytes from your driver, so your driver
+worked successfully in that it said, well, I don't have this
+many bytes to return, but I do have three
+bytes to return, so I'll return those bytes here and set that value
+as my return value. Similarly, you can see that there's another
+pull that happens. After you've read
+those three bytes out, userspace pulls again to see if there's more data
+available and again, it just asks for that
+chunk size of 131072. In this case, your
+driver's saying, I don't have anything
+else because this was the only thing that
+was written so far and so it's just
+going to return zero and not fill anything
+into the buffer. Here's another case where
+a student has said, "Well, my aesd read function
+is just getting, I can turn on [inaudible]
+and I see that it's continuously called
+over and over again." Most likely the reason why
+this is happening is because you aren't handling
+the return value of your read function correctly. You need to remember to return zero to say
+that there's no data remaining to be
+read after you've finished all the
+content of your buffer. Because otherwise, the userspace is just going to be
+keep calling you like this to wait
+until you return zero. If you return something
+other than zero, it's going to think you
+have more data to return as long as you keep
+returning that value. This gets into the read return
+values discussion that we had earlier and the rules
+about what your return. You need to know that at the end of the
+file where there's no data available to be
+read into the buffer, you need to return
+zero in this case. Another question,
+depending on the design of your aesd socket
+implementation, maybe use fseek or stat, try to find the size of the file as part of
+your implementation. It turns out that's not
+really going to work with our device driver
+implementation. fseek is not going to
+work because we don't implement the necessary
+write seek support. If you remember, we said, we're doing in a simpler
+implementation of write that just ignores
+the seek parameter. You need to implement that in order for fseek
+to work properly. Stat doesn't work because
+dev aesdchar is not a file, so it's not really going
+to be possible for you to determine the size of the dev, at least not easily
+to get the size of the dev from aesdsocket the same way that you
+would with a real file. What I would suggest instead was just remove the logic
+that requires a stat and just read and write to the file descriptor in
+a loop until you get that end of file just
+the same way as we'll do it with the strips that
+are on the device. Here's another example.
+Students says, why isn't locking working? My system hangs when I
+remove the comments here. This is again a case where
+with locking you need to pay attention to every return path. The fact that we're
+doing a return here while we're
+holding the mutex lock, this is going to cause your
+whole system to hang now. Again, the stakes go
+up as we're working in kernel space so when you
+make a locking error here, you might get in a state
+where the whole system stops responding and you
+have to reboot the system. You need to handle
+locking properly in error paths when
+you're using locks. You could consider
+using goto to have common clean up handlers
+that you always handle in any return scenario. Here's another case where
+we already did an example, a really simple example of how
+to analyze a crash report. If you're unlucky, you might have some crash
+reports that you have to analyze with
+Assignment number 8. This shows an example of
+the way that you'd analyze that and find a problem
+from within aesd_write. The oops message that you get
+from the crash in Ubuntu, which you can find here under
+the var/crash directory, is pretty good about pointing out exactly where
+the problem is. Here it's saying it's 1fc, 3e6 bytes in aesdchar. If you did the objectdump
+-S on aesdchar.ko. After turning on debug equals y, you'll get the mixed source
+that points you to 669 being the first address
+of ASD write in this chart or in this case. You can take the 669, the beginning address here, add the 01fc that's here, and you get the location of 865 where the oops
+actually occurred. You can see that I got an oops, when I was doing this mem copy in here write at this line. This gives you an example
+that for instance, maybe you should
+comment this out, add some additional prints to figure out what's wrong
+with one or more of these variables that
+you're passing into mem copy that's causing
+this oops to occur. An example of a question I've had about
+assigned Number 8, I'm not seeing
+print key messages from the driver when I use echo, but when I use driver
+test it works. What's happening
+here? This command, it looks like you're echoing
+some check command into your driver and you're using
+sudo to access the driver. But what's actually happening here is you're echoing check into a new file called sudo, and so it's not doing
+what you expect. This can be a little
+bit confusing to get the syntax correct, but you can do something
+like this sudo echo check to debit ASD char. Or better yet, it might
+be simpler to just fix your permissions so that
+you don't need sudo. To see that this is
+what's happening, you can use the estrous utility and see what's actually
+being written. Here you can see in the
+write command you're just writing a standard out
+check Dev ASD char, which is not what you
+were intending to do. As I mentioned before, to get around the requirements
+for running with sudo, you can just add your
+user to the staff group. Doing sudo usermod-a-G staff with your username and
+then log out and back in. This will allow you to
+run the commands without sudo on your Ubuntu
+virtual machine to test your driver on
+Ubuntu before you try to deploy it to [inaudible]. One other thing I
+wanted to point out, you might find yourself doing repetitive things
+over and over again. Like here was an example of where I was making
+changes to my driver. I was unloading, reloading, and then restarting esterase. I just put that in a little
+socket stackdriver script so that rather than having to retype these three
+commands every time, I would just restart my
+socket start driver script. Think about this
+for anything that you end up repeating
+a lot to try to speed up your debug and
+iterative development process. I wanted to summarize just
+some high-level assignments, suggestions and strategies, of what I've seen students
+struggle with in the past. First, what I would suggest, is implement a really
+simple version that works with that very first example
+from driver test SH. Just assume that every write is a new line terminated and every write that happens to your driver
+is one command, which will be the case for that simplest case of driver test, the first one that tests. Verify that just for a simple case with echo and
+cat on the command line, just type on the command line Echo test1 and verify cat
+gives you test1 back. That will make sure
+that just the basics, simplest implementation
+of your driver read and write
+functions are working. Save and push this commit. Why do I say and push? Because if you're testing on your Ubuntu Virtual
+Machine and it crashes, there's a chance that you
+might lose what you've done. Definitely as you
+get things working, make a commit to track the fact that something
+is working and then push it up so
+that if something happens on your virtual machine, you'll be able to just
+re-pull it back from GitHub, like use it as a
+backup essentially. Then add locking and implement a locking properly
+and verify that really simple example works
+with locking and assuming one command
+maps to one write. Then repeat the test
+commit push cycle. Then add support for
+partial command write. Add support for the more complicated implementation
+from driver tests where we write partial
+commands and we don't implement the new line
+as a part of the write. Just keep repeating that
+process over again. Add in small chunks, get little things
+working at once, commit and push between each
+working implementation. The other nice thing about
+doing in small chunks like this is that what you might find is that when you go from one simple implementation to a more complicated
+implementation, maybe now your driver
+crashes and hangs. Well, if you made commits for your last
+working implementation, you can just look really
+closely at whatever you changed since your last
+commit, and you can just say, I know it happened based on
+this new code that I added, so this has to be
+where the problem is, and you can look through
+that a lot easier than just looking at the entire problem or the entire source
+code as a whole.

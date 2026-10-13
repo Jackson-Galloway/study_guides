@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 2 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2><strong>Assignment 2: File Operations and Cross Compiler</strong></h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h2><strong>GitHub Repository Start Instructions</strong></h2><p>For this assignment we will start with the git repo we created for the previous assignment, but change the origin to point to the GitHub repo where we will submit the next assignment.  See suggested git related reading content below for more details about the commands below.</p><ol type="1"><li><p><a href="https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes"><u>https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes</u></a></p></li><li><p><a href="https://longair.net/blog/2009/04/16/git-fetch-and-merge/"><u>https://longair.net/blog/2009/04/16/git-fetch-and-merge/</u></a>
+</p></li></ol><p><strong>Ensure you are setup to use SSH keys before proceeding, see the instructions from github at </strong><a href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/"><u>https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/</u></a></p><p><strong>Then use these commands in git bash to prepare your assignment repository:</strong></p><p>git remote remove origin</p><ul><li><p>This removes the origin repository you used to submit the previous assignment</p></li></ul><p>git remote add origin &lt;url&gt;</p><ul><li><p>Substitute &lt;url&gt; for the repository created through the github assignment link for the current assignment.  Use the SSH URL to use with your SSH keys.  See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-SSH-Access-To-your-Repo">https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-SSH-Access-To-your-Repo</a> for details.</p></li><li><p>This is where you will submit your current assignment.  It will be configured as origin so git push origin master will push to this repository.</p></li></ul><p>git fetch assignments-base</p><ul><li><p>Fetch the latest content from the starter code remote added above</p></li><li><p>This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in assignment 1.  If you started from a new repo you’ll need to re-run the git remote add step before attempting to fetch.</p></li></ul><p>git merge assignments-base/assignment2</p><ul><li><p>Merge the assignment 2 starter code from the assignment2 branch of the aesd-assignments repository into your master branch</p></li></ul><p>git submodule update --init --recursive</p><ul><li><p>This ensures your autotest submodule is up to date with master.</p></li></ul><p>git push origin main</p><ul><li><p>This pushes your main branch, including previous assignment source and content merged from assignments-base to your working repository for this assignment.  If you prefer to use the master branch instead, substitute all push references to main to use master instead in this and following assignments.</p></li></ul><h2><strong>Repository Setup:</strong></h2><img alt="Screen Shot 2021-08-16 at 10.16.44 AM.png" src="Screen%20Shot%202021-08-16%20at%2010.16.44%20AM.png"/><p></p><h2><strong>Setup Github Actions:</strong></h2><ul><li><p>See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions</u></a> </p></li></ul><p></p><h2><strong>Suggested Reading: </strong></h2><ol type="1"><li><p>Module 1 content</p></li><li><p>Linux System Programming Chapter 2.</p></li><li><p>Mastering Embedded Linux Programming Chapters 1 and 2.</p></li><li><p>Look for man pages to get a detailed description of the system calls/C library function.  For example: Type- “man fopen” on the terminal.  See also the man page links below.</p></li><li><p>If you have limited experience with makefiles, I suggest the content at  <a href="https://www.gnu.org/software/make/manual/html_node/Simple-Makefile.html">https://www.gnu.org/software/make/manual/html_node/Simple-Makefile.html</a>  or   <a href="https://makefiletutorial.com/">https://makefiletutorial.com/</a> </p></li></ol><p> </p><p><a href="https://linux.die.net/man/3/syslog"><u>https://linux.die.net/man/3/syslog</u></a></p><p><a href="https://linux.die.net/man/8/syslogd"><u>https://linux.die.net/man/8/syslogd</u></a></p><p><a href="http://man7.org/linux/man-pages/man2/time.2.html"><u>http://man7.org/linux/man-pages/man2/time.2.html</u></a></p><p><a href="http://man7.org/linux/man-pages/man3/ctime.3.html"><u>http://man7.org/linux/man-pages/man3/ctime.3.html</u></a>
+</p><h2><strong>Implementation:</strong></h2><ol type="1"><li><p>Setup your assignment repository using the github classroom instructions and link above.  You should see your previous assignment content in the repository linked from the github classroom link at the top of the document when you complete these steps.</p></li><li><p>Setup an ARM cross compile toolchain as described in Module 1 instructions and the wiki page at <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Installing-an-ARM-aarch64-developer-toolchain"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Installing-an-ARM-aarch64-developer-toolchain</u></a> </p></li></ol><ul><li><p>Create an assignments/assignment2/cross-compile.txt file in your repository showing version, configuration and sysroot path of aarch64-none-linux-gnu-gcc using -print-sysroot  and -v options in an file you add for validation purposes. </p><ul><li><p>There are no requirements about how you create or fill this file and you may simply copy and paste from command line output.  If you chose to use redirection please note that some of the content is written to stderr and you must redirect stderr to the file.  See  <a href="https://stackoverflow.com/a/876242">https://stackoverflow.com/a/876242</a> .</p></li></ul></li></ul><p>3. Write a C application “writer” (<strong>finder-app/writer.c) </strong> which can be used as an alternative to the “writer.sh” test script created in assignment1 and using File IO as described in LSP chapter 2.  See the Assignment 1 requirements for the writer.sh test script and these additional instructions:</p><ul><li><p>One difference from the write.sh instructions in Assignment 1:  You do not need to make your "writer" utility create directories which do not exist.  You can assume the directory is created by the caller.</p></li><li><p>Setup syslog logging for your utility using the LOG_USER facility.</p></li><li><p>Use the syslog capability to write a message “Writing &lt;string&gt; to &lt;file&gt;” where &lt;string&gt; is the text string written to file (second argument) and &lt;file&gt; is the file created by the script.  This should be written with LOG_DEBUG level.</p></li><li><p>Use the syslog capability to log any unexpected errors with LOG_ERR level.</p></li></ul><p>4. Write a Makefile which includes:</p><ul><li><p>A default target which builds the “writer” application</p></li><li><p>A clean target which removes the “writer” application and all .o files</p></li><li><p>Support for cross-compilation.  You should be able to generate an application for the native build platform when GNU make variable CROSS_COMPILE is not specified on the make command line.  When CROSS_COMPILE is specified with aarch64-none-linux-gnu- (note the trailing -)your makefile should compile successfully using the cross compiler installed in step 1.</p></li></ul><p>5. Make modifications to the finder-app/finder-test.sh script provided with the assignment github repository as described below.</p><ul><li><p>Clean any previous build artifacts.</p></li><li><p>Compile your writer application using native compilation</p></li><li><p>Use your “writer” utility instead of “writer.sh” shell script.</p></li></ul><p>6. Verify your <strong>finder-app/finder-test.sh</strong> script works with your writer application instead of writer.sh</p><p>7. Test your implementation using the shell script <strong>./full-test.sh</strong> and ensure all scripts pass.</p><ul><li><p>This verifies the writer and tester.sh implementation passes requirements.</p></li></ul><p>8. Verify the “file” utility (<a href="https://man7.org/linux/man-pages/man1/file.1.html"><u>https://man7.org/linux/man-pages/man1/file.1.html</u></a>) indicates an aarch64 executable type when building with CROSS_COMPILE specified on the command line.</p><ul><li><p>Include the output of the “file” utility after building <strong>writer</strong> with CROSS_COMPILE in an “assignments/assignment2/fileresult.txt” file for grading purposes.</p></li></ul><h2><strong>Validation/Deliverables:</strong></h2><ol type="1"><li><p>Your assignments/assignment2/cross-compile.txt file should show the version, configuration and sysroot path (output of -print-sysroot)</p></li><li><p>The finder-test.sh script should return “success” when run.</p></li><li><p>Your writer application should meet requirements from assignment 1 regarding error handling.</p></li><li><p>Ensure all error handling has been implemented for writer.c.</p></li></ol><ul><li><p>Ensure syslog logging is setup and working properly (you should see messages logged to /var/log/syslog on your Ubuntu VM).</p></li><li><p>If using Windows Subsystem for Linux, you may need to manually start rsyslog with `sudo service rsyslog start`</p></li></ul><p>5. Your assignments/assignment2/fileresult.txt should show that you were able to cross compile successfully</p><p>6. Your github actions automated test script should pass on your repository and the “Actions” tab should show a successful run on your last commit.</p><p></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 1 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<p>These are detailed instructions for how to complete Assignment 1: Bash Scripting Basics. Please follow the steps for the assignment outlined here, then submit a link to your GitHub repository in the following peer-review assignment. Three peers will evaluate your work based on the rubric included here.     </p><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view, as highlighted below.</p><img alt="image.png" src="image.png"/><h2><strong>Suggested Reading:</strong></h2><ol type="1"><li><p><a href="https://cvw.cac.cornell.edu/linux/intro/index">https://cvw.cac.cornell.edu/linux/intro/index </a></p></li><li><p>Linux System Programming Chapter 1.</p></li><li><p><a href="https://ryanstutorials.net/bash-scripting-tutorial/bash-variables.php">https://ryanstutorials.net/bash-scripting-tutorial/bash-variables.php</a> </p></li><li><p><a href="https://ryanstutorials.net/bash-scripting-tutorial/bash-if-statements.php">https://ryanstutorials.net/bash-scripting-tutorial/bash-if-statements.php</a></p></li></ol><h2><strong>Implementation:</strong></h2><p>1) Bring up a virtual machine host environment using Virtualbox and the specific version of Ubuntu specified in the instructions <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Virtualbox-Environment-Setup">here</a>.  <strong>Please ensure you use only the supported version(s) of Ubuntu.  Don't use the most recent version as it may not be tested with the entirety of the course content.</strong></p><p>2) Clone the github repository created from the github classroom link and instructions on the resources page.  If you haven't cloned a github repository previously, see instructions at <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">this link</a>. The repository will initially be empty. <strong>Don’t follow the instructions on the associated GitHub page to add a README commit</strong>. Instead fill with template content using the git commands below inside the repository:</p><p>git remote add assignments-base https://github.com/cu-ecen-aeld/aesd-assignments.git</p><ul><li><p>This command specifies the base repository at <a href="https://github.com/cu-ecen-aeld/aesd-assignments">https://github.com/cu-ecen-aeld/aesd-assignments</a> with example starter code</p></li></ul><p>git fetch assignments-base</p><ul><li><p>This command pulls the content locally to match the latest status at <a href="https://github.com/cu-ecen-aeld/aesd-assignments">https://github.com/cu-ecen-aeld/aesd-assignments</a> </p></li></ul><p>git merge assignments-base/master</p><ul><li><p>This command makes your master branch match the master branch of   <a href="https://github.com/cu-ecen-aeld/aesd-assignments">https://github.com/cu-ecen-aeld/aesd-assignments</a></p></li></ul><p>git submodule update --init --recursive</p><ul><li><p>This command clones the <a href="https://github.com/cu-ecen-aeld/assignment-autotest">assignment-autotest submodule</a> and nested git repositories</p></li></ul><h2></h2><h2><strong>Setup Your Development Host and Actions Runner:</strong></h2><p>3) See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-Up-Your-Development-Host">https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-Up-Your-Development-Host</a> for the instructions to setup your Development Host.  See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions">https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions</a> to setup your Github Actions Runner.  You may use the same machine for your Development Host and Github Actions runner.</p><h2><strong>Run Unit Tests</strong></h2><p>4) Run the ./unit-test.sh script.  You must run this script from the base aesd-assignments directory. It will fail with a message like this:</p><img alt="pasted image 0.png" src="pasted%20image%200.png"/><ul><li><p>This is because the Unity test function in your repository within the student-test folder at <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/master/student-test/assignment1/Test_validate_username.c#L21">Test_validate_username.c</a> is not yet implemented.   </p></li></ul><p>5) Update file conf/username.txt to include your github username (no leading/trailing spaces, no additional lines).</p><p>6) Implement the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/master/student-test/assignment1/Test_validate_username.c#L21">Test_validate_username.c</a> function in your assignment repository.</p><p>7) Update your username in <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/master/examples/autotest-validate/autotest-validate.c#L30">autotest-validate.c</a>.</p><p>8) Re-run the ./unit-test.sh script. The script should now get past the failure message above and the unit tests should now pass. This verifies the Unity unit test function stubs requirements.</p><p>9) Write a shell script <strong>finder-app/finder.sh</strong> as described below:</p><ul><li><p>Accepts the following runtime arguments: the first argument is a path to a directory on the filesystem, referred to below as <strong>filesdir</strong>; the second argument is a text string which will be searched within these files, referred to below as <strong>searchstr</strong></p></li><li><p>Exits with return value 1 error and print statements if any of the parameters above were not specified</p></li><li><p>Exits with return value 1 error and print statements if <strong>filesdir</strong> does not represent a directory on the filesystem</p></li><li><p>Prints a message "The number of files are X and the number of matching lines are Y" where X is the number of files in the directory and all subdirectories and Y is the number of matching lines found in respective files, where a matching line refers to a line which contains <strong>searchstr </strong>(and may also contain additional content).</p></li></ul><p><strong>Example invocation:</strong></p><p><strong>      </strong> finder.sh /tmp/aesd/assignment1 linux</p><p>10) Write a shell script <strong>finder-app/writer.sh</strong> as described below</p><ul><li><p>Accepts the following arguments: the first argument is a full path to a file (including filename) on the filesystem, referred to below as <strong>writefile</strong>; the second argument is a text string which will be written within this file, referred to below as <strong>writestr</strong></p></li><li><p>Exits with value 1 error and print statements if any of the arguments above were not specified</p></li><li><p>Creates a new file with name and path <strong>writefile</strong> with content <strong>writestr</strong>, overwriting any existing file and creating the path if it doesn’t exist. Exits with value 1 and error print statement if the file could not be created.</p></li></ul><p><strong>Example:</strong></p><p><strong>       </strong>writer.sh /tmp/aesd/assignment1/sample.txt ios</p><p><strong>Creates file:</strong></p><p><strong>    </strong>/tmp/aesd/assignment1/sample.txt</p><p><strong>            With content:</strong></p><p><strong>            ios</strong></p><p>11) Run the shell script <strong>finder-test.sh</strong> provided with your assignment github repository to test your implementations.  This script:</p><ul><li><p>Accepts the following arguments: the first argument is the number of files to write <strong>numfiles</strong>; the second argument is the string to write to each file <strong>writestr</strong></p></li><li><p>Defaults to use <strong>numfiles</strong> 10 and <strong>writestr</strong> “AELD_IS_FUN” if respective arguments are not specified.</p></li><li><p>Creates an empty directory <strong>/tmp/aeld-data</strong></p></li><li><p>Loops to create <strong>numfiles</strong> files in directory <strong>/tmp/aeld-data</strong> using the writer.sh script, with <strong>writefile</strong> first argument name <strong>/tmp/aeld-data/usernameX.txt</strong> where X is a number from 1 to numfiles, <strong>username</strong> is the username found in conf/username.txt and <strong>writestr</strong> is passed as the second argument.</p></li><li><p>Runs finder.sh script with <strong>filesdir</strong> set to <strong>/tmp/aeld-data</strong> and <strong>searchstr</strong> set to <strong>writestr</strong></p></li><li><p>Compares the output of the finder script with expected output “The number of files are <strong>numfiles</strong> and the number of matching lines are <strong>numfiles</strong>”. Prints “success” on match or “error” on mismatch.</p></li></ul><p>12) Test your implementation using the shell script full-test.shand ensure all steps pass.</p><ul><li><p>This runs the same tests performed by Github Actions.</p></li></ul><h2><strong>Repository Setup:</strong></h2><img alt="repository_setup.jpg" src="repository_setup.jpg"/><p></p>
+  </div>
+</body>
+</html>

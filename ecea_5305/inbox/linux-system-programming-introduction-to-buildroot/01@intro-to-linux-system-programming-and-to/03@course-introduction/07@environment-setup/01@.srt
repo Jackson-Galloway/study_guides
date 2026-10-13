@@ -1,0 +1,890 @@
+1
+00:00:02,540 --> 00:00:04,130
+Hi students.
+
+2
+00:00:04,130 --> 00:00:05,394
+So subject to this video,
+
+3
+00:00:05,394 --> 00:00:09,090
+we're going to talk about setting up
+our Ubuntu Development Environment.
+
+4
+00:00:09,090 --> 00:00:12,264
+We're going to talk about
+Linux Distributions, Linux Packages and
+
+5
+00:00:12,264 --> 00:00:15,947
+Ubuntu which we're going to be using for
+our Linux Development Environment for
+
+6
+00:00:15,947 --> 00:00:16,650
+this course.
+
+7
+00:00:16,650 --> 00:00:19,455
+And we'll also talk a little bit
+about Root User Accounts and
+
+8
+00:00:19,455 --> 00:00:22,840
+the philosophy about how we're going
+to use these Root User accounts.
+
+9
+00:00:22,840 --> 00:00:26,846
+So some of the backup material,
+if you aren't that familiar with Linux
+
+10
+00:00:26,846 --> 00:00:31,319
+command line to begin with, you might want
+to review some of the backup material
+
+11
+00:00:31,319 --> 00:00:34,123
+that's the basis of the slides
+in this lecture and
+
+12
+00:00:34,123 --> 00:00:38,500
+the upcoming lectures for this week
+regarding the use of Linux command line.
+
+13
+00:00:38,500 --> 00:00:41,100
+So there's one here on
+introduction to Linux workshop.
+
+14
+00:00:41,100 --> 00:00:43,020
+That's a good one for you to reference.
+
+15
+00:00:43,020 --> 00:00:46,866
+There are also a couple of bash scripting
+tutorials here that will be useful for
+
+16
+00:00:46,866 --> 00:00:48,810
+you when you complete the assignment.
+
+17
+00:00:48,810 --> 00:00:53,089
+If you don't have a lot of
+scripting experience already.
+
+18
+00:00:53,089 --> 00:00:57,707
+Okay so one option, as I mentioned
+in previous videos regarding how to
+
+19
+00:00:57,707 --> 00:01:02,486
+complete your programming assignments
+if you're running on Windows or
+
+20
+00:01:02,486 --> 00:01:06,980
+MacOS and you don't have a native
+Linux development environment.
+
+21
+00:01:06,980 --> 00:01:11,460
+One of our options is going to be to
+install virtual box on your pc and
+
+22
+00:01:11,460 --> 00:01:14,620
+you can see the link
+here to virtualbox.org.
+
+23
+00:01:14,620 --> 00:01:18,653
+There's also a link with a little more
+instructions inside the assignment one
+
+24
+00:01:18,653 --> 00:01:21,300
+document which we'll talk
+about in a later video.
+
+25
+00:01:21,300 --> 00:01:26,216
+But in terms of what the environment
+setup that we use for
+
+26
+00:01:26,216 --> 00:01:33,340
+the student assistance and myself,
+we're going to use virtual box and Ubuntu.
+
+27
+00:01:33,340 --> 00:01:37,027
+And you can see the document that
+I mentioned is linked to this
+
+28
+00:01:37,027 --> 00:01:41,750
+environment set up doc that talks about
+how to set up your virtual box system.
+
+29
+00:01:41,750 --> 00:01:46,440
+And that like I mentioned is also
+linked in the assignment one document.
+
+30
+00:01:46,440 --> 00:01:51,074
+One thing I wanted to mention because this
+has come up in the past, especially as we
+
+31
+00:01:51,074 --> 00:01:55,979
+get into Linux kernel driver development,
+there's a chance that you may corrupt your
+
+32
+00:01:55,979 --> 00:02:00,310
+virtual machine by accident when
+you're doing Linux driver development.
+
+33
+00:02:00,310 --> 00:02:06,099
+So when you get your initial system set
+up, it's a good idea to use the snapshot
+
+34
+00:02:06,099 --> 00:02:11,390
+feature of virtual box to save a copy
+of the current state of the system.
+
+35
+00:02:11,390 --> 00:02:15,376
+And that way, if you do something later
+and accidentally corrupt your file
+
+36
+00:02:15,376 --> 00:02:19,510
+system or your install, you have to wait
+it to get back to the original setup.
+
+37
+00:02:19,510 --> 00:02:22,570
+So that's one handy benefit
+of using virtual box.
+
+38
+00:02:22,570 --> 00:02:26,398
+I've got a link here to describing how to
+use snapshots is pretty intuitive, but
+
+39
+00:02:26,398 --> 00:02:30,040
+this is something you should consider
+doing as a part of your system set up.
+
+40
+00:02:30,040 --> 00:02:35,125
+So I also mentioned before and
+I've got this in the class overview
+
+41
+00:02:35,125 --> 00:02:40,951
+that you might not have enough resources
+to run virtual box on your laptop,
+
+42
+00:02:40,951 --> 00:02:45,140
+or you might already have
+dedicated Linux hardware.
+
+43
+00:02:45,140 --> 00:02:50,502
+And this is another option for completing
+the assignments with the course and
+
+44
+00:02:50,502 --> 00:02:55,865
+you don't need a really powerful laptop
+in order to meet the requirements for
+
+45
+00:02:55,865 --> 00:02:56,800
+the course.
+
+46
+00:02:56,800 --> 00:03:03,760
+So there's lots of options on Ebay or
+Pawn shops for something less than $200.
+
+47
+00:03:03,760 --> 00:03:09,513
+One other option is if you don't have
+the the ability to run virtual box,
+
+48
+00:03:09,513 --> 00:03:12,641
+you could also consider dual booting.
+
+49
+00:03:12,641 --> 00:03:16,317
+So set up your system to
+boot into Windows, but
+
+50
+00:03:16,317 --> 00:03:19,830
+conditionally to boot into Linux instead.
+
+51
+00:03:19,830 --> 00:03:23,987
+And that way you can use all the resources
+of your laptop or your computer
+
+52
+00:03:23,987 --> 00:03:28,370
+in your Linux boot and not have to rely
+on running inside a virtual machine.
+
+53
+00:03:28,370 --> 00:03:29,653
+So as I mentioned,
+
+54
+00:03:29,653 --> 00:03:34,330
+we're going to talk a little bit
+about distributions and packages.
+
+55
+00:03:34,330 --> 00:03:38,120
+When we say distribution with Linux,
+what do we mean?
+
+56
+00:03:38,120 --> 00:03:41,706
+We really mean just a collection
+of a bunch of pre configured
+
+57
+00:03:41,706 --> 00:03:44,433
+software that's maintained by community or
+
+58
+00:03:44,433 --> 00:03:48,550
+in some cases by companies that
+have created these distributions.
+
+59
+00:03:48,550 --> 00:03:53,382
+So these are really just a collection of
+software packages that either companies or
+
+60
+00:03:53,382 --> 00:03:56,833
+community have found useful and
+I think is a useful place for
+
+61
+00:03:56,833 --> 00:03:59,480
+you to start when you're
+setting up your pc.
+
+62
+00:03:59,480 --> 00:04:04,212
+So you can think of it as like all of the
+software applications that would go into,
+
+63
+00:04:04,212 --> 00:04:05,117
+for instance,
+
+64
+00:04:05,117 --> 00:04:09,600
+a default install of your laptop when
+you bought it with Windows installed.
+
+65
+00:04:09,600 --> 00:04:11,390
+Same idea with the distribution.
+
+66
+00:04:11,390 --> 00:04:15,944
+There's probably more packages
+that are associated with, for
+
+67
+00:04:15,944 --> 00:04:19,589
+instance, editing documents or
+editing images.
+
+68
+00:04:19,589 --> 00:04:24,041
+And each each distribution is going to be
+slightly different on what they have by
+
+69
+00:04:24,041 --> 00:04:28,014
+default, and each distribution is
+going to be slightly different on
+
+70
+00:04:28,014 --> 00:04:30,570
+how you add additional software packages.
+
+71
+00:04:30,570 --> 00:04:34,639
+So the version in the configuration of the
+software that's installed on the system
+
+72
+00:04:34,639 --> 00:04:37,540
+is going to be managed by
+what's called packages.
+
+73
+00:04:37,540 --> 00:04:41,650
+Ubuntu is the distribution that we're
+going to be using for this course.
+
+74
+00:04:41,650 --> 00:04:43,711
+It's a pretty popular Linux distributions.
+
+75
+00:04:43,711 --> 00:04:47,081
+So one of the nice things about it,
+you can find a lot of help online and
+
+76
+00:04:47,081 --> 00:04:49,430
+a lot of references to
+people that are using it.
+
+77
+00:04:49,430 --> 00:04:52,684
+Every distribution that you use is
+going to have its own mechanism for
+
+78
+00:04:52,684 --> 00:04:55,230
+adding software packages
+through the command line.
+
+79
+00:04:55,230 --> 00:04:58,545
+And so Ubuntu's is called
+the Apt Package Manager,
+
+80
+00:04:58,545 --> 00:05:01,200
+which we'll talk about in a minute here.
+
+81
+00:05:01,200 --> 00:05:05,912
+So one question you might have, especially
+if you come from a Windows background,
+
+82
+00:05:05,912 --> 00:05:10,150
+is why with Windows, I just maybe find
+some application that I want to use on
+
+83
+00:05:10,150 --> 00:05:14,393
+the web and I download the executable and
+I run the executable installer and
+
+84
+00:05:14,393 --> 00:05:17,530
+I install it from whatever
+website I downloaded from.
+
+85
+00:05:17,530 --> 00:05:20,285
+So why doesn't Linux just do it that way,
+
+86
+00:05:20,285 --> 00:05:26,060
+why would they use these packages that are
+associated with the distribution instead?
+
+87
+00:05:26,060 --> 00:05:30,802
+And really, you can think of packages
+as kind of a precursor to app stores
+
+88
+00:05:30,802 --> 00:05:32,279
+that you have today for
+
+89
+00:05:32,279 --> 00:05:37,300
+mobile phones that have become popular
+with the iPhone and android phones.
+
+90
+00:05:37,300 --> 00:05:41,397
+So the benefit of the package manager is
+that it's one centralized location that's
+
+91
+00:05:41,397 --> 00:05:43,090
+controlled by the distribution.
+
+92
+00:05:43,090 --> 00:05:46,591
+That gives you a list of
+trusted software sources.
+
+93
+00:05:46,591 --> 00:05:50,581
+So rather than trying to download
+from a bunch of different websites
+
+94
+00:05:50,581 --> 00:05:55,551
+that are hosted by completely different
+applications, you've got one place where
+
+95
+00:05:55,551 --> 00:06:00,101
+someone in the community is helping to
+maintain a list of all the packages that
+
+96
+00:06:00,101 --> 00:06:04,740
+are configured to build and run and
+install successfully in a distribution.
+
+97
+00:06:04,740 --> 00:06:07,919
+So this helps solve some of
+the fragmentation problems because every
+
+98
+00:06:07,919 --> 00:06:11,755
+distribution is a little bit different in
+terms of configuration that ships with,
+
+99
+00:06:11,755 --> 00:06:14,879
+there might need to be slight
+customization to software packages in
+
+100
+00:06:14,879 --> 00:06:17,440
+order to make them run
+properly on the distributions.
+
+101
+00:06:17,440 --> 00:06:20,659
+So by having a package manager
+that's built into the distribution,
+
+102
+00:06:20,659 --> 00:06:23,932
+you can solve some of those problems
+because the distribution package
+
+103
+00:06:23,932 --> 00:06:27,096
+manager will know which distribution
+is getting installed into and
+
+104
+00:06:27,096 --> 00:06:29,979
+it can put all the required
+components in the correct paths and
+
+105
+00:06:29,979 --> 00:06:32,400
+make sure that it runs
+correctly on distribution.
+
+106
+00:06:32,400 --> 00:06:37,011
+So I mentioned before Ubuntu is
+one of the popular distributions.
+
+107
+00:06:37,011 --> 00:06:39,310
+It's the one that we're
+going to use in this course.
+
+108
+00:06:39,310 --> 00:06:41,620
+You can use other
+distributions if you want.
+
+109
+00:06:41,620 --> 00:06:45,694
+This is just the one that will
+provide support in terms of myself and
+
+110
+00:06:45,694 --> 00:06:50,789
+student assistance and this is one of the
+things that I have pronounced wrong before
+
+111
+00:06:50,789 --> 00:06:56,029
+I started teaching this course and had to
+look up pronunciations, but it's actually
+
+112
+00:06:56,029 --> 00:07:01,100
+pronounced uu-boonto and it's an African
+word which means humanity to others.
+
+113
+00:07:01,100 --> 00:07:03,542
+The first release was back in 2004 and
+
+114
+00:07:03,542 --> 00:07:07,251
+it's based on another distribution
+that's known as Debian.
+
+115
+00:07:07,251 --> 00:07:09,410
+Also popular distribution.
+
+116
+00:07:09,410 --> 00:07:14,756
+And the kind of the motivation behind
+Ubuntu over Debian is that it might
+
+117
+00:07:14,756 --> 00:07:19,833
+be slightly less stable, but
+it's also going to be more up to date,
+
+118
+00:07:19,833 --> 00:07:25,840
+have more recent software packages
+available than what you'd find in Debian.
+
+119
+00:07:25,840 --> 00:07:29,324
+It's also more focused on
+usability than licensing and
+
+120
+00:07:29,324 --> 00:07:34,460
+what that means is that in Debian, there's
+kind of an emphasis on free software.
+
+121
+00:07:34,460 --> 00:07:38,086
+Again, free as I mentioned before,
+as in liberty, like your freedom to do
+
+122
+00:07:38,086 --> 00:07:41,510
+whatever you want with the software
+to have access to the source code.
+
+123
+00:07:41,510 --> 00:07:45,626
+Ubuntu is less focused on
+making sure that for instance,
+
+124
+00:07:45,626 --> 00:07:50,001
+every single Kodak that you'd install for
+access to video or
+
+125
+00:07:50,001 --> 00:07:54,975
+audio has a free and open license and
+it's more focused on making sure
+
+126
+00:07:54,975 --> 00:07:59,371
+that the system is as usable
+as possible from installation.
+
+127
+00:07:59,371 --> 00:08:03,271
+In other words, making it easy for users
+who might be just getting started out.
+
+128
+00:08:03,271 --> 00:08:06,060
+Like might be your case for this course.
+
+129
+00:08:06,060 --> 00:08:11,463
+So the package management for Ubuntu is
+traditionally performed by the apt utility
+
+130
+00:08:11,463 --> 00:08:16,350
+that's still available and and
+still a way that you can install packages.
+
+131
+00:08:16,350 --> 00:08:19,561
+There's also recent support for
+the snap utility and
+
+132
+00:08:19,561 --> 00:08:23,150
+one nice thing about Ubuntu
+is package management system.
+
+133
+00:08:23,150 --> 00:08:27,220
+If you try to use an application that's
+not currently installed, you'll get
+
+134
+00:08:27,220 --> 00:08:31,560
+this message here that tells you how you
+can install that particular application.
+
+135
+00:08:31,560 --> 00:08:35,256
+So in this case, I'm trying to use
+an application called tree to look
+
+136
+00:08:35,256 --> 00:08:37,830
+at the details of a specific
+folder structure.
+
+137
+00:08:37,830 --> 00:08:40,847
+And it's giving me a helpful message
+saying it can't be installed but
+
+138
+00:08:40,847 --> 00:08:42,450
+here are some options to install it.
+
+139
+00:08:42,450 --> 00:08:46,703
+So by simply doing sudo apt install tree,
+I can have the tree utility that I was
+
+140
+00:08:46,703 --> 00:08:50,251
+trying to use installed and
+available in the operating system.
+
+141
+00:08:51,940 --> 00:08:56,224
+So getting into a little bit more about
+how we would install applications,
+
+142
+00:08:56,224 --> 00:09:00,644
+you can imagine that it would make sense
+that a default user account you create
+
+143
+00:09:00,644 --> 00:09:02,910
+would have access limitations there.
+
+144
+00:09:02,910 --> 00:09:04,099
+This would be important,
+
+145
+00:09:04,099 --> 00:09:07,250
+especially if there's multiple
+user accounts created on a system.
+
+146
+00:09:07,250 --> 00:09:11,114
+But it's also helpful because it prevents
+you from accidentally doing things you
+
+147
+00:09:11,114 --> 00:09:12,080
+didn't want to do.
+
+148
+00:09:12,080 --> 00:09:15,738
+So for instance,
+if you would happen to use rm-rf and
+
+149
+00:09:15,738 --> 00:09:19,901
+we'll talk a little bit more
+about what the rm command does.
+
+150
+00:09:19,901 --> 00:09:24,247
+But it's basically, this command is
+going to be removing a directory or
+
+151
+00:09:24,247 --> 00:09:25,611
+a set of directories.
+
+152
+00:09:25,611 --> 00:09:28,275
+And if you happen to use
+rm-rf with a slash and
+
+153
+00:09:28,275 --> 00:09:30,951
+then referencing some undefined variable.
+
+154
+00:09:30,951 --> 00:09:35,116
+Because the variable is undefined,
+this would look like rm-rf/ and
+
+155
+00:09:35,116 --> 00:09:38,646
+basically just start deleting
+everything in your system,
+
+156
+00:09:38,646 --> 00:09:41,280
+which is probably not
+what you wanted to do.
+
+157
+00:09:41,280 --> 00:09:45,822
+And so if you're running this rm-rf/
+command as a normal user account,
+
+158
+00:09:45,822 --> 00:09:50,294
+you get errors back saying that you
+don't have the permissions to delete
+
+159
+00:09:50,294 --> 00:09:55,540
+the contents of the file system, which in
+this case would be a really good thing.
+
+160
+00:09:55,540 --> 00:10:00,400
+But in some cases you
+actually do need Root access.
+
+161
+00:10:00,400 --> 00:10:04,487
+And there are specific commands where you
+need to have the permissions to access
+
+162
+00:10:04,487 --> 00:10:08,220
+things in the root file system that
+aren't allocated to specific user.
+
+163
+00:10:08,220 --> 00:10:11,590
+So for that you would use what's
+called the Root User account.
+
+164
+00:10:11,590 --> 00:10:18,340
+And that account basically has access to
+modify or change anything on the system.
+
+165
+00:10:18,340 --> 00:10:22,123
+So the different levels that
+are available to root user account or
+
+166
+00:10:22,123 --> 00:10:26,664
+single users let the system administrator
+configure who should have access to
+
+167
+00:10:26,664 --> 00:10:31,510
+specific devices on the system, who should
+have access to specific directories.
+
+168
+00:10:31,510 --> 00:10:34,255
+And then again,
+if you can either log in as a root user or
+
+169
+00:10:34,255 --> 00:10:38,040
+impersonate the root user, you can
+do whatever you want on the system.
+
+170
+00:10:38,040 --> 00:10:42,352
+So Ubuntu each distribution
+might have a slightly different
+
+171
+00:10:42,352 --> 00:10:45,151
+philosophy on how it uses root access.
+
+172
+00:10:45,151 --> 00:10:50,520
+Ubuntu's root access philosophy is
+that when you configure your default
+
+173
+00:10:50,520 --> 00:10:55,390
+user account, you do not have root
+permissions for that account.
+
+174
+00:10:55,390 --> 00:10:58,779
+However, if you are doing something
+that you need permissions for,
+
+175
+00:10:58,779 --> 00:11:01,992
+you can just use the sudo command
+which is short for super user do,
+
+176
+00:11:01,992 --> 00:11:04,410
+before whatever command
+you're trying to run.
+
+177
+00:11:04,410 --> 00:11:07,616
+So if you type sudo and then
+the command that you're trying to run,
+
+178
+00:11:07,616 --> 00:11:09,680
+it's going to ask you for
+your password and
+
+179
+00:11:09,680 --> 00:11:13,577
+if you enter your password successfully,
+it's going to run the command that you
+
+180
+00:11:13,577 --> 00:11:17,220
+specified as if you were a root user
+rather than your current user account.
+
+181
+00:11:17,220 --> 00:11:21,275
+So this is kind of a nice trade off in
+that it prevents us from accidentally
+
+182
+00:11:21,275 --> 00:11:25,595
+doing things we maybe didn't want to do
+when we're running things as our user
+
+183
+00:11:25,595 --> 00:11:29,915
+account, but it also gives us the option
+to have root access when we need it for
+
+184
+00:11:29,915 --> 00:11:31,261
+specific operations.

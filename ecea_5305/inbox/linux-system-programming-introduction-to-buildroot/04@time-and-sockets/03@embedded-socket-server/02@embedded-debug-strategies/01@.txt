@@ -1,0 +1,57 @@
+In this video will give a brief
+overview of embedded debug strategies. So as our programs are going to get a
+little bit more complicated starting with assignment number five, we're going to
+talk about how to use GDB to debug and how to use GDB to do remote
+debug on the target. So we'll do an overview of
+the GDB command line and an overview of how to use remote GDB. So for you probably already have used
+GCC to create debug symbols if used -g argument to endure your compile step,
+you'll get debug symbols, you can use -O0 to disable optimizations, which will help you with single
+stepping in GDB for instance. So you've probably used GDB interactively
+as a part of a gooey tool in the past, for instance, but
+maybe you haven't used a command line yet. So I encourage you to get familiar with
+using GDB command line because a lot of times this is an easy way to do debug
+on remote systems that might not have the full capabilities that you'd
+have through an for instance. So here's a an example of running
+an application on natively using GDB through the command line. So this is the segue falter application
+that we've reference before that just does a segmentation fault. So here's an example of how you
+can run that if you use GDB and passing the site falter. If you've compiled with
+debugging arguments, you'll be able to use the R
+command to run and then you'll get a segmentation fault as a result
+in this particular application. And then you can use the bt
+function to get a back trace. So showing even in this case where
+we didn't compile with debug info, we can still see that which function it
+was in, where the seg fault occurred. And that's going to help you track down
+problems that would occur, for instance, with segmentation faults. So some of the key commands you can use
+with GDB r is to run the application. B let you set breakpoints,
+p you can print variable names. You can also use this to execute
+functions if you have debug info and n you can use to step
+over the next statement. So similar to what you do in the UI. And finish would step out of the function
+into the next function info b list, breakpoints, delete and the number
+would delete the breakpoints that were shown in the info b list and
+then bt is really useful or because it shows you that back
+trace of which function was called. So what if we have a problem
+that only exists on the target? Maybe we don't have space on the target or
+it's in a production image, we wouldn't have GDB loaded on the full
+version of GDB loaded on the target. So there's a turns out you can
+use GDB in remote mode and here's some packages that you'd
+use to turn this on in builder. Yet if you turn on these packages,
+you'll have support for running the GDB on the host and
+connecting to a remote target. And this is really useful for debugging
+problems that happen on target, mastering embedded links program in chapter 14
+goes through this step in detail. But the basic premise or the basic steps
+that you would do is on the target, you'd run GDB server and you specify
+some unused port number to use as your GDB server port and then you start
+whatever application you wanted to debug. Then on the host, you would use a cross
+compiled version of GDB you specify the binary that you're running,
+that's cross compiled. And then once you're inside GDB, you'd use the target remote command
+to connect to the remote target. So this would be the IP
+address of the target and this would be the port that we
+specified up here with GDB server. So on buildroot,
+we'll start our cross GTB through a command that's specific
+to the buildroot build. And then we'll just set it up for the same
+remote debug using this target remote. So with buildroot, there's some more details about this
+in the advanced usage link, but you'll find the GDB cross compiler
+under the output host bin directory. And then you can use that -x to specify
+the GDB in that file that'll initialize some of the parameters and here's where
+you would specify the application that's cross compiled,
+that you're going to debug.

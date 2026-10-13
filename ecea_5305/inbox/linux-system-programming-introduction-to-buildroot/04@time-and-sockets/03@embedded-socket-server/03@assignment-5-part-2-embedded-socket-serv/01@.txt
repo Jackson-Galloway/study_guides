@@ -1,0 +1,105 @@
+This video is an
+overview and demo of the embedded socket server Part 2 portion of assignment 5. The second part of assignment 5 is going to be taking all
+the work that we did with the first part and the
+native's implementation that we had running on our Ubuntu host
+and put that into our QEMU implementation and
+run on our embedded target, using Buildroot to build and
+install the application. Your repository setup's
+going to look like this. You're going to have the content that you implement it in
+your assignment 3 and later repository based on
+the assignment 5 Part 1. Your Buildroot repository is going to be updated to point 2, your latest commits that
+support all the changes there. You're going to make some
+minor changes here to add a startup script so that you can start your code automatically
+when Buildroot starts. Then you're going to
+push that content that was previously
+associated with assignment 4 and is now going to be
+building your assignment 5 application up into the
+GitHub classroom repo that you set up for
+the assignment. You'll have some content that you pull in from
+Buildroot assignments base, that will support
+doing the full test of your embedded application on your Buildroot QEMU instance. We'll use GitHub actions
+on your new repo again. Once again, you need to set up your SSH key as repository
+secret and that's going to allow your Buildroot build to access this private
+repository in assignment 3, same as we did with the
+assignment 4 implementation. This is going to walk
+you through setting up your Git repo correctly. Then for the
+implementation portion, we're going to add a
+System V startup script called easdsocket-start-stop
+and put that in the server
+directory at assignment 3 repository with the rest
+of your easdsocket code. That should use the
+start-stop-daemon command that we discussed in the lecture videos to start your daemon with that -d option. When it stops, it should
+send SIGTERM that all gracefully exit the daemon
+and do any cleanup. Then you need to modify your
+aesd assignments package that we created
+with assignment 4. To cross-compile your
+aesdsocket application, install that executable to
+the user bin and install the aesd-socket start script
+to etc/init.d/S99aesdsocket. This will allow the
+QEMU running version of your build-up built system to automatically start your aesdsocket
+application on startup. Then modify the run QEMU
+script to forward host port 9000 to your QEMU
+instance port 9000. This way, when
+you're running QEMU, and you run the socket
+test application, and you tell it you want to send a string through
+Netcat to port 9000. That port is going to be forwarded into your
+running QEMU instance. You're actually going
+to be sending that into your aesdsocket application
+that's running inside QEMU. Then you need to verify that your socket application started automatically when you
+start QEMU on the target. The socket test script run
+from the host now should successfully work
+when it's running against the target
+implementation. This is exactly
+what the full test script is going to do for you. When you complete, tag your commit that's associated with completing the assignments, so it's obvious where your
+assignment was completed. Demoing the full
+test implementation here for assignment 5, you'll see when we kick it off, it does the same thing it
+did with the assignment 4, we'll do our Buildroot build. Again, this is going to cache your previous builds and it'll be faster the second
+time you implement it. If you're using a
+download cache, you should be able
+to skip the whole download step since a lot of the content that
+you've downloaded for assignment 4 will also be
+useful with assignment 5. That is going to kick
+off the QEMU instance and run your built
+image in QEMU. One thing you should see is this starting
+aesdsocket message that would come from your
+start-stop script showing that now we're starting our aesdsocket
+application as a part of the bring-up of QEMU. Then it's going to do
+the same login process. Then you should see it running the socket test
+application against your embedded aesdsocket
+application running on QEMU. It's the same output
+that we saw when we ran against the native
+implementation. But now again, we're
+port forwarding that port 9000 into QEMU, and we're actually testing the aesdsocket application
+that's running on QEMU. You should get the same
+output where it sends the strings and make sure it gets the right results
+back from the socket, and ending with this, complete with success message. For an example of how you can also run this interactively. If I do run QEMU, kick off my QEMU instance, I should see again that
+my aesdsocket application started automatically. If it didn't start
+automatically, it should be possible to, if you're troubleshooting
+this or something you could start it yourself. This would be one way you
+could interactively work with easdsocket
+application from QEMU. Now if I want to run socket test against my implementation, I can run assignment autoteststestassignment5buildroot
+in socket test. This will run that
+socket test script. Again, port forwarding port
+9000 into my QEMU instance. If I run socket test here, you should see if you
+have any print messages coming out of your
+socket test application, you'd see them here in QEMU. You should see this tests
+completed with success, this is essentially what the
+full-text script wrapper is doing but allows you to
+test it in isolation. Now one thing you will notice, if I try to run again, it's going to complete
+with failure. The reason it's going
+to fail is because we sent all the previous
+content in through the aesdsocket
+application and that the var temp file that we created that has the history
+of the commands we sent, is starting off with content and the socket test script
+doesn't expect that, it expects that you're
+running against the newly started
+aesdsocket application. What we can do for
+that, if we go back to our QEMU instance, if we log in here, and if we do etc/init.d/S99aesdsocket
+and you stop. That should stop our
+aesdsocket application. Now, if I do start that
+should restart it. Now, we should have cleared out that vartempaesdsocket
+data file. Now I can run socket test again and I should get a
+successful result this time, and I get that
+successful message. This is verifying that
+everything that we did with Part 1 is now working running inside QEMU
+on our embedded instance.

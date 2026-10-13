@@ -1,0 +1,992 @@
+1
+00:00:00,000 --> 00:00:02,865
+In this video, we're going
+to be talking about using
+
+2
+00:00:02,865 --> 00:00:05,595
+time with your user
+space programs.
+
+3
+00:00:05,595 --> 00:00:08,040
+We're going to talk about
+different time measurements
+
+4
+00:00:08,040 --> 00:00:09,960
+and formats that are
+supported by Linux,
+
+5
+00:00:09,960 --> 00:00:10,620
+we're going to talk about
+
+6
+00:00:10,620 --> 00:00:12,180
+different clock
+types you can use
+
+7
+00:00:12,180 --> 00:00:14,950
+for obtaining time
+and setting time,
+
+8
+00:00:14,950 --> 00:00:17,310
+and then we're going to talk
+about the functions you can
+
+9
+00:00:17,310 --> 00:00:20,280
+use for getting and setting
+time from user space.
+
+10
+00:00:20,280 --> 00:00:22,560
+There's three different
+measurement types
+
+11
+00:00:22,560 --> 00:00:24,060
+that the book discusses.
+
+12
+00:00:24,060 --> 00:00:27,645
+There's wall time, process
+time, and monotonic time.
+
+13
+00:00:27,645 --> 00:00:29,940
+The wall time is the actual time
+
+14
+00:00:29,940 --> 00:00:31,380
+and date to real-world clocks,
+
+15
+00:00:31,380 --> 00:00:32,550
+so what you see in the clock on
+
+16
+00:00:32,550 --> 00:00:33,915
+your system, for instance.
+
+17
+00:00:33,915 --> 00:00:36,670
+That one's often useful
+for user interaction,
+
+18
+00:00:36,670 --> 00:00:38,015
+so when you're
+talking to the user
+
+19
+00:00:38,015 --> 00:00:39,680
+about some specific event,
+
+20
+00:00:39,680 --> 00:00:40,925
+the time that it happened,
+
+21
+00:00:40,925 --> 00:00:43,085
+when you're giving the time now,
+
+22
+00:00:43,085 --> 00:00:45,895
+this is the time measurement
+that you'd want to use.
+
+23
+00:00:45,895 --> 00:00:47,700
+It's going to be
+localized so that
+
+24
+00:00:47,700 --> 00:00:50,255
+means time zone information
+is going to be relevant.
+
+25
+00:00:50,255 --> 00:00:52,025
+That means daylight
+savings time,
+
+26
+00:00:52,025 --> 00:00:53,900
+for instance, it's
+going to be relevant.
+
+27
+00:00:53,900 --> 00:00:57,170
+It might be saved
+and restored using
+
+28
+00:00:57,170 --> 00:01:02,760
+battery-powered hardware and
+special hardware support
+
+29
+00:01:02,760 --> 00:01:04,725
+so a real-time
+clock for instance.
+
+30
+00:01:04,725 --> 00:01:08,240
+It's often updated with
+Network Time Protocol or NTP,
+
+31
+00:01:08,240 --> 00:01:11,000
+which allows us to synchronize
+with clocks that are
+
+32
+00:01:11,000 --> 00:01:15,060
+available and known
+good references times.
+
+33
+00:01:15,710 --> 00:01:17,870
+The other types of
+
+34
+00:01:17,870 --> 00:01:20,000
+time measurements that
+we can get from Linux
+
+35
+00:01:20,000 --> 00:01:23,750
+besides wall time
+is process time.
+
+36
+00:01:23,750 --> 00:01:25,040
+This would be the time that's
+
+37
+00:01:25,040 --> 00:01:27,575
+spent executing on a processor.
+
+38
+00:01:27,575 --> 00:01:30,125
+The total time that
+
+39
+00:01:30,125 --> 00:01:32,330
+your process spends
+executing on a processor,
+
+40
+00:01:32,330 --> 00:01:33,995
+could be less than wall time
+
+41
+00:01:33,995 --> 00:01:36,650
+because your process is
+going to get interrupted.
+
+42
+00:01:36,650 --> 00:01:37,880
+Or it actually could be more
+
+43
+00:01:37,880 --> 00:01:39,650
+than wall time
+because if you have
+
+44
+00:01:39,650 --> 00:01:41,720
+multiprocessors and
+you're splitting
+
+45
+00:01:41,720 --> 00:01:43,940
+your process across
+multiple processors,
+
+46
+00:01:43,940 --> 00:01:45,920
+the total amount of
+process time could
+
+47
+00:01:45,920 --> 00:01:49,045
+actually be more than the
+amount of wall clock time.
+
+48
+00:01:49,045 --> 00:01:52,980
+Then monotonic time which
+is always increasing.
+
+49
+00:01:52,980 --> 00:01:56,360
+You can think of that
+as system up time,
+
+50
+00:01:56,360 --> 00:01:59,310
+the amount of time that the
+system has been running.
+
+51
+00:02:00,350 --> 00:02:03,290
+The time measurement
+formats that we'll use with
+
+52
+00:02:03,290 --> 00:02:07,145
+these different
+time measurements
+
+53
+00:02:07,145 --> 00:02:10,300
+are relative time
+or absolute time.
+
+54
+00:02:10,300 --> 00:02:12,740
+Relative time is going
+to be relative to
+
+55
+00:02:12,740 --> 00:02:14,420
+some specific time so now
+
+56
+00:02:14,420 --> 00:02:16,565
+would be an example
+of a relative time.
+
+57
+00:02:16,565 --> 00:02:19,940
+Then you can have
+a relationship to
+
+58
+00:02:19,940 --> 00:02:21,650
+the current time being something
+
+59
+00:02:21,650 --> 00:02:24,070
+like five seconds from
+now, 10 minutes ago.
+
+60
+00:02:24,070 --> 00:02:26,900
+For this you would typically
+want to use monotonic time
+
+61
+00:02:26,900 --> 00:02:29,210
+because wall clock time
+
+62
+00:02:29,210 --> 00:02:31,460
+we could be adjusting
+that, for instance,
+
+63
+00:02:31,460 --> 00:02:35,645
+due to NTP or due to an
+adjustment from the user,
+
+64
+00:02:35,645 --> 00:02:37,890
+or due to something like
+daylight savings time,
+
+65
+00:02:37,890 --> 00:02:40,250
+and we wouldn't want
+our relative time to
+
+66
+00:02:40,250 --> 00:02:44,200
+change based on changes
+made to a specific clock.
+
+67
+00:02:44,200 --> 00:02:47,510
+Then absolute time measurements
+aren't relative to
+
+68
+00:02:47,510 --> 00:02:48,845
+a benchmark they describe
+
+69
+00:02:48,845 --> 00:02:51,245
+a certain point in
+wall clock time.
+
+70
+00:02:51,245 --> 00:02:53,465
+September 24th at 3:00 PM,
+
+71
+00:02:53,465 --> 00:02:54,560
+Mountain Daylight Time would be
+
+72
+00:02:54,560 --> 00:02:56,165
+an example of an absolute time.
+
+73
+00:02:56,165 --> 00:02:58,240
+It's something that you
+would see in a calendar.
+
+74
+00:02:58,240 --> 00:03:01,115
+In Linux these are all tract
+relative to the epoch.
+
+75
+00:03:01,115 --> 00:03:05,040
+The epoch was midnight,
+January 1st, 1970.
+
+76
+00:03:05,040 --> 00:03:07,475
+When they're writing
+the POSIX library,
+
+77
+00:03:07,475 --> 00:03:10,220
+they figured no computer
+was going to need to deal
+
+78
+00:03:10,220 --> 00:03:13,040
+with a current clock time
+earlier than January 1st,
+
+79
+00:03:13,040 --> 00:03:15,665
+1970 based on when the
+standard was written,
+
+80
+00:03:15,665 --> 00:03:19,520
+so they use this as the
+time zero essentially for
+
+81
+00:03:19,520 --> 00:03:24,870
+calculating when an absolute
+time event is occurring.
+
+82
+00:03:24,950 --> 00:03:27,275
+How does this actually
+
+83
+00:03:27,275 --> 00:03:29,330
+get calculated by
+the Linux kernel?
+
+84
+00:03:29,330 --> 00:03:31,010
+Turns out there's a system timer
+
+85
+00:03:31,010 --> 00:03:32,570
+that we'll talk in
+more detail about
+
+86
+00:03:32,570 --> 00:03:35,870
+when we get into the specifics
+of kernel programming,
+
+87
+00:03:35,870 --> 00:03:38,100
+and it's using a specific
+interval frequency.
+
+88
+00:03:38,100 --> 00:03:40,700
+It's going to increment the
+elapsed time by one unit
+
+89
+00:03:40,700 --> 00:03:43,310
+every time there's an
+interval that ends,
+
+90
+00:03:43,310 --> 00:03:44,960
+and those intervals
+are referred to
+
+91
+00:03:44,960 --> 00:03:46,915
+in the kernel as
+ticks or jiffies.
+
+92
+00:03:46,915 --> 00:03:48,810
+A jiffy counter in the kernel is
+
+93
+00:03:48,810 --> 00:03:50,660
+going to be a 64-bit value
+
+94
+00:03:50,660 --> 00:03:52,610
+that is incremented
+
+95
+00:03:52,610 --> 00:03:55,640
+every hertz frequency
+of the system timer.
+
+96
+00:03:55,640 --> 00:03:57,890
+The hertz value is
+going to be platform
+
+97
+00:03:57,890 --> 00:04:02,930
+independent but
+historical x86 values
+
+98
+00:04:02,930 --> 00:04:05,150
+which is probably what you're
+using if you're using a PC,
+
+99
+00:04:05,150 --> 00:04:06,770
+for instance, would range
+
+100
+00:04:06,770 --> 00:04:08,840
+from 100 hertz to 1,000 hertz so
+
+101
+00:04:08,840 --> 00:04:10,340
+that's typically the interval
+
+102
+00:04:10,340 --> 00:04:13,480
+that the software clock
+is going to be updated.
+
+103
+00:04:13,480 --> 00:04:16,455
+What about jiffies
+time rollover?
+
+104
+00:04:16,455 --> 00:04:19,395
+If you have a 64-bit
+jiffies timer,
+
+105
+00:04:19,395 --> 00:04:24,320
+and you're using x86 and
+the Jiffy is 0.004 seconds,
+
+106
+00:04:24,320 --> 00:04:27,200
+then the rollover would be
+at about 5.8 billion years,
+
+107
+00:04:27,200 --> 00:04:30,739
+so nothing that we need to
+worry about in our lifetimes.
+
+108
+00:04:30,739 --> 00:04:34,520
+The frequency of the system
+timer is called hertz,
+
+109
+00:04:34,520 --> 00:04:37,805
+and that's architecture
+specific as mentioned before.
+
+110
+00:04:37,805 --> 00:04:39,470
+The POSIX time APIs are
+
+111
+00:04:39,470 --> 00:04:40,880
+going to convert it
+for us so when we're
+
+112
+00:04:40,880 --> 00:04:44,045
+in user space we don't care
+about the value of hertz.
+
+113
+00:04:44,045 --> 00:04:45,770
+We'll talk more about
+that when we get in
+
+114
+00:04:45,770 --> 00:04:48,390
+the kernel driver development.
+
+115
+00:04:48,560 --> 00:04:53,690
+The simplest time representation
+in Linux is the time_t,
+
+116
+00:04:53,690 --> 00:04:56,225
+which is defined as
+typedef long time_t.
+
+117
+00:04:56,225 --> 00:04:58,220
+This is going to
+represent the number
+
+118
+00:04:58,220 --> 00:04:59,480
+of seconds since the epoch
+
+119
+00:04:59,480 --> 00:05:03,265
+which was that January
+1st, 1970 time.
+
+120
+00:05:03,265 --> 00:05:05,330
+One thing to note about this,
+
+121
+00:05:05,330 --> 00:05:07,820
+we talked about 64-bit
+jiffies rollover,
+
+122
+00:05:07,820 --> 00:05:10,790
+but if we're counting
+seconds since the epoch,
+
+123
+00:05:10,790 --> 00:05:13,925
+it turns out if we only
+have a 32-bit long value,
+
+124
+00:05:13,925 --> 00:05:15,875
+then we're going to roll over
+
+125
+00:05:15,875 --> 00:05:20,120
+that 32 value on Monday the
+18th of January in 2038.
+
+126
+00:05:20,120 --> 00:05:23,180
+If you remember reading
+about the Y2K problem,
+
+127
+00:05:23,180 --> 00:05:25,160
+or if you're like me and
+you live through it,
+
+128
+00:05:25,160 --> 00:05:27,350
+we have another one of
+those coming up for
+
+129
+00:05:27,350 --> 00:05:30,740
+32-bit systems in
+January of 2038.
+
+130
+00:05:30,740 --> 00:05:32,900
+Hopefully most of
+the 32-bit systems
+
+131
+00:05:32,900 --> 00:05:34,745
+will be phased out by that time.
+
+132
+00:05:34,745 --> 00:05:36,895
+But no doubt,
+
+133
+00:05:36,895 --> 00:05:39,200
+some group of us
+is probably going
+
+134
+00:05:39,200 --> 00:05:42,010
+to be dealing with
+this problem in 2038.
+
+135
+00:05:42,010 --> 00:05:44,090
+One thing that you might ask
+
+136
+00:05:44,090 --> 00:05:45,770
+is if we're only counting
+seconds with this,
+
+137
+00:05:45,770 --> 00:05:48,545
+how do I get sub-second
+precision with timing?
+
+138
+00:05:48,545 --> 00:05:51,320
+There's a solution for that that
+
+139
+00:05:51,320 --> 00:05:54,595
+we'll mention in a future slide.
+
+140
+00:05:54,595 --> 00:05:57,020
+The clock real-time is one of
+
+141
+00:05:57,020 --> 00:05:58,220
+the clock types
+that's going to be
+
+142
+00:05:58,220 --> 00:06:00,080
+the system wide wall clock time.
+
+143
+00:06:00,080 --> 00:06:02,630
+That's the one you can
+actually set or update based
+
+144
+00:06:02,630 --> 00:06:06,385
+on information about the
+correct current time.
+
+145
+00:06:06,385 --> 00:06:07,680
+Then clock monotonic is
+
+146
+00:06:07,680 --> 00:06:09,020
+the one that's not
+settable it's going
+
+147
+00:06:09,020 --> 00:06:12,035
+to be elapsed time since the
+starting point like boot.
+
+148
+00:06:12,035 --> 00:06:13,700
+There are other clocks that
+
+149
+00:06:13,700 --> 00:06:15,200
+your book covers as
+well but these are
+
+150
+00:06:15,200 --> 00:06:16,580
+the main two that
+we're going to discuss
+
+151
+00:06:16,580 --> 00:06:18,640
+for the purpose of this course.
+
+152
+00:06:18,640 --> 00:06:22,295
+When would you use clock
+monotonic over clock real-time?
+
+153
+00:06:22,295 --> 00:06:23,540
+You wouldn't want to use clock
+
+154
+00:06:23,540 --> 00:06:24,620
+real-time when you're measuring
+
+155
+00:06:24,620 --> 00:06:27,320
+intervals that are depending
+on system time not changing.
+
+156
+00:06:27,320 --> 00:06:30,170
+Remember, if clock real-time can
+
+157
+00:06:30,170 --> 00:06:33,080
+change and you're using a
+measurement in relative time,
+
+158
+00:06:33,080 --> 00:06:35,540
+you wouldn't want daylight
+savings event, for instance,
+
+159
+00:06:35,540 --> 00:06:36,860
+to make you think
+that you waited
+
+160
+00:06:36,860 --> 00:06:39,085
+an hour when you
+actually didn't.
+
+161
+00:06:39,085 --> 00:06:42,905
+The system might be
+setting that time
+
+162
+00:06:42,905 --> 00:06:45,130
+ahead or backwards depending
+
+163
+00:06:45,130 --> 00:06:48,625
+on the time correction that
+you're trying to perform.
+
+164
+00:06:48,625 --> 00:06:52,450
+How do you get more
+accurate representations
+
+165
+00:06:52,450 --> 00:06:55,515
+then no single digits seconds?
+
+166
+00:06:55,515 --> 00:06:57,970
+You can use timeval
+or timespec to get
+
+167
+00:06:57,970 --> 00:07:00,490
+microsecond or
+nanosecond resolution.
+
+168
+00:07:00,490 --> 00:07:01,510
+There's a set of
+
+169
+00:07:01,510 --> 00:07:03,340
+functions that you can use
+with each one of these
+
+170
+00:07:03,340 --> 00:07:08,255
+to obtain or to set based
+on higher precisions.
+
+171
+00:07:08,255 --> 00:07:10,545
+There's also a TM,
+
+172
+00:07:10,545 --> 00:07:12,205
+a representation which is
+
+173
+00:07:12,205 --> 00:07:13,810
+going to give you the
+human-readable time.
+
+174
+00:07:13,810 --> 00:07:16,374
+This will give you
+seconds, minutes, hours,
+
+175
+00:07:16,374 --> 00:07:18,970
+the absolute time
+that we referenced
+
+176
+00:07:18,970 --> 00:07:21,740
+when we talked about an
+example of absolute time.
+
+177
+00:07:21,740 --> 00:07:23,530
+There's a whole list of
+
+178
+00:07:23,530 --> 00:07:25,630
+functions here that
+you can use with this,
+
+179
+00:07:25,630 --> 00:07:27,499
+and they're some suggestions
+
+180
+00:07:27,499 --> 00:07:28,610
+about which of these you should
+
+181
+00:07:28,610 --> 00:07:31,700
+use in terms of
+being thread-safe,
+
+182
+00:07:31,700 --> 00:07:34,460
+for instance, or being
+generally safer to
+
+183
+00:07:34,460 --> 00:07:38,790
+use for obtaining the time
+representation as TM.
+
+184
+00:07:38,840 --> 00:07:41,480
+Talking specifically
+about how we can
+
+185
+00:07:41,480 --> 00:07:43,190
+get clock time using
+
+186
+00:07:43,190 --> 00:07:44,720
+the timespec structure which is
+
+187
+00:07:44,720 --> 00:07:47,945
+the higher precision that
+we mentioned before.
+
+188
+00:07:47,945 --> 00:07:51,110
+The clock time or
+
+189
+00:07:51,110 --> 00:07:53,135
+the get clock time function
+
+190
+00:07:53,135 --> 00:07:54,960
+is going to take
+o'clock Id argument.
+
+191
+00:07:54,960 --> 00:07:55,970
+That's going to be
+one of the clocks
+
+192
+00:07:55,970 --> 00:07:57,050
+that we mentioned before so
+
+193
+00:07:57,050 --> 00:08:00,170
+real-time and monotonic
+are two examples.
+
+194
+00:08:00,170 --> 00:08:03,420
+Then the timespec structure
+that needs to fill in.
+
+195
+00:08:04,490 --> 00:08:07,805
+You'd want to use
+clock real-time with
+
+196
+00:08:07,805 --> 00:08:09,620
+clock set time when
+
+197
+00:08:09,620 --> 00:08:11,190
+you're actually using
+it to set the time.
+
+198
+00:08:11,190 --> 00:08:12,320
+Again, because clock
+
+199
+00:08:12,320 --> 00:08:14,260
+monotonic isn't going
+to be settable.
+
+200
+00:08:14,260 --> 00:08:16,670
+It's important to note
+that you might need
+
+201
+00:08:16,670 --> 00:08:19,700
+elevated permissions
+to set the clock time,
+
+202
+00:08:19,700 --> 00:08:21,230
+you wouldn't want
+unprivileged user
+
+203
+00:08:21,230 --> 00:08:23,760
+to be able to
+arbitrarily served.
+
+204
+00:08:24,080 --> 00:08:27,605
+There's also a add
+
+205
+00:08:27,605 --> 00:08:30,560
+adjust time function
+that can be used by
+
+206
+00:08:30,560 --> 00:08:33,080
+the NTP daemon that
+
+207
+00:08:33,080 --> 00:08:37,570
+begins slowly adjusting
+the system time.
+
+208
+00:08:37,570 --> 00:08:40,010
+The benefit of this one
+is that it wouldn't
+
+209
+00:08:40,010 --> 00:08:41,660
+move the clock backwards
+which could be
+
+210
+00:08:41,660 --> 00:08:43,340
+disruptive to programs that
+
+211
+00:08:43,340 --> 00:08:45,350
+are referencing absolute time.
+
+212
+00:08:45,350 --> 00:08:49,110
+This is another option
+for setting the time.

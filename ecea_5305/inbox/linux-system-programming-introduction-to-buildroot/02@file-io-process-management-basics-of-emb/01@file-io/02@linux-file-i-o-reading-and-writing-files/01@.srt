@@ -1,0 +1,1226 @@
+1
+00:00:00,410 --> 00:00:02,820
+In this video, we're
+going to continue on
+
+2
+00:00:02,820 --> 00:00:04,500
+the theme of Linux file IO,
+
+3
+00:00:04,500 --> 00:00:06,420
+but move past open and
+
+4
+00:00:06,420 --> 00:00:08,955
+talk about actually
+reading and writing files.
+
+5
+00:00:08,955 --> 00:00:10,500
+The learning objectives here,
+
+6
+00:00:10,500 --> 00:00:12,450
+we're going to discuss
+reading and writing files.
+
+7
+00:00:12,450 --> 00:00:14,520
+We're going to learn
+how umask influences
+
+8
+00:00:14,520 --> 00:00:16,680
+file permissions that we've
+
+9
+00:00:16,680 --> 00:00:20,160
+talked about that Linux
+has and uses today.
+
+10
+00:00:20,160 --> 00:00:22,800
+We're also going to
+get an introduction to
+
+11
+00:00:22,800 --> 00:00:24,390
+a really useful tool
+that we're going to use
+
+12
+00:00:24,390 --> 00:00:27,160
+throughout the semester
+called strace.
+
+13
+00:00:27,170 --> 00:00:29,970
+In terms of reading
+file content,
+
+14
+00:00:29,970 --> 00:00:32,265
+once you've got that file
+descriptor from open,
+
+15
+00:00:32,265 --> 00:00:33,765
+you can use it with read,
+
+16
+00:00:33,765 --> 00:00:36,480
+very similar to the way
+you'd use the filehandle
+
+17
+00:00:36,480 --> 00:00:39,750
+that you use with F read
+and buffered IO today.
+
+18
+00:00:39,750 --> 00:00:42,170
+The return value from read
+is going to be the number of
+
+19
+00:00:42,170 --> 00:00:44,880
+bytes read or minus
+one on error.
+
+20
+00:00:44,880 --> 00:00:45,965
+If there is an error,
+
+21
+00:00:45,965 --> 00:00:49,145
+it's going to set errono and
+this relates to the Linux,
+
+22
+00:00:49,145 --> 00:00:51,635
+the discussion that
+we talked about in
+
+23
+00:00:51,635 --> 00:00:55,295
+previous weeks' videos
+regarding Linux error handling.
+
+24
+00:00:55,295 --> 00:00:57,740
+If there is a return
+value less than count,
+
+25
+00:00:57,740 --> 00:01:00,770
+that means that there's no
+more bytes available now.
+
+26
+00:01:00,770 --> 00:01:04,150
+This would be if it's less
+than count but not negative.
+
+27
+00:01:04,150 --> 00:01:06,050
+Some reasons that
+there might not be
+
+28
+00:01:06,050 --> 00:01:07,340
+any bytes available
+now it would be
+
+29
+00:01:07,340 --> 00:01:10,190
+maybe you've read all the
+way to the end of the file,
+
+30
+00:01:10,190 --> 00:01:13,280
+or maybe your read got
+interrupted by a signal
+
+31
+00:01:13,280 --> 00:01:17,790
+like the signals that we talked
+about in previous weeks.
+
+32
+00:01:17,800 --> 00:01:21,260
+I've got a really simple
+example here that's
+
+33
+00:01:21,260 --> 00:01:24,380
+linked from this lecture
+slide that you can go over,
+
+34
+00:01:24,380 --> 00:01:31,040
+that illustrates a combination
+of create on Open and
+
+35
+00:01:31,040 --> 00:01:34,100
+also the functionality
+of read related
+
+36
+00:01:34,100 --> 00:01:36,770
+to returning when there's
+
+37
+00:01:36,770 --> 00:01:39,790
+no bytes available
+to read in the file.
+
+38
+00:01:39,790 --> 00:01:43,040
+This is really
+simple application,
+
+39
+00:01:43,040 --> 00:01:44,750
+just tries to read
+the first byte of
+
+40
+00:01:44,750 --> 00:01:47,135
+a file but if the
+file doesn't exist,
+
+41
+00:01:47,135 --> 00:01:48,545
+it creates it with zero size.
+
+42
+00:01:48,545 --> 00:01:50,430
+This can help us just
+
+43
+00:01:50,430 --> 00:01:53,010
+investigate how
+permission handling is
+
+44
+00:01:53,010 --> 00:01:56,300
+handled relative to open
+
+45
+00:01:56,300 --> 00:02:00,270
+and also how read deals with
+files that are zeroing.
+
+46
+00:02:00,710 --> 00:02:03,020
+One of the things that
+you'll notice if you look at
+
+47
+00:02:03,020 --> 00:02:04,955
+this code and if
+you try to run it,
+
+48
+00:02:04,955 --> 00:02:07,880
+if you run it with no file,
+
+49
+00:02:07,880 --> 00:02:11,630
+the application's going
+to try to operate on
+
+50
+00:02:11,630 --> 00:02:13,220
+this empty file based on
+
+51
+00:02:13,220 --> 00:02:16,735
+the parameters passed in
+the run empty file script.
+
+52
+00:02:16,735 --> 00:02:18,935
+One of the things
+you'll notice is,
+
+53
+00:02:18,935 --> 00:02:22,010
+despite the fact that I'm
+opening it here with read,
+
+54
+00:02:22,010 --> 00:02:24,485
+write, and execute
+permissions for others.
+
+55
+00:02:24,485 --> 00:02:27,620
+If you look at the
+empty file permissions
+
+56
+00:02:27,620 --> 00:02:31,190
+for the file that gets
+created in Open Stack,
+
+57
+00:02:31,190 --> 00:02:35,220
+on your virtual-box VM,
+
+58
+00:02:35,220 --> 00:02:36,585
+or on your Linux machine,
+
+59
+00:02:36,585 --> 00:02:38,015
+what you'll notice is that
+
+60
+00:02:38,015 --> 00:02:39,290
+the write permission is
+
+61
+00:02:39,290 --> 00:02:41,420
+actually missing for
+the others group,
+
+62
+00:02:41,420 --> 00:02:42,860
+even though we've specified it
+
+63
+00:02:42,860 --> 00:02:45,425
+here in the open permissions.
+
+64
+00:02:45,425 --> 00:02:47,910
+What happened to that,
+right permission?
+
+65
+00:02:47,910 --> 00:02:50,535
+It was actually
+cleared by the umask.
+
+66
+00:02:50,535 --> 00:02:53,730
+That begs the question,
+what is umask?
+
+67
+00:02:53,730 --> 00:02:56,255
+Umask is really just
+a per-process way
+
+68
+00:02:56,255 --> 00:02:59,300
+that you can restrict the
+permission set on files.
+
+69
+00:02:59,300 --> 00:03:03,770
+If you can basically
+make it so that even if
+
+70
+00:03:03,770 --> 00:03:05,360
+an application is trying to open
+
+71
+00:03:05,360 --> 00:03:08,675
+a file with some
+set of permissions,
+
+72
+00:03:08,675 --> 00:03:11,405
+as a system administrator,
+
+73
+00:03:11,405 --> 00:03:12,830
+restrict the level of
+
+74
+00:03:12,830 --> 00:03:14,960
+permissions that a
+person could give by
+
+75
+00:03:14,960 --> 00:03:19,220
+default from that process on
+any files that were created.
+
+76
+00:03:19,220 --> 00:03:21,770
+There are reasons why
+you might not want
+
+77
+00:03:21,770 --> 00:03:24,050
+a default application to be
+
+78
+00:03:24,050 --> 00:03:26,675
+creating files that
+anyone could write.
+
+79
+00:03:26,675 --> 00:03:30,720
+By having the default
+umask set to 0002,
+
+80
+00:03:30,720 --> 00:03:35,925
+what this essentially does
+is a bitwise invert or
+
+81
+00:03:35,925 --> 00:03:38,745
+a bitwise mask off of the bit
+
+82
+00:03:38,745 --> 00:03:42,000
+two which of course would
+be the write permission.
+
+83
+00:03:42,000 --> 00:03:45,195
+This is a way that you
+can set four processes.
+
+84
+00:03:45,195 --> 00:03:50,879
+Don't give new file
+creation permission
+
+85
+00:03:50,879 --> 00:03:53,530
+for right by default
+using umask 2,
+
+86
+00:03:53,530 --> 00:03:56,165
+and that happens to be
+the default for Ubuntu,
+
+87
+00:03:56,165 --> 00:03:59,020
+that's why we're seeing
+this particular behavior.
+
+88
+00:03:59,020 --> 00:04:02,250
+What would happen if I
+change my umask to three?
+
+89
+00:04:02,250 --> 00:04:04,565
+Then instead of just
+masking off the right bit,
+
+90
+00:04:04,565 --> 00:04:06,410
+I'm also going to
+mask off execute bit.
+
+91
+00:04:06,410 --> 00:04:07,760
+If you can use
+
+92
+00:04:07,760 --> 00:04:10,040
+the umask command to do
+this, and when you do,
+
+93
+00:04:10,040 --> 00:04:11,750
+you'll see that creating that
+
+94
+00:04:11,750 --> 00:04:14,510
+empty file results in
+neither the right nor the
+
+95
+00:04:14,510 --> 00:04:16,445
+execute bit set clear
+
+96
+00:04:16,445 --> 00:04:20,040
+or neither right nor
+execute bit itself.
+
+97
+00:04:20,050 --> 00:04:22,580
+One other thing I wanted
+
+98
+00:04:22,580 --> 00:04:24,110
+to introduce here now
+that we're talking
+
+99
+00:04:24,110 --> 00:04:25,940
+about little more about
+
+100
+00:04:25,940 --> 00:04:29,045
+the interaction between
+kernel space and userspace.
+
+101
+00:04:29,045 --> 00:04:31,340
+I want to introduce
+the tool Strace,
+
+102
+00:04:31,340 --> 00:04:33,110
+and this is a really useful tool
+
+103
+00:04:33,110 --> 00:04:35,090
+that we'll be using throughout
+the semester because it
+
+104
+00:04:35,090 --> 00:04:36,770
+helps us see exactly
+what's happening
+
+105
+00:04:36,770 --> 00:04:39,235
+between user space
+and kernel space.
+
+106
+00:04:39,235 --> 00:04:41,795
+It's like a protocol
+analyzer for
+
+107
+00:04:41,795 --> 00:04:43,190
+the system call traces that are
+
+108
+00:04:43,190 --> 00:04:44,690
+happening from userspace,
+
+109
+00:04:44,690 --> 00:04:46,550
+showing exactly what's getting
+
+110
+00:04:46,550 --> 00:04:49,210
+called and what's getting
+returned from the kernel.
+
+111
+00:04:49,210 --> 00:04:51,930
+If you run the Strace with
+
+112
+00:04:51,930 --> 00:04:54,440
+the read-file execution
+application that I
+
+113
+00:04:54,440 --> 00:04:57,970
+mentioned earlier and the
+parameter empty file,
+
+114
+00:04:57,970 --> 00:05:02,330
+you can see that the open
+command, so open app,
+
+115
+00:05:02,330 --> 00:05:04,070
+in this case, the
+actual system call for
+
+116
+00:05:04,070 --> 00:05:06,635
+open is occurring and
+it's returning three.
+
+117
+00:05:06,635 --> 00:05:08,300
+Three is going to be our file
+
+118
+00:05:08,300 --> 00:05:10,110
+descriptor and then you can see
+
+119
+00:05:10,110 --> 00:05:14,630
+the call that's going to check
+that the file for content,
+
+120
+00:05:14,630 --> 00:05:15,980
+there's a read on
+
+121
+00:05:15,980 --> 00:05:18,110
+that same three file
+descriptor that
+
+122
+00:05:18,110 --> 00:05:20,585
+we opened here in
+the previous step,
+
+123
+00:05:20,585 --> 00:05:22,990
+and you can see that it's
+returning zero bytes.
+
+124
+00:05:22,990 --> 00:05:25,250
+One thing to know
+about this is this
+
+125
+00:05:25,250 --> 00:05:27,475
+did not require any source
+code for read file.
+
+126
+00:05:27,475 --> 00:05:30,410
+This could work on
+anyone, any application,
+
+127
+00:05:30,410 --> 00:05:32,345
+including just a binary that you
+
+128
+00:05:32,345 --> 00:05:35,210
+got from a closed source
+application for instance.
+
+129
+00:05:35,210 --> 00:05:38,060
+Again, it's a really useful tool
+
+130
+00:05:38,060 --> 00:05:40,040
+that we'll use throughout
+the semester and
+
+131
+00:05:40,040 --> 00:05:42,060
+it can help illustrate
+
+132
+00:05:42,060 --> 00:05:43,180
+how the interaction is
+
+133
+00:05:43,180 --> 00:05:45,155
+working between user
+and kernel space.
+
+134
+00:05:45,155 --> 00:05:48,050
+In addition to file data,
+
+135
+00:05:48,050 --> 00:05:50,420
+we can also use the
+open command with.
+
+136
+00:05:50,420 --> 00:05:52,790
+With fifos or pipes,
+
+137
+00:05:52,790 --> 00:05:54,590
+and fifos and pipes have
+
+138
+00:05:54,590 --> 00:05:56,915
+additional option of 0_NONBLOCK,
+
+139
+00:05:56,915 --> 00:06:00,575
+which can be used to open
+in non-blocking mode.
+
+140
+00:06:00,575 --> 00:06:03,440
+When you use in
+non-blocking mode,
+
+141
+00:06:03,440 --> 00:06:04,850
+rather than the default behavior
+
+142
+00:06:04,850 --> 00:06:07,700
+for fifo or a pipe,
+which is the block,
+
+143
+00:06:07,700 --> 00:06:11,600
+waiting for access or waiting
+for data from the pipe,
+
+144
+00:06:11,600 --> 00:06:15,800
+you'll get a return of
+EAGAIN to mean that there's
+
+145
+00:06:15,800 --> 00:06:17,840
+no data available which
+you can then pull from
+
+146
+00:06:17,840 --> 00:06:21,360
+your application to wait
+for data available.
+
+147
+00:06:21,550 --> 00:06:24,185
+There's an example of this,
+
+148
+00:06:24,185 --> 00:06:28,685
+creating a pipe and using
+this with readfile.
+
+149
+00:06:28,685 --> 00:06:35,165
+It's also attached
+to this slide deck.
+
+150
+00:06:35,165 --> 00:06:39,155
+What you can see if
+you run this example,
+
+151
+00:06:39,155 --> 00:06:40,850
+if you start one thread,
+
+152
+00:06:40,850 --> 00:06:42,290
+you'll see that by
+default it's going to
+
+153
+00:06:42,290 --> 00:06:43,820
+block waiting for access
+
+154
+00:06:43,820 --> 00:06:45,620
+to the pipe that's
+
+155
+00:06:45,620 --> 00:06:47,675
+created in the current
+directory called pipe.
+
+156
+00:06:47,675 --> 00:06:49,370
+If you open another
+terminal window
+
+157
+00:06:49,370 --> 00:06:50,600
+and you just echo anything,
+
+158
+00:06:50,600 --> 00:06:51,995
+write anything into that pipe,
+
+159
+00:06:51,995 --> 00:06:53,795
+you'll get the response and
+
+160
+00:06:53,795 --> 00:06:55,970
+the application will come
+
+161
+00:06:55,970 --> 00:06:58,265
+back with the byte that
+was written into the pipe.
+
+162
+00:06:58,265 --> 00:06:59,930
+That's the default
+behavior that you
+
+163
+00:06:59,930 --> 00:07:02,085
+get without specifying
+0_NONBLOCK.
+
+164
+00:07:02,085 --> 00:07:04,375
+But if you specify 0_NONBLOCK,
+
+165
+00:07:04,375 --> 00:07:07,980
+what you'll see when
+you run this example
+
+166
+00:07:07,980 --> 00:07:10,220
+is that instead of
+blocking and waiting for
+
+167
+00:07:10,220 --> 00:07:12,410
+this command to be executed
+from the terminal,
+
+168
+00:07:12,410 --> 00:07:14,690
+you'll get a EAGAIN
+returned back from read,
+
+169
+00:07:14,690 --> 00:07:17,720
+indicating that there's no
+data available to read,
+
+170
+00:07:17,720 --> 00:07:21,900
+and you can just call read
+as many times as you want.
+
+171
+00:07:22,780 --> 00:07:25,730
+We've talked about
+reading files and some of
+
+172
+00:07:25,730 --> 00:07:28,505
+the modes related
+to read access.
+
+173
+00:07:28,505 --> 00:07:30,755
+You can of course
+also write a file.
+
+174
+00:07:30,755 --> 00:07:32,945
+This again is going to
+look really similar to
+
+175
+00:07:32,945 --> 00:07:35,330
+what you do with f
+write where you're
+
+176
+00:07:35,330 --> 00:07:37,715
+going to specify the
+file descriptor and
+
+177
+00:07:37,715 --> 00:07:40,445
+then give it a buffer and
+the size of bytes to write,
+
+178
+00:07:40,445 --> 00:07:43,385
+and it's going to return the
+number of bytes written.
+
+179
+00:07:43,385 --> 00:07:45,620
+One thing to know, and I've
+
+180
+00:07:45,620 --> 00:07:47,690
+mentioned before that
+there are options for
+
+181
+00:07:47,690 --> 00:07:52,340
+synchronized operation on
+the mode option for open.
+
+182
+00:07:52,340 --> 00:07:54,620
+So synchronized IO becomes
+
+183
+00:07:54,620 --> 00:07:57,410
+important when we talk
+about write behavior.
+
+184
+00:07:57,410 --> 00:08:01,100
+By default, if
+
+185
+00:08:01,100 --> 00:08:02,390
+you write to a file and
+
+186
+00:08:02,390 --> 00:08:04,520
+that file is ultimately
+located on disk,
+
+187
+00:08:04,520 --> 00:08:06,395
+one thing that might
+be a little confusing
+
+188
+00:08:06,395 --> 00:08:07,670
+is that when you complete
+
+189
+00:08:07,670 --> 00:08:09,020
+the write command and let's say
+
+190
+00:08:09,020 --> 00:08:10,805
+the write command
+completes successfully,
+
+191
+00:08:10,805 --> 00:08:12,260
+that does not actually mean that
+
+192
+00:08:12,260 --> 00:08:14,540
+the bits were
+manipulated on disk.
+
+193
+00:08:14,540 --> 00:08:16,340
+What that just means is
+that you've written it
+
+194
+00:08:16,340 --> 00:08:18,110
+into a buffer somewhere in
+
+195
+00:08:18,110 --> 00:08:19,970
+the kernel and it's intended to
+
+196
+00:08:19,970 --> 00:08:22,650
+be destined for
+the disk ultimate.
+
+197
+00:08:22,650 --> 00:08:24,205
+Why would we do it this way?
+
+198
+00:08:24,205 --> 00:08:26,110
+Why wouldn't you wait until
+
+199
+00:08:26,110 --> 00:08:28,600
+the write returns
+with success and
+
+200
+00:08:28,600 --> 00:08:29,950
+actually is written
+completely out to
+
+201
+00:08:29,950 --> 00:08:33,275
+the disk in order to know
+that that was successful?
+
+202
+00:08:33,275 --> 00:08:34,580
+Well, the main reason for that
+
+203
+00:08:34,580 --> 00:08:35,915
+is because disks are slow.
+
+204
+00:08:35,915 --> 00:08:38,120
+Relative your program seek
+
+205
+00:08:38,120 --> 00:08:40,430
+times on a spinning hard
+drive, for instance,
+
+206
+00:08:40,430 --> 00:08:42,800
+are in probably tens to
+hundreds of milliseconds,
+
+207
+00:08:42,800 --> 00:08:44,540
+which is an eternity
+when you're talking
+
+208
+00:08:44,540 --> 00:08:49,610
+about code running on
+a gigahertz processor.
+
+209
+00:08:49,610 --> 00:08:53,060
+That's really the main reason
+that by default you won't
+
+210
+00:08:53,060 --> 00:08:57,005
+have writes waiting for
+data to be written to disk.
+
+211
+00:08:57,005 --> 00:08:59,630
+But we can control this
+when we're opening based
+
+212
+00:08:59,630 --> 00:09:03,120
+on how we flag for
+synchronized IO.
+
+213
+00:09:03,220 --> 00:09:06,530
+If we don't use synchronized IO,
+
+214
+00:09:06,530 --> 00:09:07,880
+which again is the default,
+
+215
+00:09:07,880 --> 00:09:10,130
+when would it be a problem
+that we hadn't actually
+
+216
+00:09:10,130 --> 00:09:12,680
+flushed all the file
+contents of disc?
+
+217
+00:09:12,680 --> 00:09:14,825
+This would be a problem
+on unclean shut down
+
+218
+00:09:14,825 --> 00:09:16,850
+because we might have
+an application that
+
+219
+00:09:16,850 --> 00:09:20,975
+thinks that it wrote successfully
+some output to a file,
+
+220
+00:09:20,975 --> 00:09:23,720
+maybe updated some
+other thread or
+
+221
+00:09:23,720 --> 00:09:25,250
+some other application
+or wrote something
+
+222
+00:09:25,250 --> 00:09:26,975
+out to the Internet that said,
+
+223
+00:09:26,975 --> 00:09:29,750
+some action was performed
+on its local file system.
+
+224
+00:09:29,750 --> 00:09:31,655
+But then let's say
+we lose power,
+
+225
+00:09:31,655 --> 00:09:34,460
+and we lost power
+before the kernel had
+
+226
+00:09:34,460 --> 00:09:35,870
+a chance to write
+the content and
+
+227
+00:09:35,870 --> 00:09:37,565
+it's buffers out to disk.
+
+228
+00:09:37,565 --> 00:09:39,590
+Well, in that case, there'll
+
+229
+00:09:39,590 --> 00:09:41,120
+be a mismatch between whoever
+
+230
+00:09:41,120 --> 00:09:42,500
+was notified about the state of
+
+231
+00:09:42,500 --> 00:09:44,750
+the file on the
+local file system,
+
+232
+00:09:44,750 --> 00:09:46,565
+and actual state that's
+
+233
+00:09:46,565 --> 00:09:49,190
+going to be on the disk
+the next time you boot up.
+
+234
+00:09:49,190 --> 00:09:50,915
+How can we manage this risk?
+
+235
+00:09:50,915 --> 00:09:52,100
+We really have to
+know about it as
+
+236
+00:09:52,100 --> 00:09:54,020
+application programmers
+and we have to
+
+237
+00:09:54,020 --> 00:09:55,370
+know that we need to do
+
+238
+00:09:55,370 --> 00:09:58,355
+a synchronization on specific
+steps where it's important.
+
+239
+00:09:58,355 --> 00:10:02,000
+There's different ways
+to do synchronization.
+
+240
+00:10:02,000 --> 00:10:04,310
+There's fsync,
+there's fdatasync,
+
+241
+00:10:04,310 --> 00:10:05,690
+and there's also 0_SYNC,
+
+242
+00:10:05,690 --> 00:10:06,770
+which is the option
+that you could
+
+243
+00:10:06,770 --> 00:10:08,405
+pass into the open command.
+
+244
+00:10:08,405 --> 00:10:09,920
+There's also an
+option where you can
+
+245
+00:10:09,920 --> 00:10:11,315
+configure disk write caching
+
+246
+00:10:11,315 --> 00:10:14,660
+to set the rules
+about when a write
+
+247
+00:10:14,660 --> 00:10:17,630
+from disk is reported
+as successful relative
+
+248
+00:10:17,630 --> 00:10:19,010
+to when it was actually
+
+249
+00:10:19,010 --> 00:10:21,380
+physically written
+to the medium disk.
+
+250
+00:10:21,380 --> 00:10:24,740
+The Linux system programming
+Chapter 2 also talks
+
+251
+00:10:24,740 --> 00:10:27,065
+about the sync command
+as one way to do this.
+
+252
+00:10:27,065 --> 00:10:29,150
+But it mentions that you
+typically don't want to
+
+253
+00:10:29,150 --> 00:10:31,370
+use this for
+performance reasons.
+
+254
+00:10:31,370 --> 00:10:33,335
+The reason is where fsync and
+
+255
+00:10:33,335 --> 00:10:35,630
+fdatasync are going to
+work on a file descriptor,
+
+256
+00:10:35,630 --> 00:10:37,280
+sync is just going
+to work globally and
+
+257
+00:10:37,280 --> 00:10:39,095
+tell the OS to
+synchronize everything.
+
+258
+00:10:39,095 --> 00:10:41,615
+What that means is that
+any application that's
+
+259
+00:10:41,615 --> 00:10:44,540
+writing to a file descriptor
+that is not synchronized,
+
+260
+00:10:44,540 --> 00:10:47,000
+it's going to try to synchronize
+all those files at once.
+
+261
+00:10:47,000 --> 00:10:48,335
+You can imagine
+that that would be
+
+262
+00:10:48,335 --> 00:10:50,850
+a pretty heavy
+performance penalty.

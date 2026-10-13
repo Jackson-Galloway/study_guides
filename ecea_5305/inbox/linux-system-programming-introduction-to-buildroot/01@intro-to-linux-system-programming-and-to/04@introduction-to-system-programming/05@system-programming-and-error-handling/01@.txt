@@ -1,0 +1,44 @@
+So in this video, I'm going to talk about
+system programming and error handling. We're going to discuss errno and
+understand error handling strategies for system programming and Linux. So the C library mechanism for
+reporting errors is errno and the functions that
+are associated with it and the errno access is
+handled through errno.h. So what you'll see in a lot of the API
+functions that will discuss and use this semester that are based on POSIX. Our statements like this
+in the return value, talking about how errors are handled. So in this case for the Fopen function,
+if there's an error that occurs, null is returned and
+errno is set to indicate the air. So there's a list of POSIX to find errors
+and one error that you might get for instance, with a file open
+command would be ENOENT, which means no such file or directory. So this is what you get back from file
+from Fopen if you tried to open a file that didn't exist. If you want to try to map those two
+specific error numbers values that would show up in the errno value. You can use errno Daschle and you can see that ENOENT is
+represented by number 2 in a row. So here's an example of a really
+simple program that tries to open a nonexistent file. So we have a file name of
+nonexistent file.text. We try to open it with that open. And we then if the file returns null,
+we print out some information about the error using access
+to the errno variable and using the perror function that
+references the errno variable. So here's an example of what
+you see when you run this. The value of the errno is in fact to and the perror responses no such file or
+directory. And you see we have two different
+ways to return that string. One is to call perror directly. And the second is to call
+strerror with the errno variable. So this perror is a function
+that's described for us. That's going to print to standard
+out a message describing the errno, the underlying air described by errno. So one thing to think about though
+when you're using errno and error handling code is that the value
+of errno is possibly modified as a side effect by some of
+the API functions that you call. So for instance, if you look up at print, if you'll see that in some
+cases of print may set errno. So what does that mean? It means that there's a chance
+that errno could change between the time the air
+happens here in F open and the time is actually printed
+through F F for perror. So how would we handle this? You could move the Fpf after perror. You could also save errno to a local var. So that's something that is
+probably a good thing to do if you're going to be referencing
+the errno in multiple places. So, given what we just talked about about
+threads and thread sharing memory space, you might say, well, wouldn't there be a
+problem if errno was set by one thread and then an error happened in a second thread, wouldn't the second thread override the
+errno, that happened in the first thread. And normally, if we were just using
+a Global, that would be the case. However, the positive standard specifies
+that errno is more than just a Global. It's actually what's using what's
+called thread local storage. So you're guaranteed to
+have a separate copy errno, that's valid for
+every thread that you're using and will only be set by the current
+threat you're you're running in.

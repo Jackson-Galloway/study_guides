@@ -1,0 +1,198 @@
+To continue our discussion
+of kernel ioctl, and talking about to understand
+kernel ioctl and its purpose and how to write an ioctl handler for
+a kernel driver. So ioctl is a system call on a file
+descriptor this passed to driver. So it's similar to the reader
+right system calls, but a little bit more unstructured in
+terms of how it can be used and a little bit more flexible
+in terms of how you use it. So with the ioctl, you're identifying
+a specific command to be performed and then you're providing some
+argument to the driver. And oftentimes,
+that argument is a pointer and oftentimes, that that pointer is referencing memory
+that you want to either transfer into or out of your driver to perform
+some specific function. So this differs from read or write where
+you're actually passing a buffer of data into or out of the device
+in a structured direction, based on the implementation
+of the function. So one difference. Another difference from my ioctl is
+that you can't access it from user space as we've been doing with
+like cat and echo commands, you need another program or maybe like
+a Python script that's going to be able to issue the ioctl
+command through a system call. So it's really designed as a common
+interface that can be used for device control. So one of the ways that you
+think about how ioctl is used in practice today would be like a CD or
+DVD RAM tray. If you wanted to eject the media
+from the CD or DVD RAM, that's kind of like a classic
+example of what an ioctl would do. So it's something that maybe doesn't quite fit in the mold of something
+related to reading or writing. So a read or write operation to a CD RAM
+or DVD RAM would be writing data onto the media, but ioctl is an out of
+band type of control interface. So ejecting media is kind of
+like a classic example. You could also think if your device had
+some door that had a physical lock on it, you could enable or disable lock through an ioctl that
+would probably be an appropriate case. You can also use it to report information
+about the device in that buffer that you pass as one of the arguments. So you can see the user space prototype
+here and it's really the file descriptor, so that's going to reference
+the device endpoint. The request which is
+going to be the command and then this dot dot dot and
+so what do the dots mean? You're probably familiar with this
+already from looking at porn f and other types of functions. This just represents. So it's saying that there could be any
+number from a C compilers perspective, the compiler is going to allow any
+number of arguments after ioctl. But in this case,
+it's kind of a historical baggage thing. There's really always only one
+signal argument here, rp but it was implemented before you
+could have a void pointer as C. And so using the dot dot dot
+gets around the fact that the last argument was not typed. So again, you can kind of see already we
+have a little bit of historical baggage with this command. So one of the reasons that we'll talk
+about it and the reason is covered in the book is that it's the easiest and kind
+of the most straightforward for these out of band not really read, not really
+write type of driver device operations. But one of the things that book
+mentions is that it's sort of fallen out of favor as among kernel
+developers just because again, a little bit of that historical
+baggage that it carries. It's difficult to audit, it's often
+not well documented how it works. So there are some alternatives that
+you should know about if you're designing your own driver. For instance, the book talks about you
+can embed commands directly into the data stream and
+we'll give an example of that later. And you can also use virtual
+file systems like Sysfs, which we're going to talk
+about in later weeks. So if you look through the book,
+you'll see the ioctl file operations table signature that it references and remember,
+the file operations table is where we map functions in our driver to functions
+the kernel knows how to call. So that's like read and
+write that we've already discussed. And if you look at the signature that they
+reference in the book, it doesn't quite match what the latest kernel is using,
+however, it's very similar. And I wanted to point this out because
+this is a common thing that you'll see as the kernel changes. That function prototypes changed slightly
+and usually, you can pretty easily map what the old function prototype was
+to what the new function prototype is. So if you look at the example
+that was in the book, there was this extra inode pointer here,
+and if you look at the latest version of the kernel which you can find link here
+on this slide, the inode pointer is gone. And so if you had a driver that was
+written with the old implementation, it was referencing that inode, you get
+a compile error when you try to compile it and you need to modify your code. But if you look into more detail
+about where you can find the inode, it turns out it's stored as a part of the
+file structure that's passed here and so you could pretty easily just set up your
+own inode pointer that just takes file pointer, file inode and
+saves that off as the local inode value. So reworking your ioctl to use
+the new to find kernel mechanism would be pretty straightforward
+most likely in this case. And the other thing that you'll
+notice about the difference in file operations is that rather
+than just being called by ioctl, there are two different unlocked ioctl and
+compact ioctl definitions. So going back to why we need
+new definitions for ioctl, the book mentions that
+the optional arg argument. So the third argument that we mentioned
+that's the dot dot dot from user space, it's passed in the form of unsigned long
+regardless of whether it was given by the user as an integer to pointer. So what would be a problem with this? Well, it means that we're assuming
+that size of unsigned long is equal to size of void, and that might not
+be true based on the architecture. So again, kind of like a historical baggage thing
+that we're dealing here with ioctl. So the new implementation includes what's
+called compact_ioctl that'll handle the differences in argument size between
+64 and 32 bit, and making sure that old programs running on 32 bit programs
+that run on 64 bit Kernels are going to do the right thing in terms of passing
+pointers in that third argument. So that's the whole purpose
+of the new compact_ioctl. If you look at how an ioctl is actually
+implemented in a device driver. So there's some good examples of this in
+the device drivers example source code. So if we look at skull ioctl, the ioctl
+code looks like this as a general design where there's a switch
+statement that switches this command, that's the argument after the file
+reference from user space. And based on that command,
+we do some action on the driver. And so one of the things you notice is
+that these commands are defined in what looks like sort of a weird way, where it's using these macros and it's got
+parameters that's passing into the macro. So the commands aren't just as simple
+as saying 0, 1, 2, 3, 4 and defining a set of commands for your driver and
+we'll talk about that in a minute here. So why do we make things more complicated,
+why are we not just defining commands at 0, 1, 2, 3, 4, 5 in order based
+on whatever the command support? It's really an attempt by the kernel
+to try to separate commands and kind of a sanity check that
+the command you're sending is an appropriate command
+to send to the driver. So because you could
+potentially get user space and kernel space code confused, and you
+could have a situation where user space tries to send a command to a driver and
+it happens to be the wrong driver. Having different sets
+of commands defined for different drivers helps ensure that
+the driver might be able to catch that and say, I can't support this command that
+you're trying to send from user space. So just provides us a little
+bit of separation, prevents you from accidentally doing something on
+a driver that you didn't mean to do just because you sent an ioctl that was valid
+for one driver to a different driver. And again, you're kind of seeing the reasons why
+ioctl maybe a little bit out of favor here in terms of having to do these
+kinds of workarounds in the first place. So one of the ways that ioctl does this is
+by combining a whole bunch of different information about what you're trying
+to do into the command argument. And so one of the things that puts in
+that argument is a what's called a magic number, that really just is
+a character that helps provide some separation between different
+device driver implementation. And if you look at the source code, you
+can see that the magic number that they chose for the skull driver is k and
+that's just arbitrarily chosen. If you look at the documentation for
+the kernel, it has a bunch of lists of where magic numbers are referenced
+in current device drivers, and you could look at that list and
+try to decide what what is unlikely to conflict with anything I'm going to
+be doing in ioctl my driver. What's unlikely to as a ioctl command
+that would be sent to my driver in addition to these already
+existing kernel device drivers. And in our case it doesn't really
+matter because this isn't really a production kernel. But again, if you are developing some
+kind of production device driver, this would have to be
+something you'd think about. And again, a reason that maybe you decide
+ioctl isn't the right way to implement for your particular driver. So in addition to the magic
+number that specified, we're going to wrap that with a macro that
+tells us more about what we're trying to do with this ioctl command. So that macro is going to be the IO macro. And so this is going to tell us
+really how we're going to use or if we're going to use that third
+parameter that we talked about, that's the dot dot dot
+parameter from user space. So it's going to tell us whether that's a
+pointer that's pointed to a data transfer going into the driver, or a pointer to
+a data transfer that's coming out of the driver, or
+if there's no parameter at all. And it's just the command that's going to
+tell you what the device driver to do, or if it's one that has
+a bidirectional transfer. So you start by writing some
+data into the driver, and you get a response that includes
+data coming back out of the driver. So all those we encode
+with these IO macros. And really this macro is just
+splitting into eight bit chunks, splitting unsigned integer
+into eight bit chunks, and shifting mask values into that
+integer value which you're probably already familiar with other
+embedded programming paradigms. And so we can use the read,
+write, and IOWR as parameters that can tell us which direction
+the data transfer is going to happen in. So moving past a simpler example here,
+if we start with skull IOC reset, you can see that this is just using
+an IO macro with no third argument here. And what this is saying is that
+it's an ioctl with no parameters. So that dot dot dot or the arg argument
+that the optional argument that specified from the user space,
+it's not actually used in this case. So moving into a more complicated one, you could also look at skull
+IOCS quantum as a an example that does a transfer as
+a part of an ioctl command. And so it's using the IOW macro
+where that's actually ioctl command that's going to transfer data
+from user space into the kernel. So the write and read here are defined
+from the perspective of user space. A write is going to be writing data
+from user space into the kernel, and a read is going to be doing
+the opposite direction. And if you look at how this macro is
+going to work in terms of defining the command number,
+it's going to use the magic number and it's going to use a incremental command
+number that we're going to make as a part of defining the unique command [COUGH] and
+then specifying what you're transferring. So in this case, we're doing a write from
+user space into the kernel of an integer. And so the check of that integer for size is going to encode into
+the command the size of the data that we're transferring in with
+the associated transfer buffer. So you're going to use in this
+parameter the whatever structure or type references, the amount of data
+that you're transferring into or out of the kernel with your ioctl command. So there are some ioctls that
+are recognized by the kernel and decoded before passing
+to your device driver. And really T is the magic type if
+you happen to choose that one, there's a chance that if you
+defined your command just wrong, you might never get it to your driver. So this is just something that the book
+mentions as something to think about when picking your magic number. So we talked before about how ioctl
+fallen out of favor a little bit with kernel developers. So there are two things that the book
+mentions you can use instead of ioctl, and you should probably consider if
+you're starting from scratch. Ioctls around and
+you're definitely going to see it. So it's worth knowing about it and
+understanding it but there are a couple of alternatives, one of
+them will talk about now which is write. So the book mentions that if you have
+a device especially device that doesn't transfer data in and out normally, you can
+actually just not use ioctl at all and just write control
+sequences to the device. And so you could for us to just say write
+start as a string to your device name, and then your device could be parsing
+the data that gets written through the write command and
+deciding what to do in terms of operation. So if you have a device
+that doesn't transfer data, this might be a way that makes sense. And it's probably a little
+bit easier to use. You can just write scripts for
+instance that could read or write using cat and echo and
+control your data from user space, but it might make the driver
+more complex in some case. And if that's the case, either the ioctl
+that we already talked about or sysfs that we're going to talk about later
+in the course is probably going to be a better solution

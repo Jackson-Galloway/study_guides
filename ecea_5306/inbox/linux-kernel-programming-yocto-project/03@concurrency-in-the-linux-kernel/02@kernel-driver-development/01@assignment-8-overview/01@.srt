@@ -1,0 +1,2789 @@
+1
+00:00:00,170 --> 00:00:02,670
+In this video, I'm going to do
+
+2
+00:00:02,670 --> 00:00:04,470
+an overview of Assignment 8,
+
+3
+00:00:04,470 --> 00:00:05,400
+and we'll talk about
+
+4
+00:00:05,400 --> 00:00:08,715
+some specific
+implementation suggestions,
+
+5
+00:00:08,715 --> 00:00:10,590
+leveraging the things
+that we've already
+
+6
+00:00:10,590 --> 00:00:12,735
+talked about regarding driver,
+
+7
+00:00:12,735 --> 00:00:16,720
+read, write, and open
+function implementations.
+
+8
+00:00:17,180 --> 00:00:20,910
+First, let's just go over
+the content of Assignment 8.
+
+9
+00:00:20,910 --> 00:00:22,890
+For your Assignment 8 overview,
+
+10
+00:00:22,890 --> 00:00:25,680
+your repository setup's
+going to look like this.
+
+11
+00:00:25,680 --> 00:00:27,750
+GitHub Classroom
+is going to create
+
+12
+00:00:27,750 --> 00:00:31,170
+an empty Assignment
+8 repository.
+
+13
+00:00:31,170 --> 00:00:33,215
+You're going to ultimately push
+
+14
+00:00:33,215 --> 00:00:35,615
+either Buildroot or
+Yocto scripts into this.
+
+15
+00:00:35,615 --> 00:00:37,160
+For Assignment 8,
+
+16
+00:00:37,160 --> 00:00:39,985
+you can pick whether you want
+to use Buildroot or Yocto,
+
+17
+00:00:39,985 --> 00:00:42,290
+and you'll base then on your
+
+18
+00:00:42,290 --> 00:00:45,455
+appropriate either Assignment
+5 or 6 repository,
+
+19
+00:00:45,455 --> 00:00:48,640
+depending on whether you're
+using Buildroot or Yocto.
+
+20
+00:00:48,640 --> 00:00:52,980
+You'll start by merging the
+Assignment 8 branch into
+
+21
+00:00:52,980 --> 00:00:55,140
+your Assignment 3 repository
+
+22
+00:00:55,140 --> 00:00:57,675
+from the base aesd assignments.
+
+23
+00:00:57,675 --> 00:00:59,930
+This is going to bring in
+a bunch of starter code
+
+24
+00:00:59,930 --> 00:01:02,300
+that's used to give
+you the framework
+
+25
+00:01:02,300 --> 00:01:05,840
+that you need to build your
+device driver implementation
+
+26
+00:01:05,840 --> 00:01:07,920
+for Assignment Number 8.
+
+27
+00:01:08,480 --> 00:01:11,635
+Whatever Buildroot or Yocto
+
+28
+00:01:11,635 --> 00:01:13,530
+implementation you choose for
+
+29
+00:01:13,530 --> 00:01:15,265
+your Assignment 8
+implementation,
+
+30
+00:01:15,265 --> 00:01:16,690
+you're ultimately
+going to be again
+
+31
+00:01:16,690 --> 00:01:19,450
+referencing your
+Assignment 3 repository,
+
+32
+00:01:19,450 --> 00:01:21,730
+which is going to be
+updated to include
+
+33
+00:01:21,730 --> 00:01:24,970
+not only your aesd
+socket application,
+
+34
+00:01:24,970 --> 00:01:26,830
+but also your kernel
+device driver that
+
+35
+00:01:26,830 --> 00:01:29,500
+you'll write for
+Assignment Number 8.
+
+36
+00:01:29,500 --> 00:01:31,615
+You'll also merge in
+
+37
+00:01:31,615 --> 00:01:35,635
+whichever repository you choose
+
+38
+00:01:35,635 --> 00:01:38,290
+for your implementation
+for Assignment 8,
+
+39
+00:01:38,290 --> 00:01:40,960
+you'll merge in the associated
+Assignment 8 branch
+
+40
+00:01:40,960 --> 00:01:44,425
+from the base repo for
+either Buildroot or Yocto,
+
+41
+00:01:44,425 --> 00:01:46,810
+they'll pull in the
+automated test that
+
+42
+00:01:46,810 --> 00:01:50,270
+you'll use to verify your
+complete implementation.
+
+43
+00:01:50,900 --> 00:01:57,045
+The functions in main.c
+
+44
+00:01:57,045 --> 00:01:59,745
+you'll see inside the
+aesd char driver,
+
+45
+00:01:59,745 --> 00:02:01,620
+there's a main.c
+and there's a bunch
+
+46
+00:02:01,620 --> 00:02:04,755
+of TODO operation or
+comments in there.
+
+47
+00:02:04,755 --> 00:02:07,670
+What you're going to do is
+replace those TODO steps
+
+48
+00:02:07,670 --> 00:02:09,080
+with the steps that actually
+
+49
+00:02:09,080 --> 00:02:11,180
+implement the
+implementation below.
+
+50
+00:02:11,180 --> 00:02:14,300
+Your device driver
+is going to install
+
+51
+00:02:14,300 --> 00:02:19,200
+a dev aesd char device
+in the file system.
+
+52
+00:02:19,210 --> 00:02:23,555
+You have two different ways
+to install and run this.
+
+53
+00:02:23,555 --> 00:02:25,900
+For grading purposes,
+you need it installed in
+
+54
+00:02:25,900 --> 00:02:28,490
+your QEMU virtual machine,
+
+55
+00:02:28,490 --> 00:02:29,930
+but for development purposes,
+
+56
+00:02:29,930 --> 00:02:31,640
+you might want to actually
+build it and run it
+
+57
+00:02:31,640 --> 00:02:33,470
+inside either your
+virtual machine
+
+58
+00:02:33,470 --> 00:02:35,360
+or your Linux hosts depending
+
+59
+00:02:35,360 --> 00:02:38,390
+on how you're doing your builds.
+
+60
+00:02:38,390 --> 00:02:41,000
+One important thing
+I want to note here
+
+61
+00:02:41,000 --> 00:02:42,965
+is that if you are using
+a virtual machine,
+
+62
+00:02:42,965 --> 00:02:44,360
+please take a snapshot.
+
+63
+00:02:44,360 --> 00:02:47,570
+Because it's possible
+that you could corrupt
+
+64
+00:02:47,570 --> 00:02:49,070
+your virtual machine disk
+
+65
+00:02:49,070 --> 00:02:51,250
+if you have problems
+developing your driver,
+
+66
+00:02:51,250 --> 00:02:52,685
+and so a snapshot would
+
+67
+00:02:52,685 --> 00:02:54,350
+possibly prevent
+you from having to
+
+68
+00:02:54,350 --> 00:02:57,745
+reinstall from scratch and
+losing some of your work.
+
+69
+00:02:57,745 --> 00:03:02,900
+I'd also suggest to make
+commits and push up to GitHub
+
+70
+00:03:02,900 --> 00:03:05,195
+often to avoid losing work
+
+71
+00:03:05,195 --> 00:03:08,030
+because if there are bugs
+in your kernel driver,
+
+72
+00:03:08,030 --> 00:03:10,410
+you can definitely get in
+
+73
+00:03:10,410 --> 00:03:12,170
+a situation where your
+
+74
+00:03:12,170 --> 00:03:15,030
+virtual machine
+doesn't boot anymore.
+
+75
+00:03:15,200 --> 00:03:18,620
+The dev aesd char device
+is really going to
+
+76
+00:03:18,620 --> 00:03:21,425
+use that circular buffer
+implementation that you
+
+77
+00:03:21,425 --> 00:03:23,720
+develop with
+Assignment 7 and add
+
+78
+00:03:23,720 --> 00:03:25,490
+some new code that's
+going to interact
+
+79
+00:03:25,490 --> 00:03:28,255
+with aesd socket application.
+
+80
+00:03:28,255 --> 00:03:30,080
+The main difference really
+
+81
+00:03:30,080 --> 00:03:31,400
+from the implementation that we
+
+82
+00:03:31,400 --> 00:03:33,860
+did in unit tests
+for Assignment 7 is
+
+83
+00:03:33,860 --> 00:03:36,470
+that rather than work on
+fixed strings like we
+
+84
+00:03:36,470 --> 00:03:39,485
+did with the test case
+for Assignment Number 7,
+
+85
+00:03:39,485 --> 00:03:41,660
+you're going to be allocating
+memory in your driver
+
+86
+00:03:41,660 --> 00:03:43,900
+for every write command
+as it's received,
+
+87
+00:03:43,900 --> 00:03:46,490
+and you're going to be
+supporting any length of write
+
+88
+00:03:46,490 --> 00:03:49,280
+request up to whatever you
+can support with kmalloc,
+
+89
+00:03:49,280 --> 00:03:50,720
+and then saving that write
+
+90
+00:03:50,720 --> 00:03:53,905
+command within allocated memory.
+
+91
+00:03:53,905 --> 00:03:56,510
+The command is still going to
+
+92
+00:03:56,510 --> 00:03:58,385
+be terminated with a
+newline character,
+
+93
+00:03:58,385 --> 00:04:03,660
+as we've done with aesd
+socket application.
+
+94
+00:04:06,160 --> 00:04:09,230
+Any writes function
+call in your driver
+
+95
+00:04:09,230 --> 00:04:11,330
+that doesn't end with
+a newline character,
+
+96
+00:04:11,330 --> 00:04:13,835
+should just be saved
+and appended to
+
+97
+00:04:13,835 --> 00:04:17,915
+future writes operations until
+that full command is sent.
+
+98
+00:04:17,915 --> 00:04:20,300
+The driver should save
+the content for the
+
+99
+00:04:20,300 --> 00:04:22,505
+most recent 10 writes commands.
+
+100
+00:04:22,505 --> 00:04:24,525
+Then the memory associated
+with writes commands
+
+101
+00:04:24,525 --> 00:04:28,315
+more than 10 writes
+ago must be freed.
+
+102
+00:04:28,315 --> 00:04:30,370
+You can see how this is
+
+103
+00:04:30,370 --> 00:04:32,110
+essentially mapping to the
+same thing that you've
+
+104
+00:04:32,110 --> 00:04:35,370
+implemented from Assignment
+7 in your unit test.
+
+105
+00:04:35,370 --> 00:04:38,380
+The write position and write
+file offsets can be ignored.
+
+106
+00:04:38,380 --> 00:04:40,570
+Every writes just
+going to write to
+
+107
+00:04:40,570 --> 00:04:43,345
+the most recent history
+in the history buffer,
+
+108
+00:04:43,345 --> 00:04:46,000
+or if you have a command
+that you've started,
+
+109
+00:04:46,000 --> 00:04:48,090
+that you haven't terminated
+with a newline character,
+
+110
+00:04:48,090 --> 00:04:50,610
+it's just going to
+append to that command.
+
+111
+00:04:50,610 --> 00:04:54,720
+You can use kmalloc
+for all allocations
+
+112
+00:04:54,720 --> 00:04:57,070
+and you can assume that
+the writes are going to
+
+113
+00:04:57,070 --> 00:05:00,320
+be small enough to work
+properly with kmalloc.
+
+114
+00:05:00,320 --> 00:05:03,990
+Then that's how you
+handle writes on
+
+115
+00:05:03,990 --> 00:05:07,345
+the read from your
+/dev/aesdchar end point.
+
+116
+00:05:07,345 --> 00:05:08,215
+You're just going to return
+
+117
+00:05:08,215 --> 00:05:09,715
+the content of the
+most recent write
+
+118
+00:05:09,715 --> 00:05:11,430
+commands in the
+order that they were
+
+119
+00:05:11,430 --> 00:05:13,945
+received on any read attempt.
+
+120
+00:05:13,945 --> 00:05:16,125
+You do need to use the position
+
+121
+00:05:16,125 --> 00:05:18,235
+specified in the
+read function to
+
+122
+00:05:18,235 --> 00:05:20,490
+your driver to determine
+the location that you
+
+123
+00:05:20,490 --> 00:05:21,750
+should read from and the number
+
+124
+00:05:21,750 --> 00:05:23,275
+of bytes you need to return.
+
+125
+00:05:23,275 --> 00:05:25,350
+You need to honor the
+count argument that's
+
+126
+00:05:25,350 --> 00:05:28,140
+specified in the
+read function to
+
+127
+00:05:28,140 --> 00:05:29,430
+return only up to
+
+128
+00:05:29,430 --> 00:05:30,780
+the first count number of
+
+129
+00:05:30,780 --> 00:05:34,105
+bytes of all the bytes
+that are available.
+
+130
+00:05:34,105 --> 00:05:37,285
+You need to do the appropriate
+locking to make sure
+
+131
+00:05:37,285 --> 00:05:40,885
+your safe multithread,
+multi-process access.
+
+132
+00:05:40,885 --> 00:05:43,230
+There's a driver test
+script that we'll talk
+
+133
+00:05:43,230 --> 00:05:45,330
+about in more detail
+that will test
+
+134
+00:05:45,330 --> 00:05:47,760
+your driver in isolation
+to make sure that it's
+
+135
+00:05:47,760 --> 00:05:51,200
+meeting up with all
+these requirements here.
+
+136
+00:05:51,200 --> 00:05:55,595
+Once you get the driver
+implemented and working,
+
+137
+00:05:55,595 --> 00:05:57,120
+you're going to swap out
+
+138
+00:05:57,120 --> 00:05:59,110
+your socket server
+implementation.
+
+139
+00:05:59,110 --> 00:06:03,045
+Rather than a writing to that
+/var/tmpaesdsocket file,
+
+140
+00:06:03,045 --> 00:06:05,890
+you're going to write into
+your char device instead,
+
+141
+00:06:05,890 --> 00:06:09,895
+and so the aesd char device
+
+142
+00:06:09,895 --> 00:06:11,830
+going to fill the function that
+
+143
+00:06:11,830 --> 00:06:14,410
+our device driver did before,
+
+144
+00:06:14,410 --> 00:06:16,060
+and it's going to mean that
+
+145
+00:06:16,060 --> 00:06:19,120
+the writes that happened
+from aesd socket,
+
+146
+00:06:19,120 --> 00:06:21,030
+use the same logic
+that we described
+
+147
+00:06:21,030 --> 00:06:23,640
+above in terms of how to
+
+148
+00:06:23,640 --> 00:06:25,890
+handle commands
+and the number of
+
+149
+00:06:25,890 --> 00:06:29,230
+commands that are supported
+in the history buffer.
+
+150
+00:06:29,230 --> 00:06:33,330
+You'll add this
+build switch upon
+
+151
+00:06:33,330 --> 00:06:37,070
+defined that controls how
+your socket server works,
+
+152
+00:06:37,070 --> 00:06:38,485
+and redirects it to this
+
+153
+00:06:38,485 --> 00:06:40,530
+instead of the
+/var/tmpaesdsocketdata.
+
+154
+00:06:41,810 --> 00:06:44,000
+We had some locking that we
+
+155
+00:06:44,000 --> 00:06:46,195
+added before around
+/var/tmpaesdsocketdata,
+
+156
+00:06:46,195 --> 00:06:48,540
+but since we're doing
+locking in the driver now,
+
+157
+00:06:48,540 --> 00:06:53,790
+we can remove that from the
+aesd socket applications,
+
+158
+00:06:53,790 --> 00:06:55,920
+so that's part of what this
+bill switch should do.
+
+159
+00:06:55,920 --> 00:06:57,990
+Then remove that timestamp
+printing that we
+
+160
+00:06:57,990 --> 00:07:00,435
+added as an addition in
+
+161
+00:07:00,435 --> 00:07:02,800
+previous assignment and just
+
+162
+00:07:02,800 --> 00:07:06,325
+read or write directly
+from /dev/aesdchar,
+
+163
+00:07:06,325 --> 00:07:08,810
+the commands that are
+received over the socket.
+
+164
+00:07:08,810 --> 00:07:11,180
+Then you can roll back to
+
+165
+00:07:11,180 --> 00:07:13,995
+the sockettest script that's
+used with assignment 5 that
+
+166
+00:07:13,995 --> 00:07:16,865
+doesn't validate
+timestamps and test
+
+167
+00:07:16,865 --> 00:07:19,060
+your socket test
+script targeting
+
+168
+00:07:19,060 --> 00:07:20,610
+your /dev/aesdchar device
+
+169
+00:07:20,610 --> 00:07:22,770
+instead of the
+/var/tmpaesdsocketdata.
+
+170
+00:07:23,090 --> 00:07:25,545
+Then once you get
+everything working
+
+171
+00:07:25,545 --> 00:07:28,500
+in your Ubuntu installation,
+
+172
+00:07:28,500 --> 00:07:29,700
+you modify your builder or
+
+173
+00:07:29,700 --> 00:07:31,310
+Yocto implementation to install
+
+174
+00:07:31,310 --> 00:07:36,515
+those updated versions
+in your QEMU instance,
+
+175
+00:07:36,515 --> 00:07:38,610
+and then verify again
+that it works with
+
+176
+00:07:38,610 --> 00:07:41,230
+sockettest application
+from within QEMU.
+
+177
+00:07:41,230 --> 00:07:43,310
+Then tag your repository
+
+178
+00:07:43,310 --> 00:07:47,190
+to track the fact that you've
+completed the assignment.
+
+179
+00:07:47,190 --> 00:07:49,380
+There's some steps here
+that show you how to
+
+180
+00:07:49,380 --> 00:07:51,780
+enable the memory leak detector.
+
+181
+00:07:51,780 --> 00:07:53,335
+Again, one of the
+biggest changes
+
+182
+00:07:53,335 --> 00:07:54,865
+is that you're going
+to be implementing
+
+183
+00:07:54,865 --> 00:07:56,820
+dynamic memory allocation to
+
+184
+00:07:56,820 --> 00:07:59,700
+the circular buffer
+implementation
+
+185
+00:07:59,700 --> 00:08:01,320
+that you had with assignment 7.
+
+186
+00:08:01,320 --> 00:08:03,420
+This is going to help you
+verify that you don't have
+
+187
+00:08:03,420 --> 00:08:07,600
+any memory leaks inside
+your driver application.
+
+188
+00:08:09,350 --> 00:08:11,790
+Summarizing at a high level
+
+189
+00:08:11,790 --> 00:08:13,530
+what we're going to
+do with assignment 8.
+
+190
+00:08:13,530 --> 00:08:16,105
+The first steps talk
+about how to make
+
+191
+00:08:16,105 --> 00:08:19,105
+this stand-alone driver
+test implementation.
+
+192
+00:08:19,105 --> 00:08:21,210
+We're going to have
+/dev/aesdchar, and
+
+193
+00:08:21,210 --> 00:08:22,695
+we're going to have the
+driver test script,
+
+194
+00:08:22,695 --> 00:08:26,665
+and we're going to verify
+that you're driver
+
+195
+00:08:26,665 --> 00:08:28,585
+works the way it's
+supposed to for
+
+196
+00:08:28,585 --> 00:08:31,485
+the cases that we care about
+with this test script.
+
+197
+00:08:31,485 --> 00:08:34,620
+Then the next step will be to
+
+198
+00:08:34,620 --> 00:08:37,270
+tie it in with your aesd
+socket application,
+
+199
+00:08:37,270 --> 00:08:40,350
+so rather than writing to
+/var/tmpaesdsocketdata,
+
+200
+00:08:40,350 --> 00:08:42,620
+your aesd socket is
+just going to be
+
+201
+00:08:42,620 --> 00:08:44,685
+pointed at /dev/aesdchar,
+
+202
+00:08:44,685 --> 00:08:47,170
+and then you can use the
+same sockettest script
+
+203
+00:08:47,170 --> 00:08:49,875
+to drive your aesd
+socket application,
+
+204
+00:08:49,875 --> 00:08:51,820
+but the reads and writes
+are also going to be
+
+205
+00:08:51,820 --> 00:08:54,055
+going through your
+/dev/aesdchar device.
+
+206
+00:08:54,055 --> 00:08:56,120
+You're going to
+test everything in
+
+207
+00:08:56,120 --> 00:08:59,680
+one group as a part
+of validation here.
+
+208
+00:09:00,590 --> 00:09:05,050
+Again, a difference
+between assignment 7,
+
+209
+00:09:05,050 --> 00:09:07,345
+circular buffer implementation,
+
+210
+00:09:07,345 --> 00:09:08,590
+and unit test,
+
+211
+00:09:08,590 --> 00:09:10,440
+and what we're doing
+with assignment 8,
+
+212
+00:09:10,440 --> 00:09:13,290
+in the unit test for assignment
+7, we use constrains.
+
+213
+00:09:13,290 --> 00:09:15,730
+We didn't have any
+dynamic allocation.
+
+214
+00:09:15,730 --> 00:09:18,460
+But in assignment 8,
+
+215
+00:09:18,460 --> 00:09:20,400
+you're going to need to allocate
+
+216
+00:09:20,400 --> 00:09:22,780
+memory dynamically within
+your Kernel driver.
+
+217
+00:09:22,780 --> 00:09:25,315
+You should think about
+when you'll need to free
+
+218
+00:09:25,315 --> 00:09:28,150
+memory from the circular buffer,
+
+219
+00:09:28,150 --> 00:09:31,900
+and really it needs to be
+before you overwrite an entry.
+
+220
+00:09:31,900 --> 00:09:34,545
+You have to keep track of the
+memory that you allocated,
+
+221
+00:09:34,545 --> 00:09:35,820
+and you have to free that memory
+
+222
+00:09:35,820 --> 00:09:37,965
+before you replace it
+with something else.
+
+223
+00:09:37,965 --> 00:09:40,490
+When you're putting
+a new command
+
+224
+00:09:40,490 --> 00:09:42,855
+in the circular buffer
+and the buffer was full,
+
+225
+00:09:42,855 --> 00:09:44,140
+that means that
+you're essentially
+
+226
+00:09:44,140 --> 00:09:46,150
+replacing one of the commands
+that was already there,
+
+227
+00:09:46,150 --> 00:09:47,569
+and you need to de-allocate
+
+228
+00:09:47,569 --> 00:09:49,630
+the memory that's
+associated with that.
+
+229
+00:09:49,630 --> 00:09:53,010
+If you need to handle that from
+
+230
+00:09:53,010 --> 00:09:54,250
+your driver and you're calling
+
+231
+00:09:54,250 --> 00:09:56,250
+your circular buffer function,
+
+232
+00:09:56,250 --> 00:09:57,595
+how could you communicate that
+
+233
+00:09:57,595 --> 00:09:59,095
+back to your driver that you
+
+234
+00:09:59,095 --> 00:10:02,575
+need to free this
+particular pointer?
+
+235
+00:10:02,575 --> 00:10:05,075
+Well, there's a lot of
+different ways you could do it,
+
+236
+00:10:05,075 --> 00:10:07,325
+but I'll suggest one
+that you could think of,
+
+237
+00:10:07,325 --> 00:10:09,680
+which is that you could
+return a pointer with
+
+238
+00:10:09,680 --> 00:10:12,590
+whatever buffer that was
+removed by the add function.
+
+239
+00:10:12,590 --> 00:10:16,295
+Here's an example of how
+you could implement.
+
+240
+00:10:16,295 --> 00:10:18,335
+Again, you don't have
+to implement this way,
+
+241
+00:10:18,335 --> 00:10:20,660
+but this is one way that
+you could implement.
+
+242
+00:10:20,660 --> 00:10:23,240
+You could take that aesd
+circular buffer add
+
+243
+00:10:23,240 --> 00:10:26,225
+entry function that we
+use for Assignment 7,
+
+244
+00:10:26,225 --> 00:10:28,805
+and then you could make
+it return either null
+
+245
+00:10:28,805 --> 00:10:32,315
+or if an entry was replaced,
+
+246
+00:10:32,315 --> 00:10:33,680
+it could return the pointer
+
+247
+00:10:33,680 --> 00:10:35,210
+that's associated
+with that entry.
+
+248
+00:10:35,210 --> 00:10:37,550
+That would allow a color
+
+249
+00:10:37,550 --> 00:10:40,695
+to conditionally
+free that pointer.
+
+250
+00:10:40,695 --> 00:10:43,990
+If you wanted to test
+that in user space,
+
+251
+00:10:43,990 --> 00:10:45,370
+you could make the
+right circular
+
+252
+00:10:45,370 --> 00:10:47,485
+buffer packet test function.
+
+253
+00:10:47,485 --> 00:10:49,690
+Actually check to see that when
+
+254
+00:10:49,690 --> 00:10:52,540
+the buffer is full that
+the value that was
+
+255
+00:10:52,540 --> 00:10:56,375
+returned here from the
+add circular buffer entry
+
+256
+00:10:56,375 --> 00:11:01,220
+was equal to the value
+that you expect to return,
+
+257
+00:11:01,220 --> 00:11:04,460
+and if the buffer wasn't full
+that that value was null.
+
+258
+00:11:04,460 --> 00:11:05,750
+Here's an example of how you
+
+259
+00:11:05,750 --> 00:11:09,365
+could write an implementation
+that works with
+
+260
+00:11:09,365 --> 00:11:12,620
+the new requirement for your
+kernel driver and verifies
+
+261
+00:11:12,620 --> 00:11:14,000
+that it works correctly in
+
+262
+00:11:14,000 --> 00:11:17,280
+userspace before you try to
+implement in the kernel.
+
+263
+00:11:17,950 --> 00:11:20,765
+The aesd circular buffer,
+
+264
+00:11:20,765 --> 00:11:22,580
+C and H files,
+
+265
+00:11:22,580 --> 00:11:25,010
+you might have
+noticed these lines
+
+266
+00:11:25,010 --> 00:11:27,950
+that check for kernel and
+
+267
+00:11:27,950 --> 00:11:30,380
+include Linux string
+versus string
+
+268
+00:11:30,380 --> 00:11:33,410
+and same with these
+standard def,
+
+269
+00:11:33,410 --> 00:11:34,850
+standard types, standard in.
+
+270
+00:11:34,850 --> 00:11:38,600
+The reason for doing
+this is so we could
+
+271
+00:11:38,600 --> 00:11:42,080
+compile these in either unit
+test or in kernel context.
+
+272
+00:11:42,080 --> 00:11:43,550
+This allows you to share
+
+273
+00:11:43,550 --> 00:11:47,165
+the implementation of your
+circular buffer C and H file
+
+274
+00:11:47,165 --> 00:11:50,240
+with either the unit
+test that run in
+
+275
+00:11:50,240 --> 00:11:51,620
+user space or with
+
+276
+00:11:51,620 --> 00:11:53,990
+kernel context that
+compile for your driver.
+
+277
+00:11:53,990 --> 00:11:55,850
+If you are careful
+
+278
+00:11:55,850 --> 00:11:57,830
+about whatever you
+add to make sure that
+
+279
+00:11:57,830 --> 00:12:02,690
+you include the
+appropriate header files
+
+280
+00:12:02,690 --> 00:12:05,840
+for kernel or user space
+in these sections,
+
+281
+00:12:05,840 --> 00:12:07,550
+what it means is that
+you could still run your
+
+282
+00:12:07,550 --> 00:12:09,500
+unit tests against
+any modifications
+
+283
+00:12:09,500 --> 00:12:10,820
+that you make and verify that
+
+284
+00:12:10,820 --> 00:12:12,200
+you haven't broken anything with
+
+285
+00:12:12,200 --> 00:12:13,490
+any changes that you made to
+
+286
+00:12:13,490 --> 00:12:16,200
+the circular buffer
+implementation.
+
+287
+00:12:16,330 --> 00:12:18,770
+One of the main reasons
+for doing this is
+
+288
+00:12:18,770 --> 00:12:20,300
+that it's way easier to
+
+289
+00:12:20,300 --> 00:12:23,555
+debug code in user space
+than it is in kernel space.
+
+290
+00:12:23,555 --> 00:12:25,610
+The more logic that you can keep
+
+291
+00:12:25,610 --> 00:12:27,695
+tested and working
+in user space,
+
+292
+00:12:27,695 --> 00:12:29,510
+the more likelihood that you're
+
+293
+00:12:29,510 --> 00:12:31,400
+not going to have to do
+the debug in kernel space,
+
+294
+00:12:31,400 --> 00:12:35,130
+which is going to be significantly
+more difficult to do.
+
+295
+00:12:35,350 --> 00:12:39,095
+Also, there are
+
+296
+00:12:39,095 --> 00:12:41,600
+PDEBUG options that work for
+
+297
+00:12:41,600 --> 00:12:43,865
+either user space
+or kernel space,
+
+298
+00:12:43,865 --> 00:12:46,390
+and so if you use
+this PUDEBUG macro,
+
+299
+00:12:46,390 --> 00:12:49,180
+you can automatically
+redirect prints either
+
+300
+00:12:49,180 --> 00:12:52,375
+to printk in the D message log.
+
+301
+00:12:52,375 --> 00:12:54,340
+If you're using kernel builds or
+
+302
+00:12:54,340 --> 00:12:56,955
+to standard error if
+you're using userspace.
+
+303
+00:12:56,955 --> 00:12:58,460
+So do definitely use
+
+304
+00:12:58,460 --> 00:13:02,855
+these add prints that
+help you debug this and
+
+305
+00:13:02,855 --> 00:13:05,510
+use this AESD-DEBUG
+flag to turn them on or
+
+306
+00:13:05,510 --> 00:13:09,840
+off depending on whether
+you're debugging your driver.
+
+307
+00:13:10,420 --> 00:13:12,785
+One of the things
+that you'll notice in
+
+308
+00:13:12,785 --> 00:13:16,190
+aesdchar.h example
+that's provided with
+
+309
+00:13:16,190 --> 00:13:21,425
+you as part of the aesd
+Assignment 8 branch,
+
+310
+00:13:21,425 --> 00:13:23,210
+is there's a definition for
+
+311
+00:13:23,210 --> 00:13:24,920
+the aesd def struct and there's
+
+312
+00:13:24,920 --> 00:13:27,470
+a char device structure
+that's set up for
+
+313
+00:13:27,470 --> 00:13:31,025
+you to make the dev
+aesd char device.
+
+314
+00:13:31,025 --> 00:13:32,390
+But what you need
+to think about is
+
+315
+00:13:32,390 --> 00:13:34,700
+what else am I going to need?
+
+316
+00:13:34,700 --> 00:13:38,195
+To support your Assignment
+7, circular buffer,
+
+317
+00:13:38,195 --> 00:13:41,120
+you'll want to include that
+circular buffer structure and
+
+318
+00:13:41,120 --> 00:13:44,810
+the associated things that
+you need for that code.
+
+319
+00:13:44,810 --> 00:13:48,380
+Then you'll probably
+want a working entry for
+
+320
+00:13:48,380 --> 00:13:50,600
+aesd buffer because if
+
+321
+00:13:50,600 --> 00:13:52,310
+you remember the
+assignment requirements,
+
+322
+00:13:52,310 --> 00:13:54,500
+it says that we might need to
+
+323
+00:13:54,500 --> 00:13:56,840
+buffer some data before
+we write the command
+
+324
+00:13:56,840 --> 00:13:58,505
+into the circular buffer
+
+325
+00:13:58,505 --> 00:14:01,625
+because we're handling writes
+before we get a new line
+
+326
+00:14:01,625 --> 00:14:03,830
+and we want to just keep
+appending those rights until we
+
+327
+00:14:03,830 --> 00:14:06,995
+see a new line and a command
+that we added to the buffer.
+
+328
+00:14:06,995 --> 00:14:11,060
+You might want to have an
+aesd buffer entry value here
+
+329
+00:14:11,060 --> 00:14:15,050
+that you use for that purpose.
+What else will you need?
+
+330
+00:14:15,050 --> 00:14:16,670
+Well, again, removing,
+
+331
+00:14:16,670 --> 00:14:19,790
+locking out of the aesd
+socket and into the driver.
+
+332
+00:14:19,790 --> 00:14:20,990
+You're going to need to use
+
+333
+00:14:20,990 --> 00:14:22,640
+some locking
+primitive like we've
+
+334
+00:14:22,640 --> 00:14:26,910
+talked about in previous videos.
+
+335
+00:14:27,300 --> 00:14:29,800
+This is the code that's
+already written for
+
+336
+00:14:29,800 --> 00:14:31,900
+you in aesd init module.
+
+337
+00:14:31,900 --> 00:14:33,880
+A lot of the setup work
+is already done for you
+
+338
+00:14:33,880 --> 00:14:36,735
+in terms of creating
+a device endpoint.
+
+339
+00:14:36,735 --> 00:14:38,870
+What you need to do
+is all the things
+
+340
+00:14:38,870 --> 00:14:39,980
+that you've added to
+
+341
+00:14:39,980 --> 00:14:42,800
+the structure that's
+associated with your device,
+
+342
+00:14:42,800 --> 00:14:44,240
+you're going to need
+to be initializing
+
+343
+00:14:44,240 --> 00:14:45,965
+them here in init module.
+
+344
+00:14:45,965 --> 00:14:47,240
+The locking primitive, for
+
+345
+00:14:47,240 --> 00:14:48,410
+instance, that we talked about,
+
+346
+00:14:48,410 --> 00:14:50,930
+you're going to need
+to be initializing the
+
+347
+00:14:50,930 --> 00:14:54,590
+locking primitive here in
+this part of the code.
+
+348
+00:14:54,590 --> 00:14:57,650
+You can see that
+we've already set up
+
+349
+00:14:57,650 --> 00:15:01,130
+function pointers for
+read, write, open,
+
+350
+00:15:01,130 --> 00:15:03,020
+and release, and
+we've already set up
+
+351
+00:15:03,020 --> 00:15:05,120
+the cdev function for you that
+
+352
+00:15:05,120 --> 00:15:08,640
+actually adds the device
+into the Linux kernel.
+
+353
+00:15:09,420 --> 00:15:13,060
+There's a cleanup function
+here that happens as a part of
+
+354
+00:15:13,060 --> 00:15:17,605
+the driver release
+that has a TODO.
+
+355
+00:15:17,605 --> 00:15:19,450
+The important thing
+for you to do
+
+356
+00:15:19,450 --> 00:15:21,010
+here is to balance whatever
+
+357
+00:15:21,010 --> 00:15:22,570
+you're doing in this
+part of the code
+
+358
+00:15:22,570 --> 00:15:23,860
+with whatever you're doing here.
+
+359
+00:15:23,860 --> 00:15:25,150
+If you're allocating memory,
+
+360
+00:15:25,150 --> 00:15:26,560
+you'd need to free memory here.
+
+361
+00:15:26,560 --> 00:15:29,770
+If you're initializing
+primitives,
+
+362
+00:15:29,770 --> 00:15:30,880
+you need to make sure
+that when you're
+
+363
+00:15:30,880 --> 00:15:31,990
+at this point of the function,
+
+364
+00:15:31,990 --> 00:15:32,830
+you're not going to be using
+
+365
+00:15:32,830 --> 00:15:35,060
+those locking
+primitives anymore.
+
+366
+00:15:35,670 --> 00:15:39,760
+The open function that's
+
+367
+00:15:39,760 --> 00:15:43,300
+implemented is today
+not doing anything,
+
+368
+00:15:43,300 --> 00:15:46,570
+but you will need to
+modify this to set up
+
+369
+00:15:46,570 --> 00:15:48,220
+the file pointer
+private data with
+
+370
+00:15:48,220 --> 00:15:51,385
+the aesd device structure.
+
+371
+00:15:51,385 --> 00:15:54,610
+How would you get a pointer
+to the aesd_dev structure?
+
+372
+00:15:54,610 --> 00:15:58,840
+You can use inode->i_cdev with
+container_of and you'll be
+
+373
+00:15:58,840 --> 00:16:00,580
+able to use that to
+figure out where
+
+374
+00:16:00,580 --> 00:16:03,265
+the start of the
+aesd_dev structure is,
+
+375
+00:16:03,265 --> 00:16:06,280
+based on where this cdev
+is located in memory.
+
+376
+00:16:06,280 --> 00:16:07,930
+Go back and look at
+the examples that
+
+377
+00:16:07,930 --> 00:16:09,534
+we did with container_of
+
+378
+00:16:09,534 --> 00:16:11,110
+or the Linux Device Driver
+
+379
+00:16:11,110 --> 00:16:13,610
+source code to see
+how to do that.
+
+380
+00:16:14,040 --> 00:16:17,480
+For the read function,
+the aesd_read,
+
+381
+00:16:17,480 --> 00:16:19,350
+the file pointer is going to
+
+382
+00:16:19,350 --> 00:16:21,210
+have that private
+data member setup,
+
+383
+00:16:21,210 --> 00:16:22,725
+and you can use that to get
+
+384
+00:16:22,725 --> 00:16:25,220
+a pointer to the
+aesd_dev structure.
+
+385
+00:16:25,220 --> 00:16:26,440
+Then the buffer is going to
+
+386
+00:16:26,440 --> 00:16:27,640
+be the buffer that
+you're going to
+
+387
+00:16:27,640 --> 00:16:30,565
+fill for the
+read_from_user space.
+
+388
+00:16:30,565 --> 00:16:32,680
+Would we be able to
+access this buffer
+
+389
+00:16:32,680 --> 00:16:34,705
+directly? Answer is no.
+
+390
+00:16:34,705 --> 00:16:36,595
+You're going to need
+to use copy_to_user
+
+391
+00:16:36,595 --> 00:16:38,170
+so that you can copy from
+
+392
+00:16:38,170 --> 00:16:39,835
+kernel space into user space
+
+393
+00:16:39,835 --> 00:16:42,100
+as a part of that read function.
+
+394
+00:16:42,100 --> 00:16:44,710
+Then the count here is going
+to be the max number of
+
+395
+00:16:44,710 --> 00:16:47,320
+writes to the buffer.
+
+396
+00:16:47,320 --> 00:16:50,095
+You may want or need to
+write less than this,
+
+397
+00:16:50,095 --> 00:16:52,850
+and we'll talk about strategies
+for this in a minute.
+
+398
+00:16:53,190 --> 00:16:56,560
+The last parameter to read
+is the file position,
+
+399
+00:16:56,560 --> 00:16:59,500
+which is the pointer
+to the read offset.
+
+400
+00:16:59,500 --> 00:17:00,805
+That's going to reference
+
+401
+00:17:00,805 --> 00:17:03,370
+a location in your
+virtual device.
+
+402
+00:17:03,370 --> 00:17:05,110
+In our case, our
+virtual device is
+
+403
+00:17:05,110 --> 00:17:08,095
+just a wrapper around
+the circular buffer.
+
+404
+00:17:08,095 --> 00:17:10,300
+It's going to reference
+
+405
+00:17:10,300 --> 00:17:13,285
+a specific byte in
+the linear content.
+
+406
+00:17:13,285 --> 00:17:15,355
+In other words, if you
+
+407
+00:17:15,355 --> 00:17:18,805
+were to put our commands
+one right after another,
+
+408
+00:17:18,805 --> 00:17:21,265
+the file position
+would reference
+
+409
+00:17:21,265 --> 00:17:22,930
+a specific byte in that list of
+
+410
+00:17:22,930 --> 00:17:25,450
+commands that are saved
+in our circular buffer.
+
+411
+00:17:25,450 --> 00:17:28,030
+The specific byte is going to be
+
+412
+00:17:28,030 --> 00:17:29,545
+referenced by the char_offset
+
+413
+00:17:29,545 --> 00:17:30,820
+in the circular buffer function
+
+414
+00:17:30,820 --> 00:17:33,010
+that you've already written to
+
+415
+00:17:33,010 --> 00:17:36,265
+access specific points
+within the circular buffer.
+
+416
+00:17:36,265 --> 00:17:39,220
+We've implemented
+in Assignment 7 in
+
+417
+00:17:39,220 --> 00:17:40,510
+a way that's going
+to directly map
+
+418
+00:17:40,510 --> 00:17:42,625
+into what we need
+to do for read.
+
+419
+00:17:42,625 --> 00:17:45,535
+You'll start the
+read at this offset,
+
+420
+00:17:45,535 --> 00:17:47,680
+and then you'll update
+this pointer to
+
+421
+00:17:47,680 --> 00:17:50,140
+point to the next
+offset that will be
+
+422
+00:17:50,140 --> 00:17:51,850
+read based on how
+many bytes you're
+
+423
+00:17:51,850 --> 00:17:55,180
+returning as a part of
+the aesd_read function.
+
+424
+00:17:55,180 --> 00:17:57,730
+A little bit more about
+
+425
+00:17:57,730 --> 00:18:00,685
+what to return from your
+aesd_read function,
+
+426
+00:18:00,685 --> 00:18:04,060
+if you return the value
+that equals the count,
+
+427
+00:18:04,060 --> 00:18:05,680
+you're telling user space that
+
+428
+00:18:05,680 --> 00:18:08,665
+you've transferred the
+requested number of bytes.
+
+429
+00:18:08,665 --> 00:18:09,820
+Everything that was requested
+
+430
+00:18:09,820 --> 00:18:12,460
+here was returned
+in this buffer.
+
+431
+00:18:12,460 --> 00:18:15,505
+But if you return something
+between zero and count,
+
+432
+00:18:15,505 --> 00:18:18,475
+that means that only a portion
+
+433
+00:18:18,475 --> 00:18:21,685
+of the total amount
+requested has been returned.
+
+434
+00:18:21,685 --> 00:18:23,920
+There's a partial read rule here
+
+435
+00:18:23,920 --> 00:18:25,930
+that determines how you can use
+
+436
+00:18:25,930 --> 00:18:27,550
+this that's really helpful for
+
+437
+00:18:27,550 --> 00:18:28,600
+our implementation and we'll
+
+438
+00:18:28,600 --> 00:18:30,490
+talk about it in the next slide.
+
+439
+00:18:30,490 --> 00:18:32,545
+If you return zero here,
+
+440
+00:18:32,545 --> 00:18:34,150
+that means that
+there's end of file
+
+441
+00:18:34,150 --> 00:18:36,925
+and no data read
+into the buffer.
+
+442
+00:18:36,925 --> 00:18:38,935
+That's appropriate when you've
+
+443
+00:18:38,935 --> 00:18:40,840
+completely exhausted
+the content in
+
+444
+00:18:40,840 --> 00:18:43,270
+your circular buffer and
+
+445
+00:18:43,270 --> 00:18:44,950
+there's nothing left
+to send to the user,
+
+446
+00:18:44,950 --> 00:18:46,690
+which could be that
+you've already read
+
+447
+00:18:46,690 --> 00:18:49,700
+everything out or there was
+nothing there to begin with.
+
+448
+00:18:49,770 --> 00:18:53,620
+You'd want to return
+negative on error so,
+
+449
+00:18:53,620 --> 00:18:56,110
+ERESTARTSYS, EINTR, or EFAULT.
+
+450
+00:18:56,110 --> 00:18:58,225
+So ERESTARTSYS for instance,
+
+451
+00:18:58,225 --> 00:19:02,485
+if you have a case where you are
+
+452
+00:19:02,485 --> 00:19:08,110
+interrupted in interruptible
+mutex wait for instance,
+
+453
+00:19:08,110 --> 00:19:13,300
+and -EINTR for other cases
+
+454
+00:19:13,300 --> 00:19:14,470
+where you need to handle
+
+455
+00:19:14,470 --> 00:19:17,110
+interrupts or -EFAULT
+is cases where,
+
+456
+00:19:17,110 --> 00:19:19,300
+for instance, you
+couldn't allocate
+
+457
+00:19:19,300 --> 00:19:21,890
+memory within your driver.
+
+458
+00:19:22,050 --> 00:19:25,750
+The partial read rule that
+we'll use here for setting
+
+459
+00:19:25,750 --> 00:19:29,275
+the return value of aesd_read,
+
+460
+00:19:29,275 --> 00:19:32,980
+we don't have to return
+again the full count
+
+461
+00:19:32,980 --> 00:19:36,430
+of bytes that are requested
+with our read function.
+
+462
+00:19:36,430 --> 00:19:38,695
+Instead, we can just return
+
+463
+00:19:38,695 --> 00:19:41,710
+some portion of the
+amount of data available.
+
+464
+00:19:41,710 --> 00:19:44,200
+A way that you can
+simplify the logic for
+
+465
+00:19:44,200 --> 00:19:46,900
+Assignment 8 is you can
+define the amount that
+
+466
+00:19:46,900 --> 00:19:48,865
+you're going to return
+from your read function
+
+467
+00:19:48,865 --> 00:19:52,315
+as one single circular
+buffer entry.
+
+468
+00:19:52,315 --> 00:19:55,120
+This means that the offset
+
+469
+00:19:55,120 --> 00:19:57,100
+is going to tell us
+which entry we're in,
+
+470
+00:19:57,100 --> 00:19:58,990
+and we're just going
+to read the content of
+
+471
+00:19:58,990 --> 00:20:01,510
+that entry into the buffer
+
+472
+00:20:01,510 --> 00:20:03,700
+and return the total number of
+
+473
+00:20:03,700 --> 00:20:07,010
+size of bytes that we're
+reading based on that offset.
+
+474
+00:20:07,160 --> 00:20:09,610
+We'll make user space calls
+
+475
+00:20:09,610 --> 00:20:12,110
+again to read from
+the next offset.
+
+476
+00:20:12,110 --> 00:20:14,590
+As long as you
+update this pointer
+
+477
+00:20:14,590 --> 00:20:17,480
+correctly to point
+to the next offset,
+
+478
+00:20:17,480 --> 00:20:20,455
+in this case the next command
+in our circular buffer,
+
+479
+00:20:20,455 --> 00:20:21,910
+then the user space will
+
+480
+00:20:21,910 --> 00:20:23,625
+just keep calling
+your read function,
+
+481
+00:20:23,625 --> 00:20:26,045
+keep reading one command
+after another until it
+
+482
+00:20:26,045 --> 00:20:28,915
+reads your entire circular
+buffer content out.
+
+483
+00:20:28,915 --> 00:20:30,700
+It turns out this can
+make our logic and
+
+484
+00:20:30,700 --> 00:20:32,945
+our driver quite a bit
+easier to implement.
+
+485
+00:20:32,945 --> 00:20:36,010
+I encourage you to look
+at how to implement
+
+486
+00:20:36,010 --> 00:20:37,960
+the partial read
+rule and just read
+
+487
+00:20:37,960 --> 00:20:41,840
+one command at a time
+from your driver.
+
+488
+00:20:41,840 --> 00:20:44,130
+This will be transparent from
+
+489
+00:20:44,130 --> 00:20:47,185
+the perspective of using
+a command like cat
+
+490
+00:20:47,185 --> 00:20:49,295
+or fread from user space
+
+491
+00:20:49,295 --> 00:20:51,640
+because all this
+will be handled in
+
+492
+00:20:51,640 --> 00:20:53,020
+the background for you by
+
+493
+00:20:53,020 --> 00:20:57,260
+the multiple calls
+to the read command.
+
+494
+00:20:58,230 --> 00:21:00,400
+For a right implementation,
+
+495
+00:21:00,400 --> 00:21:01,265
+we're going to do this slightly
+
+496
+00:21:01,265 --> 00:21:02,170
+different than you normally
+
+497
+00:21:02,170 --> 00:21:04,280
+would if you were implementing
+write and driver.
+
+498
+00:21:04,280 --> 00:21:06,700
+Normally, this file
+position would point to
+
+499
+00:21:06,700 --> 00:21:09,365
+the location where the write
+should start in the buffer.
+
+500
+00:21:09,365 --> 00:21:11,650
+But to make things
+simple in Assignment 8,
+
+501
+00:21:11,650 --> 00:21:12,875
+we're just going to ignore that.
+
+502
+00:21:12,875 --> 00:21:16,000
+Always, every write is
+either going to append to
+
+503
+00:21:16,000 --> 00:21:17,455
+the command that's being written
+
+504
+00:21:17,455 --> 00:21:19,610
+when there's no
+new line received,
+
+505
+00:21:19,610 --> 00:21:23,860
+or it's going to write
+the entire string
+
+506
+00:21:23,860 --> 00:21:25,325
+into the command buffer whenever
+
+507
+00:21:25,325 --> 00:21:28,180
+a new line is received as
+a part of the command.
+
+508
+00:21:29,150 --> 00:21:31,480
+Similar with write,
+we need to think
+
+509
+00:21:31,480 --> 00:21:33,545
+about what our return
+values are going to be.
+
+510
+00:21:33,545 --> 00:21:36,295
+If the return value equals
+the count that you specified,
+
+511
+00:21:36,295 --> 00:21:38,150
+you're telling the
+user space that
+
+512
+00:21:38,150 --> 00:21:39,875
+you've written the
+requested number
+
+513
+00:21:39,875 --> 00:21:41,175
+of bytes successfully.
+
+514
+00:21:41,175 --> 00:21:43,685
+If it's positive, but
+smaller than count,
+
+515
+00:21:43,685 --> 00:21:45,605
+then that means that
+only part of it's been
+
+516
+00:21:45,605 --> 00:21:47,110
+written and you're telling
+
+517
+00:21:47,110 --> 00:21:49,225
+user space to retry the command.
+
+518
+00:21:49,225 --> 00:21:51,165
+If you return zero,
+
+519
+00:21:51,165 --> 00:21:53,260
+you're telling user space
+that nothing's been written
+
+520
+00:21:53,260 --> 00:21:54,970
+and user space is
+
+521
+00:21:54,970 --> 00:21:57,335
+probably going to retry
+the command in that case.
+
+522
+00:21:57,335 --> 00:21:59,350
+This is most often
+
+523
+00:21:59,350 --> 00:22:01,745
+seen when you're first
+bringing up the application.
+
+524
+00:22:01,745 --> 00:22:03,485
+You're saying, why
+is my application
+
+525
+00:22:03,485 --> 00:22:05,780
+hanging when I attempt
+to do the first write?
+
+526
+00:22:05,780 --> 00:22:08,130
+It's probably that you're
+not returning the right size
+
+527
+00:22:08,130 --> 00:22:11,700
+here in your
+aesd_write function.
+
+528
+00:22:11,700 --> 00:22:14,160
+You can use a
+negative return here
+
+529
+00:22:14,160 --> 00:22:16,570
+to indicate that an
+error occurred, ENOMEM,
+
+530
+00:22:16,570 --> 00:22:18,095
+if you weren't able to allocate
+
+531
+00:22:18,095 --> 00:22:19,565
+memory or EFAULT if there was
+
+532
+00:22:19,565 --> 00:22:23,920
+some other thing that occurred
+that you can't handle.
+
+533
+00:22:24,050 --> 00:22:26,420
+Talking a little bit
+more specifically
+
+534
+00:22:26,420 --> 00:22:27,690
+about the drivertest script
+
+535
+00:22:27,690 --> 00:22:30,640
+that we'll use to verify
+our driver and operation.
+
+536
+00:22:30,640 --> 00:22:32,980
+If you look at what this
+is doing under the hood,
+
+537
+00:22:32,980 --> 00:22:36,650
+we're referencing our
+device as /dev/aesdchar,
+
+538
+00:22:36,650 --> 00:22:39,565
+and we're just doing simple
+echo commands to write
+
+539
+00:22:39,565 --> 00:22:44,435
+numbered write commands
+into our circular buffer.
+
+540
+00:22:44,435 --> 00:22:46,360
+Every one of the write
+commands is going to
+
+541
+00:22:46,360 --> 00:22:49,430
+write one string that says,
+
+542
+00:22:49,790 --> 00:22:51,900
+write1,2,3,4,5,6,7,8,9,10,
+and you can see that this
+
+543
+00:22:51,900 --> 00:22:53,015
+would just completely fill up
+
+544
+00:22:53,015 --> 00:22:56,330
+our circular buffer
+with 10 write commands.
+
+545
+00:22:57,360 --> 00:23:00,370
+What we do then in
+the driver test
+
+546
+00:23:00,370 --> 00:23:02,705
+is we build an expected
+file that says,
+
+547
+00:23:02,705 --> 00:23:04,990
+I expect that when I
+read out the content
+
+548
+00:23:04,990 --> 00:23:07,705
+of the /dev/aesdchar device,
+
+549
+00:23:07,705 --> 00:23:10,060
+I should see every write
+that I did in order
+
+550
+00:23:10,060 --> 00:23:13,420
+to return back out
+of the device.
+
+551
+00:23:13,420 --> 00:23:19,290
+This double arrow EOF syntax
+is what's called a heredock.
+
+552
+00:23:19,290 --> 00:23:22,240
+What this is really just
+doing is creating a file
+
+553
+00:23:22,240 --> 00:23:25,760
+that contains the contents
+that's between these two EOF.
+
+554
+00:23:25,760 --> 00:23:27,400
+This is a helpful thing that you
+
+555
+00:23:27,400 --> 00:23:28,650
+can do when you write scripts.
+
+556
+00:23:28,650 --> 00:23:30,605
+There's some information about
+
+557
+00:23:30,605 --> 00:23:32,525
+heredoc link in the slide here,
+
+558
+00:23:32,525 --> 00:23:34,555
+if you want to read
+more about it.
+
+559
+00:23:34,555 --> 00:23:37,465
+Then this function check_output
+
+560
+00:23:37,465 --> 00:23:39,160
+is just going to see when we
+
+561
+00:23:39,160 --> 00:23:45,190
+read the content
+out of our device,
+
+562
+00:23:45,190 --> 00:23:47,810
+doesn't match what we thought
+it should match based on
+
+563
+00:23:47,810 --> 00:23:49,180
+our expected file that we set
+
+564
+00:23:49,180 --> 00:23:52,100
+up previously with the heredoc.
+
+565
+00:23:52,110 --> 00:23:55,380
+Then, if we verify that
+
+566
+00:23:55,380 --> 00:23:58,170
+that first simple
+case works properly
+
+567
+00:23:58,170 --> 00:24:00,670
+and you can fill
+the device up with
+
+568
+00:24:00,670 --> 00:24:03,750
+write 1-10 and get those
+same write 1-10 back,
+
+569
+00:24:03,750 --> 00:24:05,430
+the next thing that
+drivertest script
+
+570
+00:24:05,430 --> 00:24:07,510
+does is just add an 11th write.
+
+571
+00:24:07,510 --> 00:24:09,235
+This is going to roll over
+
+572
+00:24:09,235 --> 00:24:11,785
+the circular buffer
+implementation.
+
+573
+00:24:11,785 --> 00:24:13,330
+Now, you should see that write1
+
+574
+00:24:13,330 --> 00:24:15,070
+disappears and you
+have write2 through
+
+575
+00:24:15,070 --> 00:24:19,745
+11 as a part of your
+device implementation,
+
+576
+00:24:19,745 --> 00:24:23,770
+as a part of the response
+from your device driver.
+
+577
+00:24:24,600 --> 00:24:27,430
+Then I want to verify that part.
+
+578
+00:24:27,430 --> 00:24:30,130
+There's a slightly
+more complicated test
+
+579
+00:24:30,130 --> 00:24:31,595
+here that is going
+to verify that
+
+580
+00:24:31,595 --> 00:24:33,665
+that logic about
+handling partial writes
+
+581
+00:24:33,665 --> 00:24:36,575
+is implemented properly
+in your driver.
+
+582
+00:24:36,575 --> 00:24:38,790
+Echo -n is going to say,
+
+583
+00:24:38,790 --> 00:24:40,535
+write this without a new line.
+
+584
+00:24:40,535 --> 00:24:42,500
+It's going to allow
+us to conditionally
+
+585
+00:24:42,500 --> 00:24:44,950
+append to a command that
+
+586
+00:24:44,950 --> 00:24:51,055
+we're writing from echo.
+
+587
+00:24:51,055 --> 00:24:54,220
+W-R-I-T-E-1, here we're
+
+588
+00:24:54,220 --> 00:24:57,610
+writing the write1
+command to the buffer,
+
+589
+00:24:57,610 --> 00:25:00,610
+without actually
+writing new lines
+
+590
+00:25:00,610 --> 00:25:01,925
+for the first three steps.
+
+591
+00:25:01,925 --> 00:25:03,390
+It should be equivalent to just
+
+592
+00:25:03,390 --> 00:25:04,960
+doing one echo of write1,
+
+593
+00:25:04,960 --> 00:25:06,700
+and this is just making
+sure that your device
+
+594
+00:25:06,700 --> 00:25:08,900
+driver's able to
+handle this case and
+
+595
+00:25:08,900 --> 00:25:11,615
+handle multiple writes
+that keep appending to
+
+596
+00:25:11,615 --> 00:25:15,690
+a single circular buffer
+entry, and same with write10.
+
+597
+00:25:15,690 --> 00:25:18,385
+Handle both cases there
+
+598
+00:25:18,385 --> 00:25:21,260
+properly within
+your device driver.
+
+599
+00:25:21,260 --> 00:25:23,700
+We're going to expect
+the same write1 through
+
+600
+00:25:23,700 --> 00:25:27,840
+10 output of your circular
+buffer after we write this.

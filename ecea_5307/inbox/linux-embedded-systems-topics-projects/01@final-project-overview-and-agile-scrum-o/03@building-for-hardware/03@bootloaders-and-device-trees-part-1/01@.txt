@@ -1,0 +1,183 @@
+This video is part of
+a multipart series talking about bootloader
+and Device Trees. We want to do with this video is understand the role
+of the bootloader, understand the role
+of Device Trees. Also let's go through some simple and then more
+complex bootloader examples. Bootloader at a high level, what we want to do is initialize the system at some basic level. Really what we want to do is get far enough that we
+can load the kernel. In the beginning
+of the semester, we've been using QEMU
+for demonstrating a lot of how the kernel works, and how we can use
+the Linux kernel, in both kernel space
+and user space. We've been able to ignore how you get as far as
+loading the kernel, but that's really part of
+the job of the bootloader. As we start to work
+with hardware, the bootloader becomes more
+important because it's a necessary piece of being able to work
+with the Linux kernel. You often are going
+to be starting with a single CPU core and a
+set of on-chip memory, which for more
+complicated parts, is probably only a small subset of the overall
+hardware solution. What a bootloader is going to do is what's known
+as bootstrapping. In other words, starting up, initializing some
+piece of hardware, using that hardware
+to initialize the next hardware
+in the process, and loading the different
+startup software that it needs to completely
+initialize the system, and run the Linux kernel, loading all of that in phases. Some of the different phases, including setting up DRAM, setting up access to storage, whatever you're
+persistent storage is. Then loading the
+kernel into RAM. We'll also talk a
+little bit about Device Trees because they're also important for
+the boot process. Before around February 2013
+and kernel version 3.8, the platform implementation for Linux kernel was
+either discovered at runtime or was hard-coded
+directly into the kernel. This became unwieldy and was less useful for
+embedded devices. It was more appropriate
+for things like PCs, where hardware varied widely. You need to be able
+to basically auto discover everything
+from the kernel, as opposed to an
+embedded or ARM system, where you pretty much know
+exactly what hardware you're going to
+have at boot time. You also might be a little
+more resource-constrained, in terms of how many different
+variations of drivers you would want to support, based on the hardware. To solve this problem, the Linux kernel developers
+started replacing this functionality
+by a functionality called Device Trees, especially on ARM, which is a pretty big part of
+the embedded solution. Device Trees have been the go-to way of configuring
+devices in Linux. It really represents
+the system and the associated devices
+that make up the system, as a collection of components
+in a hierarchy tree. That's where the name
+Device Tree comes from. It includes these properties
+and key-value pairs with a form of a name that's
+assigned to know value. The Mastering Embedded
+Linux Programming, Chapter 3 goes over
+these in more detail, but you can see the things
+that we can specify here with the Device Tree. We can talk about where
+memory is located, and how it fits in the
+overall memory space. We can describe the CPUs that we have connected to the system. We can describe things like
+the interrupt controller, what location it's
+located at in memory, what interrupts are supported, and how those are being used. In this case, for an LCD device. The ARM bootloader and kernel requires a Device Tree to
+be compiled before using. You can think of it very similar to what we do with a C file. This would be the source
+code implementation, the human-readable portion. Then you go through a compiled
+step to turn that into a binary that the bootloader
+or kernel can understand. The binary would be a DTB, which is often referred to as either a Device Tree Binary
+or a Device Tree Blob, and the compilation step, instead of using GCC for C code, we'd use DTC, which is
+the Device Tree Compiler. The result, it could be referred to as a Device Tree Binary,
+Device Tree Blob. You might also see
+it referred to as a Flattened Device
+Tree or an FDT. Let's talk a little bit
+about how bootloader will work from a
+conceptual point of view. First, starting with the
+simple bootloader example. This is probably something
+you're familiar with, if you've done any embedded
+development at all, and use some low-resource
+common embedded product. There's typically
+a reset vector. You got a reset vector
+that boots into NOR flash. That NOR flash
+probably sets up RAM, sets up the boot,
+and run from RAM. In some cases, maybe there's a little more complexity
+in the NOR flash. It has to deal with
+something like DRAM. But ultimately, it's still
+a pretty simple scenario, where a flat linear
+addressing space that's all addressed from the code that
+starts with the NOR flash, and is pretty
+straightforward to config, and run from a
+bootloader perspective. Not a lot of work for the
+bootloader to do here. Why can't we just always
+use a simple bootloader? That one looks nice. Why
+would we just always do that? Well, it turns out that
+it gets a little more complex with different parts, especially with the
+higher performance parts that you might want to use an
+embedded Linux environment. One of the complexities
+associated with NAND flash. With NAND flash
+versus NOR flash, and this is covered in other
+courses you've probably taken or will be
+taking in more detail, the content is no longer
+linearly addressable, meaning that you
+can't just jump to an address and assume
+you'll be able to read the content
+of the flash. You probably need to
+use something like ECC, support recovery of bad blocks, and so all this requires some additional software work to support and potentially some additional hardware
+work to support, so it makes the bootloader
+a little more complicated. There's also just general
+complexities of the hardware, the multiple cores
+or cores that need other hardware components like DRAM brought up before
+they're able to function. There's more work that
+needs to happen before we can actually get to the point
+that we could start Linux. If we want to go through a
+more complicated example, and this is again covered in your Mastering Embedded Linux
+Programming Chapter 3 book. But some of the different
+components here that we'll be talking through in this
+more complicated example. Let's say you've got an
+on-board or external DRAM, so you've got a dynamic RAM
+that you have to refresh, probably need some
+hardware support for that, there will be a
+tertiary program loader that's associated with that, that's the third stage
+of our boot process. Then you might have an
+on-board or external flash, and maybe that flash
+is NAND flash, instead of NOR flash, so that means that
+there's some extra work that you'll have
+to do to be able to read and access
+that NAND flash. The things that
+would be stored in there would be things like compressed images on the flattened device
+tree that we talked about, the device tree,
+the kernel image, maybe an initramfs image that will be the early bootloader
+portion of your kernel. Maybe one or more
+root filesystems, and probably some
+images related to the program loaders like
+the SPL or TPL image. Then you might also
+have an on-board SOC. Some base system that is able to start from
+the reset vectors, so the part that implements the simple bootloader that we talked about in the first slide. You'd have some type
+of reset vector, some storage, and in a lot
+of cases, it might be ROM. This might not be something
+that's programmable, it might be a fixed thing
+that's built into the part. Then possibly a SRAM with secondary program loader
+as a part of that SOC, so a small amount of RAM that's available specifically for
+the purposes of initial boot. Going through how all this
+could work together in a more complicated
+bootloader example, you can have the reset
+vector boot into ROM and then ROM
+could initialize SPL or a small SRAM area. Do the work to enable
+access to NAND, get the content of the
+SPL image from NAND, copy that into our SRAM for
+secondary program loader. A lot of times this
+content could be stored in a special
+portion of NAND flash, for instance, a section where you don't need
+to read with ECC, and so it's a little bit easier from a software
+perspective to access it. It could also be that the SPL could get transferred in
+from an external interface. For instance, you might be
+able to have the ROM be able to access over
+USB and possibly pull the secondary program
+loader over something like a USB connection as an alternative to reading
+out of NAND flash. But one way or another,
+it will be the job of that phase 1 ROM code to get the secondary program
+loader into RAM and be able to run the secondary
+program loader. Then as a part of running the
+secondary program loader, now we probably have
+enough software support to initialize the hardware that
+we need to access the DRAM, and we'll probably also be able to complete initialization
+of the NAND flash, be able to use ECC and read
+more content from the NAND. The job of a secondary
+program loader might be to load the tertiary
+program loader. Give us access to
+the NAND flash, give us access to the DRAM, and have enough capability to load that tertiary program
+loader out of NAND flash, put it into DRAM, and then
+jump and run from DRAM. Again, the TPL could be content received over USB or
+some external interface, or maybe it could be content
+from the NAND flash. Then in phase 3, the
+tertiary program loader, now we're at support of more of a
+full-featured bootloader, something like U-boot
+where we've got full support for reading
+or writing NAND flash. It's able to read and decompress the
+flattened device tree, the kernel, the initramfs, all the different
+components that we need to actually boot kernel. We can take the kernel out of
+something like NAND flash, including ECC, and
+copy that into DRAM, and then jump into
+and start the kernel. This phase 3 step gets us to exactly the point
+at when we're starting our QMU instance using the simple examples that we've done with the first
+part of the semester. Once we're at this point, we're ready to boot into the kernel. The tertiary program
+loader hands over or jumps into the kernel, and now the kernel can
+initialize all the memory in DRAM since the DRAM is
+already set up for it. It can start the initramfs, where we can complete
+hardware initialization, load some drivers if we need to, and set up that root file system so we can now access
+the root filesystem and the NAND flash and mount it appropriately and boot and start running the Linux system.

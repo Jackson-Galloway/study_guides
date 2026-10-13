@@ -1,0 +1,676 @@
+1
+00:00:00,766 --> 00:00:04,862
+In this video I'm going to do
+demonstration of a working assignments 6.
+
+2
+00:00:09,681 --> 00:00:13,596
+So assignments 6 is going to start
+similar to the way assignment forded.
+
+3
+00:00:13,596 --> 00:00:17,776
+Where you're going to start with a base
+repository with public source and
+
+4
+00:00:17,776 --> 00:00:18,688
+starter code.
+
+5
+00:00:18,688 --> 00:00:23,271
+Get help classroom is going to create
+a assignment 6 repository for you.
+
+6
+00:00:23,271 --> 00:00:26,614
+That's going to contain a bunch
+of starter scripts that you
+
+7
+00:00:26,614 --> 00:00:28,920
+can use to start the Yocto assignment.
+
+8
+00:00:28,920 --> 00:00:33,667
+And then for the modifications to
+the socket ASD socket application.
+
+9
+00:00:33,667 --> 00:00:36,574
+We'll use our assignment
+3 repository again.
+
+10
+00:00:36,574 --> 00:00:41,098
+And you'll start by merging
+in some content from the ASD
+
+11
+00:00:41,098 --> 00:00:45,827
+assignments 6 branch to pull
+in the shared starter code.
+
+12
+00:00:45,827 --> 00:00:49,277
+Most importantly the updates to
+the socket test script that you use for
+
+13
+00:00:49,277 --> 00:00:50,630
+testing your native code.
+
+14
+00:00:52,733 --> 00:00:57,769
+So this gets you through the steps that
+are required to update your assignment 3
+
+15
+00:00:57,769 --> 00:01:03,047
+repository with the changes from the
+assignment 6 branch for automated testing.
+
+16
+00:01:03,047 --> 00:01:06,059
+And here's a link list of
+the suggested reading.
+
+17
+00:01:06,059 --> 00:01:12,049
+Some of this we've gone over in
+the week 60 Yocto slides already.
+
+18
+00:01:12,049 --> 00:01:16,527
+But there's some more detail here that you
+can go through if you have questions about
+
+19
+00:01:16,527 --> 00:01:17,295
+these steps.
+
+20
+00:01:17,295 --> 00:01:21,791
+So, we'll start assignment 6 with
+a continuation of assignment 5.
+
+21
+00:01:21,791 --> 00:01:25,132
+Where your socket based program is
+going to accept multiple simultaneous
+
+22
+00:01:25,132 --> 00:01:25,862
+connections.
+
+23
+00:01:25,862 --> 00:01:29,156
+And the way you do that is that
+every connection you receive will
+
+24
+00:01:29,156 --> 00:01:33,400
+spawn a new threat to actually handle
+the socket IO associated with connection.
+
+25
+00:01:33,400 --> 00:01:37,625
+So, your rights to var temp AESD socket
+data should be synchronized between
+
+26
+00:01:37,625 --> 00:01:39,085
+threads using a miu text.
+
+27
+00:01:39,085 --> 00:01:43,196
+To make sure that if there are multiple
+threads that are attempting to write at
+
+28
+00:01:43,196 --> 00:01:44,018
+the same time,
+
+29
+00:01:44,018 --> 00:01:47,768
+they're going to get blocked until
+one of the two threats completes.
+
+30
+00:01:47,768 --> 00:01:48,927
+So that just keeps it so
+
+31
+00:01:48,927 --> 00:01:53,142
+that it wouldn't be possible to mixed data
+from two different threads that once.
+
+32
+00:01:53,142 --> 00:01:56,991
+The thread is going to exit whenever
+the connection is closed by a client or
+
+33
+00:01:56,991 --> 00:01:59,828
+when an error occurs in the center or
+receive steps.
+
+34
+00:01:59,828 --> 00:02:02,351
+And then your program should
+continue to gracefully exit.
+
+35
+00:02:02,351 --> 00:02:05,846
+Which means that you're going to have to
+signal the threads that you want them to
+
+36
+00:02:05,846 --> 00:02:07,317
+exit if they haven't already.
+
+37
+00:02:07,317 --> 00:02:08,892
+And you're going to have to wait for
+
+38
+00:02:08,892 --> 00:02:11,542
+them to complete before you
+complete your main threat.
+
+39
+00:02:11,542 --> 00:02:15,182
+And you can use the singly
+list API's discussed in class.
+
+40
+00:02:15,182 --> 00:02:17,522
+Or if you want to use your
+own implementation you can.
+
+41
+00:02:17,522 --> 00:02:20,484
+But please use P thread join to
+join the completed threads and
+
+42
+00:02:20,484 --> 00:02:22,993
+don't use detached threads for
+this assignment.
+
+43
+00:02:24,302 --> 00:02:28,939
+You're going to modify your AESD socket
+source code repository to append
+
+44
+00:02:28,939 --> 00:02:31,109
+a time stamp every 10 seconds.
+
+45
+00:02:31,109 --> 00:02:36,024
+And then you use the same locking to
+make sure that the timestamp data is not
+
+46
+00:02:36,024 --> 00:02:37,382
+inter leaved with.
+
+47
+00:02:37,382 --> 00:02:44,899
+Or is not intermixed with the content that
+comes over in a given socket transmission.
+
+48
+00:02:44,899 --> 00:02:49,270
+So and then there's an updated socket test
+script that handles timestamps correctly
+
+49
+00:02:49,270 --> 00:02:52,679
+in the assignment or test,
+test assignments 6 sub-directory.
+
+50
+00:02:52,679 --> 00:02:57,304
+And if you want, you can run this
+outside the test of SH script.
+
+51
+00:02:57,304 --> 00:03:00,434
+And at this point when you have
+all that implemented the test out
+
+52
+00:03:00,434 --> 00:03:03,568
+SH script in your AESD assignments
+repository should build and
+
+53
+00:03:03,568 --> 00:03:05,892
+run your native applications successfully.
+
+54
+00:03:05,892 --> 00:03:10,564
+And should complete successfully against
+the the code when running natively on your
+
+55
+00:03:10,564 --> 00:03:11,363
+Lynx system.
+
+56
+00:03:13,238 --> 00:03:17,715
+So, next you're going to modify
+your Yocto installation such
+
+57
+00:03:17,715 --> 00:03:21,690
+that you can install this in
+a Yocto based image as well.
+
+58
+00:03:21,690 --> 00:03:25,100
+So, you'll start by setting up your
+virtual machine, or your build machine.
+
+59
+00:03:25,100 --> 00:03:29,442
+With the build host packages requirements
+from the Yocto quick start guide.
+
+60
+00:03:29,442 --> 00:03:33,660
+You're going to add pocky
+as a sub-module and
+
+61
+00:03:33,660 --> 00:03:39,020
+use branch dumb fell as the branch for
+the pocky source.
+
+62
+00:03:39,020 --> 00:03:41,591
+Or if this is different in
+the latest assignment document.
+
+63
+00:03:41,591 --> 00:03:44,163
+Always follow the contact
+from the assignment document.
+
+64
+00:03:45,795 --> 00:03:52,046
+And make sure that you do get out and get
+commit to save the correct commit hash for
+
+65
+00:03:52,046 --> 00:03:56,358
+the pocket sub-module before
+your own build that SH.
+
+66
+00:03:56,358 --> 00:04:00,801
+Because bill that SH is going to update
+the sub-module based on whatever it was on
+
+67
+00:04:00,801 --> 00:04:01,823
+the last commit.
+
+68
+00:04:01,823 --> 00:04:04,956
+So you would override your
+changes that can be confusing.
+
+69
+00:04:06,786 --> 00:04:11,659
+So then you'll follow the to do
+steps in the AESD ssignments
+
+70
+00:04:11,659 --> 00:04:15,948
+repository to update or
+in the recipes AESD folder of
+
+71
+00:04:15,948 --> 00:04:20,543
+the project to update the recipe for
+AESD assignments.
+
+72
+00:04:20,543 --> 00:04:25,299
+And that should build the assignment 5
+AESD socket source with the committee
+
+73
+00:04:25,299 --> 00:04:26,920
+specified by source rev.
+
+74
+00:04:26,920 --> 00:04:31,528
+And so, you you'll specify the new source
+read that matches these changes that
+
+75
+00:04:31,528 --> 00:04:34,015
+you're adding for assignment number 6.
+
+76
+00:04:34,015 --> 00:04:38,176
+And then add that package of the core
+image AESD as we discussed in class.
+
+77
+00:04:38,176 --> 00:04:43,066
+And you'll need to make the change to
+add your start script using the update
+
+78
+00:04:43,066 --> 00:04:45,948
+our C-D as we mentioned
+in lecture as well.
+
+79
+00:04:45,948 --> 00:04:49,138
+You use build that SH to
+build the combined image.
+
+80
+00:04:49,138 --> 00:04:54,640
+And then run qemu.shh is going
+to run in a virtual machine
+
+81
+00:04:54,640 --> 00:05:01,186
+much in the same way as it did with
+bill drip using slope networking.
+
+82
+00:05:01,186 --> 00:05:05,437
+And if you want, you can add ssh
+support using core image extra,
+
+83
+00:05:05,437 --> 00:05:08,053
+install in your core image as DWB file.
+
+84
+00:05:08,053 --> 00:05:12,637
+This it allows you to SSH into yard Cumia
+instance if you want to troubleshoot
+
+85
+00:05:12,637 --> 00:05:13,447
+something.
+
+86
+00:05:13,447 --> 00:05:19,716
+And the socket test script in the Yocto
+repository under the assignments,
+
+87
+00:05:19,716 --> 00:05:24,195
+assignment 6-Yocto test
+directory should now pass
+
+88
+00:05:24,195 --> 00:05:28,690
+when running against
+the running QEMU instance and,
+
+89
+00:05:30,003 --> 00:05:34,544
+The ./testscript as well should
+also complete successfully.
+
+90
+00:05:38,030 --> 00:05:42,598
+So here's a demo overworking
+implementation starting first in
+
+91
+00:05:42,598 --> 00:05:45,144
+the AESD assignments repository.
+
+92
+00:05:45,144 --> 00:05:49,356
+So testing the native application
+around test at SH from here.
+
+93
+00:05:49,356 --> 00:05:52,576
+I should see is that I'm
+building my socket server.
+
+94
+00:05:52,576 --> 00:05:56,736
+And then I'm starting
+the socket test program.
+
+95
+00:05:56,736 --> 00:06:01,326
+And now what I'll see is a combination
+of the the prince that I'm
+
+96
+00:06:01,326 --> 00:06:06,171
+printing out from the AESD socket
+application plus the data that's
+
+97
+00:06:06,171 --> 00:06:09,412
+coming from the socket server application.
+
+98
+00:06:09,412 --> 00:06:14,836
+And you'll notice a delay here of about
+20 seconds where we make sure that
+
+99
+00:06:14,836 --> 00:06:21,228
+the timestamp is getting updated every 10
+seconds per the assignment requirements.
+
+100
+00:06:21,228 --> 00:06:23,693
+So it's going to count
+the number of time stamps and
+
+101
+00:06:23,693 --> 00:06:26,469
+verify that you implemented
+this part successfully.
+
+102
+00:06:26,469 --> 00:06:30,682
+And then after the first past six succeeds
+you'll see that it's rerunning the test
+
+103
+00:06:30,682 --> 00:06:31,597
+with Valgaeren.
+
+104
+00:06:31,597 --> 00:06:36,000
+So this is just going to make sure that if
+you can succeed without Valgaeren you can
+
+105
+00:06:36,000 --> 00:06:39,284
+rerun the Valgaeren and
+you don't have any memory leaks.
+
+106
+00:06:39,284 --> 00:06:41,892
+So you'll see the same kind of
+test happened two times in a row.
+
+107
+00:06:41,892 --> 00:06:46,880
+And if the second time succeeds you'll
+know that the native applications working
+
+108
+00:06:46,880 --> 00:06:50,503
+for the requirements and
+you don't have any memory leaks.
+
+109
+00:06:50,503 --> 00:06:54,685
+For the active portion of
+the assignment we'll use the build that
+
+110
+00:06:54,685 --> 00:06:57,204
+SH Script again to do our builds for us.
+
+111
+00:06:57,204 --> 00:07:00,863
+And you should see prints
+like this happening once you
+
+112
+00:07:00,863 --> 00:07:02,655
+start the build process.
+
+113
+00:07:02,655 --> 00:07:05,368
+And in this case I'm not going to wait for
+the bill to complete.
+
+114
+00:07:05,368 --> 00:07:07,382
+I've already completed
+the build successfully.
+
+115
+00:07:07,382 --> 00:07:10,932
+So this will go much quicker than it will
+the very first time you try to run it.
+
+116
+00:07:10,932 --> 00:07:16,015
+But you should see prints like this
+happening that show which branch
+
+117
+00:07:16,015 --> 00:07:21,825
+you're on and what commit you're building
+from for your Yocto source code.
+
+118
+00:07:21,825 --> 00:07:25,747
+And you should ultimately get
+a print like this saying,
+
+119
+00:07:25,747 --> 00:07:29,844
+some specific number of tasks will run and
+all succeeded.
+
+120
+00:07:29,844 --> 00:07:33,901
+Once you see this you should be able
+to run your Yocto image with run QEMU.
+
+121
+00:07:36,475 --> 00:07:38,485
+And this is going to start QEMU and
+
+122
+00:07:38,485 --> 00:07:43,591
+you'll you'll have something that looks
+similar to when you run QEMU against
+
+123
+00:07:43,591 --> 00:07:48,869
+build it where you'll boot up a system
+that you can log into interactively with.
+
+124
+00:07:50,694 --> 00:07:53,654
+So eventually you'll boot
+to a login prompt and
+
+125
+00:07:53,654 --> 00:07:56,912
+you can type route to log in
+as root with no password.
+
+126
+00:07:59,066 --> 00:08:03,204
+So now if I want to run the soccer test
+script against my running QEMU instance,
+
+127
+00:08:03,204 --> 00:08:07,549
+I can run assignment auto, test, test
+assignment 6 out of socket test that SH.
+
+128
+00:08:07,549 --> 00:08:11,036
+And this is going to do the same thing
+that we did with the native app but
+
+129
+00:08:11,036 --> 00:08:13,763
+it's going to be running
+against the QEMU instance.
+
+130
+00:08:13,763 --> 00:08:15,482
+And so you should see these prints coming.
+
+131
+00:08:15,482 --> 00:08:20,014
+If you have prints that are happening from
+your AESD socket server inside the Yocto
+
+132
+00:08:20,014 --> 00:08:23,572
+image, you'll see those prints
+happening from the terminal.
+
+133
+00:08:26,325 --> 00:08:31,514
+So when the test completes, you should see
+this message test completed with success.
+
+134
+00:08:31,514 --> 00:08:37,630
+So what I, what I just showed here
+was running QEMU interactively and
+
+135
+00:08:37,630 --> 00:08:42,066
+running the building
+QEMU steps interactively.
+
+136
+00:08:42,066 --> 00:08:43,372
+Which might be useful way for
+
+137
+00:08:43,372 --> 00:08:46,049
+you to bug any problems that
+are happening with the yocto.
+
+138
+00:08:46,049 --> 00:08:49,999
+But another option you have
+here is you can just run
+
+139
+00:08:49,999 --> 00:08:52,929
+test.shh from your Yocto Project.
+
+140
+00:08:52,929 --> 00:08:57,592
+This should do the build and then run
+QEMU and kick off the test in parallel on
+
+141
+00:08:57,592 --> 00:09:01,381
+the QEMU instance, and
+do this all in an automated fashion.

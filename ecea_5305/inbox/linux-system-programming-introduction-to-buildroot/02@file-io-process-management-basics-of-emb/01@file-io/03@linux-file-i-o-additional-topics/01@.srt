@@ -1,0 +1,547 @@
+1
+00:00:01,040 --> 00:00:04,370
+This video we're going to continue
+our discussion of Linux File I/O, and
+
+2
+00:00:04,370 --> 00:00:06,991
+cover the remaining portions
+that we haven't covered in
+
+3
+00:00:06,991 --> 00:00:09,840
+Linux System Programming chapter two.
+
+4
+00:00:09,840 --> 00:00:11,376
+So some of the learning objectives,
+
+5
+00:00:11,376 --> 00:00:13,820
+we're going to talk about how
+to access file positionally.
+
+6
+00:00:13,820 --> 00:00:16,939
+We're going to reintroduce the idea and
+concept of Sparse Files,
+
+7
+00:00:16,939 --> 00:00:20,440
+which we've actually mentioned
+briefly in previous weeks.
+
+8
+00:00:20,440 --> 00:00:23,917
+And then we're going to introduce
+the idea of Multiplexed I/O.
+
+9
+00:00:23,917 --> 00:00:28,823
+So reading positionally,
+you might have had some experience with
+
+10
+00:00:28,823 --> 00:00:32,960
+this already with the f versions
+of open read and write.
+
+11
+00:00:32,960 --> 00:00:37,483
+So if you want to rather than just read
+from the beginning to the end of the file
+
+12
+00:00:37,483 --> 00:00:38,339
+in sequence.
+
+13
+00:00:38,339 --> 00:00:42,895
+If you need to change that up and need to
+read from different parts of the file, or
+
+14
+00:00:42,895 --> 00:00:47,590
+need to write to different certain areas
+of the file, you can use lseek to do this.
+
+15
+00:00:47,590 --> 00:00:52,352
+And there are a couple different options
+in terms of how to locate within the file
+
+16
+00:00:52,352 --> 00:00:53,150
+with lseek.
+
+17
+00:00:53,150 --> 00:00:57,299
+And these are the same options that
+are offered for the buffered I/O as well.
+
+18
+00:00:57,299 --> 00:01:01,811
+So SEEK_SET means you're just
+going to use the byte offset you
+
+19
+00:01:01,811 --> 00:01:03,942
+mentioned inside the file.
+
+20
+00:01:03,942 --> 00:01:07,246
+You're going to just use that relative
+to the beginning of the file,
+
+21
+00:01:07,246 --> 00:01:10,374
+that's going to be an absolute
+position that you want to stick to.
+
+22
+00:01:10,374 --> 00:01:13,936
+The SEEK_CUR says wherever I'm at,
+I'm going to increment or
+
+23
+00:01:13,936 --> 00:01:17,094
+decrement based on the offset
+I specify into the file.
+
+24
+00:01:17,094 --> 00:01:21,581
+And then SEEK_END means I'm going to
+seek relative to the end of the file.
+
+25
+00:01:21,581 --> 00:01:26,361
+So, if I say minus one, I'll be one
+byte before the end of the file.
+
+26
+00:01:28,840 --> 00:01:32,840
+The book also mentioned some alternatives
+for positional reader, right?
+
+27
+00:01:32,840 --> 00:01:38,118
+Based on the, and
+an alternative to the lseek command or
+
+28
+00:01:38,118 --> 00:01:43,747
+the lseek function I mentioned
+earlier in period in pread.
+
+29
+00:01:43,747 --> 00:01:48,439
+So, one benefit of these is if
+you're using a the lseek command,
+
+30
+00:01:48,439 --> 00:01:51,598
+you're going to be
+modifying the position for
+
+31
+00:01:51,598 --> 00:01:55,372
+any of the threads that
+are running in your process.
+
+32
+00:01:55,372 --> 00:01:58,351
+So you're basically setting
+the position globally for
+
+33
+00:01:58,351 --> 00:02:00,940
+your process on that file descriptor.
+
+34
+00:02:00,940 --> 00:02:04,795
+But if you use the pread or pwrite
+versions, you're not going to specify
+
+35
+00:02:04,795 --> 00:02:08,651
+the origin, you're not going to
+specify the location for all threads,
+
+36
+00:02:08,651 --> 00:02:12,898
+you're going to be specifying the location
+based on this one particular read or
+
+37
+00:02:12,898 --> 00:02:16,001
+write command and
+where it's going to go into the buffer.
+
+38
+00:02:16,001 --> 00:02:19,163
+So, benefit would be if you're
+using a multithreaded application,
+
+39
+00:02:19,163 --> 00:02:22,340
+it's not going to manipulate
+file position for other threads.
+
+40
+00:02:22,340 --> 00:02:26,524
+And, in order to simplify this a bit,
+the origin argument is removed and
+
+41
+00:02:26,524 --> 00:02:29,560
+you're always going to use
+the equivalent of six set.
+
+42
+00:02:29,560 --> 00:02:32,561
+In other words, just an absolute
+position into the file for locating.
+
+43
+00:02:34,440 --> 00:02:37,946
+So talking a little bit
+more about Sparse Files.
+
+44
+00:02:37,946 --> 00:02:44,301
+If you use lseek and let's say you search
+into a gigabyte offset based on SEEK_END.
+
+45
+00:02:44,301 --> 00:02:48,623
+So in other words, I'm going to locate
+from the end of the file, one gigabyte out
+
+46
+00:02:48,623 --> 00:02:52,370
+on my current file descriptor and
+then maybe I just write one value.
+
+47
+00:02:52,370 --> 00:02:57,340
+Unsigned integer value let's say,
+out to that location.
+
+48
+00:02:57,340 --> 00:03:03,040
+This would extend the file, one gig past
+the end of the current file location.
+
+49
+00:03:03,040 --> 00:03:06,587
+So what if there's less than one
+gigabyte of disk space available,
+
+50
+00:03:06,587 --> 00:03:09,040
+would you expect this command to fail?
+
+51
+00:03:09,040 --> 00:03:12,090
+And maybe you would,
+just thinking about what it's doing.
+
+52
+00:03:12,090 --> 00:03:16,985
+But in reality, the links file system
+is smart enough to know that you didn't
+
+53
+00:03:16,985 --> 00:03:19,270
+actually write a gigabyte of data.
+
+54
+00:03:19,270 --> 00:03:23,629
+You just extended the file out that
+long and wrote one byte past the end.
+
+55
+00:03:23,629 --> 00:03:29,070
+So the Linux file system is actually smart
+enough to not use disk space in this case.
+
+56
+00:03:29,070 --> 00:03:32,362
+Instead it will create a hole to represent
+the space in the file that hasn't
+
+57
+00:03:32,362 --> 00:03:33,540
+been written.
+
+58
+00:03:33,540 --> 00:03:38,861
+And if you read the file, it'll look
+like it's a continuous block of values.
+
+59
+00:03:38,861 --> 00:03:42,365
+But in reality when you're reading
+the hole that hasn't been written,
+
+60
+00:03:42,365 --> 00:03:43,869
+it'll just be returning 0s.
+
+61
+00:03:43,869 --> 00:03:47,361
+And this is what's referred
+to in Linux as a sparse file.
+
+62
+00:03:48,940 --> 00:03:53,080
+So, if you want to see an example of
+this again you can follow the link from
+
+63
+00:03:53,080 --> 00:03:54,500
+the lecture notes.
+
+64
+00:03:54,500 --> 00:03:59,337
+But here's a case where you can create
+a sparse file using the sparse file dot c
+
+65
+00:03:59,337 --> 00:04:04,995
+application, by doing an lseek relative to
+SEEK_END based on the parameter specified,
+
+66
+00:04:04,995 --> 00:04:08,061
+and then writing a single
+byte at that location.
+
+67
+00:04:09,740 --> 00:04:14,930
+So how can we see what's happened
+here in terms of disk space usage?
+
+68
+00:04:14,930 --> 00:04:19,648
+What you'll notice is that that sparse
+file that we create, if you do ls- lh.
+
+69
+00:04:19,648 --> 00:04:21,435
+So this is going to say list and
+
+70
+00:04:21,435 --> 00:04:25,740
+give me a human readable
+representation of the file size.
+
+71
+00:04:25,740 --> 00:04:30,456
+What you'll notice is that the ls
+command says that the file is
+
+72
+00:04:30,456 --> 00:04:32,548
+954 megabytes in size.
+
+73
+00:04:32,548 --> 00:04:38,961
+So roughly one gigabyte offset that we
+specified here with sparse file parameter.
+
+74
+00:04:40,140 --> 00:04:43,419
+But if I use du which is
+the disk usage command, and
+
+75
+00:04:43,419 --> 00:04:47,557
+I list the human readable size for
+every file in the directory,
+
+76
+00:04:47,557 --> 00:04:52,270
+I'll see that the sparse file is
+actually only using 4k of disk space.
+
+77
+00:04:52,270 --> 00:04:55,461
+So this is a way that you can tell that
+the file is actually a sparse file.
+
+78
+00:04:58,040 --> 00:05:01,918
+Okay, so if your,
+let's say your application needs to handle
+
+79
+00:05:01,918 --> 00:05:05,010
+input from more than one
+file descriptor at once.
+
+80
+00:05:05,010 --> 00:05:07,453
+And if you're using
+something like a FIFO or
+
+81
+00:05:07,453 --> 00:05:09,706
+a pipe as one of those file descriptors.
+
+82
+00:05:09,706 --> 00:05:13,628
+And you would normally have a behavior
+where you're blocking waiting for
+
+83
+00:05:13,628 --> 00:05:15,662
+some input from the file descriptor.
+
+84
+00:05:15,662 --> 00:05:18,940
+You have a couple of different
+ways to handle this.
+
+85
+00:05:18,940 --> 00:05:22,500
+So, two of the ways are the ones
+that we've already talked about.
+
+86
+00:05:22,500 --> 00:05:25,497
+One would be you just create a thread for
+every descriptor and
+
+87
+00:05:25,497 --> 00:05:27,511
+you just do the typical blocking reads.
+
+88
+00:05:27,511 --> 00:05:30,931
+So, if you have some other work to
+do you just spin up another thread.
+
+89
+00:05:30,931 --> 00:05:35,252
+But you have a thread that's dedicated
+to doing blocking reads on the FIFO or
+
+90
+00:05:35,252 --> 00:05:35,868
+the pipe.
+
+91
+00:05:35,868 --> 00:05:38,842
+And it's okay that it's blocking and
+waiting for data.
+
+92
+00:05:38,842 --> 00:05:41,927
+A second option would be that
+you use nonblocking IO, or
+
+93
+00:05:41,927 --> 00:05:45,100
+O_NONBLOCK that we talked
+about in the previous video.
+
+94
+00:05:45,100 --> 00:05:47,004
+And then you poll with your application.
+
+95
+00:05:47,004 --> 00:05:50,440
+So you keep trying to read and
+if there's data you do something with it.
+
+96
+00:05:50,440 --> 00:05:53,351
+If there's not, you do something
+else that the thread needs to do.
+
+97
+00:05:54,940 --> 00:06:00,370
+But the book also mentions Multiplexed I/O
+as a better solution than polling,
+
+98
+00:06:00,370 --> 00:06:05,311
+because what it allows you to do is sleep
+from one thread until a set of file
+
+99
+00:06:05,311 --> 00:06:07,280
+descriptors is available.
+
+100
+00:06:07,280 --> 00:06:10,804
+So in other words, rather than
+needing to have a dedicated thread for
+
+101
+00:06:10,804 --> 00:06:14,998
+every file descriptor, maybe you're in a
+situation where you want to handle any of
+
+102
+00:06:14,998 --> 00:06:17,093
+a bunch of different file descriptors.
+
+103
+00:06:17,093 --> 00:06:21,540
+You want to handle IO and any of those
+file descriptors whenever they occur.
+
+104
+00:06:21,540 --> 00:06:24,736
+But you'd rather not have to spin up
+a separate thread to monitor each one of
+
+105
+00:06:24,736 --> 00:06:25,940
+them independently.
+
+106
+00:06:25,940 --> 00:06:30,613
+And you'd rather not waste the cycles
+of continuously polling and
+
+107
+00:06:30,613 --> 00:06:36,840
+doing nothing other than polling every
+one of the file descriptors forever.
+
+108
+00:06:36,840 --> 00:06:40,771
+So there are three different options
+to do this, select, pselect, and poll.
+
+109
+00:06:40,771 --> 00:06:44,570
+The book mentions that poll is actually
+the preferred mechanism of these,
+
+110
+00:06:44,570 --> 00:06:46,692
+based on the flexibility that it offers.
+
+111
+00:06:46,692 --> 00:06:49,169
+But all of them essentially
+do the same thing,
+
+112
+00:06:49,169 --> 00:06:52,536
+which is take a list of file
+descriptors that you want to watch and
+
+113
+00:06:52,536 --> 00:06:56,477
+sleep until something happens on one
+of those file descriptors, at which
+
+114
+00:06:56,477 --> 00:07:00,951
+point you'll get a notification from your
+application that you need to handle it.

@@ -1,0 +1,233 @@
+In this video, I'm
+going to discuss application containers and
+Docker for embedded systems. One understand the
+difference between containerization
+and virtualization, understand the Linux
+kernel capabilities that support containerization, and understand how you can use containers in embedded
+development workflow. What are application containers? Application containers are
+really a packaging mechanism that abstracts applications from whatever environment
+they intend to run from. It's a way that you can deploy applications consistently, regardless of how the
+target environment is set up specifically. If I have a specific
+application that I want to be able to
+deploy to, let's say, a server running in
+the data center, a server in the Cloud, a developer laptop, or
+even an embedded device, and I want that
+application to work the same in any of those scenarios, and I don't want
+to be dependent on specific versions of
+dependent applications, I can put bundle all
+the dependencies into a container and run that container on any
+one of those targets, and get the same
+execution environment. Containers allow developer
+and IT teams to focus on different parts that are unique to their role in the team. For instance, a
+developer needs to focus on the application
+logic and the dependency. Which specific version
+of applications and libraries need to
+be installed in the roof file
+system in order for my application to work properly? Which versions have been successfully tested
+with my application. That should be the developer's responsibility to know that, to document that as a
+part of their setup, and to provide a way to deliver that specific
+tested instance. It allows then IT teams to focus on the deployment
+and management. When should this application
+be started and stopped? How much memory or storage should the application
+be allowed to use of the overall memory and storage that I've got on
+my server, for instance? Which ports should I allow it to access or should be exposed
+externally on my server? When we talk about
+application containerization, at first glance it sounds
+a lot like virtualization. If you are using
+Ubuntu virtual machine for your builds this semester, you're familiar with the
+term virtualization, and you're familiar with the concept of using
+a hypervisor and virtualization to virtualize
+a guest operating system. A container is similar, but it's different in a key way, which is that virtualization, you've got a whole hypervisor
+layer where you're simulating a new guest
+operating system. With a container and an
+application container, you aren't including
+the hypervisor layer. You aren't simulating
+a different kernel. You're really using the
+host operating system in the associated kernel to run the applications
+in dedicated containers. We're sharing the kernel
+in the case of Linux, but really the host
+operating system components with the host system. Whereas in the
+virtual machine case, we've got a hypervisor
+that's creating a completely virtualized
+host system as well. Some of the features that
+are built into Linux kernel that support containers
+and that are used to build a container
+support mechanism , first is namespaces. A namespace allows you to
+create isolated instance of a resource using
+the clone system call. You can think of clone
+as similar to fork, where we're taking a copy
+of a process in memory and making a separate copy of
+it that we can manipulate. Clone can work on separate
+things other than processes, though it can work
+on networking, it can work on specific ports, and it can work on mount
+points for storage. It can also work on process IDs. Trees or process IDs in which processes can interact
+with each other. That can all be controlled
+based on namespaces. Second thing used
+is control group. Once we've defined
+our namespaces, you can use control
+groups to limit the constrained groups of processes that are
+used in namespaces. For instance, if I want to say that I shouldn't have
+more than x amount of memory or CPU allocated to a specific group
+of processes. I can do that through the
+control group's feature of the kernel. Then the third is union mounts is a way that we can combine multiple directories
+into a single one that has the combined contents. This was covered in the read-only file
+system video series. Talking about
+Process Namespaces, normally a process
+tree would contain a reference to any process
+that's running in the kernel. If you had a process
+that's running with sufficient privileges and that process had a
+reference the PID of another process
+in the namespace, it could kill the process send
+signals to it, et cetera. With a namespace,
+you can introduce what's called a
+nested process tree. Meaning that, a child
+PID or a child process would have access and could view other processes
+in its namespace, but it couldn't view the content
+in the parent namespace. From a parent perspective, it would be able to see the child PIDs and
+interact with them, but the child PIDs couldn't do the opposite with
+the parent PIDs. This is all supported with the clone function that I mentioned earlier
+and CLONE_NEWPID. In addition to processes, you can create
+network namespaces where you can have
+a different set of network interfaces exposed to processes based on
+namespaces that you define. Network ports that
+are defined on a parent process might not be accessible on a child
+process, for instance. You can do this so that
+you have different loop back interfaces for networks based on whether your
+processes running in a parent or a
+child namespace. Then you can create routing
+between those networks, again using these network
+namespace functions. CLONE_NEWNET is the thing that supports this functionality through the clone command. What you can see with
+a network namespace is a completely
+different view of the network availability
+on the host. For instance, if I create
+a new network namespace, I might see only the
+loopback port address on the host because I
+haven't specifically exposed the Ethernet port that's available in the
+parent PID namespace. This allows us to
+specifically control how a process is able
+to see the network and what type of access
+it would be able to have to the host
+network resources. Then control groups will
+organize a process into groups and then be able to limit resources for that group. It can control things
+like the amount of CPU time, the memory available. It can also freeze
+and resume execution of processes running
+in a specific group. Then union mounts, this is again a
+generic reference to the content that we covered in the read-only UnionFS video. Union mounts were started in the early '90s to
+spot writable CDs, really with the idea of merging read-only file system
+content with read-write file system content to get the equivalent of the two different
+merged directory trees. There have been three
+implementation sense originally coming up with
+the idea of union mounts. UnionFS and aufs
+were two of them. Then OverlayFS is
+the first version that's been accepted in
+the main line kernel. Again, that's discussed in a little more detail in the
+read-only file system video. But the basic idea is to allow a read/write
+overlay on top of a read-only overlay and be
+able to conditionally put parts of the overlay in RAM instead of persistent storage. Docker is an open
+platform that can be used to create and run
+containerized applications. It's based on a Docker engine
+client-server application, where there's a docker
+daemon that can start, run, and control containers and there's a client that can interact with the daemon
+to perform commands. There's also optionally
+a registry that can be used to
+store docker images and share docker images or use
+them on different systems. Look at the way this interaction works from the docker client, you can use build to build a local container based
+on a set of instructions. You can use pull to pull
+containers from a registry, and you can use run to run
+local copies of containers. The docker daemon
+is the one that's organizing which
+containers are pulled locally and being able to start and stop them
+based on commands. Then the registry
+is where you can share and store
+common applications. For instance, this register
+entry for NGINX is a NGINX server, a web server that's free-running in a container
+and all configured based on the
+applications that NGINX needs in order to support
+running on it a container. Similarly, there's
+an Ubuntu image in a registry and so rather than
+having to install Ubuntu, you can just reference
+the registry container and pull that in as the
+basis of your docker image. There's some setup
+steps you can do, to set up Docker on
+your Ubuntu host and there's links here to the Docker CE instructions
+to set this up, but you basically include
+the Docker CE sources. You install Docker CE
+and the Docker CLI, and then you can run hello-world
+to test your install. The hello-world
+example is going to pull the hello-world from Docker Hub and then do a multi-stage build to
+actually build the container. Then we'll start the
+container based on the docker file Build that's included with
+hello-world example. That's going to pull down a
+specific Debian container that has the OS components
+associated with Debian file system and then
+run the commands to set up the compile environment and cross-compile for
+target platforms. Ultimately compiles hello.c and copies to root of container. Then we'll run that content
+when you run the container. If you want to actually set
+up Docker on Buildroot, the main steps there
+are you would install Docker engine and that will require changing
+the tool chain. If you're using Raspberry Pi, you'll have to change from
+the default to glibc. You'll also needed
+install Docker CLI if you want to be able to
+interact with the Engine. Then you'll need to increase the default RPI system size because the default for our Raspberry Pi is too small for
+docker components. As of the time of this video, 500 megs is sufficient, so you can increase to
+500 megabytes or more. You then boot the new SD
+card image on the target. You can use a check
+config script that will find all the
+necessary kernel packages, including the ones we
+just discussed for cgroup and overlay and add
+that to your kernel build. Then you build with a new kernel and you can run and
+tests on hardware. If you look at this link,
+this is an overview of all the different steps that
+you have to take in order to get docker built
+into Buildroot for Raspberry Pi and you can see the completed
+pull request here and all the changes
+you'd have to make. It's pretty easy step for
+you to do if you want to bring docker into
+your Buildroots. When would you want to use containers in
+embedded development? There are really two
+different places where they are very useful. One is when you're
+developing on a host system. So if you want to
+create a consistent Build and development
+environment, you have multiple
+developers who might be building an
+application and let's say that application has a
+bunch of dependencies and specific libraries that need to be installed in
+order to build it. You can either give people instructions or
+scripts that tried to install those versions on
+their operating system. Or you can just
+set up a container that builds with the exact
+versions that you care about and everyone
+can share the copy of the container and build with exactly the same Build system. It's also really
+useful for creating automated test
+frameworks because you can know that any
+new automated tests that you run is always using the same environment and you
+can easily add new systems that will again be using the
+exact same components you use when you build on
+your development system. Then you can deploy what test frameworks to continuous integration
+and deployment, and there's more
+information about that in the continuous integration
+deployments section of the test videos. Then in terms of on
+the target system. On our target system
+that's actually running our embedded Linux OS, when would you want to
+use a container there? This can be useful for pulling independencies
+quickly for test purposes. Let's say you're testing out some application that
+is supported on Ubuntu, but isn't, maybe has some components that aren't
+supported by Buildroot today. Before you go
+through the process of actually implementing all those recipes and
+adding to Buildroot, you could just using Docker, bring up on Ubuntu
+instance on Buildroot. Then once you have the Ubuntu instance running on Buildroot, you could use sudo
+apt-get install to install the dependencies and
+test locally on the device. You can also use
+it for supporting optional or possibly conflicting
+product configuration. Maybe there's a
+specific version of a Python library
+that you need for some application that you're
+going to run on the target. You could use Docker to bring in that exact environment
+that might be different from the
+environment that you have for your own applications
+running on target. You could also maybe bring in multiple web servers
+or applications. Maybe you'd have one
+main web server that serves up content from
+your device on port 80, but you can bring in a
+second one that served up some other content based on a pre-built container
+on some other port.

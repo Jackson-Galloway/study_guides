@@ -1,0 +1,175 @@
+This video, I'll continue
+discussion about embedded testing and
+talk about CI and CD. We're going to introduce CI, CD, continuous integration and
+continuous deployment, and introduce a couple
+of CI frameworks, Travis CI and GitLab CI. What is continuous integration,
+continuous deployment? As I've mentioned in
+the previous videos, when you're working with
+multiple developers, you want to try to merge
+as much as you can, as early as you can, and have shared
+repository branches that everybody is
+working off of. When that merge happens
+to the shared branch, you want some kind of CI
+pipeline that's going to help verify for you that the
+build still succeeds, the automated tests
+still succeeds. If you're working with
+a hardware device, it'd be great to know
+that the code can still be deployed
+successfully to hardware. Then ideally there'd be
+some level of automation on the hardware that you can run as well that still succeeds. This is like a
+classic drawing of what a CI/CD system looks like. The version control
+system can build in when there's a new commit or there's
+new merged to a branch. There can be a build
+that's kicked off, that can kick off a unit test, that can kick off a
+deployment in our case, to hardware, an automated
+test maybe at that point. Then if you're
+working on a web app, you can even have the
+deployment directly to production and have devices get deployed or have web app automatically be in the
+pipeline for updates based on whether it's
+passing test cases. In embedded devices, maybe that's a little
+bit harder to do again because a lot of times there's
+a manual part of testing that still needs to be
+done before it's ready to deploy to production. You can often have everything
+up to that point and possibly even some level of
+deployment covered as a part of this production
+feedback cycle from CI/CD. A couple of different
+ways to do CI/CD. Jenkins is the traditional
+way to do CI/CD. It's been around
+for quite a while, originally created in 2004. It's an open-source
+software solution that's intended to
+be self-deployed. In other words, it
+doesn't run in the cloud. It's something that you would typically deploy
+on your own server. It's got a web UI
+that you can use for configuration and setup. Then there's a text-based
+Jenkins file that helps you define your pipeline
+and by pipeline, meaning the connection to the repository that you're
+using for source code control, the commands you use to
+run your automated test, any commands you do for
+deployment, et cetera. It's meant for doing
+things like being able to deploy devices as a
+part of the pipeline. It's a great application for
+device update for instance, in terms of what's covered in other videos for
+updating devices. If you make automated
+device update as a part of your
+deployment process, then you can test it through
+something like Jenkins. Jenkins again is the
+classic way to do this. There are other and
+newer options that have more tight integration with git revisions control
+specifically. I probably wouldn't
+choose Jenkins for a new project going forward, but it's possible
+that you'll see it just based on its history. I wanted to talk about some
+of the other options that are available and before I do that, I wanted to mention
+YAML because YAML is used as a configuration
+script language for some of the possible CI options
+that we'll talk about. YAML stands for Yaml Ain't Markup Language or
+recursive algorithm. It's similar to JSON, which is described
+in the IoT lecture, except JSON is designed
+for simplicity and generation parsing which makes it maybe slightly
+less human-readable. Still pretty human-readable, but still has the quotes
+and the colons and the brackets that need to be in specific spots so maybe a little bit less human-readable, but YAML is the opposite. It prioritizes human
+readability and also support for serializing
+native data structures. In other words, taking
+a data structure that's meant to or
+that's implemented in something like C
+code and being able to directly translate that into something that is documented in this easily human-readable form. It was really designed
+as a replacement for Extensible Markup
+Language or XML. This shows you the same
+content representative, either in JSON or YAML, and you can see maybe
+this YAML representation is just slightly more typical of what you'd
+expect to read if you were just typing a note to
+someone in a text file. This looks a little bit more
+contrived and specifically formatted for easier
+parsing by devices. Talking about some
+specific CI frameworks, one of them you might
+have noticed that's used for some of the components for the
+ASD course is Travis CI. Travis CI is a hosted CI service that integrates really
+well on GitHub. It's free for Open
+Source Repositories, although I've found out
+myself that it can't handle the Yocto or Buildroot builds even for Open Source
+Repositories. It's controlled by
+a simple YAML file, and here's the example of
+a really simple case that I am just compiling a C file and running
+a test at SH scripts. You can see it's pretty
+easy to set up here in terms of having
+a script that can just run simple commands and do simple test space
+on any commit. The language specifies the program language
+and that helps determine how the automated
+tests will be run. The script line tells it
+what to run when testing. You just need to
+write that script so that it gives you
+a non-zero return when there's an error and everything else will be
+handled automatically for you. There's some links
+here if you want to see an example on implementation of Travis-ci, use for AESD. The general steps to do this, you set up an account on Travis-ci and link
+your GitHub account. Make sure that your
+repository is public so that you can use the free option. Then you can view all your
+builds on your dashboard. Here's an example that shows a specific commit that I did, that passed, tells
+me how long it ran, tells me where it ran. This has some details about
+the execution environment. If you look at the details
+of your environment, you can see the exact output
+that you would have seen if you ran that on
+your local system. Every time you do a commit
+once you set it up, the pipeline and Travis-ci
+will automatically re-run tests on every
+commit and let you know if something failed with
+messages like this. You can configure
+it for emails, etc. You've probably
+noticed these badges on other repositories. There's a badge that's generated for your project that
+you can link from your Readme.markdown file
+using something like this and there's a details page on
+Travis-ci where you can see that this is the case. Let someone just see at a glance that you have
+automated testing setup for your Build and verify
+that the latest check-in on that branch has a
+successful build result. A second CI framework
+that I wanted to mention here is GitLab-CI. GitLab is very
+similar to GitHub, but it's an open-source
+alternative in that you can host it yourself
+on your own server, inside your corporate
+environment, for instance. It's really like GitHub, but on a self-hosted
+open source platform. You can also use the hosted
+version at gitlab.com. GitLab has really functional
+and useful CI framework called GitLab CI that's very similar to Travis-ci in terms of configuration and it uses this Yml syntax for configuration in
+setting up the build. It's also completely
+integrated with Gitlab, rather than having to set
+something up like you do with Travis-ci for GitHub, this is all just
+completely integrated and after you do the commit, if you just turn it on, you'll automatically get reports and the email and dashboard, the same one that's
+used for development, you'll see the exact
+same information about the continuous
+integration incorporated. The other really interesting
+and useful feature, especially for embedded
+development from GitLab CI, is that you can
+self-host the GitLab Runner and Cloud host
+to GitLab server. In other words, you could use the GitLab server in the
+Cloud for all your commits, but then in either some
+cases or in all cases, you can run a runner inside your corporate environment
+that might be connected to a physical device and
+running an automated test on a physical device as a part
+of the validation sequence. It just gives you some
+additional flexibility about how you would deploy
+the automated test runner. Here's an example of the GitLab CI implementation
+we use for AESD. This is an example of
+a simple yml file that sets up a Yocto build
+and automated test run. What I'm specifying here are the docker and docker instances. What this allows us to do is run a docker container inside a docker container
+deployed by GitLab CI. In that docker container, we can have all the
+components that we need to build and
+run a Yocto build. Where there might be some
+flexibility limitations in what you can do
+with Travis-ci, here you can define
+your own container and do really whatever you want inside it and have any components that you
+want necessary for Build. As I mentioned, in addition
+to specify how you test and how the test process actually
+works from the yml file, you can also use a runner
+that you define yourself. If you go into the project
+configuration here, I've actually created a
+separate Build Server that's a physical server
+located in the CU environment that is interacting
+with Gitlab web server and getting notified
+whenever there's a new check in on this repository and then pulling in the
+repository contents, running the bill based
+on this script step, taking the result output from the test log and saving
+that backup into the web server from Gitlab and then populating the status so that you
+can see the status on Gitlab.com of the build success. In this case you can see
+that the last commit we did, there's a green checkbox
+saying that there was a passed state on
+your build and you automatically get emails
+if your build goes from failed to success
+state or vice versa.

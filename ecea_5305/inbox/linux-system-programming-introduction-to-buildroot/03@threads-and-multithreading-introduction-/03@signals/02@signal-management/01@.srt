@@ -1,0 +1,1142 @@
+1
+00:00:00,170 --> 00:00:02,550
+In this video, we'll expand on
+
+2
+00:00:02,550 --> 00:00:04,620
+the signal concepts that we
+
+3
+00:00:04,620 --> 00:00:06,330
+talked about in the
+previous video and talk
+
+4
+00:00:06,330 --> 00:00:08,845
+more about how to
+manage signals.
+
+5
+00:00:08,845 --> 00:00:11,490
+We're going to learn how
+to write signal handlers,
+
+6
+00:00:11,490 --> 00:00:13,560
+and we're going to talk
+about the details of writing
+
+7
+00:00:13,560 --> 00:00:17,290
+a signal handler and
+dealing with reentrancy.
+
+8
+00:00:17,630 --> 00:00:20,520
+The book talks about
+the signal function
+
+9
+00:00:20,520 --> 00:00:22,665
+as one way to set
+up signal handlers.
+
+10
+00:00:22,665 --> 00:00:25,079
+But if you look at the
+latest documentation
+
+11
+00:00:25,079 --> 00:00:27,285
+from the Linux
+programmer's manual,
+
+12
+00:00:27,285 --> 00:00:31,365
+it recommends not
+using signal anymore
+
+13
+00:00:31,365 --> 00:00:35,610
+due to some variation across
+older versions of Linux,
+
+14
+00:00:35,610 --> 00:00:38,085
+and it suggests using
+sigaction instead.
+
+15
+00:00:38,085 --> 00:00:41,940
+That's what we'll go
+over in this video.
+
+16
+00:00:41,940 --> 00:00:47,260
+Sigaction is a POSIX alternative
+to the signal function.
+
+17
+00:00:47,260 --> 00:00:50,770
+It wasn't a part of the
+original standard C library,
+
+18
+00:00:50,770 --> 00:00:54,830
+but it does have better signal
+management capabilities.
+
+19
+00:00:55,790 --> 00:00:58,960
+Those better signal management
+capabilities include
+
+20
+00:00:58,960 --> 00:01:01,510
+the ability to block new
+signals during the handler,
+
+21
+00:01:01,510 --> 00:01:04,495
+because as we mentioned
+in the previous video,
+
+22
+00:01:04,495 --> 00:01:07,610
+signals could interrupt
+other signals.
+
+23
+00:01:07,670 --> 00:01:11,305
+That's probably not the
+behavior that you want.
+
+24
+00:01:11,305 --> 00:01:13,420
+Sigaction gives you an option
+
+25
+00:01:13,420 --> 00:01:15,740
+to prevent that from occurring.
+
+26
+00:01:16,100 --> 00:01:19,990
+The better single
+management capabilities
+
+27
+00:01:19,990 --> 00:01:21,250
+also include retrieving
+
+28
+00:01:21,250 --> 00:01:22,750
+state information
+about the system.
+
+29
+00:01:22,750 --> 00:01:24,685
+There's some additional
+information you can
+
+30
+00:01:24,685 --> 00:01:27,770
+retrieve as a part
+of the handler.
+
+31
+00:01:27,770 --> 00:01:31,250
+It looks a little bit cumbersome
+to use here in terms of
+
+32
+00:01:31,250 --> 00:01:33,560
+all the different
+sigaction content
+
+33
+00:01:33,560 --> 00:01:34,610
+that you can set up here in
+
+34
+00:01:34,610 --> 00:01:36,115
+the structure that
+you're passing.
+
+35
+00:01:36,115 --> 00:01:37,880
+However, for the simplest cases,
+
+36
+00:01:37,880 --> 00:01:40,520
+you really only need to set
+up this signal handler.
+
+37
+00:01:40,520 --> 00:01:42,545
+It's very similar to
+
+38
+00:01:42,545 --> 00:01:44,630
+the inner action that
+
+39
+00:01:44,630 --> 00:01:47,185
+you need to have with
+the signal function.
+
+40
+00:01:47,185 --> 00:01:49,925
+Once you register for a signal,
+
+41
+00:01:49,925 --> 00:01:51,950
+you can use pause to wait for
+
+42
+00:01:51,950 --> 00:01:53,195
+a signal if that's
+
+43
+00:01:53,195 --> 00:01:54,930
+a part of what your
+program needs to do.
+
+44
+00:01:54,930 --> 00:01:57,080
+In some cases, your program
+might just register for
+
+45
+00:01:57,080 --> 00:01:59,285
+signals and then wait
+for those to happen.
+
+46
+00:01:59,285 --> 00:02:02,100
+In that case, you'd
+use pause to do that.
+
+47
+00:02:02,510 --> 00:02:06,275
+You can use kill to send
+a signal to a process.
+
+48
+00:02:06,275 --> 00:02:07,970
+It's a little confusing,
+
+49
+00:02:07,970 --> 00:02:11,615
+because you might think it
+would be sending SIGKILL.
+
+50
+00:02:11,615 --> 00:02:13,520
+That's what I would
+do by default.
+
+51
+00:02:13,520 --> 00:02:16,100
+But you can really send
+any signal to it with
+
+52
+00:02:16,100 --> 00:02:18,395
+either the command line option
+
+53
+00:02:18,395 --> 00:02:21,135
+or the argument that
+you're passing.
+
+54
+00:02:21,135 --> 00:02:24,200
+It's available either as a
+system call or a user command,
+
+55
+00:02:24,200 --> 00:02:25,610
+meaning I can type kill from
+
+56
+00:02:25,610 --> 00:02:27,500
+the terminal and invoke kill on
+
+57
+00:02:27,500 --> 00:02:29,660
+a process or send
+
+58
+00:02:29,660 --> 00:02:33,055
+a signal that I
+specified to a process,
+
+59
+00:02:33,055 --> 00:02:37,740
+or I can call it from
+within my own program.
+
+60
+00:02:38,230 --> 00:02:41,465
+Here's a really simple example
+
+61
+00:02:41,465 --> 00:02:43,775
+of a sigaction signal handling,
+
+62
+00:02:43,775 --> 00:02:45,830
+where we register here with
+
+63
+00:02:45,830 --> 00:02:49,055
+sigaction for either
+SIGTERM or SIGINT.
+
+64
+00:02:49,055 --> 00:02:53,015
+We set up the new action
+signal handler here,
+
+65
+00:02:53,015 --> 00:02:54,170
+which is pointing to
+
+66
+00:02:54,170 --> 00:02:56,030
+our signal handler function
+
+67
+00:02:56,030 --> 00:02:57,980
+that we've defined right here.
+
+68
+00:02:57,980 --> 00:02:59,810
+When we get a signal,
+
+69
+00:02:59,810 --> 00:03:02,120
+we'll get a call to signal
+
+70
+00:03:02,120 --> 00:03:03,275
+handler that's going to
+
+71
+00:03:03,275 --> 00:03:06,115
+include the signal
+number that we received.
+
+72
+00:03:06,115 --> 00:03:08,720
+We're using the
+pause function here.
+
+73
+00:03:08,720 --> 00:03:12,300
+If we were successful in
+setting up both of the signals,
+
+74
+00:03:12,300 --> 00:03:14,780
+we'll use pause to
+wait for a signal,
+
+75
+00:03:14,780 --> 00:03:17,090
+and then we'll just
+log what we received.
+
+76
+00:03:17,090 --> 00:03:18,680
+The way we're communicating this
+
+77
+00:03:18,680 --> 00:03:20,480
+is just through a global
+variable that we're
+
+78
+00:03:20,480 --> 00:03:23,150
+setting in the signal
+handler and we're
+
+79
+00:03:23,150 --> 00:03:26,490
+reading outside of
+the signal handler.
+
+80
+00:03:26,490 --> 00:03:29,700
+The fact that we're only setting
+
+81
+00:03:29,700 --> 00:03:32,030
+this value in the signal
+handler and we're
+
+82
+00:03:32,030 --> 00:03:34,490
+only reading it outside
+the signal handler,
+
+83
+00:03:34,490 --> 00:03:36,785
+is part of the reason that
+we won't have to worry about
+
+84
+00:03:36,785 --> 00:03:40,110
+the reentrancy that
+we'll talk about later.
+
+85
+00:03:40,820 --> 00:03:43,190
+An overview of how you'd use
+
+86
+00:03:43,190 --> 00:03:45,200
+this really simple function,
+
+87
+00:03:45,200 --> 00:03:46,640
+and you can find the source here
+
+88
+00:03:46,640 --> 00:03:48,880
+if you want to try it yourself.
+
+89
+00:03:48,880 --> 00:03:50,870
+You can invoke with
+
+90
+00:03:50,870 --> 00:03:53,660
+the signal handler executable
+
+91
+00:03:53,660 --> 00:03:55,040
+and you'll see a
+message that says,
+
+92
+00:03:55,040 --> 00:03:56,495
+waiting forever for a signal.
+
+93
+00:03:56,495 --> 00:03:58,370
+If you use Control-C
+at that point,
+
+94
+00:03:58,370 --> 00:04:00,445
+you'll be able to send SIGINT.
+
+95
+00:04:00,445 --> 00:04:02,230
+Once you send a SIGINT,
+
+96
+00:04:02,230 --> 00:04:05,060
+you should see the message to
+say that you caught SIGINT.
+
+97
+00:04:05,060 --> 00:04:07,855
+A second way you can use this
+
+98
+00:04:07,855 --> 00:04:11,895
+is instead of sending
+via Control-C,
+
+99
+00:04:11,895 --> 00:04:13,965
+you could send term
+through the kill command.
+
+100
+00:04:13,965 --> 00:04:15,665
+In this case, you could restart
+
+101
+00:04:15,665 --> 00:04:17,540
+and then open a new
+terminal window,
+
+102
+00:04:17,540 --> 00:04:19,505
+use PS to find the process.
+
+103
+00:04:19,505 --> 00:04:22,405
+In this case, it was 31236.
+
+104
+00:04:22,405 --> 00:04:25,245
+Then I can say kill-term 31236.
+
+105
+00:04:25,245 --> 00:04:26,789
+That's going to send SIGTERM
+
+106
+00:04:26,789 --> 00:04:29,025
+to the process and you'll
+see the same result.
+
+107
+00:04:29,025 --> 00:04:30,630
+You'll get that you caught
+
+108
+00:04:30,630 --> 00:04:34,540
+the SIGTERM and the
+process will exit.
+
+109
+00:04:36,080 --> 00:04:38,990
+Siqueue is a way that
+
+110
+00:04:38,990 --> 00:04:41,345
+you could actually send
+a payload to a signal.
+
+111
+00:04:41,345 --> 00:04:44,840
+The arguments here will
+allow you to provide
+
+112
+00:04:44,840 --> 00:04:46,715
+a function pointer that would
+
+113
+00:04:46,715 --> 00:04:49,610
+provide additional information
+to the signal handler.
+
+114
+00:04:49,610 --> 00:04:52,790
+This can be used as a
+rudimentary form of IPC,
+
+115
+00:04:52,790 --> 00:04:55,190
+although it's probably not
+the best way to do IPC,
+
+116
+00:04:55,190 --> 00:04:57,640
+which we'll talk about
+later in the video.
+
+117
+00:04:57,640 --> 00:04:59,830
+Some additional signal concepts,
+
+118
+00:04:59,830 --> 00:05:03,720
+we've talked about forking a
+process in previous videos.
+
+119
+00:05:03,720 --> 00:05:07,130
+When you fork a process and
+you create a child process,
+
+120
+00:05:07,130 --> 00:05:08,270
+the child is going to inherit
+
+121
+00:05:08,270 --> 00:05:10,340
+the signal actions of
+the parent on the fork.
+
+122
+00:05:10,340 --> 00:05:11,645
+Whatever the parents set up,
+
+123
+00:05:11,645 --> 00:05:16,985
+if the parent thread setup
+custom signal actions,
+
+124
+00:05:16,985 --> 00:05:19,445
+those will be inherited
+by the child on fork.
+
+125
+00:05:19,445 --> 00:05:22,730
+If you then would start
+a process with exec,
+
+126
+00:05:22,730 --> 00:05:25,070
+which remember is
+part of the sequence
+
+127
+00:05:25,070 --> 00:05:26,270
+for starting a daemon that
+
+128
+00:05:26,270 --> 00:05:28,070
+we discussed in
+the previous week.
+
+129
+00:05:28,070 --> 00:05:30,470
+The exec call is
+
+130
+00:05:30,470 --> 00:05:32,825
+going to reset all signals
+to the default actions,
+
+131
+00:05:32,825 --> 00:05:34,640
+and that's the case for
+everything other than
+
+132
+00:05:34,640 --> 00:05:38,190
+the signals that were previously
+ignored by the parent.
+
+133
+00:05:38,950 --> 00:05:42,500
+A little bit about
+writing signal handlers
+
+134
+00:05:42,500 --> 00:05:45,650
+and safety inside signal
+handler functions.
+
+135
+00:05:45,650 --> 00:05:48,740
+Because signal handlers are
+going to suspend execution of
+
+136
+00:05:48,740 --> 00:05:50,330
+a process and then
+just jump into
+
+137
+00:05:50,330 --> 00:05:52,760
+the signal handler function,
+
+138
+00:05:52,760 --> 00:05:54,425
+it's important to
+know this is not
+
+139
+00:05:54,425 --> 00:05:59,150
+a thread switch to a different
+thread or a new thread.
+
+140
+00:05:59,150 --> 00:06:01,160
+It's going to reuse
+the existing thread,
+
+141
+00:06:01,160 --> 00:06:03,290
+whatever was running,
+execution is going
+
+142
+00:06:03,290 --> 00:06:05,540
+to stop and it's going to
+switch to our signal handlers.
+
+143
+00:06:05,540 --> 00:06:07,250
+That has some important
+implications on
+
+144
+00:06:07,250 --> 00:06:09,705
+how we can write
+signal handlers.
+
+145
+00:06:09,705 --> 00:06:12,235
+What does this mean about
+the functions you can call?
+
+146
+00:06:12,235 --> 00:06:14,815
+It means they must
+be async-signal-safe
+
+147
+00:06:14,815 --> 00:06:18,345
+in the Single Unix
+Specification parlance.
+
+148
+00:06:18,345 --> 00:06:22,430
+It means that they must be
+reentrant and also they must
+
+149
+00:06:22,430 --> 00:06:24,260
+block signals at any point
+
+150
+00:06:24,260 --> 00:06:26,000
+that could cause
+inconsistencies.
+
+151
+00:06:26,000 --> 00:06:29,464
+Because even if your
+reentrant function,
+
+152
+00:06:29,464 --> 00:06:31,280
+if it's a possible
+that you could take
+
+153
+00:06:31,280 --> 00:06:34,700
+a second signal handler
+or a second signal,
+
+154
+00:06:34,700 --> 00:06:37,100
+you need to make sure that
+that signal handler could also
+
+155
+00:06:37,100 --> 00:06:40,790
+execute without causing
+inconsistencies.
+
+156
+00:06:40,790 --> 00:06:43,430
+How do you know if a
+POSIX function that
+
+157
+00:06:43,430 --> 00:06:45,470
+you're calling is signal safe?
+
+158
+00:06:45,470 --> 00:06:47,120
+Really the only way to know is
+
+159
+00:06:47,120 --> 00:06:50,210
+to look at the table
+of allowed functions.
+
+160
+00:06:50,210 --> 00:06:52,010
+There's one that's in
+your book and there's
+
+161
+00:06:52,010 --> 00:06:53,120
+a more complete one that I've
+
+162
+00:06:53,120 --> 00:06:55,250
+linked in the slide below here.
+
+163
+00:06:55,250 --> 00:06:58,894
+But the main takeaway
+is that malloc, free,
+
+164
+00:06:58,894 --> 00:07:01,805
+any functions that might
+call malloc and free
+
+165
+00:07:01,805 --> 00:07:06,410
+and just general stdio
+library functions,
+
+166
+00:07:06,410 --> 00:07:08,570
+so for instance,
+printf are generally
+
+167
+00:07:08,570 --> 00:07:12,690
+not really safe to call
+from within a signal.
+
+168
+00:07:13,110 --> 00:07:16,075
+The signal function
+that you write
+
+169
+00:07:16,075 --> 00:07:18,720
+or any functions that you
+call from a signal handler,
+
+170
+00:07:18,720 --> 00:07:20,420
+must not be manipulating
+
+171
+00:07:20,420 --> 00:07:21,800
+static data that could be used
+
+172
+00:07:21,800 --> 00:07:23,270
+outside the signal handler.
+
+173
+00:07:23,270 --> 00:07:24,680
+There's a handful of these that
+
+174
+00:07:24,680 --> 00:07:26,150
+are a part of the POSIX spec,
+
+175
+00:07:26,150 --> 00:07:29,390
+str signal is one example
+that the book gives.
+
+176
+00:07:29,390 --> 00:07:33,260
+But anything that's returning
+a pointer to, for instance,
+
+177
+00:07:33,260 --> 00:07:36,245
+memory that's used in some
+kind of static structure,
+
+178
+00:07:36,245 --> 00:07:39,545
+that won't be safe to use
+inside of signal handler.
+
+179
+00:07:39,545 --> 00:07:43,310
+Ideally, your signal
+handler would only
+
+180
+00:07:43,310 --> 00:07:44,990
+stack allocated data or
+
+181
+00:07:44,990 --> 00:07:47,630
+data that's provided
+by the caller.
+
+182
+00:07:47,630 --> 00:07:50,690
+If you want to make a really
+simple signal handler,
+
+183
+00:07:50,690 --> 00:07:52,070
+often the easiest
+way to do this is
+
+184
+00:07:52,070 --> 00:07:53,825
+just to set a global flag.
+
+185
+00:07:53,825 --> 00:07:55,790
+If you just set in
+the signal handler
+
+186
+00:07:55,790 --> 00:07:57,800
+and just read outside
+the signal handler,
+
+187
+00:07:57,800 --> 00:08:00,845
+that's one safe way that
+you can do reentrancy.
+
+188
+00:08:00,845 --> 00:08:03,050
+But it's important that
+you must not invoke
+
+189
+00:08:03,050 --> 00:08:05,720
+any non-async-signal-
+safe function
+
+190
+00:08:05,720 --> 00:08:07,950
+from within your signal handler.
+
+191
+00:08:08,230 --> 00:08:10,520
+The best practices
+if you're going to
+
+192
+00:08:10,520 --> 00:08:12,005
+write a signal handler routine,
+
+193
+00:08:12,005 --> 00:08:14,690
+you want to minimize
+global data access and
+
+194
+00:08:14,690 --> 00:08:16,670
+any global data access
+that you do need to
+
+195
+00:08:16,670 --> 00:08:18,995
+confirm that it's
+async-signal-safe.
+
+196
+00:08:18,995 --> 00:08:20,900
+In other words, if at
+
+197
+00:08:20,900 --> 00:08:25,685
+any process in your
+existing program,
+
+198
+00:08:25,685 --> 00:08:27,814
+if you were accessing
+that variable,
+
+199
+00:08:27,814 --> 00:08:29,120
+it could be interrupted,
+
+200
+00:08:29,120 --> 00:08:30,530
+take the signal handler and it
+
+201
+00:08:30,530 --> 00:08:33,870
+won't impact the way
+the program works.
+
+202
+00:08:33,970 --> 00:08:37,955
+We talked about how errno
+know is stored per thread.
+
+203
+00:08:37,955 --> 00:08:40,700
+However, because we're
+interrupting the current thread,
+
+204
+00:08:40,700 --> 00:08:42,470
+if you call a function
+that modifies
+
+205
+00:08:42,470 --> 00:08:44,300
+errno inside your
+signal handler,
+
+206
+00:08:44,300 --> 00:08:46,235
+you are going to change
+the value of errno,
+
+207
+00:08:46,235 --> 00:08:47,900
+so to be safe you should
+
+208
+00:08:47,900 --> 00:08:50,855
+save and restore errno
+in your signal handler.
+
+209
+00:08:50,855 --> 00:08:54,365
+Then call an absolute
+minimum set of functions
+
+210
+00:08:54,365 --> 00:08:55,700
+and only the
+functions that are on
+
+211
+00:08:55,700 --> 00:08:57,725
+approved list of signal
+handler functions.
+
+212
+00:08:57,725 --> 00:08:59,210
+You really want to make
+your signal handler
+
+213
+00:08:59,210 --> 00:09:00,230
+be as simple as
+
+214
+00:09:00,230 --> 00:09:02,030
+possible and be really diligent
+
+215
+00:09:02,030 --> 00:09:04,880
+about what functions
+you call within it.
+
+216
+00:09:04,880 --> 00:09:07,250
+Why would we want to use,
+
+217
+00:09:07,250 --> 00:09:08,810
+or why would we not
+want to use signals?
+
+218
+00:09:08,810 --> 00:09:10,745
+Well, after the discussion
+that we just had
+
+219
+00:09:10,745 --> 00:09:12,665
+about all the things you need to
+
+220
+00:09:12,665 --> 00:09:14,615
+make sure of in terms
+of signal handlers,
+
+221
+00:09:14,615 --> 00:09:16,520
+you can see that we're
+pretty restricted
+
+222
+00:09:16,520 --> 00:09:18,710
+about what we can do
+in a signal handler.
+
+223
+00:09:18,710 --> 00:09:20,870
+One of the biggest
+reasons not to use
+
+224
+00:09:20,870 --> 00:09:23,015
+signals would be that there's
+
+225
+00:09:23,015 --> 00:09:24,200
+significant risk in
+
+226
+00:09:24,200 --> 00:09:27,800
+the signal handler
+safety and reentrancy,
+
+227
+00:09:27,800 --> 00:09:29,855
+and if you mess that up,
+
+228
+00:09:29,855 --> 00:09:31,250
+those problems can be easy to
+
+229
+00:09:31,250 --> 00:09:33,380
+introduce and really
+difficult to track down.
+
+230
+00:09:33,380 --> 00:09:35,090
+You really have to
+be careful about
+
+231
+00:09:35,090 --> 00:09:36,590
+implementing your handlers and
+
+232
+00:09:36,590 --> 00:09:38,060
+they're really limited
+on what you can
+
+233
+00:09:38,060 --> 00:09:39,845
+do from a signal handler,
+
+234
+00:09:39,845 --> 00:09:42,050
+so that's one reason you
+might not want to use it.
+
+235
+00:09:42,050 --> 00:09:45,185
+The book references signals as
+
+236
+00:09:45,185 --> 00:09:46,700
+old antiquated mechanism for
+
+237
+00:09:46,700 --> 00:09:48,200
+kernel to user communication,
+
+238
+00:09:48,200 --> 00:09:51,260
+so they're there for
+a specific purpose,
+
+239
+00:09:51,260 --> 00:09:53,855
+they're there for historical
+reasons in a lot of cases,
+
+240
+00:09:53,855 --> 00:09:55,475
+we need to use them
+
+241
+00:09:55,475 --> 00:09:57,800
+for many important notifications
+
+242
+00:09:57,800 --> 00:09:58,580
+that come from the kernel.
+
+243
+00:09:58,580 --> 00:10:01,175
+Probably the most
+important is termination.
+
+244
+00:10:01,175 --> 00:10:02,615
+It's important to
+know about them,
+
+245
+00:10:02,615 --> 00:10:03,815
+but they're probably
+not the best
+
+246
+00:10:03,815 --> 00:10:06,570
+IPC mechanism that you can use.

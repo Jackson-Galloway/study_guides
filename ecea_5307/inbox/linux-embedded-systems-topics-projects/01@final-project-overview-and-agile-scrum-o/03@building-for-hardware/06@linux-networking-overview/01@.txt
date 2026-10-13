@@ -1,0 +1,70 @@
+In this video, I'll
+give a short overview of Linux networking. I want to describe some tips for working with IP-based networking on Linux and on Buildroot. If you're searching
+for Linux networking, you'll probably see
+lots of references to ifconfig and possibly to IP. Ifconfig was the traditional way to manage networking on Linux. As of the time I'm
+recording this video, it's still available and probably will be
+available for awhile, but IP is the new way to manage networking and was the more
+recent way that's added, so I'll use that
+for these examples. The most basic way you'll
+interact with networking over Linux is using
+the IP addr command, and that'll just list
+the IP address details for each of your
+network adapters. One of the things you'll
+see if you type IP addr, you'll see lo listed and
+lo is the loopback port. This is useful if you're going to send network commands
+to your own device. For instance, when
+we're using socket test on our native
+implementation, we're really using the
+loopback port for this. There's not really anything typically that they need
+to configure on this. This 127.0.0.1 is a
+common loopback address that you can use if
+you want to send a socket command to
+yourself for instance. The same thing as
+saying local host. Eth0 is the local wired Ethernet and depending on what
+system you're using, and if you're using System D, you might see enp
+instead of eth0. It's just a different way to
+denote the Ethernet port. Sit0 is the tunneling
+for IPv6 over IPv4. There won't be any
+specific thing we'll do with this in this course. Then WLAN is another
+one that you'd have if you are using
+a wireless lan port, if you're using Wi-Fi
+in your project. You can see that with
+each one of these, there's a setting associated
+with the IP address, there is a MAC address that defines the specific hardware, and there's some level of
+status here about the link. Using the eth as the case, this up here means
+that the link is up, but this may or may not mean that you're connected
+to the Internet. This in its self is
+not enough to know whether or not you have a routable Internet
+address for instance. The link in ether section
+lists the MAC address. That's the hardware
+address that's globally unique reference
+to this particular device. In other words, there's no other device in the
+world that would have this same MAC address based on the fact
+that it's assigned, given a hardware identification that's unique to the hardware. Then the inet section here gives the IPv4 address and mask. We mentioned earlier
+when we talked about socket communication
+IPv4 versus IPv6, and this section would
+give you the IPv4 address. This inet 6 gives you
+the IPv6 address. What you'll probably see with your default hardware
+build is that you end up getting an
+address like this, and you might wonder well,
+how did that happen? How did I get an
+address assigned? It turns out the
+default setting for Yocto Builder is going to
+use what's called DHCP, Dynamic Host
+Configuration Protocol, that will automatically get you an address from your router, assuming your
+router supports it, and most routers do today. This is all set up with a default configuration in
+etc network interfaces, and this example
+showing builder, it shows that this file is
+automatically generated, and if you go into your
+system configuration, you can see where it's
+configured here to use DHCP for eth0 by default. This is on the Raspberry
+Pi for instance. It'll be a similar setup on different hardware
+devices, and usually, you'll find that the
+primary network connection is going to be set up for
+you in using Ethernet. For more complex configurations, you can edit this etc
+network interfaces file for instance by using a root
+file system overlay, like what we did for one of the assignments in Buildroot, or if you're using Yocto, you can use ROOTFS
+post-process command to change the content
+of this file. If you don't need a
+custom IP address, you can just use DHCP and use a router
+that supports DHCP.

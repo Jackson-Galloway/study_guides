@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bootloaders and Device Tree Part1 & Part 2 </title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p><strong>Which are some common functions of Bootloaders?</strong></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~n2iKMkRVEey10QpDz91UTQ" type="checkbox"/> <div class="quiz-option-text"><p>Loading the kernel in RAM</p></div></li>
+<li><input name="autoGradableResponseId~n2iKMkRVEey10QpDz91UTQ" type="checkbox"/> <div class="quiz-option-text"><p>Implementing an application web server</p></div></li>
+<li><input name="autoGradableResponseId~n2iKMkRVEey10QpDz91UTQ" type="checkbox"/> <div class="quiz-option-text"><p>Setting up storage</p></div></li>
+<li><input name="autoGradableResponseId~n2iKMkRVEey10QpDz91UTQ" type="checkbox"/> <div class="quiz-option-text"><p>Controlling system devices using kernel drivers</p></div></li>
+<li><input name="autoGradableResponseId~n2iKMkRVEey10QpDz91UTQ" type="checkbox"/> <div class="quiz-option-text"><p>Setting up DRAM</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The RaspberryPi stores device related configuration parameters in _______________</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~DR_JVES8EeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>bcm2710-rpi-3-b.dts</p></div></li>
+<li><input name="autoGradableResponseId~DR_JVES8EeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>UEFI</p></div></li>
+<li><input name="autoGradableResponseId~DR_JVES8EeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>powerup.sh</p></div></li>
+<li><input name="autoGradableResponseId~DR_JVES8EeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>config.txt</p></div></li>
+<li><input name="autoGradableResponseId~DR_JVES8EeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>BIOS</p></div></li>
+<li><input name="autoGradableResponseId~DR_JVES8EeySzw6M_w-6gw" type="radio"/> <div class="quiz-option-text"><p>start.elf</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Recent x86/x86_64 designs use bootloaders based on which architecture?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MkI1IUS9EeyJihJUDNX3Nw" type="radio"/> <div class="quiz-option-text"><p>U-boot</p></div></li>
+<li><input name="autoGradableResponseId~MkI1IUS9EeyJihJUDNX3Nw" type="radio"/> <div class="quiz-option-text"><p>UEFI</p></div></li>
+<li><input name="autoGradableResponseId~MkI1IUS9EeyJihJUDNX3Nw" type="radio"/> <div class="quiz-option-text"><p>Redboot</p></div></li>
+<li><input name="autoGradableResponseId~MkI1IUS9EeyJihJUDNX3Nw" type="radio"/> <div class="quiz-option-text"><p>BIOS</p></div></li>
+<li><input name="autoGradableResponseId~MkI1IUS9EeyJihJUDNX3Nw" type="radio"/> <div class="quiz-option-text"><p>CFE</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the options below are possible reasons you may need a more complicated bootloader setup?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~-LbPKk4hEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>The system image may not fit in memory addressibly by inital boot code</p></div></li>
+<li><input name="autoGradableResponseId~-LbPKk4hEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Flash may require recovery, may not be linearly addressable</p></div></li>
+<li><input name="autoGradableResponseId~-LbPKk4hEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Hardware may require more complex setup</p></div></li>
+<li><input name="autoGradableResponseId~-LbPKk4hEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Software needs to run from RAM, which generally isn't possible with simple bootloaders</p></div></li>
+<li><input name="autoGradableResponseId~-LbPKk4hEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>The reset vector boots to NOR flash, which is generally not accesible with simple bootloaders</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The dtc utility is useful for</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~dv2CME4jEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Saving U-boot environment</p></div></li>
+<li><input name="autoGradableResponseId~dv2CME4jEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Applying device tree binary patches</p></div></li>
+<li><input name="autoGradableResponseId~dv2CME4jEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Examining device trees</p></div></li>
+<li><input name="autoGradableResponseId~dv2CME4jEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Replacing BIOS on x86 platforms</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

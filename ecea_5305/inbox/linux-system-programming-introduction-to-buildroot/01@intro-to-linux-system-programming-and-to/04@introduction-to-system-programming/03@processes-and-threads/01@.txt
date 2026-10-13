@@ -1,0 +1,111 @@
+Hi, students. This video, I'll be talking about
+processes and threads. The objectives for this
+video we're going to learn and understand
+about Linux processes, understand about Linux threads, and also introduce inter-process
+communication, or IPC. A Linux process is executable object code
+that's running on hardware. Often the encapsulation
+of that object code is in what's called ELF format or executable and
+linkable format. This is what the, ultimately the binary
+that you're using to execute and run on
+any operating system, but in the case of Linux, on Linux operating system. For Linux process, the necessary resources that are needed to run are managed and allocated by
+the kernel through the system call
+interface that we've discussed in previous lectures. The first is timers or files or any type
+of hardware access, it's all organized and managed by the kernel
+through these system calls. All Linux processes
+reference by a process ID. That's something
+that you can use to interact with the process, to send it signals to
+stop it, for instance. The process is going to
+run on what's referred to as a virtualized processor and a virtualized view of
+memory. What does that mean? It means that from the
+processes perspective, it appears to have its own
+dedicated RAM and CPU, it doesn't know about
+any other processes that are running in the system, but in reality it's being
+time-shared by the kernel. A visual depiction
+here of what we mean by having virtualized
+processor and memory. Again, from the
+processes perspective, it just sees a chunk of
+RAM that it has access to for the storage of its data, and it has access to a CPU
+and it's executing over time and it doesn't
+know anything about any time-shifting
+that's happening. But in reality, what's
+happening is that the process RAM might be physically split in different locations
+in physical RAM, and the process CPU is
+getting time split with other processes that are
+running on the system and it's not really running
+continuously in time. A process is made of
+one or more threads, and a thread is a unit of
+activity within a process. If you use, by default, if you just compile a
+Hello World application, you have one process and
+you have one thread, and your application is
+referred to as single-threaded. If you specifically
+start other threads, you'll be, as soon as you
+start the second thread, you'll be what's called a
+multi-threaded application. In a multithreaded application, every thread is going
+to have its own stack, which will be storing
+local variables, it will be storing the
+call stack that's used. For instance, if you call a function or some
+set of functions, that will be tracked inside the call stack for
+that specific thread, and so it'll have
+the processor state and the current location for a call tree in a specific
+call stack for that thread. An important distinction between Linux threads and Linux
+processes is that, well I mentioned before every process has its
+own virtualized view of memory and appears to have its own memory
+isolated to itself. The memory for
+threads is shared, so every thread within a process has exactly the
+same memory space. If every process has
+its own virtual memory, but every thread
+shares virtual memory, then how would you share
+memory access between threads? If you wanted to access a global variable between
+two different threads, you can just access
+it directly, however, you need to think about
+if you're modifying it from one thread and you're reading it
+from another thread, iIf you want to make
+sure that you have a consistent view
+of that memory, you're going to have to
+use synchronization, and we'll talk about different
+synchronization strategies later in the semester. By comparison, if you're sharing memory between
+different processes, that's not just built-in
+like it is with threads, because every process has its own virtualized
+view of memory. You won't be able
+to, for instance, access a global
+variable that's in a different process by default. However, there are different
+mechanisms for doing that, and those are called
+inter-process communication, which we'll cover a little
+bit today and we'll get into a lot more detail
+later in the semester. The Linux signal is one of the simplest ways to do
+inter-process communication. A signal is just a one-way
+asynchronous notification that can be sent from
+the kernel to a process. It could be sent from one
+process to another process, or it could be sent from
+a process to itself. The process can set up a signal handler that controls how a signal
+is responded to. There's a chunk of code
+you can define that says, if a specific signal
+occurs, do this action. For example, a common signal that you might want to
+handle will be Control C. If you've ever run
+an application on a Linux terminal before
+and wanted to stop, you've probably use
+the Control C key. What you're doing
+there is sending a SIGINT to stop the process, and your code can had a signal handler that
+handles that SIGINT and does things like shutdown
+resources and gracefully close. If you write a signal handler
+or use a signal handler, you must use signal say, functions that are safe to call asynchronously. Why is that? It's because there's
+no guarantee of any synchronous capability when you hit Control C relative to what's running
+in your current code. If you're calling
+some function in your running process and you hit Control C and your signal handler calls that
+same function, you need to make sure that, that function is safe to call in two different contexts at once. One of the easiest ways
+to do that would be to, or one of the easiest
+ways to break that capability would be to
+access global variables. If you're accessing
+global variables in a non consistent way between two different functions
+that are asynchronous, that wouldn't be a safe thing to do from a signal handler. You have to keep in mind
+when you write these, that process code can
+be interrupted at anytime by a signal and your signal handler could
+be invoked at any time. IPC, more generically, or Linux processing
+or communication, allows the processes to exchange information without having
+that global memory space. Processes keep their own
+virtualized view of memory, but they can still exchange
+information with each other. There are several
+different IPC mechanisms that we'll get into more detail about a couple of these later in the semester. But pipes, semaphores,
+message queues, and shared memory
+are all examples of ways that you can do inter-process
+communication in Linux.

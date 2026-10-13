@@ -1,0 +1,266 @@
+In the previous video, we gave a little background
+about Buildroot. With this video, we're going to talk about how to use
+Buildroot for build. We're tailoring our
+discussion to how we're going to use
+Buildroot for this class, and how you can solve
+assignment number 4. Learning objectives;
+we're going to go over Git submodule since we're going to use that
+for our Buildroot Builds. Then we'll go through
+an overview of a buildroot example
+project and talk about the steps you need to actually build your assignment
+for implementation. Git sub-module is a way to add a git repository as a subdirectory
+of another repository. It's a really handy way that you can keep two projects
+separate from each other, but reference one
+from the other. I talked about before the BR2 external trees
+that are supported by Buildroot as a way to keep your proprietary packages
+out of the Buildroot tree. That lets you stay
+up-to-date with Buildroot in the
+Buildroot subdirectory, but keep your own
+content separate and track that in a separate
+revision control system. We're going to use Git
+submodules for this purpose, and we're going to
+use Buildroot as a submodule for
+assignment number 4, and all of our assignments
+that use Buildroot, and we'll use a similar
+scheme for JATO. Your assignment 4 repository is going to contain
+Buildroot as a submodule. When you look at what this looks like in GitHub,
+for instance, you'll see directories and files just like you
+would normally see, and then you'll see this
+funny-looking symbol with an arrow on it that is going to reference the
+Buildroot repository. What this is telling
+you is that while on your working system, this might just look like a normal directory,
+like anything else. This actually isn't a directory from the perspective
+of your Git repo, it's a reference to
+another repository. This @ symbol will be
+followed by some Git hash. I removed it here just to avoid confusion if this changes
+during the semester. But there will be a
+specific Git commit hash here that is referencing, that's going to relate
+to a version of Buildroot that you're
+going to check out to complete the assignment. We advance that
+version every year, so this video won't
+reference that version, but you'll find it in
+your assignment document. What you can see from this view is that we're using
+Buildroot as a submodule, and we're linked to
+a specific commit from the Buildroot project. In order to add a Git submodule, you'll use Git submodule add and specify the URL to the
+Buildroot repository. That'll create a directory
+for you called Buildroot, and you'll go into
+that directory, and you'll check out
+the branch that's corresponding to the release referenced in the assignment. Then you'll cede back out of that directory back into
+the base and then do Git add Buildroot to add that directory into your
+staging environment for Git. When you do that, you're
+not actually going to add all the content that's in
+the Buildroot subdirectory, you're just going to
+add a reference to the specific commit
+that corresponds to the version that you had been instructed to
+use in the assignment. The changes that we make, we're going to keep
+in the base project. One of the reasons
+this is a good way to structure it is because this allows you in a production environment,
+for instance, not only to keep your
+content separate from the content that you're
+going to share and use, that's part of the
+public repository, but it also lets you easily update as new releases of
+Buildroot comes along, all you need to do is go into
+the submodule directory, update to the new
+Buildroot revision, and add that as the sub-module
+in your base project, and you're able to just
+move to the next revision. You don't need to try to merge in your content separately. You can just move to
+the next revision as it's available
+from Buildroot. We mentioned before, the
+Buildroot packages are the way to add either existing projects
+into your image or to define your own project that you're going to be
+adding to your custom image. When you're creating a package, you need at least two files. You need the config.in which is the KConfig
+configuration file that describes what the package
+is and how to build it. Then there's the package
+name.mk that's going to contain the mk variables that are
+used to build the project. An important thing
+to note is that the packages don't
+actually contain code. They're just going
+to have all the instructions that
+you need to get the code from wherever
+it's located, compile it, and add it to
+your real file system. When we talk about assignment
+number 4 specifically, we're going to use an aesd
+assignments package folder under our basic external
+package directory. We'll add a config.in
+file that describes the content of the base
+external directory. Then we'll create our
+aesd-assignments.mk file, and you can leverage assignment for starter
+code for this. We'll give you a template you can use to create this file, and you'll just need
+to fill in the content that's specific to
+your assignment. There's two different
+projects that are going to be useful for you when you're working on
+assignment number 4. One, this link takes you
+to the base repository, which is going to be the content that's used when
+you create your assignments. When you follow the
+GitHub classroom link and create your
+assignment initially, it will contain the content
+from this repository. A lot of the work has
+been started for you, and you just need to
+fill in the details. There's also completely
+working hello-world example. You can see how a completed standalone
+Buildroot project looks like and what our final project should look like in
+terms of structure. If you look at the
+HelloWorld project, you'll see those two
+files that we mentioned, the config.in and the
+helloworld.makefile. In the config.infile, we have the content that
+describes what our package is. If we had dependencies, we would list them
+here in terms of what's needed to
+build the package. Then the dot makefiles going to specify a specific commit hash that is referenced
+in our repository that tells us how to
+build that Package. It's going to reference
+where we can find the code. One thing to note about this, since I'm using a
+public repository here and I don't want to have to use SSH keys to access, I'm using HTTPS prefix
+on the Git clone URL. In our case we're
+going to be using private repositories for
+our assignment completion. You want to swap this out
+with SSH version of the URL. Just use the Git clone option to get the SSH URL instead of
+HTTPS for your assignment. I want to talk a
+little bit about the content of this
+Make-file and how this is actually working to compile
+and install your application. One of the things
+that you'll notice is there's not a lot
+of content here. We're doing pretty
+simple stuff where we're saying make target, configure ops, dash
+C, directory all. We're essentially just
+calling make all passing in some configuration options that Buildroot setup for us. All the work that we did
+before when we were specifying our own cross-compile commands, etc for make, Buildroot
+is going to take care of all that for us in the
+target configure Ops. By doing this, if we
+just write a make all target that is able
+to use cross-compile, then Buildroot will take care of getting that all set
+up correctly for us. The installed target commands, this is what Buildroot's
+going to call to install your content in the file system. The install command here
+is going to tell us this mode tells us what
+mode we want to install. These are the permissions
+that we've mentioned before about the file
+permissions that we want, 755 would be read, write execute for the owner, and the 55 would mean group and other Git read
+and execute permissions. Then this is telling us
+where to find the file. At D argument specifies the build directory or the directory where
+we invoked make here. The target dir specifies the staging directory where all your target files
+are going to be stored before they are
+created into an image. The way this works,
+these prefixes here before install and build, these are all defined by
+Buildroot, I'm sorry, the suffix is defined
+by Buildroot and the prefix is defined by
+the name of your package. In our case, our package is
+called ECN 5013 helloworld, which we're setting up here. If we use that same prefix here at with the build commands
+and target command suffix, including this eval generic
+Package is going to know how to use these to actually
+build an installer package. You can read more about this in the Buildroot manual in the generic package reference here I've linked on this slide. Including that eval
+generic Package knows how to cross compile the packages for the target and uses in the documentation, you'll see it referred
+to as libfoo or FOO prefixes for variables. What you want to
+do is just replace that llibfoo with
+your package name. For our helloworld example, it was the ECN
+helloworld Package Name. Then the dollar installed actually maps to
+the install utility and you can read more
+about that here. It's just like a
+glorified version of CP that's used specifically
+for install purposes. When setting up the base
+external directory, before we were talking
+about how to add your package to the base
+external directory. You also have to do a
+little bit of work to set up the base external
+directory itself. In other words, tell Buildroot
+what all the packages are that you're
+including that are outside the built-in
+Buildroot tree. There's a few files
+that you need for this. There's base external config.in, there's external/makingexternal.desk
+that describe what your base
+external project is. We're going to use
+project base as the external name and
+external.description. Then we're going to set
+up the other two based on the contents of the specified
+in the Buildroot manual, which you can find here. You can use the
+Hello World example as an example on notation. You'll notice if we look back at the ASD assignments.makefile, there are a few
+different variables to specify where the code was found and which commit
+hash we're using. If we look at the
+way this is setup for the assignment space, what you see here is some things that you
+need to fill in, you're going to
+need to fill it in the assignment version with a specific commit hash that
+matches your assignment. You're going to fill in
+the assignment site with the URL that specifies your particular
+assignment repository. This will be the repository
+containing assignment 3 code. Because what we're going to
+do is install the assignment 3 code into our embedded system as a part of
+assignment number 4. We'll use our
+assignment 4 repository to build the entire image, and we'll use our
+assignment 3 repository as the content that we're going to install into that image. They're really simple
+application that we've been working on so far with the writer.tester and writer
+executables in scripts. The aesd-assignment.mk
+is going to reference the
+assignment 3 repository in a specific commit and then it's going to
+complete the installation of all the scripts
+and dependencies into the bin directory
+on the target. What we just went
+through was the link that shows the template
+you'll use for this. In addition to setting up the aesd-assignments
+repository, there's also a build
+script that's going to do the work of actually
+building for us. This is going to handle git
+submodule initialization and update after you've set it up properly as we discussed
+in the beginning, and then it's going
+to also ensure that your.config file exists. You remember with
+the.config framework, all the configuration that's specific to your
+build is going to be stored in a.config file and
+your working directory. This script is
+just going to help us manage that.config file. When we first check
+out our project, that file's not going to exist. We have two options then, we can either use a configuration file
+that we've checked in, which won't be there for your
+first commit or we can use the default config
+for QEMU AArch64, which is the 64-bit
+ARM configuration that we'll run under
+our QEMU emulator. It's just going to
+help us start out with the
+qemu_aarch64_virt_defconfig and then use the configuration
+that we're going to save with the project after setting up that
+initial configuration. You can look at the content of the build script
+through the link here. This will be provided
+for you when you create your assignment
+4 repository. After you set up the base
+external and your get out submodule or your
+buildroot submodule and your aesd-assignments, you'll be able to run build.sh, and that's going to create
+your own defconfig file. The default config is
+going to be started based on this aarch64_virt_defconfig, and that's going to be used for the initial default
+configuration for your buildroot. Then once you have that,
+you'll run save_config. The buildroot script will tell you here that
+you need to rerun save_config to save it as a
+default configuration here. You're going to run save_config, that'll save then a new file under
+base_external/configs/aesd_qemu_defconfig. This is essentially
+overriding the default in the build directory and
+saying this is going to be your default for your
+assignments going forward. As you add or modify packages, you'll save your configuration using the save_config script, and that's going to call this
+savedefconfig command on buildroot to save the
+configuration to this directory. After you add your package, if you use the instructions
+to add your package and configure the.make
+and config.infiles. You should be able to use
+make menu config and you should be able to see your
+package listed there. You'll just select that
+package, run build.sh, and then run save_configs again to save your configuration, and what you should see then
+is that your package name will be referenced in your configuration
+that you've saved. This is how when, if we're in a
+production project, your coworkers or in our case, the student assistance myself, if we check out your
+project repository and we kick off a build, this is how we'll know
+that buildroot it's been configured to pull in your assignment repository
+and your custom package. Here's what it'll look
+like in menu config. You'll go to external
+options and there'll be an option there for
+aesd-assignments, which is going to be
+your package name. You'll select that
+with the space bar and then say that you want to
+save the configuration. Then you'll run save_configs
+to actually save that to your base_external
+defconfig file. After you've configured
+menu config, then you'll run
+save_config again. This time you should see that your buildroot
+configuration at base_externa/configs/aesd_qemu_defconfig
+is going to include the
+aesd-assignments package. You'll see that based on this, a line this that
+gets added where this BR2_PACKAGE_AESD_ASSIGNMENTS
+equals y will be added to that file. Now you should be ready to build your image with the
+custom package. You can use build.sh
+to do that for you, or you can use make from
+the buildroot directory, or you can do make aesd-assignments from
+the buildroot directory, which will build just your
+aesd-assignments package. There's different ways to build. Here's a link to the
+buildroot documentation that describes these
+options in more detail.

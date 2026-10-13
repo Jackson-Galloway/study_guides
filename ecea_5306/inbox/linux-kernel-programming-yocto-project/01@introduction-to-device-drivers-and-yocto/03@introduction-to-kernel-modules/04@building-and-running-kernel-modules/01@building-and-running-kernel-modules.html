@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Building and Running Kernel Modules</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>Which of the following code examples prints "Hello, world" to the kernel log from a Linux kernel module?</p><p>Option 1:</p><img alt="e318a306-3d49-4715-b004-b5e6dd14fc11image1.png" src="e318a306-3d49-4715-b004-b5e6dd14fc11image1.png"/><p>Option 2:</p><img alt="e318a306-3d49-4715-b004-b5e6dd14fc11image2.png" src="e318a306-3d49-4715-b004-b5e6dd14fc11image2.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Cb1sMs" type="radio"/> <div class="quiz-option-text"><p>Option 1</p></div></li>
+<li><input name="autoGradableResponseId~Cb1sMs" type="radio"/> <div class="quiz-option-text"><p>Either option 1 or option 2</p></div></li>
+<li><input name="autoGradableResponseId~Cb1sMs" type="radio"/> <div class="quiz-option-text"><p>Option 2</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the purpose of a module’s init function specified by module_init.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~UQ467l" type="radio"/> <div class="quiz-option-text"><p>Handles requests for the module, then exits when the module is removed.</p></div></li>
+<li><input name="autoGradableResponseId~UQ467l" type="radio"/> <div class="quiz-option-text"><p>Registers the module for use by the kernel</p></div></li>
+<li><input name="autoGradableResponseId~UQ467l" type="radio"/> <div class="quiz-option-text"><p>Removes the module from the kernel.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the purpose of a module's exit function specified by module_exit</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~KztNcT" type="radio"/> <div class="quiz-option-text"><p>De-registers module functions with the kernel which were setup by the init function</p></div></li>
+<li><input name="autoGradableResponseId~KztNcT" type="radio"/> <div class="quiz-option-text"><p>Decide which parts of the module_init function it should undo and which parts were automatically undone by the kernel.</p></div></li>
+<li><input name="autoGradableResponseId~KztNcT" type="radio"/> <div class="quiz-option-text"><p>Waits for the module to stop being used, then unloads</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the reason your kernel driver should not #include &lt;stdio.h&gt;.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~UXr4Ce" type="radio"/> <div class="quiz-option-text"><p>libc is not available in the kernel module build environment</p></div></li>
+<li><input name="autoGradableResponseId~UXr4Ce" type="radio"/> <div class="quiz-option-text"><p>printf routines are too slow for kernel space.</p></div></li>
+<li><input name="autoGradableResponseId~UXr4Ce" type="radio"/> <div class="quiz-option-text"><p>printf doesn't support floating point.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select all of the reasons Linux transfers execution from user space to kernel space (select any which apply)</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~4bfYv5" type="checkbox"/> <div class="quiz-option-text"><p>An application issues a system call.</p></div></li>
+<li><input name="autoGradableResponseId~4bfYv5" type="checkbox"/> <div class="quiz-option-text"><p>A user application is running as the root user</p></div></li>
+<li><input name="autoGradableResponseId~4bfYv5" type="checkbox"/> <div class="quiz-option-text"><p>A hardware interrupt occurs</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You need to write reentrant code in your kernel driver...</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~46bZ40" type="radio"/> <div class="quiz-option-text"><p>only when your driver sleeps or blocks</p></div></li>
+<li><input name="autoGradableResponseId~46bZ40" type="radio"/> <div class="quiz-option-text"><p>only when your code is run on a system with support for SMP</p></div></li>
+<li><input name="autoGradableResponseId~46bZ40" type="radio"/> <div class="quiz-option-text"><p>always</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your Linux kernel driver code needs a buffer several thousand bytes in size.  Which of the following statements are true about how you should allocate?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WKUqLN" type="radio"/> <div class="quiz-option-text"><p>Use dynamic memory allocation</p></div></li>
+<li><input name="autoGradableResponseId~WKUqLN" type="radio"/> <div class="quiz-option-text"><p>Use a local variable</p></div></li>
+<li><input name="autoGradableResponseId~WKUqLN" type="radio"/> <div class="quiz-option-text"><p>Allocate on the stack, as long as the buffer is less than 4096 bytes</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When should you use modprobe to load a module instead of insmod?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~BxqpFQ" type="radio"/> <div class="quiz-option-text"><p>You should never use modprobe</p></div></li>
+<li><input name="autoGradableResponseId~BxqpFQ" type="radio"/> <div class="quiz-option-text"><p>When you want to ensure only a single module specified is loaded</p></div></li>
+<li><input name="autoGradableResponseId~BxqpFQ" type="radio"/> <div class="quiz-option-text"><p>When you want modules needed by a requested module to be loaded automatically</p></div></li>
+<li><input name="autoGradableResponseId~BxqpFQ" type="radio"/> <div class="quiz-option-text"><p>When you want to remove a module instead of add it</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your co-worker is complaining that they are seeing an error "Invalid module format" when attempting to load their kernel module with insmod.  What would you suggest?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~cUEGi0" type="radio"/> <div class="quiz-option-text"><p>They should try removing first with rmmod</p></div></li>
+<li><input name="autoGradableResponseId~cUEGi0" type="radio"/> <div class="quiz-option-text"><p>They should make sure they are building against the correct kernel version</p></div></li>
+<li><input name="autoGradableResponseId~cUEGi0" type="radio"/> <div class="quiz-option-text"><p>They should use modprobe instead.</p></div></li>
+<li><input name="autoGradableResponseId~cUEGi0" type="radio"/> <div class="quiz-option-text"><p>They should look for compile errors in the source code</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When writing an error handler in your init function you must (select all statements which apply)</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~xpvuuz" type="checkbox"/> <div class="quiz-option-text"><p>Undo any registration activities performed before a failure</p></div></li>
+<li><input name="autoGradableResponseId~xpvuuz" type="checkbox"/> <div class="quiz-option-text"><p>Force the user to reboot the system</p></div></li>
+<li><input name="autoGradableResponseId~xpvuuz" type="checkbox"/> <div class="quiz-option-text"><p>Avoid using goto statements</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,838 @@
+1
+00:00:00,000 --> 00:00:03,570
+This video is an overview
+of assignment 3 part 2,
+
+2
+00:00:03,570 --> 00:00:04,650
+where we're going to be building
+
+3
+00:00:04,650 --> 00:00:08,295
+a manual Linux file
+system and kernel.
+
+4
+00:00:08,295 --> 00:00:10,320
+For part 2, you'll just
+
+5
+00:00:10,320 --> 00:00:11,700
+be building onto
+the same repo that
+
+6
+00:00:11,700 --> 00:00:15,165
+you implemented with
+part 1 of assignment 3.
+
+7
+00:00:15,165 --> 00:00:17,535
+You'll need to set
+up GitHub actions
+
+8
+00:00:17,535 --> 00:00:19,340
+so that you can prove that
+
+9
+00:00:19,340 --> 00:00:21,170
+your test is working or
+
+10
+00:00:21,170 --> 00:00:24,790
+your code is working in
+an automated fashion.
+
+11
+00:00:24,790 --> 00:00:27,470
+We'll start by completing
+the system calls
+
+12
+00:00:27,470 --> 00:00:30,095
+assignment to set
+up the repository.
+
+13
+00:00:30,095 --> 00:00:31,970
+You'll use that exact same link
+
+14
+00:00:31,970 --> 00:00:34,085
+for this part of the assignment.
+
+15
+00:00:34,085 --> 00:00:36,785
+You're going to
+add a bash script
+
+16
+00:00:36,785 --> 00:00:39,320
+finder app manual Linux.SH,
+
+17
+00:00:39,320 --> 00:00:42,020
+that's going to build
+your Linux system.
+
+18
+00:00:42,020 --> 00:00:45,260
+This is going to include
+compiling the kernel.
+
+19
+00:00:45,260 --> 00:00:48,200
+It's going to include setting up
+
+20
+00:00:48,200 --> 00:00:49,670
+the root file system with
+
+21
+00:00:49,670 --> 00:00:53,285
+your application content,
+your finder app.
+
+22
+00:00:53,285 --> 00:00:54,920
+It's also going to
+include setting up
+
+23
+00:00:54,920 --> 00:00:55,940
+the roof file system with all
+
+24
+00:00:55,940 --> 00:00:57,410
+the content that
+you need to run,
+
+25
+00:00:57,410 --> 00:01:01,710
+including the dynamic
+link libraries.
+
+26
+00:01:02,420 --> 00:01:06,430
+The manual Linux script
+needs to do a bunch
+
+27
+00:01:06,430 --> 00:01:08,530
+of things to set up
+an output directory
+
+28
+00:01:08,530 --> 00:01:09,970
+with all this content.
+
+29
+00:01:09,970 --> 00:01:12,910
+You should be able to specify
+the output directory as
+
+30
+00:01:12,910 --> 00:01:16,365
+a variable to your script.
+
+31
+00:01:16,365 --> 00:01:21,160
+You can reference that in
+bold here below to see
+
+32
+00:01:21,160 --> 00:01:23,170
+every time that
+we're going to be
+
+33
+00:01:23,170 --> 00:01:25,435
+placed in this content
+in the output directory.
+
+34
+00:01:25,435 --> 00:01:27,640
+If you don't specify
+an output directory,
+
+35
+00:01:27,640 --> 00:01:31,430
+you could use slash temp slash
+a TLD is that directory.
+
+36
+00:01:31,430 --> 00:01:33,820
+Your script should start by
+creating that directory of
+
+37
+00:01:33,820 --> 00:01:35,770
+it couldn't be created and then
+
+38
+00:01:35,770 --> 00:01:37,990
+you'll build the
+kernel image using
+
+39
+00:01:37,990 --> 00:01:40,300
+all the content that
+we discussed in
+
+40
+00:01:40,300 --> 00:01:42,940
+the lecture content
+and the instructions.
+
+41
+00:01:42,940 --> 00:01:44,740
+The version of the
+Linux kernel that
+
+42
+00:01:44,740 --> 00:01:46,820
+you build is going to change.
+
+43
+00:01:46,820 --> 00:01:48,619
+Refer to your assignment
+documentation
+
+44
+00:01:48,619 --> 00:01:50,060
+for the most recent notes,
+
+45
+00:01:50,060 --> 00:01:52,250
+but you'll really just clone
+
+46
+00:01:52,250 --> 00:01:54,800
+that version of the Linux
+repository or download
+
+47
+00:01:54,800 --> 00:01:56,510
+that tarball corresponding to
+
+48
+00:01:56,510 --> 00:01:58,190
+that version and then build it
+
+49
+00:01:58,190 --> 00:02:00,625
+using the instructions
+we discussed in lecture.
+
+50
+00:02:00,625 --> 00:02:02,600
+Those resulting files will get
+
+51
+00:02:02,600 --> 00:02:04,805
+copied into the
+output directory.
+
+52
+00:02:04,805 --> 00:02:08,150
+It should also then set
+up a root file system
+
+53
+00:02:08,150 --> 00:02:09,560
+again using the content we
+
+54
+00:02:09,560 --> 00:02:12,035
+discussed in the
+previous videos.
+
+55
+00:02:12,035 --> 00:02:16,230
+A lot of this
+
+56
+00:02:16,230 --> 00:02:18,665
+is implemented for you in
+the manual Linux script,
+
+57
+00:02:18,665 --> 00:02:20,150
+you can look for all the to-do
+
+58
+00:02:20,150 --> 00:02:22,520
+sections that you
+could fill in to
+
+59
+00:02:22,520 --> 00:02:24,380
+perform the steps you need to
+
+60
+00:02:24,380 --> 00:02:26,725
+complete building the
+roof file system.
+
+61
+00:02:26,725 --> 00:02:28,370
+The end result though,
+
+62
+00:02:28,370 --> 00:02:30,875
+should be that you'll
+have an outdoor image.
+
+63
+00:02:30,875 --> 00:02:32,630
+That's going to be
+your kernel image.
+
+64
+00:02:32,630 --> 00:02:36,515
+An outer in it Ram
+fs.cpo.gzfile.
+
+65
+00:02:36,515 --> 00:02:39,620
+This CPO gz file is going to be
+
+66
+00:02:39,620 --> 00:02:41,270
+the compressed content of
+
+67
+00:02:41,270 --> 00:02:44,340
+your staging directory
+tree that you set up.
+
+68
+00:02:44,740 --> 00:02:47,060
+One of the things that
+you need to include
+
+69
+00:02:47,060 --> 00:02:48,650
+in your staging directory tree,
+
+70
+00:02:48,650 --> 00:02:51,230
+in the root FS home directory.
+
+71
+00:02:51,230 --> 00:02:54,545
+The slash home directory
+of your root file system,
+
+72
+00:02:54,545 --> 00:02:55,970
+you need to include your writer
+
+73
+00:02:55,970 --> 00:02:57,635
+application from assignment 2,
+
+74
+00:02:57,635 --> 00:02:58,820
+and you need to make
+sure that you've
+
+75
+00:02:58,820 --> 00:03:00,455
+cross-compile that
+for the target.
+
+76
+00:03:00,455 --> 00:03:01,970
+With assignment 2 we've
+
+77
+00:03:01,970 --> 00:03:04,070
+verified we had the
+cross-compiler setup properly.
+
+78
+00:03:04,070 --> 00:03:05,870
+We were able to cross-compile
+for the target.
+
+79
+00:03:05,870 --> 00:03:07,340
+Now is where we need
+to actually take
+
+80
+00:03:07,340 --> 00:03:12,295
+that executable and put it
+in the slash home directory.
+
+81
+00:03:12,295 --> 00:03:16,920
+You'll copy your finder
+SH, your username.text,
+
+82
+00:03:16,920 --> 00:03:19,400
+and the finder.test scripts with
+
+83
+00:03:19,400 --> 00:03:21,500
+slight modifications into
+
+84
+00:03:21,500 --> 00:03:24,270
+the outer root FS
+home directory.
+
+85
+00:03:24,710 --> 00:03:27,600
+That's what you'll
+use to create this
+
+86
+00:03:27,600 --> 00:03:30,645
+initramfs.cpio.output.gzfile.
+
+87
+00:03:30,645 --> 00:03:32,915
+Once you have all
+that put together,
+
+88
+00:03:32,915 --> 00:03:35,150
+you should be able
+to use the Start QMU
+
+89
+00:03:35,150 --> 00:03:37,865
+terminal.sh file to start up
+
+90
+00:03:37,865 --> 00:03:40,580
+your QMU image using
+
+91
+00:03:40,580 --> 00:03:44,005
+the kernel and init Ram
+fs file that you created.
+
+92
+00:03:44,005 --> 00:03:46,280
+Based on that out Directory
+
+93
+00:03:46,280 --> 00:03:48,110
+you use to build the assignment.
+
+94
+00:03:48,110 --> 00:03:51,470
+You should also be able to
+use the Start QMU app.sh
+
+95
+00:03:51,470 --> 00:03:54,840
+to not only kick off
+your QMU instance,
+
+96
+00:03:54,840 --> 00:03:59,580
+but also run your Finder
+application on the QMU instance.
+
+97
+00:03:59,580 --> 00:04:01,640
+A demo of what you
+
+98
+00:04:01,640 --> 00:04:04,800
+should see in your
+assignment three repository.
+
+99
+00:04:05,830 --> 00:04:08,960
+If you're on the
+full test script,
+
+100
+00:04:08,960 --> 00:04:12,020
+it'll run through the
+system test unit test
+
+101
+00:04:12,020 --> 00:04:14,870
+that you implemented as the
+first part of the assignment.
+
+102
+00:04:14,870 --> 00:04:17,390
+Then some of the steps
+that you need to
+
+103
+00:04:17,390 --> 00:04:19,610
+perform will need
+to run as root.
+
+104
+00:04:19,610 --> 00:04:24,180
+You might have a prompt here
+to enter your sudo password.
+
+105
+00:04:26,920 --> 00:04:29,810
+If you follow the instructions
+
+106
+00:04:29,810 --> 00:04:34,015
+in the manual Linux script,
+
+107
+00:04:34,015 --> 00:04:37,435
+you should get some hints
+about how to make your script.
+
+108
+00:04:37,435 --> 00:04:39,670
+Not need to re-download and
+
+109
+00:04:39,670 --> 00:04:42,385
+start from scratch every
+time you rerun it.
+
+110
+00:04:42,385 --> 00:04:44,590
+Some of the steps are
+going to be missing here
+
+111
+00:04:44,590 --> 00:04:46,120
+because I've already
+compiled the kernel.
+
+112
+00:04:46,120 --> 00:04:48,805
+But what you'll see is
+the steps used to install
+
+113
+00:04:48,805 --> 00:04:50,890
+the curdle and the
+raw file system
+
+114
+00:04:50,890 --> 00:04:53,370
+into the root file system tree.
+
+115
+00:04:53,370 --> 00:04:54,700
+Then now you can see that it's
+
+116
+00:04:54,700 --> 00:04:57,580
+booting my QMU application.
+
+117
+00:04:58,010 --> 00:05:01,855
+Once it boots up with QMU
+and starts my kernel,
+
+118
+00:05:01,855 --> 00:05:02,980
+it'll run the test script.
+
+119
+00:05:02,980 --> 00:05:04,300
+You should see this message
+
+120
+00:05:04,300 --> 00:05:06,070
+saying that it
+completed with success,
+
+121
+00:05:06,070 --> 00:05:08,200
+meaning that all of the content
+
+122
+00:05:08,200 --> 00:05:11,165
+was placed in the
+root directory,
+
+123
+00:05:11,165 --> 00:05:15,420
+and everything worked when we
+ran from the QMU terminal.
+
+124
+00:05:15,420 --> 00:05:17,600
+Looking at a little
+more detail about
+
+125
+00:05:17,600 --> 00:05:19,685
+what's happening
+under the hood here,
+
+126
+00:05:19,685 --> 00:05:21,685
+I go into my finder app.
+
+127
+00:05:21,685 --> 00:05:25,130
+I should see the Start
+QMU terminal and start
+
+128
+00:05:25,130 --> 00:05:27,110
+QMU App Script
+that's mentioned in
+
+129
+00:05:27,110 --> 00:05:30,005
+the test overview document.
+
+130
+00:05:30,005 --> 00:05:32,645
+If I run Start QMU terminal,
+
+131
+00:05:32,645 --> 00:05:37,250
+this should start
+the terminal or
+
+132
+00:05:37,250 --> 00:05:42,350
+the QMU using the files for the
+
+133
+00:05:42,350 --> 00:05:49,070
+cpio.gz and the kernel instance
+
+134
+00:05:49,070 --> 00:05:50,450
+that I built in
+
+135
+00:05:50,450 --> 00:05:53,920
+the temp directory or
+the output directory.
+
+136
+00:05:53,920 --> 00:05:57,315
+This should bring
+me to a prompt.
+
+137
+00:05:57,315 --> 00:06:00,350
+If I do an ls under
+the home directory,
+
+138
+00:06:00,350 --> 00:06:01,550
+this should list all of
+
+139
+00:06:01,550 --> 00:06:03,800
+the content that I
+needed to copy in,
+
+140
+00:06:03,800 --> 00:06:05,690
+as mentioned in the
+assignment document
+
+141
+00:06:05,690 --> 00:06:07,400
+to run my Finder application.
+
+142
+00:06:07,400 --> 00:06:08,900
+You should be able to, from
+
+143
+00:06:08,900 --> 00:06:10,730
+here run your finder and writer
+
+144
+00:06:10,730 --> 00:06:12,560
+script should be able to cd into
+
+145
+00:06:12,560 --> 00:06:16,110
+the home directory
+and run Finder tests.
+
+146
+00:06:16,730 --> 00:06:19,190
+See that you get
+successful output
+
+147
+00:06:19,190 --> 00:06:21,095
+here running your finder test.
+
+148
+00:06:21,095 --> 00:06:23,525
+If I want to exit QMU,
+
+149
+00:06:23,525 --> 00:06:24,785
+I could do Control A,
+
+150
+00:06:24,785 --> 00:06:30,020
+C and then Q. I mentioned
+there's a couple of
+
+151
+00:06:30,020 --> 00:06:31,220
+different scripts here under
+
+152
+00:06:31,220 --> 00:06:33,650
+the Finder app directory that
+
+153
+00:06:33,650 --> 00:06:36,590
+you'll get as a part of
+the assignment start.
+
+154
+00:06:36,590 --> 00:06:39,320
+One of them is start QMU
+terminal that I just
+
+155
+00:06:39,320 --> 00:06:42,035
+showed you that would allow
+you to start a QMU Terminal.
+
+156
+00:06:42,035 --> 00:06:43,910
+The second one is the
+Start QMU app that
+
+157
+00:06:43,910 --> 00:06:46,020
+actually runs your
+Finder application.
+
+158
+00:06:46,020 --> 00:06:47,945
+If we look at the difference
+between those two,
+
+159
+00:06:47,945 --> 00:06:51,090
+if I cut out start QMU app,
+
+160
+00:06:51,090 --> 00:06:53,255
+what you see here is that
+
+161
+00:06:53,255 --> 00:06:55,400
+RD init command that
+we use to start
+
+162
+00:06:55,400 --> 00:06:56,630
+QMU that we talked
+
+163
+00:06:56,630 --> 00:07:00,625
+about before we
+discussed Assignment 2.
+
+164
+00:07:00,625 --> 00:07:03,200
+Instead of running bin SH here,
+
+165
+00:07:03,200 --> 00:07:05,855
+I'm just running
+home autorun QMU.
+
+166
+00:07:05,855 --> 00:07:10,220
+This is a script that we're
+providing as a part of
+
+167
+00:07:10,220 --> 00:07:12,755
+the assignment
+implementation that will
+
+168
+00:07:12,755 --> 00:07:16,040
+automatically run your
+finder app on startup.
+
+169
+00:07:16,040 --> 00:07:22,510
+If I compare that to what I
+see with Start QMU terminal,
+
+170
+00:07:23,960 --> 00:07:27,360
+this just uses rdinitbin.sh.
+
+171
+00:07:27,360 --> 00:07:28,920
+It's going to start us up
+
+172
+00:07:28,920 --> 00:07:32,910
+in interactive shell terminal
+
+173
+00:07:32,910 --> 00:07:34,745
+after we start the QMU instance.
+
+174
+00:07:34,745 --> 00:07:37,370
+But what you can see
+referenced here is
+
+175
+00:07:37,370 --> 00:07:40,070
+the init RD specified by
+
+176
+00:07:40,070 --> 00:07:46,320
+aided RD image and
+the root file system,
+
+177
+00:07:46,810 --> 00:07:50,240
+tar.gz, I'm sorry,
+
+178
+00:07:50,240 --> 00:07:51,650
+the kernel specified by
+
+179
+00:07:51,650 --> 00:07:53,930
+the kernel image and
+the root file system,
+
+180
+00:07:53,930 --> 00:07:58,280
+cpio.gz referenced by
+the init RD image.
+
+181
+00:07:58,280 --> 00:07:59,960
+Both of those are
+going to default to
+
+182
+00:07:59,960 --> 00:08:01,910
+the temp ASD directory if you
+
+183
+00:08:01,910 --> 00:08:04,890
+haven't specified a
+different output directory.

@@ -1,0 +1,168 @@
+in this video we'll go over some
+basics of kernel module design. So we're going to talk about kernel
+module dependencies, the symbol table, module in exit and air handling and
+also module parameters. So, in terms of version dependencies
+in the previous discussion, we talked about the location
+of different kernel modules based on the kernel source
+that you're running. Your driver is only going to be allowed
+to load against the specific kernel for which it was compiled. And in order to do that,
+it uses something that's called vermagic, that uses things like the target kernel,
+the compiler version, the processor and all the and some
+significant configuration variables for the kernel and
+all those must match before you can load. So it's more than just
+matching the kernel version. It's also a bunch of other things about
+the way the kernel was compiled and the way you're compiling your module. If you have something wrong there and
+you don't have a good match between the content of your kernel and
+the content of your driver. When you try to load with its modern mod
+probe, you're going to get a message saying, error inserted, whatever your
+module name is, invalid module format. And so, this is your clue that it's
+probably built for the wrong kernel, the wrong architecture,
+something like that. And you need to rebuild with
+the appropriate kernel source. So the in kernel space programming, it's
+often going to happen that an API that you're using could change
+from one release to another. And so,
+your code is going to break as a part of the natural progression of
+the kernel to new versions. And there's a kernel version
+macro you can use to help deal with these compatibility issues. If you're in a situation where you need
+to build and compile your kernel for different versions. And there's an example here that will go
+through that you can follow the link for a case where the links driver development
+source code needed to be updated for a later version of kernel. So, here's an example of a case where
+the Linux kernel version changed and a function that was previously a part
+of the kernel has disappeared. And so, the way you can handle this
+with Linux kernel version macro, you can have checks like this that say
+if the version is less than a specific version number, you can define whether or
+not the function exists anymore. And if the function doesn't exist anymore, you can write your own function to
+deal with backwards compatibility. And so, here I'm replacing the file I know
+function by just returning the location where the file I know it is available
+in the file structure that is available on releases after 391 but this particular
+function is no longer available. So, in this case I'm
+just providing my own, so that I can use the code below
+with either kernel version. So, this is an example of the kind of
+work around that you can do to support multiple kernel versions with your module
+build using the same kernel source. So, as a kernel driver developer, how do I
+keep up with all the possible variations? How do I know that my kernel is going to
+be able to compile on the entire range of kernel versions that I need to support. So, option one is you released
+under GPL compatible license and you release your source code and you let
+your router using your driver module, basically help take care of that for you. When they want to use with the new
+version, they'll have the source code so they can make the changes themselves. And ideally the best case scenario here
+would be if you could get added to the mainline kernel, if your driver
+was a part of the mainline kernel. What this means is that if someone wanted
+to do that, re factoring of removing a function like what I showed before,
+it would be their job to go through and update your module to match
+the latest version of the kernel. And so, you would just make that a part
+of the standard release whenever anyone got kernel source code, they
+have the latest version of your module. So, this isn't going to be an option for
+everybody. There's a lot of drivers that just aren't
+going to be mainline in the kernel, but if that's an option for your driver,
+that's definitely a great option. So, option two would be, you can distribute in source code
+form with scripts to compile it. And this is not specifically
+mentioned in the book, but there's if you ever get in this
+situation and you need to support it, take a look at DKMS dynamic
+kernel modules, support. So there's a great framework
+that's available for helping to automate the rebuild of kernel
+sources and deployment of your source that's not a part of the next kernel but
+released with an open source license. And then option three. This is one case where for us when we're
+building embedded systems a lot of times this gets simpler for us because we might
+only have either a single target kernel configuration or maybe a specific
+set of target kernel configurations. So, we don't necessarily need to worry
+about supporting any possible kernel version, will have really specific
+ones that will support and we can just keep updating it ourselves
+as the kernel module version changes. So the simple table is
+the thing that we'll use to link into other
+functions in the kernel and in small is going to do that for
+us at low time, fill in the content in
+memory copy of our module. And if you recall when we talked about
+mod probe we said that you could have dependencies between modules. So, I can have my module call
+a function from another module and this is referred to as module stacking. And if you set those dependencies up and
+you use mod pro for loading mod pro will automatically
+load the modules that you need for your device or for your driver
+as you try to load your driver. So we've talked about how
+the module license macro specifies what license you're using for
+your module. The export symbol macro is used by
+the kernel to export functions or and can be used by your driver to export
+specific functions that you want other modules to be able to call. And the export symbol GPL
+is telling us specifically that those are only available to
+GPL compliant licensed modules. And so, your module license needs to
+include GPL if you want to be able to call those functions. And that's basically the way that's
+enforced is through these export symbol macros that either you define in your
+module file if you want to create files or create functions other modules could call. And these are also used in the kernel. So, for instance, with print K or any of the functions that you're
+going to call from, the kernel. So, Linux/module.h is where the symbols
+needed for the common definitions and the symbols that are needed for
+laudable modules are located. The init.h functions where
+the initialization and cleanup functions are located. So, all these module license module,
+author description version, there's a detail about, they're pretty
+self explanatory if you see them used. But these are all going to be defined
+in these header files that you'll include at the top of
+your module definition. So, we've talked about the module in it
+function as the first thing that happens when your modules in spotted and
+the book recommends that that be static. And the reason is just enforcing, it's not going to be used anywhere other
+than the main file that it's included in. So, there's really no reason to have
+it any scope other than static. And you also would notice
+this under init label. And so, this looks a little strange what
+this is telling the module loader is that, since this is only called on init as
+soon as your module is initialized, there's no need to keep that
+code around in memory anymore. And so, it turns out if you've
+got a lot of loaded modules and you take all the functions that
+are included with every one of those modules that ends up being
+a lot of memory that could be reclaimed. And so, adding this optimization
+lets us free memory for use dynamically when it's no longer
+needed after the modules been loaded. So what are you going to do
+with your inner function? You want to register for
+kernel facilities. So, devices, filesystem, crypto transforms
+anything that's going to be interacting with SFS process basically anything that
+you need for the user or the colonel to interact with your module needs to get
+registered as a part of your function. And you also need to initialize
+any data structures. It's important to do that before you do
+the registration because you don't want something to be calling your module that
+might reference the data structure that's not set up yet. And we've mentioned already that
+the data structure should be located in general in allocated memory. You wouldn't want to locate those
+on the stack because the stack for the initialization function is
+going to disappear as soon as the init completes based
+on that in a sense. So, what would the exit function do? It's going to unregistered all the
+interfaces that were previously registered with init and you usually do it in the reverse
+order as the way you registered them. That just avoids a case where you
+would end up in a situation that you unregistered a part of one particular
+portion and then the kernel ends up making a call to that already unregistered as
+a part of registering a previous function. And your exit function also needs to free
+any of the memory that was allocated on init. As I mentioned before, we don't have
+any kind of clean up like we have in user space and if we forget to free
+stuff in kernel driver development, it's just going to remain allocated. So, why would you use this
+under under exit prefix? It's similar to the under init,
+prefix that we talked about before. This is a hint to the module
+loader that if I'm building this kernel module directly
+into the kernel, so I'm not actually going to be
+using it as a laudable module. All the exit related code won't ever be
+executed and so we can again drop this all from the in memory copy of the kernel,
+there's no reason to have it there. So, an important thing
+about init functions specifically is the handling of errors. So, all the different registrations
+I talked about before, almost all of those are going to
+be able to fail in some way. And so, it's really important that
+you check for and handle failures. So, what you see a lot of times in
+init functions as code like this, you'll do some registration,
+if there's an error, you'll go to a failure and each step
+through the process when you have so let's say we fail at this
+second registration step. If there's an error,
+we're going to a separate fail label and we want to make sure that we unregistered
+anything that we've previously registered. Because again there's nothing
+to clean up for us here, if we register something and then
+a failure happens and we just exit without registering the kernel's going to
+try to call our device or our module that's been unregistered and
+we're probably going to crash the system. So, it's really important to pay
+attention to the exit and error codes and to handle them by undoing whatever you
+successfully done in the function. And it turns out you might have learned
+in other programming courses that go to is like bad form or
+not to use it in general. In kernel programming and especially with
+init functions go to is widely used and it's a really commonly used pattern
+because it makes these kind of recovery scenario is really easy to do. If you get through all the registrations, then you can just have each one of the
+labels happen one right after another and the registration can happen really easily. So, this was an alternative to building
+a large nested if statements for instance and a lot of kernel developers
+prefer this as being more readable. So, one other content amount that we talk about with respect to loading modules. When you're loading a module, you can also
+define module parameters that you can specify on load that will tell your driver
+more information about how to operate. So, similar to what you provide as
+an argument to a command line program. And you can define these with
+macros module program and you can set things like whether
+the module is readable or writable. And who is able to read or write it. And if you want to see an example of this,
+Hello P module is allows you to specify how many prints you have in what to say,
+who to say the print is coming from. So, this is just a simple example
+of passing an integer and a string into your module. We'll get into more complicated ways to
+interact with your module in later weeks.

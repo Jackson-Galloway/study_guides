@@ -1,0 +1,194 @@
+This video is a demo of
+assignment number one. So we're going to do an overview walk
+through the assignment and also a demo. You'll start the assignment off by
+clicking on a get help classroom link to accept it into your get up account. If you don't already have a get help
+account you should create one before you start the assignment. And you don't need to use a dedicated or
+separate account for this class or for any of the other courses that you're
+taking as a part of the CU course. Once you do click on
+the Github classroom link, you should start out with
+a new empty repository. And you're going to fill that
+with the content of the base assignments repository. And the base assignments repository
+looks something like this. It's going to have a bunch of
+starter code implemented for you that you'll modify as
+a part of this assignment. So then you'll follow the instructions
+in the assignment document to modify the example code. Commit and push to your individual
+Github classroom repository to complete the assignment. So next I'll do a walk through
+in a demo of the assignment one. So as I mentioned in the overview you'll
+start each classroom with a Github classroom link. When you click that link you'll be
+taken to a screen that allows you to accept the assignment. And when you accept the assignment, you'll be creating a repository that
+includes your Github user name in it. So when I click accept this assignment,
+I should get this new repository created. And if I refresh this page, the repository will be available
+at this link that it sets up. And what you'll notice when you start
+here is that the repository is empty, so the next thing we'll do is
+fill that with content. You'll also notice that the assignment
+document is going to include some suggested reading. This is including the content
+that will go over in class and also some additional background material
+that you might want to review to help you complete the assignment. So we'll start the implementation for assignment one with bringing up your
+virtual machine host environment. It wouldn't need to be a virtual machine
+if you want to use a physical machine that works fine as well. If you wannaa use a cloud hosted
+machine that works as well. There are some instructions here if you are going to use the virtual
+box based machine. There's some instructions about how to
+set up a virtual box on your host PC. And referred to the document instructions
+for the latest version in use, the current version is to 20
+as a time of this recording. So do the clone of the get help repository
+as I showed in the previous view. And then that's going to
+create the empty repository. One of the things you'll notice when
+you create this empty repository. It gives you some comments here about
+what you can do to add content here. But we don't want to do that
+because we're going to add content specifically using
+the instructions here. So you'll go through each one of these
+instructions to add the base repository, which is the one that includes content,
+for we'll have content in this repository for
+every assignment. The main branch here is the one that's
+going to include the content for the first assignment. So you're going to add a remote that
+will let get nowhere can fetch that base assignment content. Then you'll fetch
+the assignment content and then merge it into your main
+branch of your current repository. And so this is going to make your
+match the branch from the ASD assignments repository. Then you'll do get sub module
+update in it recursive. And what this is going to do is clone
+the next to get repositories inside the assignment auto test. So if you aren't familiar with
+sub modules this is really just a way to put one Git repository
+inside another Git repository. So you can see this symbol here
+next to the folder icon in Git. And this is just showing that there's a
+sub module here referencing a separate Git repository. This separate Git reports story is where
+all the content is going to be located for our assignment automated testing. We'll get into more detail about
+this later in the semester. But for now you just need to make sure
+that you're cloning it as a part of your assignment repository. So when you do to Git some module update
+in a recursive that's going to clone that repository. All the nests to Git repository is
+going to pull all the test content into your repository. Next thing you need to do
+is set up Github Actions. And you can use this for
+automated testing and also to set up your virtual machine or
+whatever environment you're using to run Ubuntu to be able to run
+the automated tests for this class. So looking through the instructions for
+this there's a section about how to set up automated testing for
+your assignment repository. And this is going to allow you to use
+a runner that's located on your machine to check the commits that you
+push to the Github Repository. And verify that they're
+working properly or give you feedback if something
+in them is not working. And follow these instructions from Github,
+the instructions are very good. You can follow these to implement, and one note though you must use a Linux
+based runner for the assignments. And then you also must ensure that you're
+running machine has docker installed. And there's some instructions about
+setting up docker in the setting of your host section of the assignment
+auto test repository. And that you won't have to worry
+about this for the first assignment. But for the future assignments you
+can go back to this page to see how to reuse a previously configured
+runner with a new assignment. So then once we've got
+Github Actions set up and all the unit test requirements,
+we can run the unit test script. And when you run that unit test script,
+you're going to see a failure message. So next we'll run the unit test script to
+run the unit test against our repository. Now in this case we're running the unit
+test against the content that we cloned from the assignment based
+response repository. So if I look at the content that I have
+in my repo it should match what's in the assignments based repo. So we haven't implemented anything yet. We're going to run the unit test, make
+sure our unit test is set up properly and we should get a failure showing that
+we haven't completed the assignment implementation yet. So I'll run the unit test script. You should see a building and
+running some files, you should see a message here to say that
+your unity setup is working, that's good. And then you'll see message
+with the failure here saying ASD students please fix me. So this is the part that will be
+adding with assignment number one. So as the assignment document mentions,
+the reason that test is going to fail is because you haven't yet implemented
+your test validate user function. So if we look at what this function is
+doing is just going to verify today. It's just checking an assertion for
+true, that's hard coded defaults, so it's always going to fail. You need to replace this line
+with a call to my username to verify your comp username. So what you're going to do is
+add a unity assertion here. That's going to make sure that the string
+that you get from your my username function matches the value from the
+configuration file for the assignments. And the configuration file
+value is one that you're going to fill in, in the camp and
+user name.text file. So you can see here it's referencing
+your Github user name here, you just need to replace this
+with your Github user name. And what you're going to verify with
+this function is that the the two values are equal, so
+my username function is written for you. That's going to get your the I'm
+sorry the Malik username from com files written for you. That's going to get the value
+from the configuration file for your Github user name. And you're going to call the my username
+function and auto test validate.c to get your hard coded username and
+that you're just going to set. So going back to the assignment
+documentation that confuse her name dot text is going to have
+your Github user name. Then test validate user name.c just
+needs to have this test assert equal string message to verify that the two
+strings that you return are equal. And the user name is going to be
+actually implemented in your auto test validate.c file. So inside your assignment,
+one repository auto test validate.c. There's a my username function and you just need to replace this
+with your Github users name. So this is just verifying
+that both your comp file and your c file agree on the setting
+of your Github user name. Now once you run the unit test script, the
+unit test portion of the of the testing for your assignment is going to pass. So here's an example of what you
+should see when you get to that point. If I run the unit test script
+should see the same kind of builds. And then instead of failing that last
+test case is going to pass because my get up user name matches between
+my comp file and my c file. Okay, so now that we've got
+the basics of our unit test working, we're going to add some system testing for
+a really simple application, we're going to write called Finder app. So Finder apps going to have a couple
+of scripts that really do some basic operations with reading and writing
+from files and doing searches on files. And just verified some real basic
+operations with shell scripts. So we're going to write a shell script
+that's called finder app Finder.SH. And the requirements for
+this script are described here. It's going to take some
+runtime arguments for the path to a directory in
+the file system and a text string, that's going to be searched within files
+in the directory in the file system. It needs to exit with
+the return value one error. And to print statements if any of the
+parameters weren't specified should exit with a return value and error. If the file directory does not represent
+an actual director in the file system and it should print the number of files and
+the number of matching lines. Where the X value here is the number
+of files in that directory and all subdirectories and
+Y is the number of matching lines. So if you look back through the content, we talked about some of the utilities
+you can use for scripting. There's just some applications you
+can use to get this information and display it from your Finder invocation. And so it could be invoked,
+something like this, Finder.SH and then some path to
+a directory and then looking for content in that directory in this case,
+the word Lennox. Next you're going to write
+a shell script called writer, which takes arguments the full
+path of the file to right, including the filename and that's going to
+be referred to below as right file. And then the second is a string that
+will be written to the file and you should do some air checking here, exit with value one if any of
+the arguments weren't specified. Should create a new file with
+that specified name and path and put the content in
+the right string into it. And you should overwrite
+any existing file, create that path if it
+doesn't already exist. And it has some error handling if for
+some reason the file couldn't be created, so for example,
+writer.sh path to some file name. IOS this would include the content
+IOS inside that file that specifies. So the next section talks about
+the finder test script and this one you don't have to do anything. This is a part of the assignment
+based repository. So this is already written for you but it goes over the counter what
+the this file actually does. And the file is going
+to take arguments for the number of files to write and
+the string to write to each files. And here all the defaults for
+what the what this applicator, what the script does. And it's going to ultimately fill
+this temp ALD data directory and then create the specified number
+of files in that directory. Then it's going to run the finder script
+and search for the search string. And so it should find that it found that
+it was able to find the same number of files that it wrote with
+the specified right string, and then checks the output of the finder
+script for the expected output. And then prints that the number of files
+matched the expected number of files and print success or failure. So when you have your finder and
+writer that SH script written, you should be able to use the finder test
+to make sure that both of the scripts are operating as expected and that your
+implementation passes requirement. So next once we have those scripts
+implemented we can use the full test script to run both the unit test and the
+functional test against the application. And so you'll see it start out
+by rerunning the unit tests and then it will run a step here
+that runs the finder script. And also checks to make sure that your
+air handling worked as expected on the finder and writer test scripts. So if you get a response out here saying
+that the assignment test completed with success then you'll know that you've
+implemented your strips successfully. So once you get everything working
+locally, you'll want to push up to your Github check in your assignment repository
+that you created with Github classroom. And what you should see then if you
+have Github Action set up correctly, you should see a green check box. So this is going to run the full test
+script against your self hosted runner and give you the success status showing
+that your test completed successfully. And under the actions button, you should be able to see a workflow
+run showing a successful run. And you should be able to see log
+messages that show that the outcome of your run was successful. If there were any failures,
+you'd see error messages here and refer back to the settings on how to
+set up your Github Actions if you see problems with this step or for
+troubleshooting instructions. So that's really it for
+assignment number one. Pretty simple repository set up, we'll get into more complicated setups
+as we get into the future assignments. But for this one we're just starting out
+with the public source and starter code. Then we're going through the step
+to create our assignment one repository based on our Github username,
+and then push the content of our assignment
+based repo into that repository. And this will be the repository that you
+modify and update for the assignment.

@@ -1,0 +1,1340 @@
+1
+00:00:00,000 --> 00:00:02,970
+In this video, I'll continue
+the discussion about
+
+2
+00:00:02,970 --> 00:00:06,240
+embedded testing and talk
+
+3
+00:00:06,240 --> 00:00:08,715
+specifically about
+automated testing.
+
+4
+00:00:08,715 --> 00:00:10,890
+We want to understand
+the components of
+
+5
+00:00:10,890 --> 00:00:14,040
+an automated test
+framework, introduce mocks,
+
+6
+00:00:14,040 --> 00:00:16,710
+and introduce the unity
+and GoogleTest as
+
+7
+00:00:16,710 --> 00:00:20,230
+two possible automated
+test frameworks.
+
+8
+00:00:20,510 --> 00:00:25,185
+The components of an
+automated test setup.
+
+9
+00:00:25,185 --> 00:00:27,030
+The first one is the framework.
+
+10
+00:00:27,030 --> 00:00:28,950
+What do I mean by
+a test framework?
+
+11
+00:00:28,950 --> 00:00:31,800
+I mean it's something that's
+able to create executables
+
+12
+00:00:31,800 --> 00:00:35,355
+on whatever platform you
+plan to run the tests on.
+
+13
+00:00:35,355 --> 00:00:38,765
+It often includes
+features like grouping
+
+14
+00:00:38,765 --> 00:00:42,770
+tests by whatever feature
+the specific test covers,
+
+15
+00:00:42,770 --> 00:00:45,380
+selecting specific tests to run,
+
+16
+00:00:45,380 --> 00:00:47,660
+maybe in allowing
+for selection of
+
+17
+00:00:47,660 --> 00:00:52,040
+specific tests and
+reporting status back about
+
+18
+00:00:52,040 --> 00:00:55,670
+which steps failed and some
+detail about what failed so
+
+19
+00:00:55,670 --> 00:00:57,350
+that it's easy to go and find
+
+20
+00:00:57,350 --> 00:00:59,870
+the problem and fix
+it when it happens.
+
+21
+00:00:59,870 --> 00:01:01,520
+A lot of times
+
+22
+00:01:01,520 --> 00:01:03,485
+the test framework will
+be set up such that
+
+23
+00:01:03,485 --> 00:01:06,320
+the executables and
+the testing that you
+
+24
+00:01:06,320 --> 00:01:07,910
+perform is going to be run on
+
+25
+00:01:07,910 --> 00:01:10,430
+a development platform instead
+of the target platform.
+
+26
+00:01:10,430 --> 00:01:14,270
+That's a lot of just
+convenience so that you
+
+27
+00:01:14,270 --> 00:01:15,980
+maybe don't have the
+extra interaction
+
+28
+00:01:15,980 --> 00:01:17,090
+required with setting up your
+
+29
+00:01:17,090 --> 00:01:18,695
+test on the
+development platform.
+
+30
+00:01:18,695 --> 00:01:20,540
+Similar to what we've done with
+
+31
+00:01:20,540 --> 00:01:22,760
+the assignments this
+semester where we start out
+
+32
+00:01:22,760 --> 00:01:25,370
+implementing our tests on
+
+33
+00:01:25,370 --> 00:01:29,740
+native Ubuntu system
+for instance.
+
+34
+00:01:29,740 --> 00:01:33,110
+Then a second test component
+
+35
+00:01:33,110 --> 00:01:35,900
+from automated test
+is test mocks.
+
+36
+00:01:35,900 --> 00:01:39,235
+I'll talk more about
+these in the next slides.
+
+37
+00:01:39,235 --> 00:01:42,920
+A test mock can simulate
+the behavior of
+
+38
+00:01:42,920 --> 00:01:44,870
+a real object in controlled
+ways that you can
+
+39
+00:01:44,870 --> 00:01:47,840
+control in your test definition.
+
+40
+00:01:47,840 --> 00:01:50,900
+A mock is really important
+and necessary when you have
+
+41
+00:01:50,900 --> 00:01:54,735
+things like
+non-deterministic results.
+
+42
+00:01:54,735 --> 00:01:56,420
+For instance, if you have
+code that's trying to
+
+43
+00:01:56,420 --> 00:01:58,880
+read current time or
+current temperature,
+
+44
+00:01:58,880 --> 00:02:00,230
+that's going to vary every
+
+45
+00:02:00,230 --> 00:02:01,670
+single time you
+run the test case.
+
+46
+00:02:01,670 --> 00:02:04,640
+It'll be difficult to get
+deterministic results
+
+47
+00:02:04,640 --> 00:02:06,050
+where something always passes or
+
+48
+00:02:06,050 --> 00:02:08,140
+fails in specific scenarios.
+
+49
+00:02:08,140 --> 00:02:10,865
+Same with states that are
+difficult to reproduce.
+
+50
+00:02:10,865 --> 00:02:12,950
+Let's say you've got
+some handling for
+
+51
+00:02:12,950 --> 00:02:15,410
+the case where a device
+returns an error condition.
+
+52
+00:02:15,410 --> 00:02:16,670
+Well, how do you make the device
+
+53
+00:02:16,670 --> 00:02:17,780
+return an error condition
+
+54
+00:02:17,780 --> 00:02:20,945
+depending on what you're
+doing for an error condition,
+
+55
+00:02:20,945 --> 00:02:22,130
+it might be difficult to do
+
+56
+00:02:22,130 --> 00:02:23,945
+that from a device perspective.
+
+57
+00:02:23,945 --> 00:02:26,675
+But a mock can help you
+simulate that case.
+
+58
+00:02:26,675 --> 00:02:29,185
+We'll talk about
+that in a minute.
+
+59
+00:02:29,185 --> 00:02:32,325
+Other cases where mocks
+are useful are when
+
+60
+00:02:32,325 --> 00:02:37,650
+the interaction is either
+slow or requires setup.
+
+61
+00:02:37,650 --> 00:02:39,290
+You can think about
+an interaction
+
+62
+00:02:39,290 --> 00:02:40,805
+with a database, for instance,
+
+63
+00:02:40,805 --> 00:02:44,600
+that in order to have
+some specific state,
+
+64
+00:02:44,600 --> 00:02:46,745
+you might need to
+set up a database
+
+65
+00:02:46,745 --> 00:02:49,580
+and get that database
+in some specific state.
+
+66
+00:02:49,580 --> 00:02:52,040
+The procedure for doing
+that might be complicated,
+
+67
+00:02:52,040 --> 00:02:53,240
+might take a lot of work to do,
+
+68
+00:02:53,240 --> 00:02:55,350
+so simulating the database
+
+69
+00:02:55,350 --> 00:02:58,595
+instead might be a faster
+option through a mock.
+
+70
+00:02:58,595 --> 00:03:00,770
+The other cases would be that
+
+71
+00:03:00,770 --> 00:03:02,330
+the thing you're interacting
+
+72
+00:03:02,330 --> 00:03:03,760
+with doesn't actually exist yet.
+
+73
+00:03:03,760 --> 00:03:05,345
+Often it's common that
+
+74
+00:03:05,345 --> 00:03:07,040
+two different development
+teams will be
+
+75
+00:03:07,040 --> 00:03:09,290
+working on developing
+something for a product.
+
+76
+00:03:09,290 --> 00:03:11,570
+Neither one of the features
+will be complete yet,
+
+77
+00:03:11,570 --> 00:03:13,384
+you can use a mock to simulate
+
+78
+00:03:13,384 --> 00:03:17,180
+the feature that's in
+development from another test or
+
+79
+00:03:17,180 --> 00:03:18,860
+another development group
+while you're developing
+
+80
+00:03:18,860 --> 00:03:22,400
+your feature or in the case that
+
+81
+00:03:22,400 --> 00:03:25,115
+you're modeling what
+it's going to look like
+
+82
+00:03:25,115 --> 00:03:26,960
+if a feature changes
+
+83
+00:03:26,960 --> 00:03:29,180
+behavior from the way
+it is currently now.
+
+84
+00:03:29,180 --> 00:03:30,650
+Again, maybe that's
+something that's in
+
+85
+00:03:30,650 --> 00:03:33,040
+development on a different
+development team.
+
+86
+00:03:33,040 --> 00:03:35,330
+It's also really
+useful for testing
+
+87
+00:03:35,330 --> 00:03:38,765
+software components and
+isolating dependency.
+
+88
+00:03:38,765 --> 00:03:41,120
+If you're seeing a bug
+that's happening in
+
+89
+00:03:41,120 --> 00:03:42,230
+some interaction between
+
+90
+00:03:42,230 --> 00:03:43,715
+two different
+software components.
+
+91
+00:03:43,715 --> 00:03:45,875
+Having a mock helps
+you prove that
+
+92
+00:03:45,875 --> 00:03:48,260
+if I try to mock
+this same scenario,
+
+93
+00:03:48,260 --> 00:03:49,820
+I either can or can't reproduce
+
+94
+00:03:49,820 --> 00:03:51,875
+this with my component
+in isolation.
+
+95
+00:03:51,875 --> 00:03:53,480
+I can give you a
+lot of clues about
+
+96
+00:03:53,480 --> 00:03:56,190
+where the problem
+ultimately lies.
+
+97
+00:03:57,200 --> 00:04:00,070
+I'm going to go through
+some examples of how you
+
+98
+00:04:00,070 --> 00:04:02,470
+can use automated testing,
+
+99
+00:04:02,470 --> 00:04:04,945
+specifically with
+the unity framework.
+
+100
+00:04:04,945 --> 00:04:06,490
+This is all going to reference
+
+101
+00:04:06,490 --> 00:04:10,000
+a project that's linked
+here in the bottom of
+
+102
+00:04:10,000 --> 00:04:12,310
+the slide that goes
+through some content
+
+103
+00:04:12,310 --> 00:04:15,800
+from a previous lecture
+about time functions.
+
+104
+00:04:15,800 --> 00:04:18,550
+First, in order to do
+automated testing,
+
+105
+00:04:18,550 --> 00:04:19,780
+you got to start with something
+
+106
+00:04:19,780 --> 00:04:22,370
+that's interesting to test.
+
+107
+00:04:22,370 --> 00:04:24,245
+What I'm starting
+with, in this case,
+
+108
+00:04:24,245 --> 00:04:25,675
+is a time spec diff,
+
+109
+00:04:25,675 --> 00:04:27,760
+that's just going
+to return a result
+
+110
+00:04:27,760 --> 00:04:29,995
+that's the difference
+between two different times.
+
+111
+00:04:29,995 --> 00:04:31,615
+It's going to handle rollover.
+
+112
+00:04:31,615 --> 00:04:33,340
+That sounds like something
+that will be able to
+
+113
+00:04:33,340 --> 00:04:36,550
+test to make sure it's
+working properly.
+
+114
+00:04:37,280 --> 00:04:40,170
+If I wanted to use
+this with unity,
+
+115
+00:04:40,170 --> 00:04:42,500
+I could add some
+test functions and
+
+116
+00:04:42,500 --> 00:04:45,755
+just prefix those with
+names test underscore.
+
+117
+00:04:45,755 --> 00:04:48,110
+That includes some assertions.
+
+118
+00:04:48,110 --> 00:04:49,820
+Those assertions you
+probably noticed
+
+119
+00:04:49,820 --> 00:04:52,490
+in other test case definitions
+you've used for the class
+
+120
+00:04:52,490 --> 00:04:54,860
+already there going
+to be defined in
+
+121
+00:04:54,860 --> 00:04:56,840
+UD assertions reference and
+
+122
+00:04:56,840 --> 00:04:59,270
+just are things
+like test assert,
+
+123
+00:04:59,270 --> 00:05:03,020
+and then check for
+conditions like equal,
+
+124
+00:05:03,020 --> 00:05:04,340
+less than, greater than
+
+125
+00:05:04,340 --> 00:05:06,400
+something about two
+different values.
+
+126
+00:05:06,400 --> 00:05:09,425
+In this time-space diff case,
+
+127
+00:05:09,425 --> 00:05:11,180
+I'm going to first
+
+128
+00:05:11,180 --> 00:05:13,855
+create a time spec that's
+based on one second.
+
+129
+00:05:13,855 --> 00:05:16,775
+Then at time spec that
+is based on 1.1 second,
+
+130
+00:05:16,775 --> 00:05:19,040
+take the difference of
+those two and expect to get
+
+131
+00:05:19,040 --> 00:05:22,870
+0.1 for the time
+spec difference.
+
+132
+00:05:22,870 --> 00:05:25,575
+You can see that part
+of the assertion.
+
+133
+00:05:25,575 --> 00:05:27,200
+I can provide a
+message here that
+
+134
+00:05:27,200 --> 00:05:30,215
+says what I'm expecting in Y.
+
+135
+00:05:30,215 --> 00:05:31,985
+If the test fails,
+
+136
+00:05:31,985 --> 00:05:33,620
+this assertion is
+printed and I'll
+
+137
+00:05:33,620 --> 00:05:36,330
+have more information
+about what failed.
+
+138
+00:05:37,070 --> 00:05:39,455
+Then the next step,
+
+139
+00:05:39,455 --> 00:05:40,550
+once you have the test case to
+
+140
+00:05:40,550 --> 00:05:42,680
+find is you need a
+test case runner.
+
+141
+00:05:42,680 --> 00:05:44,540
+The runner is going
+to be the thing that
+
+142
+00:05:44,540 --> 00:05:48,080
+can actually create the
+main entry point for
+
+143
+00:05:48,080 --> 00:05:51,170
+your executable so
+that you can build
+
+144
+00:05:51,170 --> 00:05:52,820
+this an executable
+and it'll find
+
+145
+00:05:52,820 --> 00:05:55,720
+all the test cases and
+run them all for you.
+
+146
+00:05:55,720 --> 00:05:57,810
+Every test framework is slightly
+
+147
+00:05:57,810 --> 00:05:59,235
+different in how this works,
+
+148
+00:05:59,235 --> 00:06:00,750
+for unities there is
+
+149
+00:06:00,750 --> 00:06:04,820
+a Ruby generate
+test runner command
+
+150
+00:06:04,820 --> 00:06:06,785
+that you can use for this step.
+
+151
+00:06:06,785 --> 00:06:09,350
+This just requires
+you to install Ruby,
+
+152
+00:06:09,350 --> 00:06:11,687
+which is a one-line apt-get.
+
+153
+00:06:11,687 --> 00:06:15,885
+I've to get step 4
+Ubuntu, for instance.
+
+154
+00:06:15,885 --> 00:06:19,140
+Then you can run it something
+like this where you specify
+
+155
+00:06:19,140 --> 00:06:24,195
+the content that
+you're going to test,
+
+156
+00:06:24,195 --> 00:06:26,375
+and then the shared
+runner that you wanted to
+
+157
+00:06:26,375 --> 00:06:28,620
+create that pulls
+those test functions
+
+158
+00:06:28,620 --> 00:06:30,770
+out and runs them for you.
+
+159
+00:06:31,540 --> 00:06:35,030
+Then you can include this all in
+
+160
+00:06:35,030 --> 00:06:39,335
+a CMake configuration to
+create a new project,
+
+161
+00:06:39,335 --> 00:06:42,990
+and then add the
+Unity submodule.
+
+162
+00:06:44,080 --> 00:06:46,860
+The Unity submodule itself
+
+163
+00:06:46,860 --> 00:06:48,575
+includes a separate CMake step,
+
+164
+00:06:48,575 --> 00:06:50,365
+so CMake already will
+know how to build
+
+165
+00:06:50,365 --> 00:06:53,410
+that just from adding
+the subdirectory.
+
+166
+00:06:53,410 --> 00:06:56,190
+Then add all the
+include directories so
+
+167
+00:06:56,190 --> 00:06:58,350
+that reference includes from
+
+168
+00:06:58,350 --> 00:07:01,575
+Unity for things
+like assertions.
+
+169
+00:07:01,575 --> 00:07:05,145
+Then create that new
+executable Unity test here
+
+170
+00:07:05,145 --> 00:07:08,345
+that will build based
+on the C source files,
+
+171
+00:07:08,345 --> 00:07:09,900
+the test files, and
+the test runner
+
+172
+00:07:09,900 --> 00:07:11,810
+that we generated through
+that Ruby script.
+
+173
+00:07:11,810 --> 00:07:14,495
+Then link it with the
+Unity library that gets
+
+174
+00:07:14,495 --> 00:07:17,205
+built based on adding
+this subdirectory here.
+
+175
+00:07:17,205 --> 00:07:18,810
+These lines here to
+
+176
+00:07:18,810 --> 00:07:20,630
+your CMake project configuration
+
+177
+00:07:20,630 --> 00:07:23,420
+will set up a Unity unit test.
+
+178
+00:07:23,420 --> 00:07:27,350
+Then you can build and
+run the Unity unit test
+
+179
+00:07:27,350 --> 00:07:30,840
+and see here an output
+based on success or fail,
+
+180
+00:07:30,840 --> 00:07:32,100
+and you've probably
+seen this already
+
+181
+00:07:32,100 --> 00:07:35,160
+from your assignment
+implementations.
+
+182
+00:07:35,160 --> 00:07:37,770
+That covers the basics
+of how you can use
+
+183
+00:07:37,770 --> 00:07:40,145
+Unity with automated testing.
+
+184
+00:07:40,145 --> 00:07:44,145
+You can also use
+CMock as an extension
+
+185
+00:07:44,145 --> 00:07:45,880
+for Unity that will create
+
+186
+00:07:45,880 --> 00:07:48,000
+mocks and stubs for
+C functions for you.
+
+187
+00:07:48,000 --> 00:07:49,815
+This is a cool feature of Unity,
+
+188
+00:07:49,815 --> 00:07:52,835
+specifically, in the way
+that they do their mocks.
+
+189
+00:07:52,835 --> 00:07:54,600
+But what they essentially do,
+
+190
+00:07:54,600 --> 00:07:56,550
+is create fake versions
+of functions that are
+
+191
+00:07:56,550 --> 00:07:59,255
+outside whatever C
+module you're testing.
+
+192
+00:07:59,255 --> 00:08:01,500
+If you're testing a
+specific file and you're
+
+193
+00:08:01,500 --> 00:08:04,095
+calling another function
+that's outside that file,
+
+194
+00:08:04,095 --> 00:08:07,295
+CMock can create mocks
+for you that can
+
+195
+00:08:07,295 --> 00:08:12,090
+handle the function in
+specific ways that you define.
+
+196
+00:08:12,090 --> 00:08:14,775
+It uses the Ruby scripts to
+
+197
+00:08:14,775 --> 00:08:16,620
+auto-generate C source that
+
+198
+00:08:16,620 --> 00:08:19,275
+corresponds to whatever you've
+defined in a header file.
+
+199
+00:08:19,275 --> 00:08:21,730
+For instance, if you
+had a file 1.c and
+
+200
+00:08:21,730 --> 00:08:23,990
+that pound included NeatStuff.h,
+
+201
+00:08:23,990 --> 00:08:27,360
+and NeatStuff define
+these header files.
+
+202
+00:08:27,360 --> 00:08:28,590
+Then there will be
+
+203
+00:08:28,590 --> 00:08:31,650
+auto-generated sources
+that CMock will create
+
+204
+00:08:31,650 --> 00:08:33,760
+for you that will
+give you a bunch
+
+205
+00:08:33,760 --> 00:08:36,555
+of ways to interact with
+each one of these functions.
+
+206
+00:08:36,555 --> 00:08:38,690
+Each of these functions
+you can call,
+
+207
+00:08:38,690 --> 00:08:42,260
+will set up how the
+mock is going to handle
+
+208
+00:08:42,260 --> 00:08:43,940
+calls to these functions
+
+209
+00:08:43,940 --> 00:08:47,470
+from whatever file you're
+testing that uses them.
+
+210
+00:08:47,780 --> 00:08:51,060
+If you're testing
+code in a C file,
+
+211
+00:08:51,060 --> 00:08:54,060
+and that C file pound
+includes NeatStuff.h,
+
+212
+00:08:54,060 --> 00:08:56,400
+and then let's say
+it calls ParseStuff,
+
+213
+00:08:56,400 --> 00:08:58,365
+then instead of calling
+
+214
+00:08:58,365 --> 00:09:01,220
+the real ParseStuff
+in your real file,
+
+215
+00:09:01,220 --> 00:09:03,620
+it will get redirected
+to the mock.
+
+216
+00:09:03,620 --> 00:09:05,585
+In that case, the test case,
+
+217
+00:09:05,585 --> 00:09:07,715
+before it calls
+whatever function
+
+218
+00:09:07,715 --> 00:09:09,530
+is going to be
+called ParseStuff,
+
+219
+00:09:09,530 --> 00:09:12,225
+can set up how it wants
+the mock to behave.
+
+220
+00:09:12,225 --> 00:09:14,760
+ExpectAndReturn,
+will say that it
+
+221
+00:09:14,760 --> 00:09:17,085
+expects your code to
+pass something in,
+
+222
+00:09:17,085 --> 00:09:18,420
+and it will simulate
+
+223
+00:09:18,420 --> 00:09:20,760
+some value to return in
+this toReturn value,
+
+224
+00:09:20,760 --> 00:09:24,940
+so you can set up both how
+you expect the interaction to
+
+225
+00:09:24,940 --> 00:09:27,255
+be with the function as well as
+
+226
+00:09:27,255 --> 00:09:30,140
+what you want the function
+to return back as a mock.
+
+227
+00:09:30,140 --> 00:09:32,400
+IgnoreAndReturn could
+ignore whatever was
+
+228
+00:09:32,400 --> 00:09:34,685
+passed in and always
+return the same value.
+
+229
+00:09:34,685 --> 00:09:37,245
+Then StubAndCallback could just
+
+230
+00:09:37,245 --> 00:09:39,845
+take a function pointer
+that it calls to do
+
+231
+00:09:39,845 --> 00:09:42,360
+whatever logic you
+wanted custom based on
+
+232
+00:09:42,360 --> 00:09:43,775
+whenever that code is called
+
+233
+00:09:43,775 --> 00:09:46,760
+inside your test and
+see if function.
+
+234
+00:09:47,930 --> 00:09:53,190
+We can combine the Unity
+implementation with CMock
+
+235
+00:09:53,190 --> 00:09:58,790
+in another Unity extension
+called Ceedling.
+
+236
+00:09:58,790 --> 00:10:01,620
+Ceedling is a wrapper
+around CMock and
+
+237
+00:10:01,620 --> 00:10:04,260
+Unity and also CException;
+
+238
+00:10:04,260 --> 00:10:09,325
+a way to do exceptions
+in C. It will automate
+
+239
+00:10:09,325 --> 00:10:10,800
+all the steps associated with
+
+240
+00:10:10,800 --> 00:10:12,365
+generating those
+individual tests files
+
+241
+00:10:12,365 --> 00:10:15,455
+so that Ruby command that
+I mentioned previously.
+
+242
+00:10:15,455 --> 00:10:18,010
+It also brings in what's
+called the Rake framework,
+
+243
+00:10:18,010 --> 00:10:20,615
+which is a way to automatically
+
+244
+00:10:20,615 --> 00:10:23,380
+generate dependencies
+and build dependencies
+
+245
+00:10:23,380 --> 00:10:25,490
+based on Ruby files.
+
+246
+00:10:25,490 --> 00:10:28,140
+There is an example project in
+
+247
+00:10:28,140 --> 00:10:30,410
+the Ceedling example if
+you want to look at it,
+
+248
+00:10:30,410 --> 00:10:33,030
+but it is basically
+
+249
+00:10:33,030 --> 00:10:34,880
+just a more turn-key
+way of doing
+
+250
+00:10:34,880 --> 00:10:37,540
+unit based testing where
+you can install Ceedling,
+
+251
+00:10:37,540 --> 00:10:39,420
+create a new Ceedling project,
+
+252
+00:10:39,420 --> 00:10:42,010
+add any of your project files
+in the source directory,
+
+253
+00:10:42,010 --> 00:10:44,750
+and then use the test files
+in a test directory with
+
+254
+00:10:44,750 --> 00:10:46,640
+this specific pattern using
+
+255
+00:10:46,640 --> 00:10:48,470
+test filename and the tests
+
+256
+00:10:48,470 --> 00:10:50,300
+like we just discussed before.
+
+257
+00:10:50,300 --> 00:10:53,660
+Then just run Ceedling
+tests:all and that will go out,
+
+258
+00:10:53,660 --> 00:10:55,010
+build all the runners for you,
+
+259
+00:10:55,010 --> 00:10:57,300
+auto detect all your
+automated tests,
+
+260
+00:10:57,300 --> 00:11:00,360
+and update, and run every
+single time you call it.
+
+261
+00:11:00,360 --> 00:11:02,050
+This is a great tool to use with
+
+262
+00:11:02,050 --> 00:11:05,825
+automation to automatically
+pull in new tests
+
+263
+00:11:05,825 --> 00:11:08,430
+based on your source
+code and verify that all
+
+264
+00:11:08,430 --> 00:11:09,760
+of your unit tests are passing
+
+265
+00:11:09,760 --> 00:11:11,190
+as a part of an
+automated build test.
+
+266
+00:11:11,190 --> 00:11:16,710
+A second unit test framework
+
+267
+00:11:16,710 --> 00:11:17,920
+that I wanted to
+mention I've used in
+
+268
+00:11:17,920 --> 00:11:19,475
+the past is GoogleTest.
+
+269
+00:11:19,475 --> 00:11:23,115
+This one is a little
+more C++ centric,
+
+270
+00:11:23,115 --> 00:11:26,090
+so you have a project
+that's already using C++,
+
+271
+00:11:26,090 --> 00:11:27,615
+it might be a good
+one to consider,
+
+272
+00:11:27,615 --> 00:11:29,930
+whereas Unity kit is pure C
+
+273
+00:11:29,930 --> 00:11:32,705
+and can be used on
+pure C projects,
+
+274
+00:11:32,705 --> 00:11:34,710
+GoogleTest to C++ centric,
+
+275
+00:11:34,710 --> 00:11:37,755
+but it can also be
+used to test C files.
+
+276
+00:11:37,755 --> 00:11:41,110
+It uses C++ streams
+for little bit
+
+277
+00:11:41,110 --> 00:11:44,495
+more verbose exception handling
+and for error handling.
+
+278
+00:11:44,495 --> 00:11:48,130
+In my opinion, that's a little
+bit easier to enumerate
+
+279
+00:11:48,130 --> 00:11:51,220
+errors and make
+more verbose errors
+
+280
+00:11:51,220 --> 00:11:53,275
+talking about what
+the failures are.
+
+281
+00:11:53,275 --> 00:11:57,005
+It has a similar google mock
+framework for C++ mocks.
+
+282
+00:11:57,005 --> 00:12:00,780
+It's not maybe quite as
+automated as Unity is,
+
+283
+00:12:00,780 --> 00:12:03,650
+but it's still very functional.
+
+284
+00:12:03,650 --> 00:12:06,610
+It's used on OpenCV
+and ROS code bases,
+
+285
+00:12:06,610 --> 00:12:08,040
+so it's pretty popular,
+
+286
+00:12:08,040 --> 00:12:10,110
+and it's widely used,
+
+287
+00:12:10,110 --> 00:12:12,550
+likely to be around for awhile.

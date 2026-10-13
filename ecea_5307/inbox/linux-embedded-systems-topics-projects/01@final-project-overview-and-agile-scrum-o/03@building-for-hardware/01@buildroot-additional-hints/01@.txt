@@ -1,0 +1,63 @@
+In this video, I'm going to
+cover a few additional hints for using Buildroot, talking about how to optimize your Buildroot
+development workflow. These are things
+that have come up in the past with students projects, especially students
+using Buildroot. One thing that might be a little confusing when
+you're looking at Buildroot dependencies
+is, for instance, if you want to add
+bash to Buildroot, you might notice that under
+the shell and utilities menu, bashes are listed as an option. If you do a search for bash, you can learn more
+about why this is the case by looking
+closely at the output. If you're trying to
+figure out why bash is missing from the shells list, even though it's shown
+here being under target packages and
+shells and utilities, what you need to pay attention to is this
+depends on line. What this is telling you is that the bash package is
+only going to be shown if BR2_PACKAGE_
+BUSYBOX_ SHOW_OTHERS is set to true, and is currently set to false. The first thing you're
+going to have to do in order to enable our C BR2__PACKAGE
+bash as an option is to set the BR2_PACKAGE_
+BUSYBOX_ SHOW_OTHERS. If you search for that, you'll see that
+that's located under target packages and busybox. This is showing you the dependency that you
+need to have before you're going to be able to
+turn on at a target package. Pay attention to these
+if you're having trouble locating a
+specific package. Also wanted to mention some
+tips about cross compiling. I think we've mentioned
+this briefly before, but the way to optimize
+your development workflow around making
+frequent changes to source and recompiling
+Buildroot accordingly. The way we've setup our
+build so far with these commit hashes pointing to
+specific commits in our repo, the kind of brute
+force way to compile your source code would be
+to push the version to git, copy this commit hash
+and keep changing the version inside your make
+file every time it changes. But this is going to
+result in a lot of commits when debugging and
+it's going to be pretty slow. Is there a better way? Of
+course the answer is yes. You can use OVERRIDE_SRCDIR
+as a way to avoid this issue. From the Buildroot
+directory, you can run, make whatever your
+package name is, OVERRIDE_SRCDIR,
+and then point to wherever the location
+is of your source. Then you can use the
+same Buildroot commands to do assignment. For instance,
+aesd-assignments-rebuild. What this is going
+to do is ignore the version specified in
+your assignments make file and instead use the
+source from this directory, in this case the home directory. In order to use this
+with a different module, you just use the
+all caps version of whatever your module name is. Put all capital letters here and just add that
+before OVERRIDE_SRCDIR. If you want to start from
+an empty build output, you can say whatever
+your package name is, dirclean to start out with
+the clean build directory. Here's an example of when I use this OVERRIDE_SRCDIR command
+with a rebuild all step. If you look carefully
+at the output here, what you'll see is that it's synchronizing from a directory, in this case, my home directory that I specified
+here with SRCDIR. It's going to use
+the rsync command to keep the build directory used by Buildroot in
+sync with the one that I've specified as
+my OVERRIDE_SRCDIR. Anytime I make a change in my home directory and
+then run this step, it'll copy any changes in, and do the build from the Buildroot output,
+aesd-assignments-custom directory.

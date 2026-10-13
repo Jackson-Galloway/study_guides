@@ -1,0 +1,157 @@
+This is the second video in the series
+about bootloaders and device trees. So we're going to introduce some different
+bootloader options, U-Boot and UEFI. We're going to understand some basic
+device tree modifications for Raspberry, Pi and Beaglebone. And go through how the device tree works
+with those particular components that you might be using for your final project. So, UEFI is the Universal
+Extensible Firmware Interface. So this is something that's
+common on x86/x86_64 designs. It's also available on some designs. And if you're familiar with the old
+school bios that used to be a part or a standard part of the boot process for
+PCs, UEFI is the replacement for that. So, it's similar to the content we talked
+about in the previous video, it will use the same three phase bootloader type of
+description that we talked about there. So this might be one option
+that you have as a bootloader, especially if you're using x86 or
+x86_64 as your embedded system platform. The book also talks about several
+different other bootloader options in Mastering Embedded Linux Programming,
+chapter three. And here's a list that comes out of the
+book in terms of different bootloaders. The ones I've used personally
+are U-Boot and GRUB 2. I'm not familiar with the rest of these. And so, the book talks about some
+of the ways that you would pick a bootloader in the case that you have
+different bootloaders to pick from. So you would figure out, first of all,
+does it support your platform? Is it provided with your BSP? This is a big one, because most likely
+whoever develops your hardware is going to have a reference design. And if you can start with
+whatever they're using, that's often the best place to start. Is source code available? We've talked about that
+a lot in this class. That is a nice thing to have
+the availability to modify the source, if you need to. Or to try to figure out the problem,
+if there is a problem. And then especially,
+if you don't have source available, are you able to get support if needed? So again, a reason why you might
+consider open source solution, and GRUB and U-Boot would both be
+open source options as well as UEFI. So talking a little bit more about U-Boot,
+U-Boots, a pretty popular ARM bootloader. It started as an open source bootloader
+for PowerPC, and then was ported to ARM. So, it's pretty common to see
+that used on ARM platforms today. And if you take a look at how U-Boot build
+works, it's again, using that kconfig, defconfig type of setup that we've been
+familiar with in multiple different parts of this course already. So, it'll feel pretty similar to you with
+respect to building U-Boot as it would be with working with the Linux kernel. It builds uboot.bin an image file
+that's suitable for running directly on the device or programming into flash, and
+then loading from flash to our own device. And then depending on the architecture,
+it may also build that secondary program loader or the first thing that we run out
+of a RAM, basically, also known as MLO. Or so the really early stage bootloader
+is supported on several devices as well. Usually to install U-Boot, you'll need
+hardware specific instructions, and often, you'll need something
+like a JTAG programmer. So, this is probably the initial installs,
+probably going to happen during a factory programming step,
+an initial bring up of the hardware. It's also possible in some cases or some
+hardware architectures to load directly into RAM with JTAG, and then run out
+of RAM and bootstrap right into flash. So, you'll have to read the details of
+a specific device to figure out how you can get U-Boot installed. But there are a couple different ways that
+you most likely be able to install it. Once you have it installed and
+you're using it for kind of troubleshooting and bring up. There's a serial terminal you can
+use to access over a serial port. And so, again, that access will vary
+depending on which device you're using. But most devices are going to
+have some kind of capability for a serial port input to
+interact with U-Boot. And you'll be able to interact similar
+to the way you do from the Linux-Colonel end type. Except that the commands
+will be more limited, you won't be using anything like
+Bash scripting, for instance. There will just be a specific built-in
+set of commands that U-Boot supports. You can type help to
+see all those commands. And U-Boot ultimately, uses environment
+variables to either pass information or to script a series of actions and commands
+in order to get the boot complete. And those script commands are initially
+defined in header files for the platform, that are part of what you compile when
+you compile U-Boot for your platform. So, some of the basics of how
+to use U-Boot from the terminal. You can set environment variables
+with the setenv command. And you can save environment variables,
+then if you want to save them for persistent memory with
+the saveenv command. And then it also has commands that would
+let you load images into RAM from flash or tftp. It has commands to boot
+a kernel image from RAM. So an example of how you use this,
+you'd say bootm, and you'd give it the address of
+the kernel location in RAM. The address of the RAM disk or
+where the ramdisk is stored in RAM and the address of the dtb. So, it would obviously assume that you've
+been able to load these all into memory from some previous step. And that's where these commands to load
+images from flash or tftp would be useful. In the tftp case, what you're saying is especially from
+a development perspective, you've got a local server on your network that is
+able to serve up these binary images. So that you don't have to get
+the flash interface working, or you don't have to reprogram it every
+time you want to try a new image. Then the boot command is a variable that
+is run at power up that you can define with a series of commands
+that will ultimately, be used to boot up your device, get to
+the point of running the Linux-Colonel. So talking through some specific
+examples about how bootloader setup and device tree works for some of
+the hardware components that will use or you may be using this semester
+in your final projects. Any time you're talking about bootloader
+and device tree, in order to get past much more than generalities, you usually have
+to pick a specific hardware platform. Because this is going to
+be hardware specific. So, we'll go through a couple of
+specific hardware examples for Raspberry Pi and BeagleBone Black. Since those are some parts that you might
+want to use with your final projects. So the Raspberry Pi has something
+that looks sort of like a bios type of configuration that's driven
+by this config.txt file. And it's up to you to specify any
+customization that you want to the device tree. For instance,
+to use things like I2C, or SPI, or any hardware components that would be off
+by default in the Raspberry Pi build. And there are some links here too, some pages that talk about
+how you can configure it. It's a pretty simple text based format
+that's going to customize the device tree for you. So again, that configuration file is the
+equivalent of the bios that you'd find on a conventional PC or the equivalent
+of what's been replaced by UEFI. And these are stored in this text file,
+config.txt. And you can make the changes
+in that config.txt to change the device configuration. So for instance, if you wanted to change
+your device tree to turn on audio, use I2C,
+with a specific bit rate turn on SPI. That's an example, things you
+could do in that config.txt file, that's going to customize the content
+of the device tree binary for you. And there's a page we have
+in our hardware hints for the class that talk about how you could
+change config.txt on a running system. Using these mount commands to first
+create a location where you can mount the partition. And then mount this
+mmcblk0p1 to that location. And change whatever you
+want to in the config.txt. So, this hardware hints page
+talks about how to turn SPI on by changing this dtparam in config.txt. So, you might make a change to
+the device tree, and then wonder how can you verify that the change is actually
+made successfully on the running system. Or this might be a good way to
+troubleshoot, if you believe you've made changes, but you aren't seeing something
+available that you expect to be there. So this talks about
+the example of figuring out whether you have a spy turned on. And we talked about the device
+tree compiler as going from a text file to a binary file or a flattened
+device tree or device tree blob. But you can also go backwards
+with the device tree compiler, you can take the output and turn that
+back into a human-readable input. So, this is often useful for figuring out what device tree content
+is currently running on your device. So, if I take the dtc command and
+do a -I fs -O dts, what that saying? Is that the input is the sys
+fs file system tree, and the output is device tree source,
+so the human-readable content. And then if you look at that content, you can find the specific spy instance at
+a specific location in the memory map. And you can see that the change should
+be that it goes from disabled to okay, once you've configured it
+properly in your config.txt. So switching gears a bit and
+going to Beaglebone. There are some links here on this page
+that talked about what a student has done in the past to make some configurations
+to enable that PARCH on Beaglebone. And so, this is all shared as actually
+as a part of a extra credit step for their final project, so
+students can use it currently. But if you need to go
+through a similar process, there's some links here that show you
+the process the student went through in order to create the device
+tree modification for Beaglebone. And so again, a lot of this gets into
+the specific details for the platform, but it's ultimately, about making a change to
+the device tree, include file, this dtsi, device tree source include file. To include the specification for enabling specific pins for
+this uart1 functionality. And so, adding the definition
+of the pin control pins. And then specifying that
+definition here in the uart1, and specifically saying that we
+wanted to enable uart1 here. And so, what does this look like in
+order to actually make the change, or how do you figure out that this is
+where you need to make the change? You can start by looking at the REPO_URL
+that's used by the build road configure to see where the source codes coming
+from before they get kernel, or for the Linux kernel. And therefore, where the device tree
+include files are going to be built from. And then once you look
+at the content of that, you can see references to the dtsi,
+the device resource include file, and the place where we needed
+to add patches for uart. And within that you can see
+a reference to the uart1 definition that we've added in
+that previous include file. And in order to understand what the
+different values are you can enter here in this field for the device tree, there's
+a documentation directory under the kernel source that talks about the different
+properties you can specify. And so, this is where you can
+specify the list of names from the documentation specific to this part, that can reference the uart definition
+that we just declared in the dtsi file. So again, you kind of have to read this
+with the idea of digging into how it works on a specific platform, because all
+device trees are somewhat different. But here's some high level
+steps you can go through, if you find yourself in a place that you
+need to make device tree changes for the hardware platform that you're using.

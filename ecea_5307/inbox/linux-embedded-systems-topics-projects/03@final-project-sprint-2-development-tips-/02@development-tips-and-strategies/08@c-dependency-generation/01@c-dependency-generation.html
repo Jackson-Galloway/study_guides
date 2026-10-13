@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>C dependency Generation</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Autoconf/Automake is  a common choice on Windows</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~pdxoOEWdEeyoexKra-TnSQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~pdxoOEWdEeyoexKra-TnSQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Why should you use automated dependency generation in your project?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~z_UX_U4yEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Your project is large enough to make adding header files as prerequisites for make targets cumbersome.</p></div></li>
+<li><input name="autoGradableResponseId~z_UX_U4yEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Automatically rebuild object files when header files referenced with #include change for a given source file.</p></div></li>
+<li><input name="autoGradableResponseId~z_UX_U4yEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Your project doesn't use gnu make</p></div></li>
+<li><input name="autoGradableResponseId~z_UX_U4yEey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Automatically rebuild source files when referenced object files change</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is contained in a generated dependency .d file created by gcc -MDD option?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~bibVqE4zEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>A list of GNU Make formatted targets and dependencies</p></div></li>
+<li><input name="autoGradableResponseId~bibVqE4zEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Binary content describing headers referenced in C files.</p></div></li>
+<li><input name="autoGradableResponseId~bibVqE4zEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Binary content describing source dependencies</p></div></li>
+<li><input name="autoGradableResponseId~bibVqE4zEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Dependent object files generated from the compile process</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You are installing a Linux package which references ./configure &amp;&amp; make &amp;&amp; sudo make install as the commands to use when building and installing from source.  Which framework was most likely used as the build tool for the project?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~_JCBZk4zEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Autoconf and Automake</p></div></li>
+<li><input name="autoGradableResponseId~_JCBZk4zEey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>CMake</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a reason to use automake for your project dependency generation instead of GNU Make?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qDc5Kk40Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Better support for Windows builds</p></div></li>
+<li><input name="autoGradableResponseId~qDc5Kk40Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Tighter integration with a GNU software defined workflow</p></div></li>
+<li><input name="autoGradableResponseId~qDc5Kk40Eey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>Supports targeting more Linux based platforms</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What are some benefits of using CMake for dependency generation when compared to GCC Make or Autotools/Automake?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~FvYOSE41Eey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Supports additional project output formats like visual studio projects and workspaces</p></div></li>
+<li><input name="autoGradableResponseId~FvYOSE41Eey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Capable of generating GNU makefiles</p></div></li>
+<li><input name="autoGradableResponseId~FvYOSE41Eey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Fewer configuration lines required for basic projects</p></div></li>
+<li><input name="autoGradableResponseId~FvYOSE41Eey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Better support for building projects on Windows platforms.</p></div></li>
+<li><input name="autoGradableResponseId~FvYOSE41Eey9LQpW7t9tew" type="checkbox"/> <div class="quiz-option-text"><p>Works with GCC compiler</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which build tools are capable of being used in buildroot package makefiles?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nlYe4U41EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>CMake</p></div></li>
+<li><input name="autoGradableResponseId~nlYe4U41EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>GNU Make</p></div></li>
+<li><input name="autoGradableResponseId~nlYe4U41EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Autoconf/Autotools</p></div></li>
+<li><input name="autoGradableResponseId~nlYe4U41EeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>None, buildroot requires custom implementations for package build makefiles.</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

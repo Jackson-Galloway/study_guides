@@ -1,0 +1,391 @@
+In this video, I'm going to do an overview of Assignment 8, and we'll talk about some specific
+implementation suggestions, leveraging the things
+that we've already talked about regarding driver, read, write, and open
+function implementations. First, let's just go over
+the content of Assignment 8. For your Assignment 8 overview, your repository setup's
+going to look like this. GitHub Classroom
+is going to create an empty Assignment
+8 repository. You're going to ultimately push either Buildroot or
+Yocto scripts into this. For Assignment 8, you can pick whether you want
+to use Buildroot or Yocto, and you'll base then on your appropriate either Assignment
+5 or 6 repository, depending on whether you're
+using Buildroot or Yocto. You'll start by merging the
+Assignment 8 branch into your Assignment 3 repository from the base aesd assignments. This is going to bring in
+a bunch of starter code that's used to give
+you the framework that you need to build your
+device driver implementation for Assignment Number 8. Whatever Buildroot or Yocto implementation you choose for your Assignment 8
+implementation, you're ultimately
+going to be again referencing your
+Assignment 3 repository, which is going to be
+updated to include not only your aesd
+socket application, but also your kernel
+device driver that you'll write for
+Assignment Number 8. You'll also merge in whichever repository you choose for your implementation
+for Assignment 8, you'll merge in the associated
+Assignment 8 branch from the base repo for
+either Buildroot or Yocto, they'll pull in the
+automated test that you'll use to verify your
+complete implementation. The functions in main.c you'll see inside the
+aesd char driver, there's a main.c
+and there's a bunch of TODO operation or
+comments in there. What you're going to do is
+replace those TODO steps with the steps that actually implement the
+implementation below. Your device driver
+is going to install a dev aesd char device
+in the file system. You have two different ways
+to install and run this. For grading purposes,
+you need it installed in your QEMU virtual machine, but for development purposes, you might want to actually
+build it and run it inside either your
+virtual machine or your Linux hosts depending on how you're doing your builds. One important thing
+I want to note here is that if you are using
+a virtual machine, please take a snapshot. Because it's possible
+that you could corrupt your virtual machine disk if you have problems
+developing your driver, and so a snapshot would possibly prevent
+you from having to reinstall from scratch and
+losing some of your work. I'd also suggest to make
+commits and push up to GitHub often to avoid losing work because if there are bugs
+in your kernel driver, you can definitely get in a situation where your virtual machine
+doesn't boot anymore. The dev aesd char device
+is really going to use that circular buffer
+implementation that you develop with
+Assignment 7 and add some new code that's
+going to interact with aesd socket application. The main difference really from the implementation that we did in unit tests
+for Assignment 7 is that rather than work on
+fixed strings like we did with the test case
+for Assignment Number 7, you're going to be allocating
+memory in your driver for every write command
+as it's received, and you're going to be
+supporting any length of write request up to whatever you
+can support with kmalloc, and then saving that write command within allocated memory. The command is still going to be terminated with a
+newline character, as we've done with aesd
+socket application. Any writes function
+call in your driver that doesn't end with
+a newline character, should just be saved
+and appended to future writes operations until
+that full command is sent. The driver should save
+the content for the most recent 10 writes commands. Then the memory associated
+with writes commands more than 10 writes
+ago must be freed. You can see how this is essentially mapping to the
+same thing that you've implemented from Assignment
+7 in your unit test. The write position and write
+file offsets can be ignored. Every writes just
+going to write to the most recent history
+in the history buffer, or if you have a command
+that you've started, that you haven't terminated
+with a newline character, it's just going to
+append to that command. You can use kmalloc
+for all allocations and you can assume that
+the writes are going to be small enough to work
+properly with kmalloc. Then that's how you
+handle writes on the read from your
+/dev/aesdchar end point. You're just going to return the content of the
+most recent write commands in the
+order that they were received on any read attempt. You do need to use the position specified in the
+read function to your driver to determine
+the location that you should read from and the number of bytes you need to return. You need to honor the
+count argument that's specified in the
+read function to return only up to the first count number of bytes of all the bytes
+that are available. You need to do the appropriate
+locking to make sure your safe multithread,
+multi-process access. There's a driver test
+script that we'll talk about in more detail
+that will test your driver in isolation
+to make sure that it's meeting up with all
+these requirements here. Once you get the driver
+implemented and working, you're going to swap out your socket server
+implementation. Rather than a writing to that
+/var/tmpaesdsocket file, you're going to write into
+your char device instead, and so the aesd char device going to fill the function that our device driver did before, and it's going to mean that the writes that happened
+from aesd socket, use the same logic
+that we described above in terms of how to handle commands
+and the number of commands that are supported
+in the history buffer. You'll add this
+build switch upon defined that controls how
+your socket server works, and redirects it to this instead of the
+/var/tmpaesdsocketdata. We had some locking that we added before around
+/var/tmpaesdsocketdata, but since we're doing
+locking in the driver now, we can remove that from the
+aesd socket applications, so that's part of what this
+bill switch should do. Then remove that timestamp
+printing that we added as an addition in previous assignment and just read or write directly
+from /dev/aesdchar, the commands that are
+received over the socket. Then you can roll back to the sockettest script that's
+used with assignment 5 that doesn't validate
+timestamps and test your socket test
+script targeting your /dev/aesdchar device instead of the
+/var/tmpaesdsocketdata. Then once you get
+everything working in your Ubuntu installation, you modify your builder or Yocto implementation to install those updated versions
+in your QEMU instance, and then verify again
+that it works with sockettest application
+from within QEMU. Then tag your repository to track the fact that you've
+completed the assignment. There's some steps here
+that show you how to enable the memory leak detector. Again, one of the
+biggest changes is that you're going
+to be implementing dynamic memory allocation to the circular buffer
+implementation that you had with assignment 7. This is going to help you
+verify that you don't have any memory leaks inside
+your driver application. Summarizing at a high level what we're going to
+do with assignment 8. The first steps talk
+about how to make this stand-alone driver
+test implementation. We're going to have
+/dev/aesdchar, and we're going to have the
+driver test script, and we're going to verify
+that you're driver works the way it's
+supposed to for the cases that we care about
+with this test script. Then the next step will be to tie it in with your aesd
+socket application, so rather than writing to
+/var/tmpaesdsocketdata, your aesd socket is
+just going to be pointed at /dev/aesdchar, and then you can use the
+same sockettest script to drive your aesd
+socket application, but the reads and writes
+are also going to be going through your
+/dev/aesdchar device. You're going to
+test everything in one group as a part
+of validation here. Again, a difference
+between assignment 7, circular buffer implementation, and unit test, and what we're doing
+with assignment 8, in the unit test for assignment
+7, we use constrains. We didn't have any
+dynamic allocation. But in assignment 8, you're going to need to allocate memory dynamically within
+your Kernel driver. You should think about
+when you'll need to free memory from the circular buffer, and really it needs to be
+before you overwrite an entry. You have to keep track of the
+memory that you allocated, and you have to free that memory before you replace it
+with something else. When you're putting
+a new command in the circular buffer
+and the buffer was full, that means that
+you're essentially replacing one of the commands
+that was already there, and you need to de-allocate the memory that's
+associated with that. If you need to handle that from your driver and you're calling your circular buffer function, how could you communicate that back to your driver that you need to free this
+particular pointer? Well, there's a lot of
+different ways you could do it, but I'll suggest one
+that you could think of, which is that you could
+return a pointer with whatever buffer that was
+removed by the add function. Here's an example of how
+you could implement. Again, you don't have
+to implement this way, but this is one way that
+you could implement. You could take that aesd
+circular buffer add entry function that we
+use for Assignment 7, and then you could make
+it return either null or if an entry was replaced, it could return the pointer that's associated
+with that entry. That would allow a color to conditionally
+free that pointer. If you wanted to test
+that in user space, you could make the
+right circular buffer packet test function. Actually check to see that when the buffer is full that
+the value that was returned here from the
+add circular buffer entry was equal to the value
+that you expect to return, and if the buffer wasn't full
+that that value was null. Here's an example of how you could write an implementation
+that works with the new requirement for your
+kernel driver and verifies that it works correctly in userspace before you try to
+implement in the kernel. The aesd circular buffer, C and H files, you might have
+noticed these lines that check for kernel and include Linux string
+versus string and same with these
+standard def, standard types, standard in. The reason for doing
+this is so we could compile these in either unit
+test or in kernel context. This allows you to share the implementation of your
+circular buffer C and H file with either the unit
+test that run in user space or with kernel context that
+compile for your driver. If you are careful about whatever you
+add to make sure that you include the
+appropriate header files for kernel or user space
+in these sections, what it means is that
+you could still run your unit tests against
+any modifications that you make and verify that you haven't broken anything with any changes that you made to the circular buffer
+implementation. One of the main reasons
+for doing this is that it's way easier to debug code in user space
+than it is in kernel space. The more logic that you can keep tested and working
+in user space, the more likelihood that you're not going to have to do
+the debug in kernel space, which is going to be significantly
+more difficult to do. Also, there are PDEBUG options that work for either user space
+or kernel space, and so if you use
+this PUDEBUG macro, you can automatically
+redirect prints either to printk in the D message log. If you're using kernel builds or to standard error if
+you're using userspace. So do definitely use these add prints that
+help you debug this and use this AESD-DEBUG
+flag to turn them on or off depending on whether
+you're debugging your driver. One of the things
+that you'll notice in aesdchar.h example
+that's provided with you as part of the aesd
+Assignment 8 branch, is there's a definition for the aesd def struct and there's a char device structure
+that's set up for you to make the dev
+aesd char device. But what you need
+to think about is what else am I going to need? To support your Assignment
+7, circular buffer, you'll want to include that
+circular buffer structure and the associated things that
+you need for that code. Then you'll probably
+want a working entry for aesd buffer because if you remember the
+assignment requirements, it says that we might need to buffer some data before
+we write the command into the circular buffer because we're handling writes
+before we get a new line and we want to just keep
+appending those rights until we see a new line and a command
+that we added to the buffer. You might want to have an
+aesd buffer entry value here that you use for that purpose.
+What else will you need? Well, again, removing, locking out of the aesd
+socket and into the driver. You're going to need to use some locking
+primitive like we've talked about in previous videos. This is the code that's
+already written for you in aesd init module. A lot of the setup work
+is already done for you in terms of creating
+a device endpoint. What you need to do
+is all the things that you've added to the structure that's
+associated with your device, you're going to need
+to be initializing them here in init module. The locking primitive, for instance, that we talked about, you're going to need
+to be initializing the locking primitive here in
+this part of the code. You can see that
+we've already set up function pointers for
+read, write, open, and release, and
+we've already set up the cdev function for you that actually adds the device
+into the Linux kernel. There's a cleanup function
+here that happens as a part of the driver release
+that has a TODO. The important thing
+for you to do here is to balance whatever you're doing in this
+part of the code with whatever you're doing here. If you're allocating memory, you'd need to free memory here. If you're initializing
+primitives, you need to make sure
+that when you're at this point of the function, you're not going to be using those locking
+primitives anymore. The open function that's implemented is today
+not doing anything, but you will need to
+modify this to set up the file pointer
+private data with the aesd device structure. How would you get a pointer
+to the aesd_dev structure? You can use inode->i_cdev with
+container_of and you'll be able to use that to
+figure out where the start of the
+aesd_dev structure is, based on where this cdev
+is located in memory. Go back and look at
+the examples that we did with container_of or the Linux Device Driver source code to see
+how to do that. For the read function,
+the aesd_read, the file pointer is going to have that private
+data member setup, and you can use that to get a pointer to the
+aesd_dev structure. Then the buffer is going to be the buffer that
+you're going to fill for the
+read_from_user space. Would we be able to
+access this buffer directly? Answer is no. You're going to need
+to use copy_to_user so that you can copy from kernel space into user space as a part of that read function. Then the count here is going
+to be the max number of writes to the buffer. You may want or need to
+write less than this, and we'll talk about strategies
+for this in a minute. The last parameter to read
+is the file position, which is the pointer
+to the read offset. That's going to reference a location in your
+virtual device. In our case, our
+virtual device is just a wrapper around
+the circular buffer. It's going to reference a specific byte in
+the linear content. In other words, if you were to put our commands
+one right after another, the file position
+would reference a specific byte in that list of commands that are saved
+in our circular buffer. The specific byte is going to be referenced by the char_offset in the circular buffer function that you've already written to access specific points
+within the circular buffer. We've implemented
+in Assignment 7 in a way that's going
+to directly map into what we need
+to do for read. You'll start the
+read at this offset, and then you'll update
+this pointer to point to the next
+offset that will be read based on how
+many bytes you're returning as a part of
+the aesd_read function. A little bit more about what to return from your
+aesd_read function, if you return the value
+that equals the count, you're telling user space that you've transferred the
+requested number of bytes. Everything that was requested here was returned
+in this buffer. But if you return something
+between zero and count, that means that only a portion of the total amount
+requested has been returned. There's a partial read rule here that determines how you can use this that's really helpful for our implementation and we'll talk about it in the next slide. If you return zero here, that means that
+there's end of file and no data read
+into the buffer. That's appropriate when you've completely exhausted
+the content in your circular buffer and there's nothing left
+to send to the user, which could be that
+you've already read everything out or there was
+nothing there to begin with. You'd want to return
+negative on error so, ERESTARTSYS, EINTR, or EFAULT. So ERESTARTSYS for instance, if you have a case where you are interrupted in interruptible
+mutex wait for instance, and -EINTR for other cases where you need to handle interrupts or -EFAULT
+is cases where, for instance, you
+couldn't allocate memory within your driver. The partial read rule that
+we'll use here for setting the return value of aesd_read, we don't have to return
+again the full count of bytes that are requested
+with our read function. Instead, we can just return some portion of the
+amount of data available. A way that you can
+simplify the logic for Assignment 8 is you can
+define the amount that you're going to return
+from your read function as one single circular
+buffer entry. This means that the offset is going to tell us
+which entry we're in, and we're just going
+to read the content of that entry into the buffer and return the total number of size of bytes that we're
+reading based on that offset. We'll make user space calls again to read from
+the next offset. As long as you
+update this pointer correctly to point
+to the next offset, in this case the next command
+in our circular buffer, then the user space will just keep calling
+your read function, keep reading one command
+after another until it reads your entire circular
+buffer content out. It turns out this can
+make our logic and our driver quite a bit
+easier to implement. I encourage you to look
+at how to implement the partial read
+rule and just read one command at a time
+from your driver. This will be transparent from the perspective of using
+a command like cat or fread from user space because all this
+will be handled in the background for you by the multiple calls
+to the read command. For a right implementation, we're going to do this slightly different than you normally would if you were implementing
+write and driver. Normally, this file
+position would point to the location where the write
+should start in the buffer. But to make things
+simple in Assignment 8, we're just going to ignore that. Always, every write is
+either going to append to the command that's being written when there's no
+new line received, or it's going to write
+the entire string into the command buffer whenever a new line is received as
+a part of the command. Similar with write,
+we need to think about what our return
+values are going to be. If the return value equals
+the count that you specified, you're telling the
+user space that you've written the
+requested number of bytes successfully. If it's positive, but
+smaller than count, then that means that
+only part of it's been written and you're telling user space to retry the command. If you return zero, you're telling user space
+that nothing's been written and user space is probably going to retry
+the command in that case. This is most often seen when you're first
+bringing up the application. You're saying, why
+is my application hanging when I attempt
+to do the first write? It's probably that you're
+not returning the right size here in your
+aesd_write function. You can use a
+negative return here to indicate that an
+error occurred, ENOMEM, if you weren't able to allocate memory or EFAULT if there was some other thing that occurred
+that you can't handle. Talking a little bit
+more specifically about the drivertest script that we'll use to verify
+our driver and operation. If you look at what this
+is doing under the hood, we're referencing our
+device as /dev/aesdchar, and we're just doing simple
+echo commands to write numbered write commands
+into our circular buffer. Every one of the write
+commands is going to write one string that says, write1,2,3,4,5,6,7,8,9,10,
+and you can see that this would just completely fill up our circular buffer
+with 10 write commands. What we do then in
+the driver test is we build an expected
+file that says, I expect that when I
+read out the content of the /dev/aesdchar device, I should see every write
+that I did in order to return back out
+of the device. This double arrow EOF syntax
+is what's called a heredock. What this is really just
+doing is creating a file that contains the contents
+that's between these two EOF. This is a helpful thing that you can do when you write scripts. There's some information about heredoc link in the slide here, if you want to read
+more about it. Then this function check_output is just going to see when we read the content
+out of our device, doesn't match what we thought
+it should match based on our expected file that we set up previously with the heredoc. Then, if we verify that that first simple
+case works properly and you can fill
+the device up with write 1-10 and get those
+same write 1-10 back, the next thing that
+drivertest script does is just add an 11th write. This is going to roll over the circular buffer
+implementation. Now, you should see that write1 disappears and you
+have write2 through 11 as a part of your
+device implementation, as a part of the response
+from your device driver. Then I want to verify that part. There's a slightly
+more complicated test here that is going
+to verify that that logic about
+handling partial writes is implemented properly
+in your driver. Echo -n is going to say, write this without a new line. It's going to allow
+us to conditionally append to a command that we're writing from echo. W-R-I-T-E-1, here we're writing the write1
+command to the buffer, without actually
+writing new lines for the first three steps. It should be equivalent to just doing one echo of write1, and this is just making
+sure that your device driver's able to
+handle this case and handle multiple writes
+that keep appending to a single circular buffer
+entry, and same with write10. Handle both cases there properly within
+your device driver. We're going to expect
+the same write1 through 10 output of your circular
+buffer after we write this.

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>File I/O</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Select all of the combinations of commands which correctly open a new file for writing at /existingpath/newfile which will be readable by anyone assuming a umask of 022</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~280Bm_rMEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>open ("/existingpath/newfile", O_RDONLY); </p></div></li>
+<li><input name="autoGradableResponseId~280Bm_rMEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>open ("/existingpath/newfile", O_WRONLY);; </p></div></li>
+<li><input name="autoGradableResponseId~280Bm_rMEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>open ("/existingpath/newfile", O_WRONLY | O_CREAT); </p></div></li>
+<li><input name="autoGradableResponseId~280Bm_rMEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>open ("/existingpath/newfile", O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG ); </p></div></li>
+<li><input name="autoGradableResponseId~280Bm_rMEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>open ("/existingpath/newfile", O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG | S_IROTH ); </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select any problems with the following code snippet:</p><img alt="Question2_image.png" src="Question2_image.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~D4yI4_rNEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>In line 6, nr should be checked for 0 value to indicate success instead of comparison with -1 </p></div></li>
+<li><input name="autoGradableResponseId~D4yI4_rNEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>In line 6, nr should be checked for sizeof (unsigned long) to indicate success instead of comparison with -1 </p></div></li>
+<li><input name="autoGradableResponseId~D4yI4_rNEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>In line 4, the open() command should specify an access mode in a 3rd argument</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You should always use O_NONBLOCK with the open() command, even if your application thread does <strong>not</strong> have any other work to do while waiting to read from an open file descriptor.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~PjFNbvrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~PjFNbvrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select any problems with the code below (select any which apply)</p><img alt="Question3_image.png" src="Question3_image.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WyR-nvrNEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>In line 4, open arguments won't provide desired access. </p></div></li>
+<li><input name="autoGradableResponseId~WyR-nvrNEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>In line 6, write arguments are incorrect.</p></div></li>
+<li><input name="autoGradableResponseId~WyR-nvrNEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>In line 7, comparison should be with a different value to ensure successful completion on all architectures.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>write() commands typically do not complete writes to disk before returning success status.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~kPi1F_rNEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~kPi1F_rNEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A write() command writes directly to disk, meaning a successful response indicates data has been stored on disk.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nFIhsfrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~nFIhsfrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the best way for synchronizing file write to disk for a single file with descriptor fd.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qGKCtvrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>fsync(fd) </p></div></li>
+<li><input name="autoGradableResponseId~qGKCtvrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>sync() </p></div></li>
+<li><input name="autoGradableResponseId~qGKCtvrNEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>write(fd) with mode O_NONBLOCK </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Seeking 1GB past the end of the file and then writing a single byte to the file will increase a Linux filesystem's disk usage by approximately 1GB.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~aIKDxfrPEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~aIKDxfrPEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Seeking past the end of the file with lseek() is allowed, and can be used to create sparse files.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~d2pt0PrPEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~d2pt0PrPEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Using select() or poll() is generally a more preferrable solution than using O_NONBLOCK for non blocking file I/O.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~hCFwD_rPEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~hCFwD_rPEeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select any reasons() multiplexed File I/O may be better than O_NONBLOCK non blocking File I/O for an application which needs to monitor several file descriptors with little to no work to do when waiting.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~lIEtbfrPEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>Multiplexed file I/O schemes support notifications for multiple file descriptors in a single call. </p></div></li>
+<li><input name="autoGradableResponseId~lIEtbfrPEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>Multiplexed file I/O supports sleep during blocking states. </p></div></li>
+<li><input name="autoGradableResponseId~lIEtbfrPEeuKfAq2_bz6Sw" type="checkbox"/> <div class="quiz-option-text"><p>None of the above, O_NONBLOCK is almost always a better solution than multiplexed File I/O. </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is the behaviour of  lseek() origin argument <strong>SEEK_END </strong>, where lseek is defined as follows:</p><p>off_t lseek (int fd, off_t pos, int origin);</p><p>and the arguments are specified as:</p><p>lseek (fd,0,origin);</p><p>With 0 in pos argument and origin specified below</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~K5lGbAhvEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>Does not move the file position</p></div></li>
+<li><input name="autoGradableResponseId~K5lGbAhvEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>Sets the file position to the end of the file</p></div></li>
+<li><input name="autoGradableResponseId~K5lGbAhvEeyZrg4MEWp6hQ" type="radio"/> <div class="quiz-option-text"><p>Moves the position to the beginning of the file</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+In this assignment,
+we're going to go over Part 1 of Assignment 7, which is bringing in the circular buffer
+implementation that you'll use with Assignment 8. You'll start with your
+Assignment 3 repository and you'll bring in the
+assignment-7 branch of ASD assignments. What you'll see when you
+follow these steps to merge is that this ASD circular buffer file's
+going to be added. You'll notice some
+stub functions in here that match some of the conversation in a video content about how to
+implement a circular buffer. We're going to be implement
+it in a way that will let us reuse it with
+assignment number 8. We'll essentially be
+starting assignment 8 with this implementation
+of circular buffer that we'll test natively first. Well, so we'll get
+this all running natively on our host, and that way when we
+go to Assignment 8 and try to compile it
+into our Kernel Driver, we'll already have a
+unit-tested implementation. Follow the notes and lecture
+and the to-do messages here to implement
+your circular buffer such that it's going to
+pass through unit test. Then tag the assignment
+3 repository with a complete tag so that
+we know which commit matched up with your
+Assignment 7 implementation. Your implementation
+for Assignment 7, if you run the full test script, you should see it
+pulling in some tests of your circular buffer
+and run those all through the unit test script and all of those tests should pass. Once you get this complete
+with success message, you're done with part one
+of assignment set up.

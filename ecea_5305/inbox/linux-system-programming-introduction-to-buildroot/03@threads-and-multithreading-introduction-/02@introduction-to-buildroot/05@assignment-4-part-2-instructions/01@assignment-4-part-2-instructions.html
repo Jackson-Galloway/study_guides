@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 4 Part 2 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2><strong>Assignment 4: Buildroot Environment Bringup</strong></h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view, as highlighted below.</p><h2><strong>GitHub Repository Start Instructions</strong></h2><p>Your assignment 4 buildroot repo should start with template <a href="https://github.com/cu-ecen-aeld/buildroot-assignments-base"><u>buildroot-assignments-base</u></a> repository containing buildroot starter code.  You will make changes to both your Assignment 4 repository and your assignment 3 repository to complete this assignment.  Your assignment 4 repository will contain buildroot scripts and your assignment 3 repository will contain the source code for your finder application, which will be ultimately cross compiled and placed in your buildroot built root filesystem.</p><p>Start this assignment by creating an empty Assignment 4 repository using "GitHub Repo Creation Links" section under course resources.  <strong>Do not attempt to use any of your previous assignment repositories for your assignment 4 repository content and the instructions below.</strong></p><p>
+<strong>Don’t follow the instructions on the associated assignment 4 github page to add a README commit</strong>. To setup your assignment 4 buildroot repo, instead use these commands:</p><ul><li><p>git remote add buildroot-assignments-base <a href="https://github.com/cu-ecen-aeld/buildroot-assignments-base.git">https://github.com/cu-ecen-aeld/buildroot-assignments-base.git</a></p></li></ul><p>This specifies the base repository at <a href="https://github.com/cu-ecen-aeld/buildroot-assignments-base.git"><u>https://github.com/cu-ecen-aeld/buildroot-assignments-base.git</u></a>  with example starter code</p><ul><li><p>git fetch buildroot-assignments-base</p></li><li><p>git merge buildroot-assignments-base/master</p></li></ul><p>This command makes your master branch match the master branch of   <a href="https://github.com/cu-ecen-aeld/buildroot-assignments-base"><u>buildroot-assignments-base</u></a></p><ul><li><p>git submodule update --init --recursive</p></li></ul><p>This command clones the <a href="https://github.com/cu-ecen-aeld/assignment-autotest"><u>assignment-autotest submodule</u></a> and nested git repositories,</p><h2><strong>Repository Setup:</strong></h2><p></p><img alt="image.png" src="image.png"/><h2><strong>Suggested Reading:</strong></h2><ul><li><p>Buildroot documentation, including:</p></li></ul><ol type="1"><li><p><a href="https://buildroot.org/downloads/manual/manual.html#requirement-mandatory"><u>https://buildroot.org/downloads/manual/manual.html#requirement-mandatory</u></a></p></li><li><p><a href="https://buildroot.org/downloads/manual/manual.html#customize"><u>https://buildroot.org/downloads/manual/manual.html#customize</u></a></p></li><li><p><a href="https://buildroot.org/downloads/manual/manual.html#generic-package-tutorial"><u>https://buildroot.org/downloads/manual/manual.html#generic-package-tutorial</u></a></p></li></ol><ul><li><p>QEMU Documentation and network options:</p></li></ul><ol type="1"><li><p><a href="https://qemu.readthedocs.io/en/v9.2.4/system/invocation.html">https://qemu.readthedocs.io/en/v9.2.4/system/invocation.html</a></p></li></ol><h2>
+<strong>Setup Github Actions</strong></h2><ul><li><p>See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions</u></a></p></li><li><p>For this and later buildroot assignments you need to setup your SSH key as a repository secret.</p></li></ul><h2><strong>Implementation:</strong></h2><ol type="1"><li><p>After accepting the classroom assignment, your buildroot project repository will be created with a base_external directory at the root which you will update to contain your buildroot image customizations.</p></li><li><p>Add all mandatory packages to your build system as listed in the buildroot documentation.  Many of these packages/utilities will likely already exist in your build host.  Use the which  command to verify.  You may also refer to the assigment 4 buildroot section of https://github.com/cu-ecen-aeld/aesd-autotest-docker/blob/master/docker/Dockerfile for the packages installed in the automated test runner.</p></li><li><p> Add buildroot as a git submodule in the root of your project repository using git submodule add.  If you aren't familiar with git submodules, see https://git-scm.com/book/en/v2/Git-Tools-Submodules for background.</p></li></ol><p>        a. Use https://gitlab.com/buildroot.org/buildroot/ as the source</p><p>        b. Use the tag <strong>2024.02.13</strong> as the Buildroot release to target.</p><p>        c. Be sure to git add your buildroot submodule directory from the root of your project repository and git commit to save the appropriate commit hash for the buildroot directory before running ./build.sh.</p><p>4. Update provided files in buildroot-assignments-base to complete the addition of a package aesd-assignments in the base_external/package directory and any other required files using the instructions discussed in the assignment video. This package should build applications based on your assignment 3 and later source repository using the git site method <strong>and the ssh url (not https)</strong> and include the tester.sh, writer application (cross compiled for the target) and finder.sh scripts in the /usr/bin directory of the rootfs, as well as any dependencies for these files (including the content in the conf directory).</p><p>        a. Add base_external/Config.in, external.mk and external.desc files using project_base as your external name in external.desc</p><p>        b. Modify your finder-test.sh to run with necessary files found in the PATH.</p><p>                i. In other words, you should be able to run /path/to/script/finder-test.sh and the script should run successfully, assuming all executables are in the PATH and config files are at /etc/finder-app/conf. This change will be added to your assignment 3 and later source repository.  The point of this step is to ensure you can run the finder-test.sh script using /usr/bin/finder-test.sh and all scripts and executables needed by finder-test.sh will be located on the target qemu rootfs.</p><p>        c. Modify your finder-test.sh script to write a file with output of the finder command to /tmp/assignment4-result.txt</p><p>5. Run ./build.sh the first time</p><p>        a. This will generate a default buildroot/.config using qemu_aarch64_virt_defconfig.</p><p>6. Run ./save-config.sh to save this configuration to your project specific defconfig file.  Your base_external/configs/aesd_qemu_defconfig content should now  be updated to reflect the content in buildroot/configs/qemu_aarch64_virt_defconfig</p><p>7. Select the aesd-assignments package you added in your buildroot configuration to add it to your image using make menuconfig from the buildroot subdirectory.</p><p>8. Run the save-config.sh script in the root folder to save the configuration, including the selection of your aesd-assignments package, into the default buildroot configuration file.  After running this script you should see that the aesd-assignments package configuration is added to your aesd_qemu_defconfig file.  Check this change into your assignment repository.</p><p>9. Run ./build.sh a second time.  This will build your system (will take hours to complete).  See the Buildroot speedup suggestions below for optional suggestions to speed up future builds.</p><p>10. Use the runqemu.sh script in the root folder to run your generated qemu image.  This command is based on the file at buildroot/board/qemu/aarch64-virt.</p><p>11. Add a clean.sh script in the root folder which runs make distclean from the buildroot directory. </p><p>12. After the build completes, add the dropbear package to your image to support ssh, save the updated configuration with the save_config.sh script and build using build.sh</p><p>        a. Add this using “make menuconfig” from the buildroot directory.</p><p>        b. Hint: You can search for the package using “/” from the menuconfig utility.</p><p>13. Set the default root password to “root” using buildroot menuconfig, save with the save_config.sh script and build into the image using build.sh</p><p>14. Verify you can use ssh to login to your host using port 10022 and the root user/password.</p><p>15. Use scp to transfer your /tmp/assignment4-result.txt file from your qemu instance to your assignment-3-and-later repository in an assignments/assignment4 folder.</p><p>16. Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a>.</p><h2><strong>Buildroot Speedup Suggestions:</strong></h2><ol type="1"><li><p>These are some optional steps you can use to speed up your buildroot builds.  If you do use these, be sure to specify cache directories in relation to $HOME and not using absolute paths so your build will work when run by others or automated test actions.</p></li></ol><p>        a. <a href="https://buildroot.org/downloads/manual/manual.html#download-location"><u>BR2_DL_DIR</u></a> allows you to specify a package download directory outside your buildroot tree which is not removed with distclean.  Using ${HOME}/.dl is one option, which will create a hidden .dl directory under your home directory.</p><p>        b. Turn on <a href="https://buildroot.org/downloads/manual/manual.html#ccache"><u>Enable Compiler Cache</u></a> in build options.</p><h2><strong>Validation:</strong></h2><ol type="1"><li><p>You should be able to clone your final buildroot assignment repository to a new directory, run ./build.sh twice to build the system image and ./runqemu.sh to start the image with no other interaction necessary.</p></li><li><p>You should be able to run the ./clean.sh script, then run the ./build.sh twice and ./runqemu.sh script to start the image with no other interaction necessary.</p></li><li><p>Once the qemu image has started, you should be able to login and run finder-test.sh (without specifying path) to execute the tester script.  </p></li></ol><p>        a. The script should complete successfully, and should be using the writer executable which buildroot has cross compiled for the target.  </p><p>        b. The script should be able to be run from any starting directory.</p><p>        c. /var/log/messages should contain your syslog messages from the writer application.</p><p>4. You should be able to login via ssh or perform file transfer using scp to/from the qemu virtual machine using port specified above.</p><p>5. Your ./full-test.sh script should complete successfully when run.  You must install sshpass for this step to complete successfully.  Use sudo apt-get install sshpass for this step to complete successfully. </p><p></p><h2>
+<strong>Submission:</strong></h2><ol type="1"><li><p>Your submission repository should contain the buildroot setup used to generate and run the qemu image described above.</p></li><li><p>Your buildroot submission repository should reference your aesd-assignments repository containing updated content from the assignments 3 and later repository.</p></li></ol><h1>
+<strong>Troubleshooting:</strong></h1><h3>Actions runner fails on clone of the buildroot submodule</h3><ul><li><p>When your buildroot submodule clone fails in your actions runner you may see an error which looks like this in your actions runner during the submodule checkout step:</p></li></ul><img alt="image.png" src="image.png"/><p>This happens for one of a few possible reasons including:</p><ol type="1"><li><p>You are referencing a buildroot commit which doesn't exist in the upstream repository, for instance if you've made a change and commit yourself which doesn't exist in the upstream repository.</p></li><li><p>You've got the wrong submodule repository specified for buildroot in your .gitmodules file.</p></li><li><p>A failure happened (network issue, etc) during the initial clone of the buildroot repository and your git submodule is now in a bad state.</p></li></ol><p>To recover, first make sure #1 or #2 are not the issue by cloning your repository in a different directory and ensuring the git submodule update --init --recursive step successfully clones your buildroot submodule.</p><p>If this does not recover, the easiest fix is to remove your actions runner, completely delete the actions runner directory, and then re-run your actions runner setup steps using the instructions in https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions.  An alternative to deleting the entire actions runner directory is to go into your actions runner work directory (typically named _work ), browse into your assignment directory, find the buildroot directory and remove it.  Then run the git submodule update --init --recursive command from your work directory to ensure this step succeeds.</p><h3>Execution of writer fails to execute inside QEMU</h3><p>Once the image built by buildroot is running, you might see error(s) related to <strong>writer</strong> execution. </p><p>Especially <strong>'writer not found'. 
+</strong>This is a commonly faced issue and usually this happens when the cross-compile process hasn't been successful or not using the <strong>'CC' </strong>variable in the makefile. </p><p>Buildroot expects the CC variable and your makefile needs to be updated from A3. You can refer to lecture notes on how to define the CC variable. </p><p>Also make sure to not check in the writer binary writer into your repository. </p>
+  </div>
+</body>
+</html>

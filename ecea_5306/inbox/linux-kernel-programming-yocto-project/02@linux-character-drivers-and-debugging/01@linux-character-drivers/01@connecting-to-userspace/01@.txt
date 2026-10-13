@@ -1,0 +1,230 @@
+In this video, I'm going
+to talk about how to connect a driver to userspace. We're going to learn
+about creating and using device nodes, and registering and unregistered and devices like the basics of loading a driver and
+accessing a device through Linux kernel
+device driver. For all these device
+driver examples, we're even going through the
+Linux device drivers book and their samples in
+the LDD3 repository, which I've mentioned
+in previous videos. The references in the book are out of date
+since they're all referencing old
+versions of the kernel. However, there's a version
+that's up to date here on GitHub that you can find in the link of the lecture slides. This will take you to a
+version that's up to date with the latest kernel
+used with Ubuntu. If you're using Ubuntu
+virtual machine, you should be able
+to just clone this, and run the examples inside
+your Ubuntu virtual machine. The examples that are
+covered in the book, a lot of them focus
+on what they call the SCULL driver and SCULL is an acronym for simple character utility
+for loading localities. I think they're trying
+to find something that matched the word SCULL. It acts on memory as
+if it were a device. Rather than communicating
+with some physical hardware, the SCULL driver is just
+going to essentially communicate with our store and retrieve from blocks of memory. The benefit of this is that
+it's going to be portable across architectures and
+it's not hardware-dependent. We can run it in our emulator. It makes a good
+useful learning tool for learning the
+basics about how to work with the Linux kernel. But the drawbacks are that it's not a real device driver, so some of the things
+that we talked about before like hardware interrupts, we don't really have a
+good way to demo that with the device driver, the simple examples that
+we're working here. But it'll give us a good base to work from and if you want to work into any of those
+hardware specific details, that's a great topic
+for your final project. The type of SCULL drivers
+that are covered in the book, SCULL 0 through SCULL 3, are four different devices with global and persistent
+memory storage. Global, meaning that it's data shared with all file
+descriptors so you can open up devices SCULL 0 through SCULL 3 and if you write
+data to one of them, you'll be able to read the data back from the other device. As persistent in that, you can open and
+close the device and the data is not lost. It remains in memory until
+the SCULL driver is unloaded. Then there's SCULLpipe 0 to
+SCULLpipe 3 are FIFO pipes, so those show you
+how to implement blocking and non-blocking
+reads and writes, which we'll get to
+in later weeks. Then there's SCULLsingle, which is the same as
+the SCULL driver, but it only allows you
+through a single process. SCULL private is private to
+virtual console sessions, and UID and WUID are meant to be opened by
+only one user at a time. Just showing you the control you can get at the driver layer. You've probably worked a
+little bit already with the /dev directory
+and I think we've mentioned before that this
+is one of the entries into the kernel space. How do the devices in the /dev directory map to
+appropriate kernel modules? If you look back at
+Assignment 3 and we glossed over
+this when we talked about Assignment 3,
+but we just said, "Here, use this command to make a dev null device
+then you'll be able to access from inside
+your QMU instance." But how that's really
+working under the hood is that it's using
+device numbers to map to and to make node command to map to a specific
+device driver, and then an instance of a
+device that's associated with that driver through the
+major and minor numbers. In the example that we
+had for Assignment 3, we used mknod with the character type
+and major 1, minor 3. Those were specific major, minor numbers allocated
+by the kernel that meant we were creating a node
+for the dev null device. If you look at an ls-l
+on the dev directory, you're going to see those
+two numbers referenced. These are the major and
+minor device numbers that identify the
+driver and identify a specific device controlled
+by that driver that you can access through
+the root file system. There are a couple
+of different ways to use major and minor numbers, one of them is you can use the common major minor numbers. If you happen to
+be using a driver, that's common or if you're extending the functionality
+of a driver that already is defined in this common like one example is this
+SCSI disk driver, so this is one of the
+main drivers that handles disk devices
+in SCSI kernel. Because it's a common device, there's a dedicated major
+number and in some cases, there's dedicated minor numbers for SCSI or for those
+particular drivers. For the sda case, for instance, there's a major
+number eight that's reserved for SD devices. If I look in my doitall/la of the dev sd nodes underneath
+my dev directory, I'll see that all
+of those indeed have a major number of eight. Then the minor numbers are
+going to follow the values that are mapped out in the documentation of
+the Linux kernel. You can see the link
+here to the devices, that text file that talks
+about how these are allocated. If you happen to be
+working on some of these common device drivers, then the major minor number
+will be allocated for you. But if you're designing a custom device
+and one that isn't going to be in the list of known dedicated
+major-minor number, then you'll use allocation. In other words, you'll
+ask the kernel, "Hey, give me a free major number that I can use for my driver." That's the method
+that we'll use for the scull device driver since
+obviously that wouldn't be something that you
+would commonly have in a Linux install. For a register and
+unregister example, in terms of what's actually happening in the Linux kernel, we're just going to
+use the init and the cleanup functions to do the setup and tear
+down for our device. What I recommend in
+the LDD3 example, take a look at the sleepy.c,
+the sleepy module. This is the simplest version
+that you can get in terms of how char device gets allocated based on an allocated
+major and minor number. Inside the sleepy_init, which is what we're
+going to link to our module_init function, we do a call to
+register chardev, and we specify or we pass in the sleepy_major and
+the name of the driver, and then a reference
+to the f ops table, which we're going to
+talk about in a minute. If we see a value of
+zero in sleepy_major, then this means that we did not allocate a
+specific major number, which is the default case, so the value returned from register chardev is going
+to be our major number. That was the dynamically
+allocated version and that gets set back
+in the global variable. Then when we unregister
+during the cleanup step, we'll just use that same
+major number that we set up during the register step. What happens to the
+character device if you register a character device with the kernel and then
+you exit your module? This is important
+conversation that we'll have often this semester when we're talking about
+Linux kernel drivers. In a lot of cases, at least, you don't have the same kind of framework you've
+got with user space for doing clean up. You're responsible for doing your own unregistering
+when your module exits. You have to make sure
+you're balancing. If you're using
+register chardev call, you have to make
+sure that you have unregistered chardev call balanced.Innit and exit are typically the place where
+that's going to get done. If you register your
+chardev in innit, you want to make
+sure you unregister your chardev in exit. The device number is represented in the Linux kernel with a typedef called dev_t. If you look at this
+under the hood, it's really just a
+uint32 unsigned integer. In order to create a dev_t, you can use this macro
+MKDEV int major, int minor. This is probably
+something you've seen in other classes or other embedded
+programs where we're just going to be using a
+certain number of bits, 20 bits for the minor
+in the unsigned int, and we're going to be
+masking in the major in the upper bits and the
+minor in lower bits. We're storing two
+different values in an unsigned integer, and then we can use
+the major and minor to extract those values back
+out of the unsigned integer. There's more
+complicated examples that show you how to
+register and unregister. One of them is the scull module that we mentioned before, that registers are a
+range of devices and also handles errors
+after registration. Something to note here is, because we're doing
+registered chardev here before we try
+to allocate memory, there could be a
+case where we fail here trying to allocate memory. But as long as the driver
+is written correctly, you need to be careful to handle that situation by
+not just returning, you have to be cleaning up
+whatever you did before. Because we did a register
+chardev_region here, and because that
+had already passed by the time we did the kmalloc, we have to have this goto
+statement here to go to the fail step that actually does the cleanup and is
+going to do the unregister. This cleanup module
+function can be handled for both innit and exit. The proc devices virtual
+file is a place that is essentially a call in to the kernel that's going to
+let the kernel tell us which device drivers are
+registered and which device drivers are using
+which major number. When we do our
+dynamic registration, we'll know what our major
+number is from the kernel based on what registered
+chardev gave us back. But if I want to connect
+to it from user space, I won't be able to know what the driver could return back
+from registered chardev. So cat proc devices is a way that I can tell from user space what my driver was actually
+allocated as a major number. We're going to be able
+to use this proc devices virtual file to
+figure out how we can use a mknod to create
+dev file system entries. Again, we can't create this in advance because we
+won't know from user space what is going to be allocated
+when we load the driver. The driver is going to figure
+that out during init time. We'll load the driver
+with its modern mod proc, and then we'll parse
+proc devices after we load it to find the major
+number that's assigned. There's a script that's
+already written in the LDD3 repository
+called module_load, that's a good example
+about how to do this. There's some other
+things that you probably want to do at init
+time that are also covered in the
+module_load script. Setting the owner and group. If you ran a script,
+there's grep. If you want people
+other than grep to be able to access it, you could do that during
+the module_load script. Then setting permissions who's able to read and
+write, for instance. One of the script
+that we'll use to parse the proc devices
+virtual file is called AWK. It looks like an
+acronym, but it's not, it's really just
+an abbreviation of the original developer's names. This is a utility that's been around for a very long time. It's really useful when you have text output that's separated
+by a common field, and one common field is space. Looking back at that
+file that we had before, we see that we have
+a number here, and then a space, and then
+the name of the driver. AWK is pretty useful for solving this kind of problem in terms of parsing
+out the major number. What we really want to do
+is find a match for when this value equals
+a specific device or driver name that
+we want to match. Using the example of the
+space disk driver or sd, if I wanted to parse this file
+and figure out that sd was mapped to major number eight, I could use AWK in
+a script like this, and I could pass in as
+the module argument sd. What AWK would say then is, if field number 2 where there's the second space
+separated field, if that matches sd, then it's going to print
+out the field number 1, which would be in
+this case, eight. That's basically what this
+AWK line is telling us. It's saying to search proc devices for a match where the second field
+matches the module name, and then print out
+the first field. This is just going
+to print out for us the eight value that
+matches our major number. Here's an example of the
+load script, and again, you can find the source for
+this in the module_load inside the LDD3 repository
+using link here on the slide. You start out with insmod to load the
+module or use mode proc, and then you use
+this AWK that we just talked about in
+the previous slide to figure out what the
+major number is. Then there's some logic here to remove if there already
+is a device node, and then use mknod with the
+major number that we found. We'll use minor number 0 because we're just
+going to access the first device that's created and will always
+use character devices. That's what this line is doing. Then you can change
+the owner and group based on the
+settings in the script. If you look at the example out, what you're going to get
+when you run it normally, you'll see an output,
+something like this. This was an example of
+loading module_sleepy. We're going to be searching
+through the proc devices list for a match for this
+module names sleepy, figure out what the
+major number is, and then setting up
+this dev/sleepy node. After I run this, I can
+see that cat proc devices, and grep for sleepy is going
+to show me that sleepy got assigned number
+241, major number. If I look in the /dev directory, I should see there are
+script actually created, a device named dev sleepy that has a major number of 241
+and a minor number of zero.

@@ -1,0 +1,611 @@
+1
+00:00:01,040 --> 00:00:03,588
+So continuing on the previous
+boulder tips video,
+
+2
+00:00:03,588 --> 00:00:06,384
+I'm going to highlight a few
+additional boulder at tips.
+
+3
+00:00:06,384 --> 00:00:09,586
+That kind of come up as sort of
+a frequently asked questions for
+
+4
+00:00:09,586 --> 00:00:11,261
+the first boulder assignment.
+
+5
+00:00:12,840 --> 00:00:16,069
+So we're going to talk about some general
+build debug strategies specifically for
+
+6
+00:00:16,069 --> 00:00:17,551
+assignment for boulder component.
+
+7
+00:00:19,340 --> 00:00:22,845
+So first of all you can get some really
+confusing things if you check binaries
+
+8
+00:00:22,845 --> 00:00:23,629
+into your repo.
+
+9
+00:00:23,629 --> 00:00:28,658
+And the reason this can happen is if
+you native compile an application and
+
+10
+00:00:28,658 --> 00:00:32,140
+then you check in the binary object file.
+
+11
+00:00:32,140 --> 00:00:36,136
+Boulder is going to think that it doesn't
+have anything to do to rebuild that file,
+
+12
+00:00:36,136 --> 00:00:38,441
+it's going to see that
+the object file is there.
+
+13
+00:00:38,441 --> 00:00:41,783
+It's going to think that there's
+no compile step that's needed and
+
+14
+00:00:41,783 --> 00:00:43,464
+it's going to try to use your file.
+
+15
+00:00:43,464 --> 00:00:46,828
+When it tries to use your file it's
+going to be the wrong architecture and
+
+16
+00:00:46,828 --> 00:00:49,640
+so it's not going to work
+on the Arm 64 target.
+
+17
+00:00:49,640 --> 00:00:53,995
+So you need to make sure that you've got
+your get ignored set up to keep any up,
+
+18
+00:00:53,995 --> 00:00:56,940
+executable or
+object files out of your repo.
+
+19
+00:00:56,940 --> 00:01:00,880
+And this should be set up by default for
+you on the base repo.
+
+20
+00:01:00,880 --> 00:01:03,511
+But it just be a matter of
+if you rename something or
+
+21
+00:01:03,511 --> 00:01:06,344
+if you didn't follow this pattern for
+object files.
+
+22
+00:01:06,344 --> 00:01:09,961
+So something to keep in mind, make sure
+that that get ignores set correctly.
+
+23
+00:01:11,040 --> 00:01:15,342
+Also don't hard code any references
+to gcc in your make file,
+
+24
+00:01:15,342 --> 00:01:17,510
+use CC as a compiler variable.
+
+25
+00:01:17,510 --> 00:01:22,020
+And this allows if you use these
+compiler variables shown here for
+
+26
+00:01:22,020 --> 00:01:23,430
+your compile step.
+
+27
+00:01:23,430 --> 00:01:28,262
+This allows builder to define
+them the way it needs to do to
+
+28
+00:01:28,262 --> 00:01:30,688
+do its cross compile setup.
+
+29
+00:01:30,688 --> 00:01:34,295
+And finally pay attention to
+the configuration changes and
+
+30
+00:01:34,295 --> 00:01:36,260
+the output of save config.sh.
+
+31
+00:01:36,260 --> 00:01:40,925
+So you're going to run save config to save
+off the configurations you've got for
+
+32
+00:01:40,925 --> 00:01:41,709
+buildroot.
+
+33
+00:01:41,709 --> 00:01:46,354
+And make sure that when you do that step,
+you save that off into your repo.
+
+34
+00:01:46,354 --> 00:01:51,513
+If you forget to do that,
+then when you check out to a new repo or
+
+35
+00:01:51,513 --> 00:01:56,089
+maybe when you deploy and
+run your automated testing.
+
+36
+00:01:56,089 --> 00:01:59,372
+You're not going to have
+the same configuration that
+
+37
+00:01:59,372 --> 00:02:02,586
+you used when you originally
+checked in the code.
+
+38
+00:02:02,586 --> 00:02:06,955
+Some general debug strategies
+that work well for
+
+39
+00:02:06,955 --> 00:02:11,121
+buildroot, what I like
+to do is try to create.
+
+40
+00:02:11,121 --> 00:02:17,032
+Especially in cases where you aren't
+getting the output that you expected.
+
+41
+00:02:17,032 --> 00:02:19,495
+It doesn't appear that
+the changes you're making or
+
+42
+00:02:19,495 --> 00:02:22,840
+making any difference in the output,
+try to just make an error.
+
+43
+00:02:22,840 --> 00:02:26,384
+So use something that's outside of
+makes in tax, for instance, for
+
+44
+00:02:26,384 --> 00:02:30,640
+a dot make file or just type some garbage
+on the line and I can figure that in.
+
+45
+00:02:30,640 --> 00:02:34,077
+And what this will tell you is whether
+you've got the configuration set
+
+46
+00:02:34,077 --> 00:02:37,530
+up correctly and buildroot to actually
+read these files to begin with.
+
+47
+00:02:37,530 --> 00:02:41,326
+And a lot of times some of the problem
+is that the file that you think is being
+
+48
+00:02:41,326 --> 00:02:44,161
+included actually isn't
+even being included at all.
+
+49
+00:02:45,940 --> 00:02:48,821
+Also pay attention to
+trying incremental builds,
+
+50
+00:02:48,821 --> 00:02:52,442
+there's some content that we
+discussed in lecture about this.
+
+51
+00:02:52,442 --> 00:02:57,040
+And there's some information in
+the buildroot help files about it.
+
+52
+00:02:57,040 --> 00:03:00,512
+But if you do make command from
+the builder at subdirectory and
+
+53
+00:03:00,512 --> 00:03:02,463
+you use this override sourcedir.
+
+54
+00:03:02,463 --> 00:03:10,080
+You can specify an arbitrary path and
+rebuild directly from a local directory.
+
+55
+00:03:10,080 --> 00:03:13,956
+So this saves the need to if you're
+doing a lot of trouble shooting or
+
+56
+00:03:13,956 --> 00:03:17,370
+incremental steps to try to
+troubleshoot some problem.
+
+57
+00:03:17,370 --> 00:03:21,780
+It saves you the need from having to
+push your AESD assignments repo up.
+
+58
+00:03:21,780 --> 00:03:26,202
+Change the git hash and rebuild from
+buildroot and that whole process just gets
+
+59
+00:03:26,202 --> 00:03:29,440
+time consuming if you need
+to do a lot of iterations.
+
+60
+00:03:29,440 --> 00:03:32,907
+So look at how to use the override
+sourcedir variable and
+
+61
+00:03:32,907 --> 00:03:35,507
+use this AESD assignments rebuild task.
+
+62
+00:03:35,507 --> 00:03:42,240
+To rebuild just your AESD
+assignments module or yeah module.
+
+63
+00:03:42,240 --> 00:03:45,672
+And also one thing to keep
+in mind with buildroot,
+
+64
+00:03:45,672 --> 00:03:48,550
+try to use clean build as the last result.
+
+65
+00:03:48,550 --> 00:03:53,398
+Clean build while it's faster than
+yak to which we'll talk about
+
+66
+00:03:53,398 --> 00:03:56,137
+in the next course in this sequence.
+
+67
+00:03:56,137 --> 00:04:00,006
+It still takes quite a bit of time and
+so it's not the kind of thing that
+
+68
+00:04:00,006 --> 00:04:03,901
+you want to do if you're used to
+just compiling a native application.
+
+69
+00:04:03,901 --> 00:04:06,283
+Maybe you just think I'll
+just run make clean and
+
+70
+00:04:06,283 --> 00:04:08,160
+then I'll rebuild the application.
+
+71
+00:04:08,160 --> 00:04:11,671
+But if you do a clean step on buildroot
+it's going to take at least a half hour
+
+72
+00:04:11,671 --> 00:04:14,281
+depending on the amount of
+your system to rebuild it.
+
+73
+00:04:14,281 --> 00:04:18,573
+So it's not a normal debug step that
+you'd want to take just any time,
+
+74
+00:04:18,573 --> 00:04:21,040
+something isn't working.
+
+75
+00:04:21,040 --> 00:04:27,101
+A few other builders debug strategies,
+this is really an optimization thing.
+
+76
+00:04:27,101 --> 00:04:30,412
+You can use DL DIR to
+avoid download steps and
+
+77
+00:04:30,412 --> 00:04:34,280
+downloads can take quite
+a bit of time to complete.
+
+78
+00:04:34,280 --> 00:04:35,561
+So if you use your DL DIR,
+
+79
+00:04:35,561 --> 00:04:38,491
+you can keep those out of your
+builder output directory.
+
+80
+00:04:38,491 --> 00:04:40,682
+And that way if you do a clean,
+
+81
+00:04:40,682 --> 00:04:45,640
+you won't have to re download
+all of the package source code.
+
+82
+00:04:45,640 --> 00:04:50,788
+One other kind of useful thing
+with this if you've got a friend
+
+83
+00:04:50,788 --> 00:04:57,050
+who is a local maybe you could share
+a flash key with or something like that.
+
+84
+00:04:57,050 --> 00:05:01,121
+You can put your DL DIR on a flash key,
+share that with your friend and
+
+85
+00:05:01,121 --> 00:05:05,837
+then they don't have to wait for all the
+files to download from the internet for
+
+86
+00:05:05,837 --> 00:05:06,921
+that directory.
+
+87
+00:05:06,921 --> 00:05:11,273
+So there's some notes about this
+in the link in the assignment, so
+
+88
+00:05:11,273 --> 00:05:12,602
+take a look at that.
+
+89
+00:05:12,602 --> 00:05:16,725
+And also do really close inspection
+when you're having problems,
+
+90
+00:05:16,725 --> 00:05:19,930
+whatever you think is
+associated with the problem.
+
+91
+00:05:19,930 --> 00:05:22,555
+Look really closely at
+every single character and
+
+92
+00:05:22,555 --> 00:05:24,248
+this includes spaces and tabs.
+
+93
+00:05:24,248 --> 00:05:28,360
+Make sure that you've specified the
+variable exactly the way you want it to.
+
+94
+00:05:28,360 --> 00:05:31,090
+You didn't include any
+extra things like colons or
+
+95
+00:05:31,090 --> 00:05:33,900
+something like that at
+the end of the variable name.
+
+96
+00:05:33,900 --> 00:05:38,799
+It's very finicky sometimes about getting
+things printed out exactly right, so
+
+97
+00:05:38,799 --> 00:05:40,380
+what works well for this?
+
+98
+00:05:40,380 --> 00:05:44,200
+I've got some working examples that I've
+shared that you can use as a reference.
+
+99
+00:05:44,200 --> 00:05:47,153
+And a lot of times if you just
+put those side by side and
+
+100
+00:05:47,153 --> 00:05:49,177
+look just character by character.
+
+101
+00:05:49,177 --> 00:05:51,771
+Sometimes you can see a difference
+that will explain the problem that
+
+102
+00:05:51,771 --> 00:05:52,451
+you're seeing.
+
+103
+00:05:53,610 --> 00:05:56,968
+One other thing to think about is think
+of other ways that you could test out
+
+104
+00:05:56,968 --> 00:05:59,540
+whatever implementation you're working on.
+
+105
+00:05:59,540 --> 00:06:03,542
+And so one of the things I've tried to do
+with these assignments is make it possible
+
+106
+00:06:03,542 --> 00:06:06,630
+for you to run the assignment,
+both natively and in embedded.
+
+107
+00:06:06,630 --> 00:06:11,190
+And so it's probably going to be a lot
+faster to do iteration and debug natively.
+
+108
+00:06:11,190 --> 00:06:16,239
+So think about how you could reproduce
+the problem on your native compile.
+
+109
+00:06:16,239 --> 00:06:23,279
+And maybe troubleshooting in debug there
+as an alternative to debugging inside QMU.
+
+110
+00:06:23,279 --> 00:06:29,491
+Few other suggestions for buildroot debug,
+don't wait until the last minute to start.
+
+111
+00:06:29,491 --> 00:06:31,188
+So the build especially for
+
+112
+00:06:31,188 --> 00:06:36,240
+buildroot can take quite a bit of time
+depending on how fast your system is.
+
+113
+00:06:36,240 --> 00:06:41,494
+So think about maybe before you get
+everything implemented with your program.
+
+114
+00:06:41,494 --> 00:06:44,303
+Kicking off a buildroot build,
+at least getting that started,
+
+115
+00:06:44,303 --> 00:06:46,601
+getting all the downloads done,
+start that early.
+
+116
+00:06:46,601 --> 00:06:49,361
+Don't wait till the very
+end to start that part and
+
+117
+00:06:49,361 --> 00:06:52,129
+think about all the things
+you can do in parallel.
+
+118
+00:06:52,129 --> 00:06:55,558
+So while you're waiting for downloads or
+builds to happen, I think if there's
+
+119
+00:06:55,558 --> 00:06:58,745
+something that you can do to be working
+on the next part of the assignment.
+
+120
+00:06:58,745 --> 00:07:03,040
+And have that ready and maybe you can even
+set up a new branch and start working on
+
+121
+00:07:03,040 --> 00:07:07,940
+that before you're ready to actually
+pull that into your assignment.
+
+122
+00:07:07,940 --> 00:07:12,778
+And one of the things I like to do
+when having issues with any problem.
+
+123
+00:07:12,778 --> 00:07:17,267
+But something like this is maybe just step
+away from the problem for a few hours and
+
+124
+00:07:17,267 --> 00:07:18,201
+come back to it.
+
+125
+00:07:18,201 --> 00:07:21,818
+I always find that I can, if I take
+some time away from it a lot of times
+
+126
+00:07:21,818 --> 00:07:25,340
+when I come back to it,
+I'll think about it slightly different.
+
+127
+00:07:25,340 --> 00:07:28,803
+This is another case where it's important
+to start early to have the flexibility to
+
+128
+00:07:28,803 --> 00:07:29,751
+do that kind of thing.

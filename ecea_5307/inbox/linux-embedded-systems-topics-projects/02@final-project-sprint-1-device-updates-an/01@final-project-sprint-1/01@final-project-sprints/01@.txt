@@ -1,0 +1,234 @@
+In this video, I'm
+going to go over the Sprint 1 final
+project assignment. First let's go through
+the assignment document. With final project
+sprint assignment, you'll use the same
+GitHub classroom link that you use for your
+final project proposal. You're going to keep working
+out at the same repositories that you used for your
+final project proposal. Each student's going to have their own individual repository. For the implementation,
+you're going take all the work
+that you did for Sprint 1 or that you're going to do for Sprint
+1 and check all that into whatever
+repositories you've set up for use for
+your final project. You need to make
+sure that again, when we're delivering sprints, we're trying to deliver an iteration of
+something that's usable. You want to make sure your
+code can build and run, and that the status of the
+build and the status of your overall project
+should match the state of the issues
+in your repositories. In other words, if you
+have an issue that said I was going to
+add some feature, and you marked it as
+resolved in the sprint, that feature should actually
+be added in the source code. If I build it and run it, it should actually work. You should update the
+project overview wiki page with any changes since
+the last sprint. If you've changed something
+about the scope of your project or what you're planning to do with your project based on
+what you've learned, that's the way it works with
+sprint and that's fine. That's part of Agile. But do update that
+project overview with the new direction for
+the project that you've had based on this
+particular sprint, so that a reviewer that's
+looking at your code and your issues is going to
+be able to make sense of your project overview
+in the same vain. You can see back to the
+original template for the project overview
+page, it hasn't changed. It's the same one that
+you used to create the original project overview. If you're editing it, drop an edit message into
+the dialogue that gives in GitHub when you
+make the change, that makes it easier
+for reviewers to track what you did, if you want to come back and
+look at the history there. Then you want to update
+your schedule page that was based on the
+scheduled template, same one you used
+for the proposal, and schedule issues for
+the upcoming sprint, as well as close any issues
+from the previous sprint. If you're working on a
+multiple person group, you want to make sure
+that every group member had something that
+they resolved that was assigned to them and also that they have something assigned to
+them in the next sprint. You're tracking what you
+did in the current sprint, you're tracking what
+you're going to do in the next sprint, and put an appropriate amount of detail so that a reviewer or myself or student
+assistants will be able to understand what you did and
+what you're going to do. If the student is making
+a change as a part of the item that was
+assigned to them that doesn't match the content of
+the project overview wiki, it's that student's
+responsibility to go back in and change
+the project overview. In other words, if you're
+working on something and that's different than what you originally said you
+were going to do, you have to remember
+to go back into the project overview
+and update that. It's your responsibility as the person who is
+making that change. All the closed issues should
+be assigned to whoever the group member was
+that closed them and also that group member
+should be updating it. I don't want to have like one person that's responsible for documentation and other people that are responsible for coding. Make sure that you're
+taking part in each part of the
+process as a part of working on the total project. As I mentioned, there should
+be at least one closed issue assigned to every
+member to talk about what you accomplished
+in the current sprint. It's okay if you
+didn't accomplish everything that you thought
+you were going to accomplish. But if that's the case, please edit the description
+of the issue to make it clear what
+you did accomplish. You should add a
+comment in every one of the closed issues
+that mentions that your Definition of
+Done is verified and any details about what
+you did in order to test. A lot of times students
+have included screenshots. That's often a really
+good way to do it, to show what you did in order to verify that
+it was working. Again, if your original
+Definition of Done doesn't match what you
+actually did, that's okay. But make sure that you
+update it so that it does match before the
+sprint completes. If a sprint item
+was partially done, and you didn't get everything done that you
+wanted to get done. You just redefine the issue to define exactly what it is you did and then take whatever didn't get done and move
+that into a new issue, put that in the next sprint or whichever sprint
+makes sense for it. Then reference and say, I didn't get all this done there's a little
+bit more work to do, and I link this in a new
+issue for the next sprint, and then link that issue
+just to make it clear for a reviewer exactly
+what isn't done again. Again, every group member should have something to do
+in the upcoming sprint that includes a definition
+done of what you expect to complete as
+a part of the next sprint. If there are blockers that are related to any new
+issues that you added, those should be
+identified in length. Again, try to keep the
+description so that top box for an issue. Try to keep that
+up-to-date with what you've actually done or
+what you're planning to do, so as things change, go in and edit that
+description so that it gives your reviewer a quick way to see what you're planning to do or what you did
+with an issue. For that, you can
+use the three dots here and select the Edit to change the content of that
+top-level description box. For the submission,
+please in Canvas include a link to your
+individual student final project repository, in that way, this
+is the way through Canvas that a reviewer can tell who they are
+actually reviewing. If you're missing this step, then if you just link, for instance, the overview
+page and everyone links it, then the reviewer won't know
+who to actually review or which GitHub ID they should actually review as a part
+of their peer review. You need to have
+checked in all the code for the corresponding issues. At least one issue should be
+closed per project member. In the project overview page, any updates that you need
+to do should be made there. You need to have
+created issues for the next sprint and included
+the contents there, and as I mentioned, there should be
+at least an issue assigned to each group member
+for the upcoming sprint. Make sure you have the detail in your closed issue about
+why they're closed; what the definition of done
+was; how you verified it. Make sure that schedule page is up-to-date and
+accurate with what you plan to do between now and
+the end of the project. Some more thoughts
+about sprint scope, especially if you're
+going into defining the second scope or
+the second sprint based on what you're accomplishing
+in the first sprint. Try to think about defining the issue that you're
+going to be working on as something different than a
+complete final implementation of software component
+in one sprint. Think about what you're
+really going to be able to do in 10-15 hours, whatever you're
+going to be spending on the project that week, and try to size your
+issue accordingly. Think about how you can
+split up the end goal of what you're working on
+into more manageable chunks, so maybe you have a
+bunch of features that you want to implement
+in some application. Think about how you could implement the bare
+minimum feature that has one thing working for the first sprint, for instance. Or maybe you need to target hardware as required by the project but maybe
+for the first sprint, you just have something that only works on your PC and does some limited amount of what you plan to do when
+you put it on hardware. Think about how you can
+split up the tasks into something more manageable and something that you can
+accomplish in one week. Then use the Edit option, as I mentioned in the
+video demo before, to edit and update the description at
+the top of the issue, and try to keep that up to date. You'll see, when you review other students' projects,
+that don't do this. If you have to go through like 30 or 40 different comments to try to figure out
+what the student did, it's good to have that history, but it's really nice to
+have just a summary at the top of what was done
+and how you've verified it. Please include that definition of done in the description and revise it as necessary to match what you
+actually complete it, so it's really easy
+to see what you did. If you didn't actually get anything or enough to complete on the issue
+to call it closed, don't just close it because you ran out of time
+in the sprint. Use the comments about what you actually got done and
+move it into the next sprint, or redefine the issue to define what you actually got done
+and then close that sprint. Think about how to
+report partial status. GitHub has some really
+nice features here where you can include a
+hyperlink to a commit and it'll just reference
+the commit like this and you can click on
+it and your reviewers can see exactly where you're at in your code in terms
+of making changes. For instance, you can say, as of commit and then link
+the commit hash, you can say, my project does this or
+this part is implemented, but this part is yet
+to be implemented. Think about how you can make it really easy for a reviewer to figure out where you're
+at in the current project. When your marking a
+task is complete, you want to update that
+definition of DoD to match what you accomplished
+and how you verified it. This is really important. Think about if I'm a student assistant or a peer reviewer and I
+don't know anything about the project other
+than what I glanced at the overview page and
+what I'm just looking at in the definition of DoD for the issue and the details
+that I put in the issue, would I have enough
+information to verify that you actually
+did your work this week? If yes, then that's probably
+a good indication that your definition of DoD is
+sufficient but if not, you probably need a
+little more detail. Think about someone coming
+into this project new, think about how
+you can show them all the work that
+you did and the fact that it's working and make that review step as easy
+for them as possible. You can place GitHub issues
+really in any location, you're going to link them
+from your schedule page, but they could be
+in any repository. It works nice with GitHub
+if you can put issues in wherever repositories
+that are going to correspond to the code
+that you're checking in. For instance, if
+you're tasked with developing an application
+that's in one repository, you might want to put the
+issue that's associated with what you're going
+to be working on that week in that repository. That just makes some
+of the features of GitHub nice to use where you can reference items in your
+commit and they'll automatically show up as being linked to the issue
+that you're working on. There's a bunch of issues here that you can read more about that feature or
+function in the GitHub. You can reference an issue and say closes number and
+then the issue number, and that would actually resolve your task or you can just
+put a reference to it. You could say issue number
+and the number of the issue, and then it'll automatically
+link so reviewer can see that your commit was related to that particular issue
+you're working on. Here's an example of
+something I did in an open-source repository
+where I was linking a specific issue here in an open-source repository
+with a code change that I made for a
+specific issue in code. In order to get
+this link set up, I just put a link to the
+issue and you see I get a nice hyperlink here in my code commit that links me
+back into the issue. Also, if I look at the
+content of the issue, I can see a reference
+to that commit. It's a really nice
+way to tie everything together for a reviewer to see exactly what you did related
+to a specific issue. As I mentioned before, if this change would have been in this repository
+instead of mine, I could have just said issue
+number 204 and it would have set up that exact link based
+on this issue number here, number 204 in the
+original repository. There's some really cool
+things you can do here with GitHub in terms of
+tracking your work and making it easy for people
+to review your work and I encourage you to look into
+learning how to do that. In terms of general sprint
+deliverables for sprint 1, in general, you should
+have something building as a part of the sprint
+1 deliverable. I've had students in the past that just
+turned in a bunch of empty c and h files
+or script files, that's really not anything
+I'm interested in seeing. You want to try to deliver something working
+at an increment, just an empty file or a bunch of empty functions doesn't really do anything towards a functional implementation
+as a part of a sprint. Then you should try to have
+some working code or build a configuration
+change as a part of each sprint for every
+person in the group. Think about how you could
+split up the work so that each person has some increment that they're delivering
+with every sprint.

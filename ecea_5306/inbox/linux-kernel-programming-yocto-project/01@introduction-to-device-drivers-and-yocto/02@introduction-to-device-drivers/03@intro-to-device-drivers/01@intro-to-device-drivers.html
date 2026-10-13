@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Intro to Device Drivers</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>A Linux device driver's role is to provide mechanism, not policy.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MslX0wLNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~MslX0wLNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When writing a device driver, a programmer should focus on writing code which enforces a specific way an application can use the associated hardware.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~QZfueQLNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~QZfueQLNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select all of the roles performed by the Linux kernel:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Creating and destroying processes </p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Setting up virtual memory addressing for processes</p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Supporting an ext3 filesystem </p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Controlling an attached keyboard </p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Dispatching networking packets </p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Implementing an ftpd file transfer server </p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Implementing a graphic display session manager </p></div></li>
+<li><input name="autoGradableResponseId~SCV7nQLNEeyzfQ5G-GO37w" type="checkbox"/> <div class="quiz-option-text"><p>Implementing a tunelp parallel port printer driver control utility application</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Features can be added to the Linux kernel at runtime using...</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~g_FAxALNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>modules </p></div></li>
+<li><input name="autoGradableResponseId~g_FAxALNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>executables </p></div></li>
+<li><input name="autoGradableResponseId~g_FAxALNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>applications </p></div></li>
+<li><input name="autoGradableResponseId~g_FAxALNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>rmmod</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Driver writers typically need to enforce security policy within the driver itself.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~oAf1JALNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~oAf1JALNEeyzfQ5G-GO37w" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your boss wants you to write a Linux device driver for their application but doesn't want to share source code publicly, and asks you for your opinion about this.  How should you respond?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~uJt2vALNEeynWgonyqD_UQ" type="radio"/> <div class="quiz-option-text"><p>You can use a GPLv2 license without distributing source code</p></div></li>
+<li><input name="autoGradableResponseId~uJt2vALNEeynWgonyqD_UQ" type="radio"/> <div class="quiz-option-text"><p>You don't need to use a GPLv2 license for your code and therefore don't need to share your source code</p></div></li>
+<li><input name="autoGradableResponseId~uJt2vALNEeynWgonyqD_UQ" type="radio"/> <div class="quiz-option-text"><p>You recommend discussing with legal counsel </p></div></li>
+<li><input name="autoGradableResponseId~uJt2vALNEeynWgonyqD_UQ" type="radio"/> <div class="quiz-option-text"><p>It's not legal to develop a Linux kernel module without sharing source code</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

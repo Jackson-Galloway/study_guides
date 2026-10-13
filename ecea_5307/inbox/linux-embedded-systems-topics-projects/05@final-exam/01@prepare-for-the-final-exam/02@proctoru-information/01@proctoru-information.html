@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ProctorU Information</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<img alt="ProctorU logo.png" src="ProctorU%20logo.png"/><h2><strong>How ME-ECE Uses Virtual/Remote Proctoring</strong></h2><p>Most for-credit MS-ECE courses feature a proctored experience at the end of the course. This is generally an exam, but may also be a project-based experience. The University of Colorado Boulder takes academic integrity seriously, and is committed to ensuring that your MS-ECE degree accurately represents your competency and retains its value in the marketplace. Protecting the integrity of the course exams is part of this process.</p><p>The stakes of the proctored experiences in MS-ECE courses are high. When you gain access to these protected items on the Coursera platform, you are no longer eligible for a tuition refund if you decide to drop the course, and you are no longer eligible for a course withdrawal. Accessing the protected examination means that you will only be eligible for an earned grade based on performance.</p><h2><strong>What is ProctorU?</strong></h2><p>ProctorU is a platform that is partnered with your institution to help you take an exam online while ensuring academic integrity is upheld. Using this platform allows you the convenience of testing from home 24/7, 365 days a year. </p><h2><strong>How it Works</strong></h2><ol type="1"><li><p>Create a ProctorU account.</p><ol type="1"><li><p><a href="https://go.proctoru.com/students/users/new?institution=2023">Click here</a> to get started.</p></li></ol></li><li><p>Download the <a href="https://guardian.meazurelearning.com/">Guardian Secure Browser</a>.</p></li><li><p><strong>Schedule at least 72 hours in advance</strong><em> </em>of the date/time you want to take your exam.</p><ol type="1"><li><p>Login and click the “<strong>Schedule New Session</strong>” button.</p></li><li><p>Confirm your institution, term, and exam name, then click “<strong>Search Sessions</strong>.”</p></li><li><p>Use the calendar and clock features on the left to select your desired testing date and time.</p></li><li><p><a href="https://go.proctoru.com/testitout">Click here</a> to log in to your ProctorU account and test your equipment.</p></li></ol></li><li><p><a href="https://go.proctoru.com/testitout">Click here</a> to log in to your ProctorU account and test your equipment.</p></li><li><p> <strong>Know What to Expect.</strong> See below for more information:</p><ol type="1"><li><p><a href="https://pages.meazurelearning.com/hubfs/Five-Steps-Student-Guide-LiveReview.pdf">5 Steps for Student Guide</a></p></li><li><p>Video: <a href="https://meazurelearning.wistia.com/medias/3yeyj6debu">Student Experience for Colleges and Universities</a> – explains what you will need and what’s expected before and during your exam</p></li></ol></li></ol><h2><strong>Important Reminders</strong></h2><p><em><strong>Note</strong></em>: Last Day and Time to Schedule ProctorU Exam will always be 3 days prior to the end of the session. It will always fall on a Tuesday, 4:50pm MT.</p><p>We strongly recommend that you do not start the proctored exam process until you are ready to take the exam and complete the course. Find more details about the relationship between proctored experiences and course drops/refunds in the <a href="https://www.colorado.edu/ecee/node/1359/attachment">MS-ECE on Coursera Student Handbook</a>.</p><ul><li><p>You will be able to take final exams for MS-ECE courses using the ProctorU remote proctoring service between 9:00 am Mountain Time on the day session starts until 4:50 pm Mountain Time on the day your class session ends.</p></li><li><p>You must schedule your exam at least 72 hours in advance of your desired day and time. For example, if the exam availability window closes at 4:50 pm on a Friday, the last time you could schedule an exam would be that Tuesday at 4:50 pm.</p></li><li><p>To secure your desired exam session time, log into ProctorU and schedule your session as soon as you know your desired exams session date and time.</p></li><li><p>View the <a href="https://www.colorado.edu/registrar/cu-boulder-coursera-calendar#session_1-2418">Academic Calendar</a> for your session to see final exam availability. <strong>Test Your Equipment before exam day</strong> in an environment that is identical to where you are planning to take your exam.</p></li></ul><h2><strong>Equipment Requirements</strong></h2><ul><li><p>A computer</p></li><li><p>A reliable internet connection – if connectivity is lost during an exam, you may not be able to regain access</p></li><li><p>A webcam</p></li><li><p>A microphone</p></li><li><p>Two forms of photo ID – one form should be a government-issued photo ID; the second form of ID is recommended though not required</p></li><li><p>A reflective surface handy</p></li></ul><h3><strong>When testing through the ProctorU Platform, you will need a computer that fulfills the following system requirements.</strong></h3><table><tr><th><p><strong> </strong></p></th><th><p><strong>Minimum Requirements</strong></p></th></tr><tr><td><p><strong>Operating System</strong></p></td><td><p>Windows 10 or later</p><p>Mac OS 11.0 or later</p><p>All recent compatible versions of ChromeOS (Extension workflow only)</p></td></tr><tr><td><p><strong>Browser (extension workflow only)</strong></p></td><td><p>Chrome</p></td></tr><tr><td><p><strong>Connectivity</strong></p></td><td><p>3 Mbps (3072 Kbps) Upload &amp; Download Speed</p><p>(mobile hotspots and tethering are discouraged)</p></td></tr><tr><td><p><strong>Webcam</strong></p></td><td><p>640x480 resolution</p></td></tr><tr><td><p><strong>Microphone</strong></p></td><td><p>All microphones other than those built into headphones are permitted.</p></td></tr><tr><td><p><strong>Speakers</strong></p></td><td><p>Built-in or external speakers are required.</p></td></tr><tr><td><p><strong>RAM Capacity</strong></p></td><td><p>8GB</p></td></tr><tr><td><p><strong>CPU</strong></p></td><td><p>4 cores at 2.4ghz</p></td></tr><tr><td><p><strong>Monitor Resolution</strong></p></td><td><p>1366x768</p></td></tr><tr><td><p><strong>Ports</strong></p></td><td><p>UDP/TCP 80</p><p>UDP/TCP 443</p></td></tr></table><h3><strong>Here are some important caveats and limitations to keep in mind when testing:</strong></h3><ul><li><p>You will not be permitted to test with remote control software running on your computer. Applications like TeamViewer, GoToMyPC, AnyDesk, etc.</p></li><li><p>You will only be permitted the use of a single monitor when testing, all others must be disconnected.</p></li><li><p>Mobile devices, such as tablets or cell phones, are not supported.</p></li><li><p>Headphones are generally not permitted. Check with your testing organization to determine if you are allowed to use headphones.</p></li><li><p>You will not be permitted to take your exam from within a virtual machine. You will be asked to reconnect using your host operating system to take your exam.</p></li><li><p>You will not be permitted to use Apple Bootcamp to take your exam.</p></li><li><p>Unlicensed/inactive versions of Windows and Test Builds/Modes are not permitted.</p></li><li><p>External monitors connected to a closed laptop should be set to mirror display and should be connected directly to the computer. Avoid using a docking station.</p></li></ul><h3><strong>Privacy Policy</strong></h3><ul><li><p>This program adheres to the University of Colorado Boulder’s commitment to the protection of individual privacy. Please see the <a href="https://www.colorado.edu/policies/privacy-statement">CU Boulder privacy statement</a>.</p></li><li><p>In order to preserve the integrity of this program, exams will have live proctoring managed by ProctorU. Please read <a href="https://www.meazurelearning.com/privacy-policy">ProctorU’s privacy policy</a> before you take the exam.</p></li><li><p>ProctorU MythBusters: <a href="https://www.meazurelearning.com/resources/proctoru-myth-busters-4-ways-we-dont-invade-our-test-takers-privacy">4 Ways We DON'T Invade Our Test Takers' Privacy</a></p></li></ul>
+  </div>
+</body>
+</html>

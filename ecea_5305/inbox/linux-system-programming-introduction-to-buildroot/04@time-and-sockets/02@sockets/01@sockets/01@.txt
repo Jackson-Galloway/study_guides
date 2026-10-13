@@ -1,0 +1,180 @@
+In this video, we're going to talk
+about a different mechanism for IPC, and specifically,
+we're going to talk about sockets. So we're going to understand using
+socket how to use sockets in Linux and how to use sockets in your Linux program. And this will be especially important for
+assignment 5. So sockets are one of several forms
+of Interprocess Communication or IPC. We've already talked about
+a simpler one in terms of signals. Sockets are a little bit
+more versatile than signals. They don't have the same
+kind of limitations and restrictions that we talked about in terms
+of the signal handler, for instance. And also, sockets can let you communicate across
+different systems over TCP/IP, whereas signals you need to know the process idea
+on a specific system to send the signal. With sockets, we can use TCP IP to connect
+to another system that's physically different from the system
+we're running on. Sockets are also known as BSD or Berkeley
+sockets based on where they were first originated, and they're supported
+by all major operating systems. So there are a way you can inter-operate
+with programs running on even, for instance, a Windows system. So when we talk about sockets,
+the communication path is going to be through TCP/IP,
+like I mentioned. That gives us the option to have
+an Ethernet connected two physically different hosts and can make our
+connections through TCP/IP ports between two different applications
+running on these separate hosts. It also can be used in a loop back mode
+where we just connect the two applications using TCP/IP, but using local host
+routing without eating, go over Ethernet. And the third way that we can do this that
+we'll use in this course is using what's called port forwarding. And so, in addition to just routing
+through a local host loop back, we can route into a virtual
+instance in this case. In our case for assignment 5,
+it's going to be QEMU, where we can tell the host that we
+want to forward a specific post port on the host into a virtual machine or
+an emulator, in our case, QEMU. So in QEMU, we can use the host
+forward argument to say that we want to connect port Y in
+the application running on the host to a specific port that's
+running in the emulator. And in this case, the same port that
+we're using for our application. So how are we going to use TCP/IP or what are some of the background on
+TCP/IP that allows this to be possible. TCP stands for
+Transmission Control Protocol. It's a connection oriented protocol where
+the connection is going to be established and maintained during the entire duration
+of the program exchanging messages. It's going to accept packets from want
+a source delivered to the destination, manage the flow control, and automatically
+retransmit if a packet was dropped and handles acknowledgement to know that
+a packet was sent successfully. All that's going to be done for us by TCP. And then IP is the way that we can address
+package to a specific destination. So that's going to provide us
+the routing between sender and receiver. The original IP standard was IPv4,
+and that's the X.X.X.X format. The 4 byte and 32 bit format that you're probably
+most familiar with from networking. This allows for 4.3 billion addresses, if you take the number of
+bits that 32 bits represents. And at the time it was created,
+32 bits was a lot of bits, 4.3 billion was a lot of addresses. But now with the amount of people in the
+world and the amount of connected devices, there's a problem in terms of
+running out of IPv4 space, which you've probably heard about. [COUGH] So, another alternative to IPv4 is IPv6 where
+you have 128 bits of address space. So 340 billion billion
+billion billion addresses, which is about 4,000 addresses for
+each person on Earth. So hopefully,
+this will last us a little bit longer. And in addition to the address,
+the IPv4, the IPv6 address on a particular local system,
+you will also bind to a port. So that you can define import numbers for
+specific applications, and then that application would own
+that particular port on that host. There are two different types of sockets. Socket stream is the stream
+socket that's going to be reliable to a connected streams. The messages are all going to be delivered
+in order, and they're going to be retried. This is what we're going to use for
+our example in this course. There's also datagram sockets,
+which are connection lists and use what's called UDP instead of TCP. This is important if you care more about
+latency than you care about delivery. So it's often used for things like video,
+where it's okay to drop a frame, and it's actually better to drop a frame
+than it is to have the video stagger. So this is an example of something
+that you can do with sockets, but we're not going to use it
+in this particular course. So we talked before about how
+in Linux everything is a file. So how would we interact with sockets? We'll interact using
+a socket file descriptor. And how do we obtain
+the socket file descriptor? You're going to obtain it through
+the socket POSIX function. So here's an overview of
+the socket creation process. We're going to be focused in this series,
+or in this video, on the server side and that's because that's what we'll implement
+with assignment number 4, all right? Assignment number 5. The client side is also
+a little bit simpler. So if we go through the server will
+probably have a better idea about how the overall sequence works. But this is, we'll go through this
+in detail in the next slides. So the first step is the socket creation
+using the socket function that I mentioned before. So, both this will happen on both
+the client and the server side. Each one are going to set up
+an endpoint for communication. That's really a file descriptor. And when you specify the socket or
+call the socket function, you'll use a domain that specifies
+whether you're using INET or INET6, which is just selecting IPv4, or IPv6, and
+then socket stream or socket datagram. And we'll use socket stream for
+this course, and then protocol- 0 will just choose
+the proper protocol for the given type. Next, once we have a file descriptor, we can use that file descriptor would
+bind to assign an address to the socket. So the sockfd is going to come from the
+return value from the socket function and the sock address and address length,
+this is going to describe. So these two arguments are going to
+describe the address that we want to bind to and that would allow us to optionally select
+a specific network adapter to bind to. So a little bit more about how we
+specify the socket address to bind. The socket address is going to map to
+a specific server socket location, so that would include both the Internet,
+the IPv4 or IPv6 address. In this case,
+specifying a local host address that we're running on the host and
+then the destination address in port. So this is, for instance, the port number
+that were binding to on the host as well. And then the socket length will just
+describe the total size of the socket address structure that we're passing,
+which is just going to be struck sockaddr. So how do we set up sockaddr to bind? How can we tell bind which
+address we want to bind to? That isn't built directly,
+it's built from other structures. And there are a few different ways that
+you can set up the sock outer structure that are discussed in the guide here
+that we're using, which is linked below. One is that, you can set up
+sock addr_in and then cast, and the second is that you can
+set up with getaddrinfo. Getaddrinfo is a newer and
+more flexible way, either one is fine for the assignment. You can go through the steps in
+this link to set them up, but we're going to go over the getaddrinfo
+mechanism in this video. So get out your info is going to
+take a series of arguments and ultimately set up the suck
+address info structure which will contain a sock outer structure for us in this result pointer
+that we're going to pass. So the important thing to note is that the
+latter info that is going to return to us is malloced, so you need to use free addrinfo to free
+that after you're done using it. So the first step here and
+call and getaddrinfo, the node and the addrinfo ints value. In order to set these,
+what you do is create this addrinfo structure and
+then set hints.ai flags. So hints will be the outer
+infrastructure that you pass. You'll set that to AI_PASSIVE,
+and you'll set the node to NULL. And this is based on the comments in
+getaddrinfo about making a socket address that's suitable for binding to a socket
+that's going to accept connections. Then in the service argument, you're going to specify the port
+that you want to bind to. So this can just be a string and
+a string 1234 would set up for port 1234. And finally, the return from getaddrinfo, the sockaddr structure
+that's going to create is going to be inside the getaddrinfo
+result here that's specified here. So what we want to do is set up a pointer
+to store the address that's returned from getaddrinfo because remember this is
+going to be malloced inside getaddrinfo. And then, we're going to pass the address
+of that pointer as a pointer to a pointer argument that getaddrinfo can use to store
+the location of the addr info structure. So I remember pointer to pointer as being
+a really hard thing to wrap my head around when I was first getting in to see. So I wanted to step
+through that specifically. So if we talk about, here's
+an example that comes from the beach guide in terms of how to use sockets
+that shows using getaddrinfo. So if you create this struck
+addrinfo pointer to serve info, this is just going to be
+a pointer location on the stack. So we haven't reserved location for
+the actual addr infrastructure itself. We've only reserved location to store
+a pointer to that address info. When we use the address
+of operator on this, what we're passing again is not
+a pointer to the structure addrinfo. We're passing a pointer to the location
+to store the pointer to that addrinfo. So this allows getaddrinfo to
+both malloced the storage for addrinfo and then save it into
+a pointer that we can reference outside the getaddrinfo structure. So what we're working with
+here is this struct addrinfo, which is actually going to be
+malloced inside getaddrinfo. So we're passing in the reference to
+this local pointer that we created on the stack, then the pointer that we
+created on the stack is going to be set within getaddrinfo to obstruct
+addrinfo that got malloced within. And this is all how the based on the
+results' argument here that we're passing in to getaddrinfo. So summarizing again, how we're going to
+get the socket address for bind. We're going to call
+getaddrinfo with the hints, the port string as
+the service argument and the pointer to the pointer in rest that's
+going to get filled by the result. And then, we'll use res->ai_addr
+as the socket address for bind. And then, when we're done with this, we'll use free
+at res after we complete the bind stuff. And what happens if you forget to free,
+you would have a memory leak in this. So after we complete the bind stop,
+we're now ready to listen on the socket or to notify the socket that we're
+ready to accept connections. We can do that with the listen command. So we take that same sockfd that we
+originally got from the socket call past that and listen. And we can specify the number of pending
+connections that are allowed before refusing as the backlog argument here. So then the next step, we can use the except argument to actually
+accept a connection from a client. So we use the sockfd, the socket file descriptor that
+we return from socket again. We pass in a location. So in this case, it's just a pointer to
+a structure that we have, for instance, on the stack that will provide a location
+that we can store the address of the clients. So we know who's connecting, for
+instance, at which IP address. And then, the address length is just
+going to store the length of the sock addr structure, so size of sock addr would be
+the value that we have here initially. And then, the except function is going to
+update that to include the length of the result that it returns in struck sock
+addr if the value is less, for instance. And this function is going to return
+a new file descriptor that we can use to actually read and write on the socket. So when we're reading and writing on
+the socket, we'll use receive and send, which are very similar to the read and
+write functions that we've already discussed in lectures that you can
+use with arbitrary file descriptors. And in fact, you actually can use read and write on the file descriptor
+that we're using here as well. But receive and send give you this extra
+flags argument, which you can use to, for instance, setup blocking or
+non-blocking node on the socket. So the received send sequence after
+we complete except, they will use the accepted file descriptor to call from
+the server application and to receive. Once the client sends data,
+we'll get the byte buffer back from receive
+as our return value. And we can also send then using the file
+descriptor that we got back from accept and send or
+receive data to or, from the client. And the flags' argument can be used to
+set up blocking or non-blocking reads. You can use either with your assignment, there's you can choose which
+way you want to implement.

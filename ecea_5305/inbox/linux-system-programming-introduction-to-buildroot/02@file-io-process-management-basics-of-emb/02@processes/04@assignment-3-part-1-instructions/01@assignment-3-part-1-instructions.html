@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 3 Part 1 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2><strong>Assignment 3 Part 1: System Calls</strong></h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view.</p><h2><strong>GitHub Repository Start Instructions</strong></h2><p>For this assignment we will start with the git repo we created for the previous assignment, but change the origin to point to the GitHub repo where we will submit the next assignment.  We will also pull in some base code used for assignment 3.</p><p></p><p><strong>Use these commands in git bash to prepare your assignment repository:</strong></p><p>git remote remove origin</p><ul><li><p>This removes the origin repository you used to submit the previous assignment</p></li></ul><p>git remote add origin &lt;url&gt;</p><ul><li><p>Substitute &lt;url&gt; for the repository created with the github assignment link for the current assignment. </p></li><li><p>This is where you will submit your current assignment.  It will be configured as origin so git push origin master will push to this repository.</p></li></ul><p>git fetch assignments-base</p><ul><li><p>Fetch the latest content from the starter code remote added during assignment 2</p></li><li><p>This step assumes you’ve already created the remote using git remote add assignments-base git@github.com:cu-ecen-aeld/aesd-assignments.git in assignment 1 or 2.  If you started from a new repo you’ll need to re-run the git remote add step before attempting to fetch.</p></li></ul><p>git merge assignments-base/assignment3-part-1</p><ul><li><p>Merge the assignment 3 starter code from the assignment3 branch of the aesd-assignments repository into your master branch</p></li></ul><p>git submodule update --init --recursive</p><ul><li><p>Update automated testing source</p></li></ul><p>git push origin main</p><ul><li><p>This pushes your main branch, including previous assignment source and content merged from &lt;base&gt; to your working repository for this assignment.</p></li></ul><h2><strong>Repository Setup:</strong></h2><img alt="Screen Shot 2021-08-18 at 2.46.16 PM.png" src="Screen%20Shot%202021-08-18%20at%202.46.16%20PM.png"/><h2><strong>Suggested Videos:</strong></h2><ol type="1"><li><p>Module 2 Content</p></li></ol><p>Note: The following links are external and will open in a new tab. </p><h2><strong>Setup Github Actions</strong></h2><ul><li><p>See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions</u></a> </p></li></ul><h2><strong>Implementation:</strong></h2><ol type="1"><li><p>Modify your finder-app/finder-test.sh script to remove the make step.</p><ol type="1"><li><p>You will add a cross-compile make step for this utilty in a different script as a part of Assignment 3 part 2.</p></li></ol></li><li><p>Make modifications in the <a href="https://github.com/cu-ecen-aeld/aesd-assignments/blob/assignment3-part-1/examples/systemcalls/systemcalls.c"><u>examples/systemcalls/systemcalls.c</u></a> file to implement the TODO there related to video content and system() and exec() functions.  See provided test code in <a href="https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment3/Test_systemcalls.c"><u>https://github.com/cu-ecen-aeld/assignment-autotest/blob/master/test/assignment3/Test_systemcalls.c</u></a> which will verify your implementation.  Run ./unit-test.sh to test your implementation using unity unit tests.</p></li><li><p>Tag your repository assignment-3-part-1 using <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Tagging-a-Release">https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Tagging-a-Release</a>
+</p></li></ol><h2><strong>Validation:</strong></h2><p>Your unit-test.sh script should pass against your systemcalls implementation.  Note that your github actions will fail due to full-test.sh, we will add support for this in part 2 of the assignment.</p><h2><strong>Troubleshooting:</strong></h2><p>You may notice printf() output duplicated after your fork() call.  Use fflush(stdout) before the fork() call to avoid duplicate prints.  See <a href="https://stackoverflow.com/questions/42690197/why-does-this-program-with-fork-print-twice/42690260#42690260">https://stackoverflow.com/questions/42690197/why-does-this-program-with-fork-print-twice/42690260#42690260</a> for details.</p>
+  </div>
+</body>
+</html>

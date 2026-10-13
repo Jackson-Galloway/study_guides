@@ -1,0 +1,1166 @@
+1
+00:00:00,050 --> 00:00:02,700
+Hi, students. In this lecture
+
+2
+00:00:02,700 --> 00:00:04,560
+of advanced embedded
+software development,
+
+3
+00:00:04,560 --> 00:00:07,710
+we're going to be talking about
+system programming and do
+
+4
+00:00:07,710 --> 00:00:09,270
+our first discussion
+of what we mean when
+
+5
+00:00:09,270 --> 00:00:10,920
+we talk about
+system programming,
+
+6
+00:00:10,920 --> 00:00:12,330
+which is what we're going
+to focus on for the
+
+7
+00:00:12,330 --> 00:00:14,745
+first third or so
+of this course.
+
+8
+00:00:14,745 --> 00:00:16,995
+Learning objectives for this,
+
+9
+00:00:16,995 --> 00:00:20,550
+for today will be to
+introduce system programming,
+
+10
+00:00:20,550 --> 00:00:22,890
+understand APIs and ABIs
+
+11
+00:00:22,890 --> 00:00:24,225
+and the difference
+between the two,
+
+12
+00:00:24,225 --> 00:00:27,390
+and also to introduce
+the POSIX standard.
+
+13
+00:00:27,390 --> 00:00:30,150
+What is system software?
+
+14
+00:00:30,150 --> 00:00:31,880
+The book defines this as
+
+15
+00:00:31,880 --> 00:00:36,210
+interfacing between the
+kernel and the C library.
+
+16
+00:00:36,830 --> 00:00:38,990
+Common examples of system
+
+17
+00:00:38,990 --> 00:00:40,220
+programming that you could find.
+
+18
+00:00:40,220 --> 00:00:42,140
+It could be an GUI, it
+could be a compiler,
+
+19
+00:00:42,140 --> 00:00:44,570
+debugger, web
+server or database.
+
+20
+00:00:44,570 --> 00:00:45,980
+Really, there's a variety of
+
+21
+00:00:45,980 --> 00:00:49,175
+software that could be
+considered system software.
+
+22
+00:00:49,175 --> 00:00:51,140
+The book draws a
+distinction between
+
+23
+00:00:51,140 --> 00:00:53,390
+system software and
+application software.
+
+24
+00:00:53,390 --> 00:00:55,640
+In that application
+software might
+
+25
+00:00:55,640 --> 00:00:57,770
+use higher-level libraries,
+
+26
+00:00:57,770 --> 00:01:01,825
+whereas what we're calling
+system software does not.
+
+27
+00:01:01,825 --> 00:01:04,025
+With system software, there's
+
+28
+00:01:04,025 --> 00:01:07,355
+less details about the OS
+and hardware abstracted.
+
+29
+00:01:07,355 --> 00:01:09,800
+The reason we're going to
+focus on system software for
+
+30
+00:01:09,800 --> 00:01:12,800
+this course is because we
+want to get into the details.
+
+31
+00:01:12,800 --> 00:01:14,000
+We're going to be working at
+
+32
+00:01:14,000 --> 00:01:17,480
+the OS and kernel layer
+and we're going to
+
+33
+00:01:17,480 --> 00:01:19,850
+use that for the second
+third of this course where
+
+34
+00:01:19,850 --> 00:01:23,165
+we start talking about
+programming in kernel land.
+
+35
+00:01:23,165 --> 00:01:25,220
+Some of the cornerstones of
+
+36
+00:01:25,220 --> 00:01:27,770
+system programming and how
+you do system programming.
+
+37
+00:01:27,770 --> 00:01:29,480
+One is system calls,
+
+38
+00:01:29,480 --> 00:01:31,310
+also known as syscalls,
+
+39
+00:01:31,310 --> 00:01:33,080
+which is how you
+get into and out of
+
+40
+00:01:33,080 --> 00:01:35,075
+the kernel for anything
+
+41
+00:01:35,075 --> 00:01:37,025
+that deals with interaction
+with the kernel.
+
+42
+00:01:37,025 --> 00:01:39,960
+A second is the C library.
+
+43
+00:01:40,150 --> 00:01:43,385
+Commonly used one is libc.
+
+44
+00:01:43,385 --> 00:01:46,460
+Then the third cornerstone is
+the C compiler and linker,
+
+45
+00:01:46,460 --> 00:01:48,715
+which is a part of a toolchain.
+
+46
+00:01:48,715 --> 00:01:51,950
+Syscalls or system calls are
+
+47
+00:01:51,950 --> 00:01:54,330
+kernel function invocations
+from user space.
+
+48
+00:01:54,330 --> 00:01:55,790
+This is something you can use
+
+49
+00:01:55,790 --> 00:01:57,380
+to have the kernel do some piece
+
+50
+00:01:57,380 --> 00:02:00,870
+of work for you from
+your application.
+
+51
+00:02:00,870 --> 00:02:02,630
+Read and write are examples
+
+52
+00:02:02,630 --> 00:02:04,895
+of the type of things that would
+
+53
+00:02:04,895 --> 00:02:07,880
+be a system call where
+the kernel would be doing
+
+54
+00:02:07,880 --> 00:02:10,640
+some work for your user
+space application.
+
+55
+00:02:10,640 --> 00:02:14,120
+There's roughly 300 of
+these system calls in total
+
+56
+00:02:14,120 --> 00:02:16,340
+and around 90
+percent of those are
+
+57
+00:02:16,340 --> 00:02:18,565
+implemented by all
+architectures.
+
+58
+00:02:18,565 --> 00:02:22,220
+In other words, the
+system call interface is
+
+59
+00:02:22,220 --> 00:02:24,995
+pretty common across different
+
+60
+00:02:24,995 --> 00:02:27,155
+hardware architectures, that is.
+
+61
+00:02:27,155 --> 00:02:29,420
+The second cornerstone is
+
+62
+00:02:29,420 --> 00:02:32,795
+the C Library or in
+the case of GNU,
+
+63
+00:02:32,795 --> 00:02:36,040
+it'd be libc or glibc.
+
+64
+00:02:36,040 --> 00:02:38,510
+This is the wrapper
+for the system call,
+
+65
+00:02:38,510 --> 00:02:40,880
+which gives you the ability to
+
+66
+00:02:40,880 --> 00:02:43,645
+call from your C application.
+
+67
+00:02:43,645 --> 00:02:45,395
+The header file
+that you include,
+
+68
+00:02:45,395 --> 00:02:46,850
+there's a function
+prototype that you
+
+69
+00:02:46,850 --> 00:02:49,400
+call and underneath that
+function prototype,
+
+70
+00:02:49,400 --> 00:02:51,245
+they'll ultimately be a call to
+
+71
+00:02:51,245 --> 00:02:54,895
+the syscall interface
+into the kernel.
+
+72
+00:02:54,895 --> 00:02:57,000
+The third cornerstone, again,
+
+73
+00:02:57,000 --> 00:02:59,385
+is the C compiler and
+linker in the toolchain.
+
+74
+00:02:59,385 --> 00:03:01,550
+We're going to focus on GCC and
+
+75
+00:03:01,550 --> 00:03:04,770
+the GNU C compiler
+for this course.
+
+76
+00:03:04,910 --> 00:03:07,130
+One of the things that the book
+
+77
+00:03:07,130 --> 00:03:08,840
+mentions is that
+it's not possible to
+
+78
+00:03:08,840 --> 00:03:10,700
+link your users pace application
+
+79
+00:03:10,700 --> 00:03:12,620
+directly with the Linux kernel.
+
+80
+00:03:12,620 --> 00:03:15,860
+That's a design
+decision in terms
+
+81
+00:03:15,860 --> 00:03:19,375
+of how the Linux operating
+system was designed.
+
+82
+00:03:19,375 --> 00:03:22,369
+For security and
+reliability reasons,
+
+83
+00:03:22,369 --> 00:03:24,620
+it's better not to
+have a direct link
+
+84
+00:03:24,620 --> 00:03:27,395
+between your user space
+application and the kernel.
+
+85
+00:03:27,395 --> 00:03:30,035
+Instead, the way we get
+
+86
+00:03:30,035 --> 00:03:31,970
+functions performed
+in the kernel space
+
+87
+00:03:31,970 --> 00:03:33,740
+is to use what's called a trap.
+
+88
+00:03:33,740 --> 00:03:36,780
+In a lot of cases, this
+is a software interrupt.
+
+89
+00:03:36,780 --> 00:03:39,290
+If you look at a simple
+Hello World application
+
+90
+00:03:39,290 --> 00:03:40,750
+that's doing a printf,
+
+91
+00:03:40,750 --> 00:03:42,560
+that printf is
+going to be calling
+
+92
+00:03:42,560 --> 00:03:44,930
+into the POSIX API library,
+
+93
+00:03:44,930 --> 00:03:47,180
+and then the POSIX
+API library is going
+
+94
+00:03:47,180 --> 00:03:49,220
+to be doing a trap
+that would invoke
+
+95
+00:03:49,220 --> 00:03:51,320
+a kernel space function that
+would do something like
+
+96
+00:03:51,320 --> 00:03:54,870
+print to the terminal
+in the case of printf.
+
+97
+00:03:55,250 --> 00:03:59,205
+How does the POSIX
+interface work?
+
+98
+00:03:59,205 --> 00:04:01,860
+How is the interface
+between user space
+
+99
+00:04:01,860 --> 00:04:04,125
+and the POSIX library defined?
+
+100
+00:04:04,125 --> 00:04:05,260
+This is part of what's called
+
+101
+00:04:05,260 --> 00:04:07,210
+an Application
+Programming Interface.
+
+102
+00:04:07,210 --> 00:04:09,700
+An API is really just
+a definition about
+
+103
+00:04:09,700 --> 00:04:10,960
+how one piece of
+
+104
+00:04:10,960 --> 00:04:13,265
+software can talk to
+another piece of software.
+
+105
+00:04:13,265 --> 00:04:15,850
+The software that
+provides the API is
+
+106
+00:04:15,850 --> 00:04:19,060
+the implementation of
+the API definition.
+
+107
+00:04:19,060 --> 00:04:21,849
+The API is used to ensure
+source compatibility,
+
+108
+00:04:21,849 --> 00:04:24,190
+meaning that you can
+write the source once,
+
+109
+00:04:24,190 --> 00:04:25,810
+you can compile it for x86,
+
+110
+00:04:25,810 --> 00:04:27,330
+you can compile it for ARM.
+
+111
+00:04:27,330 --> 00:04:29,220
+Do any different architecture.
+
+112
+00:04:29,220 --> 00:04:32,725
+As long as the source
+matches the AI definition,
+
+113
+00:04:32,725 --> 00:04:34,300
+it's going to be able
+to be recompiled
+
+114
+00:04:34,300 --> 00:04:37,100
+and rerun on
+different platforms.
+
+115
+00:04:37,450 --> 00:04:39,950
+Your source code
+can remain portable
+
+116
+00:04:39,950 --> 00:04:43,145
+across hardware
+platforms and revisions.
+
+117
+00:04:43,145 --> 00:04:45,840
+Ideally, there are some
+limitations on this.
+
+118
+00:04:45,840 --> 00:04:48,500
+We mentioned before
+that syscall has
+
+119
+00:04:48,500 --> 00:04:51,795
+about 90 percent
+architecture similarities,
+
+120
+00:04:51,795 --> 00:04:54,080
+so that means that there's
+approximately 10 percent
+
+121
+00:04:54,080 --> 00:04:56,420
+of syscalls that
+might be architecture
+
+122
+00:04:56,420 --> 00:04:58,220
+independent and there might
+
+123
+00:04:58,220 --> 00:04:59,570
+be some functions that you could
+
+124
+00:04:59,570 --> 00:05:03,220
+call via an API that would
+be architecture specific.
+
+125
+00:05:03,220 --> 00:05:04,810
+But for the most part,
+
+126
+00:05:04,810 --> 00:05:06,200
+the APIs are going to be
+
+127
+00:05:06,200 --> 00:05:07,970
+widely cross-platform
+
+128
+00:05:07,970 --> 00:05:09,950
+and used across
+different architectures.
+
+129
+00:05:09,950 --> 00:05:13,625
+For any of the common C
+library functions like printf,
+
+130
+00:05:13,625 --> 00:05:15,380
+string copy, etc,
+
+131
+00:05:15,380 --> 00:05:17,090
+you're going to
+be able to easily
+
+132
+00:05:17,090 --> 00:05:18,920
+recompile for a different
+hardware platform
+
+133
+00:05:18,920 --> 00:05:20,660
+and run without issue
+
+134
+00:05:20,660 --> 00:05:23,730
+after you complete
+the compiling like.
+
+135
+00:05:24,510 --> 00:05:27,760
+To compare with the API,
+
+136
+00:05:27,760 --> 00:05:29,095
+there's also what's called the
+
+137
+00:05:29,095 --> 00:05:32,785
+ABI or the application
+binary interface.
+
+138
+00:05:32,785 --> 00:05:35,950
+Before we were talking
+about source compatibility.
+
+139
+00:05:35,950 --> 00:05:39,100
+The ABI is talking about
+binary compatibility.
+
+140
+00:05:39,100 --> 00:05:41,020
+It's saying, after you
+do your compile and
+
+141
+00:05:41,020 --> 00:05:43,705
+your link step and you have
+an executable program,
+
+142
+00:05:43,705 --> 00:05:46,120
+where is that program
+going to be able to run?
+
+143
+00:05:46,120 --> 00:05:47,710
+That's what's ultimately defined
+
+144
+00:05:47,710 --> 00:05:49,810
+by the application
+binary interface.
+
+145
+00:05:49,810 --> 00:05:51,280
+Some of the things
+that's covered by
+
+146
+00:05:51,280 --> 00:05:53,020
+the application binary interface
+
+147
+00:05:53,020 --> 00:05:54,625
+would be calling conventions,
+
+148
+00:05:54,625 --> 00:05:56,530
+byte ordering or register use.
+
+149
+00:05:56,530 --> 00:05:59,004
+Meaning if you called
+some function,
+
+150
+00:05:59,004 --> 00:06:01,240
+there would be some convention
+
+151
+00:06:01,240 --> 00:06:03,850
+about where the first
+argument would go,
+
+152
+00:06:03,850 --> 00:06:06,355
+in which register of a
+specific architecture.
+
+153
+00:06:06,355 --> 00:06:07,795
+It's easy to see that,
+
+154
+00:06:07,795 --> 00:06:10,780
+that wouldn't be portable
+across different architectures.
+
+155
+00:06:10,780 --> 00:06:12,760
+For instance, x86 doesn't
+
+156
+00:06:12,760 --> 00:06:15,220
+have the same register
+expect that ARM would.
+
+157
+00:06:15,220 --> 00:06:17,350
+It makes sense that
+there would have to be
+
+158
+00:06:17,350 --> 00:06:18,460
+a different ABI between
+
+159
+00:06:18,460 --> 00:06:21,230
+those two different
+hardware architectures.
+
+160
+00:06:21,450 --> 00:06:24,460
+The ABI is defined and
+
+161
+00:06:24,460 --> 00:06:27,805
+implemented by the kernel
+and the toolchain.
+
+162
+00:06:27,805 --> 00:06:35,250
+The ABI defines the program's
+interaction with itself,
+
+163
+00:06:35,250 --> 00:06:37,560
+with libraries, and
+with the kernel.
+
+164
+00:06:37,560 --> 00:06:39,930
+With itself, what I mean is,
+
+165
+00:06:39,930 --> 00:06:42,330
+when you call a function
+in your own program,
+
+166
+00:06:42,330 --> 00:06:44,880
+that's going to use an ABI
+to decide for instance,
+
+167
+00:06:44,880 --> 00:06:47,080
+where to put the parameters
+
+168
+00:06:47,080 --> 00:06:49,310
+that are passed
+into the function.
+
+169
+00:06:50,070 --> 00:06:53,050
+The ultimate lead ABIs
+
+170
+00:06:53,050 --> 00:06:54,460
+going to used to
+generate that binary
+
+171
+00:06:54,460 --> 00:06:59,215
+that's the output of the
+compiler and link step.
+
+172
+00:06:59,215 --> 00:07:02,200
+In order to know if your binary
+
+173
+00:07:02,200 --> 00:07:04,930
+is going to run on a
+different platform,
+
+174
+00:07:04,930 --> 00:07:07,480
+what you have to know
+is how close of a match
+
+175
+00:07:07,480 --> 00:07:09,370
+do you have between
+
+176
+00:07:09,370 --> 00:07:11,290
+the target that you
+originally compiled
+
+177
+00:07:11,290 --> 00:07:13,465
+for and the target that
+you're trying to run on.
+
+178
+00:07:13,465 --> 00:07:15,475
+Some of the things are
+going to impact whether
+
+179
+00:07:15,475 --> 00:07:18,310
+an ABI is portable to a
+different platform would
+
+180
+00:07:18,310 --> 00:07:20,860
+be obviously the hardware
+architecture like I just
+
+181
+00:07:20,860 --> 00:07:23,980
+mentioned between ARM
+and x86 for instance,
+
+182
+00:07:23,980 --> 00:07:27,160
+likely those would not
+share a similar ABI.
+
+183
+00:07:27,160 --> 00:07:30,145
+But there would also
+be software libraries.
+
+184
+00:07:30,145 --> 00:07:32,290
+Whether you use glibc,
+
+185
+00:07:32,290 --> 00:07:35,320
+and also which version of
+glibc used would be important.
+
+186
+00:07:35,320 --> 00:07:36,880
+The compiler would be important,
+
+187
+00:07:36,880 --> 00:07:39,160
+because that's part of
+the definition of how,
+
+188
+00:07:39,160 --> 00:07:44,150
+for instance, the parameters
+will be passed in registers.
+
+189
+00:07:45,750 --> 00:07:51,920
+We talked about API definitions
+and API is being defined.
+
+190
+00:07:53,750 --> 00:07:56,640
+One implementation of
+API definition for
+
+191
+00:07:56,640 --> 00:07:58,845
+user space is in
+what's called POSIX,
+
+192
+00:07:58,845 --> 00:08:01,925
+which stands for portable
+operating system interface.
+
+193
+00:08:01,925 --> 00:08:03,700
+It was started back in
+
+194
+00:08:03,700 --> 00:08:05,950
+the late 1980s as a way to
+
+195
+00:08:05,950 --> 00:08:08,755
+coalesce what the book
+calls the Unix Wars.
+
+196
+00:08:08,755 --> 00:08:11,560
+If you look at more history
+
+197
+00:08:11,560 --> 00:08:14,140
+of the Unix and Linux
+operating system,
+
+198
+00:08:14,140 --> 00:08:16,600
+what you see is a
+chart like this.
+
+199
+00:08:16,600 --> 00:08:19,885
+In the late '70s and early '80s,
+
+200
+00:08:19,885 --> 00:08:21,670
+there were several
+different branches that
+
+201
+00:08:21,670 --> 00:08:23,935
+developed where different
+versions of Unix
+
+202
+00:08:23,935 --> 00:08:28,120
+originally and ultimately
+Linux were started and each
+
+203
+00:08:28,120 --> 00:08:29,260
+one of them were doing
+
+204
+00:08:29,260 --> 00:08:32,470
+slightly different things
+in terms of API calls.
+
+205
+00:08:32,470 --> 00:08:35,710
+There was a need, especially
+in the late '80s,
+
+206
+00:08:35,710 --> 00:08:37,600
+as all these numbers of
+
+207
+00:08:37,600 --> 00:08:40,435
+different Unix and Linux
+variants started to show up,
+
+208
+00:08:40,435 --> 00:08:43,870
+there was a strong desire
+for programmers to coalesce
+
+209
+00:08:43,870 --> 00:08:46,540
+how the API works and
+make sure that when you
+
+210
+00:08:46,540 --> 00:08:49,945
+write software for one platform,
+
+211
+00:08:49,945 --> 00:08:51,760
+you'll be able to
+recompile it and run it on
+
+212
+00:08:51,760 --> 00:08:53,500
+a different platform
+without having to
+
+213
+00:08:53,500 --> 00:08:56,035
+do custom API work
+for a platform.
+
+214
+00:08:56,035 --> 00:08:57,640
+That was the original motivation
+
+215
+00:08:57,640 --> 00:09:00,260
+behind the POSIX platform.
+
+216
+00:09:01,830 --> 00:09:05,170
+The Linux operating system
+
+217
+00:09:05,170 --> 00:09:07,675
+that we're going to use as
+the subject of this course.
+
+218
+00:09:07,675 --> 00:09:08,950
+You can actually
+go back here and
+
+219
+00:09:08,950 --> 00:09:10,540
+click on this Google
+Groups link and you can
+
+220
+00:09:10,540 --> 00:09:12,310
+see the original posting to
+
+221
+00:09:12,310 --> 00:09:15,520
+the Minix mailing list
+
+222
+00:09:15,520 --> 00:09:19,630
+where Linus Torvalds proposed
+the Linux operating system,
+
+223
+00:09:19,630 --> 00:09:21,685
+and this would
+have been in 1991.
+
+224
+00:09:21,685 --> 00:09:23,440
+This was around the time that
+
+225
+00:09:23,440 --> 00:09:25,630
+the POSIX standard was
+starting to be defined and
+
+226
+00:09:25,630 --> 00:09:29,050
+everybody was working towards
+a common API that can
+
+227
+00:09:29,050 --> 00:09:30,385
+be shared across
+
+228
+00:09:30,385 --> 00:09:33,550
+all these different Unix
+and Linux variance.
+
+229
+00:09:33,550 --> 00:09:36,400
+The Open Software Foundation
+
+230
+00:09:36,400 --> 00:09:40,000
+created what was called the
+Single Unix Specification.
+
+231
+00:09:40,000 --> 00:09:44,545
+Originally the IEEE POSIX
+specification cost money.
+
+232
+00:09:44,545 --> 00:09:47,665
+But the Single Unix
+Specification was free and
+
+233
+00:09:47,665 --> 00:09:51,730
+it ultimately incorporated
+the entire POSIX standard.
+
+234
+00:09:51,730 --> 00:09:56,770
+This was a big part of why
+POSIX was ultimately adopted,
+
+235
+00:09:56,770 --> 00:10:00,940
+because it became part of the
+Single Unix Specification.
+
+236
+00:10:00,940 --> 00:10:04,330
+POSIX is given define the
+C code API for many of
+
+237
+00:10:04,330 --> 00:10:05,350
+the concepts that we're going to
+
+238
+00:10:05,350 --> 00:10:07,390
+cover throughout this semester.
+
+239
+00:10:07,390 --> 00:10:09,175
+File and directory operation,
+
+240
+00:10:09,175 --> 00:10:11,185
+clocks and timers, semaphores,
+
+241
+00:10:11,185 --> 00:10:12,865
+shared memory, threads.
+
+242
+00:10:12,865 --> 00:10:15,610
+A large amount of what we'll
+be doing from users pace is
+
+243
+00:10:15,610 --> 00:10:18,955
+going to be defined by
+the POSIX API standard.
+
+244
+00:10:18,955 --> 00:10:20,935
+There's an official list of
+
+245
+00:10:20,935 --> 00:10:22,720
+headers you could
+find at this link.
+
+246
+00:10:22,720 --> 00:10:24,175
+There's lots of headers that you
+
+247
+00:10:24,175 --> 00:10:26,230
+probably are familiar with
+and you have used already.
+
+248
+00:10:26,230 --> 00:10:28,790
+For instance, standard
+IO, standardint.h.
+
+249
+00:10:28,790 --> 00:10:30,400
+Those are examples of
+
+250
+00:10:30,400 --> 00:10:33,190
+files that are covered
+in the POSIX standards.
+
+251
+00:10:33,190 --> 00:10:34,780
+You've probably been
+using this already.
+
+252
+00:10:34,780 --> 00:10:38,210
+You might not have realized
+that you were using POSIX.

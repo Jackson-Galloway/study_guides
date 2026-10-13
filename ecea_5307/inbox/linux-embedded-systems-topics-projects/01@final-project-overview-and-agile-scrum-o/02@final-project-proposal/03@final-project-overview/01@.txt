@@ -1,0 +1,304 @@
+In this video, I'm
+going to talk about your final project
+proposal overview. This is going to be the
+part where you kick off your final project proposal and share it with
+peer reviewers. What we want to
+cover here is how to propose your final project and then get us started
+on talking about how to retarget your
+project for hardware, which is going to be the
+focus of your final project. First of all, I want to step through some of the details in the final project
+proposal assignment which you can find in the Coursera
+reading assignment. Stepping through the
+Coursera reading assignment, you'll have a GitHub
+Classroom link to start the assignment. Similar to you've done
+with previous assignments, check on the resources
+page to find that. By default, every student will create a final
+project repository. Depending on how many
+people are in your group, you may need additional
+repositories. If that's the case,
+just go ahead and create those with your
+own GitHub account. You can implement the final
+project on your own or you can organize in groups of up
+to three for the assignment. All grading and peer
+review will be done individually based on your own individual
+contribution of the project. It's important to track
+what each person is doing and how each person is
+contributing to the project. Think about the amount of work that you've done previously
+in the course in each assignment
+and the idea is to split that work between
+three different, what we're going to call
+sprints that we use to organize the work for
+our final project. You'll start with an
+empty GitHub repository and what you're going
+to focus on for the final project proposal
+is really creating some Wiki pages that describe the work that you're
+planning to do for your final project. You need to make sure that
+it's publicly accessible for peer reviews and this
+will be the default state. You should create a README in
+each submission repository. In the case that you're in
+group with multiple students, you'll want to share a single
+project overview page. For those of you who are
+in the Coursera section, you may want to use
+the discussion forum to look for students who are interested in joining
+up in a group or you're welcome to
+complete on your own. The README in every student's
+repository, however, should have a link to a project
+overview page and that's where all the content
+that we're going to go over here is going to be stored. The template you can follow for the project overview
+page is here. There's a link that you can follow to find it and
+you'll notice a bunch of TBD areas in
+here that describe the changes that you need or the way you need
+to set up this page. You can start by making
+a copy of this page into your final project
+repository Wiki page and use this as a template for filling in
+everything that you need to do. We'll go over a few of the things that are
+in the template here. You want to make sure
+you have an overview of the project goals
+and motivation and include at least one diagram that helps show how the
+project's laid out, the different components, the interactions between the
+different components. You'll want to select
+the target build system. You can have either a
+Buildroot or Yocto and also identify the target
+hardware platform. We'll talk about
+this in a minute. There are some pages
+that talk about which hardware platforms
+are supported by the course and which ones do we have some experience
+working with. You can use any
+hardware platform you want, but if you do, I just ask that you
+put in some detail about how you plan to support
+this hardware platform. I'd like you to identify any of the open-source
+projects other than the base Yocto builder
+packages that you intend to use and if you
+don't intend to use other projects,
+please state that. If you're planning
+to use any projects, please include some
+links to those. Talk about any
+previous assignment content that you've
+used for this course or previous courses that you
+intend to leverage and if you don't intend to leverage any content, please state that. You could discuss any of
+the course content that you plan to use
+and how it will be used or if you're not going to use any specific course content from this or previous courses in the sequence,
+you can state that. You'll also want to talk
+about how you're going to organize the source code
+for group projects. So which project is
+going to contain the Buildroot or Yocto source? And it often works best to put this one in the
+same one that has the project overview Wiki page. Then any additional repositories that you'll have to store
+content or for instance, applications that you'll be
+bringing into your build. You'll want to list
+every team member for multi-team projects and
+then their focus or role in the project as a part
+of the overview Wiki page. Then you're also going to link
+to a shared schedule page. For the shared schedule page, you can follow these
+instructions to get set up, but there's a Wiki
+page that talks about how you can create a project schedule page for your project that will have
+step-by-step instructions, will keep this up-to-date as anything changes in
+terms of GitHub projects, but we want to leverage the GitHub projects
+feature in order to create a project schedule
+for your project and document the work
+that you're going to be doing for your project. If you follow all the
+instructions on this creating an organizing your
+final project Wiki page, what you should end up
+with is something that looks like the template
+which is linked here. This is going to show the
+different work that we plan to do in the sprint, who's planning to do it, and the current status. You can see in this case, we've got some work on Sprint 1, some work in Sprint 2, some work in Sprint 3 and
+if I click on any of these, I should get some detail about what I'm planning to do and a definition of done about what's been done
+for each one of these. You can use this
+template reference to see what your
+project should look like and as a peer reviewer, this is the kind of view
+you should see from someone's submission when they submit their project
+for peer review. You need to make sure that when you're creating your
+final project proposal, you'll want to focus on
+having Sprint 1 item defined. Sprint 1 items are going to be the things
+that you're going to cover the very first week
+that you work on the project. It's great to start putting some detail and some thoughts
+in about Sprint 2 and 3. But for the first week, we'll focus on implementing
+what's done in Sprint 1 and planning what
+needs to get done in Sprint 2. The thing you should
+focus on the most, just making sure that
+you have the detail in Sprint 1 about what you're
+planning to do the first week. We'll go over that in a
+little bit more detail on the future slides. There's some things here on your submission to
+double-check that you've completed in terms of
+your proposal submission. In summary, the requirements for the final project is number 1, you need to use real hardware. The work we've done so far for this course sequence has been in QEMU and simulation. For your final
+project, you need to plan to use a real
+hardware platform. You need to use Buildroot
+or Yocto to build the image since that's what
+we've covered in the first portions
+of the course. It needs to have
+some relationship to the content that we covered
+in the course sequence. This is very flexible
+because it is essentially covered by using
+Buildroot or Yocto portion. But I'd like to identify
+the things that you are covering based on
+the content we covered here. Also, if you don't have
+ideas about what to do, you can use some of the
+content we've covered in the previous assignments and
+expand or build on them. There's a lot of things
+I didn't cover in much depth and definitely don't have code examples for instance, and so think about maybe
+exploring some of those. Another thing you can
+do for project ideas are looking at the projects that on-campus students
+have completed in versions of this
+course previously. For that, you can use the project section of the homepage. One thing you'll notice
+is that if you look at the final project demo page for each project linked
+from the homepage, you should see any notes
+about future work in there. Students might have noted
+when they've completed a project that there are some follow-up
+things you could do to build on top of the project. If a project looks interesting, you might want to think
+about how you could add onto it with your
+project and start with some work that
+others have done and use the Final Project
+Overview page as a way to document that you're going
+to be building on top of a previous completed project. The hardware platforms that
+we supported are all detailed in the wiki page that will keep up-to-date linked from here. Each one of those
+pages is going to have some information
+about how to modify a Buildroot or
+Yocto configuration to support building on hardware. In a lot of cases,
+you'll be able to support not only
+building on hardware, but also building on QEMU. Depending on your project, you may still want to
+keep the QEMU option around for iterating or testing. One thing to note,
+especially with Buildroot, when you're switching
+between target platforms, you need to make sure that
+you use either clean builds or have saved different
+output directories, depending on which target
+you're building for. These instructions are also
+going to go over how to flash the ultimate image that
+you build onto an SD card. But in general, use
+something like dd on Linux or and Rufus or something
+similar on Windows. The overall project schedule, we're going to have three
+different checkpoints and we've talked a little
+bit already about Agile Scrum terminology. We're going to refer
+to these as sprints, using that Agile terminology. Think about putting
+in each sprint the rough equivalent of one assignment worth
+of effort per person, so think about 10-15
+hours of work per week. Part of what you're
+going to want to do with your issues are
+demonstrate that you've completed that amount
+of work per week and make it clear to
+the peer reviewer what you've accomplished. You'll plan the work for the next sprint and
+the previous sprint. As I mentioned with the
+final project proposal, you'll be proposing what
+you do in Sprint 1. When you complete Sprint 1, you'll propose what you do
+for Sprint 2, and so on. You'll use the GitHub
+issues that I showed previously to track
+and report your work and you'll use
+GitHub Wiki pages to report on the overall progress and status of your project. The general schedule
+for the project looks like this final project proposal that I'm talking about now, the first week, then Sprint 1, Sprint 2, and Sprint 3 in
+consecutive weeks or blocks of time depending on
+whether you're taking this course synchronously
+or asynchronously. You'll also complete
+the final project with a demo outline
+and video detailing your individual contribution
+to the project and some ideas about follow-on
+work or next steps. One other part for the on-campus
+version of this course, we'll have a final project
+Scrum that we do weekly with all of the people who are taking the
+course synchronously. For those of you who are taking this course
+asynchronously, you may think about scheduling one of these with
+your teammates. The main idea behind the Scrum, it's the same thing
+that we talked about with the Agile content. You want to be able to
+answer the questions, what did you do since
+the last report? What are you going to do
+before the next report? Are there any blockers? Listen, especially, for
+the blockers thing. As blockers are identified, think about how you
+can work together as a team to help resolve them. Or possibly how you
+could leverage help from other teams to resolve
+any blocking issues. Another strategy you
+could possibly use with blockers is to reorganize your work such that you can complete
+something else. For instance, if
+you're waiting for delivery or something, maybe think about how
+you could reorganize the work such that you could avoid being blocked by an issue that's
+outside your control. A bit more about
+final project ideas. If you're stuck or
+have trouble thinking about what you want to do
+for the final project. You might want to consider
+something we haven't covered fully in class or assignments. Look at some content we may have partially covered that
+looked interesting to you. Try to build onto that, explore that content
+a little more. Look for projects which
+have done similar things online to something that
+sounds interesting. Read blogs about
+things that people have done and maybe try to build on some existing projects. In some cases,
+projects might not be built with something
+like Buildroot or Yocto. You might want to put a
+standalone demo project into something that
+you can build as a deployable image with
+Buildroot or Yocto. Or maybe something's
+been done on a different hardware
+platform and you want to create an image
+for it that would run on Raspberry
+Pi for instance. Those are some ideas
+about what you could do for a final project. One thing I caution
+everybody on is, although the agile
+scrum methodology lets you change your plan in terms of how you plan
+to implement things. One thing I've seen
+students struggle with in the past is if you
+start the project without really
+having any plan for implementing some of the more major of the project components, it may become very
+difficult by the end to have anything to
+actually submit. Think about having
+a plan for any of the major project
+components you're going to do. Don't assume that it's just going to all come
+together at the end. Think about how
+you can structure your project sprints
+such that you're doing some work at the
+beginning to make sure the most critical parts of your project are
+proven out early. There are a lot of different project
+components that you can leverage that are linked from our supported
+hardware platform site. The wiki pages are also
+useful to search for this. Students from previous
+semesters have done work to giving you common
+project components like UART or things that you
+might find useful for your implementations and for
+specific hardware platforms. So take a look at those. Also as I mentioned before, look at the past project section of the on-campus course website. In terms of how to retarget
+for Buildroot for hardware, there's a section on this
+that goes over the details. But it's really about, there's a shared
+script that exists in the Buildroot
+assignment base repo, that you can use to select
+the hardware configuration. Once you change the
+hardware configuration, you want to clean so that you start with a new build targeting that specific configuration and then rerun the build dot sh. That's going to use the new
+configuration setup for your hardware based on
+this shared dot sh script. Then do the same
+save config that we did previously with the
+Buildroot assignments. That's going to save that
+modified config file to your repo and
+allow your teammates, for instance, to build with the same configuration
+you're using. Once you switch to use
+a different project, you'll also start with a
+brand new configuration file. You'll need to use Buildroot
+and menu config to add any packages that you
+want back into the build. For instance, Dropbear, changing the root password, adding the assignment
+packages as necessary if you plan to leverage some of your
+assignment content. Then setting up the
+root file system overlay the same steps that
+we've done previously. You'll need to redo once you retarget for a different
+hardware platform. Then save your configuration
+file and rebuild to start the configuration or start the build for this
+target platform. One thing also to know
+as we move away from QEMU and into a hardware-based
+implementation, you'll find that
+reflashing the image for every change is
+quite time-consuming. There's a couple of
+different approaches you can use for avoiding this. One is depending
+on your project, you might be able to still
+leverage the QEMU build. You may be able to still test
+your application in QEMU and get it working that way and it might be
+quicker to iterate there. Another successful strategy
+is to copy executables from your output directory
+directly to the file system using SCP. We've covered SCP in
+previous courses as well, but it's basically just a way to transfer files to and
+from an SSH target. You can just take the
+output of your build and target files and SCP them. If you know which
+files are changing, just copy them directly
+over to the target. Then once you get everything
+working, of course, you can make the
+changes and rebuild the entire image and retest
+it all as one component. That's pretty much the basics of the final project overview. As I mentioned, I tried to
+keep this very generic. The idea is that you
+can cover whatever you find interesting
+for your final project. If you happen to be
+working on a work project, you might want to think
+about how you could do some portion of a
+project investigation that could be useful
+for your work as well. Really anything that you find interesting that can align with the tasks that we talked
+about in this course, especially building
+Buildroot or Yocto images. I hope that you
+could find a way to leverage that for your project.

@@ -1,0 +1,792 @@
+1
+00:00:03,640 --> 00:00:04,211
+Hi students.
+
+2
+00:00:04,211 --> 00:00:06,274
+So in this part of the video lecture,
+
+3
+00:00:06,274 --> 00:00:10,490
+I want to talk a little bit about
+licensing how software licenses are used.
+
+4
+00:00:10,490 --> 00:00:13,540
+This is an important part of
+Lennox software development,
+
+5
+00:00:13,540 --> 00:00:17,692
+because we've already talked about some
+of the freedoms that you're granted.
+
+6
+00:00:17,692 --> 00:00:21,570
+And some of the ability that you have
+based on the access to the source.
+
+7
+00:00:21,570 --> 00:00:25,935
+So what the licensing tells you are your
+obligations based on being granted,
+
+8
+00:00:25,935 --> 00:00:27,340
+those freedoms.
+
+9
+00:00:27,340 --> 00:00:29,563
+And there are different
+types of software licensing,
+
+10
+00:00:29,563 --> 00:00:31,740
+will go over some of the different types.
+
+11
+00:00:31,740 --> 00:00:36,580
+And then we'll talk about the license
+that are specifically used often with
+
+12
+00:00:36,580 --> 00:00:41,661
+Lennox development and talk about how to
+contribute to the open source software.
+
+13
+00:00:43,040 --> 00:00:48,040
+So you may have heard the expression about
+free as in freedom not free, as in beer.
+
+14
+00:00:48,040 --> 00:00:53,207
+And so the word free is sort of
+overloaded in the english language.
+
+15
+00:00:53,207 --> 00:00:58,458
+You can be talk talking about freedom
+like your abilities not being
+
+16
+00:00:58,458 --> 00:01:05,239
+restricted your abilities to do things
+be you're being free to do something.
+
+17
+00:01:05,239 --> 00:01:08,570
+Or you can talk about
+things not having any cost.
+
+18
+00:01:08,570 --> 00:01:12,182
+And so that's the free, as in beer where
+if someone's giving away free beer,
+
+19
+00:01:12,182 --> 00:01:16,240
+what they mean is they're not going to
+charge you any money to get the beer.
+
+20
+00:01:16,240 --> 00:01:19,236
+And so what we talk about when
+we're talking about licensing for
+
+21
+00:01:19,236 --> 00:01:22,131
+Lennox, we're talking about
+the first definition of free.
+
+22
+00:01:22,131 --> 00:01:23,420
+The free as in Freedom.
+
+23
+00:01:23,420 --> 00:01:27,886
+So you have the freedom to obtain and you
+have the freedom to modify the source code
+
+24
+00:01:27,886 --> 00:01:31,450
+as long as you follow,
+follow the stipulations in the license.
+
+25
+00:01:31,450 --> 00:01:37,428
+There are two basic categories of
+licensing for open source software,
+
+26
+00:01:37,428 --> 00:01:42,430
+and the first is what will refer
+to as permissive licenses.
+
+27
+00:01:42,430 --> 00:01:46,023
+So in other words, these are licenses
+that give you the freedom to obtain and
+
+28
+00:01:46,023 --> 00:01:46,989
+modify the source.
+
+29
+00:01:46,989 --> 00:01:51,817
+But with relatively few limitations
+that you have based on your
+
+30
+00:01:51,817 --> 00:01:54,651
+modifications to that source code.
+
+31
+00:01:55,740 --> 00:02:00,930
+Two examples of permissive licenses
+that you'll see on open source software.
+
+32
+00:02:00,930 --> 00:02:05,720
+RBSD, which stands for Berkeley Software
+Distribution and MITT, which stands for
+
+33
+00:02:05,720 --> 00:02:08,161
+massachusetts Institute of Technology.
+
+34
+00:02:08,161 --> 00:02:12,359
+So these are original software licenses
+that came about from each one of these
+
+35
+00:02:12,359 --> 00:02:17,640
+academic institutions during the early
+days of open source software development.
+
+36
+00:02:17,640 --> 00:02:22,999
+And the basic premise of permissive
+licenses is that you can use the code,
+
+37
+00:02:22,999 --> 00:02:24,823
+you can modify the code.
+
+38
+00:02:24,823 --> 00:02:28,465
+And you don't necessarily need
+to share those modifications or
+
+39
+00:02:28,465 --> 00:02:32,243
+the source code that you incorporate
+them into with your customers
+
+40
+00:02:32,243 --> 00:02:35,290
+if you're developing
+an embedding mimics device.
+
+41
+00:02:35,290 --> 00:02:39,318
+So this is important in some scenarios
+because if you're working for
+
+42
+00:02:39,318 --> 00:02:44,187
+a company and they're developing their
+own proprietary intellectual property.
+
+43
+00:02:44,187 --> 00:02:49,126
+You wouldn't want to necessarily make
+restrict the company in the way that would
+
+44
+00:02:49,126 --> 00:02:54,062
+make them need to share all the details of
+their intellectual property as a part of
+
+45
+00:02:54,062 --> 00:02:55,461
+using some software.
+
+46
+00:02:57,740 --> 00:03:00,994
+So on the other side of
+permissive licensing is what's
+
+47
+00:03:00,994 --> 00:03:03,040
+called copy left licensing.
+
+48
+00:03:03,040 --> 00:03:05,540
+And it's kind of a play
+on the word copyright.
+
+49
+00:03:05,540 --> 00:03:09,544
+Where what it's saying is that
+if you incorporate the license,
+
+50
+00:03:09,544 --> 00:03:13,412
+this license material into your
+work with some limitations.
+
+51
+00:03:13,412 --> 00:03:17,596
+You typically need to share the content of
+the overall system that you're building is
+
+52
+00:03:17,596 --> 00:03:18,361
+based on that.
+
+53
+00:03:19,940 --> 00:03:24,850
+So two examples are the main example
+of the copy left license that's used
+
+54
+00:03:24,850 --> 00:03:28,170
+with Lennox is the GPL or
+the new public license.
+
+55
+00:03:28,170 --> 00:03:29,641
+So what does this mean?
+
+56
+00:03:29,641 --> 00:03:34,301
+It means that if you use the GPL and
+you use GPL licensed software,
+
+57
+00:03:34,301 --> 00:03:37,120
+your customers that buy your product.
+
+58
+00:03:37,120 --> 00:03:41,693
+And by virtue of the open nature
+of the Internet, essentially,
+
+59
+00:03:41,693 --> 00:03:46,840
+you need to plan on, everyone would
+get access to the source code.
+
+60
+00:03:46,840 --> 00:03:50,640
+If the source code that you developed
+is what's considered a derivative work.
+
+61
+00:03:50,640 --> 00:03:55,461
+So the definition of derivative work
+involves maybe more legal terms,
+
+62
+00:03:55,461 --> 00:03:59,450
+then we're going to come and
+be able to cover in this course.
+
+63
+00:03:59,450 --> 00:04:03,557
+But what it really means is if you're
+modifying an application that's GPL
+
+64
+00:04:03,557 --> 00:04:04,217
+licensed.
+
+65
+00:04:04,217 --> 00:04:08,750
+You're going to have to share the content
+of those modifications in order to comply
+
+66
+00:04:08,750 --> 00:04:09,961
+with license terms.
+
+67
+00:04:11,840 --> 00:04:16,339
+So, here's an example of a permissive
+license in this case, an MIT license.
+
+68
+00:04:16,339 --> 00:04:22,040
+So this shows some of the typical things
+that you'll see in a software license.
+
+69
+00:04:22,040 --> 00:04:25,711
+So first it goes over your rights
+as a user of the software.
+
+70
+00:04:25,711 --> 00:04:29,164
+So, some of the things to look for
+here, I can modify the software,
+
+71
+00:04:29,164 --> 00:04:32,090
+I can distribute the software,
+I can sell the software.
+
+72
+00:04:32,090 --> 00:04:36,880
+So this is telling me all the things
+that I can do as a user of the software.
+
+73
+00:04:36,880 --> 00:04:41,171
+And then this tells me what you know,
+if I'm going to use the software for
+
+74
+00:04:41,171 --> 00:04:44,240
+the terms of the license,
+what do I have to do?
+
+75
+00:04:44,240 --> 00:04:47,041
+And in this case, what it says
+is the above copyright notice.
+
+76
+00:04:47,041 --> 00:04:50,068
+And this permission notice shall be
+included in all copies are substantial
+
+77
+00:04:50,068 --> 00:04:51,190
+portions of the software.
+
+78
+00:04:51,190 --> 00:04:55,320
+So I need to make sure that I include
+the copyright information that's
+
+79
+00:04:55,320 --> 00:04:59,320
+associated with the license, say,
+who developed this software.
+
+80
+00:04:59,320 --> 00:05:04,127
+And I need to pass on
+the permission notice that
+
+81
+00:05:04,127 --> 00:05:07,461
+is given here in this document.
+
+82
+00:05:08,940 --> 00:05:13,100
+And then it also covers the limitation as
+a user that you need to pass on to your
+
+83
+00:05:13,100 --> 00:05:15,381
+users as well for the use of the software.
+
+84
+00:05:15,381 --> 00:05:18,129
+And, and the basic, you know,
+
+85
+00:05:18,129 --> 00:05:24,100
+nonlegal layman's description of this
+is if it doesn't work, don't sue me.
+
+86
+00:05:24,100 --> 00:05:24,651
+Right?
+So
+
+87
+00:05:24,651 --> 00:05:29,492
+what this is saying is that the copyright
+holder is letting you use it for
+
+88
+00:05:29,492 --> 00:05:31,450
+whatever purpose you want.
+
+89
+00:05:31,450 --> 00:05:36,337
+As long as you give them attribution in
+the form of notifying that you're using
+
+90
+00:05:36,337 --> 00:05:40,129
+their copyright and
+as long as you free them from liability.
+
+91
+00:05:40,129 --> 00:05:44,476
+And you pass that along to your customers
+to let them know that the original soft.
+
+92
+00:05:44,476 --> 00:05:47,916
+They can't go back and sue the original
+copyright holder if there's something
+
+93
+00:05:47,916 --> 00:05:49,261
+doesn't work in this office.
+
+94
+00:05:50,640 --> 00:05:55,451
+Two examples of licensing that
+are used in Linux software development
+
+95
+00:05:55,451 --> 00:05:58,730
+that are the copy left variety
+are L G P L and G P L.
+
+96
+00:05:58,730 --> 00:06:02,561
+So L GPL is typically used for
+software libraries.
+
+97
+00:06:02,561 --> 00:06:07,742
+So, for instance, GCC libraries and
+these allow you to link to a proprietary
+
+98
+00:06:07,742 --> 00:06:12,941
+application without needing to share
+the source code of your applications.
+
+99
+00:06:12,941 --> 00:06:15,861
+So, you see this used for
+things like gcc libraries.
+
+100
+00:06:15,861 --> 00:06:20,507
+This allows you to build your software
+with GCC calls something like Prune F.
+
+101
+00:06:20,507 --> 00:06:25,381
+And not have to worry about having
+licensing restrictions apply to
+
+102
+00:06:25,381 --> 00:06:29,907
+your application that you built
+based on that call to a library
+
+103
+00:06:29,907 --> 00:06:33,040
+that's included as part of GCC.
+
+104
+00:06:33,040 --> 00:06:37,377
+But what it does say is that if you needed
+to make some change to a print F function
+
+105
+00:06:37,377 --> 00:06:40,158
+or to something that's
+a part of the GCC library.
+
+106
+00:06:40,158 --> 00:06:44,097
+You would be legally obligated
+to share that change
+
+107
+00:06:44,097 --> 00:06:47,861
+when you distribute
+the ultimate application.
+
+108
+00:06:50,040 --> 00:06:54,747
+So for GPL based software,
+like what is used for the links,
+
+109
+00:06:54,747 --> 00:07:00,031
+Colonel GPS I mentioned before is
+considered a copy left license.
+
+110
+00:07:00,031 --> 00:07:04,343
+In other words, if you incorporate
+in any way the source code of that
+
+111
+00:07:04,343 --> 00:07:07,153
+GPL licensed software into your software.
+
+112
+00:07:07,153 --> 00:07:09,503
+Your software is also bound
+by the terms of the GPL,
+
+113
+00:07:09,503 --> 00:07:13,540
+meaning that you would need to
+distribute its source code to customers.
+
+114
+00:07:13,540 --> 00:07:15,171
+There are different versions of the GPL.
+
+115
+00:07:15,171 --> 00:07:20,280
+However, you'll see that reference in GPL,
+version two versus version three.
+
+116
+00:07:20,280 --> 00:07:24,981
+The Tebow that we mentioned earlier as
+being one of the first Lennox hardware
+
+117
+00:07:24,981 --> 00:07:26,607
+devices did some change.
+
+118
+00:07:26,607 --> 00:07:31,510
+Which meant that they could,
+meet the spirit of the GPL or
+
+119
+00:07:31,510 --> 00:07:34,481
+meet the requirements of the GPL.
+
+120
+00:07:34,481 --> 00:07:39,162
+Version two by publishing all
+their source code, but not allow
+
+121
+00:07:39,162 --> 00:07:44,570
+the customer to modify the source code and
+then run it on their hardware.
+
+122
+00:07:44,570 --> 00:07:49,446
+So they put some limited restrictions and
+hardware, which meant that their
+
+123
+00:07:49,446 --> 00:07:54,181
+hardware could only run the specific
+Lennox in binary that they created.
+
+124
+00:07:54,181 --> 00:07:58,391
+And not something else that would be
+created by someone else using their source
+
+125
+00:07:58,391 --> 00:08:00,240
+code as a reference.
+
+126
+00:08:00,240 --> 00:08:04,191
+And there was some consternation in
+the community about whether that was
+
+127
+00:08:04,191 --> 00:08:07,040
+an appropriate and
+valid use of the license.
+
+128
+00:08:07,040 --> 00:08:10,171
+And so
+part of the newest revision of GPL or
+
+129
+00:08:10,171 --> 00:08:14,291
+GPL V three specifically
+prevents that that use case.
+
+130
+00:08:14,291 --> 00:08:18,788
+In other words, it says that not only
+must you share all your source, but
+
+131
+00:08:18,788 --> 00:08:23,287
+you also must not restrict the ability
+of the user to change the source and
+
+132
+00:08:23,287 --> 00:08:24,861
+run it on your hardware.
+
+133
+00:08:25,940 --> 00:08:30,912
+However, importantly, the Lennox Colonel
+has not incorporated GPL version three.
+
+134
+00:08:30,912 --> 00:08:34,337
+So the Colonel still uses
+the version two of the license that
+
+135
+00:08:34,337 --> 00:08:38,877
+allows the type of implementation that
+Tebow did that shares the source code.
+
+136
+00:08:38,877 --> 00:08:42,309
+But does not necessarily
+make it possible for
+
+137
+00:08:42,309 --> 00:08:47,106
+customers to update with their
+own source code on your device.
+
+138
+00:08:47,106 --> 00:08:51,843
+So what do we mean when we talk about
+contributing to open source community?
+
+139
+00:08:51,843 --> 00:08:55,001
+And what are some of the things that go
+into contributing, open source software?
+
+140
+00:08:55,001 --> 00:08:59,091
+I mentioned before that there are groups
+that are associated with each software
+
+141
+00:08:59,091 --> 00:08:59,900
+application.
+
+142
+00:08:59,900 --> 00:09:03,481
+In terms of Lennox application
+development, there's groups that
+
+143
+00:09:03,481 --> 00:09:07,205
+are associated with each specific
+sub component of the Linux kernel.
+
+144
+00:09:07,205 --> 00:09:08,930
+And contributing to open source for
+
+145
+00:09:08,930 --> 00:09:12,844
+those groups typically means that you're
+going to be communicating with others,
+
+146
+00:09:12,844 --> 00:09:15,920
+probably in written fashion and
+most likely over open forums.
+
+147
+00:09:15,920 --> 00:09:19,701
+So you're going to be using things like
+mailing lists to interact with a bunch of
+
+148
+00:09:19,701 --> 00:09:23,425
+people that have some stake in the
+development of whatever software you're
+
+149
+00:09:23,425 --> 00:09:24,640
+talking about.
+
+150
+00:09:24,640 --> 00:09:27,275
+So this means that you're going to
+need to be responding to questions
+
+151
+00:09:27,275 --> 00:09:28,000
+about your code.
+
+152
+00:09:28,000 --> 00:09:31,610
+You're going to need to ask good
+questions when you need help from others.
+
+153
+00:09:31,610 --> 00:09:33,756
+And you're going to have
+to follow detailed and
+
+154
+00:09:33,756 --> 00:09:36,523
+specific submission rules about
+how to submit changes for
+
+155
+00:09:36,523 --> 00:09:40,040
+whatever project you happen to
+be trying to contribute to.
+
+156
+00:09:40,040 --> 00:09:44,845
+And I want you to think about making open
+source contributions as especially as
+
+157
+00:09:44,845 --> 00:09:46,624
+a part of your final project.
+
+158
+00:09:46,624 --> 00:09:51,471
+And how you could maybe leverage
+that in terms of advertising your,
+
+159
+00:09:51,471 --> 00:09:52,711
+your own skills.
+
+160
+00:09:52,711 --> 00:09:55,722
+So this is the kind of thing that you
+should be able to ultimately put on your
+
+161
+00:09:55,722 --> 00:09:58,551
+resume, the fact that you contributed
+to some open source project.
+
+162
+00:10:00,340 --> 00:10:02,099
+And each, as I mentioned before,
+
+163
+00:10:02,099 --> 00:10:05,090
+each project has their own
+rules about how to contribute.
+
+164
+00:10:05,090 --> 00:10:08,860
+And so, if you want to see the type
+of detail that's included in this,
+
+165
+00:10:08,860 --> 00:10:12,825
+here's a link to how to contribute to
+the Linux kernel that you can use for
+
+166
+00:10:12,825 --> 00:10:14,261
+more information about.

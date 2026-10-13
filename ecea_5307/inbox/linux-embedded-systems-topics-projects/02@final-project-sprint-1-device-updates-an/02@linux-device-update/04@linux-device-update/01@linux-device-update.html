@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Linux Device Update</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>When considering security of OTA update schemes, you can use obfuscation to remove the need for cryptography.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Q85RjE02EeydGAow5AKOFw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~Q85RjE02EeydGAow5AKOFw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which design goals are important to consider when desiging a device update scheme?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~v4eGn01dEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Prevent unathorized code replacement</p></div></li>
+<li><input name="autoGradableResponseId~v4eGn01dEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Ability to recover from power loss or connection outages</p></div></li>
+<li><input name="autoGradableResponseId~v4eGn01dEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Ease of use for end users as well as developers</p></div></li>
+<li><input name="autoGradableResponseId~v4eGn01dEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>Use obfuscation to transfer encryption keys</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which update scheme occupies maximum storage space?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Vuvc0E1rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>A/B Dual Redundant</p></div></li>
+<li><input name="autoGradableResponseId~Vuvc0E1rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Single Copy</p></div></li>
+<li><input name="autoGradableResponseId~Vuvc0E1rEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Application Update</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Label the components in the drawing below, depecting a signature generation step.</p><img alt="Q1.png" src="Q1.png"/><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>B - Large number of fixed size</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>B - Input Binary File</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>C - Multiply operation</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>A - Private Key</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>D - Output Key</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>A - Public Key</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>C - Signature/Encryption Algorithm (RSA or ECC)</p></div></li>
+<li><input name="autoGradableResponseId~zcLVYk1rEey3KBI-GvqEhw" type="checkbox"/> <div class="quiz-option-text"><p>D - Signature</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Label the components in the drawing below, depicting a signature validation process.</p><img alt="Q2.png" src="Q2.png"/><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>A - Large number used as input to Signature Generation step</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>D - Large number matching the number used as input during signature generation step</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>A - Large number from output of signature generation step</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>C - Multiplication operation</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>B - Private Key</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>D - Large number different from the number used as input during signature generation step.</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>C - Signature/Encryption Algorithm (RSA or ECC)</p></div></li>
+<li><input name="autoGradableResponseId~BVtC401yEeyXYQ4OWt3joQ" type="checkbox"/> <div class="quiz-option-text"><p>B - Public Key</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the relationshipos between components below</p><img alt="Q3.png" src="Q3.png"/><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>A - Private Key</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>A - Public Key</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>D - Public Key</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>C - Private Signature</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>B - Input Number to signature generation step, output of signature validation step.</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>B - Output Number from signature generation step, input used for signature validation step.</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>C - Signature</p></div></li>
+<li><input name="autoGradableResponseId~ocreBk1yEeyF_wroUAQ62w" type="checkbox"/> <div class="quiz-option-text"><p>D - Private Key</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>If a hacker obtains one or more of the inputs or outputs used with signature validation step, it's possible to use these to recreate the private key</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~jL-Hn044EeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~jL-Hn044EeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>If a hacker obtains a private key, it's possible to generate a signature which passes signature validation with the corresponding public key</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~t0KOhE44Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~t0KOhE44Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given an asymmetric encryption step which requires a fixed input size, how can you sign a firmware image with different size?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1t9cC044Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Truncate your firmware image to match the required input size.</p></div></li>
+<li><input name="autoGradableResponseId~1t9cC044Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Use a hash function like SHA on the input firmware image to generate a fixed size output.</p></div></li>
+<li><input name="autoGradableResponseId~1t9cC044Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>Only use the first or last bytes of the image as corresponding to the required input size.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Why is it important that a hash function used during a signature generation step produces different output with slight changes in input binary file?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~YP4-dE45EeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>It makes the public key more random</p></div></li>
+<li><input name="autoGradableResponseId~YP4-dE45EeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>It ensures any small unauthorized changes in firmware payload result in a failure of signature validation steps.</p></div></li>
+<li><input name="autoGradableResponseId~YP4-dE45EeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>It makes the private key more difficult to guess</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>With a properly generated pubilc and private key combination even a supercomputer would take more than a year to correctly guess and calcuate a private key.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1R58I045Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~1R58I045Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Asymmetric Encryption schemes available today are resistent to quantum computing, however this may not always be the case.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~bkr7QU46Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~bkr7QU46Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a reason to use A/B Dual Redundant updates instead of Single Copy or Application Update schemes?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~lIvEcU46Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Ability to roll back to a previous known good and unmodified root filesystem, even after upgrade failure.</p></div></li>
+<li><input name="autoGradableResponseId~lIvEcU46Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Simplest implementation possible</p></div></li>
+<li><input name="autoGradableResponseId~lIvEcU46Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>Minimized storage space reuired for update</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

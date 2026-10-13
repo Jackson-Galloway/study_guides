@@ -1,0 +1,569 @@
+1
+00:00:00,000 --> 00:00:02,130
+In this video, I'll talk
+about the format of
+
+2
+00:00:02,130 --> 00:00:04,605
+the Advanced Embedded
+Linux Development course.
+
+3
+00:00:04,605 --> 00:00:06,465
+I'm going to talk about
+the prerequisites and
+
+4
+00:00:06,465 --> 00:00:09,690
+expectations I have
+for you as a student
+
+5
+00:00:09,690 --> 00:00:12,780
+covering this course
+and also some of
+
+6
+00:00:12,780 --> 00:00:15,450
+the common content
+we learnt regarding
+
+7
+00:00:15,450 --> 00:00:17,070
+assignments and build
+environments that
+
+8
+00:00:17,070 --> 00:00:18,810
+you'll use in
+completing the course.
+
+9
+00:00:18,810 --> 00:00:20,940
+I'll also mention the books that
+
+10
+00:00:20,940 --> 00:00:24,070
+are used as the basis
+of this course.
+
+11
+00:00:24,230 --> 00:00:27,720
+Talking about my expectations
+for you as a student,
+
+12
+00:00:27,720 --> 00:00:29,700
+I do expect that you have
+some working knowledge
+
+13
+00:00:29,700 --> 00:00:32,985
+already of C programming
+and Makefiles.
+
+14
+00:00:32,985 --> 00:00:35,610
+Ideally, you'd also have
+a little bit of knowledge
+
+15
+00:00:35,610 --> 00:00:37,740
+of Linux command line
+and shell scripting.
+
+16
+00:00:37,740 --> 00:00:40,470
+I think if you don't
+have this knowledge,
+
+17
+00:00:40,470 --> 00:00:44,820
+you're still able to complete
+this course successfully.
+
+18
+00:00:44,820 --> 00:00:46,700
+It just may take a
+little bit more time and
+
+19
+00:00:46,700 --> 00:00:48,200
+a little bit more
+work than if you
+
+20
+00:00:48,200 --> 00:00:51,030
+already had some exposure
+to these topics.
+
+21
+00:00:51,310 --> 00:00:54,440
+For the assignments
+in this course,
+
+22
+00:00:54,440 --> 00:00:57,265
+we'll use a Linux-based
+build environment.
+
+23
+00:00:57,265 --> 00:00:59,960
+This could be a virtual machine
+
+24
+00:00:59,960 --> 00:01:02,720
+or it could be actual
+Linux hardware.
+
+25
+00:01:02,720 --> 00:01:04,850
+The Assignment 1 document
+
+26
+00:01:04,850 --> 00:01:06,815
+will have some links
+that talk about
+
+27
+00:01:06,815 --> 00:01:09,920
+the version of Ubuntu Linux
+
+28
+00:01:09,920 --> 00:01:12,875
+that we're currently using
+for the assignments.
+
+29
+00:01:12,875 --> 00:01:14,960
+This will give you
+some setup ideas and
+
+30
+00:01:14,960 --> 00:01:16,100
+setup instructions about how you
+
+31
+00:01:16,100 --> 00:01:17,570
+can set up your
+build environment.
+
+32
+00:01:17,570 --> 00:01:19,730
+But there's a few different
+options you could consider.
+
+33
+00:01:19,730 --> 00:01:24,095
+One, is if you have a
+Windows or MacOS main PC,
+
+34
+00:01:24,095 --> 00:01:26,585
+you could use VirtualBox
+for your build environment.
+
+35
+00:01:26,585 --> 00:01:28,640
+If you do that, you'll want
+to make sure that you have
+
+36
+00:01:28,640 --> 00:01:31,880
+at least four gigs RAM and
+100 gigs of disk space.
+
+37
+00:01:31,880 --> 00:01:35,180
+Again, refer to the Assignment
+1 setup instructions for
+
+38
+00:01:35,180 --> 00:01:36,785
+any more specific content
+
+39
+00:01:36,785 --> 00:01:39,660
+that's more up-to-date
+than this video.
+
+40
+00:01:39,660 --> 00:01:43,070
+But if you are using
+a virtual machine,
+
+41
+00:01:43,070 --> 00:01:45,090
+you'll need to have
+
+42
+00:01:45,090 --> 00:01:46,780
+roughly double that amount of
+
+43
+00:01:46,780 --> 00:01:48,250
+space available on your host.
+
+44
+00:01:48,250 --> 00:01:49,900
+So if you're using
+four gigs of RAM,
+
+45
+00:01:49,900 --> 00:01:51,250
+you'll probably need about eight
+
+46
+00:01:51,250 --> 00:01:53,480
+gigs of RAM on your host.
+
+47
+00:01:55,220 --> 00:01:58,060
+If you're short on
+host disk space,
+
+48
+00:01:58,060 --> 00:02:01,390
+you can use a USB
+3 hard disk drive
+
+49
+00:02:01,390 --> 00:02:03,760
+or especially a solid-state disk
+
+50
+00:02:03,760 --> 00:02:06,070
+for virtual machine images.
+
+51
+00:02:06,070 --> 00:02:09,970
+That will work as
+well. Second option
+
+52
+00:02:09,970 --> 00:02:12,400
+is that you can have a
+dedicated Linux laptop.
+
+53
+00:02:12,400 --> 00:02:13,660
+If you do that,
+just make sure you
+
+54
+00:02:13,660 --> 00:02:15,010
+find one with at
+least eight gigs of
+
+55
+00:02:15,010 --> 00:02:18,140
+RAM and 100 gigabytes
+of disk space.
+
+56
+00:02:18,140 --> 00:02:20,320
+The more performant, the
+
+57
+00:02:20,320 --> 00:02:22,520
+faster you'll be able to
+build your assignments,
+
+58
+00:02:22,520 --> 00:02:24,970
+but it's not a
+requirement to have
+
+59
+00:02:24,970 --> 00:02:27,850
+a super performant machine
+to complete this course.
+
+60
+00:02:27,850 --> 00:02:29,735
+You can think like
+pawn shops and
+
+61
+00:02:29,735 --> 00:02:32,110
+eBay to come up with
+something that could work.
+
+62
+00:02:32,110 --> 00:02:34,160
+If you are going to just pick up
+
+63
+00:02:34,160 --> 00:02:36,980
+an arbitrary system or a laptop,
+
+64
+00:02:36,980 --> 00:02:38,270
+it's a good idea to google
+
+65
+00:02:38,270 --> 00:02:40,790
+the whatever hardware model
+that you're picking up in
+
+66
+00:02:40,790 --> 00:02:42,830
+Ubuntu just to make
+sure that you can
+
+67
+00:02:42,830 --> 00:02:45,200
+see some indication
+that it's supported.
+
+68
+00:02:45,200 --> 00:02:46,700
+Typically, most machines
+
+69
+00:02:46,700 --> 00:02:48,110
+these days are
+supported pretty well,
+
+70
+00:02:48,110 --> 00:02:50,080
+so it's usually not an issue.
+
+71
+00:02:50,080 --> 00:02:51,680
+Then Option 3,
+
+72
+00:02:51,680 --> 00:02:53,720
+look for some links in
+
+73
+00:02:53,720 --> 00:02:57,200
+the Wiki pages for the
+assignment base repository,
+
+74
+00:02:57,200 --> 00:03:00,860
+but another option is to
+use a cloud hosted runner,
+
+75
+00:03:00,860 --> 00:03:04,475
+either AWS or Google Compute as
+
+76
+00:03:04,475 --> 00:03:06,215
+a place that you can host
+
+77
+00:03:06,215 --> 00:03:10,590
+a Linux instance you can
+use to do your builds.
+
+78
+00:03:10,790 --> 00:03:14,140
+We'll make extensive use
+of git in the course and
+
+79
+00:03:14,140 --> 00:03:16,885
+you'll turn in assignments
+through GitHub Classroom.
+
+80
+00:03:16,885 --> 00:03:19,540
+The assignments are
+going to start with
+
+81
+00:03:19,540 --> 00:03:21,955
+some sample repository content
+
+82
+00:03:21,955 --> 00:03:25,055
+that comes from
+base repositories.
+
+83
+00:03:25,055 --> 00:03:26,650
+These base Repositories
+are going to
+
+84
+00:03:26,650 --> 00:03:28,540
+depend on which
+application we're
+
+85
+00:03:28,540 --> 00:03:32,165
+building and which build tool
+we're using But typically,
+
+86
+00:03:32,165 --> 00:03:34,225
+an assignment's going to
+start with a git merge.
+
+87
+00:03:34,225 --> 00:03:36,550
+When you do git merges,
+
+88
+00:03:36,550 --> 00:03:39,010
+depending on which
+files you've modified,
+
+89
+00:03:39,010 --> 00:03:41,245
+you may see git merge issues.
+
+90
+00:03:41,245 --> 00:03:43,540
+When you see these, use
+
+91
+00:03:43,540 --> 00:03:46,375
+Internet searches to help you
+figure out the next steps.
+
+92
+00:03:46,375 --> 00:03:50,140
+There's lots of good git
+information online or use
+
+93
+00:03:50,140 --> 00:03:54,765
+the appropriate help
+channels for your class.
+
+94
+00:03:54,765 --> 00:03:59,170
+Use Slack channel or
+use the forum post
+
+95
+00:03:59,170 --> 00:04:02,050
+for help from your peers
+
+96
+00:04:02,050 --> 00:04:05,390
+and from the student
+facilitators.
+
+97
+00:04:06,260 --> 00:04:08,710
+I also wanted to talk
+a little bit about
+
+98
+00:04:08,710 --> 00:04:10,795
+the books that I
+used in this course.
+
+99
+00:04:10,795 --> 00:04:14,395
+I originally based all the
+content in this course,
+
+100
+00:04:14,395 --> 00:04:17,040
+the first section is
+
+101
+00:04:17,040 --> 00:04:19,800
+based primarily off the
+Linux System Programming,
+
+102
+00:04:19,800 --> 00:04:21,960
+2nd Edition book, which I
+
+103
+00:04:21,960 --> 00:04:24,985
+refer to in some
+cases by acronym LSP.
+
+104
+00:04:24,985 --> 00:04:26,440
+This is talking about how
+
+105
+00:04:26,440 --> 00:04:28,760
+the system program is going
+to interact with the kernel.
+
+106
+00:04:28,760 --> 00:04:30,780
+This is where the
+processes, threading,
+
+107
+00:04:30,780 --> 00:04:33,520
+and POSIX overview comes from.
+
+108
+00:04:33,520 --> 00:04:37,010
+Part of the first
+course also covers
+
+109
+00:04:37,010 --> 00:04:38,620
+the Mastering Embedded
+Linux Programming
+
+110
+00:04:38,620 --> 00:04:40,240
+, 2nd Edition book.
+
+111
+00:04:40,240 --> 00:04:41,750
+This has some more of
+
+112
+00:04:41,750 --> 00:04:44,860
+the practical aspects of
+building embedded systems.
+
+113
+00:04:44,860 --> 00:04:47,790
+Then in the later
+parts of the course,
+
+114
+00:04:47,790 --> 00:04:49,290
+we talk about
+driver development.
+
+115
+00:04:49,290 --> 00:04:50,840
+This, we'll get into the content
+
+116
+00:04:50,840 --> 00:04:53,015
+from Linux Device
+Drivers, 3rd Edition.
+
+117
+00:04:53,015 --> 00:04:54,860
+This is all about
+theory, practice
+
+118
+00:04:54,860 --> 00:04:57,665
+related to developing
+device drivers.
+
+119
+00:04:57,665 --> 00:05:00,305
+None of these books are required
+to complete the course.
+
+120
+00:05:00,305 --> 00:05:02,120
+This is all background
+material that you
+
+121
+00:05:02,120 --> 00:05:05,550
+can reference based
+on slide content.

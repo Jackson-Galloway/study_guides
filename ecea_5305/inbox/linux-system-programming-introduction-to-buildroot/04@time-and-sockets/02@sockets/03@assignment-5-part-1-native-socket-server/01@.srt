@@ -1,0 +1,624 @@
+1
+00:00:00,880 --> 00:00:03,570
+In this video, I'm going to go
+through part one of assignment five,
+
+2
+00:00:03,570 --> 00:00:06,240
+the native socket server implementation.
+
+3
+00:00:06,240 --> 00:00:08,794
+So step me through
+the assignment instructions.
+
+4
+00:00:08,794 --> 00:00:11,855
+You're going to start with
+your assignment three and
+
+5
+00:00:11,855 --> 00:00:16,696
+later repository merge in the contents
+of the assignments based assignment five
+
+6
+00:00:16,696 --> 00:00:19,557
+branch to pull in the starter
+content you need.
+
+7
+00:00:19,557 --> 00:00:26,633
+And then and these get a classroom start
+instructions will walk you through this.
+
+8
+00:00:26,633 --> 00:00:31,325
+So the implementation, what we're
+going to be doing here is creating
+
+9
+00:00:31,325 --> 00:00:34,207
+a server directory in your repository and
+
+10
+00:00:34,207 --> 00:00:39,840
+then creating a socket based program
+that we're going to call ASD socket.
+
+11
+00:00:39,840 --> 00:00:43,920
+And that is going to have
+a make file that builds and
+
+12
+00:00:43,920 --> 00:00:48,923
+runs it either natively or
+cross compiled for the target.
+
+13
+00:00:48,923 --> 00:00:54,240
+It's going to open a stream socket that's
+bound to port 9,000 and handle errors.
+
+14
+00:00:54,240 --> 00:00:57,684
+Appropriately, it will listen for
+an accepted connection when it
+
+15
+00:00:57,684 --> 00:01:01,937
+gets a connection, it'll log a message
+saying that it accepted the connection.
+
+16
+00:01:01,937 --> 00:01:05,304
+And then it's going to receive
+the data over the connection and
+
+17
+00:01:05,304 --> 00:01:08,010
+append that into this var
+temp ASD socket file and
+
+18
+00:01:08,010 --> 00:01:11,440
+it's going to create that
+file if it doesn't exist.
+
+19
+00:01:11,440 --> 00:01:16,262
+So every data packet received that
+has a new line should consider
+
+20
+00:01:16,262 --> 00:01:17,787
+a packet complete.
+
+21
+00:01:17,787 --> 00:01:22,054
+So you're going to buffer packets that you
+receive over the socket interface until
+
+22
+00:01:22,054 --> 00:01:23,830
+you see that new line character.
+
+23
+00:01:23,830 --> 00:01:26,298
+Once you see the new line character,
+
+24
+00:01:26,298 --> 00:01:29,887
+you'll write that into
+the var temp ASD socket file.
+
+25
+00:01:29,887 --> 00:01:34,745
+And you can assume that the stream
+that we're sending over the data is
+
+26
+00:01:34,745 --> 00:01:38,951
+all over the socket is not going to
+include in all characters.
+
+27
+00:01:38,951 --> 00:01:41,690
+So you can use string
+handling functions too.
+
+28
+00:01:41,690 --> 00:01:44,461
+Look at the strings that you received or
+to print them out.
+
+29
+00:01:45,940 --> 00:01:48,740
+You can assume that the length of
+the packet is going to be shorter than
+
+30
+00:01:48,740 --> 00:01:49,812
+the available heap size.
+
+31
+00:01:49,812 --> 00:01:53,811
+So you should be able to mark any
+received packet that you get over
+
+32
+00:01:53,811 --> 00:01:55,310
+the socket interface.
+
+33
+00:01:55,310 --> 00:02:01,940
+And if that total length of the package
+is longer than the size of the available
+
+34
+00:02:01,940 --> 00:02:08,572
+heap, you can consider that a failure
+of the program and returned a failure.
+
+35
+00:02:08,572 --> 00:02:12,954
+So every time as soon as the receive
+packet portion completes,
+
+36
+00:02:12,954 --> 00:02:17,181
+its going to return all the content
+of our temp ASD socket data.
+
+37
+00:02:17,181 --> 00:02:20,038
+So if you write multiple
+strings out over the socket,
+
+38
+00:02:20,038 --> 00:02:22,779
+it's going to buffer those
+one right after another.
+
+39
+00:02:22,779 --> 00:02:26,923
+And then as soon as the last string you
+sent completes, it's going to send back
+
+40
+00:02:26,923 --> 00:02:30,761
+all the content that you've sent
+since you started the application.
+
+41
+00:02:32,440 --> 00:02:37,351
+You can and then you can assume that the
+amount of packets that we send is going to
+
+42
+00:02:37,351 --> 00:02:39,829
+be smaller than the root file system.
+
+43
+00:02:39,829 --> 00:02:43,594
+But you can't assume that the total size
+of all the packets sent is going to be
+
+44
+00:02:43,594 --> 00:02:45,671
+less than the size of the available RAM.
+
+45
+00:02:45,671 --> 00:02:50,801
+So in other words, you can't just read
+the entire file directly into RAM and
+
+46
+00:02:50,801 --> 00:02:53,620
+then and write it all back out the socket.
+
+47
+00:02:53,620 --> 00:02:55,965
+You need to have some logic
+that reads line by line.
+
+48
+00:02:59,247 --> 00:03:03,802
+Then it will log the message to cis log
+saying that close client connection from
+
+49
+00:03:03,802 --> 00:03:06,161
+the IP address of the connected client.
+
+50
+00:03:07,675 --> 00:03:11,164
+And it's just going to
+sit in a loop waiting for
+
+51
+00:03:11,164 --> 00:03:16,560
+new clients to connect and
+until the sigint or sig term is received.
+
+52
+00:03:16,560 --> 00:03:21,001
+And when the signit or sig terms received,
+it's going to complete open connections,
+
+53
+00:03:21,001 --> 00:03:24,204
+close sockets and
+then delete that var temp ASD socket data.
+
+54
+00:03:24,204 --> 00:03:29,077
+So this way every time you stop and
+restart the app, it'll start over with
+
+55
+00:03:29,077 --> 00:03:33,651
+a new empty list of responses that
+it will send two sockets commands.
+
+56
+00:03:35,640 --> 00:03:39,298
+So you can use the netcat utility
+to test your implementation.
+
+57
+00:03:39,298 --> 00:03:41,650
+And this is what the test
+scripts are going to use.
+
+58
+00:03:41,650 --> 00:03:45,147
+And you can also use the test script
+we have called sacha test on SH,
+
+59
+00:03:45,147 --> 00:03:48,218
+this is what the test implementation
+is going to be based on.
+
+60
+00:03:48,218 --> 00:03:52,558
+And if you look at what the sacha
+test that SH implementation does.
+
+61
+00:03:52,558 --> 00:03:57,140
+It's just a bash wrapper around netcat
+that sends a series of strings and
+
+62
+00:03:57,140 --> 00:04:01,811
+looks at the results and make sure that
+you get the expected results back.
+
+63
+00:04:01,811 --> 00:04:06,249
+So if we send a B C D E F G, we expect
+to get that back from the socket.
+
+64
+00:04:06,249 --> 00:04:08,689
+If we spend, if we send H I J K L M N O P,
+
+65
+00:04:08,689 --> 00:04:12,840
+we expect to get the previous
+packet plus the next packet.
+
+66
+00:04:12,840 --> 00:04:16,364
+And this logic just verifies that your
+implementation matches the requirements.
+
+67
+00:04:21,440 --> 00:04:23,691
+So you can test this.
+
+68
+00:04:23,691 --> 00:04:29,910
+So the full test script is going to
+test the entire implementation for you.
+
+69
+00:04:29,910 --> 00:04:35,449
+Running on your native,
+your native you'd want to machine.
+
+70
+00:04:35,449 --> 00:04:39,374
+But you could test it yourself if you
+want by starting the socket application,
+
+71
+00:04:39,374 --> 00:04:44,140
+then executing the socket test script and
+then stopping your socket application.
+
+72
+00:04:44,140 --> 00:04:48,099
+That should do the same thing that
+the full test script does if you want
+
+73
+00:04:48,099 --> 00:04:50,126
+to run it in isolation.
+
+74
+00:04:50,126 --> 00:04:53,843
+And then next you need to modify your
+program to support a dash D, argument.
+
+75
+00:04:53,843 --> 00:04:56,677
+And so when you run ASD socket dash D,
+
+76
+00:04:56,677 --> 00:05:01,940
+it should kick off your ASD
+socket application as a daemon.
+
+77
+00:05:01,940 --> 00:05:06,561
+And one thing to note with your daemon
+implementation, when it's in daemon mode,
+
+78
+00:05:06,561 --> 00:05:10,869
+you should wait to fork until after
+ensuring you can bind to port 9,000.
+
+79
+00:05:10,869 --> 00:05:15,364
+In other words, you should fail out
+without doing the fork if you were
+
+80
+00:05:15,364 --> 00:05:20,540
+unable to bind to port 9,000 as
+a part of your socket set up.
+
+81
+00:05:20,540 --> 00:05:23,494
+And now once you have
+this implementation done,
+
+82
+00:05:23,494 --> 00:05:28,108
+you can verify that the full test script
+from the ASD assignments repository
+
+83
+00:05:28,108 --> 00:05:31,515
+verifies your socket application
+running as a daemon.
+
+84
+00:05:31,515 --> 00:05:36,817
+And so this, this makes sure that the core
+portion of assignment five is working and
+
+85
+00:05:36,817 --> 00:05:39,861
+running on your native
+Cuban to installation.
+
+86
+00:05:41,140 --> 00:05:46,056
+So looking at a demo of what you
+should see with your native assignment
+
+87
+00:05:46,056 --> 00:05:49,800
+five part one implementation
+are on full test here.
+
+88
+00:05:49,800 --> 00:05:52,693
+You should see that it builds and
+runs my unit tests and
+
+89
+00:05:52,693 --> 00:05:56,488
+then it's going to build and run my
+ASD socket application as a daemon and
+
+90
+00:05:56,488 --> 00:05:59,461
+it's gonnaexercise it with
+a bunch of input strings.
+
+91
+00:05:59,461 --> 00:06:04,475
+And so what you can see is the strings
+that I showed from the Sacher test
+
+92
+00:06:04,475 --> 00:06:10,113
+application and then a bunch of larger
+strings that are randomly generated.
+
+93
+00:06:10,113 --> 00:06:15,330
+And once it completes, its going to
+shut down your ASD socket application.
+
+94
+00:06:15,330 --> 00:06:19,799
+And what you should see is this message
+here saying that the test completed with
+
+95
+00:06:19,799 --> 00:06:20,415
+success.
+
+96
+00:06:20,415 --> 00:06:24,731
+If a failure happens here, it'll print
+out the detail about what it sent and
+
+97
+00:06:24,731 --> 00:06:26,687
+what it expected to receive but and
+
+98
+00:06:26,687 --> 00:06:32,040
+what it received instead from your socket
+test from your ASD socket application.
+
+99
+00:06:32,040 --> 00:06:37,104
+The second way you should
+be able to test this and
+
+100
+00:06:37,104 --> 00:06:44,328
+more in isolation is you should be
+able to run the sacha test script.
+
+101
+00:06:44,328 --> 00:06:48,714
+So under the assignment auto test
+directory and test assignment five,
+
+102
+00:06:48,714 --> 00:06:53,029
+there's a sacha test script that's
+ultimately going to be testing your
+
+103
+00:06:53,029 --> 00:06:54,000
+application.
+
+104
+00:06:54,000 --> 00:06:58,221
+If I run this without my application
+running, I can see the kinds of failure
+
+105
+00:06:58,221 --> 00:07:02,376
+message I'm going to get if my
+application isn't implemented correctly.
+
+106
+00:07:02,376 --> 00:07:06,277
+So what this is saying is that it
+sent a string A B C D E F G and
+
+107
+00:07:06,277 --> 00:07:08,030
+expect to get that back.
+
+108
+00:07:08,030 --> 00:07:10,282
+But instead it got nothing back.
+
+109
+00:07:10,282 --> 00:07:12,740
+It was missing this A B C D E F G line.
+
+110
+00:07:12,740 --> 00:07:17,155
+So, this is the way that you can
+use this script to test your,
+
+111
+00:07:17,155 --> 00:07:19,502
+implementation in isolation.
+
+112
+00:07:19,502 --> 00:07:25,140
+So let's show an example of
+running my ASD socket application.
+
+113
+00:07:25,140 --> 00:07:27,835
+So if I do ASD socket dash D,
+
+114
+00:07:27,835 --> 00:07:33,475
+that should start my socket
+application in daemon mode.
+
+115
+00:07:33,475 --> 00:07:37,440
+And now, if I go back and
+run my soccer test.
+
+116
+00:07:38,705 --> 00:07:44,126
+Should see that it completes with
+success now because my socket
+
+117
+00:07:44,126 --> 00:07:50,240
+application was running and
+responding to these commands.
+
+118
+00:07:50,240 --> 00:07:54,710
+So one of the things to know about running
+your native implementation manually is
+
+119
+00:07:54,710 --> 00:07:55,640
+once you run it.
+
+120
+00:07:55,640 --> 00:07:59,029
+If you kick off your ASD socket
+application, it's going to
+
+121
+00:07:59,029 --> 00:08:03,770
+remain running in the background even
+after you run your socket, test script.
+
+122
+00:08:03,770 --> 00:08:07,400
+So if you started it by yourself
+with your ASD socket dash D.
+
+123
+00:08:07,400 --> 00:08:10,901
+Option, you're going to have
+to kill it yourself as well.
+
+124
+00:08:10,901 --> 00:08:14,296
+And so to do that,
+you can do use the PS command to look for
+
+125
+00:08:14,296 --> 00:08:18,636
+ASD socket application running in
+the background and you can see here,
+
+126
+00:08:18,636 --> 00:08:22,140
+I've got a process running ASD
+socket dash D at this pit.
+
+127
+00:08:22,140 --> 00:08:26,701
+So if I do kill and
+enter the pit should see this
+
+128
+00:08:26,701 --> 00:08:31,634
+caught signal exiting
+socket signal shut down.
+
+129
+00:08:31,634 --> 00:08:35,744
+So this is the way you can test that your
+daemons responding correctly to the sig
+
+130
+00:08:35,744 --> 00:08:36,560
+term message.

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Character Device Drivers</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>The listing below shows an ls -l output for the /dev directory.  What do the two numbers highlighted in red illustrate?  Select any answers which apply</p><img alt="f22fd40a-03c4-4809-8c19-3ef1100fa206image3.png" src="f22fd40a-03c4-4809-8c19-3ef1100fa206image3.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~xoI4TO" type="checkbox"/> <div class="quiz-option-text"><p>/dev/null uses the same driver as /dev/tty1.</p></div></li>
+<li><input name="autoGradableResponseId~xoI4TO" type="checkbox"/> <div class="quiz-option-text"><p>The major number for /dev/null is 1.</p></div></li>
+<li><input name="autoGradableResponseId~xoI4TO" type="checkbox"/> <div class="quiz-option-text"><p>There are 3 null devices on the system, with major number 1.</p></div></li>
+<li><input name="autoGradableResponseId~xoI4TO" type="checkbox"/> <div class="quiz-option-text"><p>The minor number for /dev/null is 3.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>The listing below shows an ls -l output for the /dev directory.  What do the two numbers highlighted in red illustrate?  Select any answers which apply</p><img alt="f22fd40a-03c4-4809-8c19-3ef1100fa206image1.png" src="f22fd40a-03c4-4809-8c19-3ef1100fa206image1.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~jDFyNW" type="checkbox"/> <div class="quiz-option-text"><p>tty1, ttys0 and ttyS1 most likely use the same driver</p></div></li>
+<li><input name="autoGradableResponseId~jDFyNW" type="checkbox"/> <div class="quiz-option-text"><p>/dev/tty1 minor number is 1</p></div></li>
+<li><input name="autoGradableResponseId~jDFyNW" type="checkbox"/> <div class="quiz-option-text"><p>/dev/tty1 major number is 4</p></div></li>
+<li><input name="autoGradableResponseId~jDFyNW" type="checkbox"/> <div class="quiz-option-text"><p>There are 4 /dev/tty1 devices in use, with minor number 1</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>How should you allocate a major device number for a device driver you've created for a device? Select any possible options</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~YAejU0" type="checkbox"/> <div class="quiz-option-text"><p>Find a static assigned number which matches the device type corresponding to your device (assuming your device is a common device type).</p></div></li>
+<li><input name="autoGradableResponseId~YAejU0" type="checkbox"/> <div class="quiz-option-text"><p>Use dynamic allocation to obtain a device number at run time</p></div></li>
+<li><input name="autoGradableResponseId~YAejU0" type="checkbox"/> <div class="quiz-option-text"><p>Request a new static device type for your driver from kernel.org</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When using dynamic device driver major numbers, how can you map your device number to the correct number matching your loaded driver?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Uqp0Ca" type="radio"/> <div class="quiz-option-text"><p>Use awk to read the value from the driver .ko file</p></div></li>
+<li><input name="autoGradableResponseId~Uqp0Ca" type="radio"/> <div class="quiz-option-text"><p>Use the value in /proc/devices for the loaded driver</p></div></li>
+<li><input name="autoGradableResponseId~Uqp0Ca" type="radio"/> <div class="quiz-option-text"><p>Use the value hard-coded in your driver.</p></div></li>
+<li><input name="autoGradableResponseId~Uqp0Ca" type="radio"/> <div class="quiz-option-text"><p>Use the value statically allocated to your device type.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the best description of the purpose of struct inode</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~AHlODP" type="radio"/> <div class="quiz-option-text"><p>Maps to the FILE type defined in the C library</p></div></li>
+<li><input name="autoGradableResponseId~AHlODP" type="radio"/> <div class="quiz-option-text"><p>Maps driver functions to system calls</p></div></li>
+<li><input name="autoGradableResponseId~AHlODP" type="radio"/> <div class="quiz-option-text"><p>Represents files in any state</p></div></li>
+<li><input name="autoGradableResponseId~AHlODP" type="radio"/> <div class="quiz-option-text"><p>Represents an open file descriptor</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the purpose of the character device registration function cdev_alloc.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XAXIUi" type="radio"/> <div class="quiz-option-text"><p>Inform the kernel about the character device after structure setup</p></div></li>
+<li><input name="autoGradableResponseId~XAXIUi" type="radio"/> <div class="quiz-option-text"><p>Obtain a character device structure at runtime.</p></div></li>
+<li><input name="autoGradableResponseId~XAXIUi" type="radio"/> <div class="quiz-option-text"><p>Initialize a previously allocated cdev structure</p></div></li>
+<li><input name="autoGradableResponseId~XAXIUi" type="radio"/> <div class="quiz-option-text"><p>Remove the char device from the system.</p></div></li>
+<li><input name="autoGradableResponseId~XAXIUi" type="radio"/> <div class="quiz-option-text"><p>Change the character device major number</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given the code below, select the true statements (select any which apply).</p><img alt="f22fd40a-03c4-4809-8c19-3ef1100fa206image2.png" src="f22fd40a-03c4-4809-8c19-3ef1100fa206image2.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~UIYlRx" type="checkbox"/> <div class="quiz-option-text"><p>filp-&gt;private_data will be set to the scull_dev structure containing cdev member at address inode-&gt;i_cdev</p></div></li>
+<li><input name="autoGradableResponseId~UIYlRx" type="checkbox"/> <div class="quiz-option-text"><p>container_of() will calculate the start of the scull_dev structure in memory based on the location of cdev structure</p></div></li>
+<li><input name="autoGradableResponseId~UIYlRx" type="checkbox"/> <div class="quiz-option-text"><p>filp-&gt;private_data will be set to the address of inode-&gt;i_cdev</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Every open() system call results in a open file method invocation on the associated driver</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~F4pq1D" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~F4pq1D" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Every close() system call results in a release method invocation on an associated driver.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ifNrRf" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~ifNrRf" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>List the true statements about a Linux kernel driver pointer which uses the __user pointer qualifier.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~pDSNUr" type="checkbox"/> <div class="quiz-option-text"><p>Access by kernel drivers should be performed through dedicated copy functions</p></div></li>
+<li><input name="autoGradableResponseId~pDSNUr" type="checkbox"/> <div class="quiz-option-text"><p>It corresponds to user-space memory</p></div></li>
+<li><input name="autoGradableResponseId~pDSNUr" type="checkbox"/> <div class="quiz-option-text"><p>It's safe to access from the kernel directly</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

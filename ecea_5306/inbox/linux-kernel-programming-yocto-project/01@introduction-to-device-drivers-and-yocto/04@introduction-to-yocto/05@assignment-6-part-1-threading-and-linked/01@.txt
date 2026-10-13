@@ -1,0 +1,192 @@
+In this video, we'll
+go over some details specific to assignment number 6, which is going to be one we're going to build on
+assignment number 5, add some new features to
+your AST socket application, and build it under [inaudible]
+instead of [inaudible]. The learning objectives. We're going to
+review linked lists, which I believe you've
+already covered in previous courses. We're going to use
+introduction to queue.h as one way to
+implement linked lists. Then we're going to
+go over threading and some suggestions for implementing assignment 6
+with threading support. Linked list is an arrangement of values where every value
+is going to be paired with a pointer to the next and possibly the previous value depending on how the
+linked list is setup. It's very similar to an array in terms of the
+functionality and use, but the difference
+is that there's no requirement to have
+sequential storage locations. Whereas in array you have one item located directly
+after each another in memory, with the link list
+implementation, you can locate these
+anywhere and you just use a pointer to point
+to the next element. Some benefits of linked
+lists over arrays is that you don't need to
+know the size in advance, because you can allocate arbitrary linked list node items later and then just
+create links to them. You don't have to reserve
+some chunk of memory for the structure that you want to put it
+in a linked list. It also means that the
+size of the list is only implemented by the
+size of the memory. As long as you can allocate memory associated with the node, then you can add a node
+to the linked list. Another benefit is that you
+can add or remove nodes to the sequence without moving memory. What do we mean by this? If you're going to remove one of the items from
+the linked list, you can just change the pointer, instead of pointing
+to item number 1, we point to item number 2 and that item will be removed
+from the linked list. We didn't have to copy anything, we didn't have to copy two to a different location
+for instance. Some of the drawbacks of linked lists compared to arrays, there's an extra memory usage for the pointer to
+the next element, because we're storing
+more than just a value, we're also storing a pointer. Every one of these pointers if you had a large enough list, then that would add up to a significant amount of
+additional memory. Then also indexing. If you just did array
+value index by offset, that's essentially a
+single cycle instruction or the equivalent of a very quick instruction
+on an array. But for a linked list it's order n. The reason is you're going to have to
+iterate over multiple. If I wanted to find
+out what number 2 is, I don't know what that
+memory location is until I follow the links from the head pointer and
+go through each one of the items to find the entry for that particular
+item I'm looking for. There's a couple of
+different options for implementing a linked list. Option number 1 is you can
+implement yourself and maybe you would like to get more experience
+implementing a linked list, or you have a specific way
+that you'd like to do it, that's a fine way, you can do that for this
+assignment if you like. If you are going to do that, there are a couple steps that require special
+consideration, so you definitely
+need to think through this before you
+implement your own. One is removing the first
+element or the head, because typically then
+you've got to change some other external
+pointer that points to the beginning of
+your linked list. Also you need to
+think about removing elements while iterating. If you're iterating over
+a list and then you're removing one of the
+elements in your list, you have to be careful
+about making sure that all your pointers
+are synchronized such that you know that
+you're going to the next element correctly after you've removed an element. Option number 2 is that you can use an existing implementation. One benefit of that is that it's probably
+going to be more thoroughly tested than your implementation
+is going to be. Theoretically,
+it's going to save time depending on how fast
+you'd write it yourself, but it's probably going
+to be a time-saver. You could also get familiar with using different APIs
+and getting used to reading an API spec and implementing based
+on someone else's spec, which is a useful skill to
+have as a software developer. I recommend using option
+number 2 unless there's a specific reason you
+want to implement your own linked list as
+part of the assignment. If you want to use an
+existing implementation, there's a queue.h
+file that you can use for this that I've
+linked here below. It's really just a C
+implementation of linked list. There are several
+different lists that are available in
+the queue.h file. We're going to be
+referencing and you can use the one that's called SLIST
+or a singly linked list. There's a few different macros that you'll use in order
+to use this structure. One is this definition
+in queue.h. One is SLIST_HEAD. This is going to declare the first element in your list and where
+it's located in memory. The SLIST_INIT is going to
+initialize that head element, and SLIST_INSERT_HEAD
+is going to insert an element at the
+head of your linked list, so essentially the first item. SLIST_REMOVE is going to remove an element and SLIST_FOREACH
+is going to iterate over a list and give you an iterative loop
+that you can do some functionality over while you're accessing each
+member on your list. There's also an SLIST_FOREACH_SAFE
+that allows you to iterate over the list and
+remove an item in the list, which I mentioned before requires some special
+considerations. If you are using a singly
+linked list and you're removing elements as one of the steps inside
+your iteration loop, then you'll want to use
+SLIST_FOREACH_SAFE. For that one, you need a specific freebsd
+version of queue.h, which you can find here
+linked below in the slides. There's a sample
+that's linked here and there's also a
+queue.h that I'm mentioning that show you how to use a queue.h in an example. You can see a working
+example where in this case the slist_data_s is
+going to contain a value which is
+really the value that we're including in
+our linked list. Then there's going
+to be SLIST_ENTRY which is going to be a reference to entry structures that's the same slist_data_s
+track we're defining here. Then we define the head element
+using SLIST_HEAD macro. Then you can define
+a data pointer like this and that iterate using SLIST_FOREACH or
+using SLIST_FOREACH safe. What this is going
+to mean is that this local data pointer
+that I defined, I'm going to start ahead
+and for every one of the entries that
+are specified in the entries element here for
+my slist_data_s structure, I'm just going to
+print out the value for every one of those
+entries inside this. This is going to evaluate
+into a for loop for me. You can see the details
+about how these work in queue.h if you look at what
+these macros actually do. You can see here for instance, that's just defining
+a for loop for you based on these values; the field that you specified
+where the entry structure is located and the head element that you've defined
+here with SLIST_HEAD. Another thing to talk about in assignment 6 is the
+requirement to add threading. Part of what we'll be doing
+in assignment 6 is add threads to the socket
+server implementation we did for assignment 5. Every socket connection
+now is going to start a new thread after the accept that's
+going to handle data transfers to
+and from the socket. How many threads
+should you support? The requirement
+says as many as you can with the memory you have. In other words, it's a good
+application to use for a linked list because
+we don't know how many we have to support, we don't have a
+specific fixed size. We can't really allocate
+a block of memory for thread structures and know that we'll have
+enough to support it. It's part of the reason
+of what we'll use a linked list for
+this assignment. You need to track the thread
+IDs in your main process because you have to be able
+to check for completion. For this I just
+recommend you include a simple variable
+like a Boolean, like it's set by your thread. You can do this
+every time you start a new thread in
+the main process, you can just check to see
+if all your threads are still running or if
+any have completed. If any of the threats
+have completed, you can use pthread_join
+to join the thread ID. This is going to free all the memory that
+were associated with the thread and ensure that
+you don't have memory leaks. Here's a flow chart that shows you how I suggest
+that you implement. You don't have to use this, but if you're looking for a
+suggestion about how you can implement the threading required for assignment number 6, you can inside your
+main process thread, you accept the socket connection and then you would
+create a thread, and you would add that
+thread to the list. Then you'd say for every
+thread that's in the list, is the thread complete flag set? If the answer was no, you'd go back in and wait for a new connection
+here in accept connection. If the answer was yes,
+you'd pthread_join the thread complete for any threads that were complete and free that associate memory. Then you go back and wait
+for new connections. Then you're sending
+received threads are just as simple as receive and send on the socket based on the requirements
+of assignment 5. Then set a complete flag to let this main process
+thread know that you've completed your work
+and exit the thread so that a pthread_join would
+complete successfully. A couple of pitfalls to avoid
+with threading based on problems students have had with this assignment
+in the past, try to deallocate memory
+only in one place. Usually the best
+place to do that is within the main
+process thread. You can think about
+doing it different ways, there might be other
+ways to do it, but I suggest trying to
+make sure that you're only deallocating
+memory in one place. Keep in mind that the
+linked list implementation itself is not thread safe. It's best not to try to manipulate the list from
+two different threads. If you want to do that, you can, but you need to add
+your own locking in order to do that safely. The easiest way to do this
+is to just only access the link list itself from
+the main process thread, which you can do using the flowchart that I showed
+you on the previous slide. Don't forget to pthread_join because if you do forget that, you'll see an error message
+come out of algorithm that tells you that you've
+some [inaudible] free. Question that's
+come from the past; why don't I just use
+detached threads then I don't have to worry about
+doing pthread_join? You can read more
+about that, there's a Stack Overflow posts that goes through this
+in a lot of detail. But it's really only safe to use detached threads
+when you have some other synchronization
+method that you can use to know for a fact that the
+thread is terminated. It can introduce some race
+conditions on shutdown. I suggest that you don't try to use detached threads
+and just use the pthread_join strategy and a linked list to track
+the threads like the one that we've
+discussed here.

@@ -1,0 +1,46 @@
+In this video, we'll
+do an overview of the first part of Assignment 3, where we're going to implement some system calls functions. This assignment is
+going to start with a GitHub Classroom link again. You'll use the Git
+instructions here to take your previous content from Assignment 2 and push it
+into your Assignment 3 repo, also to pull in some
+example content that we've got in starter code for
+assignment Number 3. Your repository setup
+will look like this. You'll have your
+local repository for the previous assignment and you're going to point it to your new Assignment 3 repository. You're also going to pull in the base repository starter code from the Assignment 3 branch. You'll set up GitHub Actions again so that you have
+automated testing of your repository using the
+same Wiki instructions that you use for the
+previous assignment. Then you're going to modify your finder-app/finder-test
+script to remove that make step that you added with the
+previous assignment. Then you'll make some
+modifications in the systemcalls.c file, that's provided as a part of these assignment base reference, that'll implement
+the TODOs regarding the content that we discussed in the videos with system
+and exec functions. If you want to see how this
+code is going to be tested, you can see the
+reference here to the test system calls function. But if we just look
+at the implementation here of systemcalls.c, this file that
+you'll be provided, there's TODO sections in here that describe what
+you need to implement, but it's all just about using the system call that
+we discussed in previous videos
+and then replacing the system call
+with calls to fork, execv, and wait. Then finally, you'll
+have a version of this that uses execv, but redirects the
+standard out to a file. This file is specified
+in the output file. In order to test
+this, you'll be able to run your./unit-test of the repository and
+that'll run all the unit tests including this one that will verify
+your implementation. Here's an example of what
+you should see when you run your unit test application. You should see it compiling
+the files that the file that you implemented
+in systemcall.c and creating the
+test application. Then you should see
+a message here, an OK status saying
+that all tests passed. One of the things you
+notice is that you will see some errors printed
+out and the reason is we're testing for error
+handling of your application, making sure that you return appropriate errors
+when errors happen in invocation of the
+associated commands. As long as you see
+this okay message, your tests should be passing
+and that should also show up at your GitHub
+Actions result for your repo. That's really it for
+Assignment 3, Part 1.

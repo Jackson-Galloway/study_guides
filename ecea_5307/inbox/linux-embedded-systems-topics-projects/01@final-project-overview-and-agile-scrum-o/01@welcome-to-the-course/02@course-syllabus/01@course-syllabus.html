@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Syllabus </title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h1><strong>ECEA 5307 Linux Embedded System Topics and Projects</strong></h1><p><strong>Instructor: Dan Walkes</strong></p><p></p><h2><strong>Course Description</strong></h2><p>This course is used as the capstone in a three course sequence, including Linux System Programming and Introduction to Buildroot and Linux Kernel Programming and Introduction to Yocto Project.  Both of these courses must be completed before starting this course.</p><p>This course builds on the content in the previous two prerequisite courses to develop a final project of your choosing targeting Linux device targeting hardware.  The final project is delivered using concepts from Agile Scrum.  Several pertinent, recent, and relevant Embedded System development related topics are covered as a part of the course curriculum, which you may optionally choose to incorporate into your final project.</p><h2><strong>Drops, Tuition Refunds, and Withdrawals</strong></h2><p>Because the MS-ECE has flexible course start dates, all drops, tuition refunds, withdrawals, and grades are handled at the individual course level. It is the student’s responsibility to monitor these deadlines. Coursera and CU Boulder are not responsible for notifying the students of these deadlines. You can drop or withdraw from a course via <a href="https://buffportal.colorado.edu/card/your-programs-enrollment">Your Programs &amp; Enrollment Card</a> via BuffPortal. </p><h3><strong>Drops and Refunds</strong></h3><p>Each student has 14 days from a class start date or their enrollment date (whichever is later) to drop for 100% tuition refund. Students are only eligible to drop a course if they have not accessed the restricted content (final exam or project). When a course is dropped under these conditions, it will not appear on the student’s record.</p><p>Students who access the final exam or project are assigned a grade and ineligible for a drop, withdrawal, or refund.</p><h3><strong>Withdrawal</strong></h3><p>Students may withdraw from a course after the 14-day period only if they have not accessed restricted content (final exam or project). In such cases, the course will not be eligible for a refund. When a student withdraws or does not complete the restricted content (final exam or project), a grade of "W" will be recorded on their academic transcript. This "W" grade does not impact the student's GPA or total earned credits. </p><h2><strong>Grading </strong></h2><h3><strong>Course Grading Policy</strong></h3><table><tr><th><p>Assignment</p></th><th><p>Percentage of Grade</p></th></tr><tr><td><p>Final Project Peer Review</p></td><td><p>10</p></td></tr><tr><td><p>Final Project Sprint 1</p></td><td><p>25</p></td></tr><tr><td><p>Final Project Sprint 2</p></td><td><p>25</p></td></tr><tr><td><p>Final Project Spring 3</p></td><td><p>25</p></td></tr><tr><td><p>Final Project Demo Video and Outline Updates</p></td><td><p>10</p></td></tr><tr><td><p>ECEA 5307 Final Exam</p></td><td><p>5</p></td></tr></table><h3><strong>Uniform Letter Grade Rubric</strong></h3><p>Grade percentages convert to letter grades according to the scheme below.  60% or higher is considered passing. </p><table><tr><th><p>Letter Grade</p></th><th><p><strong>Minimum </strong>Percentage</p></th></tr><tr><td><p>A</p></td><td><p>93</p></td></tr><tr><td><p>A-</p></td><td><p>90</p></td></tr><tr><td><p>B+</p></td><td><p>87</p></td></tr><tr><td><p>B</p></td><td><p>83</p></td></tr><tr><td><p>B-</p></td><td><p>80</p></td></tr><tr><td><p>C+</p></td><td><p>77</p></td></tr><tr><td><p>C</p></td><td><p>73</p></td></tr><tr><td><p>C-</p></td><td><p>70</p></td></tr><tr><td><p>D+</p></td><td><p>67</p></td></tr><tr><td><p>D</p></td><td><p>60</p></td></tr><tr><td><p>F</p></td><td><p>0</p></td></tr></table><h2><strong>Artificial Intelligence (AI) Guidance</strong></h2><p><strong>Full AI Tool Usage: </strong>You may use AI tools in this course. Some assignments will require the use of such tools. However, keep in mind your own and others' privacy implications and security risks when using AI tools. If you use AI tools on assignments in CU Boulder courses hosted on Coursera, document your usage per the AI Usage Documentation Best Practices.</p><p><strong>AI tools may not be used on the final exam.</strong></p><h3><strong>AI Usage Documentation Best Practices</strong></h3><p>When using AI tools in your academic work, it is essential to accurately document how and why you used them. AI tools should be considered as aids rather than primary sources. Therefore, remember to:</p><ul><li><p>Reference AI assistance<strong>.</strong> In your references or bibliography section, mention the AI tool used and the nature of its contribution. For example: "Assistance provided by [AI Tool Name] for generating initial content ideas, response to [prompt], [month, day, year]”.</p></li><li><p>Document your process. Save screenshots, dialog, prompt, queries or version history to document your process if you used AI. Include documentation in the submission if the assignment format allows. Otherwise, save it in your system in case you are asked by a program or university staff.</p></li></ul><h3><strong>Suspected Violations of this Policy</strong></h3><p>If program staff suspects you may have used AI tools to complete assignments in ways not explicitly authorized or suspect other violations of the honor code, they will contact you via email. Be sure to respond promptly to any related communication so your perspective is included in the case review. Failure to respond timely will not prevent the completion of a case review.</p><p>Turnitin and similar AI detection tools may be used in these courses for initial detection of possible honor code violations.<strong> </strong>All suspected violations will be reviewed by a human. AI tools alone will not be used to determine if an assignment is plagiarized, and results from these tools will not be used alone as evidence to penalize students.</p><h2><strong>University Policies</strong></h2><h3>Accommodation for Disabilities</h3><p>If you qualify for accommodations because of a disability, please submit your accommodation letter to your program at <a href="mailto:msece-accomodations@colorado.edu">msece-accomodations@colorado.edu</a> in a timely manner so that your needs can be addressed. Disability Services determines accommodations based on documented disabilities in the academic environment. Information on requesting accommodations is located on the <a href="https://www.colorado.edu/disabilityservices/">Disability Services website</a>. Contact Disability Services at 303-492-8671 or <a href="mailto:dsinfo@colorado.edu">dsinfo@colorado.edu</a> for further assistance. If you have a temporary medical condition or injury, see <a href="https://www.colorado.edu/disabilityservices/students/temporary-medical-conditions">Temporary Medical Conditions</a> under the Students tab on the Disability Services website.</p><h3>Classroom Behavior</h3><p>Students and faculty each have responsibility for maintaining an appropriate learning environment. Those who fail to adhere to such behavioral standards may be subject to discipline. Professional courtesy and sensitivity are especially important with respect to individuals and topics dealing with race, color, national origin, sex, pregnancy, age, disability, creed, religion, sexual orientation, gender identity, gender expression, veteran status, political affiliation or political philosophy. Class rosters are provided to the instructor with the student's legal name. We will gladly honor your request to address you by an alternate name or gender pronoun. Please advise us of this preference early in the semester so that we may make appropriate changes to my records. For more information, see the <a href="http://www.colorado.edu/osccr/">Student Code of Conduct</a>.</p><h3>Honor Code</h3><p>The University of Colorado Boulder takes issues of academic dishonesty extremely seriously. </p><p>Students in all of CU Boulder’s courses, whether not-for-credit or for-credit, are expected to perform to the highest standards of academic honesty. </p><p>Students enrolled in for-credit courses are members of the CU Boulder’s community and are subject to the Honor Code Office’s policies and procedures. Information on the Honor Code can be found at the <a href="https://www.colorado.edu/sccr/students/honor-code-and-student-code-conduct">Honor Code Office website</a>.</p><p>Students who violate the Honor Code are subject to discipline. Violations of the policy may include: plagiarism, cheating, fabrication, lying, bribery, threats, unauthorized access to academic materials, submitting the same or similar work in more than one course without permission from all course instructors involved, and aiding academic dishonesty. Students are specifically expected to turn in original work and cite portions created by other authors. If a student has doubts regarding what collaboration is permissible in the course, the student should consult the discussion forums or the course facilitator directly.</p><p>Violations also include facilitating any act which may help a student to gain an unfair academic advantage including:</p><ol type="1"><li><p>Sharing course materials, including but not limited to personal notes, in an unauthorized online bank or forum, whether for profit or for free, is strongly discouraged and may result in a referral to the Honor Code. This includes sharing course materials on Slack.</p></li><li><p>Sharing personal authentication credentials/login information to third party sites is strongly discouraged and may result in a referral to the Honor Code process</p></li></ol><h3>Sexual Misconduct, Discrimination, Harassment and/or Related Retaliation</h3><p>The University of Colorado Boulder (CU Boulder) is committed to fostering a positive and welcoming learning, working, and living environment. CU Boulder will not tolerate acts of sexual misconduct, intimate partner abuse (including dating or domestic violence), stalking, or protected-class discrimination or harassment by members of our community. Individuals who believe they have been subject to misconduct or retaliatory actions for reporting a concern should contact the Office of Institutional Equity and Compliance (OIEC) at 303-492-2127 or <a href="mailto:cureport@colorado.edu">cureport@colorado.edu</a>. Information about the OIEC, university policies, <a href="https://cuboulder.qualtrics.com/jfe/form/SV_0PnqVK4kkIJIZnf">anonymous reporting</a>, and the campus resources can be found on the <a href="http://www.colorado.edu/institutionalequity/">OIEC website</a>. </p><p>Please know that faculty and instructors have a responsibility to inform OIEC when made aware of incidents of sexual misconduct, discrimination, harassment and/or related retaliation, to ensure that individuals impacted receive information about options for reporting and support resources.</p><h3>Religious Holidays</h3><p>Campus policy regarding religious observances requires that faculty make every effort to deal reasonably and fairly with all students who, because of religious obligations, have conflicts with scheduled exams, assignments or required attendance. Since this is an online class, with no fixed weekly calendar schedule, we ask that you arrange your workload to accommodate your religious practice. See the <a href="https://www.colorado.edu/oiec/religious-accommodations">campus policy regarding religious observances</a> for full details. </p>
+  </div>
+</body>
+</html>

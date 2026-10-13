@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Application Containers and Docker For Embedded</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Application containers are the same as virtual machines.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~uvHkhU45Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~uvHkhU45Eey9LQpW7t9tew" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is one difference between a container and a virtual machine?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1apBrk45Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>A <strong>virtulal machine</strong> does not have a dedicated root filesystem, shares the root filesystem with the host OS.</p></div></li>
+<li><input name="autoGradableResponseId~1apBrk45Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>A <strong>container</strong> does not have a dedicated root filesystem, shares the root filesystem with the host OS.</p></div></li>
+<li><input name="autoGradableResponseId~1apBrk45Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>A <strong>container</strong> does not have a dedicated kernel, shares the kernel with the host OS</p></div></li>
+<li><input name="autoGradableResponseId~1apBrk45Eey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>A <strong>virtual machine </strong>does not have a dedicated kernel, shares the kernel with the host OS</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>How is the kernel <strong>namespace</strong> feature used to support application containers?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~p1xlwE7aEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Enforce limits and constraints on process memory</p></div></li>
+<li><input name="autoGradableResponseId~p1xlwE7aEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Create a virtual isolated network instance used for the container</p></div></li>
+<li><input name="autoGradableResponseId~p1xlwE7aEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Combine multiple directories on the host into a single rootfs directory inside the container</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>How is the kernel <strong>control groups</strong> feature used to support application containers?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0k6ox07aEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Create a virtual isolated list of process IDs used for the container</p></div></li>
+<li><input name="autoGradableResponseId~0k6ox07aEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Enforce limits and constraints on process CPU</p></div></li>
+<li><input name="autoGradableResponseId~0k6ox07aEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Combine multiple directories on the host into a single rootfs directory inside the container.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>How is the kernel <strong>union mounts</strong> feature used to support application containers?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~NE2ij07bEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Enforce limits and constraints on process memory</p></div></li>
+<li><input name="autoGradableResponseId~NE2ij07bEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Create virtual isolated ports used inside the container</p></div></li>
+<li><input name="autoGradableResponseId~NE2ij07bEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>Combine multiple directories on the host into a single rootfs directory inside the container.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>An unprivileged process in a child PID namespace can inspect or kill processes in the parent PID namespace.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~db8sOE7bEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~db8sOE7bEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A chid network namespace may not be able to access network ports in the parent network namespace.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~neyDdE7bEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~neyDdE7bEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Control groups are useful for applicaiton containers because they allow the p<strong>arent and host process</strong> to restrict the total amount of CPU used by the <strong>child container</strong>.</p><p></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~30yoFk7bEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+<li><input name="autoGradableResponseId~30yoFk7bEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your coworker mentioned there's a docker image available from a 3rd party which runs an application you need to use with your embedded device.  Where would you expect to find this image?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XE3Yok7cEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>In a docker registry</p></div></li>
+<li><input name="autoGradableResponseId~XE3Yok7cEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>In the docker daemon</p></div></li>
+<li><input name="autoGradableResponseId~XE3Yok7cEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>In the docker client</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your coworker mentioned docker is only useful on host systems and isn't supported by buildroot.  Are they correct?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~m5oSwU7cEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>No</p></div></li>
+<li><input name="autoGradableResponseId~m5oSwU7cEeye7gpLWDw2RQ" type="radio"/> <div class="quiz-option-text"><p>Yes</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

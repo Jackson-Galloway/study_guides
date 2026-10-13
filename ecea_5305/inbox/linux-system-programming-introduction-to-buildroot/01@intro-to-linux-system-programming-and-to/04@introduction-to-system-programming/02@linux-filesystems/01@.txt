@@ -1,0 +1,203 @@
+Hi students. In this video we're going to talk about
+Linux filesystems. We're going to talk about
+understanding the use of files, how files are used in Linux. We're going to introduce
+inodes and Links as two useful parts of
+Linux filesystems. We'll just talk about how Linux filesystem work in general. Linux uses what's called the "Everything Is A File" paradigm, meaning a lot of the interaction that you do with the kernel, whether it's what
+you think of as a typical file
+holding, for instance, user data or if you're interacting with the
+hardware device in a lot of the case that happens via reading
+and writing of files. For instance, if you're
+interacting with the USB serial port, you're probably reading and
+writing to dev/ttyUSB0. The benefit of this
+is if you've got a generic piece of software that can
+open, read, and write, you can probably redirect
+that software to either what you'd think of as a typical file
+containing user data, or you could
+potentially redirect it to something like
+USB serial port and have it operate on stream of data coming
+over the serial port. This makes it much more
+versatile and more easy to write software
+that can work in different environments
+or different scenarios. Files in Linux are
+represented by paths. There's two different
+ways that you can access a file based on path. One is absolute, for instance, if you had, /path/to/file, each one of these slashes
+would separate a directory and the starting slash would
+indicate that you're starting from root of
+the file hierarchy. Whereas if you use path/to/file
+with no proceeding slash, what this would
+mean is that from whatever working
+directory you're in, you would move relative to that current directory
+so the leading slash tells you whether it's an absolute or relative path
+that you're referencing. For a regular file, what
+we normally think of as a file or a file containing, for instance, user
+content, really, this is just bytes of
+data in a byte stream and the system doesn't
+have any expectation about what's actually contained in what's called a regular file. The file position and offset contract the location
+so when you're reading, if you call the
+next read command, the kernel will keep track for you about where you're at in the file and will
+automatically give you the next chunk of
+data that you read. Files can also be truncated and they can be
+truncated to a size, smaller so you can
+cut down the content to a specific length or
+to zero, for instance, if you want to start with a completely new content or you can also truncate the file larger
+than the original, which sounds a little
+counter-intuitive. But what you can do
+is define a file of a specific size without
+reserving that space on disk. If there's a reason
+for you to have a file that's defined
+with a specific size, but maybe you don't
+need to write the entire file full
+of content initially, you can actually use file system capabilities
+to define that file of a specific size but not use
+up the disk space initially at least until it's been
+written by another application. Files can be opened
+more than once, they can be opened by different processes or the
+same process at the same time. File is ultimately
+referenced and accessed by what's called an inode
+in the file system. Linux inode stands for Index
+Node and this is really just a piece of
+metadata that's used to track where files
+are located on disk. You can think of
+it as a database that the file system's
+going to keep about all the different files
+and their location on disk. In addition to the
+location on disk, the inode is going to store
+things like the timestamp, the owner of the file, the size of the file, and the mode or the
+access permissions so who should be allowed
+to access the file. This is a small size,
+a chunk of data. you think of something
+like a 128 bytes in size and one thing to note about this is that the filename is not included in the inode, that might be a little
+counter-intuitive when you think about locating files
+in the file system. How do we map a
+filename to an inode? That's really the
+function of a directory. The directory is really
+just a set of files with their own inodes that contains a mapping of filename
+to an inode. A directory entry is simply a name that corresponds
+to the file that you're looking up and an inode
+reference the points to a specific inode in
+the directory table. The directory start again at the root directory
+so slash would be the root directory where all directories start and then you can have a sub hierarchy of directories created from there. Each one of the directory
+entries would have an inode that points to the corresponding new
+referenced file or directory. You might ask, why wouldn't
+we have the filename built into the I node if this is associated
+with the file? The reason is the design
+to keep the filename out of the inode allows us to reference the file
+in multiple ways, we can reference the same file
+content in multiple ways. The things that are
+associated with a file like the size, the UID, user and group ID, the permission location on disk, all that needs to be constant regardless of how
+we access the file. However, it might
+make sense to access the file from two
+different places and get the same content. That's really the function
+of a link and so the inode designed by keeping the
+filename out of the inode, we have the option
+to access it from different places and
+get the same content. The link flexibility
+means that we can have multiple names that
+resolved to the same inode and the same file content permissions that are
+associated with that inode. Links can redirect
+two different file and directory paths
+to the same inode. Here's an example of if you do an ls-l on a directory
+that contains a link, you'll see a symbol like this
+indicating that my link is a link to my file.txt
+so if I open my link, I will get the content of my file.txt the same as I would
+if I just open my file.txt. There's two types of Links. In Linux, the hard and
+the symbolic link, the symbolic link is often
+referred to as a symlink. Hard links map
+directly to inodes, and for that reason,
+they are only allowed on the same file system. The inode is referencing metadata that's talking
+about the currents, the structure of one
+specific file system. For instance, it has a specific location on disk that's tied to that file system. For that reason, the hard
+link is only going to work across the
+same file system. But a soft link or a symlink
+just maps to a file name. That means that they could
+work across any file system. Really, anything in the
+directory hierarchy can be referenced
+by a soft link. Again, if you talk
+about a hard link, it's really conceptually the
+same as a directory entry. It works and acts the same way. Because we're using
+the same file system, we know when it's safe
+to delete the file based on whether or not there are
+references to the file. If the hard link was
+created initially and we delete the
+original directory entry, we can know that we still
+can't allow delete of the file because there's
+still a reference to it from the hard link. Symbolic links or symlinks
+on the other hand, those aren't going to be
+directly referencing an inode, instead, they're going
+to be referencing a path in the file system. They'll look
+something like this. They'll have their
+own inode pointing to a location on disk
+and that location on disk is simply going to have a path that references
+the file system. That path is going to reference a specific directory
+entry and we can use that inode to find the content in the file
+that we want to access. You can see that this
+is going to take one extra step to
+resolve for us because we have to look up for the directory entry that's
+corresponding to the symlink. We have to look at
+the symbolic link, find the location on disk, read the symbolic
+link dislocation, and link that into the
+directory entry to ultimately find the inode for the file
+content that we care about. We're talking, so far, about regular files, but there's also the
+concept in Linux of special files and I mentioned the dev/ttyUSB0 as
+an example of this. What you can do with
+a special file is map hardware devices to the "everything is
+a file" paradigm. Special files are
+really kernel objects that are represented as files. Those could be character
+devices or block devices, they also could be
+named pipes or sockets. Character device is a device
+that's used anytime you have a linear queue of bytes in terms of the interaction
+with the device. A great example of
+that is a keyboard. If you're pressing a
+key on a keyboard, there's a sequence of bytes
+that you're sending that's associated with the entries
+as you hit the key, so that would be a great
+example of a character device. A block device, on
+the other hand, would be when you're
+accessing data in bulk and so you access a entire chunk
+of data at one time. An example of this would be a hard disk drive where
+you're going to access on file system
+boundaries and access more than one byte at
+a time, typically. Then the named pipes and sockets are used for inter-process
+communication, which we'll get to in later
+videos for this week. The file system is
+ultimately a collection of files in a hierarchy and there's lots of different
+file systems to choose from that
+are ultimately tied to how the file content
+is stored on disk. NFS is an example of a file system that's used
+for network file storage. Ext 4 is a common
+block device storage. There's a whole series
+of ext file systems and those are probably
+the most common that are used on Linux devices. There's also fat, which is a Microsoft defined
+storage format for disks that can inter-operate
+with Windows platforms. The Linux file system is
+mounted and unmounted to add and remove to
+the root file system. The paths that we talked about, the absolute paths, you
+can create a mount point, you can mount a new file
+system to that mount point, and then you can access it through absolute
+paths just like you could any other content within
+the existing file systems. The smallest unit that's addressable in a Linux
+file system is a block, where a block is a power of two multiple of a sector size. A typical historical
+sector size is 512 bytes. You can see that
+this maps well to the block device type that we talked about
+in the previous slide. Why would you want to have a Linux file system
+based on blocks? Well, you can think
+about if you had a one terabyte file system, that's this number of bytes. If you want to be
+able to address every byte individually, it would take 34 bits to be able to address each
+byte individually. All of that would work into the amount of storage
+that you need, for instance, to save the location on disk and the amount of data
+that's transferred when you're sending that
+over the wire. It's ultimately a
+little bit less efficient to be able
+to address each byte. If there are performance
+reasons that this is important, which there are
+for a file system, this would be one
+reason to use blocks instead of byte ordering access. If we use the example
+of 34 bits to address each byte if they're
+all addressed individually, if you use 512 byte
+blocks instead, then if you divide
+that number by 512, you get 30 bits that are
+required to access each block. If you use 4K blocks instead, you can get all the
+way down to 28 bits required to access each block. Having block-oriented storage
+means we have less space required and less
+bits required to transmit information about how
+to access any given block.

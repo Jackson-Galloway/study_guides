@@ -1,0 +1,121 @@
+In this video, we'll do
+an Introduction to Device Drivers. So the learning objectives, we're going to
+understand the role of device drivers. We're going to talk a little bit
+about device driver design, and we're going to introduce modules. So starting off with the structure
+of operating systems and some common operating systems structures. Talking about how this interaction
+works between the system or user space, application and the operating system and how that varies based on
+the operating system design. So there's three basic designs that
+you can have for an operating system. One would be monolithic where
+you have the the entire content of the kernel running in
+a protective mode in the operating system. And your all applications
+then live in user space. The second is a micro kernel type
+of set up where you have some applications running in
+the system user space, and then you have user mode extending
+into the operating system. And so there's a set of kernel
+capabilities that are run at higher privilege level. But there's also a set of operating system capabilities that
+are served from user mode. And so
+an example of micro kernel is FreeRTOS. And then there's also the hybrid
+kernel where there is some combination of the two. That there's some basic functionality
+that's in kernel mode, there's also some device drivers and other capability
+that is implemented in kernel mode. But there's also pieces that
+are provided by the operating system that are implemented in user mode. So for this class, what we're talking
+about is the monolithic kernel-based operating system that we have with Linux. Where everything that's running
+in as a part of the operating system is running in kernel mode
+at that higher privilege level. So what do we mean when we
+talk about a device driver? The goal or the function of the device
+driver is to make a hardware respond to a well defined abstraction interface. And so all those system calls that
+we talked about in the first part of this course, we're going to take
+some subset of those system calls, read write, for instance. And we're going to map those into
+functions that interact with the hardware. And that's really going to be
+the purpose of the device driver. The device driver can be built
+separately from the kernel and it could be added dynamically
+whenever it's needed. So this is useful because if
+the device is not a part of the system, there would be no reason
+to load it into the kernel. The book also talks about mechanism
+versus policy that a driver should provide mechanism and not policy. And when we talk about mechanisms,
+what we mean is that we're providing access to
+the capabilities of the hardware. And when we talk about policy, we're
+talking about how would you use those capabilities for a specific instance? So some examples of the book gives
+a TCP/IP socket as an example of a capability and a policy and
+how it would actually be used would be specific services or
+specific serving of content. Similarly for hard disk drive,
+the blocks of a hard disk drive, it would be a driver that would provide
+the mechanism to access the blocks and store binary data on blocks of the disk. And it would be a file
+system that would provide the policy of how you can
+use those particular blocks. So the driver that's driving
+the hardware would be responsible for the capability and the filesystem driver
+would be responsible for the policy. So in order to write a policy
+free driver for hardware, what you want to do is basically
+make the least amount of restrictions as possible on
+a user space application. Or another driver that's that's
+attempting to use your hardware device. So that means that you want to
+support both synchronous and asynchronous operation,
+be able to open multiple times at once. You want to allow multiple user
+space applications to access your device at the same time. The book warns against adding additional
+layers to try to simplify things. A lot of times that basically
+turns into enforcing policy on how your device can be used. And what the book recommends is
+if you want to give an example about how you can simplify
+things in user space. A lot of times you'll bundle your
+driver with application that runs in user space that can give
+you an example about how to use it. So some of the roles that are going to
+be provided for us by the kernel, and we've talked about these
+already in the first part of this course from the perspective of
+writing user space code as well. So the process management is
+going to provide for us creating and destroying processes,
+handling the I/O for processes, and scheduling processes to be run or
+stop or replaced. And also memory management. So that virtual address space for
+processes, that's all going to be
+controlled by the kernel. And when we call malloc and free from user
+space, kernel is going to be responsible for either allocating or freeing
+the memory that's associated with that. The everything is a file
+paradigm that we've talked about, the place where we will locate our device
+nodes will be part of the file system. And then all the rest of the files
+that you would interact with, the normal files are all going to be
+located in the file system as well. There are lots of different
+file systems supported, ext4, fat, NTFS are just a handful of those. And then device control is also a part
+of what the kernel is going to provide. So the endpoint of system operations, meaning the way that you would
+interact with the device through those read write Actel type of methods
+that I mentioned earlier. And there's going to be a device driver
+for every active device in the system that will essentially provide
+the functionality for that endpoint. The other kernel role is networking. So collecting, identifying,
+dispatching network packets, routing address resolution,
+everything that gets us into and out of the network is happening because
+of functionality in the kernel. So what's happening from user space,
+that's really where all the applications are, everything that we've talked about
+from the beginning of this course. So if you're thinking about an FTP server,
+for example, that wouldn't be implemented in the kernel,
+that would be implemented in user space. Same with the graphics session manager, that would not be something that
+would be implemented in the kernel. That's an application that will
+be implemented in user space. And then as I mentioned before, the policy
+around access of device drivers or examples about how to use device drivers, those utility applications that
+would interact with your driver, those would all be running
+in user space as well. So we talked about drivers being kernel
+code that's controlling hardware that may or may not be added at runtime. When we're talking about
+adding driver at runtime, what we're talking about
+in that case is a module. And so module is just another name for
+a kernel code that's added at runtime. And often this is used for
+device drivers and it's useful for device drivers because your system
+may not have specific devices, in that case there's no reason
+to load it into the kernel. So you can use the dynamic
+features to only load the kernel modules that you need at runtime. There are several user space utilities
+that are used to add modules to a running kernel, insmod is one that would link
+a module file into the running kernel. Rmmod would remove the file
+from the running kernel, and modprobe is another one that
+works similar to insmod in that it can link a kernel module
+into the running kernel. But it will also include dependencies,
+and so if your driver references other drivers, for instance, modprobe
+can track that and it can load any dependencies that you have in addition
+to driver that you've asked to load. So the book also shows this
+split view of the kernel. All the things that the kernel
+is responsible for. We've talked about the system call
+interface being the the interface into the kernel. And what you'll notice
+here is this small box is listed as the features that
+are typically implemented as modules. And so you see a lot of these
+lined up here along the bottom that are interacting with hardware. Because as I mentioned, the fact that
+you're interacting with hardware means that the hardware might be
+different on different systems. So these are cases the block
+character devices and interface drivers since there's going to
+be interacting with specific hardware, they are often implemented as modules. So that they can be dynamically loaded at
+runtime to match whatever hardware you're running on. And filesystem types are another case
+where these are optionally loaded at runtime, depending on which file system
+you happen to be using on your device.

@@ -1,0 +1,106 @@
+In this video, I'm going to go
+through part one of assignment five, the native socket server implementation. So step me through
+the assignment instructions. You're going to start with
+your assignment three and later repository merge in the contents
+of the assignments based assignment five branch to pull in the starter
+content you need. And then and these get a classroom start
+instructions will walk you through this. So the implementation, what we're
+going to be doing here is creating a server directory in your repository and then creating a socket based program
+that we're going to call ASD socket. And that is going to have
+a make file that builds and runs it either natively or
+cross compiled for the target. It's going to open a stream socket that's
+bound to port 9,000 and handle errors. Appropriately, it will listen for
+an accepted connection when it gets a connection, it'll log a message
+saying that it accepted the connection. And then it's going to receive
+the data over the connection and append that into this var
+temp ASD socket file and it's going to create that
+file if it doesn't exist. So every data packet received that
+has a new line should consider a packet complete. So you're going to buffer packets that you
+receive over the socket interface until you see that new line character. Once you see the new line character, you'll write that into
+the var temp ASD socket file. And you can assume that the stream
+that we're sending over the data is all over the socket is not going to
+include in all characters. So you can use string
+handling functions too. Look at the strings that you received or
+to print them out. You can assume that the length of
+the packet is going to be shorter than the available heap size. So you should be able to mark any
+received packet that you get over the socket interface. And if that total length of the package
+is longer than the size of the available heap, you can consider that a failure
+of the program and returned a failure. So every time as soon as the receive
+packet portion completes, its going to return all the content
+of our temp ASD socket data. So if you write multiple
+strings out over the socket, it's going to buffer those
+one right after another. And then as soon as the last string you
+sent completes, it's going to send back all the content that you've sent
+since you started the application. You can and then you can assume that the
+amount of packets that we send is going to be smaller than the root file system. But you can't assume that the total size
+of all the packets sent is going to be less than the size of the available RAM. So in other words, you can't just read
+the entire file directly into RAM and then and write it all back out the socket. You need to have some logic
+that reads line by line. Then it will log the message to cis log
+saying that close client connection from the IP address of the connected client. And it's just going to
+sit in a loop waiting for new clients to connect and
+until the sigint or sig term is received. And when the signit or sig terms received,
+it's going to complete open connections, close sockets and
+then delete that var temp ASD socket data. So this way every time you stop and
+restart the app, it'll start over with a new empty list of responses that
+it will send two sockets commands. So you can use the netcat utility
+to test your implementation. And this is what the test
+scripts are going to use. And you can also use the test script
+we have called sacha test on SH, this is what the test implementation
+is going to be based on. And if you look at what the sacha
+test that SH implementation does. It's just a bash wrapper around netcat
+that sends a series of strings and looks at the results and make sure that
+you get the expected results back. So if we send a B C D E F G, we expect
+to get that back from the socket. If we spend, if we send H I J K L M N O P, we expect to get the previous
+packet plus the next packet. And this logic just verifies that your
+implementation matches the requirements. So you can test this. So the full test script is going to
+test the entire implementation for you. Running on your native,
+your native you'd want to machine. But you could test it yourself if you
+want by starting the socket application, then executing the socket test script and
+then stopping your socket application. That should do the same thing that
+the full test script does if you want to run it in isolation. And then next you need to modify your
+program to support a dash D, argument. And so when you run ASD socket dash D, it should kick off your ASD
+socket application as a daemon. And one thing to note with your daemon
+implementation, when it's in daemon mode, you should wait to fork until after
+ensuring you can bind to port 9,000. In other words, you should fail out
+without doing the fork if you were unable to bind to port 9,000 as
+a part of your socket set up. And now once you have
+this implementation done, you can verify that the full test script
+from the ASD assignments repository verifies your socket application
+running as a daemon. And so this, this makes sure that the core
+portion of assignment five is working and running on your native
+Cuban to installation. So looking at a demo of what you
+should see with your native assignment five part one implementation
+are on full test here. You should see that it builds and
+runs my unit tests and then it's going to build and run my
+ASD socket application as a daemon and it's gonnaexercise it with
+a bunch of input strings. And so what you can see is the strings
+that I showed from the Sacher test application and then a bunch of larger
+strings that are randomly generated. And once it completes, its going to
+shut down your ASD socket application. And what you should see is this message
+here saying that the test completed with success. If a failure happens here, it'll print
+out the detail about what it sent and what it expected to receive but and what it received instead from your socket
+test from your ASD socket application. The second way you should
+be able to test this and more in isolation is you should be
+able to run the sacha test script. So under the assignment auto test
+directory and test assignment five, there's a sacha test script that's
+ultimately going to be testing your application. If I run this without my application
+running, I can see the kinds of failure message I'm going to get if my
+application isn't implemented correctly. So what this is saying is that it
+sent a string A B C D E F G and expect to get that back. But instead it got nothing back. It was missing this A B C D E F G line. So, this is the way that you can
+use this script to test your, implementation in isolation. So let's show an example of
+running my ASD socket application. So if I do ASD socket dash D, that should start my socket
+application in daemon mode. And now, if I go back and
+run my soccer test. Should see that it completes with
+success now because my socket application was running and
+responding to these commands. So one of the things to know about running
+your native implementation manually is once you run it. If you kick off your ASD socket
+application, it's going to remain running in the background even
+after you run your socket, test script. So if you started it by yourself
+with your ASD socket dash D. Option, you're going to have
+to kill it yourself as well. And so to do that,
+you can do use the PS command to look for ASD socket application running in
+the background and you can see here, I've got a process running ASD
+socket dash D at this pit. So if I do kill and
+enter the pit should see this caught signal exiting
+socket signal shut down. So this is the way you can test that your
+daemons responding correctly to the sig term message.

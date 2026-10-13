@@ -1,0 +1,144 @@
+Now that we've gone over
+both Buildroot and Yocto as ways that you can use to
+build an embedded system, I'm going to compare and contrast Buildroot and
+Yocto in this slide deck to help you decide when you should use one versus
+the other in a project. The learning objectives,
+we'll go over comparison of Yocto
+and Buildroot, and the build frameworks
+comparison in general. To start from the
+beginning maybe you've gone through Yocto and you've gone through
+Buildroot and you said, wow, this is all just
+way too complicated. It's too hard to set up. Why don't I just use
+the tools that we talked about at the beginning of the semester for
+cross compiling? Why don't I just copy, cross-compile the binary that I need for my custom application, just copied into a root
+file system image? Just create my own
+riff file system image based on that
+cross-compile content. The answer is that it's
+really not scalable to do that long-term and you don't want have to learn
+that the hard way, but you probably will if you start with
+something like that. Build frameworks provide
+a lot of benefit. For one thing, the
+hardware changes are much easier to manage, if you switch from one
+platform to another later, rather than redoing
+everything about how you did your customized
+build framework, it's probably going
+to be more like switching the config file
+that you're using or changing the machine setup or customizing something
+about your BSP layer. It'll be much easier to handle if you're using
+a build framework. Emulation, which is what
+we're using right now, can be a really powerful
+tool and that's much easier to use with
+a build framework that already has that built in. Something to keep
+in mind is that these short-term hacks that seem like a way that you can
+get started really quickly, they have their place and
+they can be okay sometimes, but it's not really
+something you want to build a project on because long-term, they'll become
+more unmanageable. It'll be the point
+where you're going to spend all of your time just dealing with issues that are related to the fact
+that you're doing some custom home-brewed
+build system rather than something that's actually used widely and
+supported by community. Technical debt is
+a recurring cost. What I mean by that is, if you start doing something that's got a lot of baggage
+and a lot of overhead, every single time
+you do a build, every time you do a release, you're going to be
+paying for that in additional time and
+additional effort that it takes to do something. This is where build
+systems can really start to add some
+benefit is as you get a little bit further in your
+project and you want to make this something that's
+a real product that you wanted to live
+with the end users. Now we've talked about
+both Buildroot and Yocto, so which is better? You might be thinking, well, which one should I maybe
+use for my project? You'll be able to
+find a lot if you just Google which is
+better Buildroot or Yocto, you'll find lots of
+different opinions about this and you'll
+probably quickly come to the conclusion
+that in a lot of cases this is a
+question of religion. It's asking, which is a
+better programming language, which is a better anything, pretty much anything comes down to personal
+preference and bias. There's not really
+a right answer. There's some reasons
+that you might want to consider one versus the other. But ultimately, there's
+also some preferences and personal bias that goes into
+which one you should use. I'm going to share my preferences
+and personal biases as a part of this slide deck. First starting off with
+the similarities are reasons not to choose
+one over the other. Both Yocto and Buildroot have really talented and really
+responsive developers, an active mailing list. You can get a lot of answers to your questions when
+things aren't working from the developers themselves
+or from people that are experts at using the tool. Both are really
+well thought out, well maintained, and have
+an active community. Both have really
+similar support for common embedded platforms
+like x86 and ARM. Both have extensive and
+well-written documentation, so there's plenty of stuff
+online to help you solve your own problems yourself
+with documentation. These are reasons that you
+could use either one really. Now getting more into
+the differences between, here are some of the ones that
+I find compelling in terms of deciding which one to use and some of the difference
+between the platforms. If you want to think about what's the simplest and what has the lowest initial
+learning curve, Buildroot is almost
+certainly, that case. The Yocto example that were providing for you is hopefully going to be
+pretty easy for you to use, but there's some work that went into setting up that
+canned example for you. Starting from scratch with Yocto is generally going
+to be more complicated, you'll have a steeper
+learning curve initially coming up and
+basing a project on Yocto. The developer
+workflow of support, this is one case where once you get the
+hang of how to use dev tool and some of the developer tools that
+are built-in to Yocto, Yocto can have some
+really good advantages there in terms of developer
+workflow support. You can do similar things
+with Buildroot and there are some good support there, but there's probably
+slightly better support in Yocto in terms of customizing
+it and developer workflow. Their clean build time is definitely shorter on Buildroot, because you're just rebuilding so many components on Yocto. But the incremental
+build time in Yocto, once you get a build
+setup is generally faster than Buildroot
+and easier to maintain because
+they're less caveats about when you need to do
+a clean build with Yocto. These two balance each other out a little
+bit, in my opinion. Then for platform
+and package support, if you're just building
+a basic embedded system based on basic platform, you'll have plenty of options
+with Buildroot and there's a lot of platforms or
+packages supported there. But if you really want to use the latest cutting edge stuff and you want to
+make sure you have support for maybe some
+not common packages, you probably have the
+best chance of having that support in Yocto. This is something to
+consider as well. Summary, when would I
+consider using Buildroot? If you have a project
+that's already using it, I would probably think pretty seriously about
+continuing to use it, unless there was a
+really specific reason you didn't want
+to going forward. If you have a team that's
+already familiar with Buildroot and excited
+about using it, I would probably consider
+I would continue using it. If you have a team
+that has lots of Makefile Linux Kernel
+build experience and relatively little
+Python or Yocto skills. This is important
+if you have a team that's not excited
+about learning it, because as I mentioned, there's a little bit more
+steeper of a learning curve, these are all reasons that Buildroot might be
+a better choice. If you're using a
+platform that's well-supported on Buildroot, especially a mature platform, if you're using a basic on
+platform or a x86 platform, then Buildroot's going to have probably the
+support that you need, especially if you have
+a product that has few and relatively
+simple requirements and a pretty
+well-defined roadmap. You're pretty sure that
+there's not going to be some new curveball
+thrown at you that might be difficult to handle
+with Buildroot support. When would I consider Yocto? It would be when I was using a product with more
+complex requirements, more of an undefined roadmap. If I was using a newer
+hardware platform if it's not supported yet
+on Buildroot for instance, or if the manufacturer hasn't committed to Buildroot support, but does have Yocto support. If the BSP is available
+only in Yocto, this would be a
+reason why I would definitely choose the Yocto. Also if you have a team that's excited about the challenge
+of learning Yocto. If you are starting from the point
+that you know it's going to be more work to learn, but you're okay with that
+because you want to learn it, then that would be
+another case where it's a good choice to choose
+Yocto for your building.

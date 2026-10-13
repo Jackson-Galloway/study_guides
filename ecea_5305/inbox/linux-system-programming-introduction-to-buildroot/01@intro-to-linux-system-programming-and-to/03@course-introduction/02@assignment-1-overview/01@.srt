@@ -1,0 +1,1164 @@
+1
+00:00:00,840 --> 00:00:03,220
+This video is a demo of
+assignment number one.
+
+2
+00:00:03,220 --> 00:00:08,140
+So we're going to do an overview walk
+through the assignment and also a demo.
+
+3
+00:00:08,140 --> 00:00:12,130
+You'll start the assignment off by
+clicking on a get help classroom link to
+
+4
+00:00:12,130 --> 00:00:14,120
+accept it into your get up account.
+
+5
+00:00:14,120 --> 00:00:18,118
+If you don't already have a get help
+account you should create one before you
+
+6
+00:00:18,118 --> 00:00:19,377
+start the assignment.
+
+7
+00:00:19,377 --> 00:00:23,712
+And you don't need to use a dedicated or
+separate account for this class or for
+
+8
+00:00:23,712 --> 00:00:27,661
+any of the other courses that you're
+taking as a part of the CU course.
+
+9
+00:00:29,340 --> 00:00:32,329
+Once you do click on
+the Github classroom link,
+
+10
+00:00:32,329 --> 00:00:35,478
+you should start out with
+a new empty repository.
+
+11
+00:00:35,478 --> 00:00:39,667
+And you're going to fill that
+with the content of the base
+
+12
+00:00:39,667 --> 00:00:41,772
+assignments repository.
+
+13
+00:00:41,772 --> 00:00:44,430
+And the base assignments repository
+looks something like this.
+
+14
+00:00:44,430 --> 00:00:47,704
+It's going to have a bunch of
+starter code implemented for
+
+15
+00:00:47,704 --> 00:00:50,851
+you that you'll modify as
+a part of this assignment.
+
+16
+00:00:54,440 --> 00:00:57,552
+So then you'll follow the instructions
+in the assignment document to
+
+17
+00:00:57,552 --> 00:00:58,720
+modify the example code.
+
+18
+00:00:58,720 --> 00:01:01,722
+Commit and push to your individual
+Github classroom repository to
+
+19
+00:01:01,722 --> 00:01:02,961
+complete the assignment.
+
+20
+00:01:04,239 --> 00:01:07,940
+So next I'll do a walk through
+in a demo of the assignment one.
+
+21
+00:01:07,940 --> 00:01:11,253
+So as I mentioned in the overview you'll
+start each classroom with a Github
+
+22
+00:01:11,253 --> 00:01:12,440
+classroom link.
+
+23
+00:01:12,440 --> 00:01:16,735
+When you click that link you'll be
+taken to a screen that allows you to
+
+24
+00:01:16,735 --> 00:01:18,310
+accept the assignment.
+
+25
+00:01:18,310 --> 00:01:19,985
+And when you accept the assignment,
+
+26
+00:01:19,985 --> 00:01:24,340
+you'll be creating a repository that
+includes your Github user name in it.
+
+27
+00:01:24,340 --> 00:01:31,303
+So when I click accept this assignment,
+I should get this new repository created.
+
+28
+00:01:31,303 --> 00:01:33,834
+And if I refresh this page,
+
+29
+00:01:33,834 --> 00:01:39,580
+the repository will be available
+at this link that it sets up.
+
+30
+00:01:39,580 --> 00:01:42,830
+And what you'll notice when you start
+here is that the repository is empty, so
+
+31
+00:01:42,830 --> 00:01:45,740
+the next thing we'll do is
+fill that with content.
+
+32
+00:01:45,740 --> 00:01:49,100
+You'll also notice that the assignment
+document is going to include some
+
+33
+00:01:49,100 --> 00:01:50,430
+suggested reading.
+
+34
+00:01:50,430 --> 00:01:53,199
+This is including the content
+that will go over in class and
+
+35
+00:01:53,199 --> 00:01:57,044
+also some additional background material
+that you might want to review to help you
+
+36
+00:01:57,044 --> 00:01:59,240
+complete the assignment.
+
+37
+00:01:59,240 --> 00:02:01,467
+So we'll start the implementation for
+
+38
+00:02:01,467 --> 00:02:05,670
+assignment one with bringing up your
+virtual machine host environment.
+
+39
+00:02:05,670 --> 00:02:08,709
+It wouldn't need to be a virtual machine
+if you want to use a physical machine
+
+40
+00:02:08,709 --> 00:02:09,740
+that works fine as well.
+
+41
+00:02:09,740 --> 00:02:13,640
+If you wannaa use a cloud hosted
+machine that works as well.
+
+42
+00:02:13,640 --> 00:02:17,978
+There are some instructions here if you
+
+43
+00:02:17,978 --> 00:02:22,990
+are going to use the virtual
+box based machine.
+
+44
+00:02:22,990 --> 00:02:27,340
+There's some instructions about how to
+set up a virtual box on your host PC.
+
+45
+00:02:27,340 --> 00:02:31,974
+And referred to the document instructions
+for the latest version in use,
+
+46
+00:02:31,974 --> 00:02:35,651
+the current version is to 20
+as a time of this recording.
+
+47
+00:02:37,770 --> 00:02:43,040
+So do the clone of the get help repository
+as I showed in the previous view.
+
+48
+00:02:43,040 --> 00:02:45,631
+And then that's going to
+create the empty repository.
+
+49
+00:02:45,631 --> 00:02:48,170
+One of the things you'll notice when
+you create this empty repository.
+
+50
+00:02:48,170 --> 00:02:52,970
+It gives you some comments here about
+what you can do to add content here.
+
+51
+00:02:52,970 --> 00:02:55,659
+But we don't want to do that
+because we're going to add
+
+52
+00:02:55,659 --> 00:02:58,740
+content specifically using
+the instructions here.
+
+53
+00:02:58,740 --> 00:03:02,966
+So you'll go through each one of these
+instructions to add the base repository,
+
+54
+00:03:02,966 --> 00:03:05,265
+which is the one that includes content,
+for
+
+55
+00:03:05,265 --> 00:03:08,760
+we'll have content in this repository for
+every assignment.
+
+56
+00:03:08,760 --> 00:03:12,527
+The main branch here is the one that's
+going to include the content for
+
+57
+00:03:12,527 --> 00:03:13,861
+the first assignment.
+
+58
+00:03:15,540 --> 00:03:19,871
+So you're going to add a remote that
+will let get nowhere can fetch that base
+
+59
+00:03:19,871 --> 00:03:21,230
+assignment content.
+
+60
+00:03:21,230 --> 00:03:24,367
+Then you'll fetch
+the assignment content and
+
+61
+00:03:24,367 --> 00:03:28,980
+then merge it into your main
+branch of your current repository.
+
+62
+00:03:28,980 --> 00:03:32,950
+And so this is going to make your
+match the branch from the ASD
+
+63
+00:03:32,950 --> 00:03:34,861
+assignments repository.
+
+64
+00:03:36,140 --> 00:03:39,270
+Then you'll do get sub module
+update in it recursive.
+
+65
+00:03:39,270 --> 00:03:44,059
+And what this is going to do is clone
+the next to get repositories inside
+
+66
+00:03:44,059 --> 00:03:46,140
+the assignment auto test.
+
+67
+00:03:46,140 --> 00:03:50,443
+So if you aren't familiar with
+sub modules this is really just
+
+68
+00:03:50,443 --> 00:03:54,850
+a way to put one Git repository
+inside another Git repository.
+
+69
+00:03:54,850 --> 00:04:00,140
+So you can see this symbol here
+next to the folder icon in Git.
+
+70
+00:04:00,140 --> 00:04:04,242
+And this is just showing that there's a
+sub module here referencing a separate Git
+
+71
+00:04:04,242 --> 00:04:05,640
+repository.
+
+72
+00:04:05,640 --> 00:04:09,484
+This separate Git reports story is where
+all the content is going to be located for
+
+73
+00:04:09,484 --> 00:04:11,510
+our assignment automated testing.
+
+74
+00:04:11,510 --> 00:04:14,071
+We'll get into more detail about
+this later in the semester.
+
+75
+00:04:14,071 --> 00:04:17,690
+But for now you just need to make sure
+that you're cloning it as a part of your
+
+76
+00:04:17,690 --> 00:04:19,740
+assignment repository.
+
+77
+00:04:19,740 --> 00:04:23,786
+So when you do to Git some module update
+in a recursive that's going to clone that
+
+78
+00:04:23,786 --> 00:04:24,541
+repository.
+
+79
+00:04:24,541 --> 00:04:28,698
+All the nests to Git repository is
+going to pull all the test content into
+
+80
+00:04:28,698 --> 00:04:29,851
+your repository.
+
+81
+00:04:31,040 --> 00:04:34,200
+Next thing you need to do
+is set up Github Actions.
+
+82
+00:04:34,200 --> 00:04:37,103
+And you can use this for
+automated testing and
+
+83
+00:04:37,103 --> 00:04:41,996
+also to set up your virtual machine or
+whatever environment you're using to
+
+84
+00:04:41,996 --> 00:04:46,440
+run Ubuntu to be able to run
+the automated tests for this class.
+
+85
+00:04:46,440 --> 00:04:50,565
+So looking through the instructions for
+this there's a section about how to set up
+
+86
+00:04:50,565 --> 00:04:53,280
+automated testing for
+your assignment repository.
+
+87
+00:04:53,280 --> 00:04:58,235
+And this is going to allow you to use
+a runner that's located on your machine to
+
+88
+00:04:58,235 --> 00:05:01,988
+check the commits that you
+push to the Github Repository.
+
+89
+00:05:01,988 --> 00:05:04,867
+And verify that they're
+working properly or
+
+90
+00:05:04,867 --> 00:05:08,361
+give you feedback if something
+in them is not working.
+
+91
+00:05:09,840 --> 00:05:14,109
+And follow these instructions from Github,
+the instructions are very good.
+
+92
+00:05:14,109 --> 00:05:16,255
+You can follow these to implement, and
+
+93
+00:05:16,255 --> 00:05:20,100
+one note though you must use a Linux
+based runner for the assignments.
+
+94
+00:05:20,100 --> 00:05:24,420
+And then you also must ensure that you're
+running machine has docker installed.
+
+95
+00:05:24,420 --> 00:05:28,305
+And there's some instructions about
+setting up docker in the setting of your
+
+96
+00:05:28,305 --> 00:05:31,066
+host section of the assignment
+auto test repository.
+
+97
+00:05:31,066 --> 00:05:34,654
+And that you won't have to worry
+about this for the first assignment.
+
+98
+00:05:34,654 --> 00:05:38,108
+But for the future assignments you
+can go back to this page to see how
+
+99
+00:05:38,108 --> 00:05:41,451
+to reuse a previously configured
+runner with a new assignment.
+
+100
+00:05:43,440 --> 00:05:47,150
+So then once we've got
+Github Actions set up and
+
+101
+00:05:47,150 --> 00:05:52,300
+all the unit test requirements,
+we can run the unit test script.
+
+102
+00:05:52,300 --> 00:05:56,440
+And when you run that unit test script,
+you're going to see a failure message.
+
+103
+00:05:56,440 --> 00:06:01,230
+So next we'll run the unit test script to
+run the unit test against our repository.
+
+104
+00:06:01,230 --> 00:06:05,238
+Now in this case we're running the unit
+test against the content that we cloned
+
+105
+00:06:05,238 --> 00:06:07,810
+from the assignment based
+response repository.
+
+106
+00:06:07,810 --> 00:06:12,073
+So if I look at the content that I have
+in my repo it should match what's in
+
+107
+00:06:12,073 --> 00:06:13,870
+the assignments based repo.
+
+108
+00:06:13,870 --> 00:06:15,780
+So we haven't implemented anything yet.
+
+109
+00:06:15,780 --> 00:06:19,118
+We're going to run the unit test, make
+sure our unit test is set up properly and
+
+110
+00:06:19,118 --> 00:06:22,352
+we should get a failure showing that
+we haven't completed the assignment
+
+111
+00:06:22,352 --> 00:06:23,361
+implementation yet.
+
+112
+00:06:24,540 --> 00:06:26,161
+So I'll run the unit test script.
+
+113
+00:06:29,140 --> 00:06:31,601
+You should see a building and
+running some files,
+
+114
+00:06:31,601 --> 00:06:36,010
+you should see a message here to say that
+your unity setup is working, that's good.
+
+115
+00:06:36,010 --> 00:06:40,924
+And then you'll see message
+with the failure here saying
+
+116
+00:06:40,924 --> 00:06:43,291
+ASD students please fix me.
+
+117
+00:06:43,291 --> 00:06:45,961
+So this is the part that will be
+adding with assignment number one.
+
+118
+00:06:47,240 --> 00:06:50,945
+So as the assignment document mentions,
+the reason that test is going to fail is
+
+119
+00:06:50,945 --> 00:06:54,520
+because you haven't yet implemented
+your test validate user function.
+
+120
+00:06:54,520 --> 00:06:59,671
+So if we look at what this function is
+doing is just going to verify today.
+
+121
+00:06:59,671 --> 00:07:03,636
+It's just checking an assertion for
+true, that's hard coded defaults, so
+
+122
+00:07:03,636 --> 00:07:05,110
+it's always going to fail.
+
+123
+00:07:05,110 --> 00:07:09,553
+You need to replace this line
+with a call to my username
+
+124
+00:07:09,553 --> 00:07:12,131
+to verify your comp username.
+
+125
+00:07:12,131 --> 00:07:15,810
+So what you're going to do is
+add a unity assertion here.
+
+126
+00:07:15,810 --> 00:07:20,188
+That's going to make sure that the string
+that you get from your my username
+
+127
+00:07:20,188 --> 00:07:24,947
+function matches the value from the
+configuration file for the assignments.
+
+128
+00:07:24,947 --> 00:07:30,155
+And the configuration file
+value is one that you're
+
+129
+00:07:30,155 --> 00:07:35,500
+going to fill in, in the camp and
+user name.text file.
+
+130
+00:07:35,500 --> 00:07:38,888
+So you can see here it's referencing
+your Github user name here,
+
+131
+00:07:38,888 --> 00:07:41,860
+you just need to replace this
+with your Github user name.
+
+132
+00:07:41,860 --> 00:07:46,273
+And what you're going to verify with
+this function is that the the two values
+
+133
+00:07:46,273 --> 00:07:49,631
+are equal, so
+my username function is written for you.
+
+134
+00:07:49,631 --> 00:07:54,221
+That's going to get your the I'm
+sorry the Malik username from com
+
+135
+00:07:54,221 --> 00:07:55,921
+files written for you.
+
+136
+00:07:55,921 --> 00:07:58,521
+That's going to get the value
+from the configuration file for
+
+137
+00:07:58,521 --> 00:08:00,040
+your Github user name.
+
+138
+00:08:00,040 --> 00:08:05,749
+And you're going to call the my username
+function and auto test validate.c
+
+139
+00:08:05,749 --> 00:08:11,020
+to get your hard coded username and
+that you're just going to set.
+
+140
+00:08:11,020 --> 00:08:14,829
+So going back to the assignment
+documentation that confuse her name dot
+
+141
+00:08:14,829 --> 00:08:17,070
+text is going to have
+your Github user name.
+
+142
+00:08:17,070 --> 00:08:22,011
+Then test validate user name.c just
+needs to have this test assert equal
+
+143
+00:08:22,011 --> 00:08:27,940
+string message to verify that the two
+strings that you return are equal.
+
+144
+00:08:27,940 --> 00:08:32,014
+And the user name is going to be
+actually implemented in your auto test
+
+145
+00:08:32,014 --> 00:08:33,270
+validate.c file.
+
+146
+00:08:33,270 --> 00:08:38,240
+So inside your assignment,
+one repository auto test validate.c.
+
+147
+00:08:38,240 --> 00:08:39,960
+There's a my username function and
+
+148
+00:08:39,960 --> 00:08:42,776
+you just need to replace this
+with your Github users name.
+
+149
+00:08:42,776 --> 00:08:46,305
+So this is just verifying
+that both your comp file and
+
+150
+00:08:46,305 --> 00:08:50,840
+your c file agree on the setting
+of your Github user name.
+
+151
+00:08:50,840 --> 00:08:55,533
+Now once you run the unit test script, the
+unit test portion of the of the testing
+
+152
+00:08:55,533 --> 00:08:57,651
+for your assignment is going to pass.
+
+153
+00:08:59,640 --> 00:09:03,140
+So here's an example of what you
+should see when you get to that point.
+
+154
+00:09:03,140 --> 00:09:08,160
+If I run the unit test script
+should see the same kind of builds.
+
+155
+00:09:08,160 --> 00:09:13,028
+And then instead of failing that last
+test case is going to pass because my get
+
+156
+00:09:13,028 --> 00:09:17,040
+up user name matches between
+my comp file and my c file.
+
+157
+00:09:17,040 --> 00:09:20,842
+Okay, so now that we've got
+the basics of our unit test working,
+
+158
+00:09:20,842 --> 00:09:24,991
+we're going to add some system testing for
+a really simple application,
+
+159
+00:09:24,991 --> 00:09:27,300
+we're going to write called Finder app.
+
+160
+00:09:27,300 --> 00:09:32,312
+So Finder apps going to have a couple
+of scripts that really do some
+
+161
+00:09:32,312 --> 00:09:38,949
+basic operations with reading and writing
+from files and doing searches on files.
+
+162
+00:09:38,949 --> 00:09:44,440
+And just verified some real basic
+operations with shell scripts.
+
+163
+00:09:44,440 --> 00:09:48,661
+So we're going to write a shell script
+that's called finder app Finder.SH.
+
+164
+00:09:50,230 --> 00:09:53,300
+And the requirements for
+this script are described here.
+
+165
+00:09:53,300 --> 00:09:56,080
+It's going to take some
+runtime arguments for
+
+166
+00:09:56,080 --> 00:09:59,834
+the path to a directory in
+the file system and a text string,
+
+167
+00:09:59,834 --> 00:10:04,661
+that's going to be searched within files
+in the directory in the file system.
+
+168
+00:10:06,050 --> 00:10:09,620
+It needs to exit with
+the return value one error.
+
+169
+00:10:09,620 --> 00:10:13,605
+And to print statements if any of the
+parameters weren't specified should exit
+
+170
+00:10:13,605 --> 00:10:15,230
+with a return value and error.
+
+171
+00:10:15,230 --> 00:10:20,111
+If the file directory does not represent
+an actual director in the file system and
+
+172
+00:10:20,111 --> 00:10:24,301
+it should print the number of files and
+the number of matching lines.
+
+173
+00:10:24,301 --> 00:10:29,174
+Where the X value here is the number
+of files in that directory and
+
+174
+00:10:29,174 --> 00:10:33,611
+all subdirectories and
+Y is the number of matching lines.
+
+175
+00:10:33,611 --> 00:10:36,029
+So if you look back through the content,
+
+176
+00:10:36,029 --> 00:10:39,890
+we talked about some of the utilities
+you can use for scripting.
+
+177
+00:10:39,890 --> 00:10:44,188
+There's just some applications you
+can use to get this information and
+
+178
+00:10:44,188 --> 00:10:46,706
+display it from your Finder invocation.
+
+179
+00:10:46,706 --> 00:10:49,467
+And so it could be invoked,
+something like this,
+
+180
+00:10:49,467 --> 00:10:53,018
+Finder.SH and then some path to
+a directory and then looking for
+
+181
+00:10:53,018 --> 00:10:56,261
+content in that directory in this case,
+the word Lennox.
+
+182
+00:10:57,640 --> 00:11:01,024
+Next you're going to write
+a shell script called writer,
+
+183
+00:11:01,024 --> 00:11:04,480
+which takes arguments the full
+path of the file to right,
+
+184
+00:11:04,480 --> 00:11:09,170
+including the filename and that's going to
+be referred to below as right file.
+
+185
+00:11:09,170 --> 00:11:12,896
+And then the second is a string that
+will be written to the file and
+
+186
+00:11:12,896 --> 00:11:15,104
+you should do some air checking here,
+
+187
+00:11:15,104 --> 00:11:18,860
+exit with value one if any of
+the arguments weren't specified.
+
+188
+00:11:18,860 --> 00:11:23,297
+Should create a new file with
+that specified name and path and
+
+189
+00:11:23,297 --> 00:11:26,530
+put the content in
+the right string into it.
+
+190
+00:11:26,530 --> 00:11:28,986
+And you should overwrite
+any existing file,
+
+191
+00:11:28,986 --> 00:11:31,577
+create that path if it
+doesn't already exist.
+
+192
+00:11:31,577 --> 00:11:36,502
+And it has some error handling if for
+some reason the file couldn't be created,
+
+193
+00:11:36,502 --> 00:11:39,760
+so for example,
+writer.sh path to some file name.
+
+194
+00:11:39,760 --> 00:11:44,561
+IOS this would include the content
+IOS inside that file that specifies.
+
+195
+00:11:46,570 --> 00:11:50,151
+So the next section talks about
+the finder test script and
+
+196
+00:11:50,151 --> 00:11:52,693
+this one you don't have to do anything.
+
+197
+00:11:52,693 --> 00:11:55,531
+This is a part of the assignment
+based repository.
+
+198
+00:11:55,531 --> 00:11:58,282
+So this is already written for you but
+
+199
+00:11:58,282 --> 00:12:02,645
+it goes over the counter what
+the this file actually does.
+
+200
+00:12:02,645 --> 00:12:05,693
+And the file is going
+to take arguments for
+
+201
+00:12:05,693 --> 00:12:10,496
+the number of files to write and
+the string to write to each files.
+
+202
+00:12:10,496 --> 00:12:15,086
+And here all the defaults for
+what the what this applicator,
+
+203
+00:12:15,086 --> 00:12:16,810
+what the script does.
+
+204
+00:12:16,810 --> 00:12:21,047
+And it's going to ultimately fill
+this temp ALD data directory and
+
+205
+00:12:21,047 --> 00:12:25,150
+then create the specified number
+of files in that directory.
+
+206
+00:12:25,150 --> 00:12:29,991
+Then it's going to run the finder script
+and search for the search string.
+
+207
+00:12:29,991 --> 00:12:34,670
+And so it should find that it found that
+it was able to find the same number of
+
+208
+00:12:34,670 --> 00:12:38,291
+files that it wrote with
+the specified right string, and
+
+209
+00:12:38,291 --> 00:12:42,681
+then checks the output of the finder
+script for the expected output.
+
+210
+00:12:42,681 --> 00:12:47,870
+And then prints that the number of files
+matched the expected number of files and
+
+211
+00:12:47,870 --> 00:12:49,661
+print success or failure.
+
+212
+00:12:52,440 --> 00:12:56,574
+So when you have your finder and
+writer that SH script written,
+
+213
+00:12:56,574 --> 00:13:01,488
+you should be able to use the finder test
+to make sure that both of the scripts
+
+214
+00:13:01,488 --> 00:13:06,661
+are operating as expected and that your
+implementation passes requirement.
+
+215
+00:13:10,010 --> 00:13:14,203
+So next once we have those scripts
+implemented we can use the full test
+
+216
+00:13:14,203 --> 00:13:19,530
+script to run both the unit test and the
+functional test against the application.
+
+217
+00:13:19,530 --> 00:13:23,233
+And so you'll see it start out
+by rerunning the unit tests and
+
+218
+00:13:23,233 --> 00:13:26,652
+then it will run a step here
+that runs the finder script.
+
+219
+00:13:26,652 --> 00:13:31,121
+And also checks to make sure that your
+air handling worked as expected on
+
+220
+00:13:31,121 --> 00:13:33,436
+the finder and writer test scripts.
+
+221
+00:13:33,436 --> 00:13:38,266
+So if you get a response out here saying
+that the assignment test completed with
+
+222
+00:13:38,266 --> 00:13:43,261
+success then you'll know that you've
+implemented your strips successfully.
+
+223
+00:13:44,540 --> 00:13:49,520
+So once you get everything working
+locally, you'll want to push up to your
+
+224
+00:13:49,520 --> 00:13:55,323
+Github check in your assignment repository
+that you created with Github classroom.
+
+225
+00:13:55,323 --> 00:13:58,530
+And what you should see then if you
+have Github Action set up correctly,
+
+226
+00:13:58,530 --> 00:14:00,040
+you should see a green check box.
+
+227
+00:14:00,040 --> 00:14:05,216
+So this is going to run the full test
+script against your self hosted runner and
+
+228
+00:14:05,216 --> 00:14:10,568
+give you the success status showing
+that your test completed successfully.
+
+229
+00:14:10,568 --> 00:14:12,322
+And under the actions button,
+
+230
+00:14:12,322 --> 00:14:16,043
+you should be able to see a workflow
+run showing a successful run.
+
+231
+00:14:16,043 --> 00:14:20,956
+And you should be able to see log
+messages that show that the outcome of
+
+232
+00:14:20,956 --> 00:14:23,020
+your run was successful.
+
+233
+00:14:23,020 --> 00:14:26,603
+If there were any failures,
+you'd see error messages here and
+
+234
+00:14:26,603 --> 00:14:30,592
+refer back to the settings on how to
+set up your Github Actions if you see
+
+235
+00:14:30,592 --> 00:14:34,740
+problems with this step or for
+troubleshooting instructions.
+
+236
+00:14:34,740 --> 00:14:37,130
+So that's really it for
+assignment number one.
+
+237
+00:14:37,130 --> 00:14:38,704
+Pretty simple repository set up,
+
+238
+00:14:38,704 --> 00:14:42,430
+we'll get into more complicated setups
+as we get into the future assignments.
+
+239
+00:14:42,430 --> 00:14:46,550
+But for this one we're just starting out
+with the public source and starter code.
+
+240
+00:14:46,550 --> 00:14:50,805
+Then we're going through the step
+to create our assignment one
+
+241
+00:14:50,805 --> 00:14:53,936
+repository based on our Github username,
+and
+
+242
+00:14:53,936 --> 00:14:58,980
+then push the content of our assignment
+based repo into that repository.
+
+243
+00:14:58,980 --> 00:15:02,031
+And this will be the repository that you
+modify and update for the assignment.

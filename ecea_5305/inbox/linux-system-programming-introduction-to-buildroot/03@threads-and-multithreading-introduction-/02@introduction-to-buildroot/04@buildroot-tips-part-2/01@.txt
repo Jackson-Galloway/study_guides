@@ -1,0 +1,101 @@
+So continuing on the previous
+boulder tips video, I'm going to highlight a few
+additional boulder at tips. That kind of come up as sort of
+a frequently asked questions for the first boulder assignment. So we're going to talk about some general
+build debug strategies specifically for assignment for boulder component. So first of all you can get some really
+confusing things if you check binaries into your repo. And the reason this can happen is if
+you native compile an application and then you check in the binary object file. Boulder is going to think that it doesn't
+have anything to do to rebuild that file, it's going to see that
+the object file is there. It's going to think that there's
+no compile step that's needed and it's going to try to use your file. When it tries to use your file it's
+going to be the wrong architecture and so it's not going to work
+on the Arm 64 target. So you need to make sure that you've got
+your get ignored set up to keep any up, executable or
+object files out of your repo. And this should be set up by default for
+you on the base repo. But it just be a matter of
+if you rename something or if you didn't follow this pattern for
+object files. So something to keep in mind, make sure
+that that get ignores set correctly. Also don't hard code any references
+to gcc in your make file, use CC as a compiler variable. And this allows if you use these
+compiler variables shown here for your compile step. This allows builder to define
+them the way it needs to do to do its cross compile setup. And finally pay attention to
+the configuration changes and the output of save config.sh. So you're going to run save config to save
+off the configurations you've got for buildroot. And make sure that when you do that step,
+you save that off into your repo. If you forget to do that,
+then when you check out to a new repo or maybe when you deploy and
+run your automated testing. You're not going to have
+the same configuration that you used when you originally
+checked in the code. Some general debug strategies
+that work well for buildroot, what I like
+to do is try to create. Especially in cases where you aren't
+getting the output that you expected. It doesn't appear that
+the changes you're making or making any difference in the output,
+try to just make an error. So use something that's outside of
+makes in tax, for instance, for a dot make file or just type some garbage
+on the line and I can figure that in. And what this will tell you is whether
+you've got the configuration set up correctly and buildroot to actually
+read these files to begin with. And a lot of times some of the problem
+is that the file that you think is being included actually isn't
+even being included at all. Also pay attention to
+trying incremental builds, there's some content that we
+discussed in lecture about this. And there's some information in
+the buildroot help files about it. But if you do make command from
+the builder at subdirectory and you use this override sourcedir. You can specify an arbitrary path and
+rebuild directly from a local directory. So this saves the need to if you're
+doing a lot of trouble shooting or incremental steps to try to
+troubleshoot some problem. It saves you the need from having to
+push your AESD assignments repo up. Change the git hash and rebuild from
+buildroot and that whole process just gets time consuming if you need
+to do a lot of iterations. So look at how to use the override
+sourcedir variable and use this AESD assignments rebuild task. To rebuild just your AESD
+assignments module or yeah module. And also one thing to keep
+in mind with buildroot, try to use clean build as the last result. Clean build while it's faster than
+yak to which we'll talk about in the next course in this sequence. It still takes quite a bit of time and
+so it's not the kind of thing that you want to do if you're used to
+just compiling a native application. Maybe you just think I'll
+just run make clean and then I'll rebuild the application. But if you do a clean step on buildroot
+it's going to take at least a half hour depending on the amount of
+your system to rebuild it. So it's not a normal debug step that
+you'd want to take just any time, something isn't working. A few other builders debug strategies,
+this is really an optimization thing. You can use DL DIR to
+avoid download steps and downloads can take quite
+a bit of time to complete. So if you use your DL DIR, you can keep those out of your
+builder output directory. And that way if you do a clean, you won't have to re download
+all of the package source code. One other kind of useful thing
+with this if you've got a friend who is a local maybe you could share
+a flash key with or something like that. You can put your DL DIR on a flash key,
+share that with your friend and then they don't have to wait for all the
+files to download from the internet for that directory. So there's some notes about this
+in the link in the assignment, so take a look at that. And also do really close inspection
+when you're having problems, whatever you think is
+associated with the problem. Look really closely at
+every single character and this includes spaces and tabs. Make sure that you've specified the
+variable exactly the way you want it to. You didn't include any
+extra things like colons or something like that at
+the end of the variable name. It's very finicky sometimes about getting
+things printed out exactly right, so what works well for this? I've got some working examples that I've
+shared that you can use as a reference. And a lot of times if you just
+put those side by side and look just character by character. Sometimes you can see a difference
+that will explain the problem that you're seeing. One other thing to think about is think
+of other ways that you could test out whatever implementation you're working on. And so one of the things I've tried to do
+with these assignments is make it possible for you to run the assignment,
+both natively and in embedded. And so it's probably going to be a lot
+faster to do iteration and debug natively. So think about how you could reproduce
+the problem on your native compile. And maybe troubleshooting in debug there
+as an alternative to debugging inside QMU. Few other suggestions for buildroot debug,
+don't wait until the last minute to start. So the build especially for buildroot can take quite a bit of time
+depending on how fast your system is. So think about maybe before you get
+everything implemented with your program. Kicking off a buildroot build,
+at least getting that started, getting all the downloads done,
+start that early. Don't wait till the very
+end to start that part and think about all the things
+you can do in parallel. So while you're waiting for downloads or
+builds to happen, I think if there's something that you can do to be working
+on the next part of the assignment. And have that ready and maybe you can even
+set up a new branch and start working on that before you're ready to actually
+pull that into your assignment. And one of the things I like to do
+when having issues with any problem. But something like this is maybe just step
+away from the problem for a few hours and come back to it. I always find that I can, if I take
+some time away from it a lot of times when I come back to it,
+I'll think about it slightly different. This is another case where it's important
+to start early to have the flexibility to do that kind of thing.

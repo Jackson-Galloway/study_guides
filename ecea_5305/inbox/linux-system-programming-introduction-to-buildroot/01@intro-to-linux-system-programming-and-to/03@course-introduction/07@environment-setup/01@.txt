@@ -1,0 +1,156 @@
+Hi students. So subject to this video, we're going to talk about setting up
+our Ubuntu Development Environment. We're going to talk about
+Linux Distributions, Linux Packages and Ubuntu which we're going to be using for
+our Linux Development Environment for this course. And we'll also talk a little bit
+about Root User Accounts and the philosophy about how we're going
+to use these Root User accounts. So some of the backup material,
+if you aren't that familiar with Linux command line to begin with, you might want
+to review some of the backup material that's the basis of the slides
+in this lecture and the upcoming lectures for this week
+regarding the use of Linux command line. So there's one here on
+introduction to Linux workshop. That's a good one for you to reference. There are also a couple of bash scripting
+tutorials here that will be useful for you when you complete the assignment. If you don't have a lot of
+scripting experience already. Okay so one option, as I mentioned
+in previous videos regarding how to complete your programming assignments
+if you're running on Windows or MacOS and you don't have a native
+Linux development environment. One of our options is going to be to
+install virtual box on your pc and you can see the link
+here to virtualbox.org. There's also a link with a little more
+instructions inside the assignment one document which we'll talk
+about in a later video. But in terms of what the environment
+setup that we use for the student assistance and myself,
+we're going to use virtual box and Ubuntu. And you can see the document that
+I mentioned is linked to this environment set up doc that talks about
+how to set up your virtual box system. And that like I mentioned is also
+linked in the assignment one document. One thing I wanted to mention because this
+has come up in the past, especially as we get into Linux kernel driver development,
+there's a chance that you may corrupt your virtual machine by accident when
+you're doing Linux driver development. So when you get your initial system set
+up, it's a good idea to use the snapshot feature of virtual box to save a copy
+of the current state of the system. And that way, if you do something later
+and accidentally corrupt your file system or your install, you have to wait
+it to get back to the original setup. So that's one handy benefit
+of using virtual box. I've got a link here to describing how to
+use snapshots is pretty intuitive, but this is something you should consider
+doing as a part of your system set up. So I also mentioned before and
+I've got this in the class overview that you might not have enough resources
+to run virtual box on your laptop, or you might already have
+dedicated Linux hardware. And this is another option for completing
+the assignments with the course and you don't need a really powerful laptop
+in order to meet the requirements for the course. So there's lots of options on Ebay or
+Pawn shops for something less than $200. One other option is if you don't have
+the the ability to run virtual box, you could also consider dual booting. So set up your system to
+boot into Windows, but conditionally to boot into Linux instead. And that way you can use all the resources
+of your laptop or your computer in your Linux boot and not have to rely
+on running inside a virtual machine. So as I mentioned, we're going to talk a little bit
+about distributions and packages. When we say distribution with Linux,
+what do we mean? We really mean just a collection
+of a bunch of pre configured software that's maintained by community or in some cases by companies that
+have created these distributions. So these are really just a collection of
+software packages that either companies or community have found useful and
+I think is a useful place for you to start when you're
+setting up your pc. So you can think of it as like all of the
+software applications that would go into, for instance, a default install of your laptop when
+you bought it with Windows installed. Same idea with the distribution. There's probably more packages
+that are associated with, for instance, editing documents or
+editing images. And each each distribution is going to be
+slightly different on what they have by default, and each distribution is
+going to be slightly different on how you add additional software packages. So the version in the configuration of the
+software that's installed on the system is going to be managed by
+what's called packages. Ubuntu is the distribution that we're
+going to be using for this course. It's a pretty popular Linux distributions. So one of the nice things about it,
+you can find a lot of help online and a lot of references to
+people that are using it. Every distribution that you use is
+going to have its own mechanism for adding software packages
+through the command line. And so Ubuntu's is called
+the Apt Package Manager, which we'll talk about in a minute here. So one question you might have, especially
+if you come from a Windows background, is why with Windows, I just maybe find
+some application that I want to use on the web and I download the executable and
+I run the executable installer and I install it from whatever
+website I downloaded from. So why doesn't Linux just do it that way, why would they use these packages that are
+associated with the distribution instead? And really, you can think of packages
+as kind of a precursor to app stores that you have today for mobile phones that have become popular
+with the iPhone and android phones. So the benefit of the package manager is
+that it's one centralized location that's controlled by the distribution. That gives you a list of
+trusted software sources. So rather than trying to download
+from a bunch of different websites that are hosted by completely different
+applications, you've got one place where someone in the community is helping to
+maintain a list of all the packages that are configured to build and run and
+install successfully in a distribution. So this helps solve some of
+the fragmentation problems because every distribution is a little bit different in
+terms of configuration that ships with, there might need to be slight
+customization to software packages in order to make them run
+properly on the distributions. So by having a package manager
+that's built into the distribution, you can solve some of those problems
+because the distribution package manager will know which distribution
+is getting installed into and it can put all the required
+components in the correct paths and make sure that it runs
+correctly on distribution. So I mentioned before Ubuntu is
+one of the popular distributions. It's the one that we're
+going to use in this course. You can use other
+distributions if you want. This is just the one that will
+provide support in terms of myself and student assistance and this is one of the
+things that I have pronounced wrong before I started teaching this course and had to
+look up pronunciations, but it's actually pronounced uu-boonto and it's an African
+word which means humanity to others. The first release was back in 2004 and it's based on another distribution
+that's known as Debian. Also popular distribution. And the kind of the motivation behind
+Ubuntu over Debian is that it might be slightly less stable, but
+it's also going to be more up to date, have more recent software packages
+available than what you'd find in Debian. It's also more focused on
+usability than licensing and what that means is that in Debian, there's
+kind of an emphasis on free software. Again, free as I mentioned before,
+as in liberty, like your freedom to do whatever you want with the software
+to have access to the source code. Ubuntu is less focused on
+making sure that for instance, every single Kodak that you'd install for
+access to video or audio has a free and open license and
+it's more focused on making sure that the system is as usable
+as possible from installation. In other words, making it easy for users
+who might be just getting started out. Like might be your case for this course. So the package management for Ubuntu is
+traditionally performed by the apt utility that's still available and and
+still a way that you can install packages. There's also recent support for
+the snap utility and one nice thing about Ubuntu
+is package management system. If you try to use an application that's
+not currently installed, you'll get this message here that tells you how you
+can install that particular application. So in this case, I'm trying to use
+an application called tree to look at the details of a specific
+folder structure. And it's giving me a helpful message
+saying it can't be installed but here are some options to install it. So by simply doing sudo apt install tree,
+I can have the tree utility that I was trying to use installed and
+available in the operating system. So getting into a little bit more about
+how we would install applications, you can imagine that it would make sense
+that a default user account you create would have access limitations there. This would be important, especially if there's multiple
+user accounts created on a system. But it's also helpful because it prevents
+you from accidentally doing things you didn't want to do. So for instance,
+if you would happen to use rm-rf and we'll talk a little bit more
+about what the rm command does. But it's basically, this command is
+going to be removing a directory or a set of directories. And if you happen to use
+rm-rf with a slash and then referencing some undefined variable. Because the variable is undefined,
+this would look like rm-rf/ and basically just start deleting
+everything in your system, which is probably not
+what you wanted to do. And so if you're running this rm-rf/
+command as a normal user account, you get errors back saying that you
+don't have the permissions to delete the contents of the file system, which in
+this case would be a really good thing. But in some cases you
+actually do need Root access. And there are specific commands where you
+need to have the permissions to access things in the root file system that
+aren't allocated to specific user. So for that you would use what's
+called the Root User account. And that account basically has access to
+modify or change anything on the system. So the different levels that
+are available to root user account or single users let the system administrator
+configure who should have access to specific devices on the system, who should
+have access to specific directories. And then again,
+if you can either log in as a root user or impersonate the root user, you can
+do whatever you want on the system. So Ubuntu each distribution
+might have a slightly different philosophy on how it uses root access. Ubuntu's root access philosophy is
+that when you configure your default user account, you do not have root
+permissions for that account. However, if you are doing something
+that you need permissions for, you can just use the sudo command
+which is short for super user do, before whatever command
+you're trying to run. So if you type sudo and then
+the command that you're trying to run, it's going to ask you for
+your password and if you enter your password successfully,
+it's going to run the command that you specified as if you were a root user
+rather than your current user account. So this is kind of a nice trade off in
+that it prevents us from accidentally doing things we maybe didn't want to do
+when we're running things as our user account, but it also gives us the option
+to have root access when we need it for specific operations.

@@ -1,0 +1,273 @@
+1
+00:00:00,940 --> 00:00:03,761
+This video will talk about logging and
+the syslog utility.
+
+2
+00:00:06,140 --> 00:00:10,455
+So you're familiar with, at this point,
+printf debugging, probably use that for
+
+3
+00:00:10,455 --> 00:00:12,980
+all your C development that you've done so
+far.
+
+4
+00:00:12,980 --> 00:00:16,656
+And you know that print output is one of
+the simplest ways that you can use to
+
+5
+00:00:16,656 --> 00:00:18,862
+troubleshoot and debug your application.
+
+6
+00:00:18,862 --> 00:00:22,034
+And it really works great for
+interactive programs, but
+
+7
+00:00:22,034 --> 00:00:25,614
+what about when you're working
+on a headless embedded system?
+
+8
+00:00:25,614 --> 00:00:28,088
+What can you do for
+using the same kind of,
+
+9
+00:00:28,088 --> 00:00:33,240
+what's a simple way that you could
+troubleshoot and debug in that case?
+
+10
+00:00:33,240 --> 00:00:36,387
+So one of the things that you should think
+about in a headless embedded system is
+
+11
+00:00:36,387 --> 00:00:37,540
+how to do logging.
+
+12
+00:00:37,540 --> 00:00:41,804
+You need typically some way to store
+information in log files that you could go
+
+13
+00:00:41,804 --> 00:00:43,116
+in and retrieve later,
+
+14
+00:00:43,116 --> 00:00:47,839
+given that you don't have this interactive
+component of running an application like
+
+15
+00:00:47,839 --> 00:00:51,004
+you would if you were just
+writing a standalone program.
+
+16
+00:00:51,004 --> 00:00:54,925
+And there's several different
+logging frameworks out there, but
+
+17
+00:00:54,925 --> 00:00:56,231
+one of the simplest and
+
+18
+00:00:56,231 --> 00:01:01,061
+the one that we're going to cover in this
+course is syslog and syslogd, or rsyslogd.
+
+19
+00:01:02,740 --> 00:01:07,208
+So this is really a daemon, which we'll
+talk about more later in the course,
+
+20
+00:01:07,208 --> 00:01:11,010
+but it's basically an application
+that runs in the background.
+
+21
+00:01:11,010 --> 00:01:15,942
+It uses configuration to configure logging
+that is written to the file system, and
+
+22
+00:01:15,942 --> 00:01:21,240
+typically you'll find those log files
+written in the var/log directory.
+
+23
+00:01:21,240 --> 00:01:24,219
+And there's a set of API calls for
+
+24
+00:01:24,219 --> 00:01:29,341
+syslog that will automatically
+write the log messages.
+
+25
+00:01:29,341 --> 00:01:33,261
+You send two files in this directory
+based on some rules that you set up.
+
+26
+00:01:35,340 --> 00:01:36,792
+So if you do man syslog,
+
+27
+00:01:36,792 --> 00:01:40,787
+you can see more information about
+the usage of this utility, but
+
+28
+00:01:40,787 --> 00:01:45,750
+it's really about splitting your log
+message into facilities and priorities.
+
+29
+00:01:45,750 --> 00:01:50,429
+And so with your facilities,
+you can say this is a user application so
+
+30
+00:01:50,429 --> 00:01:54,080
+this is maybe something
+that would run interactive.
+
+31
+00:01:54,080 --> 00:01:56,938
+This is a daemon application
+meaning something that's running in
+
+32
+00:01:56,938 --> 00:01:57,720
+the background.
+
+33
+00:01:57,720 --> 00:02:02,707
+Or you can have these LOCAL0 to LOCAL7,
+just your own defined facility
+
+34
+00:02:02,707 --> 00:02:07,461
+that you use for your application to
+split up the type of log message.
+
+35
+00:02:08,940 --> 00:02:12,008
+And then there's also a priority
+associated with the log message, so
+
+36
+00:02:12,008 --> 00:02:14,301
+you can say there's an error
+warning info or debug.
+
+37
+00:02:14,301 --> 00:02:18,781
+And then you can set different rules based
+on the priority to say maybe you don't log
+
+38
+00:02:18,781 --> 00:02:19,370
+it at all.
+
+39
+00:02:19,370 --> 00:02:21,730
+Maybe you log it to a specific location.
+
+40
+00:02:21,730 --> 00:02:26,322
+Maybe you display it on the terminal,
+if it's an error message for
+
+41
+00:02:26,322 --> 00:02:29,766
+instance, rather than just
+logging it to a file.
+
+42
+00:02:29,766 --> 00:02:32,440
+The usage of syslog is really simple.
+
+43
+00:02:32,440 --> 00:02:36,643
+It's just you open log with the facility
+that I mentioned earlier and
+
+44
+00:02:36,643 --> 00:02:41,570
+then any time you want to use it, you just
+use syslog, specify the logging level,
+
+45
+00:02:41,570 --> 00:02:45,540
+and then just use exactly
+like you would with printf.
+
+46
+00:02:45,540 --> 00:02:49,847
+And so for this simple example that I'm
+showing here results in a message like
+
+47
+00:02:49,847 --> 00:02:54,310
+this in /var/log/syslog where we're
+printing out the print if statement.
+
+48
+00:02:54,310 --> 00:02:57,661
+But rather than going to the terminal,
+it's going to go to this log file.
+
+49
+00:02:59,240 --> 00:03:01,423
+So in terms of how syslog is configured,
+
+50
+00:03:01,423 --> 00:03:03,941
+it will be a little
+different on every system.
+
+51
+00:03:03,941 --> 00:03:10,669
+But for the Ubuntu application or Ubuntu
+OS or virtual machine that we're using for
+
+52
+00:03:10,669 --> 00:03:15,860
+this course, it's going to happen
+based on rules that are located
+
+53
+00:03:15,860 --> 00:03:21,451
+in /etc/rsyslog.d, and
+then just some message default.conf.
+
+54
+00:03:22,940 --> 00:03:26,740
+So what we can see here
+is that the facility and
+
+55
+00:03:26,740 --> 00:03:31,241
+log level if it's not
+mentioned here specifically.
+
+56
+00:03:31,241 --> 00:03:34,221
+So like the log user that we mentioned,
+because it's not mentioned
+
+57
+00:03:34,221 --> 00:03:37,951
+here specifically, it's going to end up
+getting written into /var/log/syslog.

@@ -1,0 +1,124 @@
+In this video, I'm going to talk about
+concurrency and race conditions. So we're going to understand concurrency
+concerns, in terms of Linux kernel and the driver that we're going to write. We're going to understand what race
+conditions are and how to avoid them. So a little bit about kernel drivers and
+concurrency. Your book talks about concurrency bugs
+as being the easiest to create and some of the hardest to find. Probably not a good combination, right? And it mentions that these are made
+ubiquitous, the concurrency bugs, that is are made ubiquitous by symmetric
+multiprocessing or SMP systems. So the advent of SMP has made it more
+easy to create concurrency bugs and has made these even more difficult
+to root out when they occur. So this is all something that we have
+to live with as a fact of dealing with hardware that's more capable of
+running Linux in the first place. So one thing worth discussing probably
+that the book doesn't really go into detail is the difference between SMP and
+AMP, symmetric versus asymmetric
+multiprocessing. So when we say symmetric multiprocessing,
+what we mean is that there are multiple CPUs that are fundamentally
+time sharing across the same RAM or just sharing the same RAM. As opposed to asymmetric multiprocessing
+where you have multiple CPUs but they have their own block of memory
+that they're each working with. So we could simplify the concurrency
+issues by just having dedicated RAM for each CPU. But it turns out it's a lot harder to
+write an operating system that way, and AMP is generally not supported by Linux. So we're going to have to deal with SMP
+and one of the fallout of that is that we have to be really careful and
+cognizant about concurrency books. So the book gives you an example of
+how you could create a concurrency bug given the skull driver example,
+if you were to not implement locking, it was giving an example about
+where a currency bug could occur. So it shows this example of some code
+that is a part of a handling for, I believe it's a right procedure. And what you see here, if you look at this
+code is that the code has decided that it needs to kmalloc new buffer. So it's looking at the data pointer
+deciding that the fact that it's NULL means that there is some data
+that needs to be malloc. And the book is talking about what would
+happen if you didn't have appropriate locking and you could end up with
+a situation where two different processes could access at the same time. So if you think through what could happen
+in this case, when the first process hits the kmalloc, we'll talk about this
+in a little more detail later. But it turns out there's a decent chance
+that the tasks switch could occur during that kmalloc. So perhaps while
+the kmalloc is in process, there's a task switch that occurs
+[COUGH] and a second process begins. And so while the second process happens to
+go through this exact same block of code, dptr data is still NULL, so we start
+with the kmalloc on the second process. And now we have a task switch again and
+this time during the task switch, the first process completes. And when kmalloc completes,
+we write dptr data and we finish go through
+the rest of the function. And then after the first
+process completes, the second process would complete,
+do the same thing again, go back through the rest of
+the function and reassigned dptr data. So what ends up being stored
+in dptr data in this scenario, is the output of the second process,
+right? Because the first process wrote it and
+then even though we had just completed this check for dptr NULL in the second
+process and it was originally NULL. By the time we completed,
+it wasn't null anymore, but we didn't check it again and
+so we just overrode it. And so, what does that mean? It means that the dptr data values written
+with the kmalloc from the second process and the kmalloc from the first process,
+that pointer is essentially lost. So if later in the code
+we're freeing that data, we're going to not free the memory that
+we allocated from the first process. So this would be an example of how you
+could end up with a memory leak due to race condition based on lock or
+lack thereof. So you might say, well that seems really
+unlikely that these two processes could just hit at exactly the wrong time. And if that other process was delayed just
+a little bit and we would have waited for the dptr data to get written, then we wouldn't have ended up with this
+kind of race condition in the first place. So maybe I can just ignore it because
+it's going to be really unlikely. Well, the book makes the point that
+if you're clocking processors at the gigahertz type speed
+that clocked at these days, one-in a million events can
+happen every few seconds. And so the other thing to point out is
+that the likelihood that it could happen could be dependent on a whole bunch of
+different factors that you have no control over and that might change in
+ways that you wouldn't expect. And so especially it could be that
+you'd never hit this in five years of operation and then suddenly you
+get some new part that seems to be completely unrelated that's updated
+in your build environment and suddenly this happens once a day,
+rather than never in ten years. So these kind of problems can just
+appear in seemingly random times and then can be really confusing in
+terms of what their source was. And then this last one, which is a variant
+of Murphy's law that I'm going to call Dan's law, which is that it's usually
+a race condition is going to happen the first time your boss or
+a customer tries to run your software. So it'll work great on your bench and
+then that once in a million event's going to happen the first time, it's
+really important that it wouldn't happen. So we need to plan for
+these ahead of time and we can't just use the let's ignore it
+because it's really unlikely approach. So the sources of concurrency issues, will
+have multiple user space processes running that could be interacting with us and
+they could be running on different CPUs. And SMP systems are going to be executing
+your code simultaneously on different processors. So because the processors are running
+asynchronous with each other, it'll be possible for you to enter the
+same code path in two different processes. Because kernel code is preemptable, the driver code can lose
+the processor at anytime. An interrupt could happen
+anytime in your code and you could end up at at any
+instruction that's not protected. You could end up getting interrupted and having the same kind of
+concurrency bugs occur. And device interrupts are going to be
+completely asynchronous, there's nothing you can do to control, Windows
+are going to happen relative to your code. And also when you're
+working with hardware, you have to consider that the device could
+disappear while you're working with it. So you can't assume that because
+the device was available when you started a function, it might not be there by
+the time you actually tried to access it. So some tips for avoiding race conditions. The easiest thing to do is just
+to avoid shared resources, whenever it's possible to do that,
+that's one way to do it. So one thing that the book suggests is
+you can avoid global variables, however, if you have no global variables, would that mean that you
+wouldn't have shared resources? And the answer of course is no,
+because referencing a global variable or referencing a pointer that you're passing
+into functions is really essentially the same thing. You're still referencing
+the same block of memory and so you still have those same kind of
+sharing and concurrency issues. So in order to decide if you need
+to manage access through locking or if you could have a concurrency problem. What you should think
+about is is hardware or another resource shared beyond
+a single thread of execution? So is it possible that more than
+one thread could could execute for this particular code I'm writing? And then is it possible that one of the
+threads could encounter an inconsistent view of the resource, meaning, could I be
+part of the way through making some change when another thread tries
+to access the resource? And if the answer the most
+of those questions are yes, then that means that it's up to
+you to explicitly manage access. And the way we'll manage access is through
+either locking or mutual exclusion. So one point the book makes is
+that you need to be careful about when you notify the kernel and
+your requirements in terms of the lifetime of the function
+after you notify the Colonel. So if you are making an object
+available to the kernel, you need to make sure
+that it's initialized. And if you are still using the object, for the lifetime of the object as long
+as the kernel knows about it, you need to make sure that
+the resource remains available. So this is especially important
+when it comes to locking. Because we need to make sure
+that locks are initialized for any objects that we provide to the kernel,
+so that there will be a correct state of the
+lock before we try to access the object.

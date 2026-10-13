@@ -1,0 +1,1254 @@
+1
+00:00:00,230 --> 00:00:02,430
+For this video,
+we're going to start
+
+2
+00:00:02,430 --> 00:00:04,275
+talking about
+process management,
+
+3
+00:00:04,275 --> 00:00:06,300
+how Linux manages processes.
+
+4
+00:00:06,300 --> 00:00:09,825
+This will be Linux system
+programming chapter 5 content.
+
+5
+00:00:09,825 --> 00:00:12,090
+Learning objectives
+for this video,
+
+6
+00:00:12,090 --> 00:00:13,980
+we're going to talk
+about what a process is.
+
+7
+00:00:13,980 --> 00:00:15,570
+We've already talked
+about that a little bit
+
+8
+00:00:15,570 --> 00:00:17,220
+in the context of
+processes and threads;
+
+9
+00:00:17,220 --> 00:00:18,765
+we're going to get into
+a little more detail
+
+10
+00:00:18,765 --> 00:00:20,340
+about what a process is.
+
+11
+00:00:20,340 --> 00:00:22,260
+We're going to talk
+about PATH and how
+
+12
+00:00:22,260 --> 00:00:24,255
+that relates to
+process execution,
+
+13
+00:00:24,255 --> 00:00:26,060
+and then we're going to
+talk about the system
+
+14
+00:00:26,060 --> 00:00:28,115
+calls you can use to
+invoke a process,
+
+15
+00:00:28,115 --> 00:00:29,885
+so that includes execl,
+
+16
+00:00:29,885 --> 00:00:32,320
+fork, wait, and system.
+
+17
+00:00:32,320 --> 00:00:34,295
+What is a process?
+
+18
+00:00:34,295 --> 00:00:36,950
+A process is really just a
+running program in memory,
+
+19
+00:00:36,950 --> 00:00:40,835
+so it's a binary image of
+the program that you built.
+
+20
+00:00:40,835 --> 00:00:42,650
+It also has that
+
+21
+00:00:42,650 --> 00:00:44,480
+virtualized memory instance
+that we talked about
+
+22
+00:00:44,480 --> 00:00:45,500
+before when we talked about
+
+23
+00:00:45,500 --> 00:00:47,885
+the differences between
+process and threads.
+
+24
+00:00:47,885 --> 00:00:50,120
+It's a collection of files,
+
+25
+00:00:50,120 --> 00:00:52,775
+files that are being
+accessed by the process,
+
+26
+00:00:52,775 --> 00:00:54,710
+that are based on
+
+27
+00:00:54,710 --> 00:00:56,360
+a unique file handle
+
+28
+00:00:56,360 --> 00:00:58,585
+that is going to be
+managed by the kernel,
+
+29
+00:00:58,585 --> 00:01:00,860
+like we talked about in
+our previous videos.
+
+30
+00:01:00,860 --> 00:01:03,500
+There'll be an associated
+user with the process,
+
+31
+00:01:03,500 --> 00:01:04,775
+the person who started it,
+
+32
+00:01:04,775 --> 00:01:06,860
+or the person under
+
+33
+00:01:06,860 --> 00:01:09,260
+whose credentials the process
+is currently running,
+
+34
+00:01:09,260 --> 00:01:12,450
+and then one or more
+threads of execution.
+
+35
+00:01:12,950 --> 00:01:15,480
+The process is uniquely
+
+36
+00:01:15,480 --> 00:01:17,490
+identified by the
+process identifier,
+
+37
+00:01:17,490 --> 00:01:19,400
+and that process identifier is
+
+38
+00:01:19,400 --> 00:01:21,710
+valid at a single point in time.
+
+39
+00:01:21,710 --> 00:01:23,840
+There's always a map
+in the kernel between
+
+40
+00:01:23,840 --> 00:01:25,040
+a process identifier and
+
+41
+00:01:25,040 --> 00:01:27,085
+a given process at
+a moment in time.
+
+42
+00:01:27,085 --> 00:01:29,115
+However, that process ID
+
+43
+00:01:29,115 --> 00:01:32,490
+is reallocated and
+reused by the kernel.
+
+44
+00:01:32,490 --> 00:01:34,940
+If you start a process
+and then you stop it,
+
+45
+00:01:34,940 --> 00:01:36,515
+and then you start a
+different process,
+
+46
+00:01:36,515 --> 00:01:38,540
+there's a chance that
+process ID is going to get
+
+47
+00:01:38,540 --> 00:01:41,065
+reallocated later to
+a different process.
+
+48
+00:01:41,065 --> 00:01:43,520
+There are a few special
+process IDs that
+
+49
+00:01:43,520 --> 00:01:45,965
+are always used for
+specific purposes.
+
+50
+00:01:45,965 --> 00:01:47,780
+One is the idle process,
+
+51
+00:01:47,780 --> 00:01:49,550
+which is process ID 0.
+
+52
+00:01:49,550 --> 00:01:51,410
+There's one of
+these per processor
+
+53
+00:01:51,410 --> 00:01:53,510
+and it handles things
+like power control,
+
+54
+00:01:53,510 --> 00:01:56,590
+things that are common
+to the entire system.
+
+55
+00:01:56,590 --> 00:02:00,080
+There's also the init process
+which is process ID 1,
+
+56
+00:02:00,080 --> 00:02:01,430
+and that's the one
+that kicks off
+
+57
+00:02:01,430 --> 00:02:04,100
+all the services on
+
+58
+00:02:04,100 --> 00:02:07,385
+startup and does the basics
+system initialization.
+
+59
+00:02:07,385 --> 00:02:09,740
+It would also launch
+a login program that
+
+60
+00:02:09,740 --> 00:02:12,930
+you could interact with
+to log into the system.
+
+61
+00:02:16,840 --> 00:02:20,050
+If we want to execute
+a different program
+
+62
+00:02:20,050 --> 00:02:22,545
+from inside our
+user space program,
+
+63
+00:02:22,545 --> 00:02:24,730
+the way we do that
+through POSIX API,
+
+64
+00:02:24,730 --> 00:02:26,005
+there's a couple
+of different ways.
+
+65
+00:02:26,005 --> 00:02:27,760
+But one of them is execl,
+
+66
+00:02:27,760 --> 00:02:31,130
+and the execl family
+of functions.
+
+67
+00:02:31,130 --> 00:02:33,460
+The important thing
+to know about execl
+
+68
+00:02:33,460 --> 00:02:35,335
+is that it's going to
+
+69
+00:02:35,335 --> 00:02:39,175
+replace the current running
+process with a new context,
+
+70
+00:02:39,175 --> 00:02:41,650
+and that new context will
+be based on whatever
+
+71
+00:02:41,650 --> 00:02:44,170
+you're calling as an
+argument to execl.
+
+72
+00:02:44,170 --> 00:02:47,690
+In this case, since
+we're calling bin vi,
+
+73
+00:02:47,690 --> 00:02:51,190
+whatever process is
+calling this, the memory,
+
+74
+00:02:51,190 --> 00:02:54,475
+the content is going to
+get completely swapped out
+
+75
+00:02:54,475 --> 00:02:59,475
+and the bin vi application
+is going to run instead.
+
+76
+00:02:59,475 --> 00:03:01,650
+So execl for this reason,
+
+77
+00:03:01,650 --> 00:03:03,710
+it would not return on success.
+
+78
+00:03:03,710 --> 00:03:06,260
+If it's successful, it
+will have completely
+
+79
+00:03:06,260 --> 00:03:09,310
+replaced the process and
+run whatever you specified.
+
+80
+00:03:09,310 --> 00:03:10,835
+It's going to change pretty much
+
+81
+00:03:10,835 --> 00:03:14,090
+everything in the
+current process image,
+
+82
+00:03:14,090 --> 00:03:15,710
+with the exception of the pid,
+
+83
+00:03:15,710 --> 00:03:17,360
+priority, owning
+user and groups.
+
+84
+00:03:17,360 --> 00:03:19,175
+All that's going
+to stay the same,
+
+85
+00:03:19,175 --> 00:03:20,480
+but then it's just
+going to swap out
+
+86
+00:03:20,480 --> 00:03:23,285
+the content with the new
+process you specified.
+
+87
+00:03:23,285 --> 00:03:25,805
+There's a few different variants
+
+88
+00:03:25,805 --> 00:03:28,070
+of execl that you can call,
+
+89
+00:03:28,070 --> 00:03:30,125
+execlp, execle,
+
+90
+00:03:30,125 --> 00:03:32,930
+and you can read more
+about them in chapter 5,
+
+91
+00:03:32,930 --> 00:03:37,970
+but they differ about how
+arguments are specified to
+
+92
+00:03:37,970 --> 00:03:40,550
+the function and also whether
+
+93
+00:03:40,550 --> 00:03:41,900
+environment is specified and
+
+94
+00:03:41,900 --> 00:03:44,110
+used and whether
+PATH is included.
+
+95
+00:03:44,110 --> 00:03:46,610
+This means the bash environment,
+
+96
+00:03:46,610 --> 00:03:48,185
+the scripts that are
+sent in the environment,
+
+97
+00:03:48,185 --> 00:03:50,480
+including PATH, whether those
+
+98
+00:03:50,480 --> 00:03:53,030
+are relevant to the
+execution of the program.
+
+99
+00:03:53,030 --> 00:03:54,470
+We'll get into a
+little more detail
+
+100
+00:03:54,470 --> 00:03:56,395
+about that in the coming slides.
+
+101
+00:03:56,395 --> 00:03:59,100
+First of all, what is
+the PATH variable?
+
+102
+00:03:59,100 --> 00:04:00,920
+If you've done a little
+bit of work with Linux,
+
+103
+00:04:00,920 --> 00:04:02,360
+you might already be used to
+
+104
+00:04:02,360 --> 00:04:04,640
+the PATH variable or at
+least have heard of it.
+
+105
+00:04:04,640 --> 00:04:07,250
+But really the PATH
+variable is just telling
+
+106
+00:04:07,250 --> 00:04:09,140
+the shell all the
+different places
+
+107
+00:04:09,140 --> 00:04:11,170
+that it should look
+for executables.
+
+108
+00:04:11,170 --> 00:04:13,040
+Here's an example
+of what I see in
+
+109
+00:04:13,040 --> 00:04:16,700
+my system when I echo
+out the PATH variable.
+
+110
+00:04:16,700 --> 00:04:20,460
+You can see it's just a colon
+separated list of paths.
+
+111
+00:04:20,870 --> 00:04:23,810
+We've taken it for granted
+in the past that if
+
+112
+00:04:23,810 --> 00:04:26,110
+I type a command like ls,
+
+113
+00:04:26,110 --> 00:04:29,025
+it works without needing
+to specify a full PATH.
+
+114
+00:04:29,025 --> 00:04:30,860
+Well, the way that
+work happen is
+
+115
+00:04:30,860 --> 00:04:32,815
+because the PATH that ls
+
+116
+00:04:32,815 --> 00:04:34,320
+is on happens to be in
+
+117
+00:04:34,320 --> 00:04:36,880
+the PATH argument
+used by the system.
+
+118
+00:04:36,880 --> 00:04:38,330
+If I do which ls,
+
+119
+00:04:38,330 --> 00:04:40,625
+that'll tell me the
+ls that I'm using.
+
+120
+00:04:40,625 --> 00:04:43,480
+You can see the full
+PATH is user bin ls,
+
+121
+00:04:43,480 --> 00:04:45,560
+and if I look back at
+the PATH variable,
+
+122
+00:04:45,560 --> 00:04:48,590
+I can see user bin is
+in that path variable.
+
+123
+00:04:48,590 --> 00:04:50,300
+That's how the lookup is working
+
+124
+00:04:50,300 --> 00:04:51,380
+and that's why I don't need to
+
+125
+00:04:51,380 --> 00:04:55,360
+specify ls with a full PATH
+in order to execute it.
+
+126
+00:04:55,360 --> 00:04:57,460
+You need to be careful with PATH
+
+127
+00:04:57,460 --> 00:05:00,170
+because there are ways that it
+
+128
+00:05:00,170 --> 00:05:02,270
+could potentially get you into
+
+129
+00:05:02,270 --> 00:05:03,290
+trouble when you aren't
+
+130
+00:05:03,290 --> 00:05:05,585
+specifying the full
+PATH of executables.
+
+131
+00:05:05,585 --> 00:05:07,730
+The book talks a little
+bit about this as well,
+
+132
+00:05:07,730 --> 00:05:09,920
+but PATH injection can happen
+
+133
+00:05:09,920 --> 00:05:12,620
+when someone's able to
+modify your PATH and
+
+134
+00:05:12,620 --> 00:05:15,365
+redirect a request for
+
+135
+00:05:15,365 --> 00:05:17,480
+a application without a PATH to
+
+136
+00:05:17,480 --> 00:05:20,090
+someplace you probably
+don't want it redirected.
+
+137
+00:05:20,090 --> 00:05:21,890
+For instance, if some hacker was
+
+138
+00:05:21,890 --> 00:05:23,810
+able to change my
+PATH to put home
+
+139
+00:05:23,810 --> 00:05:29,415
+hacker ahead of my
+user bin directory.
+
+140
+00:05:29,415 --> 00:05:31,790
+Then I tried to execute ls.
+
+141
+00:05:31,790 --> 00:05:33,670
+I would potentially be executing
+
+142
+00:05:33,670 --> 00:05:36,020
+home hacker ls instead
+of user bin ls,
+
+143
+00:05:36,020 --> 00:05:38,320
+which you could see it
+would be a problem.
+
+144
+00:05:38,320 --> 00:05:41,770
+The solution to this
+is to avoid relying
+
+145
+00:05:41,770 --> 00:05:45,080
+on PATH and instead use
+absolute path for executables.
+
+146
+00:05:45,080 --> 00:05:47,495
+This is one case where it
+actually becomes easier
+
+147
+00:05:47,495 --> 00:05:50,230
+for us because we're building
+in the case of embedded,
+
+148
+00:05:50,230 --> 00:05:52,960
+rebuilding our root file
+system from scratch so we know
+
+149
+00:05:52,960 --> 00:05:54,550
+exactly where stuff's going to
+
+150
+00:05:54,550 --> 00:05:56,360
+be located in the
+row file system.
+
+151
+00:05:56,360 --> 00:06:00,770
+So we can just invoke it
+directly based on absolute path.
+
+152
+00:06:01,580 --> 00:06:04,995
+Another related Posix function
+
+153
+00:06:04,995 --> 00:06:08,590
+that is useful in the
+context of processes.
+
+154
+00:06:08,590 --> 00:06:10,930
+Here is fork, so fork where
+
+155
+00:06:10,930 --> 00:06:12,640
+exec is going to completely
+
+156
+00:06:12,640 --> 00:06:14,610
+replace the current
+process image,
+
+157
+00:06:14,610 --> 00:06:17,350
+fork is going to create
+a new process for us.
+
+158
+00:06:17,350 --> 00:06:19,630
+The new process is
+going to be running
+
+159
+00:06:19,630 --> 00:06:21,795
+in the same image as
+the current process,
+
+160
+00:06:21,795 --> 00:06:23,480
+but it's essentially
+going to be a child
+
+161
+00:06:23,480 --> 00:06:25,390
+of the current running process.
+
+162
+00:06:25,390 --> 00:06:27,970
+It'll create a new PID
+for that child and
+
+163
+00:06:27,970 --> 00:06:30,525
+then kickoff the process,
+
+164
+00:06:30,525 --> 00:06:33,425
+running the content in
+
+165
+00:06:33,425 --> 00:06:35,625
+the application that's
+specific to the child.
+
+166
+00:06:35,625 --> 00:06:39,155
+This is often the method
+that's used to start daemons.
+
+167
+00:06:39,155 --> 00:06:40,450
+The daemon is really just a
+
+168
+00:06:40,450 --> 00:06:41,810
+process running in
+the background.
+
+169
+00:06:41,810 --> 00:06:43,690
+We'll give a specific
+example about
+
+170
+00:06:43,690 --> 00:06:46,470
+how to use fork with daemons.
+
+171
+00:06:46,470 --> 00:06:49,585
+The other thing to know
+about fork is that it uses
+
+172
+00:06:49,585 --> 00:06:51,480
+copy-on-write for any changes
+
+173
+00:06:51,480 --> 00:06:53,140
+to the process memory space.
+
+174
+00:06:53,140 --> 00:06:56,650
+When the parent forks
+into the child,
+
+175
+00:06:56,650 --> 00:06:58,495
+there might be local variables,
+
+176
+00:06:58,495 --> 00:07:00,740
+kernel resources,
+open file handles
+
+177
+00:07:00,740 --> 00:07:03,925
+all this stuff that was
+created in the parent process.
+
+178
+00:07:03,925 --> 00:07:06,925
+The child process is going to
+have a copy of all of those
+
+179
+00:07:06,925 --> 00:07:08,500
+because the memory space
+
+180
+00:07:08,500 --> 00:07:10,575
+being essentially
+cloned at start.
+
+181
+00:07:10,575 --> 00:07:13,660
+However, if the child starts
+changing those values,
+
+182
+00:07:13,660 --> 00:07:16,425
+then those values are going
+to differ from the parent.
+
+183
+00:07:16,425 --> 00:07:20,105
+But behind the scenes, Linux,
+
+184
+00:07:20,105 --> 00:07:22,250
+rather than making a
+complete separate copy
+
+185
+00:07:22,250 --> 00:07:26,975
+of the entire environment
+between these two processes,
+
+186
+00:07:26,975 --> 00:07:28,865
+it'll use what's
+called copy-on-write,
+
+187
+00:07:28,865 --> 00:07:32,515
+meaning initially they will
+share exactly the same copy.
+
+188
+00:07:32,515 --> 00:07:35,760
+Then if the parent or
+the child writes to
+
+189
+00:07:35,760 --> 00:07:38,165
+the local variable or
+
+190
+00:07:38,165 --> 00:07:40,350
+changes the state of
+open file handles.
+
+191
+00:07:40,350 --> 00:07:41,690
+It's only at that
+point that they'll
+
+192
+00:07:41,690 --> 00:07:43,095
+get their own separate copy.
+
+193
+00:07:43,095 --> 00:07:45,085
+This is just something that's
+going on behind the scenes,
+
+194
+00:07:45,085 --> 00:07:47,550
+but it's interesting
+to know about.
+
+195
+00:07:47,730 --> 00:07:54,110
+Here's a really simple example
+of a fork application,
+
+196
+00:07:54,110 --> 00:07:55,620
+and you can see the
+link to this here
+
+197
+00:07:55,620 --> 00:07:57,500
+on the bottom of the slide.
+
+198
+00:07:57,500 --> 00:08:01,120
+We're just going to
+do a fork call here,
+
+199
+00:08:01,120 --> 00:08:03,095
+we can check the return
+of the fork to try to
+
+200
+00:08:03,095 --> 00:08:05,580
+figure out whether we're
+the parent or the child.
+
+201
+00:08:05,580 --> 00:08:07,770
+Then we can print out
+whether we're the parent or
+
+202
+00:08:07,770 --> 00:08:11,610
+the child process here
+in this print statement.
+
+203
+00:08:11,610 --> 00:08:14,120
+If you run this, you'll see
+something like this where you
+
+204
+00:08:14,120 --> 00:08:17,020
+can get the child PID
+that was created.
+
+205
+00:08:17,020 --> 00:08:19,400
+You'll see the
+hello messages from
+
+206
+00:08:19,400 --> 00:08:23,190
+both the parent and the child
+after the process splits.
+
+207
+00:08:23,610 --> 00:08:26,780
+The book also mentioned
+zombie processes.
+
+208
+00:08:26,780 --> 00:08:31,055
+This is a state where when
+a child process dies before
+
+209
+00:08:31,055 --> 00:08:33,335
+parent and before the parent
+
+210
+00:08:33,335 --> 00:08:36,325
+is informed about the
+child terminating.
+
+211
+00:08:36,325 --> 00:08:41,690
+It's listed as zombie status
+in the process status.
+
+212
+00:08:41,690 --> 00:08:44,469
+When would the parent
+not have been notified?
+
+213
+00:08:44,469 --> 00:08:46,990
+It's really when the
+parent hasn't waited or
+
+214
+00:08:46,990 --> 00:08:50,945
+hasn't obtained the status
+about the child process.
+
+215
+00:08:50,945 --> 00:08:55,705
+One of the ways to do that is
+using the weight POSIX API.
+
+216
+00:08:55,705 --> 00:08:57,995
+So you can use weight
+from the parent to
+
+217
+00:08:57,995 --> 00:09:01,055
+obtain information about
+terminated children.
+
+218
+00:09:01,055 --> 00:09:04,810
+This would not only
+obtain information,
+
+219
+00:09:04,810 --> 00:09:09,410
+but also wait for the child
+process to terminate.
+
+220
+00:09:09,410 --> 00:09:11,260
+Based on the response from wait,
+
+221
+00:09:11,260 --> 00:09:12,930
+you can figure out
+the reason that
+
+222
+00:09:12,930 --> 00:09:15,030
+the child process terminated.
+
+223
+00:09:15,030 --> 00:09:19,779
+You can also get the return
+code from the process.
+
+224
+00:09:19,779 --> 00:09:25,160
+There's some additional options
+here about, for instance,
+
+225
+00:09:25,160 --> 00:09:28,000
+specifying the process
+ID to wait for
+
+226
+00:09:28,000 --> 00:09:29,530
+a specific process if
+
+227
+00:09:29,530 --> 00:09:32,420
+the process is starting
+multiple children.
+
+228
+00:09:32,490 --> 00:09:36,950
+We've discussed replacing
+a process with exec,
+
+229
+00:09:36,950 --> 00:09:38,950
+launching a new
+child process with
+
+230
+00:09:38,950 --> 00:09:41,720
+fork and waiting for
+completion with wait.
+
+231
+00:09:41,720 --> 00:09:44,315
+How would we, if we
+wanted to launch
+
+232
+00:09:44,315 --> 00:09:47,575
+a completely new process and
+then wait for completion,
+
+233
+00:09:47,575 --> 00:09:50,795
+not replacing our current
+process, how would we do that?
+
+234
+00:09:50,795 --> 00:09:53,270
+We just combine
+fork, exec and wait.
+
+235
+00:09:53,270 --> 00:09:55,470
+Fork would create a
+new process for us.
+
+236
+00:09:55,470 --> 00:09:57,280
+Exec inside that new process
+
+237
+00:09:57,280 --> 00:09:58,535
+would replace everything about
+
+238
+00:09:58,535 --> 00:10:00,305
+the process which is
+fine because it's
+
+239
+00:10:00,305 --> 00:10:02,720
+our child process
+rather than a parent.
+
+240
+00:10:02,720 --> 00:10:06,165
+Then wait from the parent
+
+241
+00:10:06,165 --> 00:10:07,355
+is going to wait
+for that child to
+
+242
+00:10:07,355 --> 00:10:10,370
+complete and get the status.
+
+243
+00:10:10,560 --> 00:10:13,635
+You might say, that
+seems complicated.
+
+244
+00:10:13,635 --> 00:10:15,650
+Is there a less
+complicated option?
+
+245
+00:10:15,650 --> 00:10:18,200
+It turns out there is,
+it's called system.
+
+246
+00:10:18,200 --> 00:10:20,555
+System will do all these for us.
+
+247
+00:10:20,555 --> 00:10:21,695
+It'll do the fork,
+
+248
+00:10:21,695 --> 00:10:23,095
+the exec and the wait.
+
+249
+00:10:23,095 --> 00:10:24,485
+You can just call system
+
+250
+00:10:24,485 --> 00:10:27,510
+with the command that
+you want to run.
+
+251
+00:10:27,510 --> 00:10:30,220
+It will handle this all for you.
+
+252
+00:10:30,220 --> 00:10:31,980
+But there are a couple
+of drawbacks to this,
+
+253
+00:10:31,980 --> 00:10:33,160
+you have to be careful about.
+
+254
+00:10:33,160 --> 00:10:35,620
+One is that it uses the
+PATH so it can have
+
+255
+00:10:35,620 --> 00:10:39,070
+PATH injection concerns like
+we talked about previously.
+
+256
+00:10:39,070 --> 00:10:40,770
+Another thing that can get you
+
+257
+00:10:40,770 --> 00:10:42,550
+into trouble is that
+it runs in the shell,
+
+258
+00:10:42,550 --> 00:10:45,060
+so it's going to
+expand shell input.
+
+259
+00:10:45,060 --> 00:10:48,490
+You want to be careful when
+you create this command that
+
+260
+00:10:48,490 --> 00:10:50,050
+you aren't passing
+anything that could
+
+261
+00:10:50,050 --> 00:10:52,170
+look like a shell variable.
+
+262
+00:10:52,170 --> 00:10:55,040
+For instance, if you tried
+to pass dollar home,
+
+263
+00:10:55,040 --> 00:10:56,890
+that dollar home
+would get expanded by
+
+264
+00:10:56,890 --> 00:10:59,020
+the shell variable to
+your home directory,
+
+265
+00:10:59,020 --> 00:11:01,020
+which might not be
+what you wanted.
+
+266
+00:11:01,020 --> 00:11:02,615
+These are just things
+that you need to think
+
+267
+00:11:02,615 --> 00:11:03,940
+about before you know
+
+268
+00:11:03,940 --> 00:11:07,570
+whether you can use system
+in your application.

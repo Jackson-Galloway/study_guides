@@ -1,0 +1,114 @@
+In this video I'm going to do
+demonstration of a working assignments 6. So assignments 6 is going to start
+similar to the way assignment forded. Where you're going to start with a base
+repository with public source and starter code. Get help classroom is going to create
+a assignment 6 repository for you. That's going to contain a bunch
+of starter scripts that you can use to start the Yocto assignment. And then for the modifications to
+the socket ASD socket application. We'll use our assignment
+3 repository again. And you'll start by merging
+in some content from the ASD assignments 6 branch to pull
+in the shared starter code. Most importantly the updates to
+the socket test script that you use for testing your native code. So this gets you through the steps that
+are required to update your assignment 3 repository with the changes from the
+assignment 6 branch for automated testing. And here's a link list of
+the suggested reading. Some of this we've gone over in
+the week 60 Yocto slides already. But there's some more detail here that you
+can go through if you have questions about these steps. So, we'll start assignment 6 with
+a continuation of assignment 5. Where your socket based program is
+going to accept multiple simultaneous connections. And the way you do that is that
+every connection you receive will spawn a new threat to actually handle
+the socket IO associated with connection. So, your rights to var temp AESD socket
+data should be synchronized between threads using a miu text. To make sure that if there are multiple
+threads that are attempting to write at the same time, they're going to get blocked until
+one of the two threats completes. So that just keeps it so that it wouldn't be possible to mixed data
+from two different threads that once. The thread is going to exit whenever
+the connection is closed by a client or when an error occurs in the center or
+receive steps. And then your program should
+continue to gracefully exit. Which means that you're going to have to
+signal the threads that you want them to exit if they haven't already. And you're going to have to wait for them to complete before you
+complete your main threat. And you can use the singly
+list API's discussed in class. Or if you want to use your
+own implementation you can. But please use P thread join to
+join the completed threads and don't use detached threads for
+this assignment. You're going to modify your AESD socket
+source code repository to append a time stamp every 10 seconds. And then you use the same locking to
+make sure that the timestamp data is not inter leaved with. Or is not intermixed with the content that
+comes over in a given socket transmission. So and then there's an updated socket test
+script that handles timestamps correctly in the assignment or test,
+test assignments 6 sub-directory. And if you want, you can run this
+outside the test of SH script. And at this point when you have
+all that implemented the test out SH script in your AESD assignments
+repository should build and run your native applications successfully. And should complete successfully against
+the the code when running natively on your Lynx system. So, next you're going to modify
+your Yocto installation such that you can install this in
+a Yocto based image as well. So, you'll start by setting up your
+virtual machine, or your build machine. With the build host packages requirements
+from the Yocto quick start guide. You're going to add pocky
+as a sub-module and use branch dumb fell as the branch for
+the pocky source. Or if this is different in
+the latest assignment document. Always follow the contact
+from the assignment document. And make sure that you do get out and get
+commit to save the correct commit hash for the pocket sub-module before
+your own build that SH. Because bill that SH is going to update
+the sub-module based on whatever it was on the last commit. So you would override your
+changes that can be confusing. So then you'll follow the to do
+steps in the AESD ssignments repository to update or
+in the recipes AESD folder of the project to update the recipe for
+AESD assignments. And that should build the assignment 5
+AESD socket source with the committee specified by source rev. And so, you you'll specify the new source
+read that matches these changes that you're adding for assignment number 6. And then add that package of the core
+image AESD as we discussed in class. And you'll need to make the change to
+add your start script using the update our C-D as we mentioned
+in lecture as well. You use build that SH to
+build the combined image. And then run qemu.shh is going
+to run in a virtual machine much in the same way as it did with
+bill drip using slope networking. And if you want, you can add ssh
+support using core image extra, install in your core image as DWB file. This it allows you to SSH into yard Cumia
+instance if you want to troubleshoot something. And the socket test script in the Yocto
+repository under the assignments, assignment 6-Yocto test
+directory should now pass when running against
+the running QEMU instance and, The ./testscript as well should
+also complete successfully. So here's a demo overworking
+implementation starting first in the AESD assignments repository. So testing the native application
+around test at SH from here. I should see is that I'm
+building my socket server. And then I'm starting
+the socket test program. And now what I'll see is a combination
+of the the prince that I'm printing out from the AESD socket
+application plus the data that's coming from the socket server application. And you'll notice a delay here of about
+20 seconds where we make sure that the timestamp is getting updated every 10
+seconds per the assignment requirements. So it's going to count
+the number of time stamps and verify that you implemented
+this part successfully. And then after the first past six succeeds
+you'll see that it's rerunning the test with Valgaeren. So this is just going to make sure that if
+you can succeed without Valgaeren you can rerun the Valgaeren and
+you don't have any memory leaks. So you'll see the same kind of
+test happened two times in a row. And if the second time succeeds you'll
+know that the native applications working for the requirements and
+you don't have any memory leaks. For the active portion of
+the assignment we'll use the build that SH Script again to do our builds for us. And you should see prints
+like this happening once you start the build process. And in this case I'm not going to wait for
+the bill to complete. I've already completed
+the build successfully. So this will go much quicker than it will
+the very first time you try to run it. But you should see prints like this
+happening that show which branch you're on and what commit you're building
+from for your Yocto source code. And you should ultimately get
+a print like this saying, some specific number of tasks will run and
+all succeeded. Once you see this you should be able
+to run your Yocto image with run QEMU. And this is going to start QEMU and you'll you'll have something that looks
+similar to when you run QEMU against build it where you'll boot up a system
+that you can log into interactively with. So eventually you'll boot
+to a login prompt and you can type route to log in
+as root with no password. So now if I want to run the soccer test
+script against my running QEMU instance, I can run assignment auto, test, test
+assignment 6 out of socket test that SH. And this is going to do the same thing
+that we did with the native app but it's going to be running
+against the QEMU instance. And so you should see these prints coming. If you have prints that are happening from
+your AESD socket server inside the Yocto image, you'll see those prints
+happening from the terminal. So when the test completes, you should see
+this message test completed with success. So what I, what I just showed here
+was running QEMU interactively and running the building
+QEMU steps interactively. Which might be useful way for you to bug any problems that
+are happening with the yocto. But another option you have
+here is you can just run test.shh from your Yocto Project. This should do the build and then run
+QEMU and kick off the test in parallel on the QEMU instance, and
+do this all in an automated fashion.

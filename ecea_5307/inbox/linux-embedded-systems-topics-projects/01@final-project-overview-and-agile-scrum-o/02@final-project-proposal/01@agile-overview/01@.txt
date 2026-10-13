@@ -1,0 +1,194 @@
+In this video, we'll
+do an overview of Agile as a software
+development methodology. We want to do an overview of
+what agile development is and also how we will map Agile roles for the
+course final project. Agile is described in the Agile Manifesto for
+software development. There are a few different
+things that are described in the manifesto in terms
+of what the goal of Agile is or what the motivations methodology for Agile development are. Agile favors individuals and interactions over
+processes and tools, so trying to keep things
+more lightweight. It favors working software over
+comprehensive documentation. Again, you'll have
+documentation about what you're doing for a given activity, but it's less about trying to create that from
+the beginning and try to implement to that and more about trying to
+keep things fluid and flexible as you're
+doing the implementation. It's more about
+customer collaboration over contract negotiation. It's a realization that things change and your interaction
+with your customers, internal or external, is going to change as
+the project progresses. As people see
+things implemented, they're going to
+change their mind about what they actually wanted. Agile tries to be able
+to take advantage of the shorter
+iteration times and less predefined work and more ability to change and adapt as you continue with the project. It's more about
+responding to change over building a really detailed plan
+and following the plan. Agile is not necessarily
+something that I would say you definitely want to do on every project or that you
+definitely want to follow. The main reason I'm talking
+about Agile in this course is because it's a popular software
+development methodology. A lot of people use some parts of Agile in software development and so it's a
+common thing to get asked about in interviews. I'm really just
+trying to give you a little bit of an overview here and a little bit of
+an experience in an Agile like environment. One of the parts of Agile
+that we'll be using in the final project is the
+Daily Stand-up or Scrum. The idea behind the
+Scrum is really just a process framework
+for addressing problems. Problems are going to happen as part of a
+development process. The Scrum is where
+you talk about what the problems are and how you're
+going to deal with them. A Scrum team is meant
+to be a small team of people that's
+flexible and adaptable, can change based on what
+the new problems are for a given day and can reorient
+their priorities quickly. A Scrum team is made up of
+a few different people. One is the product owner, and the product owner
+is really the one that figures out all the backlog of things that
+you're going to do, what's the most important
+thing to be doing? What's the most
+important thing to include in the next sprint? Really is going to be providing the voice of the end users. Whoever is going to be
+using your product, the product owner is responsible
+for knowing what they collectively want or what
+their highest priorities are. Then there's the
+development team, which is probably going to
+be you as the developer and the goal of the development team
+is to deliver "Done." We'll talk more about what it
+means to deliver it "Done." Usually on a Scrum
+team that's going to be between three
+and nine members. If you get to more
+than nine members, it gets a little
+harder to make it flexible and adaptive and so a lot of times you'll split into different Scrum
+teams at that point. If there's less
+than three members, it might be a little bit
+more overhead than you need in order to really
+do Agile Scrum. Then there's also
+a Scrum master who is the one that's
+enforcing the rules and coaching all the members on how you want to do Agile process. When you talk about Agile, there's analogy that
+gets brought up often, that's about pigs and chickens. There's a way to think about who the
+different roles are on an Agile team in terms of this cartoon that relates
+to a pig and a chicken. In the cartoon, there's a chicken that's
+talking to a pig about, hey, let's get together
+and open a restaurant. A pig saying, okay, well, what would you want to call it? The chicken says,
+well, how about if we call it Ham and Eggs? The pig says, no,
+that's not a good idea. I don't like that because
+I'd be committed, but you'd only be involved. In other words, the
+pig is committed in that there's no coming
+back from the ham. But the chicken's just involved because it's
+involved with making the egg, but not necessarily as
+committed as the pig is. The pigs and chicken analogy describes the different roles of the people that are
+on the Scrum team. The product owner,
+the development team, and the Scrum master
+are usually all pigs, in the sense that if
+the project goes south, their jobs are on the line. It's directly going
+to reflect on them. This might be counterintuitive, but the management is often
+a chicken in this process, so they have a
+reason to weigh in, but they are
+probably involved in multiple projects or they're not directly involved
+in this one. They're in the
+Agile methodology. Their weight is
+somewhat less than the people who are the pigs that are committed to the project. If we try to map these Agile
+roles to our final project, it's not going to be
+perfect because we're not really an Agile
+development team. But if you'd want
+to try to map them to what it would be in
+the final project role, the product owner
+would essentially be a combination of you, student assistants,
+and peer reviewers. The development team
+is going to be you, you're going to be
+doing the development. Then the Scrum master will be myself or the
+student assistants, whoever's hosting the Scrum
+and enforcing the rules. A lot of times what
+you're doing as a Scrum master is just cutting
+people off and saying, let's just keep to the details, keep the report short
+and to the point, and move on to the next report. We talked before about a
+backlog and organizing the backlog as something that the product
+owner would be doing. When we talk about
+a product backlog, it's really an ordered list of everything that needs
+to be in the product. That could be
+features, functions, requirements,
+enhancements, fixes. It's going to include things
+like the description, what needs to get
+done, the order, which things are the
+highest priority to do and what should be done first and then estimate which
+would be development time, cost, in terms of materials,
+or personnel cost. Then the ultimate value, which is going to help
+prioritize things like order. Again, the product owner is
+responsible for the backlog, responsible for keeping
+that backlog up to date, deciding what should be worked on next in the current sprint. This might seem
+counterintuitive, but a product backlog, as long as a product is still alive is actually
+never complete. You always have
+more things to do in a product backlog than
+you can ever get done. As you're completing a sprint, you've got two or three
+sprints at least ahead of items in the backlog
+that you're organizing, adding detail to, and you're never actually
+completing your backlog. In the whole list of
+the product backlog, I mentioned sprints as these subsets of intervals
+where you're going to be doing some specific development
+task or you're going to aim toward implementing some specific part
+of the project. You take some subset of your product backlog and you'd select that for a given sprint. The sprint length would be some varied time
+based on project, but usually measured
+in one or two weeks, usually not a month or longer. The sprint backlog really has the functionality
+that you want to deliver in the next increment, where that increment
+is the sprint. It's the work that's needed to deliver a new done increment. I mentioned what done
+means in a second. There's enough detail then in the sprint backlog for
+each one of the tasks, such that in the daily Scrum, you can say, I made this amount
+of progress on this task. In other words, we're
+breaking up tasks into small enough pieces that in a week or a
+two-week timeframe, we're going to have
+measurable progress on each one of the tasks. We'll be able to report the status of that
+progress in daily Scrum. You don't want your tasks to be so long that
+they're going to take months to complete and it's really hard to measure
+what you're doing. You want to try to
+split them up into something smaller that you can measure whether you're
+progressing in a daily Scrum. I've mentioned a couple times about done and what
+done means in Agile. There's a definition of done, which we'll refer to with
+DOD as an abbreviation. Where it's really important
+that all the team members understand what done means in the context of
+a backlog item. You as a developer
+might have one idea what done means for your
+code implementation, but the product owner might have a different idea of
+what done means in terms of what they expect to see in the product
+functionality. You need to make
+sure that there's no disagreement there or the product owner is not
+going to be happy with the result that comes out
+of the development team. Having a definition of done of what's going to be
+delivered is really important for that transparency and avoiding miscommunication. Another thing to keep
+in mind about Agile is that every sprint increment, we want it to be usable. We don't want to have
+a feature that we had in the last sprint be affected by some other feature
+that we tried to add that was partially added that broke something that
+used to be working. The idea is every sprint we deliver something
+new that's usable, that the product owner who's interacting with the product, with the voice of
+the end user can actually use and is functional. You need to define your
+definition of done such that you'll end up with a usable product at the end
+of the sprint. Even if a complete feature
+is not implemented, you'd have some subset of
+the feature implemented, and more importantly,
+you won't have broken something that was implemented in a previous release or in a previous sprint. As you get further
+along in the project, in the beginning of the
+project, your definition of done might be pretty loose. But as the project
+gets further along, it's a little bit more
+easy to add detail about what actually
+is it means to be done given this current state of the feature and what needs to be added in this
+particular sprint. The daily stand-up that
+will incorporate as a part of our Agile review
+for the final project. You really need to think
+about what did I do, if you're thinking about from a full-time work perspective and you're working five days a week; what did I do yesterday toward
+my current sprint goal? Also, what am I
+going to do today towards the current sprint goal? Then importantly,
+what, if anything, is blocking my progress towards achieving my
+portion of the sprint goal. This is part of where the Scrum turns into the
+problem-solving session. Because if someone's
+blocked on something else, then you work as a team to figure out how to get
+people unblocked. Maybe it's part of the
+work that's blocking them, they could do it themselves, or maybe they could
+work on something else that's blocking the person that needs to get the task done that's
+blocking them. That's part of the conversation that you have in
+the Scrum stand-up. The blocking issue
+could be something like a portion that's
+not yet complete. It could be a bug, that
+means you can't test or implement whatever part of code that you need
+to for your sprint. Or it also could be like
+an external problem, like I placed an order and
+it hasn't gotten here yet, and so I can't do
+whatever testing or implementation I needed to do. Or maybe if you're
+in the software team and the hardware is not working, this is something that
+you're blocked on, an external thing from
+a different team.

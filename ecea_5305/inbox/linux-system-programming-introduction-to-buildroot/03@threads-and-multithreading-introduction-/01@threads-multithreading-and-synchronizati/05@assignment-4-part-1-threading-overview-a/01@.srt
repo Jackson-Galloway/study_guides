@@ -1,0 +1,185 @@
+1
+00:00:00,000 --> 00:00:03,720
+In this video, I'll do an
+overview of Assignment 4,
+
+2
+00:00:03,720 --> 00:00:06,645
+Part 1 of threading
+implementation.
+
+3
+00:00:06,645 --> 00:00:08,655
+For Assignment 4, Part 1,
+
+4
+00:00:08,655 --> 00:00:10,305
+you're going to
+implement a unit test
+
+5
+00:00:10,305 --> 00:00:12,440
+that implements
+threading functions,
+
+6
+00:00:12,440 --> 00:00:15,790
+and you're going to start with
+your Assignment 3 content.
+
+7
+00:00:15,790 --> 00:00:17,820
+You're going to merge
+in content from
+
+8
+00:00:17,820 --> 00:00:19,320
+the base repository for
+
+9
+00:00:19,320 --> 00:00:22,275
+Assignment 4 unit
+test framework,
+
+10
+00:00:22,275 --> 00:00:24,630
+and then your modifications
+are going to go
+
+11
+00:00:24,630 --> 00:00:27,190
+in the example threading file.
+
+12
+00:00:28,220 --> 00:00:30,620
+In the assignment
+based repository,
+
+13
+00:00:30,620 --> 00:00:32,870
+you can see these
+two to-do methods in
+
+14
+00:00:32,870 --> 00:00:36,185
+thread function and start
+thread obtaining mutex,
+
+15
+00:00:36,185 --> 00:00:37,760
+and your task here is to
+
+16
+00:00:37,760 --> 00:00:39,470
+implement the logic
+that's associated
+
+17
+00:00:39,470 --> 00:00:40,850
+with these functions based on
+
+18
+00:00:40,850 --> 00:00:42,850
+the comments in
+the to-do section.
+
+19
+00:00:42,850 --> 00:00:44,420
+If you want to see the unit test
+
+20
+00:00:44,420 --> 00:00:46,010
+that's going to run
+against your code,
+
+21
+00:00:46,010 --> 00:00:50,710
+you can follow this link to
+see the testthreading.c file.
+
+22
+00:00:50,710 --> 00:00:54,290
+But ultimately you just
+need to run unit-test.sh to
+
+23
+00:00:54,290 --> 00:00:57,910
+compile and build your
+example unit test.
+
+24
+00:00:57,910 --> 00:00:59,570
+Showing you a demo of what it
+
+25
+00:00:59,570 --> 00:01:00,725
+should look like when you have
+
+26
+00:01:00,725 --> 00:01:03,380
+your Assignment 4
+completed for Part 1,
+
+27
+00:01:03,380 --> 00:01:04,610
+you should be able to run
+
+28
+00:01:04,610 --> 00:01:09,305
+this unit test script from
+the root of your repository.
+
+29
+00:01:09,305 --> 00:01:11,300
+You should see it
+compile and run
+
+30
+00:01:11,300 --> 00:01:14,030
+your unit test functions,
+
+31
+00:01:14,030 --> 00:01:16,970
+and this is the type of
+output you should see.
+
+32
+00:01:16,970 --> 00:01:19,640
+It should ultimately end up
+with the test results saying
+
+33
+00:01:19,640 --> 00:01:23,225
+that all tests succeeded.
+
+34
+00:01:23,225 --> 00:01:25,130
+Here's an example
+of what you should
+
+35
+00:01:25,130 --> 00:01:27,535
+see with your unit test output.
+
+36
+00:01:27,535 --> 00:01:30,170
+You should see here
+that it compiles
+
+37
+00:01:30,170 --> 00:01:32,075
+and runs all of your unit tests,
+
+38
+00:01:32,075 --> 00:01:34,680
+and all tests pass.
+
+39
+00:01:34,720 --> 00:01:37,835
+If you get a passing
+result on the unit test,
+
+40
+00:01:37,835 --> 00:01:42,150
+that is it for the first
+part of Assignment 4.

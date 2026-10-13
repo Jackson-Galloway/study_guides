@@ -1,0 +1,1220 @@
+1
+00:00:00,380 --> 00:00:02,850
+In this video, we'll talk about
+
+2
+00:00:02,850 --> 00:00:05,970
+some specific Assignment 8
+frequently asked questions,
+
+3
+00:00:05,970 --> 00:00:08,250
+go through some common
+issues I've seen with
+
+4
+00:00:08,250 --> 00:00:10,710
+Assignment 8 in the
+past and hopefully
+
+5
+00:00:10,710 --> 00:00:13,485
+help you avoid
+making mistakes that
+
+6
+00:00:13,485 --> 00:00:15,210
+have been made by students
+
+7
+00:00:15,210 --> 00:00:17,235
+in the past on
+Assignment number 8.
+
+8
+00:00:17,235 --> 00:00:19,770
+You're going to learn tips
+and strategies to use
+
+9
+00:00:19,770 --> 00:00:22,980
+when troubleshooting the
+Assignment 8 implementation.
+
+10
+00:00:22,980 --> 00:00:25,200
+Here's an example of
+a question that I've
+
+11
+00:00:25,200 --> 00:00:27,210
+got in the past
+with Assignment 8.
+
+12
+00:00:27,210 --> 00:00:29,430
+"Why is it that
+
+13
+00:00:29,430 --> 00:00:33,315
+the read function count
+value equals 131072."
+
+14
+00:00:33,315 --> 00:00:35,115
+Looks like a weird number.
+
+15
+00:00:35,115 --> 00:00:36,930
+Well, if you punch that into
+
+16
+00:00:36,930 --> 00:00:38,520
+a calculator and convert the 0x,
+
+17
+00:00:38,520 --> 00:00:41,260
+you'll see that that's 0x20000.
+
+18
+00:00:41,630 --> 00:00:43,760
+The answer is, I don't
+
+19
+00:00:43,760 --> 00:00:45,695
+exactly know where
+that comes from,
+
+20
+00:00:45,695 --> 00:00:47,960
+but it's probably the
+default buffer size of
+
+21
+00:00:47,960 --> 00:00:49,760
+whatever underlying
+system call is
+
+22
+00:00:49,760 --> 00:00:53,635
+happening as a part
+of the echo command.
+
+23
+00:00:53,635 --> 00:00:56,360
+The easy place to see
+where this is coming
+
+24
+00:00:56,360 --> 00:00:59,300
+in is again using [inaudible].
+
+25
+00:00:59,300 --> 00:01:01,760
+If we look at this
+simple example of
+
+26
+00:01:01,760 --> 00:01:04,595
+writing hi to your
+/dev/aesdchar,
+
+27
+00:01:04,595 --> 00:01:08,770
+you can see that the read
+
+28
+00:01:08,770 --> 00:01:10,355
+that's happening on
+
+29
+00:01:10,355 --> 00:01:12,800
+the file descriptor
+here that we opened
+
+30
+00:01:12,800 --> 00:01:17,040
+for dev/aesdchar is using
+
+31
+00:01:17,040 --> 00:01:23,825
+a 131072 parameter as the
+request size for the read.
+
+32
+00:01:23,825 --> 00:01:25,595
+This is again just like
+
+33
+00:01:25,595 --> 00:01:28,060
+some default that's
+coming in from userspace.
+
+34
+00:01:28,060 --> 00:01:30,510
+That would show you why that
+
+35
+00:01:30,510 --> 00:01:32,760
+value's showing up in
+your kernel driver.
+
+36
+00:01:32,760 --> 00:01:34,010
+It's because it was issued by
+
+37
+00:01:34,010 --> 00:01:36,275
+the read command from userspace.
+
+38
+00:01:36,275 --> 00:01:38,180
+Here you can see that
+you actually return
+
+39
+00:01:38,180 --> 00:01:40,010
+three bytes from your driver,
+
+40
+00:01:40,010 --> 00:01:41,600
+so your driver
+worked successfully
+
+41
+00:01:41,600 --> 00:01:43,010
+in that it said, well,
+
+42
+00:01:43,010 --> 00:01:45,185
+I don't have this
+many bytes to return,
+
+43
+00:01:45,185 --> 00:01:46,710
+but I do have three
+bytes to return,
+
+44
+00:01:46,710 --> 00:01:48,200
+so I'll return those bytes here
+
+45
+00:01:48,200 --> 00:01:51,535
+and set that value
+as my return value.
+
+46
+00:01:51,535 --> 00:01:53,870
+Similarly, you can see that
+
+47
+00:01:53,870 --> 00:01:55,715
+there's another
+pull that happens.
+
+48
+00:01:55,715 --> 00:01:58,760
+After you've read
+those three bytes out,
+
+49
+00:01:58,760 --> 00:02:00,500
+userspace pulls again to
+
+50
+00:02:00,500 --> 00:02:02,420
+see if there's more data
+available and again,
+
+51
+00:02:02,420 --> 00:02:05,755
+it just asks for that
+chunk size of 131072.
+
+52
+00:02:05,755 --> 00:02:07,280
+In this case, your
+driver's saying,
+
+53
+00:02:07,280 --> 00:02:08,960
+I don't have anything
+else because this was
+
+54
+00:02:08,960 --> 00:02:11,450
+the only thing that
+was written so far
+
+55
+00:02:11,450 --> 00:02:13,040
+and so it's just
+going to return zero
+
+56
+00:02:13,040 --> 00:02:16,650
+and not fill anything
+into the buffer.
+
+57
+00:02:17,300 --> 00:02:23,820
+Here's another case where
+a student has said, "Well,
+
+58
+00:02:23,820 --> 00:02:26,135
+my aesd read function
+is just getting,
+
+59
+00:02:26,135 --> 00:02:27,710
+I can turn on [inaudible]
+and I see that
+
+60
+00:02:27,710 --> 00:02:30,040
+it's continuously called
+over and over again."
+
+61
+00:02:30,040 --> 00:02:33,290
+Most likely the reason why
+this is happening is because
+
+62
+00:02:33,290 --> 00:02:36,845
+you aren't handling
+the return value
+
+63
+00:02:36,845 --> 00:02:38,585
+of your read function correctly.
+
+64
+00:02:38,585 --> 00:02:40,460
+You need to remember to
+
+65
+00:02:40,460 --> 00:02:42,440
+return zero to say
+that there's no data
+
+66
+00:02:42,440 --> 00:02:44,210
+remaining to be
+read after you've
+
+67
+00:02:44,210 --> 00:02:46,000
+finished all the
+content of your buffer.
+
+68
+00:02:46,000 --> 00:02:48,470
+Because otherwise, the userspace
+
+69
+00:02:48,470 --> 00:02:49,970
+is just going to be
+keep calling you
+
+70
+00:02:49,970 --> 00:02:54,275
+like this to wait
+until you return zero.
+
+71
+00:02:54,275 --> 00:02:56,300
+If you return something
+other than zero,
+
+72
+00:02:56,300 --> 00:02:58,055
+it's going to think you
+have more data to return
+
+73
+00:02:58,055 --> 00:03:00,370
+as long as you keep
+returning that value.
+
+74
+00:03:00,370 --> 00:03:03,200
+This gets into the read return
+values discussion that we
+
+75
+00:03:03,200 --> 00:03:05,850
+had earlier and the rules
+about what your return.
+
+76
+00:03:05,850 --> 00:03:06,890
+You need to know that at
+
+77
+00:03:06,890 --> 00:03:07,940
+the end of the
+file where there's
+
+78
+00:03:07,940 --> 00:03:10,865
+no data available to be
+read into the buffer,
+
+79
+00:03:10,865 --> 00:03:13,620
+you need to return
+zero in this case.
+
+80
+00:03:14,480 --> 00:03:17,330
+Another question,
+depending on the design
+
+81
+00:03:17,330 --> 00:03:19,520
+of your aesd socket
+implementation,
+
+82
+00:03:19,520 --> 00:03:21,665
+maybe use fseek or stat,
+
+83
+00:03:21,665 --> 00:03:23,585
+try to find the size of
+
+84
+00:03:23,585 --> 00:03:26,635
+the file as part of
+your implementation.
+
+85
+00:03:26,635 --> 00:03:28,580
+It turns out that's not
+really going to work
+
+86
+00:03:28,580 --> 00:03:30,935
+with our device driver
+implementation.
+
+87
+00:03:30,935 --> 00:03:33,275
+fseek is not going to
+work because we don't
+
+88
+00:03:33,275 --> 00:03:35,790
+implement the necessary
+write seek support.
+
+89
+00:03:35,790 --> 00:03:38,040
+If you remember, we said,
+
+90
+00:03:38,040 --> 00:03:40,210
+we're doing in a simpler
+implementation of write
+
+91
+00:03:40,210 --> 00:03:42,380
+that just ignores
+the seek parameter.
+
+92
+00:03:42,380 --> 00:03:43,940
+You need to implement that in
+
+93
+00:03:43,940 --> 00:03:45,970
+order for fseek
+to work properly.
+
+94
+00:03:45,970 --> 00:03:50,090
+Stat doesn't work because
+dev aesdchar is not a file,
+
+95
+00:03:50,090 --> 00:03:52,580
+so it's not really going
+to be possible for you to
+
+96
+00:03:52,580 --> 00:03:56,205
+determine the size of the dev,
+
+97
+00:03:56,205 --> 00:03:59,910
+at least not easily
+to get the size of
+
+98
+00:03:59,910 --> 00:04:02,755
+the dev from aesdsocket
+
+99
+00:04:02,755 --> 00:04:05,965
+the same way that you
+would with a real file.
+
+100
+00:04:05,965 --> 00:04:08,900
+What I would suggest instead was
+
+101
+00:04:08,900 --> 00:04:11,720
+just remove the logic
+that requires a stat and
+
+102
+00:04:11,720 --> 00:04:13,850
+just read and write to
+
+103
+00:04:13,850 --> 00:04:16,010
+the file descriptor in
+a loop until you get
+
+104
+00:04:16,010 --> 00:04:18,320
+that end of file just
+the same way as we'll do
+
+105
+00:04:18,320 --> 00:04:21,720
+it with the strips that
+are on the device.
+
+106
+00:04:21,940 --> 00:04:25,730
+Here's another example.
+Students says,
+
+107
+00:04:25,730 --> 00:04:27,410
+why isn't locking working?
+
+108
+00:04:27,410 --> 00:04:30,065
+My system hangs when I
+remove the comments here.
+
+109
+00:04:30,065 --> 00:04:33,290
+This is again a case where
+with locking you need to pay
+
+110
+00:04:33,290 --> 00:04:36,390
+attention to every return path.
+
+111
+00:04:36,390 --> 00:04:38,030
+The fact that we're
+doing a return
+
+112
+00:04:38,030 --> 00:04:39,850
+here while we're
+holding the mutex lock,
+
+113
+00:04:39,850 --> 00:04:43,655
+this is going to cause your
+whole system to hang now.
+
+114
+00:04:43,655 --> 00:04:46,530
+Again, the stakes go
+up as we're working in
+
+115
+00:04:46,530 --> 00:04:49,265
+kernel space so when you
+make a locking error here,
+
+116
+00:04:49,265 --> 00:04:51,230
+you might get in a state
+where the whole system
+
+117
+00:04:51,230 --> 00:04:54,410
+stops responding and you
+have to reboot the system.
+
+118
+00:04:54,410 --> 00:04:57,050
+You need to handle
+locking properly in
+
+119
+00:04:57,050 --> 00:05:00,075
+error paths when
+you're using locks.
+
+120
+00:05:00,075 --> 00:05:02,225
+You could consider
+using goto to have
+
+121
+00:05:02,225 --> 00:05:04,790
+common clean up handlers
+that you always handle
+
+122
+00:05:04,790 --> 00:05:08,280
+in any return scenario.
+
+123
+00:05:08,920 --> 00:05:12,365
+Here's another case where
+we already did an example,
+
+124
+00:05:12,365 --> 00:05:16,055
+a really simple example of how
+to analyze a crash report.
+
+125
+00:05:16,055 --> 00:05:17,870
+If you're unlucky, you
+
+126
+00:05:17,870 --> 00:05:19,460
+might have some crash
+reports that you have to
+
+127
+00:05:19,460 --> 00:05:23,775
+analyze with
+Assignment number 8.
+
+128
+00:05:23,775 --> 00:05:26,750
+This shows an example of
+the way that you'd analyze
+
+129
+00:05:26,750 --> 00:05:30,965
+that and find a problem
+from within aesd_write.
+
+130
+00:05:30,965 --> 00:05:36,245
+The oops message that you get
+from the crash in Ubuntu,
+
+131
+00:05:36,245 --> 00:05:40,535
+which you can find here under
+the var/crash directory,
+
+132
+00:05:40,535 --> 00:05:41,930
+is pretty good about pointing
+
+133
+00:05:41,930 --> 00:05:43,550
+out exactly where
+the problem is.
+
+134
+00:05:43,550 --> 00:05:46,990
+Here it's saying it's 1fc,
+
+135
+00:05:47,210 --> 00:05:50,715
+3e6 bytes in aesdchar.
+
+136
+00:05:50,715 --> 00:05:55,945
+If you did the objectdump
+-S on aesdchar.ko.
+
+137
+00:05:55,945 --> 00:05:58,955
+After turning on debug equals y,
+
+138
+00:05:58,955 --> 00:06:03,590
+you'll get the mixed source
+that points you to 669 being
+
+139
+00:06:03,590 --> 00:06:06,170
+the first address
+of ASD write in
+
+140
+00:06:06,170 --> 00:06:09,125
+this chart or in this case.
+
+141
+00:06:09,125 --> 00:06:10,760
+You can take the 669,
+
+142
+00:06:10,760 --> 00:06:12,185
+the beginning address here,
+
+143
+00:06:12,185 --> 00:06:14,225
+add the 01fc that's here,
+
+144
+00:06:14,225 --> 00:06:15,425
+and you get the location of
+
+145
+00:06:15,425 --> 00:06:17,885
+865 where the oops
+actually occurred.
+
+146
+00:06:17,885 --> 00:06:19,850
+You can see that I got an oops,
+
+147
+00:06:19,850 --> 00:06:21,290
+when I was doing this mem copy
+
+148
+00:06:21,290 --> 00:06:23,555
+in here write at this line.
+
+149
+00:06:23,555 --> 00:06:26,420
+This gives you an example
+that for instance,
+
+150
+00:06:26,420 --> 00:06:28,760
+maybe you should
+comment this out,
+
+151
+00:06:28,760 --> 00:06:30,080
+add some additional prints to
+
+152
+00:06:30,080 --> 00:06:31,880
+figure out what's wrong
+with one or more of
+
+153
+00:06:31,880 --> 00:06:34,340
+these variables that
+you're passing into
+
+154
+00:06:34,340 --> 00:06:38,400
+mem copy that's causing
+this oops to occur.
+
+155
+00:06:40,840 --> 00:06:43,340
+An example of a question
+
+156
+00:06:43,340 --> 00:06:45,140
+I've had about
+assigned Number 8,
+
+157
+00:06:45,140 --> 00:06:46,700
+I'm not seeing
+print key messages
+
+158
+00:06:46,700 --> 00:06:48,110
+from the driver when I use echo,
+
+159
+00:06:48,110 --> 00:06:50,420
+but when I use driver
+test it works.
+
+160
+00:06:50,420 --> 00:06:53,660
+What's happening
+here? This command,
+
+161
+00:06:53,660 --> 00:06:57,140
+it looks like you're echoing
+some check command into
+
+162
+00:06:57,140 --> 00:07:00,875
+your driver and you're using
+sudo to access the driver.
+
+163
+00:07:00,875 --> 00:07:02,090
+But what's actually happening
+
+164
+00:07:02,090 --> 00:07:03,290
+here is you're echoing check
+
+165
+00:07:03,290 --> 00:07:05,780
+into a new file called sudo,
+
+166
+00:07:05,780 --> 00:07:09,650
+and so it's not doing
+what you expect.
+
+167
+00:07:09,650 --> 00:07:11,630
+This can be a little
+bit confusing to
+
+168
+00:07:11,630 --> 00:07:13,970
+get the syntax correct,
+
+169
+00:07:13,970 --> 00:07:15,800
+but you can do something
+like this sudo echo
+
+170
+00:07:15,800 --> 00:07:18,005
+check to debit ASD char.
+
+171
+00:07:18,005 --> 00:07:21,050
+Or better yet, it might
+be simpler to just fix
+
+172
+00:07:21,050 --> 00:07:24,960
+your permissions so that
+you don't need sudo.
+
+173
+00:07:29,050 --> 00:07:31,865
+To see that this is
+what's happening,
+
+174
+00:07:31,865 --> 00:07:40,040
+you can use the estrous utility
+
+175
+00:07:40,040 --> 00:07:41,960
+and see what's actually
+being written.
+
+176
+00:07:41,960 --> 00:07:44,360
+Here you can see in the
+write command you're just
+
+177
+00:07:44,360 --> 00:07:47,105
+writing a standard out
+check Dev ASD char,
+
+178
+00:07:47,105 --> 00:07:49,890
+which is not what you
+were intending to do.
+
+179
+00:07:50,170 --> 00:07:52,385
+As I mentioned before,
+
+180
+00:07:52,385 --> 00:07:55,175
+to get around the requirements
+for running with sudo,
+
+181
+00:07:55,175 --> 00:07:58,235
+you can just add your
+user to the staff group.
+
+182
+00:07:58,235 --> 00:08:02,180
+Doing sudo usermod-a-G staff
+
+183
+00:08:02,180 --> 00:08:04,895
+with your username and
+then log out and back in.
+
+184
+00:08:04,895 --> 00:08:07,580
+This will allow you to
+run the commands without
+
+185
+00:08:07,580 --> 00:08:10,730
+sudo on your Ubuntu
+virtual machine to
+
+186
+00:08:10,730 --> 00:08:13,040
+test your driver on
+Ubuntu before you try to
+
+187
+00:08:13,040 --> 00:08:16,820
+deploy it to [inaudible].
+
+188
+00:08:16,820 --> 00:08:17,990
+One other thing I
+wanted to point out,
+
+189
+00:08:17,990 --> 00:08:19,010
+you might find yourself doing
+
+190
+00:08:19,010 --> 00:08:20,720
+repetitive things
+over and over again.
+
+191
+00:08:20,720 --> 00:08:21,830
+Like here was an example
+
+192
+00:08:21,830 --> 00:08:24,850
+of where I was making
+changes to my driver.
+
+193
+00:08:24,850 --> 00:08:26,170
+I was unloading, reloading,
+
+194
+00:08:26,170 --> 00:08:27,835
+and then restarting esterase.
+
+195
+00:08:27,835 --> 00:08:30,940
+I just put that in a little
+socket stackdriver script so
+
+196
+00:08:30,940 --> 00:08:32,260
+that rather than having to
+
+197
+00:08:32,260 --> 00:08:34,150
+retype these three
+commands every time,
+
+198
+00:08:34,150 --> 00:08:37,360
+I would just restart my
+socket start driver script.
+
+199
+00:08:37,360 --> 00:08:39,160
+Think about this
+for anything that
+
+200
+00:08:39,160 --> 00:08:41,620
+you end up repeating
+a lot to try to
+
+201
+00:08:41,620 --> 00:08:46,790
+speed up your debug and
+iterative development process.
+
+202
+00:08:47,620 --> 00:08:51,170
+I wanted to summarize just
+some high-level assignments,
+
+203
+00:08:51,170 --> 00:08:53,855
+suggestions and strategies,
+
+204
+00:08:53,855 --> 00:08:56,870
+of what I've seen students
+struggle with in the past.
+
+205
+00:08:56,870 --> 00:08:58,790
+First, what I would suggest,
+
+206
+00:08:58,790 --> 00:09:01,760
+is implement a really
+simple version that works
+
+207
+00:09:01,760 --> 00:09:05,135
+with that very first example
+from driver test SH.
+
+208
+00:09:05,135 --> 00:09:08,280
+Just assume that every write
+
+209
+00:09:17,530 --> 00:09:20,195
+is a new line terminated
+
+210
+00:09:20,195 --> 00:09:22,940
+and every write that
+
+211
+00:09:22,940 --> 00:09:24,440
+happens to your driver
+is one command,
+
+212
+00:09:24,440 --> 00:09:25,655
+which will be the case for that
+
+213
+00:09:25,655 --> 00:09:27,290
+simplest case of driver test,
+
+214
+00:09:27,290 --> 00:09:28,640
+the first one that tests.
+
+215
+00:09:28,640 --> 00:09:30,740
+Verify that just for
+
+216
+00:09:30,740 --> 00:09:33,170
+a simple case with echo and
+cat on the command line,
+
+217
+00:09:33,170 --> 00:09:34,820
+just type on the command line
+
+218
+00:09:34,820 --> 00:09:38,660
+Echo test1 and verify cat
+gives you test1 back.
+
+219
+00:09:38,660 --> 00:09:41,750
+That will make sure
+that just the basics,
+
+220
+00:09:41,750 --> 00:09:43,655
+simplest implementation
+of your driver
+
+221
+00:09:43,655 --> 00:09:45,440
+read and write
+functions are working.
+
+222
+00:09:45,440 --> 00:09:47,615
+Save and push this commit.
+
+223
+00:09:47,615 --> 00:09:49,055
+Why do I say and push?
+
+224
+00:09:49,055 --> 00:09:51,140
+Because if you're testing on
+
+225
+00:09:51,140 --> 00:09:53,765
+your Ubuntu Virtual
+Machine and it crashes,
+
+226
+00:09:53,765 --> 00:09:55,970
+there's a chance that you
+might lose what you've done.
+
+227
+00:09:55,970 --> 00:09:59,330
+Definitely as you
+get things working,
+
+228
+00:09:59,330 --> 00:10:01,880
+make a commit to track
+
+229
+00:10:01,880 --> 00:10:03,650
+the fact that something
+is working and
+
+230
+00:10:03,650 --> 00:10:05,390
+then push it up so
+that if something
+
+231
+00:10:05,390 --> 00:10:07,160
+happens on your virtual machine,
+
+232
+00:10:07,160 --> 00:10:09,440
+you'll be able to just
+re-pull it back from GitHub,
+
+233
+00:10:09,440 --> 00:10:11,750
+like use it as a
+backup essentially.
+
+234
+00:10:11,750 --> 00:10:14,525
+Then add locking and
+
+235
+00:10:14,525 --> 00:10:17,540
+implement a locking properly
+and verify that really
+
+236
+00:10:17,540 --> 00:10:20,720
+simple example works
+with locking and
+
+237
+00:10:20,720 --> 00:10:25,625
+assuming one command
+maps to one write.
+
+238
+00:10:25,625 --> 00:10:31,880
+Then repeat the test
+commit push cycle.
+
+239
+00:10:31,880 --> 00:10:34,220
+Then add support for
+partial command write.
+
+240
+00:10:34,220 --> 00:10:35,450
+Add support for the more
+
+241
+00:10:35,450 --> 00:10:38,240
+complicated implementation
+from driver tests
+
+242
+00:10:38,240 --> 00:10:39,830
+where we write partial
+commands and we
+
+243
+00:10:39,830 --> 00:10:42,815
+don't implement the new line
+as a part of the write.
+
+244
+00:10:42,815 --> 00:10:45,350
+Just keep repeating that
+process over again.
+
+245
+00:10:45,350 --> 00:10:46,940
+Add in small chunks,
+
+246
+00:10:46,940 --> 00:10:48,890
+get little things
+working at once,
+
+247
+00:10:48,890 --> 00:10:53,015
+commit and push between each
+working implementation.
+
+248
+00:10:53,015 --> 00:10:55,850
+The other nice thing about
+doing in small chunks like
+
+249
+00:10:55,850 --> 00:10:58,630
+this is that what you might
+
+250
+00:10:58,630 --> 00:11:01,150
+find is that when you go
+
+251
+00:11:01,150 --> 00:11:03,340
+from one simple implementation
+
+252
+00:11:03,340 --> 00:11:05,275
+to a more complicated
+implementation,
+
+253
+00:11:05,275 --> 00:11:07,980
+maybe now your driver
+crashes and hangs.
+
+254
+00:11:07,980 --> 00:11:09,380
+Well, if you made
+
+255
+00:11:09,380 --> 00:11:12,140
+commits for your last
+working implementation,
+
+256
+00:11:12,140 --> 00:11:14,510
+you can just look really
+closely at whatever you
+
+257
+00:11:14,510 --> 00:11:17,300
+changed since your last
+commit, and you can just say,
+
+258
+00:11:17,300 --> 00:11:20,555
+I know it happened based on
+this new code that I added,
+
+259
+00:11:20,555 --> 00:11:22,325
+so this has to be
+where the problem is,
+
+260
+00:11:22,325 --> 00:11:24,845
+and you can look through
+that a lot easier than just
+
+261
+00:11:24,845 --> 00:11:26,450
+looking at the entire problem
+
+262
+00:11:26,450 --> 00:11:29,070
+or the entire source
+code as a whole.

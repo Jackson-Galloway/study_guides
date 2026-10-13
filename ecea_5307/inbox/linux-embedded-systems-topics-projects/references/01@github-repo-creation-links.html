@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GitHub Repo Creation Links</title>
+  <link rel="stylesheet" href="../resource/katex/katex.min.css">
+  <script src="../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<p>Use this link to create a repo for your Final Project under your GitHub namespace for any assignments started August 2026 or later following the sunset of GitHub Classroom.  These links create a public repo named "aeld-final-project" in your namespace.  You can also/alternatively create this repository yourself in GitHub.</p><p>Final Project:</p><ul><li><p><a href="https://github.com/new?name=aeld-final-project&amp;description=Coursera%20AELD%20Assignment&amp;visibility=public">https://github.com/new?name=aeld-final-project&amp;description=Coursera%20AELD%20Assignment&amp;visibility=public</a></p></li></ul><p>If you need additional repositories for your final project, please create on GitHub directly using your personal GitHub workspace.</p><h1>Legacy GitHub Classroom Links</h1><p>Use these assignment links to access any previously created repositories in GitHub classroom. <strong>Do not</strong> use for new assignments.</p><p>To find a repository already created when these links are no longer working, search the repositories list at <a href="https://github.com/cu-ecen-aeld/">https://github.com/cu-ecen-aeld/</a> with your GitHub username.</p><p>Final Project:</p><ul><li><p><a href="https://classroom.github.com/a/2OV_i88V">https://classroom.github.com/a/2OV_i88V</a> </p></li></ul><p>If you need additional repositories for your final project, please create on GitHub directly using your personal GitHub workspace.</p><p></p><h2><strong>GitHub Classroom Troubleshooting</strong></h2><p>There have been some known issues with GitHub Classroom and students accessing the repositories. If you run into any, see the instructor's directions for manual creation steps at <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Workaround-for-issues-with-github-classroom">https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Workaround-for-issues-with-github-classroom</a></p>
+  </div>
+</body>
+</html>

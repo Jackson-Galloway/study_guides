@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Buildroot Additional Hints</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>When using Buildroot for development, you must update your _VERSION git hash with every new revision in order to test work-in-progress versions of your application software</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~m16MDU4fEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~m16MDU4fEeyXYQ4OWt3joQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given a Buildroot package name MYPACKAGE and source directory path ~/mypackage how would you cross compile your package using a custom source directory?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~yUqG2U4fEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>run make MYPACKAGE_OVERRIDE_SRCDIR=~/mypackage mypackage-rebuild all from the base_external directory</p></div></li>
+<li><input name="autoGradableResponseId~yUqG2U4fEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>run make mypackage-override-srcdir-~/mypackage all from the buildroot directory</p></div></li>
+<li><input name="autoGradableResponseId~yUqG2U4fEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>run make MYPACKAGE_OVERRIDE_SRCDIR=~/mypackage mypackage-rebuild all from the buildroot directory</p></div></li>
+<li><input name="autoGradableResponseId~yUqG2U4fEey3KBI-GvqEhw" type="radio"/> <div class="quiz-option-text"><p>run make from the buildroot directory, which will use ~/mypackage automatically when building your package if this directory exists.</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

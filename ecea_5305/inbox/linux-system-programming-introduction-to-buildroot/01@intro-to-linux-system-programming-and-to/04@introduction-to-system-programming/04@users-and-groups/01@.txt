@@ -1,0 +1,37 @@
+In this video, I'll be talking
+about users and groups and how users and groups
+are used in Linux. We'll want to understand
+Linux users and groups and understand users and groups and how they interact with
+Linux permissions. When you created your
+initial Linux system image, you gave it a username
+and a password. When you're accessing
+that system, you're logging in
+with that username and password and that's the authentication
+that can be used to map a specific user account. Every user account on
+the system is going to be associated with a
+specific user ID or UID. This is just a number that corresponds to that particular
+user on the system. Every process that is started is associated
+with the UID of the user that either started or is now the owner
+of that process. The etc/passwd, etc/password
+file is what's used to map username to UIDs that are used in a given
+Linux system. UID 0 is a special
+UID that always is the root user and the root user can do almost
+anything on the system. We talked about
+Ubuntu's philosophy of how it uses root with pseudo. Once you authenticate as pseudo, you're essentially running as the root user and you can do pretty much anything that you're allowed to do via
+userspace permissions. Every user belongs to
+one or more group, and every group has a
+corresponding group ID or GID. So etc group similar to etc password is going to
+map group names to GIDs. We already mentioned Linux
+file permissions in Week 1. But the permission structure
+is such that you can associate a file with the
+owning user and owning group. We've mentioned the UID
+and GID and in high notes. In addition to associate the owning user
+and owning group, you can also set permissions
+based on the user, that's the owner of
+the file and the group access for the file for
+the group ownership, as well as the
+access for everyone. That is done through
+specific bits for read, write, and execute for
+each of these groups. You can mask these bits
+with given octal values. So adding 4 and 2 together or 600 octal value would add in read and write for
+the user or owner.

@@ -1,0 +1,315 @@
+1
+00:00:00,868 --> 00:00:04,708
+In this video will give a brief
+overview of embedded debug strategies.
+
+2
+00:00:04,708 --> 00:00:09,219
+So as our programs are going to get a
+little bit more complicated starting with
+
+3
+00:00:09,219 --> 00:00:13,730
+assignment number five, we're going to
+talk about how to use GDB to debug and
+
+4
+00:00:13,730 --> 00:00:16,534
+how to use GDB to do remote
+debug on the target.
+
+5
+00:00:16,534 --> 00:00:20,272
+So we'll do an overview of
+the GDB command line and
+
+6
+00:00:20,272 --> 00:00:23,033
+an overview of how to use remote GDB.
+
+7
+00:00:23,033 --> 00:00:27,904
+So for you probably already have used
+GCC to create debug symbols if used
+
+8
+00:00:27,904 --> 00:00:32,776
+-g argument to endure your compile step,
+you'll get debug symbols,
+
+9
+00:00:32,776 --> 00:00:35,861
+you can use -O0 to disable optimizations,
+
+10
+00:00:35,861 --> 00:00:40,110
+which will help you with single
+stepping in GDB for instance.
+
+11
+00:00:40,110 --> 00:00:46,656
+So you've probably used GDB interactively
+as a part of a gooey tool in the past,
+
+12
+00:00:46,656 --> 00:00:51,852
+for instance, but
+maybe you haven't used a command line yet.
+
+13
+00:00:51,852 --> 00:00:56,469
+So I encourage you to get familiar with
+using GDB command line because a lot of
+
+14
+00:00:56,469 --> 00:01:00,798
+times this is an easy way to do debug
+on remote systems that might not have
+
+15
+00:01:00,798 --> 00:01:04,788
+the full capabilities that you'd
+have through an for instance.
+
+16
+00:01:04,788 --> 00:01:09,547
+So here's a an example of running
+an application on natively
+
+17
+00:01:09,547 --> 00:01:12,451
+using GDB through the command line.
+
+18
+00:01:12,451 --> 00:01:16,664
+So this is the segue falter application
+that we've reference before that just does
+
+19
+00:01:16,664 --> 00:01:17,874
+a segmentation fault.
+
+20
+00:01:17,874 --> 00:01:22,546
+So here's an example of how you
+can run that if you use GDB and
+
+21
+00:01:22,546 --> 00:01:24,616
+passing the site falter.
+
+22
+00:01:24,616 --> 00:01:28,243
+If you've compiled with
+debugging arguments,
+
+23
+00:01:28,243 --> 00:01:32,752
+you'll be able to use the R
+command to run and then you'll get
+
+24
+00:01:32,752 --> 00:01:37,716
+a segmentation fault as a result
+in this particular application.
+
+25
+00:01:37,716 --> 00:01:40,276
+And then you can use the bt
+function to get a back trace.
+
+26
+00:01:40,276 --> 00:01:44,510
+So showing even in this case where
+we didn't compile with debug info,
+
+27
+00:01:44,510 --> 00:01:49,190
+we can still see that which function it
+was in, where the seg fault occurred.
+
+28
+00:01:49,190 --> 00:01:54,088
+And that's going to help you track down
+problems that would occur, for instance,
+
+29
+00:01:54,088 --> 00:01:55,827
+with segmentation faults.
+
+30
+00:01:55,827 --> 00:02:01,187
+So some of the key commands you can use
+with GDB r is to run the application.
+
+31
+00:02:01,187 --> 00:02:05,570
+B let you set breakpoints,
+p you can print variable names.
+
+32
+00:02:05,570 --> 00:02:10,445
+You can also use this to execute
+functions if you have debug info and
+
+33
+00:02:10,445 --> 00:02:13,768
+n you can use to step
+over the next statement.
+
+34
+00:02:13,768 --> 00:02:16,367
+So similar to what you do in the UI.
+
+35
+00:02:16,367 --> 00:02:21,498
+And finish would step out of the function
+into the next function info b list,
+
+36
+00:02:21,498 --> 00:02:26,309
+breakpoints, delete and the number
+would delete the breakpoints that
+
+37
+00:02:26,309 --> 00:02:30,156
+were shown in the info b list and
+then bt is really useful or
+
+38
+00:02:30,156 --> 00:02:34,677
+because it shows you that back
+trace of which function was called.
+
+39
+00:02:34,677 --> 00:02:37,768
+So what if we have a problem
+that only exists on the target?
+
+40
+00:02:37,768 --> 00:02:43,993
+Maybe we don't have space on the target or
+it's in a production image,
+
+41
+00:02:43,993 --> 00:02:50,655
+we wouldn't have GDB loaded on the full
+version of GDB loaded on the target.
+
+42
+00:02:50,655 --> 00:02:53,933
+So there's a turns out you can
+use GDB in remote mode and
+
+43
+00:02:53,933 --> 00:02:57,863
+here's some packages that you'd
+use to turn this on in builder.
+
+44
+00:02:57,863 --> 00:03:01,363
+Yet if you turn on these packages,
+you'll have support for
+
+45
+00:03:01,363 --> 00:03:05,010
+running the GDB on the host and
+connecting to a remote target.
+
+46
+00:03:05,010 --> 00:03:09,959
+And this is really useful for debugging
+problems that happen on target, mastering
+
+47
+00:03:09,959 --> 00:03:14,353
+embedded links program in chapter 14
+goes through this step in detail.
+
+48
+00:03:14,353 --> 00:03:18,986
+But the basic premise or the basic steps
+that you would do is on the target,
+
+49
+00:03:18,986 --> 00:03:23,621
+you'd run GDB server and you specify
+some unused port number to use as your
+
+50
+00:03:23,621 --> 00:03:28,525
+GDB server port and then you start
+whatever application you wanted to debug.
+
+51
+00:03:28,525 --> 00:03:33,488
+Then on the host, you would use a cross
+compiled version of GDB you specify
+
+52
+00:03:33,488 --> 00:03:37,587
+the binary that you're running,
+that's cross compiled.
+
+53
+00:03:37,587 --> 00:03:39,225
+And then once you're inside GDB,
+
+54
+00:03:39,225 --> 00:03:42,570
+you'd use the target remote command
+to connect to the remote target.
+
+55
+00:03:42,570 --> 00:03:45,378
+So this would be the IP
+address of the target and
+
+56
+00:03:45,378 --> 00:03:49,266
+this would be the port that we
+specified up here with GDB server.
+
+57
+00:03:49,266 --> 00:03:53,348
+So on buildroot,
+we'll start our cross GTB through
+
+58
+00:03:53,348 --> 00:03:57,444
+a command that's specific
+to the buildroot build.
+
+59
+00:03:57,444 --> 00:04:02,810
+And then we'll just set it up for the same
+remote debug using this target remote.
+
+60
+00:04:02,810 --> 00:04:03,983
+So with buildroot,
+
+61
+00:04:03,983 --> 00:04:08,054
+there's some more details about this
+in the advanced usage link, but
+
+62
+00:04:08,054 --> 00:04:12,337
+you'll find the GDB cross compiler
+under the output host bin directory.
+
+63
+00:04:12,337 --> 00:04:16,987
+And then you can use that -x to specify
+the GDB in that file that'll initialize
+
+64
+00:04:16,987 --> 00:04:21,427
+some of the parameters and here's where
+you would specify the application
+
+65
+00:04:21,427 --> 00:04:24,761
+that's cross compiled,
+that you're going to debug.

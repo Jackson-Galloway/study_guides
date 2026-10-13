@@ -1,0 +1,160 @@
+In this video we'll continue our
+discussion of Kernel Locking and talk about some additional
+Kernel Locking options. So we'll Introduce Kernel Mutexes,
+Reader/Writer, Semaphores and Completions as some different Locking
+options for your Linux Kernel drivers. So because as I mentioned
+in the previous video, the book kind of focuses on semaphore. And the reason was since
+the book has been written, the Kernel code has since
+added mutex type for a lot of the purposes that were used
+in the original scull implementation. So the original scull implementation has
+a lot of code that was really using mutual exclusion where exactly one thread needed
+access, but it was using semaphore for it. And the reason was just that the mutex
+primitive hadn't been included in the kernel yet. So a lot of the scull code
+doesn't match the book. I've actually taken the liberty of
+changing a lot of it to use mutex instead of semaphore,
+where mutex made the most sense. But the concepts are very similar and
+really want you to understand semaphore mutex if anything
+is easier to understand, because you're just dealing with one process or
+one specific threat having access. So a lot of the same kind of functions
+that are available that we discussed for semaphores are going to
+be available to mutex. And you're so
+you'll have lock and try lock and there's also a nested
+lock that's available for obtaining the lock from multiple
+nested function calls that we won't really get into a lot
+of detail with in this course. But you also have the mutex_unlock and
+the check to see if mutex is locked. And then the interruptible variants that
+we talked about with semaphores as well. So how does mutex map to the semaphore
+class that we talked about before? Mutex lock is essentially down. Mutex trylock is down_trylock. Mutex_lock_interruptible is
+down_interruptible. And then mutex_unlock would be up. And then the nested one is used for
+the multiple locks and ordering between nested function calls. So the mutex use in scull. We talked before about for semaphores that you had two
+different ways to declare them. You could statically defined with
+something like this would define mutex or you could dynamically
+defined with the mutex in it. So in the scull case where we have
+a structure member as a part of the structure,
+we'd use mutex in it then at runtime to to initialize the lock
+member of the structure. So the also as you mentioned before,
+the important thing about initializing the mutex is that it must be done
+before we tell the Kernel about it. So before we call scull_setup_cdev which
+is going to ultimately call cdev_add, we need to make sure that we've
+done our mutex initialization for the part of the structure,
+because we have to make sure no object can be made available to the Kernel
+before it can function properly. And before we call mutex in it, that
+mutex is not going to function properly. So we have to know when we're
+notifying the Kernel and we have to make sure that our
+mutex in it happens before that. So during module in it, we're going to
+do both of those things and we can see the code here and scull_setup_cdev
+that will initialize the device and we just need to make sure our
+mutex in it happens before that. So we talked about that most of the time
+you're going to want to use interruptible. And the fact that
+interruptible could fail, for instance if a process is interacting and
+you hit Ctrl+C or send a signal to the process
+that you wanted to terminate. So how would we handle that case? And the book talks about some suggestions
+here in terms of what to return to user space when you get interrupted
+attempting to lock a mutex. In some cases it could be that if
+there was a reason to continue, if you didn't want to handle
+the signal by exiting, the best thing to do would
+be to restart the operation. In that case you can use -ERESTARTSYS as
+an error that's defined to let the user space know that that's the case. Then it could also be the case that for
+instance you started some operation and you don't have a good way
+to undo that operation. Like especially if you
+are working with the device, and in that case you might want to
+return -EINTR to notify the user space that the operation was interrupted and
+you might not be able to undo it, so the state of the device
+might be inconsistent. And then as we mentioned before, you
+want to make sure that you're balancing every lock with an unlock,
+including in error cases. So if you were obtaining multiple locks,
+you obtained one and you were interrupted on the second one, you need to make sure that you release
+that first one before you return. So the book also discusses in addition to
+just normal semaphores that the Kernel also supports that's called
+Reader/Writer semaphores. And to think about why you'd want
+a different type of semaphore than just a standard semaphore or mutex. Think about access to a shared
+resource by threads that are reading versus threads that are writing. So if you're thinking about only
+threads that are reading and you're thinking about accessing
+a non atomic variables. So like maybe one a 64 Bit variable that
+you're accessing on a 32 Bit system. How many readers could concurrently
+access that variable when rights to that variable are blocked? And the answer is infinite, right? Because as long as we know
+that the value isn't changing, you could let any number
+of readers read it. It's okay if they're not synchronized and
+they're not reading at the same time, as long as it's not changing. But if you turn that around and you say,
+okay, what if a right was occurring, how many readers could access? Now the answer is 0, it's not safe to let
+anyone access it when you're in the middle of writing it if it's not a ton. So to answer the question
+about would every thread need an exclusive lock to access a variable? The answer is technically no,
+if most threads are only reading it, they really wouldn't need
+exclusive access to read it. It would only be the writer thread
+that needs exclusive access. And as long as you're blocking writers, an infinite number of reader
+threads could access. So this is really the point of
+a read/writers semaphore is to kind of optimize that case if you have
+a variable that fits that description. So you're very similar functions for using reader/writer semaphores
+in terms of in it down up. There's one thing to note here that
+the trylock functions return 1 instead of 0 on success,
+which is kind of backwards. So that's something to pay
+attention if you use that. There's also a mechanism to convert a lock
+from a write lock into a read lock. Because again, the writer is the case
+that needs to block every other access. So if you've finished writing to the lock,
+but you still want to be able to read the lock, you're able to just
+downgrade from a write to a read lock. Writers get priority, so if there's
+a writer waiting, it's going to block any other readers from happening until
+the writer gets a chance to complete. And the time when you want to use
+this would be when write access is rarely required and you only need write
+access fairly briefly when you need it. So this doesn't make sense for
+every situation, but it's good to know that it exists. Another variant on the locking
+schemes that we've discussed so far are completions. So completions are designed as you
+probably guessed from the name when you want to wait for
+some activity to complete. And you might say, well, couldn't I
+just use a semaphore for this and the answer is generally yes you could. However, the book talks about
+the fact that the software design of semaphore is really optimized for
+the available case. So it's optimized to make, if the
+semaphore is available, that's going to be the fastest code path, because if you
+think about access to a critical region for instance, it's probably just very
+small windows of time that that's blocked. So you want to make semaphore
+optimize such that for the high percentage of the time that
+you don't need to block the thread, it's a very small overhead
+to use the semaphore. By contrast, the completions
+are designed for the opposite. Completions are designed for the case
+where typically the, when you check it, the completion is not available. So you've kicked off some thread and
+you're going to be checking periodically for the thread to be complete and
+that amount of time that that threat is going to run and the completion is not
+going to be complete is large relative to the number of times that you're
+going to check it potentially. So the example when this would be a case
+would be if you just started a thread and you're going to want to wait for
+it to complete and that's a relatively long
+amount of time that occurs. There's also the complete/complete_all
+functions which support use and interrupt handlers. So you can set up a completion and
+initialize await in a process and then an interrupt could come through and
+issue a complete or complete_all that would complete
+your wait in user space. The book gives some suggestions
+about when to use completions and it said if you're thinking
+about using yield() or some kind of m(1)sleep loop to
+allow something to complete. Its probably an example of something
+that completions was designed for. So you should be looking at
+using a completion instead. The way you use the completion is similar
+to the way we've talked about with mutexs and semaphores already. You can have these declare macros that
+you used to declare it globally or there's also a declare that you can
+use to declare it on the stack. And then you can also
+use an in it like this, if you're initializing it as
+part of a structure variable. So the general way you'd use it, this
+is an example that's shown in the book, you initialize the completion, you define
+it and initialize the completion and then you pass it to some work that
+some work function that will be running in a different thread,
+maybe on a different CPU. And then you call wait for completion and
+wait for the completion to be signaled. So on that other thread that's doing
+work or maybe it's an interrupt whenever it's done, you would call
+complete on the value that was passed, and that would trigger the wait for
+completion to continue on the first CPU. So it's a way to communicate
+between two different CPU threads. There's a similar variants here as to
+what we've already seen with mutex, where you have the interruptible
+versions that can be interrupted. You also have time out versions where you
+can tell it this is the maximum amount of time I want to wait for it and
+if it doesn't complete by this time, return and do some action. And then you can look at the return value
+to figure out which of these states occurred. Then the complete and
+complete_all just tell you the difference between, and
+should I signal complete for the most recent thread that's waiting for
+completion? Or should I signal complete for
+any thread that's waiting for completion? And the last is for
+any thread that's waiting for completion is what complete_all does. And one other important thing to note
+about complete_all is that it would signal all the current and the future waiters. So if you might have a thread
+that would start and call complete all before you actually
+started waiting from the other thread, your thread that calls weight is
+going to just complete immediately. And so
+if that's the behavior that you want, that would be a reason
+to use complete_all.

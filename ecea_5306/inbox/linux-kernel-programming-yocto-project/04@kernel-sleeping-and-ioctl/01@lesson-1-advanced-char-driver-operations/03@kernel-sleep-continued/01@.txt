@@ -1,0 +1,161 @@
+This video will go into a little bit more
+detail about Kernel Sleep expanding on our previous discussion. So we want to understand the scull pipe
+wakeup kernel example based on the kernel sources. And then understanding nonblocking I/O
+implementation as an alternative to sleeping. So the scull pipe sleep and
+wakeup example uses the weight event and wakeup that we discussed
+in the previous video. To implement a blocking or
+nonblocking [COUGH] but in the case of the wait event and wakeup, we're talking about
+blocking I/O interaction. And so this is showing you an example
+of a read command that's going to be waiting on a queue. That we've set up for
+our device that tells us whether or not we're able to handle a read. So in other words, if something's
+been written to the endpoint, and there's new data to read from the queue. So you can see this call to
+wait_event_interruptible here is going to handle based on
+the member of the dev structure. That's going to be our wait queue, and we're going to wait until the read
+pointer does not equal the write pointer. And so what this is going to
+tell us when we get woken up and the read pointer is not
+equal to the write pointer. We know that there's new data
+that's available to read. So the write function then can just
+increment the write pointer and then do a wakeup interruptible here. Which means that anybody that's waiting
+on this event would wake back up and would retry this condition. In this case, the read pointer
+does not equal the write pointer. And so we can sit in this loop waiting for
+the read pointer, anytime the read pointer does not equal, or any time
+the read pointer equals the write pointer. We're waiting in this loop for
+something to happen here in terms of a write from user space so
+that we're able to do a read. So one of the things I wanted to point
+out about this code block when we talked before about rules about sleeping and
+locks. The suggestion from the book is try not
+to sleep when you're holding locks. And you can see that they're implementing
+this in the scull pipe example. So the first thing that we're
+doing before we go to sleep, is we're unlocking the device lock. And that's because there's no reason for
+us to hold that while we're in sleep. And so we'll come back and reobtain
+the lock after we come back out of sleep. And this is kind of a really normal
+implementation that you'll see in Lenny's kernel device drivers in terms of how
+to deal with locking and sleeping. So if you see how you'd run this
+example from the command line, you would have if you have the scull
+pipe device driver loaded. If you open one terminal window and you just try to cat the content
+of the dev scull pipe. You're going to be in this loop here and
+you're going to be waiting right here for the read point to not
+equal the write pointer. So you'll start out with both
+of those values equal to zero, there's nothing in the scull pipe device. And so you're going to be inside
+this wait_event_interruptible macro, waiting for
+a write to increment the write pointer. Then if you open a new
+command terminal window, and you did echo hello world
+to dev scull pipe. And remember this is again part of
+the rules about if you're going to be sleeping, you have to know another
+process is going to wake you up. So this is our other process
+that we're creating. We're opening a new terminal window, we're
+starting a new echo hello world process. That's going to write this
+information into dev scull pipe and ultimately we'll end up here
+in the scull write function. So when we do that, we're going
+to increment the write pointer, write data into the buffer. And then do a wake up interruptible
+here on our wait queue. And once that wakeup
+interruptible happens, we'll wake back up here in scull read. And the code that's below this
+will actually return the data out of the buffer. And you can see then that the cat command
+that we started up here is going to complete. And cat out the contents that you wrote
+here from your echo hello world command. So we've talked before about how the
+device driver examples that we're looking at are just reading and
+writing into memory. And they are actually interacting with
+real devices like you most likely will be doing with a real device driver. However the book makes the point that for
+blocking I/O and buffering. A lot of times this is a pretty
+normal case where you're going to be using memory buffers. To buffer data from read and write
+before you actually write to the driver. So the instead of blocking on access to or
+from the driver, you're really blocking on
+access to the memory buffer. Just the same way that these
+book examples are doing. And this is especially important when
+the device interaction might be a lot slower than memory access. You can service requests from user space
+much faster if you're just writing into a buffer. And then you're having some process
+inside your kernel driver handle getting that data from the buffer
+into the device or vice versa. So a little more detail
+about how a process sleeps. There are a couple different task
+states that a process can be in. So task running means that it's able to
+run but it may not actually be executing. And then task interruptible and uninterruptible are the two
+different types of sleep. Which as you could expect based
+on our discussion of locking and wait queues are the two different types. That you specify with the kind
+of function signature you use. And whether or not you specify
+interruptible in the function signature. And again,
+those are going to determine whether or not you're going to wake up on signals. Or whether or not your code is going to
+be reactivated on signals or ignore them. And then the schedule function is the
+function that actually runs the scheduler. And it's going to allow other
+process to be scheduled, which will effectively put
+the process that calls it to sleep. So I mentioned before that
+the wait_event_interruptible case and the reason why this flag not equal zero. The reason why this is more than just
+one check that's passed into a function. The fact that there's this macro magic
+that's happening that's making this parameter getting re-evaluated. So a little bit more detail
+about how this works. Also bringing in the interruptible
+task schedule or task state and the schedule function that
+we're talking about here. And if you map all these
+down into the functions and the macros that are actually
+implemented into. So showing a little bit more detail
+about the wait_event function here. You can see that we're passing
+the state as one of the arguments here. And that state is just going to map to
+the TASK_INTERRUPTIBLE option here. That's going to describe
+the way that we want to wait. And whether or
+not we want to wake up on signals. And so that will ultimately get
+mapped to prepare_to_wait_event here. That's going to set up
+that current task state, depending on whether the current
+tasks should be interruptible or not. And then as we mentioned before, the flag, not equal zero is mapping
+to the condition. And that condition is going to get
+checked here in this wait loop and break out of the wait once it's satisfied. And the book also mentions that the,
+so one other thing to mention here. The schedule function as we mentioned, this is the one that's going to swap out
+the current running task for another one. And essentially put the process to sleep,
+and that's passed as this last argument here. So here's where we actually
+be calling schedule. And the book mentions that by checking the
+condition before you ever go into sleep. You handle the case where the condition
+was already satisfied when at the point that you invoke
+the wait_event interruptible macro. So you won't ever sleep if
+the condition was already satisfied. That's kind of like an optimization that
+the kernel provides on these functions. And then you can see when you're
+exiting the weight event status, we'll go back to task running state
+through this finish_wait function. So again, if you ever want to know
+how things are actually working. The best way to do this here is to search
+the function names in kernel source. And just look at the source of how this
+stuff is actually working underneath the hood. All right, so
+when we're talking about sleep, and most of what we've talked about so
+far. We're talking about blocking I/O, but we've talked about the open
+command from user space. What if when we do an open of a file
+descriptor, we specify O_NONBLOCK. And it turns out that the open function
+that we get the file pointer that's passed, the flags in that case are
+going to include O_NONBLOCK and a flag. So we can tell whether or not the user
+has requested nonblocking mode. And so the scull handler here for open, if it sees that the scull
+device is not available. So in this particular
+implementation there are some restrictions that mean that the device
+isn't available in some scenarios. And when that's the case,
+rather than waiting for it to be available, which we would
+do if we were in blocking mode. If we see we're in nonblocking mode
+we'll just return minus EAGAIN. And this gives the user space
+a chance to keep pulling us for status rather than us doing
+the wait inside the kernel. So it turns out it's
+a little bit difficult to test nonblocking mode from user space. There's a reference in
+the book to an nbtest example, which is kind of an interesting
+way to do this testing. Where they're taking the standard in and
+standard out file descriptors, and essentially changing
+the control on them. To open them in nonblocking
+mode instead of blocking mode. So the standard I/O input and output
+rather than blocking like we would do if we did the cat command in the previous
+example for the scull pipe. Rather than blocking on that cat command,
+by setting the standard input and standard output to O_NONBLOCK
+inside a simple C program here. We're able to make those commands not
+block anymore based on setting that configuration and the driver. So this is a way that you can test any
+arbitrary driver that uses standard in and standard out through
+a simple function like this. That just reads whatever is passed and writes out the content both in
+nonblocking operation modes. So you can try this out with the scull
+pipe example, and what you'll really see is that the, what strace is
+going to show you under the hood. Is all the interactions that
+are happening with the driver are going to be polling for reads and
+writes as opposed to blocking. So the end result is going to be similar
+to what we see with the blocking example. But you can see from the strace
+that there's polling happening and there's EAGAIN being
+returned from the driver. When the transfer is not ready
+to occur because, so for instance if you're waiting for
+a read to be available. Because you haven't written
+anything into the driver yet, in this case you'd be writing
+in through this test infile. The read side is going to
+be continuously polling and returning EAGAIN from user space. So really we're moving the sleep out of
+the driver, and into the user space here. Where we're just going to be sleeping for
+a specified amount of delay between attempts to pull for
+read and write update. And so the example that I've added to
+the next device driver source code here. It lets you demonstrate this,
+redirects input and output from designated files
+through that nonblocking pipe. And just lets you see the interaction
+that's happening both with strace through the user space. IO and also through the kernel logs and the response from the scull driver. In terms of handling the requests for
+data and nonblocking them.

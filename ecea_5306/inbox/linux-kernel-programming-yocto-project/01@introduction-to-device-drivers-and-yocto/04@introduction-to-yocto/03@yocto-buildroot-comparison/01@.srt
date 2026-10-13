@@ -1,0 +1,986 @@
+1
+00:00:00,000 --> 00:00:03,030
+Now that we've gone over
+both Buildroot and Yocto
+
+2
+00:00:03,030 --> 00:00:05,850
+as ways that you can use to
+build an embedded system,
+
+3
+00:00:05,850 --> 00:00:07,350
+I'm going to compare and
+
+4
+00:00:07,350 --> 00:00:09,840
+contrast Buildroot and
+Yocto in this slide deck
+
+5
+00:00:09,840 --> 00:00:11,880
+to help you decide when you
+
+6
+00:00:11,880 --> 00:00:14,580
+should use one versus
+the other in a project.
+
+7
+00:00:14,580 --> 00:00:16,740
+The learning objectives,
+we'll go over
+
+8
+00:00:16,740 --> 00:00:19,220
+comparison of Yocto
+and Buildroot,
+
+9
+00:00:19,220 --> 00:00:22,230
+and the build frameworks
+comparison in general.
+
+10
+00:00:22,230 --> 00:00:24,300
+To start from the
+beginning maybe
+
+11
+00:00:24,300 --> 00:00:26,040
+you've gone through Yocto
+
+12
+00:00:26,040 --> 00:00:27,330
+and you've gone through
+Buildroot and you said,
+
+13
+00:00:27,330 --> 00:00:29,250
+wow, this is all just
+way too complicated.
+
+14
+00:00:29,250 --> 00:00:30,675
+It's too hard to set up.
+
+15
+00:00:30,675 --> 00:00:32,910
+Why don't I just use
+the tools that we
+
+16
+00:00:32,910 --> 00:00:35,010
+talked about at the beginning
+
+17
+00:00:35,010 --> 00:00:36,540
+of the semester for
+cross compiling?
+
+18
+00:00:36,540 --> 00:00:37,895
+Why don't I just copy,
+
+19
+00:00:37,895 --> 00:00:39,380
+cross-compile the binary that I
+
+20
+00:00:39,380 --> 00:00:41,490
+need for my custom application,
+
+21
+00:00:41,490 --> 00:00:43,940
+just copied into a root
+file system image?
+
+22
+00:00:43,940 --> 00:00:45,860
+Just create my own
+riff file system image
+
+23
+00:00:45,860 --> 00:00:48,570
+based on that
+cross-compile content.
+
+24
+00:00:49,130 --> 00:00:54,050
+The answer is that it's
+really not scalable to do
+
+25
+00:00:54,050 --> 00:00:56,480
+that long-term and you
+
+26
+00:00:56,480 --> 00:00:58,490
+don't want have to learn
+that the hard way,
+
+27
+00:00:58,490 --> 00:00:59,690
+but you probably will if
+
+28
+00:00:59,690 --> 00:01:02,125
+you start with
+something like that.
+
+29
+00:01:02,125 --> 00:01:05,190
+Build frameworks provide
+a lot of benefit.
+
+30
+00:01:05,190 --> 00:01:07,445
+For one thing, the
+hardware changes
+
+31
+00:01:07,445 --> 00:01:08,690
+are much easier to manage,
+
+32
+00:01:08,690 --> 00:01:11,840
+if you switch from one
+platform to another later,
+
+33
+00:01:11,840 --> 00:01:13,940
+rather than redoing
+everything about how
+
+34
+00:01:13,940 --> 00:01:16,140
+you did your customized
+build framework,
+
+35
+00:01:16,140 --> 00:01:17,915
+it's probably going
+to be more like
+
+36
+00:01:17,915 --> 00:01:20,360
+switching the config file
+that you're using or changing
+
+37
+00:01:20,360 --> 00:01:22,295
+the machine setup or
+
+38
+00:01:22,295 --> 00:01:24,530
+customizing something
+about your BSP layer.
+
+39
+00:01:24,530 --> 00:01:25,820
+It'll be much easier to
+
+40
+00:01:25,820 --> 00:01:28,250
+handle if you're using
+a build framework.
+
+41
+00:01:28,250 --> 00:01:30,950
+Emulation, which is what
+we're using right now,
+
+42
+00:01:30,950 --> 00:01:33,470
+can be a really powerful
+tool and that's much
+
+43
+00:01:33,470 --> 00:01:35,030
+easier to use with
+a build framework
+
+44
+00:01:35,030 --> 00:01:37,120
+that already has that built in.
+
+45
+00:01:37,120 --> 00:01:39,120
+Something to keep
+in mind is that
+
+46
+00:01:39,120 --> 00:01:42,230
+these short-term hacks that
+
+47
+00:01:42,230 --> 00:01:44,735
+seem like a way that you can
+get started really quickly,
+
+48
+00:01:44,735 --> 00:01:47,390
+they have their place and
+they can be okay sometimes,
+
+49
+00:01:47,390 --> 00:01:49,070
+but it's not really
+something you want to build
+
+50
+00:01:49,070 --> 00:01:51,415
+a project on because long-term,
+
+51
+00:01:51,415 --> 00:01:52,920
+they'll become
+more unmanageable.
+
+52
+00:01:52,920 --> 00:01:54,510
+It'll be the point
+where you're going to
+
+53
+00:01:54,510 --> 00:01:56,150
+spend all of your time just
+
+54
+00:01:56,150 --> 00:01:57,260
+dealing with issues that are
+
+55
+00:01:57,260 --> 00:01:58,580
+related to the fact
+that you're doing
+
+56
+00:01:58,580 --> 00:02:02,150
+some custom home-brewed
+build system rather
+
+57
+00:02:02,150 --> 00:02:04,625
+than something that's actually
+
+58
+00:02:04,625 --> 00:02:08,035
+used widely and
+supported by community.
+
+59
+00:02:08,035 --> 00:02:10,620
+Technical debt is
+a recurring cost.
+
+60
+00:02:10,620 --> 00:02:12,220
+What I mean by that is,
+
+61
+00:02:12,220 --> 00:02:13,640
+if you start doing something
+
+62
+00:02:13,640 --> 00:02:17,425
+that's got a lot of baggage
+and a lot of overhead,
+
+63
+00:02:17,425 --> 00:02:19,055
+every single time
+you do a build,
+
+64
+00:02:19,055 --> 00:02:20,345
+every time you do a release,
+
+65
+00:02:20,345 --> 00:02:22,415
+you're going to be
+paying for that in
+
+66
+00:02:22,415 --> 00:02:24,470
+additional time and
+additional effort
+
+67
+00:02:24,470 --> 00:02:26,185
+that it takes to do something.
+
+68
+00:02:26,185 --> 00:02:28,040
+This is where build
+systems can really
+
+69
+00:02:28,040 --> 00:02:29,870
+start to add some
+benefit is as you get a
+
+70
+00:02:29,870 --> 00:02:32,450
+little bit further in your
+project and you want to make
+
+71
+00:02:32,450 --> 00:02:34,100
+this something that's
+a real product
+
+72
+00:02:34,100 --> 00:02:36,750
+that you wanted to live
+with the end users.
+
+73
+00:02:36,770 --> 00:02:39,450
+Now we've talked about
+both Buildroot and
+
+74
+00:02:39,450 --> 00:02:41,250
+Yocto, so which is better?
+
+75
+00:02:41,250 --> 00:02:42,390
+You might be thinking, well,
+
+76
+00:02:42,390 --> 00:02:45,865
+which one should I maybe
+use for my project?
+
+77
+00:02:45,865 --> 00:02:47,960
+You'll be able to
+find a lot if you
+
+78
+00:02:47,960 --> 00:02:50,780
+just Google which is
+better Buildroot or Yocto,
+
+79
+00:02:50,780 --> 00:02:52,595
+you'll find lots of
+different opinions
+
+80
+00:02:52,595 --> 00:02:54,260
+about this and you'll
+probably quickly
+
+81
+00:02:54,260 --> 00:02:56,000
+come to the conclusion
+that in a lot
+
+82
+00:02:56,000 --> 00:02:57,920
+of cases this is a
+question of religion.
+
+83
+00:02:57,920 --> 00:03:00,815
+It's asking, which is a
+better programming language,
+
+84
+00:03:00,815 --> 00:03:02,930
+which is a better anything,
+
+85
+00:03:02,930 --> 00:03:04,850
+pretty much anything comes
+
+86
+00:03:04,850 --> 00:03:06,890
+down to personal
+preference and bias.
+
+87
+00:03:06,890 --> 00:03:08,590
+There's not really
+a right answer.
+
+88
+00:03:08,590 --> 00:03:10,280
+There's some reasons
+that you might want to
+
+89
+00:03:10,280 --> 00:03:11,990
+consider one versus the other.
+
+90
+00:03:11,990 --> 00:03:14,270
+But ultimately, there's
+also some preferences and
+
+91
+00:03:14,270 --> 00:03:18,545
+personal bias that goes into
+which one you should use.
+
+92
+00:03:18,545 --> 00:03:21,590
+I'm going to share my preferences
+and personal biases as
+
+93
+00:03:21,590 --> 00:03:25,990
+a part of this slide deck.
+
+94
+00:03:25,990 --> 00:03:28,340
+First starting off with
+the similarities are
+
+95
+00:03:28,340 --> 00:03:30,715
+reasons not to choose
+one over the other.
+
+96
+00:03:30,715 --> 00:03:32,730
+Both Yocto and Buildroot have
+
+97
+00:03:32,730 --> 00:03:35,015
+really talented and really
+responsive developers,
+
+98
+00:03:35,015 --> 00:03:36,425
+an active mailing list.
+
+99
+00:03:36,425 --> 00:03:37,880
+You can get a lot of answers to
+
+100
+00:03:37,880 --> 00:03:39,980
+your questions when
+things aren't working
+
+101
+00:03:39,980 --> 00:03:42,440
+from the developers themselves
+or from people that
+
+102
+00:03:42,440 --> 00:03:45,120
+are experts at using the tool.
+
+103
+00:03:45,120 --> 00:03:46,880
+Both are really
+well thought out,
+
+104
+00:03:46,880 --> 00:03:49,880
+well maintained, and have
+an active community.
+
+105
+00:03:49,880 --> 00:03:51,920
+Both have really
+similar support for
+
+106
+00:03:51,920 --> 00:03:55,315
+common embedded platforms
+like x86 and ARM.
+
+107
+00:03:55,315 --> 00:03:58,400
+Both have extensive and
+well-written documentation,
+
+108
+00:03:58,400 --> 00:04:00,710
+so there's plenty of stuff
+online to help you solve
+
+109
+00:04:00,710 --> 00:04:03,695
+your own problems yourself
+with documentation.
+
+110
+00:04:03,695 --> 00:04:06,955
+These are reasons that you
+could use either one really.
+
+111
+00:04:06,955 --> 00:04:10,190
+Now getting more into
+the differences between,
+
+112
+00:04:10,190 --> 00:04:12,860
+here are some of the ones that
+I find compelling in terms
+
+113
+00:04:12,860 --> 00:04:14,450
+of deciding which one to
+
+114
+00:04:14,450 --> 00:04:17,155
+use and some of the difference
+between the platforms.
+
+115
+00:04:17,155 --> 00:04:18,710
+If you want to think about
+
+116
+00:04:18,710 --> 00:04:20,480
+what's the simplest and what has
+
+117
+00:04:20,480 --> 00:04:23,320
+the lowest initial
+learning curve,
+
+118
+00:04:23,320 --> 00:04:26,370
+Buildroot is almost
+certainly, that case.
+
+119
+00:04:26,370 --> 00:04:28,615
+The Yocto example that were
+
+120
+00:04:28,615 --> 00:04:30,425
+providing for you is
+
+121
+00:04:30,425 --> 00:04:32,240
+hopefully going to be
+pretty easy for you to use,
+
+122
+00:04:32,240 --> 00:04:33,530
+but there's some work that went
+
+123
+00:04:33,530 --> 00:04:37,200
+into setting up that
+canned example for you.
+
+124
+00:04:37,200 --> 00:04:38,685
+Starting from scratch with
+
+125
+00:04:38,685 --> 00:04:40,910
+Yocto is generally going
+to be more complicated,
+
+126
+00:04:40,910 --> 00:04:43,580
+you'll have a steeper
+learning curve
+
+127
+00:04:43,580 --> 00:04:47,665
+initially coming up and
+basing a project on Yocto.
+
+128
+00:04:47,665 --> 00:04:50,355
+The developer
+workflow of support,
+
+129
+00:04:50,355 --> 00:04:51,665
+this is one case where
+
+130
+00:04:51,665 --> 00:04:53,060
+once you get the
+hang of how to use
+
+131
+00:04:53,060 --> 00:04:55,580
+dev tool and some
+
+132
+00:04:55,580 --> 00:04:57,865
+of the developer tools that
+are built-in to Yocto,
+
+133
+00:04:57,865 --> 00:05:00,230
+Yocto can have some
+really good advantages
+
+134
+00:05:00,230 --> 00:05:02,135
+there in terms of developer
+workflow support.
+
+135
+00:05:02,135 --> 00:05:04,100
+You can do similar things
+with Buildroot and there
+
+136
+00:05:04,100 --> 00:05:06,250
+are some good support there,
+
+137
+00:05:06,250 --> 00:05:09,450
+but there's probably
+slightly better support in
+
+138
+00:05:09,450 --> 00:05:13,500
+Yocto in terms of customizing
+it and developer workflow.
+
+139
+00:05:13,500 --> 00:05:15,680
+Their clean build time is
+
+140
+00:05:15,680 --> 00:05:17,090
+definitely shorter on Buildroot,
+
+141
+00:05:17,090 --> 00:05:18,110
+because you're just rebuilding
+
+142
+00:05:18,110 --> 00:05:20,210
+so many components on Yocto.
+
+143
+00:05:20,210 --> 00:05:22,460
+But the incremental
+build time in Yocto,
+
+144
+00:05:22,460 --> 00:05:24,620
+once you get a build
+setup is generally
+
+145
+00:05:24,620 --> 00:05:27,710
+faster than Buildroot
+and easier to
+
+146
+00:05:27,710 --> 00:05:30,260
+maintain because
+they're less caveats
+
+147
+00:05:30,260 --> 00:05:33,440
+about when you need to do
+a clean build with Yocto.
+
+148
+00:05:33,440 --> 00:05:35,390
+These two balance each
+
+149
+00:05:35,390 --> 00:05:38,095
+other out a little
+bit, in my opinion.
+
+150
+00:05:38,095 --> 00:05:41,235
+Then for platform
+and package support,
+
+151
+00:05:41,235 --> 00:05:44,300
+if you're just building
+a basic embedded system
+
+152
+00:05:44,300 --> 00:05:46,040
+based on basic platform,
+
+153
+00:05:46,040 --> 00:05:48,620
+you'll have plenty of options
+with Buildroot and there's
+
+154
+00:05:48,620 --> 00:05:51,820
+a lot of platforms or
+packages supported there.
+
+155
+00:05:51,820 --> 00:05:54,230
+But if you really want to use
+
+156
+00:05:54,230 --> 00:05:55,820
+the latest cutting edge stuff
+
+157
+00:05:55,820 --> 00:05:57,170
+and you want to
+make sure you have
+
+158
+00:05:57,170 --> 00:06:02,820
+support for maybe some
+not common packages,
+
+159
+00:06:02,820 --> 00:06:04,460
+you probably have the
+best chance of having
+
+160
+00:06:04,460 --> 00:06:06,320
+that support in Yocto.
+
+161
+00:06:06,320 --> 00:06:09,060
+This is something to
+consider as well.
+
+162
+00:06:09,110 --> 00:06:12,625
+Summary, when would I
+consider using Buildroot?
+
+163
+00:06:12,625 --> 00:06:14,495
+If you have a project
+that's already using it,
+
+164
+00:06:14,495 --> 00:06:15,890
+I would probably think pretty
+
+165
+00:06:15,890 --> 00:06:17,570
+seriously about
+continuing to use it,
+
+166
+00:06:17,570 --> 00:06:19,430
+unless there was a
+really specific reason
+
+167
+00:06:19,430 --> 00:06:21,155
+you didn't want
+to going forward.
+
+168
+00:06:21,155 --> 00:06:23,150
+If you have a team that's
+already familiar with
+
+169
+00:06:23,150 --> 00:06:25,775
+Buildroot and excited
+about using it,
+
+170
+00:06:25,775 --> 00:06:28,705
+I would probably consider
+I would continue using it.
+
+171
+00:06:28,705 --> 00:06:30,440
+If you have a team
+that has lots of
+
+172
+00:06:30,440 --> 00:06:32,570
+Makefile Linux Kernel
+build experience and
+
+173
+00:06:32,570 --> 00:06:35,570
+relatively little
+Python or Yocto skills.
+
+174
+00:06:35,570 --> 00:06:37,250
+This is important
+if you have a team
+
+175
+00:06:37,250 --> 00:06:38,885
+that's not excited
+about learning it,
+
+176
+00:06:38,885 --> 00:06:40,580
+because as I mentioned,
+
+177
+00:06:40,580 --> 00:06:42,805
+there's a little bit more
+steeper of a learning curve,
+
+178
+00:06:42,805 --> 00:06:44,250
+these are all reasons that
+
+179
+00:06:44,250 --> 00:06:46,275
+Buildroot might be
+a better choice.
+
+180
+00:06:46,275 --> 00:06:47,720
+If you're using a
+platform that's
+
+181
+00:06:47,720 --> 00:06:49,235
+well-supported on Buildroot,
+
+182
+00:06:49,235 --> 00:06:50,765
+especially a mature platform,
+
+183
+00:06:50,765 --> 00:06:55,010
+if you're using a basic on
+platform or a x86 platform,
+
+184
+00:06:55,010 --> 00:06:56,795
+then Buildroot's going to
+
+185
+00:06:56,795 --> 00:06:59,660
+have probably the
+support that you need,
+
+186
+00:06:59,660 --> 00:07:01,160
+especially if you have
+a product that has
+
+187
+00:07:01,160 --> 00:07:03,200
+few and relatively
+simple requirements
+
+188
+00:07:03,200 --> 00:07:04,820
+and a pretty
+well-defined roadmap.
+
+189
+00:07:04,820 --> 00:07:06,770
+You're pretty sure that
+there's not going to be
+
+190
+00:07:06,770 --> 00:07:08,885
+some new curveball
+thrown at you that
+
+191
+00:07:08,885 --> 00:07:12,780
+might be difficult to handle
+with Buildroot support.
+
+192
+00:07:12,780 --> 00:07:14,010
+When would I consider Yocto?
+
+193
+00:07:14,010 --> 00:07:15,650
+It would be when I was using
+
+194
+00:07:15,650 --> 00:07:17,690
+a product with more
+complex requirements,
+
+195
+00:07:17,690 --> 00:07:19,250
+more of an undefined roadmap.
+
+196
+00:07:19,250 --> 00:07:22,145
+If I was using a newer
+hardware platform
+
+197
+00:07:22,145 --> 00:07:25,415
+if it's not supported yet
+on Buildroot for instance,
+
+198
+00:07:25,415 --> 00:07:28,100
+or if the manufacturer hasn't
+
+199
+00:07:28,100 --> 00:07:29,510
+committed to Buildroot support,
+
+200
+00:07:29,510 --> 00:07:31,070
+but does have Yocto support.
+
+201
+00:07:31,070 --> 00:07:33,350
+If the BSP is available
+only in Yocto,
+
+202
+00:07:33,350 --> 00:07:34,550
+this would be a
+reason why I would
+
+203
+00:07:34,550 --> 00:07:36,175
+definitely choose the Yocto.
+
+204
+00:07:36,175 --> 00:07:38,465
+Also if you have a team that's
+
+205
+00:07:38,465 --> 00:07:40,550
+excited about the challenge
+of learning Yocto.
+
+206
+00:07:40,550 --> 00:07:42,410
+If you are starting
+
+207
+00:07:42,410 --> 00:07:43,430
+from the point
+that you know it's
+
+208
+00:07:43,430 --> 00:07:44,520
+going to be more work to learn,
+
+209
+00:07:44,520 --> 00:07:46,805
+but you're okay with that
+because you want to learn it,
+
+210
+00:07:46,805 --> 00:07:48,560
+then that would be
+another case where it's
+
+211
+00:07:48,560 --> 00:07:52,050
+a good choice to choose
+Yocto for your building.

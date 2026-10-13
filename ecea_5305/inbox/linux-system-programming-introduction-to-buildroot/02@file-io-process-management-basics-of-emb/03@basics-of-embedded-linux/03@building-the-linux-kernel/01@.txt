@@ -1,0 +1,123 @@
+In this video,
+we're going to talk about building the Linux kernel. We'll do an introduction
+to KConfig, talk about kernel
+defconfigs and go through the steps that we take to build the Linux kernel from source. We'll use a QEMU example kernel build that will be part of what you use for
+assignment number 3. First we talk about
+the KConfig format. This is a popular format
+used for Linux development, especially with the
+kernel, but also with utilities like BusyBox. This is a text format that
+controls kernel configuration. Here's an example of
+what it looks like. Pretty easy to read. There's a item describing a
+menu item and then a config label that describes a
+specific configuration. Like in this case, it's talking about device memory
+virtual support. The type here defined is
+Boolean, the default value, and some help that can
+be used by a program to show what this value does
+when it's turned on or off. The graphical tool that usually parses these
+KConfig files, there are a few
+different options, but one of them is
+called menuconfig. That's a terminal based
+utility that you could use if you just type make
+menuconfig in the kernel tree, you'll see a utility
+like this that lets you use the space bar
+to go select one or more of the configurations for the kernel and you
+can see a map here between the KConfig text file and what shows up here
+in the menuconfig tool. This text file
+essentially just drives the content of the
+menuconfig tool. Once we make changes
+with menuconfig, our changes are going
+to be stored in a.config file at the kernel
+source root directory. That.config file won't show up with the ls because
+it's a hidden file, but you'll see it if you
+search for it specifically, or if you use the
+dash a option for ls. Using the example that
+we showed before of that DEVMEM character device, if we turn that on inside
+the kernel config, we'll see an entry in our.config file that says CONFIG_DEVMEM=y. This is setting the Boolean
+true to say we want to turn on character device
+support in our kernel build. For most of the kernel drivers, there are a few
+different options you can select at KConfig. The first is off saying that you're not
+going to build and it's not going to be included in
+your kernel and you can see this in menuconfig with this empty not selected for you. The second is on. When it's on, it's going to
+be built into the kernel and no need to load
+it at runtime, it'll just be directly built in, and you can notice that
+with the asterisk here. Then the final is the module. In this case, it's going
+to be loadable at runtime. You'll be able to use modprobe or other
+commands to load it dynamically into the
+kernel and that's shown by this m here in
+the menuconfig view. Second thing to know about
+kernel configs is that you want to start based on whatever machine you're using or whatever architecture
+you're using, you typically want to start with a default configuration
+for your kernel. That's often referred to
+as a kernel defconfig. This is really just a
+file that sets up your initial.config to have a set of known defaults that work with a specific hardware
+platform and typically, this is something that you get like four-year
+development board, a base configuration setup
+for you and you'd use this as the basis for your
+own custom kernel.config. In our case, we're going to
+do something a little bit different than what's
+discussed in Mastering Embedded Linux
+Programming Chapter 4, and the reason is we're
+going to take advantage of the arm cross-compiler
+tools that we used with
+Assignment 2, and so, instead of using
+the instructions in Mastering Embedded Linux
+Programming Chapter 4, we're going to use
+the QEMU virt target. That, you can specify it with the virt machine
+target defconfig, or you could just
+make defconfig with no arguments to use this
+default QEMU virtual machine. There are a bunch more
+options that you can use, and you can find these here in the Linux source
+directory under configs. We're going to compile with Kbuild using the
+KConfig framework. The examples that we showed before about built-in or module, you can see references here to the object files that are
+included with your driver, and whether they're
+going to be built into the kernel with this -y, or if they're going
+to be selectable, either built into the kernel, not built into the kernel
+or included as module. Looking back at what we
+did with the.config file, that reference there to the config value is going to just be
+filled into the obj-, and it's going to
+essentially build a list of objects that we're going to compile as a part of
+our kernel build. You can see here if I don't have CONFIG_TTY_PRINTK defined as Y, it's not going to end
+up in the obj-y list, and we're not going to
+compile TTY_PRINTK.C. The other thing you
+can see here is that the mem and random.o are requirements for the
+kernel build of TTY_PRINTK, and so those are just going
+to be set by default. But the TTY_PRINTK itself
+will be turned on or off based on that configuration
+in the.config file. Another thing to talk about are the build artifacts or
+the output of the build. In our case, we're going to
+be using the VM Linux file, which is an ELF binar. It's a executable linker format, a binary file and depending
+on how you build the kernel, this may also include
+debugging symbols. Another set of build artifacts, underneath the architecture
+boot directory, there'll be some
+bootloader files used if you're going to be
+working with hardware. We'll get into these
+later when we get into the final project
+portion of the course. For this assignment, we won't
+need to get into these, but there's binary version of
+VM Linux in the image file, there's a compressed image
+and a compressed image that specifically meant for use
+with U-Boot bootloaders. For our Assignment
+3 build steps, we could start out
+with a clean command. The example would look
+like something like this, where we say make
+ARCH equals arm64 and cross-compile we'd use that same cross-compile for prefix that
+we used for Assignment 2, and then specify the mrproper. That's going to deep clean
+the kernel build tree, removing.config file and
+any existing configuration. Next step, we'll
+do the defconfig build and set up
+our default config. This is the same
+make ARCH equals arm64 cross-compile string
+that we use previously, and then we'll use
+the target defconfig. This is going to configure for our "virt" arm device that we're going to
+simulate in QEMU. Then we're going to build
+our VM Linux target. If we say make our ARCH equals
+arm64 CROSS_COMPILE all. The j4 will just allow running
+multiple compiles at once, which could speed up things
+if you have multiple CPUs on your system and this
+is going to build our kernel image that we
+use for booting QEMU. Finally, we can build
+the modules and devicetree file
+using the same make commands or the
+same make arguments we used before and using the targetmodules to
+build modules and building dtbs to
+build the devicetree.

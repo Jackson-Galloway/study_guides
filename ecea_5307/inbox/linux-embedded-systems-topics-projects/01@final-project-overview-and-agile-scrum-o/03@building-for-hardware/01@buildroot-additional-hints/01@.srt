@@ -1,0 +1,417 @@
+1
+00:00:00,000 --> 00:00:03,000
+In this video, I'm going to
+cover a few additional hints
+
+2
+00:00:03,000 --> 00:00:04,545
+for using Buildroot,
+
+3
+00:00:04,545 --> 00:00:06,240
+talking about how to optimize
+
+4
+00:00:06,240 --> 00:00:07,740
+your Buildroot
+development workflow.
+
+5
+00:00:07,740 --> 00:00:09,000
+These are things
+that have come up in
+
+6
+00:00:09,000 --> 00:00:10,890
+the past with students projects,
+
+7
+00:00:10,890 --> 00:00:13,150
+especially students
+using Buildroot.
+
+8
+00:00:13,150 --> 00:00:15,120
+One thing that might be a
+
+9
+00:00:15,120 --> 00:00:16,530
+little confusing when
+you're looking at
+
+10
+00:00:16,530 --> 00:00:20,370
+Buildroot dependencies
+is, for instance,
+
+11
+00:00:20,370 --> 00:00:22,530
+if you want to add
+bash to Buildroot,
+
+12
+00:00:22,530 --> 00:00:26,625
+you might notice that under
+the shell and utilities menu,
+
+13
+00:00:26,625 --> 00:00:28,680
+bashes are listed as an option.
+
+14
+00:00:28,680 --> 00:00:30,525
+If you do a search for bash,
+
+15
+00:00:30,525 --> 00:00:32,220
+you can learn more
+about why this is
+
+16
+00:00:32,220 --> 00:00:35,295
+the case by looking
+closely at the output.
+
+17
+00:00:35,295 --> 00:00:37,400
+If you're trying to
+figure out why bash is
+
+18
+00:00:37,400 --> 00:00:39,140
+missing from the shells list,
+
+19
+00:00:39,140 --> 00:00:40,820
+even though it's shown
+here being under
+
+20
+00:00:40,820 --> 00:00:42,920
+target packages and
+shells and utilities,
+
+21
+00:00:42,920 --> 00:00:44,150
+what you need to pay
+
+22
+00:00:44,150 --> 00:00:46,340
+attention to is this
+depends on line.
+
+23
+00:00:46,340 --> 00:00:48,200
+What this is telling you is that
+
+24
+00:00:48,200 --> 00:00:52,220
+the bash package is
+only going to be
+
+25
+00:00:52,220 --> 00:00:56,540
+shown if BR2_PACKAGE_
+BUSYBOX_ SHOW_OTHERS
+
+26
+00:00:56,540 --> 00:00:57,920
+is set to true,
+
+27
+00:00:57,920 --> 00:01:00,215
+and is currently set to false.
+
+28
+00:01:00,215 --> 00:01:02,150
+The first thing you're
+going to have to do
+
+29
+00:01:02,150 --> 00:01:04,885
+in order to enable
+
+30
+00:01:04,885 --> 00:01:08,520
+our C BR2__PACKAGE
+bash as an option is
+
+31
+00:01:08,520 --> 00:01:12,555
+to set the BR2_PACKAGE_
+BUSYBOX_ SHOW_OTHERS.
+
+32
+00:01:12,555 --> 00:01:14,015
+If you search for that,
+
+33
+00:01:14,015 --> 00:01:15,410
+you'll see that
+that's located under
+
+34
+00:01:15,410 --> 00:01:18,425
+target packages and busybox.
+
+35
+00:01:18,425 --> 00:01:20,510
+This is showing you
+
+36
+00:01:20,510 --> 00:01:22,370
+the dependency that you
+need to have before
+
+37
+00:01:22,370 --> 00:01:25,775
+you're going to be able to
+turn on at a target package.
+
+38
+00:01:25,775 --> 00:01:27,530
+Pay attention to these
+if you're having
+
+39
+00:01:27,530 --> 00:01:30,390
+trouble locating a
+specific package.
+
+40
+00:01:30,670 --> 00:01:35,660
+Also wanted to mention some
+tips about cross compiling.
+
+41
+00:01:35,660 --> 00:01:39,005
+I think we've mentioned
+this briefly before,
+
+42
+00:01:39,005 --> 00:01:43,265
+but the way to optimize
+your development workflow
+
+43
+00:01:43,265 --> 00:01:45,890
+around making
+frequent changes to
+
+44
+00:01:45,890 --> 00:01:49,270
+source and recompiling
+Buildroot accordingly.
+
+45
+00:01:49,270 --> 00:01:52,700
+The way we've setup our
+build so far with these
+
+46
+00:01:52,700 --> 00:01:56,285
+commit hashes pointing to
+specific commits in our repo,
+
+47
+00:01:56,285 --> 00:01:58,550
+the kind of brute
+force way to compile
+
+48
+00:01:58,550 --> 00:02:01,460
+your source code would be
+to push the version to git,
+
+49
+00:02:01,460 --> 00:02:03,260
+copy this commit hash
+and keep changing
+
+50
+00:02:03,260 --> 00:02:06,260
+the version inside your make
+file every time it changes.
+
+51
+00:02:06,260 --> 00:02:08,210
+But this is going to
+result in a lot of
+
+52
+00:02:08,210 --> 00:02:11,075
+commits when debugging and
+it's going to be pretty slow.
+
+53
+00:02:11,075 --> 00:02:14,045
+Is there a better way? Of
+course the answer is yes.
+
+54
+00:02:14,045 --> 00:02:19,995
+You can use OVERRIDE_SRCDIR
+as a way to avoid this issue.
+
+55
+00:02:19,995 --> 00:02:22,760
+From the Buildroot
+directory, you can run,
+
+56
+00:02:22,760 --> 00:02:26,025
+make whatever your
+package name is,
+
+57
+00:02:26,025 --> 00:02:27,710
+OVERRIDE_SRCDIR,
+and then point to
+
+58
+00:02:27,710 --> 00:02:30,230
+wherever the location
+is of your source.
+
+59
+00:02:30,230 --> 00:02:32,150
+Then you can use the
+same Buildroot commands
+
+60
+00:02:32,150 --> 00:02:34,230
+to do assignment.
+
+61
+00:02:34,230 --> 00:02:37,065
+For instance,
+aesd-assignments-rebuild.
+
+62
+00:02:37,065 --> 00:02:39,050
+What this is going
+to do is ignore
+
+63
+00:02:39,050 --> 00:02:40,880
+the version specified in
+your assignments make
+
+64
+00:02:40,880 --> 00:02:44,150
+file and instead use the
+source from this directory,
+
+65
+00:02:44,150 --> 00:02:46,610
+in this case the home directory.
+
+66
+00:02:46,610 --> 00:02:49,580
+In order to use this
+with a different module,
+
+67
+00:02:49,580 --> 00:02:51,380
+you just use the
+all caps version
+
+68
+00:02:51,380 --> 00:02:53,225
+of whatever your module name is.
+
+69
+00:02:53,225 --> 00:02:55,355
+Put all capital letters here
+
+70
+00:02:55,355 --> 00:02:57,940
+and just add that
+before OVERRIDE_SRCDIR.
+
+71
+00:02:57,940 --> 00:03:00,560
+If you want to start from
+an empty build output,
+
+72
+00:03:00,560 --> 00:03:02,810
+you can say whatever
+your package name is,
+
+73
+00:03:02,810 --> 00:03:07,090
+dirclean to start out with
+the clean build directory.
+
+74
+00:03:07,090 --> 00:03:10,250
+Here's an example of when I use
+
+75
+00:03:10,250 --> 00:03:13,955
+this OVERRIDE_SRCDIR command
+with a rebuild all step.
+
+76
+00:03:13,955 --> 00:03:15,935
+If you look carefully
+at the output here,
+
+77
+00:03:15,935 --> 00:03:17,180
+what you'll see is that it's
+
+78
+00:03:17,180 --> 00:03:20,425
+synchronizing from a directory,
+
+79
+00:03:20,425 --> 00:03:22,520
+in this case, my home directory
+
+80
+00:03:22,520 --> 00:03:24,365
+that I specified
+here with SRCDIR.
+
+81
+00:03:24,365 --> 00:03:26,405
+It's going to use
+the rsync command
+
+82
+00:03:26,405 --> 00:03:28,490
+to keep the build directory
+
+83
+00:03:28,490 --> 00:03:30,530
+used by Buildroot in
+sync with the one
+
+84
+00:03:30,530 --> 00:03:33,310
+that I've specified as
+my OVERRIDE_SRCDIR.
+
+85
+00:03:33,310 --> 00:03:34,970
+Anytime I make a change in
+
+86
+00:03:34,970 --> 00:03:36,950
+my home directory and
+then run this step,
+
+87
+00:03:36,950 --> 00:03:38,570
+it'll copy any changes in,
+
+88
+00:03:38,570 --> 00:03:41,000
+and do the build from
+
+89
+00:03:41,000 --> 00:03:46,720
+the Buildroot output,
+aesd-assignments-custom directory.

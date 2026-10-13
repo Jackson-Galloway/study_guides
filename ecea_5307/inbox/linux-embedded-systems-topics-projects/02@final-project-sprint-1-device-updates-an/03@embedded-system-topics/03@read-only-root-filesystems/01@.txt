@@ -1,0 +1,234 @@
+In this video, I'm
+going to talk about read-only root filesystems. I want to introduce
+overlayFS and tmpfs as ways we can build
+read-only root filesystem. I want to introduce the concept of read-only root filesystems, why you want to use it, and understand some
+strategies for implementing them on
+embedded devices. First of all, overlayFS
+is a functionality that's supported in recent
+Linux kernels came in at version 3.8, that is a really slick
+capability that allows us to virtually merge
+multiple folders, keeping the contents of
+individual folders separate. What this allows us to do is
+take an upper and a lower directory and make
+an overlay that includes the content
+of both directories. The upper and lower
+directories could be contents that are
+on different volumes. Those volumes could have
+different permissions in terms of whether you
+can read and write, and they could be completely
+different filesystems on those separate volumes. The combination of
+the upper and lower together gives us the total
+content of the overlay. For instance, you
+can see if the lower had some sparse set
+of files like this, and the upper had some
+combination of additional files, the overlay would get the content from the
+upper layer if it exists, otherwise, it would get the content from
+the lower layer. This allows you to
+make a modification in the upper layer that
+would essentially overwrite the content
+in the lower. Modification to the file in
+the overlay that's only in the lower layer actually
+results in two steps. It results in a copy
+of the file up to the upper directory and then a modification of the
+file on the upper directory. Then if you are
+modifying a file that already exists in
+the upper directory, then that file would only
+exist in the upper directory, or that file modification
+would just be placed there. This would allow you to
+take the lower directory, make this read-only
+for instance, and have this to be the basis
+of your filesystem and keep the contents that are changing in an upper directory
+or an upper filesystem. One thing you might ask is, "What if I wanted to delete a content from the
+lower directory? I wanted to delete content from my filesystem but I had the lower directory
+mounted read-only, for instance, how
+would I be able to remove content from
+the lower directory?" It turns out there's
+a clever way to do that through what they
+call a whiteout file, where it's really a char device with a node major
+and minor of 0,0. It's a special file type that's essentially
+not useful with this node major and
+minor reserved number that's just a clue to the overlay filesystem
+that what we're really trying to do is block the content from
+the lower layer. What this would allow us to
+do is to delete a content in the upper layer and make it look like the file was not
+in the lower layer. In addition to the
+upper and lower layer, there's also a work directory
+that has temporary content. That work directory needs to be an empty directory that's on the same filesystem
+as the upperdir. In order to mount an
+overlay filesystem, you can use a command
+line like this, where you specify
+the lower directory, the upper directory, and the work directory as the
+three different arguments. Talking about how we'd use overlayFS to implement a
+read-only root filesystem, it's also important
+to talk about tmpfs or a temporary
+file systems. Temporary file system is really just a place that you can store files that have
+a short lifetime, and specifically
+files that don't need to be saved across reboots. It's really just going
+to be a filesystem that's created in RAM. Tmpfs is a file system type that's supported by
+the kernel that's specifically meant
+for this purpose. If you want to create a
+filesystem at mount somepath, you can do it and have a RAM-backed copy
+of the filesystem. If you just use mount- o
+tmpfs tmpfs/mount somepath. Once you do that, if you access the content and mount somepath, you'll really just be
+writing content to tmpfs, meaning that the next time you reboot that content's
+going to be gone. The default option creates a max size of the
+filesystem with half the size of
+your physical RAM. You might want to
+restrict that if you know that you don't want to
+use that much space or wouldn't want an
+application to write gigabytes worth of files
+and use up that much RAM. Then you can mount with a specific size
+where, for instance, here you can specify one
+megabyte in the -o options. Talking about read-only root
+filesystem, first of all, why would we want to use a
+read-only root filesystem with an embedded device? Read only root filesystem
+could be useful to number 1, avoid
+unintentional rights. Avoid changing a
+file that you didn't intend to change and if you're using a dual AB redundant update
+scheme, for instance, it's probably important to know exactly which file
+you're changing because if you're changing some files in the
+root filesystem, those are probably going to be lost as a part of
+the update process. You can also reduce filesystem
+corruption possibilities. Anytime you're changing a file, there's a chance that
+if you lose power, maybe you could end up with corrupt contents of
+the file system. Most modern file systems have
+ways to recover from this, but those aren't foolproof. There's still chances
+they could fail. Anytime you're
+allowing modifications of your file system, you're opening yourself
+up to the possibility that you may end up with
+filesystem corruption. Making our root filesystem read-only just
+removes the chance that we'd be modifying that
+during normal operations. It also can simplify the factory default
+reset strategies. Again, because we're moving
+the content of whatever we change at runtime outside of the content that boots
+and runs our device, it becomes easier to just
+focus on removing content from that data partition in the case that we need to go back to the factory default
+configuration. You don't need to figure
+out which values changed in the root filesystem selectively delete or rollback
+individual files. It can also simplify
+device updates strategies. For the reason I
+mentioned before, if you're going
+to be using an AB update scheme, for instance, you want to know that you
+can completely overwrite one partition and boot from that partition and you'll
+get the behavior you expect and one way to
+make sure that is to make sure that the
+root partition is never modified during
+normal operation. Talking specifically about using read-only root
+filesystem for update, if we're going back and forth between a partition
+A and partition B, we're going to be
+completely replacing the content of the root
+filesystem partition. It really never makes
+sense to allow writes to the root filesystem
+at runtime, because anything that you wrote to one of
+these partitions, if you tried to write and
+boot to the new partition, it would be lost and a part of the inactive
+boot partition. You want to make sure
+that all your changes go into a data partition anyway. Read-only root filesystem is
+a good way to enforce that. The amount options to the kernel and kernel
+boot parameters that support mounting the root device read-only
+on boot and you can modify the boot
+configuration. You have to look
+at your hardware platform to see how to do this. On the Raspberry Pi,
+there's the commandline.txt file where you can modify
+boot configuration. You can just specify it, to include this
+parameter as part of your kernel
+boot instructions. But that's probably not
+enough because you need to do some additional work for applications
+that might expect to be able to write to
+the root filesystem. For instance, if
+you're using dropbear, one of the first
+things is going to happen when you boot up is that dropbear is going
+to create SSH keys. If your root filesystem
+is read-only, then that path that
+it uses to write those SSH keys will
+be writable on boot, and your SSH wouldn't
+work, for instance. Same thing with DHCP. Part of the process
+of obtaining a, an IP address through
+DHCP would be to obtain the devices address
+and then modify some content in the root
+filesystem to have that address. That's not going to
+work properly if the root filesystem
+is read-only. There'll be some work to do
+to configure these packages. Then in general, any software configuration that the user
+could modify on your device, given the example before about configuring a Wi-Fi access
+point, for instance, anything your application
+needs to customize, you need to make sure that
+that's not going to be written to a file that maps to your
+read-only root filesystem. How can we handle
+a read-only root filesystem and still be able to modify some of the content
+of the root filesystem? I'm going to go through
+a few different options and strategies you
+can use for that. But ultimately, we're
+going to need to split some storage needs
+into categories. We'll use the read-only root
+filesystem for the content that's not going to change at
+anytime other than update, and then we'll have places that we could store persistent data, as well as data that's
+volatile in the sense that it can be created or
+updated at every boot. One option would be
+you could just take specific locations of your
+read-only root filesystem and use symbolic links
+to link those into the appropriate
+storage locations. You could have a data partition with read/write persistent data, and you could symbol link for new read-only root filesystem the collect directories
+or files into that read/write
+persistent data storage. Same with volatile content that you're going to
+recreate on every boot. Maybe DHCP
+configuration would be an example of something that you would recreate
+on every boot. That you could symbol
+link into tmpfs then and make that a part of your
+read-only root filesystem, or just link into a tmpfs
+partition that you set up. A second option would be
+that you could use OverlayFS for this implementation and place your lower layer on the read-only root
+filesystem partition, and then you could place
+OverlayFS mounts on any of the root filesystem
+directories that need overlay, and you could place that upper
+level either on tmpfs for volatile content or in a data partition here
+for persistent data. There are some things that
+could help us implement this with Yocto, in particular. Yocto supports an
+EXTRA_IMAGE_FEATURES read-only-rootfs that automates a lot
+of this setup for you. It has a VOLATILE _BINDS definition that lets
+you specify where locations on your root
+filesystem should mount to in terms of content in a volatile or
+a data partition for either tmpfs or
+persistent data. A second thing that's related to running from a root
+filesystem or can be depending on how
+you implement it, is the chroot command. Chroot is a command
+that can be used to change your root directory. Software that expects to
+access absolute paths and uses the starting
+slash or any subpath, if you use the chroot command, what you can do is
+redirect that software to a completely separate location
+on your storage device. This is really useful
+if you want to switch your root filesystem
+from one system to another, or from one location to another. For instance, if
+you want to have a root filesystem that's
+located on tmpfs, and then let's say
+you want to switch to a different location in tmpfs or a different location
+on your flash mount, you could use chroot
+for this to specify that your new root location is at some different
+mount point. A lot of times whenever
+you do a chroot, you'll require bind mounts or remounts of temporary
+filesystems. Remember, we've talked
+before about the fact that the Filesystem
+Hierarchy Standard is something really
+for user space. The kernel doesn't care too
+much where you're mounting these directories like
+proc insist in dev, and so we can really mount those locations
+wherever we want, for instance, under
+the directory that we're going to
+create as our new chroot. We can use the chroot to implement a third option for read-only root filesystems, where we overlay the
+entire root filesystem with another partition. Rather than having to
+think about which file we will be modifying out
+of the root filesystem, we can just completely overlay
+the entire root filesystem with an overlay implementation that's on a writable partition. The benefit of this one is
+that you don't need to know in advance which of the directories
+need to be writable, you can just let the OverlayFS handle enabling rights for whatever files need
+to be written. The drawback of this
+one is that it's a little bit more
+difficult to set up, because you need a
+chroot system that's running on startup from
+your initramfs that can do a dance to go from
+RAM to overlay root FS, and set up your overlay root FS from your initial RAM disk. It's a little bit more
+difficult to set up, but there are some scripts
+that are available to do that. There's a script that
+I linked here that is a raspy and implementation
+that you could use for Raspberry Pi to help you implement this on
+Raspberry Pi, if you like.

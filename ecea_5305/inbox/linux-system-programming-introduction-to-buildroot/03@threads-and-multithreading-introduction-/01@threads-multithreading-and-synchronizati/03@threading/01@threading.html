@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Threading</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Threads are similar to processes in that each thread has its own dedicated and unique view of memory.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mo8Y4PrREeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>True </p></div></li>
+<li><input name="autoGradableResponseId~mo8Y4PrREeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>State machines are in many cases a design pattern which can be used as an alternative to threads.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qPF_pfrREeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~qPF_pfrREeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In a multi-processor system, state machines offer the same parallelism opportunities which threads offer.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~tbtFQvrREeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~tbtFQvrREeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your co-worker is complaining that their application UI thread is freezing up during long running applications.  Which of the alternatives would you suggest?  Suggest any which apply.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~wRip6vrREeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>Move blocking operations to a dedicated worker thread</p></div></li>
+<li><input name="autoGradableResponseId~wRip6vrREeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>Use a single threaded process for both UI and long running operations </p></div></li>
+<li><input name="autoGradableResponseId~wRip6vrREeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>Use blocking I/O </p></div></li>
+<li><input name="autoGradableResponseId~wRip6vrREeut9hJjowdXLQ" type="checkbox"/> <div class="quiz-option-text"><p>Use non-blocking I/O and a state machine implementation</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Your co-worker is concerned about using a multithreading architecture because they worry the design may be more complex to understand and debug.  Are their concerns justified?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~3ob_DPrREeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>Yes</p></div></li>
+<li><input name="autoGradableResponseId~3ob_DPrREeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>No</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>An application which uses event driven threading will typically not see a performance improvement by increasing the number of threads to a value higher than the number of processors available in hardware.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~-WqKsfrREeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~-WqKsfrREeukfw7pd2Cm2Q" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Race conditions can only occur in programming environments which support parallelism.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~EB-HqvrSEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~EB-HqvrSEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Parallelism is not possible on a platform which only has a single processor or execution unit.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~G1NrzvrSEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~G1NrzvrSEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Race conditions are avoided by making critical regions atomic.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~JQHoBvrSEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~JQHoBvrSEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>An important programming pattern for multi threaded design is to associate locks with code instead of data.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Lh1MAPrSEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~Lh1MAPrSEeuKfAq2_bz6Sw" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The best strategy to avoid deadlocks is to add more mutexes to your code.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~OxAdVvrSEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~OxAdVvrSEeut9hJjowdXLQ" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A _____________________ is a Dormant programs residing on a storage medium and ready to execute.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~GpVCkRStEeyGwxKJ6v1epw" type="radio"/> <div class="quiz-option-text"><p>Thread</p></div></li>
+<li><input name="autoGradableResponseId~GpVCkRStEeyGwxKJ6v1epw" type="radio"/> <div class="quiz-option-text"><p>Process</p></div></li>
+<li><input name="autoGradableResponseId~GpVCkRStEeyGwxKJ6v1epw" type="radio"/> <div class="quiz-option-text"><p>Binary</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>A Thread is defined as </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~T8FTDxStEeyIqg5qgAmGVw" type="radio"/> <div class="quiz-option-text"><p>Unit of execution with a virtualized stack and program state.</p></div></li>
+<li><input name="autoGradableResponseId~T8FTDxStEeyIqg5qgAmGVw" type="radio"/> <div class="quiz-option-text"><p>OS Abstraction representing binaries in action.</p></div></li>
+<li><input name="autoGradableResponseId~T8FTDxStEeyIqg5qgAmGVw" type="radio"/> <div class="quiz-option-text"><p>Dormant programs residing on a storage medium and ready to execute.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p> ___________________________ uses asynchronous I/O requests, callbacks and multiplexed I/O with a loop which hands a callback off to a waiting thread.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~GkCyuBp7EeyUOA6DL0TzMw" type="radio"/> <div class="quiz-option-text"><p>Event-driven-Threading</p></div></li>
+<li><input name="autoGradableResponseId~GkCyuBp7EeyUOA6DL0TzMw" type="radio"/> <div class="quiz-option-text"><p>Threads-per-connection</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>_________________ is the ability of two or more threads to execute in overlapping time periods.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~yf6hShp7EeyKCQoA6hPa3w" type="radio"/> <div class="quiz-option-text"><p>Concurrency</p></div></li>
+<li><input name="autoGradableResponseId~yf6hShp7EeyKCQoA6hPa3w" type="radio"/> <div class="quiz-option-text"><p>Parallelism</p></div></li>
+<li><input name="autoGradableResponseId~yf6hShp7EeyKCQoA6hPa3w" type="radio"/> <div class="quiz-option-text"><p>Race Conditions</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

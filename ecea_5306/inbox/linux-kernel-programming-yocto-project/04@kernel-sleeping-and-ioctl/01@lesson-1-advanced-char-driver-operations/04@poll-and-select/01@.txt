@@ -1,0 +1,122 @@
+In this video,
+we're going to talk about poll and select. So understand the use of poll and
+select in kernel drivers. Understand how to do seeking in your
+kernel driver and associate read, write open function implementation
+controlling access to your driver. So poll and select can be used to
+determine whether a device can be opened without blocking or whether you need to
+wait for the descriptor to become ready. So these are implementing the poll
+function that you'd use from user space to figure out is there data
+available on my driver endpoint. Is my reader right command going to block? And it's supported by a poll method in
+the device driver which looks like this. That takes a poll table structure that's
+provided to you by the kernel and a file pointer that references the
+particular open command that was used to open the file operation. So looking at an example of
+poll implementation in scull, we can see that the kernel really
+does a lot of the heavy lifting for us there poll weight functions here
+that do whatever needs to get done based on these wait queues that we've
+talked about in previous lectures or in previous videos where we talked
+about how to wait on device operations. So you're just going to call
+poll_wait with inq and outqs and pass in the poll_table that is
+passed to you from the kernel. So this is going to take care of
+the details of what the kernels are, what the user's actually waiting for
+and just fill in based on the current state of your waitq that you've set up for
+waiting on data and input or output qs. So then after calling poll_wait
+the bit mask that you return from poll needs to be set based on some rules
+about the availability of read or write on your driver and
+we'll talk about those in a minute, but again these wait qs
+are just going to be defined, they're the same ones that we're using for waiting on read or
+write availability inside your driver. So the rules that you need to use to
+handle both the read and the poll or read write and poll implementations when there
+is data available in the input buffer, so when you're asking for data from
+the device and that data is available. The read should always return
+immediately with at least 1 byte. So you don't need to return
+the full length of the request but you need to return something
+if there is data available. This is kind of like the rule that you
+need when you implement your read handler. And also poll should return poll in and
+read normally in other words there's data available that and
+you're signaling that back to user space. When there's no data in the buffer,
+the read should either block until at least 1 byte is there
+if you're in blocking mode or if you specify non blocking mode
+it should return -EAGAIN to say that you need to poll later for
+data available and the read q and then poll should report
+unreadable in this case. And so the read flags that you return
+in that mask value should all be 0. And at the end of file, the read should
+return immediately with a value of 0. And poll should report this POLLHUP which
+means there's no data left in the buffer. So there's a distinguish here
+between there's no data left in the buffer because there's nothing
+written to the device yet but there's something that will be written. So this is all based on the design of your
+device driver as opposed to there's not going to be anything else in the buffer
+because you're at the end of file, this is all based on how you've
+designed your device driver and what you're trying to
+signal back to user space. So, similarly to read we have rules
+on write on how we should handle the write when there's either space
+available or no space available and how poll should indicate what the current
+status of the write buffer is. So when there is space available
+in the output buffer and you have a way that you can handle write,
+write should always return without delay accepting at least 1 byte and
+writing at least 1 byte in the buffer. Again similar to read if you've been
+asked to write a large amount of data, you don't necessarily
+have to write it all. But you should write at least 1 byte
+if you have the ability to write 1 byte into your device buffer. And then poll should report POLLOUT or
+[INAUDIBLE] Normally in other words you would not
+block on a write in this case. But conversely when there is no space in
+the output buffer, so the buffer is full, then a write needs to block until space is
+freed if you're in blocking mode or if you specified O_NONBLOCK do the same thing, it
+doesn't read and return -EAGAIN saying you need to keep calling this waiting for
+space available in the output buffer. And similarly poll should
+report that the file is not writable by setting
+the return flags all to 0. So one thing that might be a little bit
+confusing about write is that it mentioned before that as long as there's data
+available room available in the buffer, you want to write at least
+1 byte immediately and you might think that if O_NONBLOCK
+is not set and we want to block and there's some type of operation that
+needs to happen to transfer data from a buffer to the device
+that we might want to buffer or we might want to block for
+that actual data transfer to happen. In other words so we might want to wait
+until the data is written all the way from the buffer directly into the device. But it turns out that's not really the way
+that write should be handled in the Linux kernel because we want to optimize for
+the case where we buffer by default and so that transfer from the right
+buffer into the device, most likely takes a lot
+of time to complete. And we don't we don't
+want to have to make users or user space applications wait for
+that by default. So regardless of the setting of blocker or
+nonblock, you don't want to typically
+make a device driver wait for transfer to complete all
+the way out to the device. And the reason is we've already talked
+about the fsync call that you can make from user space and so
+you can implement fsync in your driver. And if the user space application cares
+whether the data has been written all the way out to the device, they can use
+that fsync call to determine whether that is or is not the case or to force it. So in addition to handling read and write, you can think of the case where we want to
+seek to a particular position in a file. So this is the seek commands and the llseek command that we've
+talked about from user space. And in that case the default case here
+is just that we use that file pointer that we're passing as the first
+argument to read or write and just set a position in that that determines
+where we want to seek to in the device. So the default implementation that
+the kernel provides simply just sets that value and then read and
+write can operate on that as necessary. But if you have some type of custom
+operation that you need to do with seek, you can implement your own llseek file
+operation in the file operation table. And you can also say that for
+my particular device it doesn't make sense to try to seek to different
+locations and so you can just call nonseekable_open which would prevent
+seek from being supported at all. And that often make sense if you
+are working with data flow as opposed to mapping to some kind of memory buffer. And the kernel gives examples of serial
+port and keyboard where it doesn't really make sense to try to seek to a particular
+location in the serial port because you're just processing characters as they come in
+one after another and same for a keyboard, your processing keystrokes,
+one after another. It doesn't really make sense to
+seek back to old keystrokes. And so for those type of devices you
+just call nonseekable_open in your open function and that would get rid
+of this default behavior and just return a failure if there
+are attempts to seek on your driver. Another thing mentioned
+in chapter six has to do with the access control
+that you can do from open. So, there's a couple of different
+examples that are provided in the next device driver example code that show how
+you can control access to your device through the open command. So they give a single open example
+where there's only one process that can open at a time and so there's atomic
+value that you obtain in the open and you release that in release. So you can block in the open command
+based on any requirements of your driver. There's also a single user one that
+compares the process uID to determine whether there's one or more users using the driver and
+you can return -EBUSY when in use. So really the book is just showing you
+that you have a couple different ways to control access to your driver and you can
+do that in open and you can do the kind of blocking or non blocking that we've
+talked about and read or write. You can also do that and just prevent
+access in open if that's desirable for your particular driver.

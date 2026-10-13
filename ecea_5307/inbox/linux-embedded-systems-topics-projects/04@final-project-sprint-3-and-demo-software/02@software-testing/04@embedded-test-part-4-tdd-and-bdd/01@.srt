@@ -1,0 +1,649 @@
+1
+00:00:00,000 --> 00:00:02,635
+. This recording discusses
+
+2
+00:00:02,635 --> 00:00:06,205
+embedded testing part 4 of
+our embedded test series.
+
+3
+00:00:06,205 --> 00:00:09,625
+This is going to go
+over TDD and BDD,
+
+4
+00:00:09,625 --> 00:00:12,890
+test-driven development and
+behavior-driven development.
+
+5
+00:00:12,890 --> 00:00:15,475
+We're going to introduce
+test-driven development
+
+6
+00:00:15,475 --> 00:00:17,650
+and introduce
+behavior-driven development,
+
+7
+00:00:17,650 --> 00:00:18,940
+just give you an overview of
+
+8
+00:00:18,940 --> 00:00:21,650
+these different testing tools.
+
+9
+00:00:22,220 --> 00:00:26,515
+Test-driven development
+is a common paradigm
+
+10
+00:00:26,515 --> 00:00:28,735
+that can be used when
+testing software.
+
+11
+00:00:28,735 --> 00:00:30,760
+The idea is to write
+requirements as
+
+12
+00:00:30,760 --> 00:00:33,425
+test case as part of
+the test process.
+
+13
+00:00:33,425 --> 00:00:35,925
+You start out with a
+set of requirements,
+
+14
+00:00:35,925 --> 00:00:38,340
+you write test case to
+those requirements,
+
+15
+00:00:38,340 --> 00:00:40,495
+you run the test case,
+and the test case
+
+16
+00:00:40,495 --> 00:00:43,645
+obviously fails because you
+haven't written software yet.
+
+17
+00:00:43,645 --> 00:00:46,040
+You start out with
+a set of failing
+
+18
+00:00:46,040 --> 00:00:47,270
+test cases that describe
+
+19
+00:00:47,270 --> 00:00:49,210
+the requirements for
+the application.
+
+20
+00:00:49,210 --> 00:00:52,080
+You then write the
+software and you
+
+21
+00:00:52,080 --> 00:00:53,540
+iterate on writing the software
+
+22
+00:00:53,540 --> 00:00:55,690
+until the test cases
+that you wrote pass.
+
+23
+00:00:55,690 --> 00:00:57,510
+This is a very useful way.
+
+24
+00:00:57,510 --> 00:00:59,660
+It's often used in what's
+called pair programming,
+
+25
+00:00:59,660 --> 00:01:01,700
+where you can have a
+different developer
+
+26
+00:01:01,700 --> 00:01:02,720
+write the test case and the
+
+27
+00:01:02,720 --> 00:01:03,980
+developer that writes the code,
+
+28
+00:01:03,980 --> 00:01:07,770
+and work on the two
+things in parallel.
+
+29
+00:01:08,080 --> 00:01:12,900
+A few pitfalls
+with this approach
+
+30
+00:01:12,900 --> 00:01:14,600
+: Usually it's going to be
+
+31
+00:01:14,600 --> 00:01:15,950
+a developer that's writing
+
+32
+00:01:15,950 --> 00:01:17,690
+the tests for the requirements,
+
+33
+00:01:17,690 --> 00:01:19,310
+and in order for
+the developer to
+
+34
+00:01:19,310 --> 00:01:20,645
+write test for the requirements,
+
+35
+00:01:20,645 --> 00:01:22,810
+they need to understand
+the requirements.
+
+36
+00:01:22,810 --> 00:01:24,140
+But often the requirements
+
+37
+00:01:24,140 --> 00:01:25,655
+aren't coming from
+the developer,
+
+38
+00:01:25,655 --> 00:01:30,215
+so the success of
+this whole paradigm
+
+39
+00:01:30,215 --> 00:01:31,790
+requires that the developer
+
+40
+00:01:31,790 --> 00:01:36,220
+understands and interprets
+the requirements properly.
+
+41
+00:01:36,220 --> 00:01:38,870
+There's a chance that if the
+developer doesn't understand
+
+42
+00:01:38,870 --> 00:01:41,300
+and interpret the
+requirements properly,
+
+43
+00:01:41,300 --> 00:01:43,550
+then both the test and
+the software could be
+
+44
+00:01:43,550 --> 00:01:46,900
+implemented wrong causing
+success in a test case,
+
+45
+00:01:46,900 --> 00:01:49,250
+but ultimately making the
+application not work the
+
+46
+00:01:49,250 --> 00:01:53,850
+way it was designed to work
+from a business perspective.
+
+47
+00:01:53,990 --> 00:01:57,410
+This is where behavior-driven
+development is
+
+48
+00:01:57,410 --> 00:02:00,515
+an interesting idea about
+
+49
+00:02:00,515 --> 00:02:03,080
+how to use test-driven
+development,
+
+50
+00:02:03,080 --> 00:02:05,050
+but in a slightly different way.
+
+51
+00:02:05,050 --> 00:02:07,490
+The different way really
+
+52
+00:02:07,490 --> 00:02:09,620
+has to do with how the
+tests are defined.
+
+53
+00:02:09,620 --> 00:02:12,260
+Rather than having a test
+case that's written in
+
+54
+00:02:12,260 --> 00:02:13,400
+a programming language that
+
+55
+00:02:13,400 --> 00:02:15,945
+only a developer can really
+read and understand,
+
+56
+00:02:15,945 --> 00:02:18,350
+the idea behind behavior-driven
+development is to write
+
+57
+00:02:18,350 --> 00:02:20,060
+a test case in a
+natural language
+
+58
+00:02:20,060 --> 00:02:21,860
+that non-programmers can read.
+
+59
+00:02:21,860 --> 00:02:27,230
+This is often referred to in
+BDD parlance as a scenario.
+
+60
+00:02:27,230 --> 00:02:29,570
+The scenario just
+describes the purpose and
+
+61
+00:02:29,570 --> 00:02:31,700
+the benefit of the
+code that you're
+
+62
+00:02:31,700 --> 00:02:33,950
+implementing for the
+application and doesn't
+
+63
+00:02:33,950 --> 00:02:36,770
+really get into the technical
+details about how it works.
+
+64
+00:02:36,770 --> 00:02:39,350
+There's a special
+Gherkin language syntax
+
+65
+00:02:39,350 --> 00:02:41,440
+that you can use for this.
+
+66
+00:02:41,440 --> 00:02:45,245
+Here's an example of
+the difference between
+
+67
+00:02:45,245 --> 00:02:49,490
+an implementation
+and an interaction
+
+68
+00:02:49,490 --> 00:02:51,200
+that could happen between,
+
+69
+00:02:51,200 --> 00:02:53,075
+for instance, a product manager
+
+70
+00:02:53,075 --> 00:02:54,680
+who is setting requirements for
+
+71
+00:02:54,680 --> 00:02:57,080
+the product and developers
+
+72
+00:02:57,080 --> 00:02:58,550
+that are implementing
+different portions
+
+73
+00:02:58,550 --> 00:03:00,410
+of the development.
+
+74
+00:03:00,410 --> 00:03:03,790
+You can see here the
+product manager saying,
+
+75
+00:03:03,790 --> 00:03:06,500
+we want to encourage new
+users to buy in our shop.
+
+76
+00:03:06,500 --> 00:03:09,445
+We'll offer 10 percent
+discount for the first order,
+
+77
+00:03:09,445 --> 00:03:12,170
+and the developers
+turning this into code.
+
+78
+00:03:12,170 --> 00:03:15,470
+They're thinking about the
+calculate discount function
+
+79
+00:03:15,470 --> 00:03:18,020
+that's going to calculate
+the discount on the order.
+
+80
+00:03:18,020 --> 00:03:20,810
+They're thinking about
+the implementation
+
+81
+00:03:20,810 --> 00:03:23,555
+of the front end,
+
+82
+00:03:23,555 --> 00:03:24,870
+the web UI,
+
+83
+00:03:24,870 --> 00:03:29,155
+that's going to do the search
+and add to cart functions.
+
+84
+00:03:29,155 --> 00:03:33,530
+You can see that this
+part probably requires
+
+85
+00:03:33,530 --> 00:03:36,170
+someone with
+engineering background
+
+86
+00:03:36,170 --> 00:03:38,480
+to really understand
+and make sense of,
+
+87
+00:03:38,480 --> 00:03:43,150
+whereas these requirements
+can be understood by anyone.
+
+88
+00:03:43,150 --> 00:03:46,205
+The idea is to try to
+make the test case
+
+89
+00:03:46,205 --> 00:03:49,790
+more representative of what
+the true requirements are.
+
+90
+00:03:49,790 --> 00:03:52,640
+What if instead of
+thinking like this about
+
+91
+00:03:52,640 --> 00:03:54,680
+the test implementation and
+
+92
+00:03:54,680 --> 00:03:56,800
+the actual code implementation,
+
+93
+00:03:56,800 --> 00:03:59,100
+product manager could
+make the same statement,
+
+94
+00:03:59,100 --> 00:04:03,290
+but then the developers could
+think of the test case and
+
+95
+00:04:03,290 --> 00:04:05,725
+the implementation
+in the sense of just
+
+96
+00:04:05,725 --> 00:04:09,130
+common Given-When-Then
+type of syntax.
+
+97
+00:04:09,130 --> 00:04:11,180
+You could actually write
+a test case that says,
+
+98
+00:04:11,180 --> 00:04:13,040
+given that the user
+hasn't ordered,
+
+99
+00:04:13,040 --> 00:04:16,280
+when the user adds a book
+with whatever the price is,
+
+100
+00:04:16,280 --> 00:04:19,790
+then the shopping cart
+sub-total is whatever.
+
+101
+00:04:21,260 --> 00:04:25,220
+The difference here being
+that the product manager,
+
+102
+00:04:25,220 --> 00:04:27,175
+even if they don't have an
+engineering background,
+
+103
+00:04:27,175 --> 00:04:29,440
+they can look through
+these test cases.
+
+104
+00:04:29,440 --> 00:04:32,425
+If you picture a whole bank
+of test cases like this,
+
+105
+00:04:32,425 --> 00:04:34,820
+the product manager
+could help analyze, "Oh,
+
+106
+00:04:34,820 --> 00:04:37,550
+there's one other requirement
+that I forgot to mention.
+
+107
+00:04:37,550 --> 00:04:40,240
+You need to make sure you
+cover this particular case."
+
+108
+00:04:40,240 --> 00:04:42,800
+They can look for
+gaps like that,
+
+109
+00:04:42,800 --> 00:04:44,030
+but they wouldn't
+be able to do if it
+
+110
+00:04:44,030 --> 00:04:46,410
+was all implemented in code.
+
+111
+00:04:46,460 --> 00:04:48,830
+There are several
+different tools you can
+
+112
+00:04:48,830 --> 00:04:51,125
+use for behavior-driven
+development.
+
+113
+00:04:51,125 --> 00:04:54,020
+If you're using Python
+development environment,
+
+114
+00:04:54,020 --> 00:04:57,935
+there's a tool called behave
+that can be used for this.
+
+115
+00:04:57,935 --> 00:05:00,020
+Ruby programming
+language also has
+
+116
+00:05:00,020 --> 00:05:01,705
+a very popular one
+called Cucumber.
+
+117
+00:05:01,705 --> 00:05:03,530
+You'll probably see a
+lot about Cucumber if
+
+118
+00:05:03,530 --> 00:05:06,790
+you look up behavior-driven
+development paradigms.
+
+119
+00:05:06,790 --> 00:05:09,380
+The snapshot that I have
+
+120
+00:05:09,380 --> 00:05:12,500
+below is an example of a
+behave implementation.
+
+121
+00:05:12,500 --> 00:05:16,535
+This would be a Python
+implementation of BDD.
+
+122
+00:05:16,535 --> 00:05:19,150
+You can see these scenarios,
+
+123
+00:05:19,150 --> 00:05:23,145
+the overview of the tests
+that it's covering,
+
+124
+00:05:23,145 --> 00:05:25,845
+and then a given,
+and then statement.
+
+125
+00:05:25,845 --> 00:05:28,965
+This is really what's
+driving the test case.
+
+126
+00:05:28,965 --> 00:05:30,810
+Given I search for
+a valid account,
+
+127
+00:05:30,810 --> 00:05:33,130
+then I will see account details.
+
+128
+00:05:33,130 --> 00:05:35,210
+How this is actually implemented
+
+129
+00:05:35,210 --> 00:05:37,330
+from a programmer perspective,
+
+130
+00:05:37,330 --> 00:05:39,825
+these given and then steps,
+
+131
+00:05:39,825 --> 00:05:45,270
+you can map the English strings
+possibly with variables.
+
+132
+00:05:45,270 --> 00:05:47,010
+You can get these more complex.
+
+133
+00:05:47,010 --> 00:05:49,910
+You can map these directly
+into step functions that are
+
+134
+00:05:49,910 --> 00:05:51,290
+implemented in Python and that
+
+135
+00:05:51,290 --> 00:05:52,945
+are specific to the application.
+
+136
+00:05:52,945 --> 00:05:55,335
+But the idea is,
+from a high level,
+
+137
+00:05:55,335 --> 00:05:57,750
+these can be described in
+
+138
+00:05:57,750 --> 00:06:01,180
+text like this that
+anyone can understand.

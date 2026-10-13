@@ -1,0 +1,121 @@
+This video is a demo of the
+second part of Assignment 6, where you're going to bring up your Yocto environment using the socket server
+application that we've been developing from Assignment
+5 and Assignment 6. You're going to take the
+implementation that you had implemented previously
+and run it in Builder IT, and you're going to build and
+run that in Yocto instead. You'll start with a GitHub
+Classroom link that'll create an empty
+repository for you. That's going to be the repository
+you'll use to check in the Yocto content that's
+associated with this assignment. The base content for
+this repo is going to be based on Yocto assignments base, this public repo, where
+we'll have the base content like the starter code essentially for your
+Yocto implementation. The repository setup's going
+to look something like this. You'll have a classroom Assignment 6 repository
+that'll be created for you through GitHub Classroom
+and you'll pull in the content from Yocto
+assignment base as part of the startup and then
+the same way with Builder IT that we referenced our Assignment 3 repository, we'll do the same thing
+with Assignment 6, where the Yocto repository
+is going to reference assignment 3 and then the assignment 3
+repository is set up with the content from aesd
+assignments base as a part of your part
+1 implementation. You'll initialize the
+Assignment 6 repo with the Yocto assignments base and follow these instructions
+to set that up for you. First, make sure that
+your virtual machine or your build host system has all the host packages
+required based on the current requirements for the Yocto setup guide
+and then you're going to add Yocto poky as a Git submodule in the root
+of your project repository, similar to what we
+did with Builder IT. You'll want to use this as
+the source and refer to the instructions in
+the assignment for the latest branch that
+we're currently using for poky and once you add that, once you check out the
+appropriate commit, make sure you go to the root of your project repository and
+say git add and git commit. That'll save the
+appropriate revision of your sub-module so that you're ready to use it when
+you run your first build. What you'll see from the
+example code is an aesd assignments recipe
+that's partially written for you in
+the Meta aesd recipes aesd subfolder and you will need to modify
+this recipe to build your Assignment 5 and
+6 aesd socket source. You'll see the to do commands or to do instructions
+inside this file. But you're really
+going to be setting up your source revision to point to the latest version of your Assignment 3
+repository that contains all the
+necessary changes to implement this assignment. You'll need to make
+sure that you also add your start script as well as cross-compiling
+your application. There's also a core
+image defined, and you'll want to add your
+package to that image, your aesd assignments package. Then the build script
+is going to build your combined image and
+the run QEMU script is going to run the image the same way it would have
+run your Builder IT image. You can look at the details of the script to see what
+it's doing under the hood. I think the base
+image is going to have everything
+you need in here, but just to let you know
+what's going to happen here the SSH support is going to be added through a core image extra
+installed OpenSSH. This means that your
+base image is going to have SSH already
+installed for you, so you'll be able to SSH into the image same as you could with your
+Builder IT instance. Then when you are ready
+to run the example, you should be able to run
+the full test script, and that should pass the same as it would with
+your Builder IT assignment. Your socket test applicant or your socket application
+should be started automatically when
+you start QEMU, that should be part of
+your startup scripts and that full test script
+should complete successfully. There's some notes in
+here about SSH pass, which is required
+for the test script. Make sure that this
+is installed in your Ubuntu host system. Then tag the assignment once
+it's complete and that way, we'll know the commit where this is working on
+your Assignment 6 repo. Here's a demo of
+what you should see when you're running
+your assignment. If we're in the
+Yocto repository, we should have our build script
+here and if we run Build, you should see it go through
+the Build steps and again, this will be much faster
+after you complete it once. This will take a very long
+time to build the first time, so make sure that you get
+it kicked off overnight. Also, make sure that you've
+set up your SSH key for access using the instructions
+in the class video, which talk about using
+SSH agent because this is going to make sure that
+it doesn't require you to be there to type
+in your SSH password. That way you can just
+kick it off overnight, let it run and it should finish and be ready for you to use the next day and then the
+next builds will be faster. It will only build whatever
+it needs to build. Once the build script
+is successful, you should be able to use
+the run QEMU script the same way you would have
+used that with Builder IT. The commands are going to be different and you can look at the detail inside the script
+to see how it started. But same type of output
+you'll see booting up the kernel and bringing you
+into a command line prompt. The same as you would get with the build that you're
+doing for Builder IT. Then you can use Control Q
+again to exit out of QEMU. That's an example of how you can run your program interactively. If you use the full test script, this should do
+everything for you the same way did
+with Builder IT, where it'll build
+your application, then run the application in QEMU and kick-off your socket test script
+for assignment 6. It's going to run against, rather than running against
+your native instance, it's going to run against
+the instance into QEMU. Here you see a booting into QEMU and now it's trying to log
+in to the SSH instance. Eventually the SSH
+login is going to succeed and if you give
+it a little more time, it should kick off your test
+scripts and you'll see, if you had prints in
+your socket application, you'd see them coming out now if they're are Sub to
+print the terminal. You can see the
+timestamp here that we added in Assignment 6. Then eventually the same
+print that you would've seen running into
+your native instance, you're going to see
+that printing out from your Yocto
+implementation as well. This is going to be running that socket test script against the aesd socket implementation that you've got running
+inside your server. It's going to validate
+the same thing that would from the
+native application. Plus it's going to
+validate the timestamps. Then you should see this message about
+complete with success, assuming everything worked from your Yocto implementation and that should be it for
+Assignment 6 part 2.

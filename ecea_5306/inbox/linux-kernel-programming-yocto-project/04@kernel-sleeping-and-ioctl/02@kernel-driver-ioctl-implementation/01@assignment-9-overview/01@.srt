@@ -1,0 +1,1624 @@
+1
+00:00:00,080 --> 00:00:03,690
+In this video, I'm going to
+go over the content that
+
+2
+00:00:03,690 --> 00:00:04,980
+we'll need to cover
+in order for you
+
+3
+00:00:04,980 --> 00:00:07,275
+to complete Assignment 9.
+
+4
+00:00:07,275 --> 00:00:09,690
+We're going to understand
+how to implement
+
+5
+00:00:09,690 --> 00:00:12,390
+the ioctl portions that
+we'll be adding to
+
+6
+00:00:12,390 --> 00:00:17,775
+our AESD server application
+
+7
+00:00:17,775 --> 00:00:21,970
+and our AESD char device
+with Assignment 9.
+
+8
+00:00:22,370 --> 00:00:24,390
+Part of what we're
+going to be using for
+
+9
+00:00:24,390 --> 00:00:26,640
+Assignment 9 is
+an implementation
+
+10
+00:00:26,640 --> 00:00:31,185
+that leverages the f_pos
+member of the file structure.
+
+11
+00:00:31,185 --> 00:00:33,860
+The f_pos member is
+going to reference
+
+12
+00:00:33,860 --> 00:00:36,230
+the current reading or
+writing position of
+
+13
+00:00:36,230 --> 00:00:39,860
+the file structure that
+
+14
+00:00:39,860 --> 00:00:42,935
+we're using to represent
+our character device.
+
+15
+00:00:42,935 --> 00:00:45,185
+That's a 64-bit signed offset
+
+16
+00:00:45,185 --> 00:00:48,360
+representing a byte
+offset in the file.
+
+17
+00:00:49,430 --> 00:00:52,910
+The f_pos member is going
+to be passed as an input
+
+18
+00:00:52,910 --> 00:00:56,270
+or an output argument
+to read write.
+
+19
+00:00:56,270 --> 00:00:58,850
+The input output is going to be
+
+20
+00:00:58,850 --> 00:01:01,520
+referenced through a
+pointer and you'll be
+
+21
+00:01:01,520 --> 00:01:02,660
+able to access that pointer
+
+22
+00:01:02,660 --> 00:01:04,010
+for read and you'll
+also be able to
+
+23
+00:01:04,010 --> 00:01:07,530
+manipulate the content
+using the pointer.
+
+24
+00:01:07,600 --> 00:01:09,620
+One of the things you'll notice,
+
+25
+00:01:09,620 --> 00:01:12,020
+if you look at the
+f_pos member from
+
+26
+00:01:12,020 --> 00:01:16,735
+our existing Assignment 8
+and earlier implementations,
+
+27
+00:01:16,735 --> 00:01:18,380
+is typically the way we're
+
+28
+00:01:18,380 --> 00:01:20,630
+writing to the AESD char driver,
+
+29
+00:01:20,630 --> 00:01:23,255
+we're doing something like
+just echoing a string
+
+30
+00:01:23,255 --> 00:01:28,470
+and writing it directly
+out to the device.
+
+31
+00:01:28,470 --> 00:01:29,690
+When you do that,
+
+32
+00:01:29,690 --> 00:01:30,740
+what you'd notice is that
+
+33
+00:01:30,740 --> 00:01:34,300
+the f_pos value is
+always going to be zero.
+
+34
+00:01:34,300 --> 00:01:37,010
+The reason that is,
+is because we are
+
+35
+00:01:37,010 --> 00:01:38,900
+doing an override of
+the file so every time
+
+36
+00:01:38,900 --> 00:01:43,475
+we use the greater than
+symbol for redirect,
+
+37
+00:01:43,475 --> 00:01:44,810
+we're going to be
+starting at offset
+
+38
+00:01:44,810 --> 00:01:47,125
+zero and overriding the file.
+
+39
+00:01:47,125 --> 00:01:49,010
+That's why you might have
+noticed already that
+
+40
+00:01:49,010 --> 00:01:50,480
+the f_pos member is
+always going to be
+
+41
+00:01:50,480 --> 00:01:54,510
+zero with our previous
+Assignment 8 implementation.
+
+42
+00:01:56,530 --> 00:01:59,980
+You'll also notice that
+we mentioned before that
+
+43
+00:01:59,980 --> 00:02:01,600
+the file position member is
+
+44
+00:02:01,600 --> 00:02:04,000
+included in the file structure.
+
+45
+00:02:04,000 --> 00:02:06,925
+In the case of the read
+and write functions,
+
+46
+00:02:06,925 --> 00:02:08,320
+we essentially have
+two different ways
+
+47
+00:02:08,320 --> 00:02:10,060
+to access the file offset.
+
+48
+00:02:10,060 --> 00:02:13,795
+One is through the struct
+file pointer that's passed,
+
+49
+00:02:13,795 --> 00:02:17,580
+and one is through
+the pointer to f_pos.
+
+50
+00:02:17,580 --> 00:02:20,805
+Why would you include
+it in two places?
+
+51
+00:02:20,805 --> 00:02:25,980
+Well, it turns out that
+the implementation allows
+
+52
+00:02:25,980 --> 00:02:30,400
+the write or read
+function to manipulate
+
+53
+00:02:30,400 --> 00:02:32,200
+the f_pos that's passed by
+
+54
+00:02:32,200 --> 00:02:35,140
+reference here as
+the last argument.
+
+55
+00:02:35,140 --> 00:02:36,850
+The idea is you should use
+
+56
+00:02:36,850 --> 00:02:39,490
+the file pointer offset
+if you don't intend to
+
+57
+00:02:39,490 --> 00:02:41,080
+manipulate and you want to see
+
+58
+00:02:41,080 --> 00:02:43,470
+the value that was passed
+into the function,
+
+59
+00:02:43,470 --> 00:02:44,530
+so in other words,
+
+60
+00:02:44,530 --> 00:02:46,810
+the starting position
+of the file pointer.
+
+61
+00:02:46,810 --> 00:02:48,340
+But if you want to
+manipulate the file
+
+62
+00:02:48,340 --> 00:02:49,630
+pointer and read or write,
+
+63
+00:02:49,630 --> 00:02:51,370
+you can do that and
+when you do that,
+
+64
+00:02:51,370 --> 00:02:53,260
+you should just modify the value
+
+65
+00:02:53,260 --> 00:02:55,730
+that was passed
+here by reference.
+
+66
+00:02:56,840 --> 00:03:00,190
+File position f_pos is modified
+
+67
+00:03:00,190 --> 00:03:03,700
+by the shared driver code
+based on read and write.
+
+68
+00:03:03,700 --> 00:03:06,490
+The kernel is going to
+handle updating that for us,
+
+69
+00:03:06,490 --> 00:03:10,460
+or we're going to update it
+through our llseek function.
+
+70
+00:03:11,870 --> 00:03:14,595
+Part of what we're going
+to do in Assignment 9
+
+71
+00:03:14,595 --> 00:03:18,070
+is implement the
+llseek function.
+
+72
+00:03:20,810 --> 00:03:23,270
+This is the section from
+the book that talks
+
+73
+00:03:23,270 --> 00:03:24,770
+about the f_pos member in
+
+74
+00:03:24,770 --> 00:03:28,460
+the file structure
+saying that in general,
+
+75
+00:03:28,460 --> 00:03:30,510
+driver functions
+won't modify this.
+
+76
+00:03:30,510 --> 00:03:32,680
+But the one exception
+is the llseek method,
+
+77
+00:03:32,680 --> 00:03:35,525
+which is what we're going to
+implement in Assignment 9.
+
+78
+00:03:35,525 --> 00:03:38,630
+In addition to modifying
+
+79
+00:03:38,630 --> 00:03:44,525
+file pointer f_pos in
+the llseek method,
+
+80
+00:03:44,525 --> 00:03:47,000
+we're also going to
+modify it in ioctl,
+
+81
+00:03:47,000 --> 00:03:49,295
+and it wouldn't typically
+be done this way.
+
+82
+00:03:49,295 --> 00:03:50,900
+We're just going to do
+it this way so that we
+
+83
+00:03:50,900 --> 00:03:53,045
+can have an easy way to
+
+84
+00:03:53,045 --> 00:03:58,320
+test the ioctl implementation
+of our driver as well.
+
+85
+00:03:58,780 --> 00:04:00,890
+Looking at how we're going to be
+
+86
+00:04:00,890 --> 00:04:03,800
+interacting from user space,
+
+87
+00:04:03,800 --> 00:04:08,020
+the lseek function that
+
+88
+00:04:08,020 --> 00:04:11,935
+you might have already
+used from user space,
+
+89
+00:04:11,935 --> 00:04:16,670
+we definitely covered from
+the first part of the course.
+
+90
+00:04:16,670 --> 00:04:19,180
+There are a few different
+options here where you can
+
+91
+00:04:19,180 --> 00:04:25,360
+specify what the function
+refers to as the whence.
+
+92
+00:04:25,360 --> 00:04:27,280
+How are we going to
+use the offset of
+
+93
+00:04:27,280 --> 00:04:30,440
+llseek to determine where we
+want to seek to in the file?
+
+94
+00:04:30,440 --> 00:04:34,690
+There's SEEK_SET that just sets
+
+95
+00:04:34,690 --> 00:04:36,340
+to a specific
+location in the file
+
+96
+00:04:36,340 --> 00:04:38,575
+where the offset is
+given as a byte offset.
+
+97
+00:04:38,575 --> 00:04:40,535
+There's SEEK_CUR that
+says take wherever
+
+98
+00:04:40,535 --> 00:04:43,000
+the current location is and
+
+99
+00:04:43,000 --> 00:04:44,890
+seek relative to
+that in a plus or
+
+100
+00:04:44,890 --> 00:04:47,970
+a minus number of bytes.
+
+101
+00:04:47,970 --> 00:04:50,660
+Then there's SEEK_END that
+says go to the end of
+
+102
+00:04:50,660 --> 00:04:53,135
+the file and then
+seek from the end,
+
+103
+00:04:53,135 --> 00:04:55,560
+either backwards or forwards.
+
+104
+00:04:56,270 --> 00:04:59,660
+The implementation of this
+
+105
+00:04:59,660 --> 00:05:02,690
+in kernel space is going to
+be through the llseek method.
+
+106
+00:05:02,690 --> 00:05:04,370
+There's two different system
+
+107
+00:05:04,370 --> 00:05:05,990
+calls that occur
+from user space,
+
+108
+00:05:05,990 --> 00:05:10,520
+there's lseek and llseek.
+
+109
+00:05:10,520 --> 00:05:13,670
+The reason for these two
+different ones existing
+
+110
+00:05:13,670 --> 00:05:16,850
+really has to do with
+historical reasons and whether
+
+111
+00:05:16,850 --> 00:05:20,480
+or not 64 versus 32-bit
+
+112
+00:05:20,480 --> 00:05:22,550
+architectures and
+whether or not you're
+
+113
+00:05:22,550 --> 00:05:26,400
+guaranteed to have support
+for a long, long offset.
+
+114
+00:05:27,880 --> 00:05:30,650
+The part that we're going
+to be implementing in
+
+115
+00:05:30,650 --> 00:05:34,140
+kernel space is this
+llseek pointer.
+
+116
+00:05:36,330 --> 00:05:39,460
+One of the things
+that was mentioned in
+
+117
+00:05:39,460 --> 00:05:42,220
+the screenshot I showed
+
+118
+00:05:42,220 --> 00:05:44,980
+previously from the Linux
+device driver book.
+
+119
+00:05:44,980 --> 00:05:46,480
+If the llseek method is
+
+120
+00:05:46,480 --> 00:05:47,950
+missing from the
+driver operations,
+
+121
+00:05:47,950 --> 00:05:50,200
+then the default implementation
+is just going to seek
+
+122
+00:05:50,200 --> 00:05:53,690
+by modifying the file position.
+
+123
+00:05:54,120 --> 00:05:58,570
+Another thing that the
+Linux device drivers
+
+124
+00:05:58,570 --> 00:06:00,310
+book notes for us is that for
+
+125
+00:06:00,310 --> 00:06:02,500
+the llseek system call
+to work correctly,
+
+126
+00:06:02,500 --> 00:06:04,780
+read and write methods must
+cooperate by using and
+
+127
+00:06:04,780 --> 00:06:07,135
+updating offset item they
+receive as an argument.
+
+128
+00:06:07,135 --> 00:06:09,190
+That is that last
+parameter that we
+
+129
+00:06:09,190 --> 00:06:12,170
+showed before that gets
+passed by reference.
+
+130
+00:06:13,080 --> 00:06:19,675
+When we don't implement
+the llseek method,
+
+131
+00:06:19,675 --> 00:06:22,465
+then the kernel is going
+to do its own seek,
+
+132
+00:06:22,465 --> 00:06:26,710
+and it performs this seek
+using a function like this.
+
+133
+00:06:26,710 --> 00:06:28,510
+This is a value that
+I pulled out of
+
+134
+00:06:28,510 --> 00:06:33,055
+the kernel source that
+shows a fixed size llseek.
+
+135
+00:06:33,055 --> 00:06:36,670
+It's using the size
+
+136
+00:06:36,670 --> 00:06:39,310
+of the file to determine
+how to manipulate
+
+137
+00:06:39,310 --> 00:06:43,990
+the file position
+pointer relative
+
+138
+00:06:43,990 --> 00:06:46,150
+to whatever offset
+you've specified and
+
+139
+00:06:46,150 --> 00:06:47,590
+the whence value that you're
+
+140
+00:06:47,590 --> 00:06:50,350
+specifying from
+userspace with llseek.
+
+141
+00:06:50,350 --> 00:06:54,460
+There's several kernel provided
+
+142
+00:06:54,460 --> 00:06:56,320
+wrappers around
+llseek that you can
+
+143
+00:06:56,320 --> 00:06:58,150
+call from your own methods.
+
+144
+00:06:58,150 --> 00:07:00,250
+You could leverage
+these if you like,
+
+145
+00:07:00,250 --> 00:07:01,360
+if you don't want
+to implement your
+
+146
+00:07:01,360 --> 00:07:03,325
+own seek method from scratch.
+
+147
+00:07:03,325 --> 00:07:05,440
+This particular one, you specify
+
+148
+00:07:05,440 --> 00:07:07,960
+the total size of the file
+that you wanted to use.
+
+149
+00:07:07,960 --> 00:07:11,170
+You can just pass all these
+seek arguments directly into
+
+150
+00:07:11,170 --> 00:07:12,970
+the kernel and it will
+update the file position
+
+151
+00:07:12,970 --> 00:07:15,640
+for you as long as you
+just provide the size.
+
+152
+00:07:15,640 --> 00:07:19,670
+In our case, what do you think
+we would use for the size?
+
+153
+00:07:20,520 --> 00:07:23,920
+Since we're
+essentially simulating
+
+154
+00:07:23,920 --> 00:07:24,940
+a file that's based out of
+
+155
+00:07:24,940 --> 00:07:27,700
+the complete content of
+our circular buffer from
+
+156
+00:07:27,700 --> 00:07:30,865
+Assignment 7 through 9.
+
+157
+00:07:30,865 --> 00:07:33,070
+For size we can just
+use the total size of
+
+158
+00:07:33,070 --> 00:07:34,210
+all content that's currently
+
+159
+00:07:34,210 --> 00:07:36,710
+written to the circular buffer.
+
+160
+00:07:37,530 --> 00:07:39,760
+In summary, you've
+got a few different
+
+161
+00:07:39,760 --> 00:07:40,810
+options about how
+you're going to
+
+162
+00:07:40,810 --> 00:07:43,870
+implement llseek in the
+driver in Assignment 9.
+
+163
+00:07:43,870 --> 00:07:45,850
+One is you can leave llseek
+
+164
+00:07:45,850 --> 00:07:48,035
+null and use the default llseek.
+
+165
+00:07:48,035 --> 00:07:50,340
+But in order to
+really support this,
+
+166
+00:07:50,340 --> 00:07:53,100
+you'd have to support
+seek and write,
+
+167
+00:07:53,100 --> 00:07:57,015
+and not just assume that
+every write appends.
+
+168
+00:07:57,015 --> 00:07:59,130
+This is not something that
+
+169
+00:07:59,130 --> 00:08:00,960
+we've had as a
+requirement in the past,
+
+170
+00:08:00,960 --> 00:08:03,810
+and I haven't tried to
+implement it this way,
+
+171
+00:08:03,810 --> 00:08:06,615
+so I'm not sure what
+pitfalls you'd have here.
+
+172
+00:08:06,615 --> 00:08:10,580
+This would be a more challenging
+way to implement it.
+
+173
+00:08:10,580 --> 00:08:13,180
+The second way you could
+do it is you can add
+
+174
+00:08:13,180 --> 00:08:16,585
+your own llseek function
+with locking and logging,
+
+175
+00:08:16,585 --> 00:08:19,870
+but use the fixed size llseek
+
+176
+00:08:19,870 --> 00:08:21,400
+that I showed before
+for the logic
+
+177
+00:08:21,400 --> 00:08:23,890
+of actually manipulating
+the file pointer.
+
+178
+00:08:23,890 --> 00:08:26,080
+The third is you
+can just implement
+
+179
+00:08:26,080 --> 00:08:28,570
+your own llseek seek
+function on your own,
+
+180
+00:08:28,570 --> 00:08:30,730
+completely separate from
+anything provided by
+
+181
+00:08:30,730 --> 00:08:34,990
+the kernel and handle
+each one of the cases.
+
+182
+00:08:34,990 --> 00:08:37,915
+I would probably use option 2.
+
+183
+00:08:37,915 --> 00:08:39,760
+Option 2 or option 3 would work
+
+184
+00:08:39,760 --> 00:08:42,680
+though, whichever you prefer.
+
+185
+00:08:44,490 --> 00:08:47,380
+The other thing that
+the book mentioned is
+
+186
+00:08:47,380 --> 00:08:49,780
+that for the llseek system
+call to work correctly,
+
+187
+00:08:49,780 --> 00:08:50,770
+the read and write methods quiz
+
+188
+00:08:50,770 --> 00:08:52,060
+cooperate by using an update in
+
+189
+00:08:52,060 --> 00:08:55,045
+the reader offset item they
+receive as an argument.
+
+190
+00:08:55,045 --> 00:08:57,670
+That means that the read
+function needs to set
+
+191
+00:08:57,670 --> 00:08:59,200
+the file position
+to the file system
+
+192
+00:08:59,200 --> 00:09:01,030
+plus whatever the
+return count is,
+
+193
+00:09:01,030 --> 00:09:02,260
+so the return count is
+
+194
+00:09:02,260 --> 00:09:03,925
+going to be the
+number of bytes read.
+
+195
+00:09:03,925 --> 00:09:07,675
+The write function needs to
+set it to the same thing,
+
+196
+00:09:07,675 --> 00:09:09,730
+based on the number
+of bytes that you
+
+197
+00:09:09,730 --> 00:09:13,250
+actually wrote from
+the write function.
+
+198
+00:09:14,130 --> 00:09:18,970
+Then you're also going
+to implement ioctl
+
+199
+00:09:18,970 --> 00:09:22,600
+that will be a way
+that you communicate
+
+200
+00:09:22,600 --> 00:09:24,460
+from your ASD socket application
+
+201
+00:09:24,460 --> 00:09:26,275
+to your character driver.
+
+202
+00:09:26,275 --> 00:09:30,970
+I've got a stub for
+you that you'll see in
+
+203
+00:09:30,970 --> 00:09:33,460
+the assignment base
+repository that you'll
+
+204
+00:09:33,460 --> 00:09:34,960
+pull in as part of the beginning
+
+205
+00:09:34,960 --> 00:09:36,505
+content for Assignment 9,
+
+206
+00:09:36,505 --> 00:09:38,380
+and this is just going
+to define some of
+
+207
+00:09:38,380 --> 00:09:40,090
+the components that you'll share
+
+208
+00:09:40,090 --> 00:09:42,920
+between the two
+different applications.
+
+209
+00:09:44,040 --> 00:09:47,305
+We've got a magic
+number already defined.
+
+210
+00:09:47,305 --> 00:09:52,820
+We've got a iocseekto command
+
+211
+00:09:52,820 --> 00:09:55,080
+already defined for the ioctl
+
+212
+00:09:55,080 --> 00:09:58,215
+and a sequence number
+we've already defined,
+
+213
+00:09:58,215 --> 00:10:00,600
+and then a structure
+reference for the structure
+
+214
+00:10:00,600 --> 00:10:03,300
+that we're going to pass
+in as part of the ioctl.
+
+215
+00:10:03,300 --> 00:10:05,340
+Here's the structure
+that we'll pass
+
+216
+00:10:05,340 --> 00:10:07,190
+in as part of the ioctl.
+
+217
+00:10:07,190 --> 00:10:10,390
+We'll tell it what command
+we want to seek into and
+
+218
+00:10:10,390 --> 00:10:11,920
+then the byte offset inside
+
+219
+00:10:11,920 --> 00:10:14,450
+that command we'll
+want to seek into.
+
+220
+00:10:17,640 --> 00:10:20,665
+Then on the user space side,
+
+221
+00:10:20,665 --> 00:10:23,710
+you're going to need a way to
+
+222
+00:10:23,710 --> 00:10:25,210
+invoke this ioctl based on
+
+223
+00:10:25,210 --> 00:10:27,890
+when you get a seek
+command from the driver.
+
+224
+00:10:28,050 --> 00:10:30,670
+You'll include that aesd
+
+225
+00:10:30,670 --> 00:10:32,080
+ioctl.h file that you share
+
+226
+00:10:32,080 --> 00:10:33,820
+with the driver implementation,
+
+227
+00:10:33,820 --> 00:10:36,340
+and then you'll use
+the ioctl command
+
+228
+00:10:36,340 --> 00:10:38,995
+with the file descriptor
+representing the driver,
+
+229
+00:10:38,995 --> 00:10:41,140
+so that the device
+driver endpoint that
+
+230
+00:10:41,140 --> 00:10:44,080
+you're opening and using
+for write commands.
+
+231
+00:10:44,080 --> 00:10:46,555
+You'll also use that
+now for an ioctl.
+
+232
+00:10:46,555 --> 00:10:48,970
+You'll use that
+aesdseekto structure.
+
+233
+00:10:48,970 --> 00:10:50,950
+You'll fill in the write
+command you want to seek to,
+
+234
+00:10:50,950 --> 00:10:52,600
+you'll fill in the offset
+you want to seek to,
+
+235
+00:10:52,600 --> 00:10:54,280
+and then you'll
+just pass that into
+
+236
+00:10:54,280 --> 00:10:57,620
+the driver through ioctl.
+
+237
+00:10:58,440 --> 00:11:01,630
+Here's the signature
+for the ioctl command.
+
+238
+00:11:01,630 --> 00:11:04,645
+You can see that there's a
+file descriptor and then
+
+239
+00:11:04,645 --> 00:11:08,380
+request and the
+varargs argument,
+
+240
+00:11:08,380 --> 00:11:10,210
+but the varargs we're
+going to provide is
+
+241
+00:11:10,210 --> 00:11:11,860
+just the one address of
+
+242
+00:11:11,860 --> 00:11:13,400
+the seek to structure
+
+243
+00:11:13,400 --> 00:11:15,660
+we're going to pass
+into our driver.
+
+244
+00:11:17,400 --> 00:11:20,605
+One question you
+might have is, okay,
+
+245
+00:11:20,605 --> 00:11:22,390
+how do I get a file
+descriptor that I should
+
+246
+00:11:22,390 --> 00:11:24,745
+use for ioctl because I'm
+
+247
+00:11:24,745 --> 00:11:27,235
+currently manipulating based on
+
+248
+00:11:27,235 --> 00:11:32,200
+standard IO file pointers
+when I write to the driver,
+
+249
+00:11:32,200 --> 00:11:35,570
+but I noticed that
+I needed int FD.
+
+250
+00:11:35,730 --> 00:11:38,920
+The answer is that
+you can use the file
+
+251
+00:11:38,920 --> 00:11:40,690
+no function to convert from
+
+252
+00:11:40,690 --> 00:11:43,000
+a file pointer that
+you'd use, for instance,
+
+253
+00:11:43,000 --> 00:11:45,850
+if you're opening a
+file stream to access
+
+254
+00:11:45,850 --> 00:11:48,250
+your driver and the
+file descriptor
+
+255
+00:11:48,250 --> 00:11:51,980
+FD that you need to interact
+with through ioctl.
+
+256
+00:11:53,040 --> 00:11:56,065
+Going back to the
+driver implementation,
+
+257
+00:11:56,065 --> 00:11:59,050
+when you send that ioctl
+through to the driver
+
+258
+00:11:59,050 --> 00:12:02,990
+from your ASD
+socket application.
+
+259
+00:12:03,030 --> 00:12:06,190
+Your ioctl handler in
+
+260
+00:12:06,190 --> 00:12:07,270
+your driver function is
+
+261
+00:12:07,270 --> 00:12:08,710
+going to look
+something like this.
+
+262
+00:12:08,710 --> 00:12:10,570
+You'll have a case that handles
+
+263
+00:12:10,570 --> 00:12:15,970
+your ASD char IOC seek-to
+command and you'll be able
+
+264
+00:12:15,970 --> 00:12:19,300
+to receive that
+seek-to structure from
+
+265
+00:12:19,300 --> 00:12:24,860
+the value provided
+in user space.
+
+266
+00:12:25,770 --> 00:12:28,660
+Then you'll be
+able to handle the
+
+267
+00:12:28,660 --> 00:12:31,150
+adjusting your file
+offset based on whatever
+
+268
+00:12:31,150 --> 00:12:32,440
+the write command value was in
+
+269
+00:12:32,440 --> 00:12:35,500
+the write command offset was and
+
+270
+00:12:35,500 --> 00:12:37,510
+so copy from user will
+be the way that you get
+
+271
+00:12:37,510 --> 00:12:41,150
+access to that structure
+from userspace.
+
+272
+00:12:41,310 --> 00:12:43,960
+In terms of what the adjust file
+
+273
+00:12:43,960 --> 00:12:45,865
+offset command could look like,
+
+274
+00:12:45,865 --> 00:12:49,675
+here's a declaration
+that you can use,
+
+275
+00:12:49,675 --> 00:12:51,310
+doesn't have to be
+this way of course,
+
+276
+00:12:51,310 --> 00:12:54,025
+but this is just a suggestion
+about what you could do
+
+277
+00:12:54,025 --> 00:12:57,640
+in order to adjust the
+file offset from an ioctl.
+
+278
+00:12:57,640 --> 00:13:00,220
+You'll want to look at
+the write command value
+
+279
+00:13:00,220 --> 00:13:01,960
+and the write command
+offset value,
+
+280
+00:13:01,960 --> 00:13:04,360
+calculate the start offset into
+
+281
+00:13:04,360 --> 00:13:07,390
+the write command that
+
+282
+00:13:07,390 --> 00:13:09,715
+you need to adjust
+the file offset into,
+
+283
+00:13:09,715 --> 00:13:14,350
+and then add the
+write command offset.
+
+284
+00:13:14,350 --> 00:13:16,240
+You're going to look
+at the circular buffer
+
+285
+00:13:16,240 --> 00:13:17,890
+as a long string of bytes for
+
+286
+00:13:17,890 --> 00:13:20,185
+every single element
+and you're going to
+
+287
+00:13:20,185 --> 00:13:23,335
+figure out what's the byte
+offset for write command.
+
+288
+00:13:23,335 --> 00:13:25,300
+You're going to add in
+the additional offset for
+
+289
+00:13:25,300 --> 00:13:27,265
+the right command offset
+and then you're going to
+
+290
+00:13:27,265 --> 00:13:31,900
+update that byte count into
+
+291
+00:13:31,900 --> 00:13:34,495
+the file pointer f_pos
+
+292
+00:13:34,495 --> 00:13:38,420
+as a part of your
+ioctl manipulation.
+
+293
+00:13:41,130 --> 00:13:43,660
+When I talk about checking for
+
+294
+00:13:43,660 --> 00:13:46,495
+valid right command and
+write command offset values,
+
+295
+00:13:46,495 --> 00:13:49,090
+when would the
+values being valid?
+
+296
+00:13:49,090 --> 00:13:51,685
+If you specify the command
+that you hadn't written yet,
+
+297
+00:13:51,685 --> 00:13:53,695
+that would be a case
+that you'd want to
+
+298
+00:13:53,695 --> 00:13:55,675
+handle in terms of validation.
+
+299
+00:13:55,675 --> 00:13:57,520
+If you've specified an
+outer range command,
+
+300
+00:13:57,520 --> 00:13:59,290
+so we're only
+buffering 10 commands.
+
+301
+00:13:59,290 --> 00:14:00,745
+If you specified command 11,
+
+302
+00:14:00,745 --> 00:14:01,810
+that would be something
+that would be out
+
+303
+00:14:01,810 --> 00:14:03,550
+of range and invalid.
+
+304
+00:14:03,550 --> 00:14:06,850
+Or if you said the
+write command offset,
+
+305
+00:14:06,850 --> 00:14:09,430
+the offset inside
+the write command
+
+306
+00:14:09,430 --> 00:14:11,215
+that you want to index into.
+
+307
+00:14:11,215 --> 00:14:13,195
+If that was bigger than
+the size of the command,
+
+308
+00:14:13,195 --> 00:14:16,550
+then that would also be
+in an invalid value.
+
+309
+00:14:17,940 --> 00:14:19,630
+You're going to calculate
+
+310
+00:14:19,630 --> 00:14:21,805
+the offset of the write command.
+
+311
+00:14:21,805 --> 00:14:23,800
+Add the length of
+each write between
+
+312
+00:14:23,800 --> 00:14:26,590
+the output pointer
+and write command,
+
+313
+00:14:26,590 --> 00:14:28,870
+and then add that write
+command offset to give you
+
+314
+00:14:28,870 --> 00:14:34,550
+the total final position
+inside the circular buffer.
+
+315
+00:14:35,670 --> 00:14:38,170
+In order to test
+the functionality
+
+316
+00:14:38,170 --> 00:14:39,400
+and validate the functionality
+
+317
+00:14:39,400 --> 00:14:42,565
+of your driver and
+socket test application,
+
+318
+00:14:42,565 --> 00:14:46,330
+there are new scripts
+that have modified
+
+319
+00:14:46,330 --> 00:14:48,370
+logic that should
+continue past with
+
+320
+00:14:48,370 --> 00:14:50,845
+all the changes in
+the assignment.
+
+321
+00:14:50,845 --> 00:14:52,060
+You can find those under
+
+322
+00:14:52,060 --> 00:14:56,065
+the assignment test
+repo in Assignment 9,
+
+323
+00:14:56,065 --> 00:14:59,875
+driver test and socket
+test directories.
+
+324
+00:14:59,875 --> 00:15:02,740
+What I'd recommend doing is
+
+325
+00:15:02,740 --> 00:15:04,330
+similar to what you've probably
+
+326
+00:15:04,330 --> 00:15:06,040
+done with Assignment 8 already.
+
+327
+00:15:06,040 --> 00:15:08,275
+Get it building and
+running natively,
+
+328
+00:15:08,275 --> 00:15:10,120
+test these components
+individually
+
+329
+00:15:10,120 --> 00:15:11,200
+and make sure that everything's
+
+330
+00:15:11,200 --> 00:15:14,695
+working on your
+Ubuntu installation
+
+331
+00:15:14,695 --> 00:15:16,210
+and then go through the build,
+
+332
+00:15:16,210 --> 00:15:22,225
+pull those all into your
+device or your QMU instance,
+
+333
+00:15:22,225 --> 00:15:24,560
+and run through QMU.
+
+334
+00:15:27,450 --> 00:15:31,900
+As part of the debugging
+or troubleshooting steps,
+
+335
+00:15:31,900 --> 00:15:35,080
+you might want to send
+
+336
+00:15:35,080 --> 00:15:41,620
+LLCs as a way to test your
+seek logic and your driver.
+
+337
+00:15:41,620 --> 00:15:48,120
+You can see these in the
+Assignment 9 test strips
+
+338
+00:15:48,120 --> 00:15:49,860
+that are referenced previously.
+
+339
+00:15:49,860 --> 00:15:53,970
+But there's a read with seek
+function in there that will
+
+340
+00:15:53,970 --> 00:15:58,810
+actually implement a seek
+using the dd command.
+
+341
+00:15:58,810 --> 00:16:00,640
+Dd is a pretty helpful utility
+
+342
+00:16:00,640 --> 00:16:03,400
+for moving bytes in or out of
+
+343
+00:16:03,400 --> 00:16:07,675
+a driver at a specific
+offset and when you do this,
+
+344
+00:16:07,675 --> 00:16:09,820
+when you specify this
+skip seek command,
+
+345
+00:16:09,820 --> 00:16:11,995
+that's going to result
+in an LLC command
+
+346
+00:16:11,995 --> 00:16:13,480
+sent from userspace
+
+347
+00:16:13,480 --> 00:16:14,980
+into your driver and a way to
+
+348
+00:16:14,980 --> 00:16:18,170
+test your LLC implementation.

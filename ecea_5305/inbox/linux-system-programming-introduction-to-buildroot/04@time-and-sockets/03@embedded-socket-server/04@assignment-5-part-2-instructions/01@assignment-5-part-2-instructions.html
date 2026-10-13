@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment 5 Part 2 Instructions</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2>Assignment 5 Part 2: Buildroot Embedded Socket Server</h2><h2><strong>GitHub Repository Links</strong></h2><p>Please find the link to create your repository for this assignment in the "GitHub Repo Creation Links" section under course resources.  You may find course resources on the left side pane of your module view, as highlighted below.</p><h2><strong>Setup GitHub Actions</strong></h2><ul><li><p>See <a href="https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions"><u>https://github.com/cu-ecen-aeld/aesd-assignments/wiki/Setting-up-Github-Actions</u></a></p></li><li><p>For this and later buildroot assignments you need to setup your SSH key as a repository secret.</p></li></ul><h2><strong>GitHub Repository Start Instructions</strong></h2><p>You will start with an empty project submission repository, and fill it with the content of your assignment 4 buildroot local repository.  Use the commands below on your local buildroot-assignments repository containing your assignment 4 submission to merge content from the buildroot-assignments-base repository assignment 5 branch.</p><ol type="1"><li><p>git remote rename origin assignment-4-remote</p></li><li><p>git remote add buildroot-assignments-base https://github.com/cu-ecen-aeld/buildroot-assignments-base.git </p></li><li><p>git fetch buildroot-assignments-base</p></li><li><p>git merge buildroot-assignments-base/assignment5</p></li><li><p>git submodule update --init --recursive</p></li><li><p>git remote add origin &lt;your github classroom submission repo created with the Assignment 5 repository link above&gt;</p></li><li><p>git push origin main</p></li></ol><h2><strong>Suggested Reading:</strong></h2><p>1.QEMU Documentation and network option</p><ul><li><p><a href="https://www.qemu.org/docs/master/system/invocation.html#hxtool-5"><u>https://www.qemu.org/docs/master/system/invocation.html#hxtool-5</u></a></p></li></ul><p>2. Buildroot Documentation:</p><ul><li><p><a href="https://buildroot.org/downloads/manual/manual.html#configure"><u>https://buildroot.org/downloads/manual/manual.html#configure</u></a></p></li></ul><p>3. Mastering Embedded Linux Programming Chapter 10: Starting Up</p><p>4. Init scripts documentation</p><ul><li><p><a href="http://man7.org/linux/man-pages/man8/start-stop-daemon.8.html"><u>http://man7.org/linux/man-pages/man8/start-stop-daemon.8.html</u></a></p></li></ul><h2><strong>Repository Setup:</strong></h2><p></p><img alt="Screen Shot 2021-08-18 at 9.20.23 PM.png" src="Screen%20Shot%202021-08-18%20at%209.20.23%20PM.png"/><p></p><h2><strong>Implementation:</strong></h2><p>1. Add a startup script aesdsocket-start-stop in the “server” directory of your assignment 3 repository which uses start-stop-daemon to start your aesdsocket application in daemon mode with the -d option.</p><ul><li><p>On stop it should send SIGTERM to gracefully exit your daemon and perform associated cleanup steps.</p></li></ul><p>2. Modify your buildroot aesd-assignments package in your buildroot assignment repository to:</p><ul><li><p>Use your latest code to cross compile an aesdsocket application for the target by running make from the server subdirectory.</p></li><li><p>Install your <strong>aesdsocket </strong>executable to /usr/bin</p></li><li><p>Install your aesdsocket-start-stop script to /etc/init.d/S99aesdsocket</p></li></ul><p>3. Modify your runqemu.sh script to forward host port 9000 to your qemu instance port 9000. Also to pass through virtual machine port 10022 to port 22 on your qemu instance.</p><p>4. Build your image and run with the runqemu.sh script.  Verify you can use ssh to login to your host using port 10022 and the root user/password.</p><p>5. Verify your socket is started automatically when starting qemu on the target. Verify your socket test scripts work as expected when running against the qemu target.</p><ul><li><p>The ./full-test.sh script in your buildroot repository should now complete successfully, running against your qemu target.</p></li></ul><p>6. Tag the assignment with “assignment-&lt;assignment number&gt;-complete” once the final commit is pushed onto the respective repositories. The instructions to add a tag can be found <a href="https://docs.google.com/document/d/1M9IlBkQGGnq5_y_sl_nMxz8fHSPNfMcc28GfnI3rDwc/edit"><u>here</u></a></p><h2><strong>Validation:</strong></h2><p>1. You should be able to clone your final buildroot assignment repository to a new directory, run ./build.sh to build the system image and ./runqemu.sh to start the image.</p><p>2. When the QEMU image is started, it should pass port 9000 from the host into the guest image, the aesdsocket utility should be running in daemon mode, and all functionality should match the implementation section.</p><ul><li><p>The ./full-test.sh script executed from your buildroot repository should complete with success.</p></li></ul><p>3. When the QEMU image is shutdown gracefully (using the <em>halt</em> command) and restarted (via restart of the runqemu script), the data returned over the connection (and content of /var/tmp/aesdsocketdata) should not contain content from a previous run (the shutdown script should have gracefully terminated the process during normal shutdown).</p><p>4. Ensure all error handling has been implemented wherever required.</p><h2><strong>Submission:</strong></h2><ol type="1"><li><p>Your assignment submission repository should contain the buildroot setup used to generate and run the qemu image described above.</p></li><li><p>Your buildroot submission repository should reference your aesd-assignments repository, which will contain the assignment content referenced above.</p></li></ol><p></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,171 @@
+In this video, I'm
+going to talk to you about Linux device update. This is the first
+of a multi-part series where we talk about how to update embedded
+Linux devices. In this first one, we're
+just going to talk about some common design goals for embedded Linux
+design update, and then in the
+next videos we're going to talk more
+about how you can actually pull this off
+in an implementation. Starting first
+defining the problem and the solution set here, here's an overview of a common device update scenario that you'll have if you're developing an embedded
+Linux based device. You've probably got
+some Cloud server that's a part of
+the implementation, you have some
+development environment where you're working
+on the code, writing the code that's going to ultimately run on the device, and you got Device Update File, which is a series of ones
+and zeros that need to get programmed on the
+device in some method. This could contain some
+different subset of components, including bootloaders, root file system
+components, et cetera. But the ultimate goal is to get that onto the device that
+you're implementing. You obviously have some
+kind of device that's doing some function and likely
+internet connected. Then you may have something
+like a wireless router in the mix depending on how you're actually
+connected to the device, but something that gets you onto a network that will give you access
+to the World Wide Web. The ultimate goal here is to get this Device Update
+File onto the device, probably through the Cloud. When we talk about
+updating something, especially over a
+wireless connection, you'll often see the acronym
+OTA as Over The Air updates. So we're just really
+referring to this more generically as updating software on an embedded device
+after shipment. It's commonly referred to as OTA for wireless applications, you'll actually see
+it referred to as OTA for Wired applications as well. It's just a normal way to
+talk about device updates. There are a couple
+of different things that you want to
+think about when you're designing the
+device update scheme. One of them is security, and we'll talk about
+how you can use asymmetric cryptography
+to accomplish this. Second is reliability. So you want to be able to
+handle different scenarios that could come up during
+the update process. Then the third is ease of use. So you don't want
+to add burdens to your users or to your
+development team, you want to make
+this as seamless and as much of a part of the
+normal workflow as possible. When you're developing
+your embedded application, you'll find some trade-offs
+like this in terms of trading off implementation complexity
+with your solution, with how easy it is
+to use that solution. There's a few different
+areas where you can trade off these differences
+between update schemes. Thinking in terms of how you could minimize the amount of work that you
+need to do with your team, there are solutions out there that implement Device
+Update for you. One example is
+Android or Particle. Where if you have the
+hardware support and you have the capability to
+use a platform like this and the financial means to do so with respect to
+the product development, then you can have kind of a more turn-key solution where
+there's some level of update built directly into whatever you're
+better platform is. Then getting down into some of the details
+about how you connect to the product, there are connectivity methods that make it easier
+to do Device Update. In the sense that there's less work for your users to
+do and there's less work for your developers to do in terms of actually
+being able to pull off embedded device updates. Thinking of standards
+like Wi-Fi and Bluetooth, and the ability to connect to a device
+through a mobile phone, for instance, if you can use those as a part of
+your updates scheme, then you can probably
+make it easier to roll out for users, and you can probably make
+it a little bit easier for developers to
+interact with the device. There's maybe some
+implementation trade-off where there's little
+more work to do with the solution to make it work
+over a protocol like these. Then on the low end
+of the spectrum, in terms of overall cost
+and development effort, you might have things like
+serial cables or USB cables. Lot of times when you're
+using a development kit, this is where everything starts. As you plug a USB device in and you plug into the product, maybe you push some buttons
+to get in a reset mode, and then you can use
+some built-in tools provided by the manufacturer. That often works okay
+for development process, but if you want to use that for updating devices in the field, there are often some
+pretty serious limitations with those. You're often going to need to do a little bit development work to get at least somewhere
+in this level, and maybe up here
+depending on what you're using for
+your implementation. A couple of things to talk about in terms of the goals and strategies of device updates
+solution. One is security. It's important to
+remember or think about the fact that device
+update can be a backdoor. If someone's able to replace
+the firmware on your device, then obviously there'll be
+able to do whatever they want with the device. You want to avoid the case where a hacker would be
+able to replace the content of any
+part of the software that's running on
+your device with something that should
+not be running. An important thing to think
+about with respect to this, and I've seen this mistake
+made during my career, that obfuscation is
+different than cryptography. In other words, don't assume that by making
+something difficult to do, that means that you're
+going to be the only one who's going
+to be able to do it. If people are motivated enough, and especially financially
+motivated enough, there are a lot of
+really clever people out there that can
+figure out a lot of things that might
+seem like they're really difficult to figure
+out from your perspective. When we talk about security, we always want to talk about
+cryptographic security. We want to talk about
+the security that people spend a lifetime doing
+PhD dissertations on, that are able to mathematically prove these are extremely
+complicated to break. It's not a matter of knowing
+some secret information. It's just that the design
+of the system is robust enough to stand up to
+security based attack. Second thing that you
+want to think about with the device updates
+solution is reliability. Especially when
+we're talking about OTA updates and the fact that the payload might be delivered over a
+wireless connection, while a wireless
+connection can fail. Wired connection can fail
+from that perspective too, but a wireless could probably
+even more likely fail. You need to have some
+level of resiliency built into your device
+updates so that you could, for instance, start an update. Then maybe I'll lose power or maybe I'll lose connectivity. I needed a way to be
+able to recover from that scenario and ensure that I don't end up in the
+infamous brick scenario where my device is no longer usable. I have to ship it back. You can find lots of examples of software device
+updates that went wrong in this perspective, and big recalls that
+had to happen of devices that were turned into bricks through
+device update. This is something you
+definitely need to think about. Be careful about
+and work to avoid. Then you need to think
+about the ease of use for both end users as
+well as developers. Think about from a
+developer perspective how many times you're
+going to be updating device during the development
+process, probably a lot. Probably multiple times per day. If there's ways you
+can streamline that, and make it take 30 seconds
+instead of five minutes, that really starts to pay
+off over the long-term. From that same perspective
+you can think about, if you're update process from a developer or
+a user perspective, means I need to dig
+out a serial cable and I need to get a
+USB to serial adapter. You should have alarm bells going off saying
+this is probably not a good sustainable
+long-term solution. Might be a good way to demo out some initial support on
+a particular platform, but even from a
+development perspective, you're going to want to
+be replacing that with something a little
+bit more robust and also more efficient
+in a pretty short while. One thing that I've
+noticed in terms of designing a device
+updates solution is that really a device
+updates solution, the best ones are the
+ones that are invisible, but nobody really sees and
+nobody really knows about, because they always
+just work and they do exactly what
+they're supposed to do. From a user perspective, it's transparent and not really noticeable
+the fact that you're doing updates to begin with. Really the way to grade how good your device update scheme is, all the things that
+it doesn't do. It doesn't expose your end users or your company to hackers. It doesn't turn your
+devices into bricks when bad things
+happen during update, doesn't burden your customers or your developers with extra
+steps that they have to do, or over burden type of
+procedure for update devices. To use the analogy of
+American football, it's really the equivalent
+of the long snapper. A long snapper in
+American football is like a really high percentage
+success case. Where the snapper snaps the ball to the punter
+and the punter kicks the ball to the opposing team and 99 plus percent of the time, you don't know anything about the long snapper as the player. It's just assumed that
+they're going to do their job perfectly and there won't
+be any issue with the snap. But when there is an
+issue with the snap, with the long snap, it's a really bad
+situation usually and this is analogous to what can happen with
+the device update. You want something that's robust and reliable that you don't ever know about and if you mess
+up and you do know about it, then it can really
+cause a big problem. We'll talk more in
+the next videos about how to avoid
+this scenario.

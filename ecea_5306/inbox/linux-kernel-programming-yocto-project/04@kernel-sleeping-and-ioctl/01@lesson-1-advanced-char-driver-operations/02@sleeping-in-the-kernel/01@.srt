@@ -1,0 +1,1156 @@
+1
+00:00:00,560 --> 00:00:03,060
+In this lecture, we're
+going to get into
+
+2
+00:00:03,060 --> 00:00:05,550
+little more detail about
+sleeping in the kernel.
+
+3
+00:00:05,550 --> 00:00:07,050
+We're going to understand rules
+
+4
+00:00:07,050 --> 00:00:08,160
+for sleeping in the kernel,
+
+5
+00:00:08,160 --> 00:00:10,980
+and some kernel sleep
+wake-up examples
+
+6
+00:00:10,980 --> 00:00:13,840
+from Linux device
+driver source code.
+
+7
+00:00:14,390 --> 00:00:16,640
+To get into the reason why we
+
+8
+00:00:16,640 --> 00:00:18,030
+think about sleeping
+to begin with,
+
+9
+00:00:18,030 --> 00:00:20,060
+a lot of times from a
+driver perspective,
+
+10
+00:00:20,060 --> 00:00:21,965
+we're talking about blocking IO.
+
+11
+00:00:21,965 --> 00:00:25,415
+What happens when there's
+a request from user space
+
+12
+00:00:25,415 --> 00:00:30,045
+for something that the
+driver can't provide yet,
+
+13
+00:00:30,045 --> 00:00:33,230
+and you're configured
+for blocking IO?
+
+14
+00:00:33,230 --> 00:00:36,680
+Well, the default case would
+be the blocker process and
+
+15
+00:00:36,680 --> 00:00:40,600
+sleep inside the kernel until
+that request can proceed.
+
+16
+00:00:40,600 --> 00:00:42,290
+What does that mean when
+
+17
+00:00:42,290 --> 00:00:43,860
+the process is going
+to be sleeping?
+
+18
+00:00:43,860 --> 00:00:45,230
+It means that the scheduler is
+
+19
+00:00:45,230 --> 00:00:46,850
+going to remove it
+from the run queue,
+
+20
+00:00:46,850 --> 00:00:50,230
+and something else is
+going to run in its place.
+
+21
+00:00:50,230 --> 00:00:52,700
+Then you're going to be
+waiting for some event to
+
+22
+00:00:52,700 --> 00:00:56,160
+change state before the
+process runs again.
+
+23
+00:00:56,560 --> 00:00:58,640
+There's a few rules that we've
+
+24
+00:00:58,640 --> 00:01:01,335
+already discussed a little bit
+
+25
+00:01:01,335 --> 00:01:03,090
+from the perspective of locking,
+
+26
+00:01:03,090 --> 00:01:04,940
+but it's good to probably
+review those here
+
+27
+00:01:04,940 --> 00:01:07,355
+again now when we're
+talking about sleeping.
+
+28
+00:01:07,355 --> 00:01:10,085
+Never sleep when we're
+holding a spinlock,
+
+29
+00:01:10,085 --> 00:01:11,840
+a seqlock, or RCU lock,
+
+30
+00:01:11,840 --> 00:01:15,160
+which were the different
+locks that all use
+
+31
+00:01:15,160 --> 00:01:18,735
+the essentially
+spinning or CPU spins
+
+32
+00:01:18,735 --> 00:01:22,170
+tight loops to obtain processor,
+
+33
+00:01:22,170 --> 00:01:24,645
+or to obtain specific resources.
+
+34
+00:01:24,645 --> 00:01:26,450
+Why not do that? Because
+they're consuming
+
+35
+00:01:26,450 --> 00:01:27,740
+the processor while
+they're waiting
+
+36
+00:01:27,740 --> 00:01:30,000
+for those events to happen.
+
+37
+00:01:30,110 --> 00:01:33,950
+If you have multiple processes
+that are waiting for
+
+38
+00:01:33,950 --> 00:01:37,400
+some event to happen and
+they're using up all the CPU,
+
+39
+00:01:37,400 --> 00:01:41,040
+it could be a recipe for
+deadlocking the process.
+
+40
+00:01:42,410 --> 00:01:45,740
+Also never sleep if you've
+disabled interrupts,
+
+41
+00:01:45,740 --> 00:01:47,450
+and that's probably
+pretty obvious.
+
+42
+00:01:47,450 --> 00:01:50,270
+You wouldn't want
+interrupt latency to take
+
+43
+00:01:50,270 --> 00:01:51,770
+the kind of hit that you'd
+have if you tried to
+
+44
+00:01:51,770 --> 00:01:53,605
+do sleeps during interrupts.
+
+45
+00:01:53,605 --> 00:01:56,690
+There's lots of code associated
+with sleep that assumes
+
+46
+00:01:56,690 --> 00:01:58,130
+that you're never
+going to be calling
+
+47
+00:01:58,130 --> 00:02:00,630
+it from interrupt context.
+
+48
+00:02:00,890 --> 00:02:03,350
+We also want to avoid sleep or
+
+49
+00:02:03,350 --> 00:02:05,390
+keep the sleep duration
+
+50
+00:02:05,390 --> 00:02:07,205
+short when holding a
+semaphore or mutex.
+
+51
+00:02:07,205 --> 00:02:09,245
+Remember when we talked about
+
+52
+00:02:09,245 --> 00:02:11,780
+sleeping in the
+context of locking,
+
+53
+00:02:11,780 --> 00:02:14,615
+but sometimes you just
+need to do operations,
+
+54
+00:02:14,615 --> 00:02:16,595
+like malloc is one example,
+
+55
+00:02:16,595 --> 00:02:20,510
+lot of times you just have to
+do that when you're locked.
+
+56
+00:02:20,510 --> 00:02:22,880
+If that's the case, you just
+
+57
+00:02:22,880 --> 00:02:24,920
+definitely need to be using
+a semaphore or mutex there,
+
+58
+00:02:24,920 --> 00:02:26,240
+and you want to think
+about how to keep
+
+59
+00:02:26,240 --> 00:02:28,285
+those durations as
+short as possible.
+
+60
+00:02:28,285 --> 00:02:30,290
+Lot of times I'll see students
+
+61
+00:02:30,290 --> 00:02:32,030
+that just know that
+they need to lock,
+
+62
+00:02:32,030 --> 00:02:33,770
+and so they'll
+just put a lock at
+
+63
+00:02:33,770 --> 00:02:36,145
+the beginning and unlock at
+the end of the function.
+
+64
+00:02:36,145 --> 00:02:38,360
+You really want to be a
+little bit more careful
+
+65
+00:02:38,360 --> 00:02:41,875
+about knowing when you need
+to lock and for what reason.
+
+66
+00:02:41,875 --> 00:02:44,240
+It gets back to what
+we've talked about before
+
+67
+00:02:44,240 --> 00:02:46,955
+about locking data
+and not locking code.
+
+68
+00:02:46,955 --> 00:02:49,355
+Don't just lock a function
+from start to end,
+
+69
+00:02:49,355 --> 00:02:51,385
+know what data you're trying to
+
+70
+00:02:51,385 --> 00:02:55,530
+synchronize and lock just
+around access to that data.
+
+71
+00:02:55,530 --> 00:02:59,390
+You want to consider
+whether you could introduce
+
+72
+00:02:59,390 --> 00:03:04,470
+a deadlock with any sleep
+that you're adding.
+
+73
+00:03:07,820 --> 00:03:09,935
+Really, the difference,
+
+74
+00:03:09,935 --> 00:03:11,930
+as we talked about when
+we discussed locking,
+
+75
+00:03:11,930 --> 00:03:14,090
+the reason that it's okay to
+sleep when you're holding
+
+76
+00:03:14,090 --> 00:03:16,415
+a semaphore is because
+other threads,
+
+77
+00:03:16,415 --> 00:03:17,210
+when they're blocked on
+
+78
+00:03:17,210 --> 00:03:19,770
+a semaphore, aren't
+actually sleeping.
+
+79
+00:03:22,250 --> 00:03:24,920
+How do you know
+that it's safe to
+
+80
+00:03:24,920 --> 00:03:27,410
+sleep when you're holding
+a semaphore or mutex?
+
+81
+00:03:27,410 --> 00:03:28,940
+It's really that you
+need to know that
+
+82
+00:03:28,940 --> 00:03:31,280
+any code that's
+attempting to obtain
+
+83
+00:03:31,280 --> 00:03:33,470
+the semaphore won't
+prevent whatever
+
+84
+00:03:33,470 --> 00:03:34,700
+your wake-up condition is
+
+85
+00:03:34,700 --> 00:03:36,700
+for waking your process back up.
+
+86
+00:03:36,700 --> 00:03:39,470
+You might say, well, I'll
+review the code now,
+
+87
+00:03:39,470 --> 00:03:40,730
+and I know that now the way
+
+88
+00:03:40,730 --> 00:03:42,740
+my driver is used,
+this won't happen.
+
+89
+00:03:42,740 --> 00:03:44,585
+But how do I know that this
+
+90
+00:03:44,585 --> 00:03:46,720
+might not happen
+sometime in the future?
+
+91
+00:03:46,720 --> 00:03:48,960
+The answer is really you don't.
+
+92
+00:03:48,960 --> 00:03:52,035
+You can document
+your assumptions,
+
+93
+00:03:52,035 --> 00:03:54,980
+but this is part of why
+the book recommends
+
+94
+00:03:54,980 --> 00:03:56,900
+that avoiding sleep while
+
+95
+00:03:56,900 --> 00:03:58,880
+holding a semaphore is
+really the best option here,
+
+96
+00:03:58,880 --> 00:04:00,050
+so that you don't
+have to worry about
+
+97
+00:04:00,050 --> 00:04:02,845
+that possible future scenario.
+
+98
+00:04:02,845 --> 00:04:05,555
+The other thing that
+the book mentions is
+
+99
+00:04:05,555 --> 00:04:08,210
+about state as
+associated with sleep.
+
+100
+00:04:08,210 --> 00:04:10,370
+You need to assume that
+
+101
+00:04:10,370 --> 00:04:12,380
+the state might be completely
+
+102
+00:04:12,380 --> 00:04:14,210
+different when you
+come out of sleep,
+
+103
+00:04:14,210 --> 00:04:16,790
+wake up, than it was
+when you entered sleep.
+
+104
+00:04:16,790 --> 00:04:19,105
+For instance, if you check
+
+105
+00:04:19,105 --> 00:04:21,230
+the state of a lock
+and then you go into
+
+106
+00:04:21,230 --> 00:04:25,125
+sleep and you come
+back out of sleep,
+
+107
+00:04:25,125 --> 00:04:27,390
+should you assume that
+that lock is still free?
+
+108
+00:04:27,390 --> 00:04:29,540
+No, you shouldn't because
+anything could have
+
+109
+00:04:29,540 --> 00:04:31,760
+happened during the time
+that you were sleeping,
+
+110
+00:04:31,760 --> 00:04:33,650
+and so you have to often write
+
+111
+00:04:33,650 --> 00:04:36,220
+loops that check some state,
+
+112
+00:04:36,220 --> 00:04:39,560
+and maybe if some
+state isn't satisfied,
+
+113
+00:04:39,560 --> 00:04:41,390
+but are only
+partially satisfied,
+
+114
+00:04:41,390 --> 00:04:42,635
+and you need to go to sleep,
+
+115
+00:04:42,635 --> 00:04:44,045
+make sure when you
+come back out,
+
+116
+00:04:44,045 --> 00:04:45,620
+you re-evaluate all state that
+
+117
+00:04:45,620 --> 00:04:48,150
+you care about
+before you proceed.
+
+118
+00:04:48,150 --> 00:04:50,950
+It might sound obvious,
+
+119
+00:04:50,950 --> 00:04:52,700
+but before you go to sleep,
+
+120
+00:04:52,700 --> 00:04:55,325
+you have to make sure
+that some process
+
+121
+00:04:55,325 --> 00:04:57,845
+interrupt or kernel event is
+going to wake you back up,
+
+122
+00:04:57,845 --> 00:05:00,085
+based on your sleep condition.
+
+123
+00:05:00,085 --> 00:05:04,190
+A simple sleep example
+is to use wait queues,
+
+124
+00:05:04,190 --> 00:05:05,540
+and these are
+discussed in the book
+
+125
+00:05:05,540 --> 00:05:08,090
+and shown in a couple
+of different examples.
+
+126
+00:05:08,090 --> 00:05:09,920
+One of the things you'll
+notice here is that
+
+127
+00:05:09,920 --> 00:05:11,420
+there's interruptible versions,
+
+128
+00:05:11,420 --> 00:05:14,060
+there's interruptible
+timeout versions and these,
+
+129
+00:05:14,060 --> 00:05:15,950
+you could probably guess
+what we're doing here
+
+130
+00:05:15,950 --> 00:05:18,500
+based on our previous
+discussion with locking,
+
+131
+00:05:18,500 --> 00:05:21,320
+where wait events are going
+
+132
+00:05:21,320 --> 00:05:24,050
+to be interruptible by
+a signal, for instance,
+
+133
+00:05:24,050 --> 00:05:26,480
+Control C. Typically
+you'll probably want to
+
+134
+00:05:26,480 --> 00:05:29,300
+use those in your
+driver assuming
+
+135
+00:05:29,300 --> 00:05:38,260
+that you can handle signals
+from user space like SGID.
+
+136
+00:05:38,260 --> 00:05:41,660
+The first parameter
+here is the wait queue.
+
+137
+00:05:41,660 --> 00:05:43,985
+The wait queue is
+initialized just like this
+
+138
+00:05:43,985 --> 00:05:46,190
+with initialization of
+the wait queue head
+
+139
+00:05:46,190 --> 00:05:47,870
+and just the wait
+queue structure.
+
+140
+00:05:47,870 --> 00:05:50,120
+Then the second is
+a condition which
+
+141
+00:05:50,120 --> 00:05:52,505
+is an arbitrary Boolean.
+
+142
+00:05:52,505 --> 00:05:54,425
+In this case not
+a Boolean value,
+
+143
+00:05:54,425 --> 00:05:56,030
+it looks like it's a parameter
+
+144
+00:05:56,030 --> 00:05:57,275
+that we're passing
+to a function,
+
+145
+00:05:57,275 --> 00:05:58,520
+but it's actually an arbitrary
+
+146
+00:05:58,520 --> 00:05:59,900
+Boolean operation that's going
+
+147
+00:05:59,900 --> 00:06:02,960
+to determine whether
+it's okay to wake up,
+
+148
+00:06:02,960 --> 00:06:04,850
+and the interruptible
+versions are just going
+
+149
+00:06:04,850 --> 00:06:06,980
+to exit on signals.
+
+150
+00:06:06,980 --> 00:06:09,515
+A little bit more about
+what I mean about
+
+151
+00:06:09,515 --> 00:06:12,365
+condition as opposed
+to a Boolean variable.
+
+152
+00:06:12,365 --> 00:06:14,810
+If I look at this
+code in sleepy read,
+
+153
+00:06:14,810 --> 00:06:20,030
+it looks like I want to wait
+until flag is not equals 0.
+
+154
+00:06:20,030 --> 00:06:24,805
+If I think about what this
+would do in a function call,
+
+155
+00:06:24,805 --> 00:06:28,840
+I would evaluate the flag naught
+
+156
+00:06:28,840 --> 00:06:31,995
+equals 0 and pass a
+Boolean into the function,
+
+157
+00:06:31,995 --> 00:06:35,270
+and I'd check that onetime
+inside the function,
+
+158
+00:06:35,270 --> 00:06:36,950
+but I'd have no idea if flag
+
+159
+00:06:36,950 --> 00:06:39,200
+is going to change
+outside the function.
+
+160
+00:06:39,200 --> 00:06:42,140
+You might look at this and
+it looks a little strange at
+
+161
+00:06:42,140 --> 00:06:43,535
+first of like how would you wait
+
+162
+00:06:43,535 --> 00:06:45,620
+on this condition that
+you're passing in?
+
+163
+00:06:45,620 --> 00:06:47,720
+The answer is, it's because
+
+164
+00:06:47,720 --> 00:06:50,405
+there's actually some macro
+magic going on here that
+
+165
+00:06:50,405 --> 00:06:52,670
+is going to be using this not as
+
+166
+00:06:52,670 --> 00:06:55,535
+a Boolean value that
+gets evaluated,
+
+167
+00:06:55,535 --> 00:06:58,010
+but that gets passed
+into a macro where it's
+
+168
+00:06:58,010 --> 00:07:01,715
+re-evaluated over and over as
+a part of the sleep status.
+
+169
+00:07:01,715 --> 00:07:04,790
+The way you can see this
+and other macro magic
+
+170
+00:07:04,790 --> 00:07:05,810
+is really by digging into
+
+171
+00:07:05,810 --> 00:07:07,865
+the source code for
+the Linux kernel.
+
+172
+00:07:07,865 --> 00:07:11,420
+You can learn a lot about how
+macros are used and there's
+
+173
+00:07:11,420 --> 00:07:13,700
+some really innovative
+and creative ways for
+
+174
+00:07:13,700 --> 00:07:16,130
+using macros in
+Linux source code,
+
+175
+00:07:16,130 --> 00:07:17,720
+so kind of walking
+through this one
+
+176
+00:07:17,720 --> 00:07:19,355
+with wait event interruptible.
+
+177
+00:07:19,355 --> 00:07:21,335
+You can see the
+second parameter here
+
+178
+00:07:21,335 --> 00:07:23,360
+is a condition in this define
+
+179
+00:07:23,360 --> 00:07:25,760
+macro and that condition
+just gets passed
+
+180
+00:07:25,760 --> 00:07:27,230
+in through a couple
+of different layers
+
+181
+00:07:27,230 --> 00:07:28,775
+to different macros.
+
+182
+00:07:28,775 --> 00:07:31,490
+Ultimately, there's
+some logic here in
+
+183
+00:07:31,490 --> 00:07:35,315
+the wait event macro that
+just says if condition break.
+
+184
+00:07:35,315 --> 00:07:40,045
+This is essentially expanding
+into a block of code
+
+185
+00:07:40,045 --> 00:07:42,610
+that's replacing this if check
+
+186
+00:07:42,610 --> 00:07:46,210
+with whatever logic
+that I put here.
+
+187
+00:07:46,210 --> 00:07:51,195
+Every time we're awakened
+by the scheduler,
+
+188
+00:07:51,195 --> 00:07:54,260
+this macro is going to recheck
+whatever our condition
+
+189
+00:07:54,260 --> 00:07:57,900
+was and just go directly back
+to sleep if it's not met.
+
+190
+00:08:00,100 --> 00:08:04,010
+The process of waking up,
+
+191
+00:08:04,010 --> 00:08:05,390
+if you are sleeping,
+
+192
+00:08:05,390 --> 00:08:08,390
+if you're waiting on a
+specific wait queue,
+
+193
+00:08:08,390 --> 00:08:10,280
+there's wake_up and wake_up
+
+194
+00:08:10,280 --> 00:08:12,230
+interruptible
+versions that you can
+
+195
+00:08:12,230 --> 00:08:14,720
+use to actually wake
+your process back up.
+
+196
+00:08:14,720 --> 00:08:15,830
+This is what I mentioned before
+
+197
+00:08:15,830 --> 00:08:17,795
+that if you're waiting
+on a wait queue,
+
+198
+00:08:17,795 --> 00:08:19,864
+you need to make
+sure that something
+
+199
+00:08:19,864 --> 00:08:21,960
+is going to wake you back up.
+
+200
+00:08:22,210 --> 00:08:24,860
+You also need to
+make sure that it's
+
+201
+00:08:24,860 --> 00:08:27,290
+a different process or
+a different interrupt.
+
+202
+00:08:27,290 --> 00:08:29,540
+Because if you're
+sleeping in one process
+
+203
+00:08:29,540 --> 00:08:32,135
+and you're expecting that
+process to wake you back up,
+
+204
+00:08:32,135 --> 00:08:34,370
+that's not going to work because
+the process is not going
+
+205
+00:08:34,370 --> 00:08:37,470
+to be running as you're
+currently sleeping.
+
+206
+00:08:37,480 --> 00:08:40,070
+You have to make sure
+that a different process
+
+207
+00:08:40,070 --> 00:08:41,780
+or an interrupt
+perhaps is going to
+
+208
+00:08:41,780 --> 00:08:43,640
+call wake_up with
+your wait queue
+
+209
+00:08:43,640 --> 00:08:45,425
+in order to wake your
+process back up.
+
+210
+00:08:45,425 --> 00:08:47,420
+There's two different
+versions of this.
+
+211
+00:08:47,420 --> 00:08:51,260
+One is the version wake_up
+
+212
+00:08:51,260 --> 00:08:52,370
+here that's going to call all
+
+213
+00:08:52,370 --> 00:08:54,050
+processes that are
+waiting on the queue,
+
+214
+00:08:54,050 --> 00:08:55,610
+and the second would only call
+
+215
+00:08:55,610 --> 00:08:57,410
+interruptible processes
+on the wait queue,
+
+216
+00:08:57,410 --> 00:08:58,580
+so the ones that are using
+
+217
+00:08:58,580 --> 00:09:01,790
+the wait interruptible version.
+
+218
+00:09:01,790 --> 00:09:03,980
+You can call these
+when you know anybody
+
+219
+00:09:03,980 --> 00:09:06,750
+that's waiting on your
+queue needs to wake up.
+
+220
+00:09:07,030 --> 00:09:09,620
+Thinking about the example
+that we talked about with
+
+221
+00:09:09,620 --> 00:09:11,450
+blocking IO and there's
+
+222
+00:09:11,450 --> 00:09:15,395
+a scull_pipe example that
+shows this in practice.
+
+223
+00:09:15,395 --> 00:09:17,660
+When would you want to use
+the wake_up functions?
+
+224
+00:09:17,660 --> 00:09:20,750
+When would you want to
+signal that the driver
+
+225
+00:09:20,750 --> 00:09:22,115
+should wake up from sleep
+
+226
+00:09:22,115 --> 00:09:24,500
+if it was blocked
+on read or write?
+
+227
+00:09:24,500 --> 00:09:26,795
+You'd want to wake_up
+a reader queue
+
+228
+00:09:26,795 --> 00:09:27,950
+so someone that was blocked on
+
+229
+00:09:27,950 --> 00:09:32,080
+a read if new data was available
+because a write came in.
+
+230
+00:09:32,080 --> 00:09:34,450
+Part of your write function
+in your kernel should
+
+231
+00:09:34,450 --> 00:09:36,670
+be to call wake_up on
+the wait queue for read,
+
+232
+00:09:36,670 --> 00:09:38,980
+that way any readers
+that were stalled
+
+233
+00:09:38,980 --> 00:09:42,315
+on that wait queue would
+get woken up automatically.
+
+234
+00:09:42,315 --> 00:09:46,190
+Similarly, if you
+
+235
+00:09:46,190 --> 00:09:49,250
+are handling a case where
+the write queue is full,
+
+236
+00:09:49,250 --> 00:09:51,755
+you're out of buffer
+in the write queue,
+
+237
+00:09:51,755 --> 00:09:54,005
+and the write queue is blocked,
+
+238
+00:09:54,005 --> 00:09:57,410
+then you'd want to
+call wake_up on
+
+239
+00:09:57,410 --> 00:09:59,390
+the writer queue head
+
+240
+00:09:59,390 --> 00:10:03,120
+when new space was available
+because a read happened.
+
+241
+00:10:03,880 --> 00:10:06,005
+If you handle a read
+
+242
+00:10:06,005 --> 00:10:07,400
+and you pull some data
+out of the buffer
+
+243
+00:10:07,400 --> 00:10:10,160
+and you free more
+data for new writes,
+
+244
+00:10:10,160 --> 00:10:11,330
+you can call wake_up on that
+
+245
+00:10:11,330 --> 00:10:12,830
+writer queue and any writer that
+
+246
+00:10:12,830 --> 00:10:14,240
+stalled is going to be able to
+
+247
+00:10:14,240 --> 00:10:17,100
+continue and write
+into the buffer.

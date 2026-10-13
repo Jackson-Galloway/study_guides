@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kernel Debugging Techniques</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the challenges associated with kernel code debug (select any which apply).</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nOql3O" type="checkbox"/> <div class="quiz-option-text"><p>difficult to execute under a debugger</p></div></li>
+<li><input name="autoGradableResponseId~nOql3O" type="checkbox"/> <div class="quiz-option-text"><p>bugs are often hard to reproduce</p></div></li>
+<li><input name="autoGradableResponseId~nOql3O" type="checkbox"/> <div class="quiz-option-text"><p>difficult to trace</p></div></li>
+<li><input name="autoGradableResponseId~nOql3O" type="checkbox"/> <div class="quiz-option-text"><p>gdb can be used to set breakpoints and modify the running kernel using /proc/kcore</p></div></li>
+<li><input name="autoGradableResponseId~nOql3O" type="checkbox"/> <div class="quiz-option-text"><p>bugs may crash the entire system</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The default kernel configuration on production kernels usually has debug features on by default</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~shYfiI" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~shYfiI" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Kernel debug features may have performance impacts which should be considered before enabling on production builds.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~f3KJ1j" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~f3KJ1j" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You can debug kernel code using the same printf() command you use to debug user space programs.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~gdtpOv" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~gdtpOv" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Debug prints from your kernel module can be added using the printk() function</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~APvOL6" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~APvOL6" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Select the possible ways of viewing the printk() prints from your driver.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~iztgWO" type="checkbox"/> <div class="quiz-option-text"><p>From the output of dmesg</p></div></li>
+<li><input name="autoGradableResponseId~iztgWO" type="checkbox"/> <div class="quiz-option-text"><p>In /var/log files based on klogd/syslog</p></div></li>
+<li><input name="autoGradableResponseId~iztgWO" type="checkbox"/> <div class="quiz-option-text"><p>at /proc/sys/kernel/printk</p></div></li>
+<li><input name="autoGradableResponseId~iztgWO" type="checkbox"/> <div class="quiz-option-text"><p>On the console</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p></p><p>When SCULL_DEBUG and __KERNEL__ are defined, where will the text from PDEBUG("test from driver"); be written?</p><img alt="c0445f7f-6063-4c3c-a16b-32d7445d8137image2.png" src="c0445f7f-6063-4c3c-a16b-32d7445d8137image2.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ITK09b" type="radio"/> <div class="quiz-option-text"><p>Nowhere</p></div></li>
+<li><input name="autoGradableResponseId~ITK09b" type="radio"/> <div class="quiz-option-text"><p>to standard error</p></div></li>
+<li><input name="autoGradableResponseId~ITK09b" type="radio"/> <div class="quiz-option-text"><p>To the printk location based on syslog configuration</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When SCULL_DEBUG is not defined, where will the text from PDEBUG("test from driver"); be written?</p><img alt="c0445f7f-6063-4c3c-a16b-32d7445d8137image1.png" src="c0445f7f-6063-4c3c-a16b-32d7445d8137image1.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0Iomdl" type="radio"/> <div class="quiz-option-text"><p>standard error</p></div></li>
+<li><input name="autoGradableResponseId~0Iomdl" type="radio"/> <div class="quiz-option-text"><p>To the printk location based on syslog configuration</p></div></li>
+<li><input name="autoGradableResponseId~0Iomdl" type="radio"/> <div class="quiz-option-text"><p>Nowhere</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>The first step in kernel debugging is typically to use a debugger to analyze and step through your driver source.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~6Ym55z" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~6Ym55z" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>GDB is able to analyze information about a running kernel using /proc/kcore</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~IuLSGY" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~IuLSGY" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>You can use gdb to halt, set breakpoints, or modify memory on a running kernel image using /proc/kcore</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~W9Hjzj" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~W9Hjzj" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>
