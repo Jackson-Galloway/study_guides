@@ -1,0 +1,2107 @@
+1
+00:00:09,500 --> 00:00:15,002
+Well, this time we're going to give
+an overview of how to use Kubernetes.
+
+2
+00:00:15,002 --> 00:00:21,066
+So this will serve as a foundation for
+us to then move into the architecture and
+
+3
+00:00:21,066 --> 00:00:26,820
+the networking and different things
+like that within Kubernetes.
+
+4
+00:00:26,820 --> 00:00:32,550
+So hopefully this is something
+you're already familiar with if so,
+
+5
+00:00:32,550 --> 00:00:36,052
+great, maybe this will be a refresher.
+
+6
+00:00:36,052 --> 00:00:39,282
+If not,
+I would highly recommend watch this and
+
+7
+00:00:39,282 --> 00:00:42,030
+then play around with it a little bit.
+
+8
+00:00:42,030 --> 00:00:47,100
+Go watch some more tutorials on
+Kubernetes and get yourself familiar.
+
+9
+00:00:48,560 --> 00:00:52,156
+So recall when we talked about Kubernetes,
+
+10
+00:00:52,156 --> 00:00:57,597
+we introduced it by saying great,
+we know how to run containers and
+
+11
+00:00:57,597 --> 00:01:02,902
+we learned a lot of the stuff on
+the networking support for that.
+
+12
+00:01:02,902 --> 00:01:06,891
+But let's say we want to
+have a larger application,
+
+13
+00:01:06,891 --> 00:01:11,904
+a distributed application,
+where our application is multiple
+
+14
+00:01:11,904 --> 00:01:16,377
+layers of maybe the presentation logic and
+data layers.
+
+15
+00:01:16,377 --> 00:01:21,950
+Each with a bunch of different
+containers that running,
+
+16
+00:01:21,950 --> 00:01:26,138
+offering different parts of the service.
+
+17
+00:01:26,138 --> 00:01:31,328
+Imagine if that's running on
+a distributed cluster such
+
+18
+00:01:31,328 --> 00:01:36,732
+that because maybe we can't run
+all of this in a single machine,
+
+19
+00:01:36,732 --> 00:01:41,941
+that machine is not powerful
+enough to handle that load.
+
+20
+00:01:41,941 --> 00:01:47,992
+So there's some challenges with this,
+is figuring out where do we run?
+
+21
+00:01:47,992 --> 00:01:52,450
+Which of these physical nodes
+should I run a given container on?
+
+22
+00:01:52,450 --> 00:01:53,875
+How can I make it so
+
+23
+00:01:53,875 --> 00:01:59,495
+that all these containers can
+communicate with each other as needed?
+
+24
+00:01:59,495 --> 00:02:02,788
+How do I go about scaling a given service?
+
+25
+00:02:02,788 --> 00:02:08,760
+So we talked about any given
+service you might need to run it,
+
+26
+00:02:08,760 --> 00:02:16,384
+multiple replicas of it and then load
+balance between those because of load.
+
+27
+00:02:16,384 --> 00:02:18,500
+And then finally,
+how do we handle failure?
+
+28
+00:02:18,500 --> 00:02:24,380
+Either failure of an individual
+application component or
+
+29
+00:02:24,380 --> 00:02:28,462
+as part of a single physical node fails.
+
+30
+00:02:28,462 --> 00:02:32,482
+And this is where Kubernetes comes in.
+
+31
+00:02:32,482 --> 00:02:37,062
+So Kubernetes is an open-source
+container-orchestration system for
+
+32
+00:02:37,062 --> 00:02:41,700
+automating application deployment,
+scaling and management.
+
+33
+00:02:41,700 --> 00:02:44,832
+So it's basically, has a control plane,
+
+34
+00:02:44,832 --> 00:02:49,010
+bunch of workers,
+you interact with the control plane.
+
+35
+00:02:49,010 --> 00:02:54,280
+You tell it the desired state
+that you want something to be in.
+
+36
+00:02:54,280 --> 00:02:58,049
+Like here's this distributed
+application I want.
+
+37
+00:02:58,049 --> 00:03:05,305
+And Kubernetes will figure out how to do
+that and ensure it stays in that state.
+
+38
+00:03:05,305 --> 00:03:09,695
+And we mentioned it's
+often abbreviated k8s.
+
+39
+00:03:09,695 --> 00:03:13,187
+So if you see that throughout the notes,
+
+40
+00:03:13,187 --> 00:03:17,822
+that's what this means,
+it just means Kubernetes.
+
+41
+00:03:17,822 --> 00:03:22,699
+So first step is,
+how do I create a Kubernetes cluster?
+
+42
+00:03:22,699 --> 00:03:27,022
+So one option is to launch
+virtual machines or
+
+43
+00:03:27,022 --> 00:03:31,930
+if you have physical servers
+you can launch those.
+
+44
+00:03:31,930 --> 00:03:36,820
+And you can install Kubernetes with
+
+45
+00:03:36,820 --> 00:03:40,735
+something called kubeadm.
+
+46
+00:03:40,735 --> 00:03:46,323
+So that's great,
+we'll provide a Vagrant file and
+
+47
+00:03:46,323 --> 00:03:53,689
+it'll be part of this github link for
+[COUGH] this particular module.
+
+48
+00:03:53,689 --> 00:03:58,412
+That we're not going to use
+that option though, but
+
+49
+00:03:58,412 --> 00:04:03,396
+a second option is to use
+a single virtual machine.
+
+50
+00:04:03,396 --> 00:04:07,553
+And then you use a system called
+KinD Kubernetes in Docker.
+
+51
+00:04:07,553 --> 00:04:12,913
+So basically what it does is, each node
+whether it's a control plane node or
+
+52
+00:04:12,913 --> 00:04:16,115
+a worker node, becomes a Docker container.
+
+53
+00:04:16,115 --> 00:04:20,660
+So you specify what you want
+your cluster to look like and
+
+54
+00:04:20,660 --> 00:04:23,181
+then it will make that happen.
+
+55
+00:04:23,181 --> 00:04:28,134
+So we'll provide a Vagrant
+file which installs kind.
+
+56
+00:04:28,134 --> 00:04:32,779
+So this is what we're actually
+going to use in this course.
+
+57
+00:04:32,779 --> 00:04:36,588
+So we'll do everything in kind.
+
+58
+00:04:36,588 --> 00:04:41,390
+All right, so
+let me pull over to my terminal and
+
+59
+00:04:41,390 --> 00:04:46,325
+what we're going to show
+is a configuration file.
+
+60
+00:04:46,325 --> 00:04:48,264
+We'll show how to create the cluster,
+
+61
+00:04:48,264 --> 00:04:50,800
+we'll show what it looks
+like when it's running.
+
+62
+00:04:50,800 --> 00:04:54,987
+And if you wanted to delete the cluster,
+you just say kind delete cluster.
+
+63
+00:04:54,987 --> 00:04:59,795
+And you can go look up the documentation
+because you can run multiple clusters,
+
+64
+00:04:59,795 --> 00:05:02,783
+give them different names and
+all that stuff.
+
+65
+00:05:02,783 --> 00:05:08,838
+So let's flip over to a terminal,
+here's this.
+
+66
+00:05:08,838 --> 00:05:13,916
+So this particular Vagrant file that's
+
+67
+00:05:13,916 --> 00:05:18,992
+included right here, is a basic one that
+
+68
+00:05:18,992 --> 00:05:24,218
+all it's doing is creating a single VM and
+
+69
+00:05:24,218 --> 00:05:31,554
+it's part of the provisioning,
+it's installing kind.
+
+70
+00:05:31,554 --> 00:05:37,013
+Now if you run Arm, like if you're
+running a Mac and it has Arm,
+
+71
+00:05:37,013 --> 00:05:44,224
+there may be a slightly different setup
+because this is just downloading a binary.
+
+72
+00:05:44,224 --> 00:05:50,158
+So my machine is AMD64, so
+that's what I'll do, all right?
+
+73
+00:05:50,158 --> 00:05:55,683
+So all of that is set up and
+then I'll have a link
+
+74
+00:05:55,683 --> 00:06:00,786
+to some other resources and a GitHub link,
+
+75
+00:06:00,786 --> 00:06:06,199
+GitHub repo if you want to
+go the kubeadm path.
+
+76
+00:06:06,199 --> 00:06:10,614
+But what else is in there is a bunch
+of these cluster configurations.
+
+77
+00:06:10,614 --> 00:06:13,402
+So let's look at one of those real quick.
+
+78
+00:06:13,402 --> 00:06:16,074
+So 1master2worker.yaml.
+
+79
+00:06:16,074 --> 00:06:22,409
+It's as simple as this,
+I could say create a cluster,
+
+80
+00:06:22,409 --> 00:06:29,508
+it specifies the apiVersion and
+then specify I want nodes.
+
+81
+00:06:29,508 --> 00:06:33,497
+And it's a list of nodes where the role
+of the first one is control-plane,
+
+82
+00:06:33,497 --> 00:06:37,160
+role of the second one is worker,
+role of the third one is worker.
+
+83
+00:06:37,160 --> 00:06:44,133
+Now they could get more complicated than
+this, you can look at the configuration,
+
+84
+00:06:44,133 --> 00:06:49,380
+but we'll stick to some real
+basic one at least for this.
+
+85
+00:06:49,380 --> 00:06:53,715
+All right, so
+now if I want to go install it or
+
+86
+00:06:53,715 --> 00:07:00,098
+launch a container,
+I would say kind create cluster config and
+
+87
+00:07:00,098 --> 00:07:03,967
+then give it the configuration file.
+
+88
+00:07:03,967 --> 00:07:07,761
+So 1master2workers.yaml.
+
+89
+00:07:07,761 --> 00:07:08,468
+All right,
+
+90
+00:07:08,468 --> 00:07:12,734
+I'm not going to run that because it
+takes a couple of minutes to spin up.
+
+91
+00:07:12,734 --> 00:07:17,395
+So before I started recording,
+I actually ran it, so
+
+92
+00:07:17,395 --> 00:07:20,540
+I did that exact [COUGH] command.
+
+93
+00:07:20,540 --> 00:07:27,307
+It created the cluster, and
+you can see it's creating all the stuff,
+
+94
+00:07:27,307 --> 00:07:31,332
+and now it's up and running, all right?
+
+95
+00:07:31,332 --> 00:07:36,793
+So now what that looks like,
+if I look at docker ps,
+
+96
+00:07:36,793 --> 00:07:42,895
+I could see there's three
+containers running, right?
+
+97
+00:07:42,895 --> 00:07:47,561
+I could see one is called
+kind-control-plane,
+
+98
+00:07:47,561 --> 00:07:52,012
+kind-worker, kind-worker2, all right?
+
+99
+00:07:52,012 --> 00:07:58,781
+So these are the three docker containers
+But because it's Kubernetes in Docker,
+
+100
+00:07:58,781 --> 00:08:04,019
+if I was to deploy a Kubernetes cluster,
+this would be a physical machine,
+
+101
+00:08:04,019 --> 00:08:09,942
+this would be a physical machine, and this
+would be a physical machine, all right?
+
+102
+00:08:09,942 --> 00:08:12,072
+So that's kind of what this is, but
+
+103
+00:08:12,072 --> 00:08:15,991
+it's allowing us to do this all
+from within one virtual machine.
+
+104
+00:08:15,991 --> 00:08:19,839
+So now, I could,
+let me look inside of one of these.
+
+105
+00:08:19,839 --> 00:08:25,936
+So it's Docker exec -it.
+
+106
+00:08:25,936 --> 00:08:30,761
+Let me look inside
+
+107
+00:08:30,761 --> 00:08:35,917
+of kind-worker.
+
+108
+00:08:35,917 --> 00:08:41,070
+And I think bin/bash.
+
+109
+00:08:41,070 --> 00:08:42,454
+Hopefully that works.
+
+110
+00:08:42,454 --> 00:08:48,605
+All right, so I'm inside of a Kubernetes
+node, a worker node right here.
+
+111
+00:08:48,605 --> 00:08:52,744
+And it's just a full kind of installation.
+
+112
+00:08:52,744 --> 00:08:57,967
+All right, so we don't need to
+really be in there just yet,
+
+113
+00:08:57,967 --> 00:09:01,313
+but that's how we created a cluster.
+
+114
+00:09:01,313 --> 00:09:02,425
+All right?
+
+115
+00:09:02,425 --> 00:09:04,831
+So now, let's understand kubectl.
+
+116
+00:09:04,831 --> 00:09:12,072
+So Kubectl is the management utility for
+controlling a cluster.
+
+117
+00:09:12,072 --> 00:09:14,097
+So much as we saw with Docker,
+
+118
+00:09:14,097 --> 00:09:18,883
+where it was some executable that
+interacted with the Docker daemon.
+
+119
+00:09:18,883 --> 00:09:23,027
+Kubectl is an executable that
+interacts with the control plane.
+
+120
+00:09:23,027 --> 00:09:27,171
+The software that's running
+on that control plane node.
+
+121
+00:09:27,171 --> 00:09:33,245
+There's a file,
+it's in our home directory, .kube/config,
+
+122
+00:09:33,245 --> 00:09:38,677
+will tell the utility, kubectl,
+where to send API calls.
+
+123
+00:09:38,677 --> 00:09:41,338
+So it wants to send them
+to the control plane.
+
+124
+00:09:41,338 --> 00:09:42,918
+It'll have all the configuration.
+
+125
+00:09:42,918 --> 00:09:48,729
+It'll say, this is running in
+this container at this address.
+
+126
+00:09:48,729 --> 00:09:50,750
+Well, it won't say that it's
+running in a container, but
+
+127
+00:09:50,750 --> 00:09:52,094
+it'll say that it's at this address.
+
+128
+00:09:52,094 --> 00:09:54,449
+And so, that's how it can reach it.
+
+129
+00:09:54,449 --> 00:10:02,088
+So now, if we go into, not inside of
+the control plane node, but outside of it.
+
+130
+00:10:02,088 --> 00:10:06,875
+[COUGH]
+>> So here, we're just in the kind of
+
+131
+00:10:06,875 --> 00:10:10,645
+root namespace outside of Docker.
+
+132
+00:10:10,645 --> 00:10:11,916
+I have Docker.
+
+133
+00:10:11,916 --> 00:10:15,858
+Here's all the nodes running as
+kind of containers inside that.
+
+134
+00:10:15,858 --> 00:10:21,008
+I could say kubectl get nodes.
+
+135
+00:10:21,008 --> 00:10:25,676
+So we'll kind of continually
+work through different things
+
+136
+00:10:25,676 --> 00:10:30,357
+that you can do with kubectl,
+and it's insanely powerful.
+
+137
+00:10:30,357 --> 00:10:35,906
+If I just type kubectl, it's going to
+show a whole bunch of different commands.
+
+138
+00:10:35,906 --> 00:10:38,512
+Each of those has a lot of
+things you can do with it.
+
+139
+00:10:38,512 --> 00:10:39,712
+We're going to stick to the basics.
+
+140
+00:10:39,712 --> 00:10:43,266
+So kubectl get nodes.
+
+141
+00:10:43,266 --> 00:10:44,613
+And there we go.
+
+142
+00:10:44,613 --> 00:10:48,715
+It showing the two workers and
+the control plane.
+
+143
+00:10:48,715 --> 00:10:50,118
+And it's saying it's all ready.
+
+144
+00:10:53,598 --> 00:10:59,107
+All right, so now,
+commands we'll use are kubectl apply,
+
+145
+00:10:59,107 --> 00:11:02,563
+delete, get, describe, and logs.
+
+146
+00:11:02,563 --> 00:11:07,726
+So those are, well, we'll restrict
+ourselves to those for the most part.
+
+147
+00:11:07,726 --> 00:11:13,993
+All right, so the first construct
+to know about is called a pod.
+
+148
+00:11:13,993 --> 00:11:17,797
+So a pod is the unit
+of work in Kubernetes.
+
+149
+00:11:17,797 --> 00:11:21,433
+It's often a single container, but
+
+150
+00:11:21,433 --> 00:11:25,899
+it can be multiple containers,
+if you want.
+
+151
+00:11:25,899 --> 00:11:31,994
+Each pod receives a unique IP
+address in the Kubernetes cluster.
+
+152
+00:11:31,994 --> 00:11:37,863
+And so, to create a pod, we're going to
+give it a YAML configuration file,
+
+153
+00:11:37,863 --> 00:11:42,424
+and we're going to say kubectl apply-f,
+that yaml file.
+
+154
+00:11:42,424 --> 00:11:48,195
+And then, to delete it, we're going to
+say, kubectl delete that yaml file.
+
+155
+00:11:48,195 --> 00:11:53,013
+Now, I added this --force,
+because if you don't,
+
+156
+00:11:53,013 --> 00:11:56,469
+it'll have this ten second delay, but
+
+157
+00:11:56,469 --> 00:12:01,311
+we're just going to kind of
+force it to do it immediately.
+
+158
+00:12:01,311 --> 00:12:05,879
+So in Kubernetes,
+if this is your first exposure to it,
+
+159
+00:12:05,879 --> 00:12:13,095
+it might look overwhelming, but there's
+common patterns that you'll start seeing.
+
+160
+00:12:13,095 --> 00:12:14,735
+So in the YAML files,
+
+161
+00:12:14,735 --> 00:12:19,574
+all of them are going to be basically
+the same general structure.
+
+162
+00:12:19,574 --> 00:12:23,949
+It's going to have these four
+main components, the API version,
+
+163
+00:12:23,949 --> 00:12:27,522
+the kind, the metadata,
+and the spec, all right?
+
+164
+00:12:27,522 --> 00:12:33,144
+So when you have a pod, it's going to look
+like one thing, and some other things that
+
+165
+00:12:33,144 --> 00:12:38,710
+we're going to show, will have that same
+structure, but with different values.
+
+166
+00:12:38,710 --> 00:12:45,244
+So as an aside on Yaml, which stands for
+yet another markup language,
+
+167
+00:12:45,244 --> 00:12:50,226
+all the configuration is
+a set of key value pairs, and
+
+168
+00:12:50,226 --> 00:12:54,690
+then the values can be
+further key value pairs.
+
+169
+00:12:54,690 --> 00:12:57,791
+So a key is just a string.
+
+170
+00:12:57,791 --> 00:13:03,607
+Value is a string,
+can contain numbers and things like that.
+
+171
+00:13:03,607 --> 00:13:06,586
+So you could see it as on the same line,
+<key>:value.
+
+172
+00:13:06,586 --> 00:13:09,183
+You could see <key> colon <value>.
+
+173
+00:13:09,183 --> 00:13:14,035
+Or you could see if it's a list,
+where there's multiple,
+
+174
+00:13:14,035 --> 00:13:20,551
+it's an array of values, where it's key or
+array, key colon array of values.
+
+175
+00:13:20,551 --> 00:13:23,234
+It would have this dash, all right?
+
+176
+00:13:23,234 --> 00:13:27,777
+And so, then,
+you could see something like <key>:value,
+
+177
+00:13:27,777 --> 00:13:32,930
+where this might be a different key
+colon different value, all right?
+
+178
+00:13:32,930 --> 00:13:37,514
+And so,
+there could be multiple things there.
+
+179
+00:13:37,514 --> 00:13:40,128
+All right, so that's a decide on Yaml.
+
+180
+00:13:40,128 --> 00:13:45,318
+Now, let's go through
+a simple example of a pod,
+
+181
+00:13:45,318 --> 00:13:50,024
+where I'm going to launch
+an nginx container.
+
+182
+00:13:50,024 --> 00:13:54,542
+So the top parts, the apiVersion,
+we're going to say v1.
+
+183
+00:13:54,542 --> 00:14:00,409
+And so, you'll be able to see in
+the documentation what API version to use.
+
+184
+00:14:00,409 --> 00:14:02,437
+Just go to the Kubernetes documentation.
+
+185
+00:14:02,437 --> 00:14:05,775
+We're going to say the kind,
+it's going to be a Pod.
+
+186
+00:14:05,775 --> 00:14:09,904
+Some metadata, that we're going to
+associate with it is a name.
+
+187
+00:14:09,904 --> 00:14:15,188
+We're going to give it mynginx, and
+then the last part is that spec.
+
+188
+00:14:15,188 --> 00:14:19,238
+So here, for a pod,
+it's going to be unique to say,
+
+189
+00:14:19,238 --> 00:14:23,489
+here's the containers I
+want to run inside of my pod.
+
+190
+00:14:23,489 --> 00:14:26,518
+We're only going to, and so,
+then, that'll be a list.
+
+191
+00:14:26,518 --> 00:14:32,242
+It's going to be an array size of one for
+us, where I'm going to say,
+
+192
+00:14:32,242 --> 00:14:39,026
+I want that container to be called
+mynginx, and I want the image to be nginx.
+
+193
+00:14:39,026 --> 00:14:42,783
+So let's try this out.
+
+194
+00:14:42,783 --> 00:14:45,091
+We can apply it,
+which will get it running.
+
+195
+00:14:45,091 --> 00:14:48,900
+We can then see it running,
+we can get its logs,
+
+196
+00:14:48,900 --> 00:14:54,250
+see more details about it, delete it,
+and all that kind of stuff.
+
+197
+00:14:54,250 --> 00:14:57,635
+All right, so here, I'm going to say.
+
+198
+00:14:57,635 --> 00:15:00,827
+So in this directory,
+
+199
+00:15:00,827 --> 00:15:07,214
+we have a directory called pod-configs/.
+
+200
+00:15:07,214 --> 00:15:14,795
+And the one we're looking at here
+is this one, simpleenginx.yaml.
+
+201
+00:15:14,795 --> 00:15:17,217
+So that's what we just
+showed in the slide.
+
+202
+00:15:17,217 --> 00:15:22,384
+So I'm going to say kubectl apply-f,
+
+203
+00:15:22,384 --> 00:15:26,891
+and then simpleenginx.yaml.
+
+204
+00:15:26,891 --> 00:15:28,617
+Great.
+
+205
+00:15:28,617 --> 00:15:31,440
+All right, so what do I do with this?
+
+206
+00:15:31,440 --> 00:15:32,987
+What just happened?
+
+207
+00:15:32,987 --> 00:15:37,710
+Well, let me run kubectl get pods,
+
+208
+00:15:37,710 --> 00:15:42,282
+and I'm going to say, output wide.
+
+209
+00:15:42,282 --> 00:15:46,662
+That's optional, but
+there's something extra I want to see.
+
+210
+00:15:46,662 --> 00:15:51,179
+So what this is going to do is, it's
+going to contact the control plane, and
+
+211
+00:15:51,179 --> 00:15:56,050
+it's going to say,
+>> All right, control plane,
+
+212
+00:15:56,050 --> 00:15:59,290
+give me a list of all
+the pods that are running.
+
+213
+00:15:59,290 --> 00:16:03,444
+And we could see mynginx is running.
+
+214
+00:16:03,444 --> 00:16:08,789
+It chose to run it on kind node worker2.
+
+215
+00:16:08,789 --> 00:16:12,713
+And it assigned it an IP address,
+all right?
+
+216
+00:16:12,713 --> 00:16:17,463
+I could see the logs of it.
+
+217
+00:16:17,463 --> 00:16:21,474
+kube ctl get logs,
+
+218
+00:16:21,474 --> 00:16:25,739
+mynginx or get log.
+
+219
+00:16:28,292 --> 00:16:32,704
+Logs pod.
+
+220
+00:16:32,704 --> 00:16:36,877
+Sorry, it's not get logs, it's just logs.
+
+221
+00:16:36,877 --> 00:16:40,670
+But not pod, EA live videos.
+
+222
+00:16:40,670 --> 00:16:46,829
+All right, so let me clear that and
+run it again.
+
+223
+00:16:46,829 --> 00:16:54,934
+All right, so
+this is the log from that particular pod.
+
+224
+00:16:54,934 --> 00:17:02,151
+So if I were to write my own
+application and I'm outputting,
+
+225
+00:17:02,151 --> 00:17:08,530
+this would allow me to
+see from the logs there.
+
+226
+00:17:08,530 --> 00:17:15,010
+All right, so let me do something
+
+227
+00:17:15,010 --> 00:17:22,350
+like kubectl describe pod mynginx.
+
+228
+00:17:22,350 --> 00:17:26,378
+So now if I want to know
+more about a given pod,
+
+229
+00:17:26,378 --> 00:17:31,004
+let me pipe that into less,
+I can say describe it.
+
+230
+00:17:31,004 --> 00:17:35,036
+And here has all the information
+that Kubernetes knows about it.
+
+231
+00:17:35,036 --> 00:17:38,042
+It's going to have its IP addresses,
+its containers.
+
+232
+00:17:38,042 --> 00:17:42,058
+Here's some container
+information about it.
+
+233
+00:17:42,058 --> 00:17:47,351
+If we learned about
+mounting directories and
+
+234
+00:17:47,351 --> 00:17:50,142
+various other things.
+
+235
+00:17:50,142 --> 00:17:54,184
+And here's some event
+log [COUGH] about it.
+
+236
+00:17:54,184 --> 00:18:02,260
+It pulled the image, it successfully
+decided where to assign the worker to.
+
+237
+00:18:02,260 --> 00:18:05,432
+And then it's stated there.
+
+238
+00:18:05,432 --> 00:18:10,593
+Now if there's any kind of errors with it,
+it'll probably show up right there.
+
+239
+00:18:10,593 --> 00:18:16,209
+All right, so that's that.
+
+240
+00:18:16,209 --> 00:18:22,480
+I can now say kubectl delete
+
+241
+00:18:22,480 --> 00:18:27,393
+--force mynginx.
+
+242
+00:18:27,393 --> 00:18:31,360
+pod mynginx.
+
+243
+00:18:31,360 --> 00:18:34,488
+All right, and
+
+244
+00:18:34,488 --> 00:18:39,541
+if I do kubectl get pods,
+
+245
+00:18:39,541 --> 00:18:46,769
+there's no pods that are running.
+
+246
+00:18:46,769 --> 00:18:54,370
+All right, so one last, or
+let me flip back over to the slides.
+
+247
+00:18:55,430 --> 00:19:01,528
+Now let's talk about networking, just
+enough at this point just to test this.
+
+248
+00:19:01,528 --> 00:19:03,656
+So when you run a pod,
+it gets an IP address.
+
+249
+00:19:03,656 --> 00:19:06,410
+We saw that IP address.
+
+250
+00:19:06,410 --> 00:19:14,578
+So that pod, that IP address is
+local to the cluster network.
+
+251
+00:19:14,578 --> 00:19:19,574
+So what the cluster network is,
+is it's basically created, Kubernetes
+
+252
+00:19:19,574 --> 00:19:25,008
+creates its own network where all the pods
+can communicate with one another.
+
+253
+00:19:25,008 --> 00:19:31,950
+But it's outside of all the networking
+that is happening on the given workers.
+
+254
+00:19:31,950 --> 00:19:38,552
+So it's not this publicly
+accessible IP address or,
+
+255
+00:19:38,552 --> 00:19:45,459
+from where I'm running,
+which is a host outside of it.
+
+256
+00:19:45,459 --> 00:19:53,062
+This 1.2.3.5 doesn't have meaning
+outside of the Kubernetes cluster.
+
+257
+00:19:53,062 --> 00:19:56,238
+So the simple mechanism just for
+
+258
+00:19:56,238 --> 00:20:00,714
+testing is we can do some port-forwarding.
+
+259
+00:20:00,714 --> 00:20:05,591
+And so this is what allows us to
+port-forward from where kubectl
+
+260
+00:20:05,591 --> 00:20:08,675
+is being run to the Kubernetes network.
+
+261
+00:20:08,675 --> 00:20:13,190
+So I could say kubectl
+port-forward some pod/mynginx.
+
+262
+00:20:13,190 --> 00:20:20,296
+So I can give it the resource and
+then the port mapping I want to see.
+
+263
+00:20:20,296 --> 00:20:24,704
+All right, so let me rerun kubectl,
+
+264
+00:20:24,704 --> 00:20:27,976
+apply -f simple-nginx,
+
+265
+00:20:27,976 --> 00:20:33,239
+get that running again, kubectl get pods,
+
+266
+00:20:33,239 --> 00:20:37,664
+I can see the container is creating.
+
+267
+00:20:37,664 --> 00:20:38,850
+It's still creating.
+
+268
+00:20:41,270 --> 00:20:47,830
+All right, it chose a different worker,
+so chances are it's pulling the image.
+
+269
+00:20:51,670 --> 00:20:53,912
+And there, we got an IP address.
+
+270
+00:20:53,912 --> 00:20:56,551
+All right, so now it's up and running.
+
+271
+00:20:56,551 --> 00:21:02,952
+Now let me keep that running and then let
+me run the port-forwarding from this one.
+
+272
+00:21:02,952 --> 00:21:09,007
+So kubectl, port-forward
+
+273
+00:21:09,007 --> 00:21:16,583
+to pod/mynginx 8000:80.
+
+274
+00:21:16,583 --> 00:21:20,860
+So internally it'll be port 80,
+externally it's be port 8000.
+
+275
+00:21:22,030 --> 00:21:24,859
+All right, so this goes and
+
+276
+00:21:24,859 --> 00:21:30,770
+it just won't return until
+you cancel out from this.
+
+277
+00:21:30,770 --> 00:21:37,094
+So what this will allow me
+to do is now from outside
+
+278
+00:21:37,094 --> 00:21:42,804
+of the container, outside of the cluster,
+
+279
+00:21:42,804 --> 00:21:49,000
+I can do curl 127.0.0.1:8000.
+
+280
+00:21:50,890 --> 00:21:57,640
+And that's going to handle
+a connection for 8000.
+
+281
+00:21:58,650 --> 00:22:04,555
+So that went through that port-forwarding
+to get inside of the cluster and
+
+282
+00:22:04,555 --> 00:22:07,097
+then communicated with nginx.
+
+283
+00:22:07,097 --> 00:22:11,153
+And so
+then it print out that was the defaults,
+
+284
+00:22:11,153 --> 00:22:14,464
+what ngInx returns, replies with.
+
+285
+00:22:14,464 --> 00:22:18,000
+All right, so
+that's what port-forwarding does.
+
+286
+00:22:19,970 --> 00:22:25,998
+The next to know about is controllers.
+
+287
+00:22:25,998 --> 00:22:29,908
+So we were just creating Pod's directly.
+
+288
+00:22:29,908 --> 00:22:37,044
+And we could say stuff like kubectl,
+apply -f somepod.yaml.
+
+289
+00:22:37,044 --> 00:22:42,474
+But this is pretty manual and
+it's better to not do that,
+
+290
+00:22:42,474 --> 00:22:49,617
+and instead create another resource
+which then creates and manages pods.
+
+291
+00:22:49,617 --> 00:22:54,339
+So there's something called a deployment.
+
+292
+00:22:54,339 --> 00:22:57,602
+And so
+a deployment is a type of controller, so
+
+293
+00:22:57,602 --> 00:23:03,206
+there's a bunch of different types of
+controllers that exist in Kubernetes.
+
+294
+00:23:03,206 --> 00:23:06,564
+The deployment is one specific one.
+
+295
+00:23:06,564 --> 00:23:10,552
+So you describe a desired
+state in a Deployment, and
+
+296
+00:23:10,552 --> 00:23:15,086
+then the Deployment Controller
+changes the actual state to
+
+297
+00:23:15,086 --> 00:23:18,378
+the desired state at a controlled rate.
+
+298
+00:23:18,378 --> 00:23:23,708
+So it actually controls another
+controller (ReplicaSet).
+
+299
+00:23:23,708 --> 00:23:29,450
+Some uses are we can scale
+the number of pods up and down.
+
+300
+00:23:29,450 --> 00:23:33,922
+We can control or
+have a controlled upgrade or downgrade.
+
+301
+00:23:33,922 --> 00:23:39,309
+So say I have a version one of some
+application and then I want to upgrade
+
+302
+00:23:39,309 --> 00:23:45,331
+it to version two, now I have running six
+replicas of it, well, this is a way to
+
+303
+00:23:45,331 --> 00:23:50,578
+keep the service continuously
+running while doing the upgrade.
+
+304
+00:23:50,578 --> 00:23:54,060
+And maybe I want to do an update
+to the pod spec itself.
+
+305
+00:23:56,295 --> 00:23:59,927
+Alright, so here's the example, YAML.
+
+306
+00:23:59,927 --> 00:24:03,445
+So again, apiVersion kind,
+
+307
+00:24:03,445 --> 00:24:08,238
+we're going to say deployment metadata.
+
+308
+00:24:08,238 --> 00:24:09,860
+We'll talk about that in a second.
+
+309
+00:24:09,860 --> 00:24:11,429
+And then the spec.
+
+310
+00:24:11,429 --> 00:24:12,329
+So the spec for
+
+311
+00:24:12,329 --> 00:24:16,768
+a deployment is a little richer
+because it's a little more powerful.
+
+312
+00:24:16,768 --> 00:24:19,502
+Here the main thing is we're
+going to say replicas.
+
+313
+00:24:19,502 --> 00:24:22,447
+I want it to have three replicas.
+
+314
+00:24:22,447 --> 00:24:30,273
+And then that specifies how many
+pods that are always running.
+
+315
+00:24:30,273 --> 00:24:38,336
+The next is the selector says which
+pod to apply that condition to, right.
+
+316
+00:24:38,336 --> 00:24:40,897
+And then the template says,
+
+317
+00:24:40,897 --> 00:24:45,922
+whenever I need to create a new pod,
+use this template.
+
+318
+00:24:45,922 --> 00:24:51,300
+So here's the metadata for that pod
+creation and the spec of the pod creation.
+
+319
+00:24:51,300 --> 00:24:53,818
+So we're going to say the name is nginx.
+
+320
+00:24:53,818 --> 00:24:59,464
+Images, nginx, right, so the selector.
+
+321
+00:24:59,464 --> 00:25:05,422
+So when he creates the pod, I think
+I have aside on labels and selectors.
+
+322
+00:25:05,422 --> 00:25:10,103
+So a label is an arbitrary
+key-value pair that
+
+323
+00:25:10,103 --> 00:25:15,030
+you can attach to a resource,
+for example a pod.
+
+324
+00:25:15,030 --> 00:25:18,557
+And then it could be used for
+label selection.
+
+325
+00:25:18,557 --> 00:25:23,918
+So we could do this,
+put the label inside the metadata
+
+326
+00:25:23,918 --> 00:25:28,340
+like that or via kubectl control manually.
+
+327
+00:25:28,340 --> 00:25:35,483
+So in this picture or in this example of
+the deployment, whenever pod is created,
+
+328
+00:25:35,483 --> 00:25:41,498
+it will create the pod with this label,
+the key value pair app nginx.
+
+329
+00:25:41,498 --> 00:25:44,900
+And it can have multiple labels.
+
+330
+00:25:44,900 --> 00:25:50,107
+[COUGH] And then for the deployment,
+what it uses is this selector.
+
+331
+00:25:50,107 --> 00:25:53,972
+So it says, here's all the labels
+that need to match for
+
+332
+00:25:53,972 --> 00:25:58,012
+me to consider it as part of
+this three replicas app nginx.
+
+333
+00:25:58,012 --> 00:26:02,778
+Now these should match, but
+why it's slightly different is
+
+334
+00:26:02,778 --> 00:26:07,824
+because let's say I already have,
+I've manually created some
+
+335
+00:26:07,824 --> 00:26:12,981
+pods with these labels and
+then I come and run a deployment later.
+
+336
+00:26:12,981 --> 00:26:17,572
+Well, it will match on
+those existing pods and
+
+337
+00:26:17,572 --> 00:26:24,174
+kind of continually see that it's
+kind of part of this deployment.
+
+338
+00:26:24,174 --> 00:26:28,561
+All right, so that's an aside
+on the labels and selectors.
+
+339
+00:26:28,561 --> 00:26:31,830
+So let's go and try it.
+
+340
+00:26:31,830 --> 00:26:35,353
+So let's flip back over here.
+
+341
+00:26:35,353 --> 00:26:39,682
+All right, so
+let me stop the port forwarding.
+
+342
+00:26:39,682 --> 00:26:45,758
+We don't really need that,
+kubectl get pods.
+
+343
+00:26:45,758 --> 00:26:46,975
+I see it's still running.
+
+344
+00:26:46,975 --> 00:26:52,351
+So I'll say delete force
+
+345
+00:26:52,351 --> 00:26:57,220
+pod mynginx, great.
+
+346
+00:26:57,220 --> 00:26:59,857
+So now let's look at the deployment.
+
+347
+00:26:59,857 --> 00:27:03,784
+Simple nginx deployment.
+
+348
+00:27:03,784 --> 00:27:06,235
+So here we're going to give it a name.
+
+349
+00:27:06,235 --> 00:27:11,019
+So this is roughly the same stuff
+that was shown in the slide.
+
+350
+00:27:11,019 --> 00:27:14,567
+And you could see what it looks like.
+
+351
+00:27:14,567 --> 00:27:17,636
+And you can guess, how do we deploy this?
+
+352
+00:27:17,636 --> 00:27:25,936
+We say kubectl apply-f
+simple nginx-deployment.
+
+353
+00:27:25,936 --> 00:27:30,647
+And now it's going to get created,
+right, so
+
+354
+00:27:30,647 --> 00:27:35,621
+with that I can, now look,
+kubectl get pods.
+
+355
+00:27:35,621 --> 00:27:37,960
+So you can see I didn't create any pods.
+
+356
+00:27:37,960 --> 00:27:39,438
+I just created this deployment.
+
+357
+00:27:39,438 --> 00:27:42,845
+But it said to create four replicas.
+
+358
+00:27:42,845 --> 00:27:45,869
+And so
+you can see it created four replicas.
+
+359
+00:27:45,869 --> 00:27:48,858
+We can look where they're deployed.
+
+360
+00:27:48,858 --> 00:27:55,252
+Two of them on worker 2,
+two of them on worker 1.
+
+361
+00:27:55,252 --> 00:27:58,708
+All of them got IP addresses.
+
+362
+00:27:58,708 --> 00:28:03,055
+If I want to see what deployments I have,
+
+363
+00:28:03,055 --> 00:28:07,287
+I can say, kubectl get deployments.
+
+364
+00:28:07,287 --> 00:28:13,449
+And there we can see mynginx
+deployment exists and it's running.
+
+365
+00:28:13,449 --> 00:28:20,498
+As an aside, I can say get all,
+which will show everything,
+
+366
+00:28:20,498 --> 00:28:28,533
+all the different resources that
+have been created, okay, right.
+
+367
+00:28:28,533 --> 00:28:33,244
+So now let's look at if we change
+
+368
+00:28:33,244 --> 00:28:37,956
+this number of replicas to two.
+
+369
+00:28:37,956 --> 00:28:39,194
+Let's see what happens.
+
+370
+00:28:39,194 --> 00:28:46,340
+So let me say kubectl apply -f deployment.
+
+371
+00:28:46,340 --> 00:28:50,814
+All right, and kubectl get pods.
+
+372
+00:28:50,814 --> 00:28:55,178
+You can see now only two are running.
+
+373
+00:28:55,178 --> 00:28:59,555
+If I want to get it again and
+change it to four, or
+
+374
+00:28:59,555 --> 00:29:03,049
+let's change it to three this time.
+
+375
+00:29:03,049 --> 00:29:09,815
+And so you'll note that these two,
+it wasn't like it created two new ones.
+
+376
+00:29:09,815 --> 00:29:13,710
+That's the exact same one
+that was already created.
+
+377
+00:29:13,710 --> 00:29:16,909
+This one is this one that was created.
+
+378
+00:29:16,909 --> 00:29:21,238
+And these are the two
+that were terminated.
+
+379
+00:29:21,238 --> 00:29:24,504
+All right, so let me apply it again.
+
+380
+00:29:24,504 --> 00:29:30,807
+I just increased it to three nodes,
+or three pods, three replicas.
+
+381
+00:29:30,807 --> 00:29:36,522
+And you can see it's now
+creating a third one, right.
+
+382
+00:29:36,522 --> 00:29:41,637
+So to delete,
+you can do kubectl delete deployment,
+
+383
+00:29:41,637 --> 00:29:47,903
+whatever the deployment name is,
+which is my nginx deployment.
+
+384
+00:29:47,903 --> 00:29:50,343
+We're going to leave it running for
+
+385
+00:29:50,343 --> 00:29:54,880
+now because I want to go into
+the next thing real quick, right.
+
+386
+00:29:54,880 --> 00:29:59,080
+So last concept that we're going to talk
+about this time is called a service.
+
+387
+00:29:59,080 --> 00:30:04,305
+So a service is an abstraction which
+defines a logical set of pods and
+
+388
+00:30:04,305 --> 00:30:06,884
+a policy by which to access them.
+
+389
+00:30:06,884 --> 00:30:11,435
+So, meaning it load balances between them,
+right?
+
+390
+00:30:11,435 --> 00:30:15,083
+So think of this cloud as a service.
+
+391
+00:30:15,083 --> 00:30:17,293
+The service is an IP address.
+
+392
+00:30:17,293 --> 00:30:19,166
+It gets an IP address.
+
+393
+00:30:19,166 --> 00:30:26,084
+And anytime I want to communicate,
+I can say the IP address of the service.
+
+394
+00:30:26,084 --> 00:30:32,129
+And then it will choose one of
+the pods to send that request to.
+
+395
+00:30:32,129 --> 00:30:37,468
+It will use a selector to see
+which nodes should be in that set,
+
+396
+00:30:37,468 --> 00:30:41,793
+both across scaling and
+across failure, right.
+
+397
+00:30:41,793 --> 00:30:46,022
+So the YAML, let's show that again,
+
+398
+00:30:46,022 --> 00:30:50,126
+or show that this time for a service.
+
+399
+00:30:50,126 --> 00:30:53,228
+Again, similar API version kind.
+
+400
+00:30:53,228 --> 00:30:56,715
+Now we're saying service,
+giving it some metadata.
+
+401
+00:30:56,715 --> 00:31:02,098
+I just want to name the service
+because we can reference that.
+
+402
+00:31:02,098 --> 00:31:07,033
+For port forwarding, we'll see, but
+for other things we'll see later and
+
+403
+00:31:07,033 --> 00:31:08,045
+then the spec.
+
+404
+00:31:08,045 --> 00:31:10,662
+So the spec here it says,
+what is the selector?
+
+405
+00:31:10,662 --> 00:31:13,701
+That's the main,
+most important thing, the selector.
+
+406
+00:31:13,701 --> 00:31:16,964
+I'm going to say anything
+that has app nginx.
+
+407
+00:31:16,964 --> 00:31:20,428
+Now that should look familiar because
+that's what we used in the deployment.
+
+408
+00:31:20,428 --> 00:31:27,080
+So this should select all of
+those pods from that deployment.
+
+409
+00:31:27,080 --> 00:31:32,112
+And then you can specify other things
+like should we do in port translation or
+
+410
+00:31:32,112 --> 00:31:33,536
+anything like that.
+
+411
+00:31:33,536 --> 00:31:36,365
+So let's give this a try.
+
+412
+00:31:36,365 --> 00:31:43,434
+[COUGH] So
+you can guess it exists in here.
+
+413
+00:31:43,434 --> 00:31:46,397
+Simple nginx service.
+
+414
+00:31:46,397 --> 00:31:48,088
+It's what's shown in the slide.
+
+415
+00:31:48,088 --> 00:31:54,540
+So I can say kubectl apply
+-f simple nginx service.
+
+416
+00:31:54,540 --> 00:31:57,770
+And it's applied.
+
+417
+00:31:57,770 --> 00:32:02,529
+I could say kube ctl get all.
+
+418
+00:32:02,529 --> 00:32:04,692
+If I want to see all the things.
+
+419
+00:32:04,692 --> 00:32:05,591
+And there we go.
+
+420
+00:32:05,591 --> 00:32:11,016
+If my service is running,
+I could say kubectl get services.
+
+421
+00:32:11,016 --> 00:32:14,037
+There's my service that's running.
+
+422
+00:32:14,037 --> 00:32:18,887
+And if I wanted to interact with
+it from within the cluster,
+
+423
+00:32:18,887 --> 00:32:24,332
+I know it has its own IP address,
+which is different than the pods.
+
+424
+00:32:24,332 --> 00:32:28,413
+I can say get pods-o wide.
+
+425
+00:32:28,413 --> 00:32:33,230
+You can see the pods have
+a different IP address than that,
+
+426
+00:32:33,230 --> 00:32:35,699
+but the service does know it.
+
+427
+00:32:35,699 --> 00:32:40,064
+So how do we learn more
+information about the service?
+
+428
+00:32:40,064 --> 00:32:45,762
+That's right,
+the describe kubectl describe.
+
+429
+00:32:45,762 --> 00:32:50,657
+So we saw that with the pod, but this time
+
+430
+00:32:50,657 --> 00:32:55,704
+we're going to describe mynginx service.
+
+431
+00:32:55,704 --> 00:33:01,743
+You're going to actually have
+to specify the type or the kind.
+
+432
+00:33:01,743 --> 00:33:06,142
+So kubectl, describe service,
+mynginx service.
+
+433
+00:33:06,142 --> 00:33:11,315
+And so what's interesting to note is
+these things right here, the endpoints.
+
+434
+00:33:11,315 --> 00:33:14,929
+So it found the selector
+through the selector and
+
+435
+00:33:14,929 --> 00:33:19,778
+through the labels of these nodes,
+the IP address of each of these
+
+436
+00:33:19,778 --> 00:33:24,471
+pods that are running, and
+it keeps it in that set, all right?
+
+437
+00:33:24,471 --> 00:33:32,975
+So now if we were to do port forwarding,
+
+438
+00:33:32,975 --> 00:33:37,097
+I would be able to,
+
+439
+00:33:37,097 --> 00:33:43,284
+instead of saying mynginx,
+
+440
+00:33:43,284 --> 00:33:51,299
+say mynginx-service, all right?
+
+441
+00:33:51,299 --> 00:33:54,161
+And now it would forward to any of them.
+
+442
+00:33:54,161 --> 00:33:57,449
+So now I can say curl
+
+443
+00:33:57,449 --> 00:34:04,651
+1270.0.0.1000, right?
+
+444
+00:34:04,651 --> 00:34:10,913
+And what this is doing, which we don't
+have it going between the different ones,
+
+445
+00:34:10,913 --> 00:34:16,376
+but it's actually load balancing
+between the three pods that we have.
+
+446
+00:34:16,376 --> 00:34:19,475
+So I did curl, it used port forwarding,
+
+447
+00:34:19,475 --> 00:34:24,501
+which then forwarded it to this
+IP address inside of the cluster.
+
+448
+00:34:24,501 --> 00:34:27,260
+And then the first request
+went to the pod one.
+
+449
+00:34:27,260 --> 00:34:33,366
+Second went to this pod,
+third one went to the last pod, all right?
+
+450
+00:34:33,366 --> 00:34:35,272
+So another way you could test that.
+
+451
+00:34:35,272 --> 00:34:39,186
+We don't have that available
+right this second,
+
+452
+00:34:39,186 --> 00:34:43,563
+but you can write some Python
+code to create a service and
+
+453
+00:34:43,563 --> 00:34:47,120
+just have a different response for
+each one.
+
+454
+00:34:47,120 --> 00:34:52,138
+Okay, so
+there's to explore with Kubernetes, but
+
+455
+00:34:52,138 --> 00:34:58,083
+this should be enough really for
+everything we're going to do.
+
+456
+00:34:58,083 --> 00:35:02,323
+But certainly go try some of
+these on your own, all right?
+
+457
+00:35:02,323 --> 00:35:03,842
+And with that, we'll end here.
+
+458
+00:35:03,842 --> 00:35:04,581
+Thanks.

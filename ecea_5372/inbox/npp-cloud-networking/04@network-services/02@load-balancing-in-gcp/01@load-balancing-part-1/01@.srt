@@ -1,0 +1,826 @@
+1
+00:00:07,280 --> 00:00:10,050
+Let's go ahead and get started.
+
+2
+00:00:10,050 --> 00:00:13,920
+Here, we're going to talk
+about load balancing.
+
+3
+00:00:13,920 --> 00:00:15,940
+We're going to give a
+little introduction to it.
+
+4
+00:00:15,940 --> 00:00:19,320
+We're going to break this
+material into two parts,
+
+5
+00:00:19,320 --> 00:00:22,640
+so it doesn't become too long.
+
+6
+00:00:23,570 --> 00:00:26,220
+I guess the first question is,
+
+7
+00:00:26,220 --> 00:00:28,710
+what is load balancing?
+
+8
+00:00:28,710 --> 00:00:31,020
+In case you don't know,
+
+9
+00:00:31,020 --> 00:00:33,380
+a load balancer serves
+
+10
+00:00:33,380 --> 00:00:36,640
+as the point of
+entry for a service,
+
+11
+00:00:36,640 --> 00:00:39,500
+and it directs traffic to one of
+
+12
+00:00:39,500 --> 00:00:43,105
+N servers that can
+handle the request.
+
+13
+00:00:43,105 --> 00:00:48,585
+It's used for both scaling
+and for resilience.
+
+14
+00:00:48,585 --> 00:00:52,935
+Scaling meaning, I have
+three servers now,
+
+15
+00:00:52,935 --> 00:00:55,035
+I want to add a fourth because I
+
+16
+00:00:55,035 --> 00:00:57,450
+have a lot of traffic
+to my servers,
+
+17
+00:00:57,450 --> 00:00:58,670
+great, I can add
+
+18
+00:00:58,670 --> 00:01:01,150
+a fourth and the load
+balancer will handle that.
+
+19
+00:01:01,150 --> 00:01:04,005
+It also handles resilience,
+
+20
+00:01:04,005 --> 00:01:07,695
+in this case let's say
+I have three servers,
+
+21
+00:01:07,695 --> 00:01:09,815
+one of them fails, well,
+
+22
+00:01:09,815 --> 00:01:12,950
+the load balancer can
+detect that and stop
+
+23
+00:01:12,950 --> 00:01:17,810
+directing traffic to
+the third server.
+
+24
+00:01:18,070 --> 00:01:24,800
+So a key property of load
+balancing is the algorithm,
+
+25
+00:01:24,800 --> 00:01:29,015
+how it's doing the
+balancing of the load.
+
+26
+00:01:29,015 --> 00:01:36,250
+The clients of this service,
+initiate a connection.
+
+27
+00:01:36,250 --> 00:01:38,680
+It comes to the load balancer,
+
+28
+00:01:38,680 --> 00:01:41,870
+and then has to
+
+29
+00:01:41,870 --> 00:01:45,880
+choose which server to
+forward the request to,
+
+30
+00:01:45,880 --> 00:01:49,230
+and so this would
+be some algorithm.
+
+31
+00:01:49,230 --> 00:01:51,330
+It could be round-robin,
+
+32
+00:01:51,330 --> 00:01:54,230
+first connection
+goes to the top one,
+
+33
+00:01:54,230 --> 00:01:56,700
+second connection
+goes to the middle,
+
+34
+00:01:56,700 --> 00:01:58,920
+third one goes to
+the bottom one,
+
+35
+00:01:58,920 --> 00:02:00,650
+and then it goes back,
+
+36
+00:02:00,650 --> 00:02:03,030
+the next connection will
+go to this top one.
+
+37
+00:02:03,030 --> 00:02:06,380
+It could be look at the
+amount of load they have,
+
+38
+00:02:06,380 --> 00:02:08,780
+the number of connections
+each of these has,
+
+39
+00:02:08,780 --> 00:02:11,935
+and divide up the traffic
+in different ways.
+
+40
+00:02:11,935 --> 00:02:14,880
+That's the first key
+property is the algorithm.
+
+41
+00:02:14,880 --> 00:02:18,330
+The second is the server set.
+
+42
+00:02:18,330 --> 00:02:23,160
+This is basically on
+the load balancer.
+
+43
+00:02:23,160 --> 00:02:26,660
+You need a table of
+what all servers are
+
+44
+00:02:26,660 --> 00:02:31,055
+part of this set that it
+can load balance between.
+
+45
+00:02:31,055 --> 00:02:37,630
+This gets updated as you
+add and remove servers,
+
+46
+00:02:37,630 --> 00:02:40,300
+but it also keeps
+track of which of
+
+47
+00:02:40,300 --> 00:02:44,170
+these servers are live or not.
+
+48
+00:02:44,170 --> 00:02:49,150
+That, would include some
+form of liveness check,
+
+49
+00:02:49,150 --> 00:02:52,240
+so potentially
+through a heartbeat.
+
+50
+00:02:52,240 --> 00:02:57,130
+The load balancer sends
+the server requests,
+
+51
+00:02:57,130 --> 00:03:00,150
+like just are you still alive?
+
+52
+00:03:00,150 --> 00:03:01,970
+And if the server responds,
+
+53
+00:03:01,970 --> 00:03:05,125
+it marks that down and say,
+yes, it's still alive.
+
+54
+00:03:05,125 --> 00:03:10,650
+This could be in the
+case of a dead server,
+
+55
+00:03:10,650 --> 00:03:12,790
+it just wouldn't
+receive the response,
+
+56
+00:03:12,790 --> 00:03:15,580
+and it would time out.
+
+57
+00:03:15,830 --> 00:03:18,600
+That's the second key property.
+
+58
+00:03:18,600 --> 00:03:21,240
+Now, if we were to go into
+
+59
+00:03:21,240 --> 00:03:23,960
+Google Cloud platform into
+
+60
+00:03:23,960 --> 00:03:27,000
+the console and start saying,
+give me a load balancer.
+
+61
+00:03:27,000 --> 00:03:29,270
+It's going to ask you a bunch
+of different things like,
+
+62
+00:03:29,270 --> 00:03:31,010
+what type are you looking for?
+
+63
+00:03:31,010 --> 00:03:34,660
+The first thing is
+differentiating between,
+
+64
+00:03:34,660 --> 00:03:37,340
+is this an application
+load balancer
+
+65
+00:03:37,340 --> 00:03:40,595
+or is it network load balancer?
+
+66
+00:03:40,595 --> 00:03:42,280
+Let's tap into
+this a little bit,
+
+67
+00:03:42,280 --> 00:03:45,010
+make sure that we have an
+understanding of both.
+
+68
+00:03:45,010 --> 00:03:48,085
+When we say network
+load balancer,
+
+69
+00:03:48,085 --> 00:03:50,815
+and it said L4 for Layer 4,
+
+70
+00:03:50,815 --> 00:03:53,255
+this is the transport layer.
+
+71
+00:03:53,255 --> 00:03:58,845
+As a refresher of what
+transport layer does is,
+
+72
+00:03:58,845 --> 00:04:01,710
+I have an application
+
+73
+00:04:01,710 --> 00:04:05,060
+run-in in this
+picture on my laptop,
+
+74
+00:04:05,060 --> 00:04:09,035
+and there's some application
+running on a server.
+
+75
+00:04:09,035 --> 00:04:11,360
+Both of those are
+just a process,
+
+76
+00:04:11,360 --> 00:04:13,160
+and so a transport layer
+
+77
+00:04:13,160 --> 00:04:16,445
+provides this process to
+process communication,
+
+78
+00:04:16,445 --> 00:04:18,480
+and in the case of TCP,
+
+79
+00:04:18,480 --> 00:04:22,250
+it'll provide a reliable,
+in order stream.
+
+80
+00:04:22,250 --> 00:04:24,960
+If I'm talking to YouTube,
+
+81
+00:04:24,960 --> 00:04:30,155
+I open a TCP connection
+between my process,
+
+82
+00:04:30,155 --> 00:04:34,180
+and a process running in
+the YouTube infrastructure,
+
+83
+00:04:34,180 --> 00:04:36,435
+and the transport layer,
+
+84
+00:04:36,435 --> 00:04:40,390
+make sure that
+communication can happen.
+
+85
+00:04:41,630 --> 00:04:45,830
+One key part, but well
+we're particularly
+
+86
+00:04:45,830 --> 00:04:47,630
+interested in is one
+
+87
+00:04:47,630 --> 00:04:50,220
+of the header fields
+called the port.
+
+88
+00:04:50,220 --> 00:04:55,755
+This is an example,
+transport header,
+
+89
+00:04:55,755 --> 00:04:58,210
+and it's got a source port,
+
+90
+00:04:58,210 --> 00:05:01,990
+a destination port, and
+then some other fields.
+
+91
+00:05:01,990 --> 00:05:04,755
+This would be within
+an IP packet.
+
+92
+00:05:04,755 --> 00:05:08,600
+What this allows the
+operating system
+
+93
+00:05:08,600 --> 00:05:12,660
+to be able to do is to be
+able to direct traffic,
+
+94
+00:05:12,660 --> 00:05:16,790
+either to application
+that's running HTTP,
+
+95
+00:05:16,790 --> 00:05:18,395
+and that would be Port 80,
+
+96
+00:05:18,395 --> 00:05:22,505
+or an application running SSH,
+
+97
+00:05:22,505 --> 00:05:24,460
+and that would be
+Port 22 because
+
+98
+00:05:24,460 --> 00:05:28,040
+both of them have
+the same IP address.
+
+99
+00:05:28,040 --> 00:05:32,360
+We've seen this with
+the firewall rules,
+
+100
+00:05:32,360 --> 00:05:35,300
+but just to refresh it again.
+
+101
+00:05:36,010 --> 00:05:38,210
+On other hand,
+
+102
+00:05:38,210 --> 00:05:44,380
+an application layer protocol
+defines message syntax,
+
+103
+00:05:44,380 --> 00:05:46,790
+what fields it has,
+
+104
+00:05:46,790 --> 00:05:48,830
+how fields are delineated,
+
+105
+00:05:48,830 --> 00:05:52,010
+the types of messages
+that are exchange,
+
+106
+00:05:52,010 --> 00:05:54,900
+is this a request and
+response protocol?
+
+107
+00:05:54,900 --> 00:05:57,210
+And the message semantics,
+
+108
+00:05:57,210 --> 00:05:59,960
+the meaning of the
+information in the fields.
+
+109
+00:05:59,960 --> 00:06:06,050
+An example of an application
+layer protocol is HTTP,
+
+110
+00:06:06,050 --> 00:06:09,935
+which is the web's
+application layer protocol,
+
+111
+00:06:09,935 --> 00:06:13,970
+where a client and server
+exchange web objects,
+
+112
+00:06:13,970 --> 00:06:18,675
+whether it's HTML or JPEG,
+audio file, whatever.
+
+113
+00:06:18,675 --> 00:06:20,670
+The server itself is stateless,
+
+114
+00:06:20,670 --> 00:06:21,760
+in that it doesn't retain
+
+115
+00:06:21,760 --> 00:06:26,230
+information about
+past client requests.
+
+116
+00:06:26,450 --> 00:06:28,920
+When you're doing a request,
+
+117
+00:06:28,920 --> 00:06:32,540
+you specify the
+protocol like HTTP,
+
+118
+00:06:32,540 --> 00:06:37,330
+a host name, and then
+that web object.
+
+119
+00:06:37,330 --> 00:06:42,360
+In this case, the PC would
+send a request to the server,
+
+120
+00:06:42,360 --> 00:06:44,320
+get a response, something else
+
+121
+00:06:44,320 --> 00:06:47,390
+can send a request
+and get a response.
+
+122
+00:06:47,820 --> 00:06:51,260
+Coming back to
+application load balancer
+
+123
+00:06:51,260 --> 00:06:53,760
+versus network load balancer,
+
+124
+00:06:53,760 --> 00:06:57,700
+Layer 4 considers
+just the network IP
+
+125
+00:06:57,700 --> 00:07:00,880
+and the transport layer headers.
+
+126
+00:07:00,880 --> 00:07:04,115
+It can pass through the traffic,
+
+127
+00:07:04,115 --> 00:07:08,120
+and the routing consideration
+is largely how to
+
+128
+00:07:08,120 --> 00:07:13,275
+balance load and may be used
+to ensure flow affinity.
+
+129
+00:07:13,275 --> 00:07:15,735
+We'll come back to what that
+
+130
+00:07:15,735 --> 00:07:17,900
+really means and how
+
+131
+00:07:17,900 --> 00:07:20,140
+Google handles it with
+their Maglev system,
+
+132
+00:07:20,140 --> 00:07:23,680
+but it just means that if I
+open up a TCP connection,
+
+133
+00:07:23,680 --> 00:07:25,760
+I want all packets in
+
+134
+00:07:25,760 --> 00:07:29,395
+that same connection to
+go to the same server.
+
+135
+00:07:29,395 --> 00:07:34,120
+We need to ensure the
+affinity of a given flow,
+
+136
+00:07:34,120 --> 00:07:36,340
+meaning a TCP connection,
+
+137
+00:07:36,340 --> 00:07:38,460
+all goes to the same server.
+
+138
+00:07:38,460 --> 00:07:45,050
+Layer 7 also considers
+the application header.
+
+139
+00:07:45,050 --> 00:07:48,475
+A lot of times this is
+called a web proxy.
+
+140
+00:07:48,475 --> 00:07:53,360
+A lot of times it will
+terminate the TCP connection,
+
+141
+00:07:53,360 --> 00:07:57,380
+and then it also provides
+extra routing consideration,
+
+142
+00:07:57,380 --> 00:08:01,920
+where you can direct specific
+URLs to specific servers,
+
+143
+00:08:01,920 --> 00:08:05,955
+so maybe sign up
+goes to Server 1,
+
+144
+00:08:05,955 --> 00:08:08,250
+but then the purchase process,
+
+145
+00:08:08,250 --> 00:08:16,515
+the URL of domain/purchase
+goes to Servers 2 or 3.
+
+146
+00:08:16,515 --> 00:08:22,750
+A web proxy or application
+load balancer can do that.
+
+147
+00:08:22,910 --> 00:08:27,390
+Another thing that
+Google asked you about,
+
+148
+00:08:27,390 --> 00:08:31,740
+is this internal or external?
+
+149
+00:08:31,740 --> 00:08:36,645
+External load balancing would
+
+150
+00:08:36,645 --> 00:08:41,115
+likely want a public IP
+address associated with it,
+
+151
+00:08:41,115 --> 00:08:44,320
+and to be able to direct it to,
+
+152
+00:08:44,320 --> 00:08:49,090
+in this case say,
+web tier front-end.
+
+153
+00:08:49,090 --> 00:08:55,385
+Internal load balancing would
+be between applications,
+
+154
+00:08:55,385 --> 00:09:00,150
+both of them are within
+the Google domain.
+
+155
+00:09:00,260 --> 00:09:03,160
+The key difference is comes back
+
+156
+00:09:03,160 --> 00:09:06,830
+to that Andromeda
+software that we saw.
+
+157
+00:09:06,830 --> 00:09:09,445
+With an internal
+network load balancer,
+
+158
+00:09:09,445 --> 00:09:14,095
+forwarding rules can be
+handled with Andromeda.
+
+159
+00:09:14,095 --> 00:09:18,020
+That's shown in this picture.
+
+160
+00:09:18,020 --> 00:09:21,185
+We saw this the
+same with Cloudnet.
+
+161
+00:09:21,185 --> 00:09:23,960
+The load balancer
+normally would have
+
+162
+00:09:23,960 --> 00:09:27,800
+this separate machine in
+
+163
+00:09:27,800 --> 00:09:32,580
+the case of Google because
+they control both sides,
+
+164
+00:09:32,580 --> 00:09:35,060
+they don't need
+this middle box or
+
+165
+00:09:35,060 --> 00:09:40,160
+this middle proxy to do that
+for a network load balancer.
+
+166
+00:09:41,360 --> 00:09:45,400
+The two key systems in GCP,
+
+167
+00:09:45,400 --> 00:09:47,080
+we're going to
+learn about Maglev
+
+168
+00:09:47,080 --> 00:09:48,920
+for network load balancing,
+
+169
+00:09:48,920 --> 00:09:51,330
+for traffic from the external.
+
+170
+00:09:51,330 --> 00:09:54,270
+For application load balancing,
+
+171
+00:09:54,270 --> 00:09:57,320
+it's going to be set up a proxy,
+
+172
+00:09:57,320 --> 00:10:01,060
+and there's some open source
+software called Envoy.
+
+173
+00:10:01,970 --> 00:10:05,580
+To summarize what we
+just covered was,
+
+174
+00:10:05,580 --> 00:10:07,905
+application or Layer 7,
+
+175
+00:10:07,905 --> 00:10:11,490
+versus network or Layer
+4 load balancing,
+
+176
+00:10:11,490 --> 00:10:15,870
+and what it means to be
+internal versus external,
+
+177
+00:10:15,870 --> 00:10:19,800
+and how that differs for Google.
+
+178
+00:10:19,820 --> 00:10:22,365
+We're going to stop here,
+
+179
+00:10:22,365 --> 00:10:27,580
+and then jump into
+Part 2 next. Thanks.

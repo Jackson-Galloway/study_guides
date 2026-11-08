@@ -1,0 +1,936 @@
+1
+00:00:09,478 --> 00:00:11,690
+All right, hello again.
+
+2
+00:00:11,690 --> 00:00:16,638
+So previously, we've learned how to
+interact with the Linux forwarding
+
+3
+00:00:16,638 --> 00:00:18,888
+table through the command line.
+
+4
+00:00:18,888 --> 00:00:23,404
+We can use ip route add,
+add some entries, we can delete those,
+
+5
+00:00:23,404 --> 00:00:25,452
+change them, whatever.
+
+6
+00:00:25,452 --> 00:00:30,353
+So here we're now going to shift
+into being able to do that through
+
+7
+00:00:30,353 --> 00:00:32,058
+routing protocols.
+
+8
+00:00:32,058 --> 00:00:36,582
+So we're going to run control plane
+software that will set up those
+
+9
+00:00:36,582 --> 00:00:37,680
+tables for us.
+
+10
+00:00:39,890 --> 00:00:47,838
+All right, so little word on
+the wording forwarding versus routing.
+
+11
+00:00:47,838 --> 00:00:54,664
+So if we were being precise,
+forwarding happens in the data plane,
+
+12
+00:00:54,664 --> 00:01:00,170
+and its job is to direct a data
+packet to an output port or
+
+13
+00:01:00,170 --> 00:01:04,810
+link, and it uses a forwarding table.
+
+14
+00:01:04,810 --> 00:01:08,706
+Routing, on the other hand,
+is for the control plane.
+
+15
+00:01:08,706 --> 00:01:13,230
+It's what computes paths by
+coordinating with neighbors and
+
+16
+00:01:13,230 --> 00:01:16,416
+it creates the forwarding table, right?
+
+17
+00:01:16,416 --> 00:01:22,040
+So you would see a lot of the routers
+would have both the control plane and
+
+18
+00:01:22,040 --> 00:01:23,146
+data plane.
+
+19
+00:01:23,146 --> 00:01:27,051
+So the traffic goes through the data
+plane, the control plane is for
+
+20
+00:01:27,051 --> 00:01:28,910
+coordination with neighbors.
+
+21
+00:01:30,210 --> 00:01:36,142
+We're going to focus on configuring BGP,
+the Border Gateway Protocol.
+
+22
+00:01:36,142 --> 00:01:41,643
+So as a quick refresher about BGP,
+the Internet is many
+
+23
+00:01:41,643 --> 00:01:48,111
+interconnected networks called
+autonomous systems, right?
+
+24
+00:01:48,111 --> 00:01:52,060
+So each of these kind of clouds is
+representing one network that's
+
+25
+00:01:52,060 --> 00:01:53,580
+an autonomous system.
+
+26
+00:01:53,580 --> 00:01:59,237
+And this might be a network like Level 3,
+or Lumen now.
+
+27
+00:01:59,237 --> 00:02:06,495
+Another might be AT&T, another might
+be Verizon, and so forth, all right?
+
+28
+00:02:06,495 --> 00:02:12,448
+So BGP is the protocol used
+to coordinate between them.
+
+29
+00:02:12,448 --> 00:02:18,890
+So two different companies, they both
+run routers that are running BGP.
+
+30
+00:02:18,890 --> 00:02:22,991
+It allows them to communicate with each
+other about the part of the Internet
+
+31
+00:02:22,991 --> 00:02:25,190
+that they know about.
+
+32
+00:02:25,190 --> 00:02:30,414
+So the first key concept
+with BGP is peering.
+
+33
+00:02:30,414 --> 00:02:34,190
+So routers will peer with a neighbor.
+
+34
+00:02:34,190 --> 00:02:37,740
+And so what that means,
+let's say, look at this one.
+
+35
+00:02:37,740 --> 00:02:45,770
+This one will establish a TCP
+connection with its neighbor router.
+
+36
+00:02:45,770 --> 00:02:49,317
+They'll both exchange some
+properties about each other.
+
+37
+00:02:49,317 --> 00:02:52,240
+Like, the first one will say,
+hey, I'm AS1.
+
+38
+00:02:52,240 --> 00:02:55,410
+This guy will say, hey, I'm AS2.
+
+39
+00:02:55,410 --> 00:02:59,837
+Here's the capabilities that I have and
+so forth.
+
+40
+00:02:59,837 --> 00:03:04,264
+[COUGH] And then a state
+machine running inside of this,
+
+41
+00:03:04,264 --> 00:03:09,174
+through this exchange of messages,
+will ultimately lead to
+
+42
+00:03:09,174 --> 00:03:13,621
+the established state once
+these routers are peered.
+
+43
+00:03:13,621 --> 00:03:18,035
+So once they're peered,
+now they can exchange routes and
+
+44
+00:03:18,035 --> 00:03:23,750
+all that routing information,
+and now they can forward traffic.
+
+45
+00:03:23,750 --> 00:03:28,058
+So the message exchange part
+of it is there's two parts,
+
+46
+00:03:28,058 --> 00:03:30,661
+there's an announcement, and so
+
+47
+00:03:30,661 --> 00:03:36,154
+this tells neighbors of the availability
+of a path to some destination.
+
+48
+00:03:36,154 --> 00:03:42,666
+So let's say AS2 knows how
+to get to some prefix D,
+
+49
+00:03:42,666 --> 00:03:49,946
+and it knows that its path
+would be to go via AS4, right?
+
+50
+00:03:49,946 --> 00:03:54,214
+So it would send an announcement
+to its peer, AS1,
+
+51
+00:03:54,214 --> 00:03:59,452
+it would say something to the effect of,
+hey, I can get to D, and
+
+52
+00:03:59,452 --> 00:04:05,160
+if you were to choose this route,
+you would go via AS2 and then AS4.
+
+53
+00:04:05,160 --> 00:04:07,171
+So this is the AS path.
+
+54
+00:04:07,171 --> 00:04:13,055
+All other kind of connections that
+might have routes to it would say,
+
+55
+00:04:13,055 --> 00:04:18,628
+like, maybe AS3 also has a path,
+as shown in this picture, and
+
+56
+00:04:18,628 --> 00:04:24,284
+would say, great, I can get to
+D as well via AS3 and then AS4.
+
+57
+00:04:24,284 --> 00:04:27,295
+This would allow, AS1 has now two choices,
+
+58
+00:04:27,295 --> 00:04:32,590
+and it could choose whichever one
+it thinks is, quote unquote, best.
+
+59
+00:04:32,590 --> 00:04:37,790
+And we'll see shortly
+what best is defined as.
+
+60
+00:04:37,790 --> 00:04:40,886
+So withdrawals are basically the opposite.
+
+61
+00:04:40,886 --> 00:04:44,930
+It tells the neighbors that those
+routes are no longer available.
+
+62
+00:04:44,930 --> 00:04:47,978
+Maybe this happened because of failure.
+
+63
+00:04:47,978 --> 00:04:52,644
+So let's say this link between AS2 and
+AS4 went down.
+
+64
+00:04:52,644 --> 00:04:59,490
+Well, then AS2 would detect that and
+then say, I no longer have a route to AS4,
+
+65
+00:04:59,490 --> 00:05:04,725
+and so I would send a message,
+a withdrawal, that would say,
+
+66
+00:05:04,725 --> 00:05:09,244
+I'm withdrawing the D because
+I can no longer reach it.
+
+67
+00:05:09,244 --> 00:05:13,930
+Now, in this picture, there is
+shown that there is this link here.
+
+68
+00:05:13,930 --> 00:05:18,250
+So in that case, potentially,
+it would have an update or
+
+69
+00:05:18,250 --> 00:05:22,128
+it would have received
+another route from AS3.
+
+70
+00:05:22,128 --> 00:05:29,340
+But either way, this is kind of how it
+works, what the withdrawals would do.
+
+71
+00:05:30,830 --> 00:05:35,786
+All right, and now I mentioned,
+what is the best path?
+
+72
+00:05:35,786 --> 00:05:38,244
+And this is where the route
+decision comes in.
+
+73
+00:05:38,244 --> 00:05:43,047
+Each BGP router will independently
+make their own choice from all
+
+74
+00:05:43,047 --> 00:05:48,198
+the routes that they've received,
+which one they think is best, and
+
+75
+00:05:48,198 --> 00:05:53,624
+then that's the one they would announce,
+if they're announcing it.
+
+76
+00:05:53,624 --> 00:06:00,242
+And so BGP sets up this kind of priority
+list of, here's how you go about choosing.
+
+77
+00:06:00,242 --> 00:06:04,982
+So local preference, and so this is just
+a numerical value that you can assign as
+
+78
+00:06:04,982 --> 00:06:08,680
+part of the configuration,
+really, to override anything.
+
+79
+00:06:09,770 --> 00:06:14,594
+There's the AS path length, so
+you could see, like in this one,
+
+80
+00:06:14,594 --> 00:06:20,239
+the path length is 2, this path length
+is also 2, so those would be equal.
+
+81
+00:06:20,239 --> 00:06:26,582
+And then you keep going down the list.
+
+82
+00:06:26,582 --> 00:06:30,059
+[COUGH] All right, so
+what it all ends up looking like, and
+
+83
+00:06:30,059 --> 00:06:32,442
+here's the kind of view of a router.
+
+84
+00:06:32,442 --> 00:06:36,893
+You have these line cards
+connected to a switch fabric, and
+
+85
+00:06:36,893 --> 00:06:40,782
+running inside of the router
+is a route processor.
+
+86
+00:06:40,782 --> 00:06:44,136
+So think of this as like a general purpose
+
+87
+00:06:44,136 --> 00:06:48,578
+software running routing processes and
+so forth.
+
+88
+00:06:48,578 --> 00:06:52,386
+The control plane runs
+on this route processor.
+
+89
+00:06:52,386 --> 00:06:56,159
+It runs these routing protocols,
+it calculates a table,
+
+90
+00:06:56,159 --> 00:07:00,702
+which is called the routing table or
+routing information base or RIB,
+
+91
+00:07:00,702 --> 00:07:03,790
+and that's what's stored up here.
+
+92
+00:07:03,790 --> 00:07:07,265
+It then chooses the particular paths, and
+
+93
+00:07:07,265 --> 00:07:12,826
+then it sets inside of each of these
+line cards a forwarding table.
+
+94
+00:07:12,826 --> 00:07:17,466
+And this is what would be able to
+forward packets in the data plane.
+
+95
+00:07:17,466 --> 00:07:20,356
+Now, Linux obviously
+doesn't have all of these.
+
+96
+00:07:20,356 --> 00:07:25,390
+You could have the forwarding table
+offloaded to the network cards,
+
+97
+00:07:25,390 --> 00:07:27,626
+but let's say it doesn't.
+
+98
+00:07:27,626 --> 00:07:32,254
+The switch fabric is basically
+just going to be PCIe, and
+
+99
+00:07:32,254 --> 00:07:38,156
+then all the data plane actually
+happens inside of software as well.
+
+100
+00:07:38,156 --> 00:07:44,371
+And so the forwarding table will be
+inside of the forwarding table or
+
+101
+00:07:44,371 --> 00:07:47,430
+inside of Linux in the software.
+
+102
+00:07:49,150 --> 00:07:52,939
+All right, so now Linux,
+the ecosystem of Linux,
+
+103
+00:07:52,939 --> 00:07:58,430
+has plenty of routing software
+that's open source and available.
+
+104
+00:07:58,430 --> 00:08:02,009
+There's Quagga, Bird, FRR, GoBGP,
+
+105
+00:08:02,009 --> 00:08:07,130
+and there's a number of other
+kind of routing software.
+
+106
+00:08:07,130 --> 00:08:12,126
+And you might even recognize some
+of these when we were talking
+
+107
+00:08:12,126 --> 00:08:17,508
+about those open network operating
+systems like Sonic and Dent and
+
+108
+00:08:17,508 --> 00:08:23,166
+Cumulus, they leverage these open
+source Linux routing software.
+
+109
+00:08:23,166 --> 00:08:25,709
+So these aren't part of Linux,
+
+110
+00:08:25,709 --> 00:08:31,000
+these are part of this Linux ecosystem
+that we kind of talked about.
+
+111
+00:08:32,090 --> 00:08:37,525
+So we're going to use Bird as our example,
+and so really,
+
+112
+00:08:37,525 --> 00:08:43,414
+all Bird is, is basically
+provided a configuration file.
+
+113
+00:08:43,414 --> 00:08:47,690
+And here we're going to talk
+about what the contents of that
+
+114
+00:08:47,690 --> 00:08:52,857
+configuration file is, and
+then provide this to a running process,
+
+115
+00:08:52,857 --> 00:08:57,172
+and then it will kind of do all
+the kind of routing for you.
+
+116
+00:08:57,172 --> 00:09:01,605
+All right, and so here it just lists off a
+bunch of the different things that you can
+
+117
+00:09:01,605 --> 00:09:06,050
+include in this configuration, and we'll
+go through each one of these briefly.
+
+118
+00:09:07,190 --> 00:09:12,448
+So the first is some protocol
+blocks related to Linux, and
+
+119
+00:09:12,448 --> 00:09:18,250
+these will just be kind of
+standard blocks you just include.
+
+120
+00:09:18,250 --> 00:09:22,789
+So the first one says protocol device,
+and this serves as a module for
+
+121
+00:09:22,789 --> 00:09:27,450
+getting information about
+network interfaces from Linux.
+
+122
+00:09:27,450 --> 00:09:30,970
+The next is protocol kernel.
+
+123
+00:09:30,970 --> 00:09:36,557
+And you specify, in this case,
+it's saying ipv4,
+
+124
+00:09:36,557 --> 00:09:41,970
+export all,
+whatever configuration you want.
+
+125
+00:09:41,970 --> 00:09:48,954
+But this synchronizes the BIRD tables,
+the forwarding table that BIRD calculates,
+
+126
+00:09:48,954 --> 00:09:53,518
+with whatever's calculated
+in the OS kernel, right?
+
+127
+00:09:53,518 --> 00:09:57,365
+And it synchronizes the two sides, right?
+
+128
+00:09:57,365 --> 00:10:00,790
+So that's another standard
+block that you'll have.
+
+129
+00:10:00,790 --> 00:10:05,528
+In our case,
+we're going to look at BGP, and so
+
+130
+00:10:05,528 --> 00:10:10,330
+here shows the basic BGP configuration.
+
+131
+00:10:10,330 --> 00:10:15,926
+So you can give it some description,
+whatever you want to name it,
+
+132
+00:10:15,926 --> 00:10:19,980
+after you say protocol bpg and
+give it a name.
+
+133
+00:10:19,980 --> 00:10:23,899
+And you would specify kind
+of one of these blocks for
+
+134
+00:10:23,899 --> 00:10:26,592
+each peering that you would have.
+
+135
+00:10:26,592 --> 00:10:31,233
+So I'm a router, I have, say,
+four different neighbors,
+
+136
+00:10:31,233 --> 00:10:34,544
+I would have four of these blocks, right?
+
+137
+00:10:34,544 --> 00:10:38,450
+And then I would say,
+here's my local address and
+
+138
+00:10:38,450 --> 00:10:43,472
+my local AS number, so this is mine,
+and then what the address,
+
+139
+00:10:43,472 --> 00:10:47,640
+the AS number and
+the IP address of the neighbor is.
+
+140
+00:10:47,640 --> 00:10:51,942
+So this allows the routing software or
+BIRD to know, all right,
+
+141
+00:10:51,942 --> 00:10:55,464
+I need to open a TCP
+connection to this IP address.
+
+142
+00:10:55,464 --> 00:10:58,574
+And then when we're
+exchanging information,
+
+143
+00:10:58,574 --> 00:11:03,480
+I'm going to know, all right, I should
+be expecting it to be this AS number.
+
+144
+00:11:04,570 --> 00:11:05,848
+All right, and
+
+145
+00:11:05,848 --> 00:11:11,955
+then there's another [COUGH] configuration
+that you can customize with.
+
+146
+00:11:11,955 --> 00:11:18,303
+The next part of a BGP protocol
+block is the filters, right?
+
+147
+00:11:18,303 --> 00:11:23,765
+So what filtering allows you to do in
+routing in BGP is to be able to say,
+
+148
+00:11:23,765 --> 00:11:29,136
+there are certain things I don't
+want to advertise to my neighbors,
+
+149
+00:11:29,136 --> 00:11:34,230
+or if my neighbors advertise to me,
+I want to ignore them.
+
+150
+00:11:34,230 --> 00:11:40,010
+And so if you think about BGP and
+the business relationships,
+
+151
+00:11:40,010 --> 00:11:45,125
+you might not want kind of
+your neighbors to send traffic
+
+152
+00:11:45,125 --> 00:11:49,836
+through you if you're
+kind of paying them money.
+
+153
+00:11:49,836 --> 00:11:56,090
+And so you kind of wouldn't export certain
+kind of routes that you learn to them.
+
+154
+00:11:56,090 --> 00:12:00,581
+But to create these filters,
+you would kind of create these blocks and
+
+155
+00:12:00,581 --> 00:12:02,610
+you just say import filter.
+
+156
+00:12:02,610 --> 00:12:08,049
+So this is all on the receive side and
+then export side.
+
+157
+00:12:08,049 --> 00:12:12,939
+And you can either say reference
+a specific filter that's
+
+158
+00:12:12,939 --> 00:12:18,244
+defined elsewhere or
+just put it all in right here, all right?
+
+159
+00:12:18,244 --> 00:12:21,765
+And then BIRD has some specific syntax for
+
+160
+00:12:21,765 --> 00:12:27,107
+how to specify these, but
+let's look at this import, right?
+
+161
+00:12:27,107 --> 00:12:32,106
+So then for
+that you just say filter rt_import, and
+
+162
+00:12:32,106 --> 00:12:37,899
+here is just if some certain conditions,
+then accept them,
+
+163
+00:12:37,899 --> 00:12:43,031
+otherwise reject the routes
+that we're receiving.
+
+164
+00:12:43,031 --> 00:12:46,338
+And then other configuration
+that you can specify.
+
+165
+00:12:46,338 --> 00:12:48,899
+So you can use templates, so
+
+166
+00:12:48,899 --> 00:12:54,023
+you could specify a protocol
+block very much like we had,
+
+167
+00:12:54,023 --> 00:12:58,832
+but make it a template such
+that now I can extend it.
+
+168
+00:12:58,832 --> 00:13:03,326
+And this is useful if all of
+the configuration is the exact same except
+
+169
+00:13:03,326 --> 00:13:08,356
+for, for example, the IP address of
+the neighbor or something like that.
+
+170
+00:13:08,356 --> 00:13:11,824
+So going back to this,
+let's say all of this one,
+
+171
+00:13:11,824 --> 00:13:15,670
+all of this is the exact same except for
+this line.
+
+172
+00:13:15,670 --> 00:13:19,831
+I can create a template
+out of all of this and
+
+173
+00:13:19,831 --> 00:13:24,950
+then extend it and
+then just add in that one line.
+
+174
+00:13:24,950 --> 00:13:28,730
+So this makes it a lot more manageable.
+
+175
+00:13:28,730 --> 00:13:31,706
+All right, we can have tables.
+
+176
+00:13:31,706 --> 00:13:37,084
+So the tables that we're referring to
+are like the routing table, the RIB.
+
+177
+00:13:37,084 --> 00:13:41,408
+And there exist default tables,
+but you can specify and
+
+178
+00:13:41,408 --> 00:13:45,834
+reference in the protocol
+block custom tables, right?
+
+179
+00:13:45,834 --> 00:13:50,660
+Just in case you want to kind of separate
+out different routing tables and
+
+180
+00:13:50,660 --> 00:13:52,450
+things like that.
+
+181
+00:13:52,450 --> 00:13:58,296
+You could specify some logging,
+indicate what logging level you'd like,
+
+182
+00:13:58,296 --> 00:14:02,880
+where to output, and
+then you can do some debug if you want.
+
+183
+00:14:04,210 --> 00:14:08,998
+All right, so in this lesson,
+we're not going to go through a demo and
+
+184
+00:14:08,998 --> 00:14:10,344
+actually run it.
+
+185
+00:14:10,344 --> 00:14:14,234
+We just gave a quick overview
+of what routing protocols are,
+
+186
+00:14:14,234 --> 00:14:17,530
+the kind of intro to
+the configuration of them.
+
+187
+00:14:17,530 --> 00:14:22,222
+In a future lesson, we're going to
+set up a topology using Containerlab
+
+188
+00:14:22,222 --> 00:14:24,777
+[COUGH] that looks lumped in like this.
+
+189
+00:14:24,777 --> 00:14:29,929
+On each one of these,
+we'll run the Bird process with
+
+190
+00:14:29,929 --> 00:14:35,310
+its own configuration to set
+up a neighbor to B, like for
+
+191
+00:14:35,310 --> 00:14:41,173
+A, it'll set up a neighbor to B and
+to C and so forth, right?
+
+192
+00:14:41,173 --> 00:14:48,518
+And then with this, we won't configure any
+of the actual forwarding inside of there,
+
+193
+00:14:48,518 --> 00:14:52,960
+but then we would be able
+to ping from lan1 to lan2.
+
+194
+00:14:54,050 --> 00:14:58,886
+All right, so with that,
+we're going to end here,
+
+195
+00:14:58,886 --> 00:15:01,888
+and we'll get to that in a bit.
+
+196
+00:15:01,888 --> 00:15:02,650
+All right, thanks.

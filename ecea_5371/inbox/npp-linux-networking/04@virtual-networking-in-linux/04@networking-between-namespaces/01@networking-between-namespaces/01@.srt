@@ -1,0 +1,2143 @@
+1
+00:00:08,720 --> 00:00:11,220
+This time we're going to talk
+
+2
+00:00:11,220 --> 00:00:14,990
+about networking
+between namespaces.
+
+3
+00:00:15,020 --> 00:00:21,320
+Just to recap, what we did
+last time was we introduced
+
+4
+00:00:21,320 --> 00:00:24,160
+network namespaces and then how
+
+5
+00:00:24,160 --> 00:00:27,120
+do you actually create
+them and create veth pair?
+
+6
+00:00:27,120 --> 00:00:30,440
+There was three main steps
+that we talked about.
+
+7
+00:00:30,440 --> 00:00:33,490
+Create the network namespace,
+
+8
+00:00:33,490 --> 00:00:36,240
+so that nsDemo,
+
+9
+00:00:36,240 --> 00:00:40,125
+we could create it with
+Ip netns ad nsDemo.
+
+10
+00:00:40,125 --> 00:00:41,880
+We then step 2,
+
+11
+00:00:41,880 --> 00:00:48,585
+create the veth pair ip
+link ad vethY type veth,
+
+12
+00:00:48,585 --> 00:00:51,270
+and then peer name vethZ.
+
+13
+00:00:51,270 --> 00:00:57,310
+That creates the two devices.
+
+14
+00:00:57,310 --> 00:00:59,880
+Then we attach one of
+
+15
+00:00:59,880 --> 00:01:04,100
+the veth devices to
+a network namespace,
+
+16
+00:01:04,100 --> 00:01:07,725
+and we can use ip
+link set for that.
+
+17
+00:01:07,725 --> 00:01:11,985
+So that's setting vethZ
+inside of nsDemo.
+
+18
+00:01:11,985 --> 00:01:14,640
+We talked about you
+could do it between
+
+19
+00:01:14,640 --> 00:01:17,470
+two different containers and
+there's different setups.
+
+20
+00:01:17,470 --> 00:01:20,865
+But those were the
+three main steps.
+
+21
+00:01:20,865 --> 00:01:24,530
+Then there's a lot of other
+Linux networking stuff.
+
+22
+00:01:24,530 --> 00:01:27,510
+Set the device state up so
+
+23
+00:01:27,510 --> 00:01:32,095
+these veth devices
+set in address,
+
+24
+00:01:32,095 --> 00:01:37,080
+add routes and do
+things like that.
+
+25
+00:01:38,090 --> 00:01:44,000
+What we're going to do is
+then take that one step
+
+26
+00:01:44,000 --> 00:01:49,950
+further and now create
+a whole network.
+
+27
+00:01:49,950 --> 00:01:53,945
+We showed this last time.
+We have this vagrant file.
+
+28
+00:01:53,945 --> 00:01:58,690
+Let me quickly show it.
+
+29
+00:01:58,730 --> 00:02:02,925
+I'm inside the GitHub repo,
+
+30
+00:02:02,925 --> 00:02:04,940
+so I can list and we have
+
+31
+00:02:04,940 --> 00:02:07,560
+a vagrant file that
+we provided that
+
+32
+00:02:07,560 --> 00:02:13,510
+we showed last time that
+includes two nodes.
+
+33
+00:02:14,960 --> 00:02:18,820
+What that allows me to
+do if I say vagrant
+
+34
+00:02:18,820 --> 00:02:22,120
+up that I'll bring up
+both virtual machines.
+
+35
+00:02:22,120 --> 00:02:24,655
+If I say vagrant up node1,
+
+36
+00:02:24,655 --> 00:02:27,595
+then I'll just bring up
+one virtual machine.
+
+37
+00:02:27,595 --> 00:02:31,160
+You can find all the code or
+
+38
+00:02:31,160 --> 00:02:33,080
+the vagrant file and
+the other code that
+
+39
+00:02:33,080 --> 00:02:36,135
+we'll show today
+inside of that repo.
+
+40
+00:02:36,135 --> 00:02:40,410
+First, what we're going
+to show is basically
+
+41
+00:02:40,410 --> 00:02:43,270
+two cases that
+we'll work together
+
+42
+00:02:43,270 --> 00:02:46,250
+and how to do and then we
+provide as part of the repo,
+
+43
+00:02:46,250 --> 00:02:50,210
+and then we'll outline
+a third case which you
+
+44
+00:02:50,210 --> 00:02:51,370
+can do on your own as
+
+45
+00:02:51,370 --> 00:02:55,180
+extra practice and then
+we'll talk about a lab.
+
+46
+00:02:55,180 --> 00:02:58,690
+The first case we want to
+do something like this.
+
+47
+00:02:58,690 --> 00:03:01,790
+We want to create
+three namespaces,
+
+48
+00:03:01,790 --> 00:03:03,825
+create the veth pairs,
+
+49
+00:03:03,825 --> 00:03:05,810
+and then bridge
+them all together.
+
+50
+00:03:05,810 --> 00:03:08,230
+This is almost
+like going back to
+
+51
+00:03:08,230 --> 00:03:12,010
+the very first week
+of this course.
+
+52
+00:03:12,010 --> 00:03:15,490
+We basically set up a bridge.
+
+53
+00:03:15,490 --> 00:03:18,010
+Now we put that inside
+of its own namespace,
+
+54
+00:03:18,010 --> 00:03:19,790
+but here we're going to not,
+
+55
+00:03:19,790 --> 00:03:22,500
+we're going to have it just
+in the root namespace.
+
+56
+00:03:22,500 --> 00:03:24,510
+Keep this picture in mind.
+
+57
+00:03:24,510 --> 00:03:27,770
+We'll flip back and
+forth between it.
+
+58
+00:03:27,770 --> 00:03:32,190
+But let's think about
+what we need to do.
+
+59
+00:03:32,190 --> 00:03:35,575
+I got two terminals pulled up.
+
+60
+00:03:35,575 --> 00:03:40,445
+What we're going to do, I'm
+going to create a file called
+
+61
+00:03:40,445 --> 00:03:42,930
+outline and we're going
+
+62
+00:03:42,930 --> 00:03:46,345
+to talk about the steps
+that we need to do.
+
+63
+00:03:46,345 --> 00:03:48,970
+What are the three main steps?
+
+64
+00:03:48,970 --> 00:03:54,885
+We talked about, I don't
+need these to be comments,
+
+65
+00:03:54,885 --> 00:03:58,455
+create the network namespaces,
+
+66
+00:03:58,455 --> 00:04:00,330
+and in the picture,
+
+67
+00:04:00,330 --> 00:04:01,905
+this was ns1,
+
+68
+00:04:01,905 --> 00:04:04,875
+ns2, and ns3.
+
+69
+00:04:04,875 --> 00:04:07,035
+Flip back to the picture,
+
+70
+00:04:07,035 --> 00:04:10,230
+ns1, ns2, ns3.
+
+71
+00:04:10,230 --> 00:04:15,180
+Second step is create
+the veth pairs, so B, C,
+
+72
+00:04:15,180 --> 00:04:17,550
+D, E, F. Note,
+
+73
+00:04:17,550 --> 00:04:19,490
+this is just the
+convention I'm using.
+
+74
+00:04:19,490 --> 00:04:21,850
+You can really name
+these whatever you want,
+
+75
+00:04:21,850 --> 00:04:25,540
+but it makes it a
+lot simpler for me.
+
+76
+00:04:25,880 --> 00:04:28,470
+Second step, we're
+going to need to
+
+77
+00:04:28,470 --> 00:04:31,575
+create the veth pairs.
+
+78
+00:04:31,575 --> 00:04:33,970
+This is vethA,
+
+79
+00:04:34,270 --> 00:04:38,855
+we'll just say through
+veth I think it was
+
+80
+00:04:38,855 --> 00:04:43,210
+F. Then what's the
+last thing that
+
+81
+00:04:43,210 --> 00:04:45,460
+you need to do is
+
+82
+00:04:45,460 --> 00:04:54,565
+attach one end to
+network namespace.
+
+83
+00:04:54,565 --> 00:05:03,545
+We showed it was
+vethB inside of ns1,
+
+84
+00:05:03,545 --> 00:05:08,380
+vethD in ns2,
+
+85
+00:05:08,380 --> 00:05:15,020
+and vethF in ns3.
+
+86
+00:05:15,020 --> 00:05:17,520
+If we go back to the picture B,
+
+87
+00:05:17,520 --> 00:05:21,570
+D and F in namespaces ns1, ns2,
+
+88
+00:05:21,570 --> 00:05:23,850
+ns3, and then we'll keep A,
+
+89
+00:05:23,850 --> 00:05:27,690
+C, E inside the root namespace.
+
+90
+00:05:27,690 --> 00:05:30,680
+Once we do that, then
+what do we want to do?
+
+91
+00:05:30,680 --> 00:05:34,075
+Well, next step, we're going to
+
+92
+00:05:34,075 --> 00:05:38,580
+bring all the veth devices up.
+
+93
+00:05:38,580 --> 00:05:40,660
+Just make sure they're up.
+
+94
+00:05:40,660 --> 00:05:43,720
+Then we're going to get
+into some networking.
+
+95
+00:05:43,720 --> 00:05:46,000
+We're going to
+create the bridge.
+
+96
+00:05:46,020 --> 00:05:49,840
+Then we're going to attach each
+
+97
+00:05:49,840 --> 00:05:53,545
+of these devices to the bridge.
+
+98
+00:05:53,545 --> 00:05:57,175
+Then we can add some
+addresses inside of
+
+99
+00:05:57,175 --> 00:06:00,415
+these namespaces
+to these devices
+
+100
+00:06:00,415 --> 00:06:03,250
+and then enable them
+to ping one another.
+
+101
+00:06:03,250 --> 00:06:07,465
+Let's recap that.
+
+102
+00:06:07,465 --> 00:06:09,895
+Go back. What did we say?
+
+103
+00:06:09,895 --> 00:06:16,690
+We said bring veths up.
+
+104
+00:06:16,690 --> 00:06:19,285
+We're going to create
+
+105
+00:06:19,285 --> 00:06:24,080
+a bridge and then
+we're going to attach
+
+106
+00:06:24,080 --> 00:06:35,850
+the veths in root
+namespace to bridge.
+
+107
+00:06:35,850 --> 00:06:42,400
+This was vethA,
+vethC, and vethE.
+
+108
+00:06:46,430 --> 00:06:51,025
+Then we're going to set,
+
+109
+00:06:51,025 --> 00:06:53,920
+or I'll use the terminology,
+
+110
+00:06:53,920 --> 00:07:03,820
+add an address to
+the veths in ns1,
+
+111
+00:07:03,820 --> 00:07:06,750
+which is vethB, ns2,
+
+112
+00:07:06,750 --> 00:07:10,150
+which is vethD,
+
+113
+00:07:10,150 --> 00:07:17,360
+and ns3, which is vethF.
+
+114
+00:07:18,060 --> 00:07:21,670
+Those are the steps
+that we're going to
+
+115
+00:07:21,670 --> 00:07:27,710
+take. Take a look at that.
+
+116
+00:07:29,580 --> 00:07:32,480
+Let's work through it.
+
+117
+00:07:33,450 --> 00:07:38,080
+First, create the
+network namespaces.
+
+118
+00:07:38,080 --> 00:07:40,615
+Here the command was
+
+119
+00:07:40,615 --> 00:07:48,440
+ip netns add and then the
+namespace name, so ns1.
+
+120
+00:07:48,450 --> 00:07:52,735
+Then we're going to
+add ns2 and ns3.
+
+121
+00:07:52,735 --> 00:07:54,715
+If I want to look at this,
+
+122
+00:07:54,715 --> 00:08:01,755
+I can say I think I need
+the pseudo netns list.
+
+123
+00:08:01,755 --> 00:08:05,500
+I can see I just want 2
+and 3, have been created.
+
+124
+00:08:05,820 --> 00:08:10,220
+Next is create some veth pairs.
+
+125
+00:08:11,100 --> 00:08:16,225
+What command do we need
+for that? IP link.
+
+126
+00:08:16,225 --> 00:08:20,710
+So pseudo op link add
+
+127
+00:08:20,710 --> 00:08:29,665
+vethA type veth peer name vethB.
+
+128
+00:08:29,665 --> 00:08:34,690
+This is add the device vethA.
+
+129
+00:08:34,690 --> 00:08:38,170
+Saying it's going to be
+type veth and we're going
+
+130
+00:08:38,170 --> 00:08:41,870
+to also create a peer
+that's named vethB.
+
+131
+00:08:44,130 --> 00:08:52,165
+Run that. I want to do
+this again with C and D,
+
+132
+00:08:52,165 --> 00:08:57,145
+I want to do this
+again with E and
+
+133
+00:08:57,145 --> 00:09:02,395
+F. If I were to do IP link,
+
+134
+00:09:02,395 --> 00:09:07,345
+I should see all these
+devices of vethD, C,
+
+135
+00:09:07,345 --> 00:09:11,620
+F, E. I scroll up a little bit,
+
+136
+00:09:11,620 --> 00:09:15,680
+I should say C, A, and B.
+
+137
+00:09:16,920 --> 00:09:21,520
+We just created the veth pairs,
+
+138
+00:09:21,520 --> 00:09:24,760
+now I need to attach
+one end of each of
+
+139
+00:09:24,760 --> 00:09:28,300
+those pairs into the
+network namespace.
+
+140
+00:09:28,300 --> 00:09:31,150
+I want to attach B, D,
+
+141
+00:09:31,150 --> 00:09:35,150
+and F into the
+respective namespace.
+
+142
+00:09:35,880 --> 00:09:39,865
+What was the command
+we used for that?
+
+143
+00:09:39,865 --> 00:09:44,570
+It was ip link set.
+
+144
+00:09:46,260 --> 00:09:49,210
+Hopefully you remember
+how to use it,
+
+145
+00:09:49,210 --> 00:09:52,720
+but what we're saying
+is the device name,
+
+146
+00:09:52,720 --> 00:09:55,330
+so vethB, and
+
+147
+00:09:55,330 --> 00:09:59,570
+then netns and then the
+network namespace name.
+
+148
+00:10:01,140 --> 00:10:12,590
+We set that D goes into
+ns2 and F goes into ns3.
+
+149
+00:10:15,780 --> 00:10:21,490
+If we did ip
+
+150
+00:10:21,490 --> 00:10:28,440
+netns exec inside
+of ns1 ip link,
+
+151
+00:10:28,440 --> 00:10:32,475
+I would see vethB inside of it,
+
+152
+00:10:32,475 --> 00:10:34,755
+I do it inside of ns2,
+
+153
+00:10:34,755 --> 00:10:36,150
+I see vethD,
+
+154
+00:10:36,150 --> 00:10:37,590
+and inside of ns3,
+
+155
+00:10:37,590 --> 00:10:39,320
+just for completeness,
+
+156
+00:10:39,320 --> 00:10:42,140
+I could see vethF.
+
+157
+00:10:44,610 --> 00:10:50,330
+Now I want to bring
+the veth devices up.
+
+158
+00:10:50,590 --> 00:10:54,515
+So that's the IP
+link set command
+
+159
+00:10:54,515 --> 00:10:57,470
+where I set this
+device state up.
+
+160
+00:10:57,470 --> 00:11:01,790
+For the devices A, C,
+
+161
+00:11:01,790 --> 00:11:04,175
+and E that are in
+the root name space,
+
+162
+00:11:04,175 --> 00:11:07,745
+I'll just run that
+command directly.
+
+163
+00:11:07,745 --> 00:11:16,370
+IP link set device vethA up,
+
+164
+00:11:16,370 --> 00:11:26,780
+I'll say C and E. Those are
+all in the root namespace.
+
+165
+00:11:26,780 --> 00:11:29,630
+Then if I do IP link,
+
+166
+00:11:29,630 --> 00:11:35,060
+I'll see veth is now one.
+
+167
+00:11:35,060 --> 00:11:37,235
+It's saying the
+lower layer is down.
+
+168
+00:11:37,235 --> 00:11:39,440
+Well that's because
+both sides aren't up,
+
+169
+00:11:39,440 --> 00:11:43,850
+so the veth pair is not up.
+
+170
+00:11:43,850 --> 00:11:47,220
+Let me clear that.
+
+171
+00:11:48,460 --> 00:11:53,750
+I'll just type it new. Now
+we need to exec inside
+
+172
+00:11:53,750 --> 00:11:59,435
+of each of the namespaces,
+
+173
+00:11:59,435 --> 00:12:02,030
+do basically the same
+command I just did.
+
+174
+00:12:02,030 --> 00:12:09,720
+IP link set device vethB up,
+
+175
+00:12:10,570 --> 00:12:18,120
+ns1, sudo and I forgot the exec.
+
+176
+00:12:19,630 --> 00:12:25,400
+Now we'll repeat that
+
+177
+00:12:25,400 --> 00:12:31,955
+for D inside of ns2,
+
+178
+00:12:31,955 --> 00:12:35,375
+and inside of ns3,
+
+179
+00:12:35,375 --> 00:12:43,355
+we'll do device F. If
+I do IP link again,
+
+180
+00:12:43,355 --> 00:12:48,665
+now vethA is in state up.
+
+181
+00:12:48,665 --> 00:12:55,145
+If I look inside of ns2,
+
+182
+00:12:55,145 --> 00:13:00,630
+I should see vethB
+and its state is up.
+
+183
+00:13:01,060 --> 00:13:06,710
+Then we just brought all
+the veth devices up.
+
+184
+00:13:06,710 --> 00:13:11,100
+Let's now create a bridge.
+
+185
+00:13:11,380 --> 00:13:18,960
+A command to do that
+was again also IP link,
+
+186
+00:13:18,960 --> 00:13:23,000
+but where we say add and
+we can give it a name,
+
+187
+00:13:23,000 --> 00:13:24,770
+I'll call it mybridge,
+
+188
+00:13:24,770 --> 00:13:28,110
+and we're going to
+say it's type bridge.
+
+189
+00:13:28,690 --> 00:13:31,865
+Then it's a device.
+
+190
+00:13:31,865 --> 00:13:36,050
+I need to bring it to
+the upstate sudo IP link
+
+191
+00:13:36,050 --> 00:13:40,925
+set device mybridge up.
+
+192
+00:13:40,925 --> 00:13:43,940
+Excellent. We created a bridge.
+
+193
+00:13:43,940 --> 00:13:45,620
+Now we need to attach
+
+194
+00:13:45,620 --> 00:13:49,430
+the veths in the root
+namespace to the bridge.
+
+195
+00:13:49,430 --> 00:13:52,250
+Going back to the picture,
+we've just created the bridge.
+
+196
+00:13:52,250 --> 00:13:54,740
+Now I need to say this one,
+
+197
+00:13:54,740 --> 00:13:56,990
+its master is mybridge.
+
+198
+00:13:56,990 --> 00:13:59,330
+This device, it's
+master is mybridge.
+
+199
+00:13:59,330 --> 00:14:02,550
+And this device, it's
+master is mybridge.
+
+200
+00:14:02,950 --> 00:14:11,195
+That's again the IP
+link set command,
+
+201
+00:14:11,195 --> 00:14:19,340
+sudo IP link set vethA
+master mybridge.
+
+202
+00:14:19,340 --> 00:14:22,445
+Before I do that command,
+
+203
+00:14:22,445 --> 00:14:26,640
+let's actually look at vethA,
+
+204
+00:14:36,070 --> 00:14:44,570
+I wanted to say show.
+Let me do that again.
+
+205
+00:14:44,570 --> 00:14:49,730
+Sudo IP link show device vethA,
+
+206
+00:14:49,730 --> 00:14:53,540
+and we can see there's no
+mention of the master.
+
+207
+00:14:53,540 --> 00:15:02,760
+But now if I say sudo IP link
+set vethA master mybridge,
+
+208
+00:15:04,600 --> 00:15:07,775
+and then I run that show again.
+
+209
+00:15:07,775 --> 00:15:09,470
+Here we can see that it added
+
+210
+00:15:09,470 --> 00:15:12,815
+that configuration
+to this device.
+
+211
+00:15:12,815 --> 00:15:15,335
+That's what that
+set command does.
+
+212
+00:15:15,335 --> 00:15:18,990
+It sets some property
+of a device.
+
+213
+00:15:19,120 --> 00:15:26,690
+Let me run that again for C and
+
+214
+00:15:26,690 --> 00:15:34,115
+E. Now all of the devices vethA,
+
+215
+00:15:34,115 --> 00:15:38,010
+C, and E are all
+attached to my bridge.
+
+216
+00:15:40,780 --> 00:15:43,640
+That's what we just
+did. Now the next thing
+
+217
+00:15:43,640 --> 00:15:44,720
+we do need to do is add
+
+218
+00:15:44,720 --> 00:15:49,505
+some addresses to the
+veths in the namespaces.
+
+219
+00:15:49,505 --> 00:15:58,460
+We're going to use 10.0.0.123.
+
+220
+00:15:58,460 --> 00:16:01,860
+I'll call this 10.0.0.1.2.3.
+
+221
+00:16:07,540 --> 00:16:10,160
+How do we do that?
+It's going to be
+
+222
+00:16:10,160 --> 00:16:13,455
+the IP addr add command,
+
+223
+00:16:13,455 --> 00:16:16,720
+but I want to execute this
+inside of a namespace.
+
+224
+00:16:16,720 --> 00:16:20,385
+I say sudo IP netns exec,
+
+225
+00:16:20,385 --> 00:16:22,250
+inside of ns1,
+
+226
+00:16:22,250 --> 00:16:32,750
+I want to run IP addr add
+10.0.0.1/24 device vethB.
+
+227
+00:16:32,750 --> 00:16:35,450
+No we're not going
+to need this the
+
+228
+00:16:35,450 --> 00:16:39,470
+via or anything like
+that because these
+
+229
+00:16:39,470 --> 00:16:42,090
+are all directly connected
+
+230
+00:16:42,280 --> 00:16:46,805
+the local area network
+through a single bridge.
+
+231
+00:16:46,805 --> 00:16:52,310
+Set that inside of names-pace 2.
+
+232
+00:16:52,310 --> 00:16:59,045
+I'm going to give it IP
+address 2, and that's D,
+
+233
+00:16:59,045 --> 00:17:01,880
+then inside of names-pace 3,
+
+234
+00:17:01,880 --> 00:17:04,880
+I'm going to give it address 3,
+
+235
+00:17:04,880 --> 00:17:08,850
+and that's device vethF.
+
+236
+00:17:10,110 --> 00:17:15,250
+Now if I want to look
+at any of these,
+
+237
+00:17:15,250 --> 00:17:19,600
+I can see great vethF
+has that address,
+
+238
+00:17:19,600 --> 00:17:25,620
+I can say IP route
+has that nice route.
+
+239
+00:17:26,110 --> 00:17:29,600
+Inside of it. Let me clear now,
+
+240
+00:17:29,600 --> 00:17:32,060
+let's do some pinging.
+
+241
+00:17:32,060 --> 00:17:41,255
+At this point, maybe we
+want to see this pseudo IP,
+
+242
+00:17:41,255 --> 00:17:44,250
+the NS exec,
+
+243
+00:17:44,410 --> 00:17:51,510
+let's do ns3 and I want
+to run tshark -i vethF.
+
+244
+00:17:55,090 --> 00:18:01,505
+Now tshark is running
+inside of ns3.
+
+245
+00:18:01,505 --> 00:18:03,380
+Inside of ns3, I'm running
+
+246
+00:18:03,380 --> 00:18:06,980
+tshark that's up here and then
+
+247
+00:18:06,980 --> 00:18:13,140
+down here I want to
+ping ns3 from ns1.
+
+248
+00:18:13,330 --> 00:18:19,205
+I can say pseudo IP netns exec,
+
+249
+00:18:19,205 --> 00:18:28,340
+ns1 ping I'll do account of
+four and I'll do 10.0.0.
+
+250
+00:18:28,340 --> 00:18:36,035
+3, that's the address
+of ns3. There you go.
+
+251
+00:18:36,035 --> 00:18:38,915
+We can see that it
+sent those requests.
+
+252
+00:18:38,915 --> 00:18:42,215
+We can scroll up, we
+can see it actually did
+
+253
+00:18:42,215 --> 00:18:46,265
+darp, who has 10.0.0.3?
+
+254
+00:18:46,265 --> 00:18:50,340
+Tell 10.0.0.1, that's ns ones.
+
+255
+00:18:50,980 --> 00:18:54,425
+You can see it did the ARB.
+
+256
+00:18:54,425 --> 00:18:56,795
+Let's go back to the picture.
+
+257
+00:18:56,795 --> 00:18:59,750
+We said, ping first,
+
+258
+00:18:59,750 --> 00:19:04,475
+it's in ARB and said,
+who has 10.0.0.3?
+
+259
+00:19:04,475 --> 00:19:07,820
+Because it went to the
+bridge. It's a broadcast.
+
+260
+00:19:07,820 --> 00:19:11,210
+It broadcast down into vethF.
+
+261
+00:19:11,210 --> 00:19:14,590
+It responded, and then,
+
+262
+00:19:14,590 --> 00:19:16,840
+great, now we can do a ping.
+
+263
+00:19:16,840 --> 00:19:22,295
+It did a ping through this path.
+
+264
+00:19:22,295 --> 00:19:24,650
+I could have done
+tshark on vethE.
+
+265
+00:19:24,650 --> 00:19:26,690
+I could have done
+it on my bridge
+
+266
+00:19:26,690 --> 00:19:28,520
+could have done a vethA or
+
+267
+00:19:28,520 --> 00:19:30,200
+my vethB and I
+
+268
+00:19:30,200 --> 00:19:33,180
+would have seen the
+packet as it traverses.
+
+269
+00:19:33,760 --> 00:19:36,605
+That's all the set up.
+
+270
+00:19:36,605 --> 00:19:39,665
+Now one thing I
+want to point out,
+
+271
+00:19:39,665 --> 00:19:41,585
+let me clear all that.
+
+272
+00:19:41,585 --> 00:19:46,400
+Is all of that is
+
+273
+00:19:46,400 --> 00:19:52,310
+provided inside of
+this case one bridge.
+
+274
+00:19:52,310 --> 00:19:56,060
+We have this create all script
+
+275
+00:19:56,060 --> 00:20:01,770
+which is all of the
+commands that we just ran.
+
+276
+00:20:01,840 --> 00:20:06,470
+There's the delete all
+where you basically just
+
+277
+00:20:06,470 --> 00:20:08,420
+deleting the name spaces
+and then deleting
+
+278
+00:20:08,420 --> 00:20:10,970
+the bridge and you
+have to run that sudo,
+
+279
+00:20:10,970 --> 00:20:14,820
+I think you have to
+run both as sudo,
+
+280
+00:20:15,190 --> 00:20:17,570
+I would say sudo.
+
+281
+00:20:17,570 --> 00:20:22,220
+/del- all, and now
+everything is deleted.
+
+282
+00:20:22,220 --> 00:20:25,040
+I say IP link, great,
+
+283
+00:20:25,040 --> 00:20:28,580
+all those veth devices are gone.
+
+284
+00:20:28,580 --> 00:20:33,785
+If I say IP net and netns list,
+
+285
+00:20:33,785 --> 00:20:36,900
+all of the name spaces are gone.
+
+286
+00:20:37,960 --> 00:20:40,970
+That was one example.
+
+287
+00:20:40,970 --> 00:20:43,910
+Highly recommend you
+go do practice on your
+
+288
+00:20:43,910 --> 00:20:48,060
+own all the codes available
+in this GitHub link.
+
+289
+00:20:48,520 --> 00:20:53,930
+Second example is now
+let's go across two nodes,
+
+290
+00:20:53,930 --> 00:20:57,935
+let's say we want to connect
+to the external world.
+
+291
+00:20:57,935 --> 00:21:00,320
+I'm going to use this other VM
+
+292
+00:21:00,320 --> 00:21:02,975
+to represent the external world.
+
+293
+00:21:02,975 --> 00:21:05,150
+I want to do port forwarding.
+
+294
+00:21:05,150 --> 00:21:09,290
+I want to set up IP tables
+inside of this node to
+
+295
+00:21:09,290 --> 00:21:15,200
+direct one set of ports port 80.
+
+296
+00:21:15,200 --> 00:21:18,260
+I wanted to go to
+this names-pace,
+
+297
+00:21:18,260 --> 00:21:23,120
+and then port 25565,
+
+298
+00:21:23,120 --> 00:21:26,330
+I wanted to go to
+this names-pace.
+
+299
+00:21:26,330 --> 00:21:28,785
+I'm going to run a
+service in each of these,
+
+300
+00:21:28,785 --> 00:21:32,575
+but they're going to be
+listening on different ports.
+
+301
+00:21:32,575 --> 00:21:35,380
+Once a web server,
+once a Mine-craft.
+
+302
+00:21:35,380 --> 00:21:37,480
+We're not actually
+running those,
+
+303
+00:21:37,480 --> 00:21:41,115
+we'll just use the
+NC tool to do that.
+
+304
+00:21:41,115 --> 00:21:44,465
+But this allows us
+to run IP tables
+
+305
+00:21:44,465 --> 00:21:47,060
+or just shows how we can use
+
+306
+00:21:47,060 --> 00:21:50,940
+IP tables to then
+direct to the veths.
+
+307
+00:21:50,950 --> 00:21:53,885
+We're not going to go
+through every single command
+
+308
+00:21:53,885 --> 00:21:56,255
+here where we're going to say,
+
+309
+00:21:56,255 --> 00:21:57,980
+great, we have, this is
+
+310
+00:21:57,980 --> 00:22:01,985
+another example that we
+provided all the code for.
+
+311
+00:22:01,985 --> 00:22:06,815
+The create all and
+the delete all.
+
+312
+00:22:06,815 --> 00:22:09,440
+Before I do that, one thing
+I would do want to point
+
+313
+00:22:09,440 --> 00:22:12,330
+out about this directory.
+
+314
+00:22:12,330 --> 00:22:14,365
+This is the GitHub repo.
+
+315
+00:22:14,365 --> 00:22:20,395
+Is this clear
+firewall.sh script?
+
+316
+00:22:20,395 --> 00:22:22,780
+Docker networking, and we
+
+317
+00:22:22,780 --> 00:22:24,970
+will learn more about
+Docker networking.
+
+318
+00:22:24,970 --> 00:22:30,340
+It sets up all kinds of
+rules inside of IP tables.
+
+319
+00:22:30,340 --> 00:22:32,440
+What we want to do just
+make sure that they
+
+320
+00:22:32,440 --> 00:22:34,660
+don't interfere with
+anything we're doing.
+
+321
+00:22:34,660 --> 00:22:37,855
+I just want to clear everything.
+
+322
+00:22:37,855 --> 00:22:40,150
+I just basically say
+clear out everything.
+
+323
+00:22:40,150 --> 00:22:42,070
+This came from something that
+
+324
+00:22:42,070 --> 00:22:47,800
+DigitalOcean posted on how
+to just delete everything.
+
+325
+00:22:47,800 --> 00:22:50,485
+Then the end result,
+
+326
+00:22:50,485 --> 00:22:55,825
+if I list out in the IP tables,
+it's basically nothing.
+
+327
+00:22:55,825 --> 00:22:59,620
+T nat it will be nothing,
+
+328
+00:22:59,620 --> 00:23:02,060
+is inside of any of those.
+
+329
+00:23:02,190 --> 00:23:05,005
+I ran that already.
+
+330
+00:23:05,005 --> 00:23:10,120
+Now let's go into Case
+2 and just look at it.
+
+331
+00:23:10,120 --> 00:23:12,595
+I'll create all,
+
+332
+00:23:12,595 --> 00:23:15,530
+go to the top of the file.
+
+333
+00:23:16,020 --> 00:23:18,280
+Actually I should say two,
+
+334
+00:23:18,280 --> 00:23:21,070
+two name spaces two pairs.
+
+335
+00:23:21,070 --> 00:23:23,630
+Create the two name spaces.
+
+336
+00:23:23,630 --> 00:23:26,865
+Create the two veth
+pairs and then attach
+
+337
+00:23:26,865 --> 00:23:30,570
+one end of the veth pair to
+each of the name spaces.
+
+338
+00:23:30,570 --> 00:23:33,465
+Come back to create
+two name spaces,
+
+339
+00:23:33,465 --> 00:23:37,330
+two pairs, attach one to each.
+
+340
+00:23:37,530 --> 00:23:41,320
+That's all basically the
+exact same that we just did.
+
+341
+00:23:41,320 --> 00:23:43,165
+Bring all the devices up,
+
+342
+00:23:43,165 --> 00:23:47,210
+add some route
+addresses to them.
+
+343
+00:23:50,520 --> 00:23:53,875
+Yeah, add routing in the host,
+
+344
+00:23:53,875 --> 00:23:58,540
+that's routing in the host to
+direct traffic to veth A or
+
+345
+00:23:58,540 --> 00:24:05,275
+C when I receive a packet
+that's destined to 10.10.10.1,
+
+346
+00:24:05,275 --> 00:24:08,635
+send destination veth A.
+
+347
+00:24:08,635 --> 00:24:11,210
+It's now how we can see
+
+348
+00:24:12,060 --> 00:24:17,420
+when I added an
+address to veth A.
+
+349
+00:24:17,670 --> 00:24:21,140
+It's adding routing table entry.
+
+350
+00:24:21,270 --> 00:24:25,480
+Now I'm adding the
+address to veth B and
+
+351
+00:24:25,480 --> 00:24:31,225
+D. Then the last part
+is set default routes
+
+352
+00:24:31,225 --> 00:24:35,470
+within each name space
+and we're going to say go
+
+353
+00:24:35,470 --> 00:24:40,645
+via the address in veth A.
+
+354
+00:24:40,645 --> 00:24:42,295
+Let me break that down.
+
+355
+00:24:42,295 --> 00:24:47,680
+So inside of here we assigned
+IP address to veth A.
+
+356
+00:24:47,680 --> 00:24:50,830
+We gave it the slash
+24 so that it added
+
+357
+00:24:50,830 --> 00:24:53,680
+a route entry so that
+whenever the host says,
+
+358
+00:24:53,680 --> 00:24:56,920
+I need something that goes
+to 10.10.10 something,
+
+359
+00:24:56,920 --> 00:24:59,530
+send it into veth A.
+
+360
+00:24:59,530 --> 00:25:02,740
+Inside of veth A, we
+gave it an address here,
+
+361
+00:25:02,740 --> 00:25:10,315
+and we set the default
+route to go via 10.10.10.1.
+
+362
+00:25:10,315 --> 00:25:13,900
+So if this is our
+destination, great.
+
+363
+00:25:13,900 --> 00:25:19,150
+But anything that we're
+sending to send it via that.
+
+364
+00:25:19,150 --> 00:25:21,700
+Because we're going to
+be getting messages
+
+365
+00:25:21,700 --> 00:25:26,450
+from 192.168.1.101.
+
+366
+00:25:26,610 --> 00:25:30,325
+That's what all of that is.
+
+367
+00:25:30,325 --> 00:25:34,090
+Then we're setting
+some IP tables rules.
+
+368
+00:25:34,090 --> 00:25:35,770
+Let's walk through these,
+
+369
+00:25:35,770 --> 00:25:39,445
+so IP tables -t nat.
+
+370
+00:25:39,445 --> 00:25:43,480
+If you recall that's
+the nat table.
+
+371
+00:25:43,480 --> 00:25:47,260
+-A means add a rule and
+we're going to add it to
+
+372
+00:25:47,260 --> 00:25:51,355
+the pre routing chain of nat,
+
+373
+00:25:51,355 --> 00:25:54,940
+and we're going to
+match if it's coming
+
+374
+00:25:54,940 --> 00:25:59,260
+in on interface emp0s8 with
+
+375
+00:25:59,260 --> 00:26:08,395
+the destination 192.168.1.100
+destined for port 80.
+
+376
+00:26:08,395 --> 00:26:12,820
+I want to do some
+destination nat and change
+
+377
+00:26:12,820 --> 00:26:17,455
+the destination to 10.10.10.1.
+
+378
+00:26:17,455 --> 00:26:21,220
+We're going to do the
+exact same thing but when
+
+379
+00:26:21,220 --> 00:26:25,375
+it's port 2565,
+
+380
+00:26:25,375 --> 00:26:29,920
+changes the destination
+to 11.11.11.1.
+
+381
+00:26:29,920 --> 00:26:33,220
+When it's going to come in and
+
+382
+00:26:33,220 --> 00:26:37,915
+it's destined to this
+address right here,
+
+383
+00:26:37,915 --> 00:26:40,330
+I'm going to change
+the destination to one
+
+384
+00:26:40,330 --> 00:26:43,300
+of these two addresses
+based on the port number.
+
+385
+00:26:43,300 --> 00:26:46,630
+On the egress direction,
+
+386
+00:26:46,630 --> 00:26:50,500
+we're going to say similarly,
+
+387
+00:26:50,500 --> 00:26:51,910
+when it's destined for
+
+388
+00:26:51,910 --> 00:27:00,325
+the emp0s8 with the
+source of 10.10.10.1,
+
+389
+00:27:00,325 --> 00:27:02,875
+where the source
+is also port 80,
+
+390
+00:27:02,875 --> 00:27:04,465
+I want to source nat it.
+
+391
+00:27:04,465 --> 00:27:05,680
+I want to change
+
+392
+00:27:05,680 --> 00:27:12,500
+the source address to
+that of the machine.
+
+393
+00:27:14,060 --> 00:27:17,100
+We're going to run
+that, then what we're
+
+394
+00:27:17,100 --> 00:27:19,275
+going to do is
+we're going to run
+
+395
+00:27:19,275 --> 00:27:24,465
+something in each node and
+see how that all works.
+
+396
+00:27:24,465 --> 00:27:27,940
+Let me clear this
+
+397
+00:27:31,940 --> 00:27:36,180
+and say pseudo create all.
+
+398
+00:27:36,180 --> 00:27:38,505
+It did all of that.
+
+399
+00:27:38,505 --> 00:27:41,460
+Now I want to pull open
+
+400
+00:27:41,460 --> 00:27:45,150
+actually something
+inside of node2.
+
+401
+00:27:45,150 --> 00:27:47,325
+I can't do this in split mode.
+
+402
+00:27:47,325 --> 00:27:52,605
+Let me put a single
+terminal mode.
+
+403
+00:27:52,605 --> 00:27:55,060
+Now it's freezing on me.
+
+404
+00:28:04,310 --> 00:28:09,280
+Let me open something to node2.
+
+405
+00:28:12,650 --> 00:28:17,200
+Well, let me just go to node2.
+
+406
+00:28:18,020 --> 00:28:24,130
+Close that, zoom in.
+
+407
+00:28:27,500 --> 00:28:30,720
+Yeah. I don't have the
+software running on that,
+
+408
+00:28:30,720 --> 00:28:35,490
+so does matter or don't
+have the GitHub-repo.
+
+409
+00:28:35,490 --> 00:28:40,530
+What I want to do is on node1,
+
+410
+00:28:40,530 --> 00:28:43,650
+I want to run the service inside
+
+411
+00:28:43,650 --> 00:28:47,370
+of each network name space.
+
+412
+00:28:47,370 --> 00:28:49,560
+This is just running it.
+
+413
+00:28:49,560 --> 00:28:52,335
+It's saying NC, just listen
+
+414
+00:28:52,335 --> 00:28:55,800
+on port 80 and the
+other terminal
+
+415
+00:28:55,800 --> 00:29:02,985
+again say listen on
+port 25565, ns2.
+
+416
+00:29:02,985 --> 00:29:06,915
+Then on node2,
+
+417
+00:29:06,915 --> 00:29:14,850
+I'm going to basically
+say hello ns1.
+
+418
+00:29:14,850 --> 00:29:18,760
+Hopefully that showed
+up. Hello ns1.
+
+419
+00:29:23,330 --> 00:29:29,070
+Then I would 25565.
+
+420
+00:29:29,070 --> 00:29:30,945
+Let me send a message
+to the other one.
+
+421
+00:29:30,945 --> 00:29:34,530
+So you can see in ns2 there
+was nothing that printed out.
+
+422
+00:29:34,530 --> 00:29:39,980
+If I say hello ns2 that
+will have showed up there.
+
+423
+00:29:39,980 --> 00:29:43,070
+You can use tshark
+to track all of
+
+424
+00:29:43,070 --> 00:29:46,160
+these different things but
+
+425
+00:29:46,160 --> 00:29:50,795
+that's where the packets
+are, all of that.
+
+426
+00:29:50,795 --> 00:29:55,750
+So with that, let me
+stop that service,
+
+427
+00:29:55,750 --> 00:30:00,405
+stop this service and
+I'll do the clean up,
+
+428
+00:30:00,405 --> 00:30:08,110
+pseudo delete, deleted
+everything, now we're clean.
+
+429
+00:30:08,360 --> 00:30:11,550
+Go try that on your own.
+
+430
+00:30:11,550 --> 00:30:14,910
+For the last one we're going
+
+431
+00:30:14,910 --> 00:30:18,585
+to extend the network
+between machines.
+
+432
+00:30:18,585 --> 00:30:25,575
+You saw how we used IP
+tables to do the netting.
+
+433
+00:30:25,575 --> 00:30:27,510
+Well, instead, see
+if you could set up
+
+434
+00:30:27,510 --> 00:30:30,390
+a tunnel between
+these two and see if
+
+435
+00:30:30,390 --> 00:30:32,730
+you can get a name space on
+
+436
+00:30:32,730 --> 00:30:36,075
+one to be able to talk to
+a name space on another.
+
+437
+00:30:36,075 --> 00:30:38,310
+We don't provide code for that.
+
+438
+00:30:38,310 --> 00:30:41,500
+That's something as a
+practice on your own.
+
+439
+00:30:42,140 --> 00:30:45,030
+Now, one note about the lab,
+
+440
+00:30:45,030 --> 00:30:47,370
+we're just to set it up.
+
+441
+00:30:47,370 --> 00:30:50,640
+This is the programming
+assignment that's provided.
+
+442
+00:30:50,640 --> 00:30:53,520
+What you're provided with is
+
+443
+00:30:53,520 --> 00:30:57,945
+a create and delete script
+that's been obfuscated.
+
+444
+00:30:57,945 --> 00:31:00,885
+Let me quickly show
+what that means.
+
+445
+00:31:00,885 --> 00:31:03,315
+It's in the GitHub-repo.
+
+446
+00:31:03,315 --> 00:31:07,320
+It's this ob-create,
+
+447
+00:31:07,320 --> 00:31:11,085
+and you can see it's obfuscated.
+
+448
+00:31:11,085 --> 00:31:14,985
+This actually is real
+commands that gets executed.
+
+449
+00:31:14,985 --> 00:31:18,540
+So I wrote a real script that
+creates some name spaces,
+
+450
+00:31:18,540 --> 00:31:21,240
+networks them
+together, all of that.
+
+451
+00:31:21,240 --> 00:31:23,865
+Then I ran something
+that obfuscates it,
+
+452
+00:31:23,865 --> 00:31:26,790
+but you can still
+run that command.
+
+453
+00:31:26,790 --> 00:31:29,445
+We only need one node for this.
+
+454
+00:31:29,445 --> 00:31:31,395
+Do vagrant up node1,
+
+455
+00:31:31,395 --> 00:31:33,825
+I would make sure to
+clear the firewall,
+
+456
+00:31:33,825 --> 00:31:38,590
+all those IP tables and then
+you just run the script.
+
+457
+00:31:39,980 --> 00:31:43,185
+Then go to Coursera,
+
+458
+00:31:43,185 --> 00:31:44,850
+answer questions about it.
+
+459
+00:31:44,850 --> 00:31:49,740
+We're going to ask how many
+name spaces are there?
+
+460
+00:31:49,740 --> 00:31:52,440
+We're going to
+ask, I don't know,
+
+461
+00:31:52,440 --> 00:31:57,330
+can these two IP addresses
+communicate with each other?
+
+462
+00:31:57,330 --> 00:31:59,460
+You're going to have to go
+do a little bit of digging
+
+463
+00:31:59,460 --> 00:32:01,755
+and troubleshooting
+to figure it out.
+
+464
+00:32:01,755 --> 00:32:07,095
+Here's some commands
+that might be useful,
+
+465
+00:32:07,095 --> 00:32:10,455
+but feel free to do
+it however you want.
+
+466
+00:32:10,455 --> 00:32:14,850
+Then then you'll capture
+
+467
+00:32:14,850 --> 00:32:20,460
+some output as described in
+the Read Me and upload that.
+
+468
+00:32:20,460 --> 00:32:23,070
+All right, with that
+
+469
+00:32:23,070 --> 00:32:25,230
+we showed how to do a
+bunch of networking
+
+470
+00:32:25,230 --> 00:32:27,195
+between some name spaces
+
+471
+00:32:27,195 --> 00:32:30,045
+and now you can start
+seeing the power behind it.
+
+472
+00:32:30,045 --> 00:32:33,165
+Next time we're going to see how
+
+473
+00:32:33,165 --> 00:32:39,460
+Docker is setting up its
+network. All right, thanks.

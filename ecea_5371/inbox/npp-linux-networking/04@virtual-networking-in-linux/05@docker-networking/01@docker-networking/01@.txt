@@ -1,0 +1,154 @@
+Welcome back. So to wrap up our module
+on virtual networking, we're going to take what we learned and we're going to try to understand
+how Docker networking works. So as a quick recap,
+we talked about containers. This is where you can create or
+where it inside of the operating system, it has support for isolation. And we talked about cgroups,
+which are the control groups for the resources such as CPU and memory. And then, namespaces for
+all the namespaces of the networking and file system and the process ids and
+all that kind of stuff. And then, Docker is a system
+that leverages containers, or enables creating containers. And they created a whole
+system that does leverage the underlying capabilities
+inside of Linux. But as a recap of its architecture,
+you have a command line tool that's called Docker,
+where you can run commands like run, that will communicate with
+a daemon that Docker is running. Oftentimes, it's on the same machine,
+doesn't have to be. And it specifies an image as the starting
+point to create a container. So here is showing a bunch of
+running containers that used a given image as the starting point. And if the image isn't local, it will go
+off to a registry and pull it locally. So the command, we might see,
+[COUGH] excuse me, something like this docker run. Those are extra flags just to say,
+remove it, create an interactive terminal,
+remove it when it's finished, the image name,
+which is Ubuntu with a label 2204. And then start it with
+the command bin/bash. So, as a recap of what a container is,
+it's a temporary file system that's layered over
+an image like Ubuntu 2204. It's fully writable and
+it disappears when it's end of life. It provides a network stack and
+it consists of a process group, where you have one main process
+with possible subprocesses. And so, when it exits, the main process
+exits and all the subprocesses exit. All right, so,
+we care about what networking is set up. So let's go and create a container. All right, so in this case, again running,
+we only need to use a single node. So if I wanted to [COUGH] run vagrant
+up node one, I could do that. And I'm in the GitHub repo, but
+we're not going to use this, I'll show you what files
+are there in a minute. So let's create a Docker container. So first, let me see if anything's
+running, nothing's running. So, docker run, I'll say, -d --rm --name mynginx nginx, so
+what I want to do is create something that's basically running
+in the background. It's always running. I wanted to remove it, when I kill it, and I want to give it the name mynginx. And the image is going to be nginx. So nginx is just, could be a web proxy. It also serves up web pages as a default. So we're not going to actually interact
+with it, but I want something running, so that I could see what exactly is there. But let's inspect before
+I run that command, I want to run,
+see if there's any namespaces and if there's any links,
+vet devices or any of that created. So let me save this command, so
+I don't have to type it again. Well, and let me run ip netns list. I don't see any namespaces. I could say ip link, and
+we could see the physical devices. And then I see this thing called docker0. All right, but
+I don't see any vet devices set up and we'll come back to what docker0 is. All right, oops, so
+let me run this command. All right, and then see that it's running. All right, so it's running. And now, we want to see,
+did a namespace show up? I want to see the vet device. So let me run ip link. All right,
+there is a vet device that showed up. And then, let me say ip netns list,
+that's interesting. There's nothing listed, but I would have thought that Docker
+would create a network namespace. So it actually did, so
+nothing was listed, but you could see that it
+probably did create it. So what happened [COUGH] is this ip netns command looks up the network namespaces file in the /var/run/netns directory. So if we clear this ls/var/run/netns, there's nothing in there. All right, so if we were to
+create our own network namespace, something would actually show up in there. Like if I were to doing this on the fly sudo ip netns add ns1. Let me do the list again. I could see that it
+exists in that directory. All right, ls, so there's something there. Let me delete that. [COUGH] And it's gone. All right, so why didn't Docker. So the problem is, the docker daemon
+doesn't create a reference of the network namespace file in that /var/run/netns
+directory after the creation. So, the ip netns cannot resolve
+the network namespace file. So this is a nice article that discusses
+this and it shows how to fix it. We took the commands that they showed and put them into a script run-container. All right, so now,
+let's go over and do it manually. So I'll show you the run-container. So it's docker run. And then these are going to be
+the commands that you need to run if you want to do this. This is just to help understand. So the first part is we need
+to create something inside of it that references that name,
+all right? So I want to just touch /
+var / run/ netns/ myenginx. All right? The next thing is I'm going to
+need to mount a directory, but it's going to have to refer
+to something in /proc. But I need to know the process ID for the top level process of this container,
+all right? So we didn't discuss this, but there's this command, docker inspect, where I could say docker
+inspect a container, name mynginx and
+let me pipe that into less. And so it spits out a lot of
+information about the container. The thing we care about is this state 3369, all right? Now what's in this run container is
+a programmatic way to pull that out. So I can pull out just in that Json, the State Pid field and
+then assign that to a variable. But what we now want to do is mount a directory that's pointing to that something in proc, so I can say, ls/proc/ 3369/ns/net. And that's the directory that contains
+a bunch of information, all right? So, That's what we care about, all right? So I want to do a mount -o
+bind/proc/3369/ns/net/var/run/netns/myeng- inx, all right? And then I can see ip netns. I can now see it exists. So now I can do stuff like ip netns exec inside of mynginx ip link, great. And now I can see that it has
+this eth device inside of it. So if you recall, we showed that
+kind of eth tool command for how to see what the other
+end of a network device is. So you might say, well,
+it's called eth zero. So I don't know what that means. And here we can show ip
+link in the root namespace. We got something, the ve was called 21. So if you recall,
+we could do something like ethtool-s. And then whatever this name is, all right? And we could see that it
+says this peer index is 20. And if you recall, once we,
+when we did the ip netns exec inside of the myenginx namespace link,
+ip link, it says 20 right there. So we know this and
+this veth are the veth pairs. Okay, so that's a little aside on that. And we just showed that you can
+run ip link, you can run ethtool, we can look inside of the container and
+see there it is. That's where the specific
+veth device pair is. So now the question is where does
+the veth traffic go in root? So now let's look back at ip link. So if we were to run this, all right? So let me clear things
+in the root namespace. I want to run ip link, and
+I'm going to look at two different things. The main thing right here, I'm going to say the veth is
+going to say the master docker0. So if you recall, when we created a bridge
+and attached to a veth device to it, we had it called mybridge, but
+this is what the output looks like. So this means that docker0 is a bridge and veth that is attached to it. It's at docker0 as its master, all right? So those are kind of the key things. So that's what docker0
+is it's a bridge device. That's the default network bridge
+that all containers attach to, unless you otherwise specify. So if I create multiple containers,
+they will all be attached to this docker0. And they would have kind
+of an IP addressing scheme that's kind of based off
+of what docker0 has. Now, that's not all you can
+do in Docker networking. So that's if you don't specify anything. This is what it looks like. And so if you're trying to troubleshoot,
+now we know, all right, that means there's a veth
+device there inside of cont1. There's a veth device right outside
+of it that's paired with it, and then that is attached set
+docker0 as its master, all right? So we can also just,
+this is for your own knowledge, you can create custom networks in Docker. So let's say I wanted this third
+container to be attached to a completely different bridge, all right? So I can say stuff like create my net1, which would create
+the bridge docker network, create subnet for that bridge and
+then say docker run. When I say docker run, I can tell
+it what network I want it to be in. So if I don't specify this,
+it'll be the default network docker0. Otherwise, it'll attach to this particular
+network that I just created, all right? And if we looked inside of that
+with if config or ip link, we would see a different veth device and
+we can track that down. You can also attach to multiple networks. After I do the connect docker run, I could then later say docker network, connect, cont3, container 3 to docker0. And it would create something like this. So then it would show up as eth1 device. All right, so
+this is all really interesting stuff. You can kind of follow this if you're
+interested to dig in a little bit, see what's created with each
+of these container commands. Now you have all the tools to be
+able to kind of look at all that and you could even do this
+all manual yourself. It also supports, docker,
+also supports port forwarding. So I can use this command
+when I do the docker run. I could say -p 8080:80. And that's doing port forwarding. So we did that as our own
+example that we set up. And so you can look into docker and see. All right, I know that's probably
+doing something with iptables. Let me look at the before and after and see what rules docker created
+to make that scenario happen. And last, I want to touch on
+something called docker compose. All it is is a YAML. So you create a YAML file and
+then run a command docker compose that is basically just a wrapper
+for a bunch of docker commands. The docker build,
+run all the networking commands. It supports multiple containers. And to install it and use it,
+there's some links here. Here's an example. Let's say I wanted to create three
+containers so this would all be one file. This just happens to wrap
+around in the first one. I specify that I'm going to
+provide a docker file with it and it's going to use
+the docker's build system. Once that's created,
+create this container. Same thing with this one, this app,
+and then this db one says, well, there's a pre created image or
+a preexisting image called postgres. Just use that within that,
+that's defining the services. I also can define networks, so I can
+define two networks called front end and back end, and there's some
+custom configuration for those. And then I can say which network I
+want a given container to attach to. I want this one to be
+connected to the front end, I want this one to be connected to
+both the front end and back end. And I want this one to be
+just the back end, right. So try that on your own and
+see what happens here. We're just proposing,
+I'm proposing little practice exercise. If you really want to see what's going on, create a container lab topology
+configuration for the following. See if this actually works. If not, try something else and
+inspect the network that was created. I'm pretty sure this works. See if you can create it,
+inspect the network that was created, attempt to recreate it manually,
+just all those things, and see if all of this is really
+kind of making sense. And then try kind of pinging things,
+bringing link down, whatever. But this could be an interesting
+exercise to make sure. All right, you really understand
+virtual networking in Linux. All right, so with that, we're going to
+end here, this ends this module. And what we're going to do is next time,
+in the next module, we're going to look into Kubernetes. Which is a container orchestration
+system that is kind of much broader and has richer capabilities than just docker. Which is a kind of much smaller
+subset of things to do, right? So until then,
+we'll see you next time, thanks.

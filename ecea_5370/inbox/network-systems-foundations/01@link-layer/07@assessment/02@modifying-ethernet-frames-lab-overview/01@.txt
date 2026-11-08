@@ -1,0 +1,8 @@
+In this programming assignment, we're
+going to focus on the network control, plane routing. And so what we're going to do
+is we're going to basically create a simplified BGP router. So we're going to be able to
+accept route announcements. We're going to accept route
+withdrawals and it's our job in our Python code to store all this
+information as a routing table, a rib. And then we're going to need to be
+able to handle the lookups, basically, create the forwarding table to fib. And so we're going to have to implement
+longest prefix matching in Python.

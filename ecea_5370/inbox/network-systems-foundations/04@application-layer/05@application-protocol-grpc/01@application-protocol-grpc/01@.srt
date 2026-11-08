@@ -1,0 +1,1080 @@
+1
+00:00:09,299 --> 00:00:13,564
+All right, this time we're
+going to talk about another
+
+2
+00:00:13,564 --> 00:00:16,516
+application protocol called gRPC.
+
+3
+00:00:18,737 --> 00:00:25,381
+So to kind of set this up again,
+the last problem that we identified was,
+
+4
+00:00:25,381 --> 00:00:31,382
+what is this application level or
+application layer protocol?
+
+5
+00:00:31,382 --> 00:00:35,141
+And while the transport layer provides for
+
+6
+00:00:35,141 --> 00:00:39,841
+the ability for
+processes to be able to communicate,
+
+7
+00:00:39,841 --> 00:00:45,377
+now the applications need to be
+able to communicate the meaning
+
+8
+00:00:45,377 --> 00:00:50,824
+behind the data that they sent,
+the messages that they send.
+
+9
+00:00:50,824 --> 00:00:55,382
+The structuring of the data and
+all that kind of stuff.
+
+10
+00:00:55,382 --> 00:00:59,426
+So for example,
+with YouTube, whether it's,
+
+11
+00:00:59,426 --> 00:01:03,972
+I want to watch a video or
+whether I want to upload a video.
+
+12
+00:01:03,972 --> 00:01:06,809
+And then what's the format of all of that?
+
+13
+00:01:06,809 --> 00:01:12,788
+So last time we looked at Http, and
+we looked at a little bit of the taxonomy.
+
+14
+00:01:12,788 --> 00:01:17,363
+So here we're going to look at
+a different example of gRPC.
+
+15
+00:01:17,363 --> 00:01:22,016
+So what gRPC is, is let's step back and
+
+16
+00:01:22,016 --> 00:01:27,102
+see what's RPC, remote procedure call.
+
+17
+00:01:27,102 --> 00:01:32,868
+So this is technology that was
+created a long time ago, 1981.
+
+18
+00:01:32,868 --> 00:01:37,925
+So here's the paper that was
+
+19
+00:01:37,925 --> 00:01:42,776
+created by Bruce J Nelson.
+
+20
+00:01:42,776 --> 00:01:50,236
+And what it really did was it extended
+the idea of a local procedure call.
+
+21
+00:01:50,236 --> 00:01:54,856
+So a local procedure call, I would have
+
+22
+00:01:54,856 --> 00:01:59,760
+something like z = add(11,22).
+
+23
+00:01:59,760 --> 00:02:06,196
+And then I would have some function or
+procedure that would return the result.
+
+24
+00:02:06,196 --> 00:02:08,719
+And we're used to writing code like that.
+
+25
+00:02:08,719 --> 00:02:14,841
+Now what if I could do that where
+the implementation of add that function or
+
+26
+00:02:14,841 --> 00:02:17,818
+procedure was on a remote machine.
+
+27
+00:02:17,818 --> 00:02:22,545
+And so what this work did was
+it defined a framework for
+
+28
+00:02:22,545 --> 00:02:26,861
+data encoding and
+the communication protocol.
+
+29
+00:02:26,861 --> 00:02:29,970
+So what it did was it created this,
+
+30
+00:02:29,970 --> 00:02:35,331
+what's shown here as a stub code and
+so on the local client,
+
+31
+00:02:35,331 --> 00:02:39,961
+you would still be able to
+call a function like Add.
+
+32
+00:02:39,961 --> 00:02:45,228
+And then this stub code would take that
+and say, well, that's going to be remote,
+
+33
+00:02:45,228 --> 00:02:49,853
+here's how I'm going to package up
+the data, the parameters 11 and 12.
+
+34
+00:02:49,853 --> 00:02:55,659
+I'm going to encode those, send them over
+to some stub code running on the server.
+
+35
+00:02:55,659 --> 00:03:00,553
+It will actually call the function,
+get the result,
+
+36
+00:03:00,553 --> 00:03:03,827
+encode the result and send it back.
+
+37
+00:03:03,827 --> 00:03:08,609
+And then the stub code on
+the client would return it.
+
+38
+00:03:08,609 --> 00:03:14,632
+So this is really useful
+functionality in modern web services.
+
+39
+00:03:14,632 --> 00:03:20,380
+So shown here is a picture of
+basically that the idea that services
+
+40
+00:03:20,380 --> 00:03:26,454
+are partitioned into smaller services,
+each with some form of API.
+
+41
+00:03:26,454 --> 00:03:31,434
+So the picture on the right shows
+a rideshare service where you
+
+42
+00:03:31,434 --> 00:03:36,514
+have different functionalities
+such as driver management and
+
+43
+00:03:36,514 --> 00:03:41,616
+trip management and payments and
+billing and notifications.
+
+44
+00:03:41,616 --> 00:03:46,734
+And so these can all be broken
+into their own smaller service,
+
+45
+00:03:46,734 --> 00:03:51,163
+but to provide the functionality
+to say the end user,
+
+46
+00:03:51,163 --> 00:03:56,199
+these functionalities get
+effectively chained together.
+
+47
+00:03:56,199 --> 00:04:01,814
+The one-piece service can call
+another service that for example,
+
+48
+00:04:01,814 --> 00:04:07,623
+when you create a ride, it's going to
+need to do both trip management and
+
+49
+00:04:07,623 --> 00:04:12,172
+then it's going to call billing
+to say how much it costs.
+
+50
+00:04:12,172 --> 00:04:16,454
+So this could be through Rest APIs,
+
+51
+00:04:16,454 --> 00:04:20,748
+through Http, as we saw last time.
+
+52
+00:04:20,748 --> 00:04:28,122
+But it could also be done
+with gRPC as the protocol.
+
+53
+00:04:28,122 --> 00:04:29,995
+So what is gRPC?
+
+54
+00:04:29,995 --> 00:04:35,413
+It's just a modern implementation of RPCs.
+
+55
+00:04:35,413 --> 00:04:40,267
+And so it's based on something
+called protobuffs that we'll
+
+56
+00:04:40,267 --> 00:04:42,328
+see a couple examples of.
+
+57
+00:04:42,328 --> 00:04:46,661
+And all protobuffs are is
+really this ability to
+
+58
+00:04:46,661 --> 00:04:50,671
+specify kind of the structure
+of a message and
+
+59
+00:04:50,671 --> 00:04:55,544
+then it creates a binary
+format to be able to serialize
+
+60
+00:04:55,544 --> 00:05:00,770
+that data such that you can
+transmit it over the network.
+
+61
+00:05:00,770 --> 00:05:04,209
+GRPC leverages Http version two,
+
+62
+00:05:04,209 --> 00:05:09,316
+which had the persistent and
+pipelined messages.
+
+63
+00:05:09,316 --> 00:05:13,660
+So shown on the left
+hand side is some JSON.
+
+64
+00:05:13,660 --> 00:05:14,352
+We saw that.
+
+65
+00:05:14,352 --> 00:05:20,242
+And because you need to include
+the extra information of the keys or
+
+66
+00:05:20,242 --> 00:05:24,238
+the names, because it's names and values,
+
+67
+00:05:24,238 --> 00:05:30,759
+the same isn't true with protobuffs
+where you can specify all the types,
+
+68
+00:05:30,759 --> 00:05:36,571
+but then what actually gets
+transmitted is a lot more condensed.
+
+69
+00:05:36,571 --> 00:05:40,932
+And so this is a binary format,
+it's a lot more compressed.
+
+70
+00:05:40,932 --> 00:05:46,441
+And so here's a simple example
+of the same functionality
+
+71
+00:05:46,441 --> 00:05:51,272
+would be defined in JSON,
+it would be 55 bytes.
+
+72
+00:05:51,272 --> 00:05:56,516
+And if you did that in
+protobuffs it would be 20 bytes.
+
+73
+00:05:56,516 --> 00:06:01,267
+So the workflow for
+how to use gRPC is the main thing that
+
+74
+00:06:01,267 --> 00:06:04,573
+revolves around is this proto file and
+
+75
+00:06:04,573 --> 00:06:10,695
+which specifies the structure of
+the data and defines the functions.
+
+76
+00:06:10,695 --> 00:06:16,371
+And we'll go into that in a little more
+depth, we'll show some actual code.
+
+77
+00:06:16,371 --> 00:06:21,169
+And so
+then a compiler shown here as protoc,
+
+78
+00:06:21,169 --> 00:06:25,329
+generates libraries of these stubs.
+
+79
+00:06:25,329 --> 00:06:30,743
+And as we mentioned for the RPC,
+that's the functionality
+
+80
+00:06:30,743 --> 00:06:34,866
+that serializes and deserializes the data.
+
+81
+00:06:34,866 --> 00:06:40,453
+And gRPC supports a wide
+number of different languages.
+
+82
+00:06:40,453 --> 00:06:45,372
+Then once I have these libraries,
+I can create the server which is
+
+83
+00:06:45,372 --> 00:06:50,471
+going to import these libraries and
+it will define the implementation
+
+84
+00:06:50,471 --> 00:06:54,780
+of those functions that
+are specified in the proto file.
+
+85
+00:06:54,780 --> 00:06:59,678
+And then I can call or
+create the client which also using
+
+86
+00:06:59,678 --> 00:07:04,365
+these libraries, and
+then I'm able to make calls to
+
+87
+00:07:04,365 --> 00:07:09,387
+those functions that were
+specified in the proto file.
+
+88
+00:07:09,387 --> 00:07:13,008
+All right, so
+we're going to walk through an example.
+
+89
+00:07:13,008 --> 00:07:19,845
+So what was created and we're going to
+create right now is simple.proto.
+
+90
+00:07:19,845 --> 00:07:25,112
+And then I've pre created the client and
+the server Python files.
+
+91
+00:07:25,112 --> 00:07:30,369
+I'm going to run this command,
+which is the protocol compiler or
+
+92
+00:07:30,369 --> 00:07:33,157
+protobuff compiler for Python.
+
+93
+00:07:33,157 --> 00:07:39,206
+And it's going to generate two files,
+basically the stubs.
+
+94
+00:07:39,206 --> 00:07:43,810
+I've set up all of this as a practice lab,
+so
+
+95
+00:07:43,810 --> 00:07:50,033
+all of this code and
+the instructions are available there,
+
+96
+00:07:50,033 --> 00:07:53,532
+but let's walk through it here.
+
+97
+00:07:53,532 --> 00:07:58,743
+All right, so for this,
+I'm going to switch over to VS Code.
+
+98
+00:07:58,743 --> 00:08:05,453
+So here I got a blank file that we're
+going to work, it's our simple.proto.
+
+99
+00:08:05,453 --> 00:08:08,622
+And if you notice,
+it's only got that simple.proto and
+
+100
+00:08:08,622 --> 00:08:12,460
+then the simple client and
+simple server, those are the only files.
+
+101
+00:08:12,460 --> 00:08:16,693
+I have another example that
+we'll briefly show and
+
+102
+00:08:16,693 --> 00:08:21,034
+that's also included as
+part of that practice lab.
+
+103
+00:08:21,034 --> 00:08:23,556
+All right, so the first thing or
+
+104
+00:08:23,556 --> 00:08:29,257
+one of the things that you need to do
+is to define what are those services,
+
+105
+00:08:29,257 --> 00:08:33,752
+what are those functions that
+you're going to be calling?
+
+106
+00:08:33,752 --> 00:08:38,042
+So in our RPC example,
+it was the function add,
+
+107
+00:08:38,042 --> 00:08:44,706
+which might be part of a larger service,
+say math or something like that.
+
+108
+00:08:44,706 --> 00:08:50,655
+So we're going to create a simple program
+that's going to just be an echo server,
+
+109
+00:08:50,655 --> 00:08:56,523
+so whatever the server receives,
+it's just going to send back immediately.
+
+110
+00:08:56,523 --> 00:09:02,487
+So I'll create the service and
+I'll call it Echo.
+
+111
+00:09:02,487 --> 00:09:07,895
+Now within this I have
+to define the function,
+
+112
+00:09:07,895 --> 00:09:15,254
+so the syntax is call it RPC, and
+now I can define the function.
+
+113
+00:09:15,254 --> 00:09:24,437
+And part of that is specifying the
+parameters as well as the return value.
+
+114
+00:09:24,437 --> 00:09:28,561
+All right, so
+I'm going to put the parameters here and
+
+115
+00:09:28,561 --> 00:09:30,535
+the return value there.
+
+116
+00:09:30,535 --> 00:09:34,663
+But before I do that,
+we need to define what is these kind of
+
+117
+00:09:34,663 --> 00:09:38,285
+object types that we're
+going to be transmitting.
+
+118
+00:09:38,285 --> 00:09:43,221
+And so
+to do that we would create a message, and
+
+119
+00:09:43,221 --> 00:09:49,182
+I'm going to just call it Message for
+lack of creativity.
+
+120
+00:09:49,182 --> 00:09:52,756
+And now I would define
+what are the values,
+
+121
+00:09:52,756 --> 00:09:57,032
+the different things that
+I can store within this.
+
+122
+00:09:57,032 --> 00:10:02,466
+So here I'm just going to say
+the first data piece inside
+
+123
+00:10:02,466 --> 00:10:09,241
+of this Message is going to be a string
+and I'll also call it Message.
+
+124
+00:10:09,241 --> 00:10:14,541
+And then I'll say =1, and what that equals
+
+125
+00:10:14,541 --> 00:10:19,284
+one means is if I have multiple of these,
+
+126
+00:10:19,284 --> 00:10:24,180
+this is the first one
+in the order of this.
+
+127
+00:10:24,180 --> 00:10:26,179
+So it's as simple as that.
+
+128
+00:10:26,179 --> 00:10:29,469
+And now this is the type.
+
+129
+00:10:29,469 --> 00:10:33,424
+And so for the parameters, I'm going to
+say it takes one parameter, and
+
+130
+00:10:33,424 --> 00:10:35,045
+it's going to be a message.
+
+131
+00:10:35,045 --> 00:10:38,924
+And then I'm going to return a message.
+
+132
+00:10:38,924 --> 00:10:45,613
+And so with that we have complete
+implementation of a protopuff
+
+133
+00:10:45,613 --> 00:10:51,178
+specification or schema,
+well, specification.
+
+134
+00:10:51,178 --> 00:10:55,697
+All right, so
+now I can go into my terminal.
+
+135
+00:10:55,697 --> 00:11:01,521
+So if you haven't used VS Code,
+we can click Terminal, New Terminal,
+
+136
+00:11:01,521 --> 00:11:07,364
+I already did that because I just
+wanted this command already typed in.
+
+137
+00:11:07,364 --> 00:11:13,046
+So this is the Python, the gRPC protoc,
+
+138
+00:11:13,046 --> 00:11:17,570
+I specify this simple.proto.
+
+139
+00:11:17,570 --> 00:11:22,553
+I say I want the output
+files to be generated in
+
+140
+00:11:22,553 --> 00:11:27,809
+this directory and yeah,
+that's what I want.
+
+141
+00:11:27,809 --> 00:11:32,264
+So when I click this so now keep a watch,
+
+142
+00:11:32,264 --> 00:11:35,779
+here's the files that I have.
+
+143
+00:11:35,779 --> 00:11:41,697
+When I ran that said expected semicolon.
+
+144
+00:11:41,697 --> 00:11:47,836
+All right, so
+let me put a semicolon there.
+
+145
+00:11:53,059 --> 00:11:56,457
+And then I mistyped that returns.
+
+146
+00:11:56,457 --> 00:12:00,037
+All right, again, great.
+
+147
+00:12:00,037 --> 00:12:05,118
+Now we actually have the generated Python.
+
+148
+00:12:05,118 --> 00:12:11,442
+And making mistakes is fine,
+you get the nice error reports,
+
+149
+00:12:11,442 --> 00:12:15,223
+but here we get two generated files.
+
+150
+00:12:15,223 --> 00:12:20,284
+All right, so we don't need to look
+into those but now how do we use those?
+
+151
+00:12:20,284 --> 00:12:23,744
+So the first thing that we'll
+look at is this simple server.
+
+152
+00:12:23,744 --> 00:12:29,011
+So for
+the simple server I need to kind of import
+
+153
+00:12:29,011 --> 00:12:35,952
+those libraries that were just
+generated and import gRPC.
+
+154
+00:12:38,856 --> 00:12:39,759
+All right?
+
+155
+00:12:39,759 --> 00:12:45,740
+And so for each service that I created,
+
+156
+00:12:45,740 --> 00:12:52,272
+I need to create this service, all right?
+
+157
+00:12:52,272 --> 00:12:56,600
+So I need to create something
+called Echo service,
+
+158
+00:12:56,600 --> 00:13:00,132
+because I defined a service called Echo.
+
+159
+00:13:00,132 --> 00:13:03,882
+Within that, and it's going to extend,
+
+160
+00:13:03,882 --> 00:13:08,656
+one of the things generated
+in that library called
+
+161
+00:13:08,656 --> 00:13:13,670
+Echo servicer, and so
+it's inheriting from that.
+
+162
+00:13:13,670 --> 00:13:17,525
+So you do the initialization but
+this is the kind of main thing.
+
+163
+00:13:17,525 --> 00:13:25,141
+For each of the functions that I defined,
+I have to specify that function and
+
+164
+00:13:25,141 --> 00:13:30,146
+then have this as the signature
+of that function.
+
+165
+00:13:30,146 --> 00:13:37,256
+So this request will have the message,
+which is the parameter.
+
+166
+00:13:37,256 --> 00:13:45,177
+So it had a message inside of it.
+
+167
+00:13:45,177 --> 00:13:50,082
+Oops, that's the client,
+here's the server, and
+
+168
+00:13:50,082 --> 00:13:53,463
+that's what contains that string.
+
+169
+00:13:53,463 --> 00:13:57,575
+All I'm going to do is return that, so
+
+170
+00:13:57,575 --> 00:14:02,921
+this request is that
+request type of message,
+
+171
+00:14:02,921 --> 00:14:08,969
+and it had that string value
+of message inside of it.
+
+172
+00:14:08,969 --> 00:14:11,372
+Now, when I want to go return,
+
+173
+00:14:11,372 --> 00:14:15,707
+I'm going to create a new
+kind of object of type message.
+
+174
+00:14:15,707 --> 00:14:21,734
+I'm going to set its string value message
+inside of it to whatever we received and
+
+175
+00:14:21,734 --> 00:14:23,024
+then return it.
+
+176
+00:14:23,024 --> 00:14:27,508
+So that's really all I have to do,
+that's the main function of the server.
+
+177
+00:14:27,508 --> 00:14:32,727
+And then there's some
+standard code to set up,
+
+178
+00:14:32,727 --> 00:14:38,989
+much as to set up a socket,
+we set up the server, pass in,
+
+179
+00:14:38,989 --> 00:14:46,427
+you'll say that this is the Echo
+service such that we create that for
+
+180
+00:14:46,427 --> 00:14:52,717
+the server to know about the library and
+then we start it.
+
+181
+00:14:52,717 --> 00:14:53,478
+All right?
+
+182
+00:14:53,478 --> 00:14:59,720
+So that's the main thing for
+the server part, for the client part here.
+
+183
+00:14:59,720 --> 00:15:03,108
+It's just as simple.
+
+184
+00:15:03,108 --> 00:15:05,765
+So here we're going to have a channel.
+
+185
+00:15:05,765 --> 00:15:10,094
+So this is all kind of
+like that standard kind of
+
+186
+00:15:10,094 --> 00:15:14,428
+template of how you
+would write a gRPC code.
+
+187
+00:15:14,428 --> 00:15:20,588
+I can then now create this stub, right?
+
+188
+00:15:20,588 --> 00:15:25,154
+So this is by calling it,
+what was generated as part of
+
+189
+00:15:25,154 --> 00:15:29,014
+the library was something
+called Echo stub.
+
+190
+00:15:29,014 --> 00:15:33,646
+Now I can now use the library
+to generate a message.
+
+191
+00:15:33,646 --> 00:15:38,657
+In the server I created it separately,
+like set the string
+
+192
+00:15:38,657 --> 00:15:43,988
+value of message, but
+here I can pass that in to initializer.
+
+193
+00:15:43,988 --> 00:15:46,162
+So I'm going to say, hello.
+
+194
+00:15:46,162 --> 00:15:52,104
+Print that out, and
+then now I'm calling the Echo
+
+195
+00:15:52,104 --> 00:15:58,768
+function with that parameter to this stub,
+all right?
+
+196
+00:15:58,768 --> 00:16:04,153
+So that's all that's involved
+in creating the client.
+
+197
+00:16:04,153 --> 00:16:09,928
+So now if I wanted to run this,
+
+198
+00:16:09,928 --> 00:16:16,858
+I could run something like Python,
+
+199
+00:16:16,858 --> 00:16:21,017
+simple server.py.
+
+200
+00:16:21,017 --> 00:16:23,747
+Now the server is running, and
+
+201
+00:16:23,747 --> 00:16:29,103
+now let's say I want to just debug,
+I can set the breakpoint.
+
+202
+00:16:29,103 --> 00:16:33,121
+Debug the client, step through this,
+
+203
+00:16:33,121 --> 00:16:38,966
+created that stub,
+printed out the hello just locally,
+
+204
+00:16:38,966 --> 00:16:44,707
+because that's what I want to call,
+but I didn't need that.
+
+205
+00:16:44,707 --> 00:16:49,042
+I just called the server,
+got the response, and
+
+206
+00:16:49,042 --> 00:16:55,412
+I could print out what I got the response,
+which as expected was hello.
+
+207
+00:16:55,412 --> 00:16:58,276
+All right, so that's the general workflow.
+
+208
+00:16:58,276 --> 00:17:02,317
+If we want to peek into the other example,
+
+209
+00:17:02,317 --> 00:17:07,743
+you can see things like,
+I can have multiple services,
+
+210
+00:17:07,743 --> 00:17:12,938
+I can have multiple functions,
+I don't necessarily
+
+211
+00:17:12,938 --> 00:17:19,186
+need the return value to be the same
+type as the input parameter.
+
+212
+00:17:19,186 --> 00:17:23,028
+I can define multiple message types and
+
+213
+00:17:23,028 --> 00:17:28,623
+I can have the showing the one and
+the two as the ordering.
+
+214
+00:17:28,623 --> 00:17:34,439
+And this is go through the same tooling.
+
+215
+00:17:34,439 --> 00:17:39,420
+I would generate these two library
+files through a similar call,
+
+216
+00:17:39,420 --> 00:17:43,780
+create a client, create a server,
+and have all of that.
+
+217
+00:17:43,780 --> 00:17:50,419
+So again, that's posted as a practice lab,
+
+218
+00:17:50,419 --> 00:17:53,922
+and this is what we saw.
+
+219
+00:17:53,922 --> 00:17:59,631
+So now what we used was a really simple
+kind of API mode which called Unary,
+
+220
+00:17:59,631 --> 00:18:04,499
+and it's basically just the client
+sends over to the server,
+
+221
+00:18:04,499 --> 00:18:08,635
+then the server sends
+something back to the client.
+
+222
+00:18:08,635 --> 00:18:14,345
+There's other modes where this
+kind of dotted line-looking
+
+223
+00:18:14,345 --> 00:18:19,844
+thing is where you can have
+various streaming interfaces.
+
+224
+00:18:19,844 --> 00:18:23,577
+If it's more than a single message but
+
+225
+00:18:23,577 --> 00:18:28,018
+it's a stream of messages,
+you can do that.
+
+226
+00:18:28,018 --> 00:18:34,506
+And then this just includes moderate.proto
+
+227
+00:18:34,506 --> 00:18:38,778
+example how you would run it.
+
+228
+00:18:38,778 --> 00:18:45,309
+All of it is annotated and
+you can look at that for more insights.
+
+229
+00:18:45,309 --> 00:18:49,755
+All right, so with that,
+that covers gRPC and
+
+230
+00:18:49,755 --> 00:18:53,871
+it wraps up the application layer module.
+
+231
+00:18:53,871 --> 00:18:54,727
+All right, thanks.

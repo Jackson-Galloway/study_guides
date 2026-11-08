@@ -1,0 +1,263 @@
+1
+00:00:09,264 --> 00:00:10,956
+All right, welcome.
+
+2
+00:00:10,956 --> 00:00:13,564
+So we're going to start a new module and
+
+3
+00:00:13,564 --> 00:00:17,190
+this one is called IP layer
+with Linux networking.
+
+4
+00:00:18,810 --> 00:00:23,690
+So question is,
+where does IP layer come in?
+
+5
+00:00:23,690 --> 00:00:28,972
+All right, so pretty much everywhere
+is going to be the end answer.
+
+6
+00:00:28,972 --> 00:00:31,930
+So let's say we have Linux as an end host.
+
+7
+00:00:31,930 --> 00:00:34,474
+It's either a client or server.
+
+8
+00:00:34,474 --> 00:00:36,530
+It needs an IP address.
+
+9
+00:00:36,530 --> 00:00:39,498
+It needs to be able to know
+where to send traffic.
+
+10
+00:00:39,498 --> 00:00:42,028
+All of that is the IP layer or
+
+11
+00:00:42,028 --> 00:00:46,770
+IP networking which would
+be at the network layer.
+
+12
+00:00:48,310 --> 00:00:52,328
+Let's say we have an end host and
+we're going to use a VPN for
+
+13
+00:00:52,328 --> 00:00:54,350
+virtual private network.
+
+14
+00:00:54,350 --> 00:01:01,530
+Now we saw how to create tunnel
+interfaces with IP link.
+
+15
+00:01:01,530 --> 00:01:06,657
+And so similar to,
+in those cases we need to be able to
+
+16
+00:01:06,657 --> 00:01:11,654
+know which IP traffic to
+send through the tunnel.
+
+17
+00:01:11,654 --> 00:01:15,647
+Maybe we're sending all traffic for
+work through this tunnel and
+
+18
+00:01:15,647 --> 00:01:19,318
+then maybe it's which traffic
+to send without tunneling.
+
+19
+00:01:19,318 --> 00:01:21,050
+Maybe that's the general Internet.
+
+20
+00:01:22,430 --> 00:01:28,510
+We could set up Linux as a firewall or
+a load balancer which here the node would
+
+21
+00:01:28,510 --> 00:01:34,875
+sit at the edge of the network where maybe
+one network interface card or NIC is for
+
+22
+00:01:34,875 --> 00:01:40,094
+the external facing the Internet and
+one nick is for internal.
+
+23
+00:01:40,094 --> 00:01:44,613
+Now on this we certainly
+need IP addresses on each of
+
+24
+00:01:44,613 --> 00:01:49,670
+the interfaces and
+we need to know where to send traffic.
+
+25
+00:01:51,210 --> 00:01:56,562
+And then the last example that I have
+here is Linux as a virtual router.
+
+26
+00:01:56,562 --> 00:02:02,009
+So we talked in the last module
+about a network operating system and
+
+27
+00:02:02,009 --> 00:02:05,790
+this trend towards disaggregation.
+
+28
+00:02:05,790 --> 00:02:10,315
+Well, there's an equal trend of
+being able to put all of that
+
+29
+00:02:10,315 --> 00:02:13,434
+software inside of a virtual machine.
+
+30
+00:02:13,434 --> 00:02:18,585
+And if you're running stuff
+inside of the public cloud it's
+
+31
+00:02:18,585 --> 00:02:23,737
+not uncommon to have an actual
+virtual router appliance like
+
+32
+00:02:23,737 --> 00:02:29,750
+maybe one from Cisco and have that
+running inside of one of the VMs.
+
+33
+00:02:29,750 --> 00:02:33,521
+And so to be able to
+understand how that works and
+
+34
+00:02:33,521 --> 00:02:37,590
+set it up needs the network layer or
+IP networking.
+
+35
+00:02:38,730 --> 00:02:44,770
+And as we've said before,
+Linux covers the whole stack.
+
+36
+00:02:44,770 --> 00:02:52,070
+So in the IP layer the data plane is
+what does all the forwarding of traffic.
+
+37
+00:02:52,070 --> 00:02:57,047
+At the control plane we got routing
+software like running BGP processes and
+
+38
+00:02:57,047 --> 00:02:58,432
+things like that.
+
+39
+00:02:58,432 --> 00:03:03,031
+And then at the management plane we're
+going to talk about Linux utilities to be
+
+40
+00:03:03,031 --> 00:03:05,650
+able to configure all of this.
+
+41
+00:03:05,650 --> 00:03:07,734
+So the upcoming lessons for
+
+42
+00:03:07,734 --> 00:03:12,938
+this module will first talk about
+Linux utilities for the IP layer.
+
+43
+00:03:12,938 --> 00:03:18,855
+So we'll go through each of
+those kind of main utilities so
+
+44
+00:03:18,855 --> 00:03:22,280
+that you know how they all work.
+
+45
+00:03:22,280 --> 00:03:26,271
+Then we'll go through some
+example walkthroughs,
+
+46
+00:03:26,271 --> 00:03:31,372
+go through the code that's provided and
+see how that all works.
+
+47
+00:03:31,372 --> 00:03:35,096
+Then we're going to move up
+into the control plane and
+
+48
+00:03:35,096 --> 00:03:39,850
+we're going to talk about how
+you could do routing in Linux.
+
+49
+00:03:39,850 --> 00:03:44,084
+We'll then go into talk
+about how you can run
+
+50
+00:03:44,084 --> 00:03:49,005
+larger routing experiments
+all within Linux, and
+
+51
+00:03:49,005 --> 00:03:54,041
+then routing,
+go through routing walkthrough with
+
+52
+00:03:54,041 --> 00:03:58,938
+one of the tools called
+the bird routing daemon.
+
+53
+00:03:58,938 --> 00:04:04,554
+So we'll go through that, and
+by the end of all of this you should
+
+54
+00:04:04,554 --> 00:04:10,910
+be pretty familiar with how to do IP or
+network layer stuff within Linux.
+
+55
+00:04:12,130 --> 00:04:13,769
+All right, with that we'll end here.
+
+56
+00:04:13,769 --> 00:04:14,896
+All right, thanks.

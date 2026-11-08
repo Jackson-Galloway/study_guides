@@ -1,0 +1,232 @@
+1
+00:00:09,170 --> 00:00:11,790
+This video marks the start of
+
+2
+00:00:11,790 --> 00:00:13,340
+the Link Layer Module in
+
+3
+00:00:13,340 --> 00:00:15,500
+the Networking
+Fundamentals course.
+
+4
+00:00:15,500 --> 00:00:18,560
+To overview, what
+we'll be covering in
+
+5
+00:00:18,560 --> 00:00:20,700
+this module will highlight
+
+6
+00:00:20,700 --> 00:00:24,720
+the main problems addressed
+at the link layer.
+
+7
+00:00:25,240 --> 00:00:29,040
+To start, let's consider
+what a link is.
+
+8
+00:00:29,040 --> 00:00:32,060
+In networks,
+communication happens
+
+9
+00:00:32,060 --> 00:00:34,240
+over some physical medium.
+
+10
+00:00:34,240 --> 00:00:37,890
+This can be wires or
+can happen wirelessly.
+
+11
+00:00:37,890 --> 00:00:41,620
+The link layer puts some
+capabilities on top of that,
+
+12
+00:00:41,620 --> 00:00:44,140
+to not just allow
+for transmitting
+
+13
+00:00:44,140 --> 00:00:46,900
+signals over the wires
+or through the air,
+
+14
+00:00:46,900 --> 00:00:50,420
+but to enable
+communication to occur.
+
+15
+00:00:51,660 --> 00:00:55,140
+This functionality is typically
+
+16
+00:00:55,140 --> 00:00:59,425
+implemented in the network
+interface card, or NIC.
+
+17
+00:00:59,425 --> 00:01:04,060
+The NIC is the component
+in your computer which
+
+18
+00:01:04,060 --> 00:01:06,700
+the wire is plugged into or has
+
+19
+00:01:06,700 --> 00:01:10,325
+an antenna to be able
+to transmit wirelessly.
+
+20
+00:01:10,325 --> 00:01:13,560
+Through a combination of
+hardware and firmware on
+
+21
+00:01:13,560 --> 00:01:16,620
+the NIC and some functionality
+in the operating system,
+
+22
+00:01:16,620 --> 00:01:20,620
+the link layer enables
+communication.
+
+23
+00:01:21,230 --> 00:01:27,000
+The first problem that we'll
+cover is how to encode data.
+
+24
+00:01:27,000 --> 00:01:31,160
+We know we can send signals
+over a physical medium,
+
+25
+00:01:31,160 --> 00:01:33,880
+but how do you
+structure the series of
+
+26
+00:01:33,880 --> 00:01:36,560
+ones and zeros to make
+
+27
+00:01:36,560 --> 00:01:39,220
+it know who the message is
+
+28
+00:01:39,220 --> 00:01:43,540
+destined for and what
+the data actually means?
+
+29
+00:01:44,220 --> 00:01:47,840
+The second problem
+to address is that
+
+30
+00:01:47,840 --> 00:01:49,760
+the physical medium isn't
+
+31
+00:01:49,760 --> 00:01:53,760
+perfect and these signals
+could get corrupted.
+
+32
+00:01:53,760 --> 00:01:55,940
+That is, errors can occur,
+
+33
+00:01:55,940 --> 00:01:58,080
+bits can get flipped.
+
+34
+00:01:58,080 --> 00:02:02,630
+The link layer can allow us
+to at least detect that there
+
+35
+00:02:02,630 --> 00:02:07,500
+was an error and perhaps
+even correct the error.
+
+36
+00:02:09,100 --> 00:02:12,020
+Some of the physical mediums
+
+37
+00:02:12,020 --> 00:02:14,460
+that could be used to
+communicate are not just
+
+38
+00:02:14,460 --> 00:02:17,750
+point-to-point links
+between two devices
+
+39
+00:02:17,750 --> 00:02:21,290
+but may be shared among several.
+
+40
+00:02:21,290 --> 00:02:25,405
+You could think of a
+Wi-Fi network for this.
+
+41
+00:02:25,405 --> 00:02:27,760
+The key problem to address here
+
+42
+00:02:27,760 --> 00:02:30,360
+is how to regulate access to
+
+43
+00:02:30,360 --> 00:02:32,280
+the physical medium to
+
+44
+00:02:32,280 --> 00:02:36,180
+allow all to be able to
+share it effectively.
+
+45
+00:02:37,010 --> 00:02:40,140
+The last problem
+we'll discuss in
+
+46
+00:02:40,140 --> 00:02:42,440
+this module is extending to
+
+47
+00:02:42,440 --> 00:02:46,200
+a local area network that
+allows communication to
+
+48
+00:02:46,200 --> 00:02:51,460
+extend beyond the limits of
+the transmission medium.
+
+49
+00:02:52,020 --> 00:02:55,940
+Thank you. Next time
+we'll get into encoding
+
+50
+00:02:55,940 --> 00:03:00,180
+the series of ones and
+zeros into frames.

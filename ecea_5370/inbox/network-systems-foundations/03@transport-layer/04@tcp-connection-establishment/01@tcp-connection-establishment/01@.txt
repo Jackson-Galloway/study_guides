@@ -1,0 +1,104 @@
+Let's jump into TCP
+connection establishment. We talked about how TCP
+is connection-oriented. Here, we'll talk about what that means and how it happens. Just to talk about
+why we need this, let's refresh what we discussed
+with reliable transfer. The goal there was to
+allow an application to be assured that what they
+send is what is received. Same data, same order. We talked about how
+TCP handles this. It uses the sequence number and acknowledgment numbers
+in the packets themselves to be able to indicate which bytes
+are being covered by this datagram and
+which bytes to expect. Acknowledging which ones
+the receiver has received. We talked about re-transmission, where if a sender had already sent out a
+whole bunch of bytes, but get some indication whether through a timeout or
+through a duplicate ACK, then it can
+re-transmit that data. Then finally, we talked
+about flow control. This is information that each side is sharing
+with the other to say, here's the amount of data that I'm willing to actually receive. All of that is to say that each side needs
+to store state. Let's walk through an
+example of a transmission. We have a process,
+some application that needs to transmit
+400 bytes of data. It shares that with the
+TCP, the transport layer, which then is sending them, but it will put that
+inside of a send buffer. Those are transmitted
+over the network. The receiver buffers that
+up as it's receiving, such that it can deliver it to the process or application, and any of the in-order
+bytes that it has received, it can deliver immediately or whenever the
+process is ready, and it will acknowledge
+the receipt of those data. But when the sender receives this acknowledgment for 0-199, basically acknowledgment
+number was 200, the sender had to
+have kept all of that data in just in case
+need to re-transmit, and in this case it does
+need to re-transmit the 299 datagram that
+it previously sent. This is all state. The data in a buffer, the receive windows for the other side to know how much the sender is
+allowed to send, all of this information,
+acknowledgment numbers, the estimated RTT
+or round trip time, all of that is state. Now that's where happens, is you need to form
+the connection such that both sides agree, hey, we're going to agree
+to talk to each other and we're fine now establishing some
+state because there's a limited amount of resources
+you have to store state. This is where connection
+establishment comes in. We already said that TCP
+is connection-oriented. The connection establishment is an exchange of messages where each process agrees
+to form a connection. This connection is
+uniquely identified by the source and
+destination IP addresses and the source and
+destination ports. It occurs through a
+three-way handshake. Basically, this one side
+to the other A-B says, I'd like to connect
+the other side. B sends back to A.
+I'm fine with that. Then A sends to B an acknowledgment of that
+and basically says, thanks. Now we'll get a little more specific and concrete with this, but that's conceptually
+what it is. Looking back at the TCP header, we could see two
+important fields here, or flags, they're
+sometimes called. It's a single bit
+within the header. One is the ACK field and
+one is the SYN field, S-Y-N. SYN indicates the
+synchronized sequence number and say that the acknowledgment
+number field is valid. We brushed over that when we talked about the
+acknowledgment number, but that would need
+to be set whenever the acknowledgment number
+is actually being used. But it's specifically called out here because it's
+an important part of this connection
+establishment. Let's go through this
+three-way handshake of TCP. The host that's initiating
+the connection, in this case, it's
+going to be host A. It will pick a starting
+sequence number. We'll arbitrarily pick the
+sequence number to be 1,000, and it will set the SYN flag to indicate that this is the
+start of that connection. It'll set the SYN flag and set the sequence number to what
+it chose, which is 1,000. B will receive that, create some state on its side, but then send back a message. It will acknowledge the message or the datagram that
+it just received. It will say, raise
+that ACK flag and set the ACK number to be 1,001. That's the next sequence
+number I'm expecting. This is what would be same, and then B would also say
+pick its own sequence number. In this case it's picking 600. Then set the SYN flag as well, and set the sequence
+number to be 600. This is telling A, any traffic that B
+is sending to A, it will start at
+sequence number 600. Then finally host A acknowledges that message from B and sets the acknowledgment flag and the acknowledgment number to be the next byte in the sequence
+or 601 that it's expecting. That's the three-way handshake
+that you'll see in TCP. Once this happens, both
+sides are now ready to transfer data
+between each other. Now, what happens if packets are lost during the
+connection establishment? What's the mechanism there? Let's look through what
+would happen in each case. There's only three cases, so we can actually
+enumerate them. Let's say if Packet 1 was lost, so A won't ever get
+an acknowledgment, and so it'll time out
+and it will resend. Now the estimated RTT has no historical data
+and so it'll just use some default enough time that it can assume
+that this would have been enough time to make it a round trip
+time to anywhere. That's if Packet 1 was lost, A would just reinitiate the connection.
+All is good there. Now let's say the
+first packet went through and then this
+second packet was lost. Now A again wouldn't
+receive that ACK for which
+acknowledged Packet 1. The same thing would happen
+as if Packet 1 was lost. It will reinitiate
+that connection, resending Packet 1, and then B would just acknowledge that
+retransmitted Packet 1. We're good there. Let's
+say the third one is lost, B won't get acknowledgment
+for Packet 2, and so it will rescind Packet 2, and then A will acknowledge
+the retransmitted Packet 2. In all cases, it's pretty
+straightforward to handle this and with this, the connection is
+established and they're ready to communicate. That ends the connection
+establishment. We'll keep talking about
+TCP next time. Thanks.

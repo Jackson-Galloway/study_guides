@@ -1,0 +1,118 @@
+All right, welcome, let's get started. So this time,
+we're going to talk about Cloud NAT. All right, so to put this in context,
+recall we've talked about the two things we want to take care of,
+communication beyond the VPC bounds. So last time we talked about VPC peering,
+so being able to peer between two VPCs to allow them to communicate as
+if they were on the same private network. And it works by some
+sort of router exchanging routes with one another
+such that the visibility of the subnets are available in each. This time, we're going to
+talk about going out to some, it says end user, but it could be
+some service across the Internet, something across the public Internet. If you recall,
+we had this setup in module 2. So we had two VPCs, some subnets in each, and only vm1 and
+vm2 had public IP addresses. The rest, vm3 and vm4,
+only had private IP addresses. And we showed what communication patterns. And you had to play a little bit
+with this for the lab, right? So this time, right now,
+we're just going to only create VPC1, that should say sub1 and vm1, but we're going to make it without
+a public IP address, all right? So I've already done this. So if we go over to the console, we could
+see vm1, VPC1, that's all that's created. And I've already SSHed into vm1,
+we can see its IP address. Okay, we got it 10.0.1.2. And we can try pinging google.com. And it's not working, all right? And that's not because the firewall
+is blocking it or anything like that. All right, so now what's happening is, what we need is some form of NAT address, network address translation. So just as a review, when we were talking
+about this in a different course, we talked about the actions
+that you can take. And in this context of this course,
+we talked about open flow or the actions in the virtual
+switch in the Andromeda and ExcelNet and things like that. So one of them is where you can do address
+translation to manipulate the addresses, the source and destination IP addresses,
+source and destination TCP or UDP ports. So an example of that is,
+that we're all commonly familiar with is, I have a private network,
+a bunch of IP addresses inside of it, like my home network I'm referring to. And then I have this router that
+goes out to the public Internet. NAT is being used where I only
+get one public IP address. But all of my computers inside
+of my home network have these private IP addresses, but
+they can all share that. All right, so use case 1 is static
+mapping of internal to external. If each server gets a public and
+a private IP address. We saw this with the virtual machines,
+with both in GCP. So here's the machine,
+we could see its IP address, 10.0.0.1. And I want to,
+let's assume it has a public IP address. I can send a message out
+to some destination, say, I'm accessing some web server and
+it's got my source address. So NAT, what would be happening
+in Google's infrastructure is, it's translating this private
+address of the VM to that public address of the VM, the external address. So this is doing source NATing. And then the reverse,
+it would just do destination NATing. A 2nd use case is where I
+have private IP addresses, but they don't have a public IP address,
+but I want to be able to share them. The cases that we showed
+with that home network, which will be the case that
+we're talking about now. Where we can use both modifying the source
+address to be the source address of this. But then taking from a pool of available
+ports, and that kind of becomes that pair, becomes associated with the internal pair,
+all right? So all of that should be review. But these kind of correspond to the two
+use cases that we were talking about. So the first one is where this machine has
+both a public and a private IP address. But the Google's infrastructure
+is using address translation on the external address. This one is where there's
+only a private IP address. And in this lesson, we're going to
+talk about something called Cloud NAT. Which is how Google will
+realize this to be able to give you that public Internet access
+to these private IP addresses or machines with only private IP addresses. So in the last course,
+we did a lot of Linux networking and we set this up where each one
+of these was a container. We set up this topology and
+we created a gateway where we can now play with the rules to do NATing,
+all right? Here's just an example of NATing for
+use case 2. Here's your internal, you want to go out to the public
+Internet that's represented by these. And it's going to share,
+use both the pool of TCP ports and in iptables,
+it's called masquerading, all right? And so it's going to allow, basically,
+any traffic that goes external. It's going to allow it,
+it's going to establish a connection, it's going to set some state for what the
+translation is, go out to the Internet. And then when it comes back,
+it's going to say, this is an established connection
+that was initiated from internal. And then it's going to do the translation
+in the reverse direction. This one corresponds more to use case 1, where we have a machine, it's sending out. And on this gateway,
+we're going to translate and make it look like it came
+from its external IP address. All right, so I mentioned Cloud NAT. That's the Google service that provides
+access to external networks for VMs that don't have external IP addresses. So it effectively provides this same
+concept that we've been showing for a VPC. What's interesting about Cloud NAT is,
+this is kind of what we just showed in that picture, this picture,
+where we had this explicit kind of proxy, I was running some
+iptables commands on it. That would be the traditional
+way that you would do it. In Google's network,
+it looks more like this. And you kind of highlight this little bit. There is no intermediate
+NAT proxy in the data path. Each VM is programs by GCP
+to NAT using assigned ports. And this is, what this is effectively
+saying is, it's using Andromeda, which is on each host, and
+it's doing the translation. So that's kind of cool. All right, so let's go and
+instantiate this in the console. So I already have this set up with
+the VPC, with the subnet, with the VM. No external IP, already SSHed into it,
+and we saw that. Now let's just add. So that's what we. Let me stop the pinging and
+let's go into the console. Let me search for cloud NAT. There we go. And it's got a nice,
+it's pretty straightforward. It's got a nice, VPC1 gateway, NAT type public. So I could also be doing this
+between kind of private networks, but I'm going to do everything public. So VPC1, us-central1, and then I don't have a cloud router. So what this needs is not just a NAT
+gateway, but it needs a router as well. All right, so there's something
+called the cloud router, and you could just easily create that. So VPC1 cloud router, or
+I'll call it RTR for router. And it's got different
+things I can set here. But these said, if not specify,
+Google will sign automatically. Right, so we'll just leave it at that. All right, so it's now source
+endpoint type VM instances. That's great, that's what I want. Source, primary and secondary ranges. We haven't really done any secondary
+ranges, so doesn't matter. And the IP addresses,
+do I want to do it manually or just allow Google to do take from a pool. All right, let's see if there's anything
+interesting in advanced configuration, some more kind of timeouts and
+things like that and logging capabilities. But we're just going to
+leave all the defaults, click create, all right? And that was pretty,
+pretty straightforward. All right, so it's all running the router. So the router, cloud routers are also
+very useful when we get into the kind of hybrid infrastructure. It's useful when we're talking
+about network services and we'll talk about a little more in those contexts
+because it's pretty simple for right here. All right, so
+it looks like the router is all set up. Let's cross our fingers. And this is my local terminal. I want the SSH terminal. This is vm1, clear this. We just tried to ping google.com dot and now it's actually able to ping it,
+all right? And you can see I still only has
+the private IP address there. And it still only has
+private IP address there. Now if I created more VMs, more subnets,
+all within VPC1, this is all shared. This cloud NAT instance is
+all shared from within VPC1. Even if I created a second VM here,
+second Subnet, more VMs,
+they're all sharing the same cloud NAT. For terraform you have to
+instantiate the router. This is the code to do that. And then the NAT and you reference
+the router and its attributes. Okay, and here's the documentation. And I won't go through these, too complex,
+but we've gone through terraform before. All right, so with that,
+that ends our discussion of Cloud NAT. Next, we're going to get
+into a little bit of the academic work understanding
+what do Google and Microsoft's wide area networks
+actually look like under the hood. All right, thanks.

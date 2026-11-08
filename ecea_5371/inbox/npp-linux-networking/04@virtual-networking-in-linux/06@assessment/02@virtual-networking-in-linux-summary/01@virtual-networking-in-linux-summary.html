@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Virtual Networking in Linux Summary</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p> None provided</p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is a benefit of virtualization.  Select all that apply.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~jZSiLw" type="checkbox"/> <div class="quiz-option-text"><p>Faster execution</p></div></li>
+<li><input name="autoGradableResponseId~jZSiLw" type="checkbox"/> <div class="quiz-option-text"><p>Simpler deployment</p></div></li>
+<li><input name="autoGradableResponseId~jZSiLw" type="checkbox"/> <div class="quiz-option-text"><p>More efficient use of resources</p></div></li>
+<li><input name="autoGradableResponseId~jZSiLw" type="checkbox"/> <div class="quiz-option-text"><p>It puts less strain on congested network links</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>If you want to know what a given veth device is paired to, how could you figure that out.  Select all that apply.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~i9i5ye" type="checkbox"/> <div class="quiz-option-text"><p>Using scapy (to generate a packet) and tshark to inspect</p></div></li>
+<li><input name="autoGradableResponseId~i9i5ye" type="checkbox"/> <div class="quiz-option-text"><p>Look at their assigned IP addresses, they must be consecutive.</p></div></li>
+<li><input name="autoGradableResponseId~i9i5ye" type="checkbox"/> <div class="quiz-option-text"><p>Using ethtool combined with 'ip link'</p></div></li>
+<li><input name="autoGradableResponseId~i9i5ye" type="checkbox"/> <div class="quiz-option-text"><p>The 'ip netns' command can tell you</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>True or False.  Only one side of a veth pair can reside inside of a namespace that is not the root namespace?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~r8PLUL" type="radio"/> <div class="quiz-option-text"><p>true</p></div></li>
+<li><input name="autoGradableResponseId~r8PLUL" type="radio"/> <div class="quiz-option-text"><p>false</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p> Once you've moved a veth device into a namespace nsDemo, it does not show up with 'ip link'.  Running a command like 'ip link set vethZ netns nsDemo-new' will not work.  How can you move that veth to the other namespace?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~tpmeQs" type="checkbox"/> <div class="quiz-option-text"><p>Run the command from within the current namespace.  'ip netns exec nsDemo ip link set vethZ netns nsDemo-new'</p></div></li>
+<li><input name="autoGradableResponseId~tpmeQs" type="checkbox"/> <div class="quiz-option-text"><p>This is not possible, you must delete the namespaces then start over.</p></div></li>
+<li><input name="autoGradableResponseId~tpmeQs" type="checkbox"/> <div class="quiz-option-text"><p>First move it back to the root namespace with ip link set vethZ netns 0</p></div></li>
+<li><input name="autoGradableResponseId~tpmeQs" type="checkbox"/> <div class="quiz-option-text"><p>Move the veth device that is currently in the root namespace, to the new namespace, which will automatically put the veth it is paired to back into the root namespace.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In Docker networking, what is docker0?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nYEkvl" type="radio"/> <div class="quiz-option-text"><p>The default bridge that each of the veth devices in the root namespace connect to.</p></div></li>
+<li><input name="autoGradableResponseId~nYEkvl" type="radio"/> <div class="quiz-option-text"><p>The default command to reset the docker networking configuration.</p></div></li>
+<li><input name="autoGradableResponseId~nYEkvl" type="radio"/> <div class="quiz-option-text"><p>The name of the root network namespace</p></div></li>
+<li><input name="autoGradableResponseId~nYEkvl" type="radio"/> <div class="quiz-option-text"><p>The network configuration of the first container created.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>True or False.  Docker does not use network address translation in any aspect of docker networking.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~x03sW1" type="radio"/> <div class="quiz-option-text"><p>true</p></div></li>
+<li><input name="autoGradableResponseId~x03sW1" type="radio"/> <div class="quiz-option-text"><p>false</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,767 @@
+1
+00:00:09,620 --> 00:00:10,449
+Hello.
+
+2
+00:00:10,449 --> 00:00:14,905
+All right, this time we're going to
+talk about sharing the link in
+
+3
+00:00:14,905 --> 00:00:16,728
+the link layer protocol.
+
+4
+00:00:16,728 --> 00:00:22,063
+So as a reminder here, so
+what problem is being solved
+
+5
+00:00:22,063 --> 00:00:27,519
+now is that the transmission
+mediums that we're going
+
+6
+00:00:27,519 --> 00:00:33,937
+to be targeting can be shared
+across multiple network devices.
+
+7
+00:00:33,937 --> 00:00:39,043
+And so what we need is to be
+able to coordinate between
+
+8
+00:00:39,043 --> 00:00:44,507
+them to regulate the access
+to this underlying medium.
+
+9
+00:00:44,507 --> 00:00:50,572
+So what can happen if we don't
+do this is interference, right?
+
+10
+00:00:50,572 --> 00:00:54,660
+So here we have both a wired
+network on the left and
+
+11
+00:00:54,660 --> 00:00:57,471
+a wireless network on the right.
+
+12
+00:00:57,471 --> 00:01:05,444
+So the wired network, this is actually
+how Ethernet was originally created and
+
+13
+00:01:05,444 --> 00:01:11,640
+imagined that you can create to
+a single basically big cable.
+
+14
+00:01:11,640 --> 00:01:17,042
+And then any computer that you wanted
+to attach to it, you would clamp
+
+15
+00:01:17,042 --> 00:01:22,837
+into that cable, and now they would
+be on that effectively the same wire.
+
+16
+00:01:22,837 --> 00:01:27,845
+And so you could see here that we
+might have two different nodes,
+
+17
+00:01:27,845 --> 00:01:32,971
+the green and the blue,
+both trying to transmit at the same time.
+
+18
+00:01:32,971 --> 00:01:40,080
+Likewise, in the wireless, we see blue and
+green also trying to transmit.
+
+19
+00:01:40,080 --> 00:01:45,168
+So once the kind of signals
+propagate far enough,
+
+20
+00:01:45,168 --> 00:01:50,255
+whether it's on the same wire or
+through the air,
+
+21
+00:01:50,255 --> 00:01:56,936
+they start colliding with each other and
+interference happens.
+
+22
+00:01:56,936 --> 00:02:02,476
+And at this point,
+no data is usefully transmitted.
+
+23
+00:02:02,476 --> 00:02:06,818
+So this is where multiple access protocols
+
+24
+00:02:06,818 --> 00:02:11,287
+come in as part of
+the link layer protocols.
+
+25
+00:02:11,287 --> 00:02:18,380
+So the key question is how do we share
+the link fairly and efficiently?
+
+26
+00:02:18,380 --> 00:02:20,373
+So there's different approaches here.
+
+27
+00:02:20,373 --> 00:02:25,366
+So one possible approach is to
+just partition up the channel.
+
+28
+00:02:25,366 --> 00:02:29,671
+So divide the link into smaller pieces and
+
+29
+00:02:29,671 --> 00:02:33,730
+assign each piece to different nodes.
+
+30
+00:02:33,730 --> 00:02:36,789
+So that's one approach, and
+we'll show examples of that.
+
+31
+00:02:36,789 --> 00:02:40,817
+And then another approach is
+to do it kind of randomly.
+
+32
+00:02:40,817 --> 00:02:44,784
+So nodes transmit in
+an uncoordinated manner and
+
+33
+00:02:44,784 --> 00:02:49,437
+then just have to deal with
+collisions when they happen.
+
+34
+00:02:49,437 --> 00:02:52,710
+So let's look at the channel
+partitioning first.
+
+35
+00:02:52,710 --> 00:02:59,946
+So one example of this is partitioning
+the channel in terms of time.
+
+36
+00:02:59,946 --> 00:03:03,412
+So this is called time division,
+multiple access.
+
+37
+00:03:03,412 --> 00:03:10,603
+So here we can divide into
+equal sized time slots.
+
+38
+00:03:10,603 --> 00:03:14,236
+So 0 to, let's say it's 1 second,
+but that's very long.
+
+39
+00:03:14,236 --> 00:03:18,654
+But 0 to 1 second might be one and
+then 1 second to 2 and
+
+40
+00:03:18,654 --> 00:03:21,674
+then 2 seconds to three and so forth.
+
+41
+00:03:21,674 --> 00:03:26,717
+So you then can take those and
+assign those slots to nodes.
+
+42
+00:03:26,717 --> 00:03:33,911
+So during the 0 to 1 slot,
+that's when node one could transmit.
+
+43
+00:03:33,911 --> 00:03:40,132
+Then during the 1 to 2 slot, that's when 2
+can transmit and then 3 could transmit and
+
+44
+00:03:40,132 --> 00:03:45,112
+then 4 could transmit and then cycle
+back through each of them again.
+
+45
+00:03:45,112 --> 00:03:50,038
+And so nodes in this case can
+only send during their slots.
+
+46
+00:03:50,038 --> 00:03:57,820
+And so let's say slots are big enough
+time to be able to transmit 100 bytes.
+
+47
+00:03:57,820 --> 00:04:04,840
+And if one, node 1 only has 10 bytes
+to send, maybe 2 has 0 bytes to send,
+
+48
+00:04:04,840 --> 00:04:10,144
+3 has 200 bytes to send and
+4 has 150 bytes to send.
+
+49
+00:04:10,144 --> 00:04:14,905
+This is what the transmission would
+look like during one's time slot.
+
+50
+00:04:14,905 --> 00:04:20,901
+It would transmit the 100 bytes that it
+has or 10 bytes that it has to send and
+
+51
+00:04:20,901 --> 00:04:26,628
+then waste the rest of the time,
+the time slot for node 2, since it doesn't
+
+52
+00:04:26,628 --> 00:04:31,842
+have anything to transmit,
+the channel at that point would be idle.
+
+53
+00:04:31,842 --> 00:04:38,028
+Node 3 would send its 100, but
+because its time slot is up,
+
+54
+00:04:38,028 --> 00:04:44,000
+even though it has more to send,
+it would have to yield to 4.
+
+55
+00:04:44,000 --> 00:04:47,323
+Then they would both then
+wait while node 1 and
+
+56
+00:04:47,323 --> 00:04:50,996
+node 2 don't transmit
+anything to get back to 3.
+
+57
+00:04:50,996 --> 00:04:56,516
+So you can see that this is certainly
+fair, it's dividing it equally,
+
+58
+00:04:56,516 --> 00:05:01,854
+but it's not really an efficient
+channel or an efficient protocol.
+
+59
+00:05:01,854 --> 00:05:06,654
+We could also partition
+the channel in terms of frequency.
+
+60
+00:05:06,654 --> 00:05:10,752
+It's called frequency
+division multiple access.
+
+61
+00:05:10,752 --> 00:05:15,655
+So here we could divide
+the frequency spectrum and
+
+62
+00:05:15,655 --> 00:05:19,048
+sign each node its own frequency.
+
+63
+00:05:19,048 --> 00:05:23,644
+And so this is showing
+a cable which can support or
+
+64
+00:05:23,644 --> 00:05:28,017
+has different frequency
+waves coming through
+
+65
+00:05:28,017 --> 00:05:32,962
+different bands, and
+we can assign to each of them.
+
+66
+00:05:32,962 --> 00:05:37,903
+This, of course, kind of reduces
+the efficiency of the channel as
+
+67
+00:05:37,903 --> 00:05:42,771
+well because you're not kind of
+maximizing the ability to send.
+
+68
+00:05:44,544 --> 00:05:49,938
+All right, so
+now switching over to random multi-access
+
+69
+00:05:49,938 --> 00:05:54,561
+protocols, there's kind
+of three key questions
+
+70
+00:05:54,561 --> 00:05:59,530
+that kind of have to be
+addressed in those protocols.
+
+71
+00:05:59,530 --> 00:06:02,810
+And we'll look at a couple of examples,
+but
+
+72
+00:06:02,810 --> 00:06:07,253
+just to look at these questions,
+the first is when to send.
+
+73
+00:06:07,253 --> 00:06:10,753
+Should you just send as a node anytime, or
+
+74
+00:06:10,753 --> 00:06:15,255
+should you at least make
+an attempt to not interfere?
+
+75
+00:06:15,255 --> 00:06:18,407
+Then the second question
+is how do you know
+
+76
+00:06:18,407 --> 00:06:22,113
+if your transmission was
+actually successful?
+
+77
+00:06:22,113 --> 00:06:25,766
+Can I detect this as the node
+that was sending it?
+
+78
+00:06:25,766 --> 00:06:30,485
+Does the receiver have to
+acknowledge it and so forth?
+
+79
+00:06:30,485 --> 00:06:34,546
+And then what do I do if
+the transmission actually failed?
+
+80
+00:06:34,546 --> 00:06:36,256
+Should we resend it immediately?
+
+81
+00:06:36,256 --> 00:06:38,330
+Should we wait some amount of time?
+
+82
+00:06:38,330 --> 00:06:44,358
+And these are questions that the protocol
+specifies and everybody agrees to.
+
+83
+00:06:44,358 --> 00:06:47,393
+So let's look at the when to send.
+
+84
+00:06:47,393 --> 00:06:53,040
+So we're going to look at
+Carrier Sense Multiple Access or CSMA.
+
+85
+00:06:53,040 --> 00:06:57,164
+So it's used in both Ethernet and Wi-Fi.
+
+86
+00:06:57,164 --> 00:07:02,064
+So in this case, the when to send
+is actually that the node will
+
+87
+00:07:02,064 --> 00:07:06,968
+read from the channel just to see
+if another node is sending and
+
+88
+00:07:06,968 --> 00:07:11,146
+only transmit if it sensed
+that the channel is idle.
+
+89
+00:07:11,146 --> 00:07:15,763
+So in these pictures below,
+say A wants to send,
+
+90
+00:07:15,763 --> 00:07:22,199
+it would sense the channel, but
+it would see B is actually sending.
+
+91
+00:07:22,199 --> 00:07:28,849
+It would see that there is some activity
+on that wire, and so A would not send.
+
+92
+00:07:28,849 --> 00:07:32,192
+In the picture on the right,
+when D wants to go ahead and
+
+93
+00:07:32,192 --> 00:07:36,280
+send, it would kind of read from
+the channel and then see nothing.
+
+94
+00:07:36,280 --> 00:07:40,078
+There's no activities and
+it would be able to send.
+
+95
+00:07:42,293 --> 00:07:49,251
+So now the next part of that is knowing if
+the transmission was actually successful,
+
+96
+00:07:49,251 --> 00:07:54,445
+and so here's where Ethernet and
+Wi-Fi diverge a little bit.
+
+97
+00:07:54,445 --> 00:07:59,212
+So with the Ethernet we have
+something called CSMA/CD,
+
+98
+00:07:59,212 --> 00:08:02,701
+where the CD is for collision detection.
+
+99
+00:08:02,701 --> 00:08:07,861
+So a property of the Ethernet, NICs or
+network interface cards is that
+
+100
+00:08:07,861 --> 00:08:12,942
+they can actually read at the same
+time that they're transmitting.
+
+101
+00:08:12,942 --> 00:08:17,875
+And so what they can do is if what
+they read in is different than what
+
+102
+00:08:17,875 --> 00:08:22,380
+they're sending,
+that means that there's a collision.
+
+103
+00:08:22,380 --> 00:08:25,495
+So in this case,
+let's look at this picture.
+
+104
+00:08:25,495 --> 00:08:29,945
+So it's sending the node A is
+sending into the channel,
+
+105
+00:08:29,945 --> 00:08:33,079
+whatever this green line represents.
+
+106
+00:08:33,079 --> 00:08:39,845
+What it reads is the red,
+which is all the kind of collided data.
+
+107
+00:08:39,845 --> 00:08:47,553
+So if what it reads is different than
+what it's sending, that's a collision.
+
+108
+00:08:47,553 --> 00:08:52,860
+Now, after it detects the collision,
+it'll jam the signal so
+
+109
+00:08:52,860 --> 00:08:59,692
+transmit some fixed bit pattern to ensure
+that everyone detects the collision.
+
+110
+00:08:59,692 --> 00:09:05,284
+So as a question that might be having is
+well in the previous slide we just said,
+
+111
+00:09:05,284 --> 00:09:11,134
+well they detect, they read from the
+channel to see if anybody's transmitting,
+
+112
+00:09:11,134 --> 00:09:15,246
+but now we're saying that
+they could actually collide.
+
+113
+00:09:15,246 --> 00:09:18,589
+Well, that's because signals
+take time to transmit.
+
+114
+00:09:18,589 --> 00:09:22,846
+So you may read and
+at that point it looks clear, and
+
+115
+00:09:22,846 --> 00:09:27,602
+then you start talking,
+the node starts transmitting,
+
+116
+00:09:27,602 --> 00:09:31,879
+and it sees and
+then a collision actually happens.
+
+117
+00:09:31,879 --> 00:09:37,412
+So with Ethernet it does this
+collision detection technique and
+
+118
+00:09:37,412 --> 00:09:41,518
+then basically jams
+the transmission medium.
+
+119
+00:09:41,518 --> 00:09:47,550
+On the wireless side or Wi-Fi,
+it does collision avoidance.
+
+120
+00:09:47,550 --> 00:09:52,333
+So the challenge with wireless
+is that the NICs cannot
+
+121
+00:09:52,333 --> 00:09:56,809
+read while transmitting,
+that's one problem.
+
+122
+00:09:56,809 --> 00:10:01,952
+And then another problem is they actually
+may be out of range of some nodes.
+
+123
+00:10:01,952 --> 00:10:07,779
+So maybe we have a set-up
+like this where we have X and
+
+124
+00:10:07,779 --> 00:10:14,280
+Z, maybe those are laptops and
+then Y is the access point.
+
+125
+00:10:14,280 --> 00:10:17,271
+Well, X is in range of Y,
+
+126
+00:10:17,271 --> 00:10:22,112
+Z is in range of Y, but X and Z can't act,
+
+127
+00:10:22,112 --> 00:10:27,684
+they're not actually in
+range of each other.
+
+128
+00:10:27,684 --> 00:10:33,779
+So even if they may be transmitting,
+they both might be transmitting to Y.
+
+129
+00:10:33,779 --> 00:10:37,114
+They wouldn't be able
+to actually hear that.
+
+130
+00:10:37,114 --> 00:10:42,628
+So in this case, the collision
+avoidance part is that it actually
+
+131
+00:10:42,628 --> 00:10:47,656
+depends on an explicit
+acknowledgment from the receiver.
+
+132
+00:10:47,656 --> 00:10:52,737
+So if it doesn't receive an acknowledgment
+in a certain period of time,
+
+133
+00:10:52,737 --> 00:10:56,585
+that's when it can assume
+that there was a collision.
+
+134
+00:10:56,585 --> 00:11:03,055
+And so we can see right around
+why there can be a collision.
+
+135
+00:11:03,055 --> 00:11:11,488
+Now, there is this option to where the
+transmitter may submit a request to send,
+
+136
+00:11:11,488 --> 00:11:16,448
+and then the receiver
+says you're clear to send
+
+137
+00:11:16,448 --> 00:11:21,656
+because your Y in this case
+is in the range of both,
+
+138
+00:11:21,656 --> 00:11:26,137
+and they can say at Y it's actually clear.
+
+139
+00:11:26,137 --> 00:11:30,721
+So that's Wi-Fi, and that's how we
+know if a transmission was successful.
+
+140
+00:11:32,260 --> 00:11:37,916
+Now the final piece is what do
+we do when a transmission fails?
+
+141
+00:11:37,916 --> 00:11:44,606
+So here we're going to want to
+retransmit the frame some time period,
+
+142
+00:11:44,606 --> 00:11:51,062
+after some time period, and
+this is called the back off period.
+
+143
+00:11:51,062 --> 00:11:54,070
+And so why we want to do this is, well,
+
+144
+00:11:54,070 --> 00:11:59,242
+we want to make sure that the receiver
+actually gets the data, and
+
+145
+00:11:59,242 --> 00:12:04,343
+we want to back off because we
+want to allow the channel to clear up.
+
+146
+00:12:04,343 --> 00:12:08,157
+And in both cases, the CSMA/CA and
+
+147
+00:12:08,157 --> 00:12:13,763
+CD specifies that this back
+off time will be random.
+
+148
+00:12:13,763 --> 00:12:18,600
+And why it's random is if they both
+were synchronized in the amount of time
+
+149
+00:12:18,600 --> 00:12:22,517
+that they backed off,
+they're just going to collide again.
+
+150
+00:12:22,517 --> 00:12:27,311
+And so if they both choose something
+random, whoever chose the lower
+
+151
+00:12:27,311 --> 00:12:32,365
+number is the one that actually would
+kind of be able to kind of transmit.
+
+152
+00:12:32,365 --> 00:12:38,105
+And then the other one would detect
+the channel has activity on it,
+
+153
+00:12:38,105 --> 00:12:42,731
+and we'll wait till that
+transmission is complete.
+
+154
+00:12:42,731 --> 00:12:48,099
+But in the case where there
+is continued collision,
+
+155
+00:12:48,099 --> 00:12:52,866
+this back off time
+exponentially increases.
+
+156
+00:12:52,866 --> 00:12:56,583
+So you wait longer and longer each time.
+
+157
+00:12:56,583 --> 00:13:02,320
+All right, so with that,
+we covered how to share the channel,
+
+158
+00:13:02,320 --> 00:13:09,591
+and so next time, we're going to talk
+about expanding into a local area network.

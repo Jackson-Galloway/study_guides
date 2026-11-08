@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Application Layer</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>In DNS, how do DNS resolvers know about root servers?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qTfYhT" type="radio"/> <div class="quiz-option-text"><p>The IP addresses are hard coded within the resolver’s code/configuration.</p></div></li>
+<li><input name="autoGradableResponseId~qTfYhT" type="radio"/> <div class="quiz-option-text"><p>It uses ARP to query on its local area network.</p></div></li>
+<li><input name="autoGradableResponseId~qTfYhT" type="radio"/> <div class="quiz-option-text"><p>The don’t – DNS resolvers don’t know about root servers, which are run as a trusted and private Internet service only available to ISPs.</p></div></li>
+<li><input name="autoGradableResponseId~qTfYhT" type="radio"/> <div class="quiz-option-text"><p>It queries DNS with the fully qualified domain name of the root servers (a.root‑servers.net, b.root‑servers.net, etc.)</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In DNS, what happens when a DNS server does not know the IP address of the domain in the query.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~5wD17c" type="radio"/> <div class="quiz-option-text"><p>Responds with the name of another resolver that it knows as authoritative for part of the domain.</p></div></li>
+<li><input name="autoGradableResponseId~5wD17c" type="radio"/> <div class="quiz-option-text"><p>Hangs the server.</p></div></li>
+<li><input name="autoGradableResponseId~5wD17c" type="radio"/> <div class="quiz-option-text"><p>Responds with the IP address of the resolver.</p></div></li>
+<li><input name="autoGradableResponseId~5wD17c" type="radio"/> <div class="quiz-option-text"><p>Silently discards the request.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In sockets programming, which would be an appropriate sequence of functions called.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~vuEoo8" type="radio"/> <div class="quiz-option-text"><p>socket(), bind(), listen(), accept()</p></div></li>
+<li><input name="autoGradableResponseId~vuEoo8" type="radio"/> <div class="quiz-option-text"><p>bind(), recv(), accept(), send()</p></div></li>
+<li><input name="autoGradableResponseId~vuEoo8" type="radio"/> <div class="quiz-option-text"><p>bind(), send(), accept(), recv()</p></div></li>
+<li><input name="autoGradableResponseId~vuEoo8" type="radio"/> <div class="quiz-option-text"><p>socket(), accept(), listen(), bind()</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>True or false: socket programming is limited to being used in the C/C++ language</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~i1a931" type="radio"/> <div class="quiz-option-text"><p>True</p></div></li>
+<li><input name="autoGradableResponseId~i1a931" type="radio"/> <div class="quiz-option-text"><p>False</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Application protocol defines which of the following</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~qnEdSP" type="radio"/> <div class="quiz-option-text"><p>Amount of buffering in the Transport stack.</p></div></li>
+<li><input name="autoGradableResponseId~qnEdSP" type="radio"/> <div class="quiz-option-text"><p>Programming language of client and server</p></div></li>
+<li><input name="autoGradableResponseId~qnEdSP" type="radio"/> <div class="quiz-option-text"><p>Message transmission time</p></div></li>
+<li><input name="autoGradableResponseId~qnEdSP" type="radio"/> <div class="quiz-option-text"><p>Message syntax and semantics</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>For HTTP messages that use JSON, which of the following can be expressed (check all that apply).</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~3Fb7Ih" type="checkbox"/> <div class="quiz-option-text"><p>arrays</p></div></li>
+<li><input name="autoGradableResponseId~3Fb7Ih" type="checkbox"/> <div class="quiz-option-text"><p>strings</p></div></li>
+<li><input name="autoGradableResponseId~3Fb7Ih" type="checkbox"/> <div class="quiz-option-text"><p>integers</p></div></li>
+<li><input name="autoGradableResponseId~3Fb7Ih" type="checkbox"/> <div class="quiz-option-text"><p>objects</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What role does the protobufs compiler play in the gRPC workflow.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~E0EqPY" type="radio"/> <div class="quiz-option-text"><p>It provides a language neutral acceleration library for client/server applications.</p></div></li>
+<li><input name="autoGradableResponseId~E0EqPY" type="radio"/> <div class="quiz-option-text"><p>It performs validation of JSON messages.</p></div></li>
+<li><input name="autoGradableResponseId~E0EqPY" type="radio"/> <div class="quiz-option-text"><p>It transforms JSON data formatted messages into a binary form.</p></div></li>
+<li><input name="autoGradableResponseId~E0EqPY" type="radio"/> <div class="quiz-option-text"><p>It generates libraries in different languages that provides stubs for serializing and deserializing data that can be used by client and server software.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which is the biggest distinguishing difference between JSON and Protobufs</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~8sVoxr" type="radio"/> <div class="quiz-option-text"><p>JSON is an open standard, protobufs require a paid license from google to use.</p></div></li>
+<li><input name="autoGradableResponseId~8sVoxr" type="radio"/> <div class="quiz-option-text"><p>JSON is textual, protobufs are binary.</p></div></li>
+<li><input name="autoGradableResponseId~8sVoxr" type="radio"/> <div class="quiz-option-text"><p>JSON is popular, protobufs are not.</p></div></li>
+<li><input name="autoGradableResponseId~8sVoxr" type="radio"/> <div class="quiz-option-text"><p>JSON is supported in many languages, protobufs are only supported in go and python.</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

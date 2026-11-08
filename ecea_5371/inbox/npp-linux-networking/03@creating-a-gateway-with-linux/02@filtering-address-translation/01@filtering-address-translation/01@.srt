@@ -1,0 +1,635 @@
+1
+00:00:09,318 --> 00:00:13,470
+Now, let's talk about filtering and
+address translation.
+
+2
+00:00:15,650 --> 00:00:20,655
+So filtering, with filtering,
+we want to block or
+
+3
+00:00:20,655 --> 00:00:24,838
+allow traffic according to some policy.
+
+4
+00:00:24,838 --> 00:00:28,080
+So maybe, we're running a web server and
+
+5
+00:00:28,080 --> 00:00:31,842
+we want to block all traffic,
+not for port 80.
+
+6
+00:00:31,842 --> 00:00:39,362
+So port 80 would be what you would
+commonly have open for HTTP requests.
+
+7
+00:00:39,362 --> 00:00:44,288
+So maybe, let's just protect
+that web server to not allow any
+
+8
+00:00:44,288 --> 00:00:47,310
+other traffic to come in.
+
+9
+00:00:47,310 --> 00:00:52,491
+Maybe we're running a home gateway,
+where we want to block
+
+10
+00:00:52,491 --> 00:00:58,298
+all traffic except for
+connections initiated from internal.
+
+11
+00:00:58,298 --> 00:01:02,570
+So this is a nice security
+mechanism from the home
+
+12
+00:01:02,570 --> 00:01:06,804
+where no external requests
+can come through.
+
+13
+00:01:06,804 --> 00:01:12,327
+Unless I went to some website,
+initiated that connection,
+
+14
+00:01:12,327 --> 00:01:16,280
+I will let that website respond, right?
+
+15
+00:01:16,280 --> 00:01:20,226
+And so,
+this can be at the edge of some network,
+
+16
+00:01:20,226 --> 00:01:24,730
+but it could also be on
+the end hosts themselves.
+
+17
+00:01:24,730 --> 00:01:31,290
+The mechanisms are going to be the same,
+but where you apply it may differ.
+
+18
+00:01:31,290 --> 00:01:37,794
+So the core of all of this
+is match action tables.
+
+19
+00:01:37,794 --> 00:01:45,131
+So the match, which sometimes you
+can also hear called classification,
+
+20
+00:01:45,131 --> 00:01:53,650
+it compares the input packets to a rule
+set in a table to see if there's a match.
+
+21
+00:01:53,650 --> 00:01:59,291
+So for example, we're going to
+match against the destination
+
+22
+00:01:59,291 --> 00:02:06,238
+IP address of 1.2.3.0/24 and
+destination port equals 80.
+
+23
+00:02:06,238 --> 00:02:12,434
+And in this table it says, we're
+going to drop that particular traffic.
+
+24
+00:02:12,434 --> 00:02:17,217
+So if you recall,
+the general kind of packet processing
+
+25
+00:02:17,217 --> 00:02:21,897
+pipeline is receive a packet,
+look up in some tables,
+
+26
+00:02:21,897 --> 00:02:26,736
+and do some manipulation of
+the packets based on that.
+
+27
+00:02:26,736 --> 00:02:28,624
+This is going to be very similar.
+
+28
+00:02:28,624 --> 00:02:32,823
+So the matches look up or
+kind of rules in a table, and
+
+29
+00:02:32,823 --> 00:02:37,596
+then, the actions tell us what
+we want to do with the packet,
+
+30
+00:02:37,596 --> 00:02:41,520
+maybe we want to drop it,
+maybe we want to allow it.
+
+31
+00:02:43,650 --> 00:02:49,530
+So a good practice to follow
+would be a default drop.
+
+32
+00:02:49,530 --> 00:02:53,765
+So you set the default action to drop,
+so if there's no matches,
+
+33
+00:02:53,765 --> 00:02:56,414
+then you're going to drop the traffic.
+
+34
+00:02:56,414 --> 00:03:01,590
+And then, you add rules to have
+an action other than drop.
+
+35
+00:03:01,590 --> 00:03:06,482
+So this might be commonly called
+something like whitelisting.
+
+36
+00:03:06,482 --> 00:03:11,050
+So you have the rules for what you're
+going to allow into your network
+
+37
+00:03:11,050 --> 00:03:13,670
+rather than what you want to disallow.
+
+38
+00:03:16,090 --> 00:03:19,860
+So that's filtering,
+it's a pretty easy concept,
+
+39
+00:03:19,860 --> 00:03:24,430
+and we're going to learn about
+iptables and how to apply it.
+
+40
+00:03:24,430 --> 00:03:29,810
+On the complementary side
+is address translation.
+
+41
+00:03:29,810 --> 00:03:34,561
+So, actions can also
+manipulate the addresses or
+
+42
+00:03:34,561 --> 00:03:38,010
+different fields in the packets.
+
+43
+00:03:38,010 --> 00:03:42,961
+So here we're talking about source and
+destination IP addresses and
+
+44
+00:03:42,961 --> 00:03:47,352
+source and destination ports,
+so like TCP port numbers.
+
+45
+00:03:47,352 --> 00:03:52,357
+So an example of this is,
+maybe I want to use private addressing on
+
+46
+00:03:52,357 --> 00:03:58,170
+the local area network or LAN with
+a single shared public IP address.
+
+47
+00:03:58,170 --> 00:04:05,020
+So packets destined to the public IP
+address are translated to a private one.
+
+48
+00:04:07,070 --> 00:04:15,318
+All right, so let's go through a few
+use cases of this address translation.
+
+49
+00:04:15,318 --> 00:04:19,906
+So the first use case is,
+maybe I have [COUGH] performing
+
+50
+00:04:19,906 --> 00:04:24,370
+a static mapping from
+internal to external.
+
+51
+00:04:24,370 --> 00:04:29,844
+Right, so each server in my network
+will get both a public IP address and
+
+52
+00:04:29,844 --> 00:04:31,768
+a private IP address.
+
+53
+00:04:31,768 --> 00:04:35,406
+So when it's communicating internally,
+
+54
+00:04:35,406 --> 00:04:41,265
+it's used in this private IP address,
+but when it goes externally,
+
+55
+00:04:41,265 --> 00:04:46,431
+this gets translated to some
+public IP address, all right?
+
+56
+00:04:46,431 --> 00:04:49,548
+And there's different reasons
+you might want to do this.
+
+57
+00:04:49,548 --> 00:04:56,115
+Maybe you have some kind of internal
+legacy management system set up.
+
+58
+00:04:56,115 --> 00:05:00,938
+Or maybe this is how you set up
+your LAN to be able to handle this,
+
+59
+00:05:00,938 --> 00:05:05,230
+but you wanted to then
+grant them external access.
+
+60
+00:05:05,230 --> 00:05:10,292
+So here, let's start with kind of how
+to read these diagrams that I drew up.
+
+61
+00:05:10,292 --> 00:05:14,972
+Well, so this is showing
+the packet as it's traversing from
+
+62
+00:05:14,972 --> 00:05:19,743
+the internal to the external,
+and we have source IP address,
+
+63
+00:05:19,743 --> 00:05:24,445
+destination IP address,
+source port, destination port.
+
+64
+00:05:24,445 --> 00:05:27,840
+And so, that's coming from this host and
+
+65
+00:05:27,840 --> 00:05:32,702
+it's going to some public IP address,
+some destination.
+
+66
+00:05:32,702 --> 00:05:39,460
+At the gateway, it's going to translate,
+do it have a static translation?
+
+67
+00:05:39,460 --> 00:05:44,548
+Recall, we have a mapping,
+and so, it's going to say,
+
+68
+00:05:44,548 --> 00:05:50,635
+if I see in ingress or
+in the egress direction 10.0.0.1,
+
+69
+00:05:50,635 --> 00:05:54,307
+translate the source to this address.
+
+70
+00:05:54,307 --> 00:06:01,088
+And in the ingress direction, translate
+the destination from this to this.
+
+71
+00:06:01,088 --> 00:06:05,146
+So you can see it was
+translated externally.
+
+72
+00:06:05,146 --> 00:06:09,451
+So now, when that server responds,
+it'll have its source, but
+
+73
+00:06:09,451 --> 00:06:12,952
+then the destination will
+be that public address.
+
+74
+00:06:12,952 --> 00:06:13,745
+And then,
+
+75
+00:06:13,745 --> 00:06:19,990
+we're going to do a static mapping to
+the destination internal IP address.
+
+76
+00:06:19,990 --> 00:06:25,242
+So that's one example,
+might not be commonly used, but so,
+
+77
+00:06:25,242 --> 00:06:32,730
+this one use case 2, you certainly would
+commonly experience this or see this.
+
+78
+00:06:32,730 --> 00:06:38,135
+So this might be a dynamic mapping
+of a single external IP address,
+
+79
+00:06:38,135 --> 00:06:42,970
+and then you dynamically select
+from available TCP ports.
+
+80
+00:06:45,630 --> 00:06:48,362
+Internally, we have a bunch
+of different hosts.
+
+81
+00:06:48,362 --> 00:06:52,424
+They all get private IP addresses and
+
+82
+00:06:52,424 --> 00:06:56,354
+we have assigned, as the gateway,
+
+83
+00:06:56,354 --> 00:07:02,630
+a single public IP address for
+this entire network.
+
+84
+00:07:02,630 --> 00:07:05,624
+So to be able to distinguish
+the different hosts,
+
+85
+00:07:05,624 --> 00:07:09,670
+it's going to use the port
+numbers as part of this process.
+
+86
+00:07:09,670 --> 00:07:14,570
+So here again, we're going to
+have a request going externally.
+
+87
+00:07:14,570 --> 00:07:19,143
+So the source would be 10.0.1.1,
+destination,
+
+88
+00:07:19,143 --> 00:07:24,461
+the same kind of public IP address
+that we're sending a request to,
+
+89
+00:07:24,461 --> 00:07:27,734
+and our source and destination ports.
+
+90
+00:07:27,734 --> 00:07:30,195
+So once it gets to the gateway,
+
+91
+00:07:30,195 --> 00:07:34,848
+it's going to look up in its table and
+see if it has a mapping.
+
+92
+00:07:34,848 --> 00:07:38,202
+In this case, it does have a mapping.
+
+93
+00:07:38,202 --> 00:07:43,322
+It's saying, 10.0.1.1/5000 will
+
+94
+00:07:43,322 --> 00:07:47,971
+map to port 1000 externally, all right?
+
+95
+00:07:47,971 --> 00:07:52,082
+And it'll include also
+the destination IP address,
+
+96
+00:07:52,082 --> 00:07:57,300
+as well as part of that, but for
+space first purposes left that off.
+
+97
+00:07:58,550 --> 00:08:03,270
+All right, and so, now, you can see,
+
+98
+00:08:03,270 --> 00:08:11,210
+both the source end IP and
+TCP port and address got translated.
+
+99
+00:08:11,210 --> 00:08:18,491
+So now, when this guy responds to
+the destination of that single IP address,
+
+100
+00:08:18,491 --> 00:08:22,532
+that all hosts in this network will share.
+
+101
+00:08:22,532 --> 00:08:27,658
+Again, it'll look up in a table,
+and it will see,
+
+102
+00:08:27,658 --> 00:08:34,490
+it should translate it to this internal
+IP address port number mapping.
+
+103
+00:08:34,490 --> 00:08:38,387
+And it will do that, and so,
+that it can get to the destination.
+
+104
+00:08:38,387 --> 00:08:43,714
+All right, now, if it was the first
+request, let's say another host comes
+
+105
+00:08:43,714 --> 00:08:48,734
+in and has a similar request,
+it would look up, there's no mapping.
+
+106
+00:08:48,734 --> 00:08:53,314
+Well, it would just pick
+one of the available TCP
+
+107
+00:08:53,314 --> 00:08:56,900
+ports to have as part of that mapping.
+
+108
+00:08:56,900 --> 00:08:59,404
+All right, so that's a second use case.
+
+109
+00:08:59,404 --> 00:09:06,010
+And so, why I say this is common is, a lot
+of home networks have this exact setup.
+
+110
+00:09:07,790 --> 00:09:11,718
+A third case might be port forwarding.
+
+111
+00:09:11,718 --> 00:09:18,628
+So let's say, I want to run a publicly
+available server on a private IP address.
+
+112
+00:09:18,628 --> 00:09:22,856
+So say I am into Minecraft in my home and
+
+113
+00:09:22,856 --> 00:09:29,209
+I want to run a server in a server or
+on a computer in my home.
+
+114
+00:09:29,209 --> 00:09:32,158
+Well, I'm going to get
+a private IP address, but
+
+115
+00:09:32,158 --> 00:09:36,583
+I also have a bunch of other family
+members that are going to have other kind
+
+116
+00:09:36,583 --> 00:09:39,483
+of computers that
+are using the same network.
+
+117
+00:09:39,483 --> 00:09:45,300
+So we all get private IP addresses, and
+then, we get this single IP address for
+
+118
+00:09:45,300 --> 00:09:49,388
+the whole network, but
+I want to make this available.
+
+119
+00:09:49,388 --> 00:09:53,436
+So this is where port forwarding comes in.
+
+120
+00:09:53,436 --> 00:09:58,455
+So requests come in, so now,
+we're looking from left to
+
+121
+00:09:58,455 --> 00:10:04,670
+right as the first request to
+the destination of this gateway.
+
+122
+00:10:04,670 --> 00:10:09,791
+But then, the gateway knows,
+all right, if I see port 25565,
+
+123
+00:10:09,791 --> 00:10:14,824
+I'm going to forward it to
+the internal server 10.0., whoops,
+
+124
+00:10:14,824 --> 00:10:20,926
+this should say 1.1, which would be
+where I'm running my Minecraft server.
+
+125
+00:10:20,926 --> 00:10:24,305
+And then,
+it will do the address translation,
+
+126
+00:10:24,305 --> 00:10:29,626
+likewise on the reverse direction,
+when the Minecraft server responds,
+
+127
+00:10:29,626 --> 00:10:34,010
+it knows that there's
+going to be this translation.
+
+128
+00:10:34,010 --> 00:10:37,100
+So that's what port forwarding does.
+
+129
+00:10:37,100 --> 00:10:42,136
+And you can see,
+each of these are kind of distinguished
+
+130
+00:10:42,136 --> 00:10:47,080
+by what fields are getting translated and
+all of that.
+
+131
+00:10:49,210 --> 00:10:55,740
+All right, so that's the basics for what
+filtering and address translation are.
+
+132
+00:10:55,740 --> 00:11:01,650
+Next, we're going to dive into
+the iptables and how to use that.
+
+133
+00:11:01,650 --> 00:11:03,690
+All right, till then.

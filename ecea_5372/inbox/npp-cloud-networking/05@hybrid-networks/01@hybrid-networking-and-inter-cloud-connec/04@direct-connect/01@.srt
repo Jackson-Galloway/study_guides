@@ -1,0 +1,436 @@
+1
+00:00:07,080 --> 00:00:08,654
+All right, let's go ahead and get started.
+
+2
+00:00:08,654 --> 00:00:11,406
+So this time we're going to
+talk about direct connect.
+
+3
+00:00:11,406 --> 00:00:15,894
+And this is the next thing
+in this hybrid networks.
+
+4
+00:00:15,894 --> 00:00:20,783
+So specifically, we're talking
+about the situation where say
+
+5
+00:00:20,783 --> 00:00:26,230
+sometimes the infrastructure is
+hosted in colocation facilities.
+
+6
+00:00:26,230 --> 00:00:32,149
+So maybe the company really had some
+legacy infrastructure they built out,
+
+7
+00:00:32,149 --> 00:00:36,774
+built their infrastructure
+around colocation before they
+
+8
+00:00:36,774 --> 00:00:41,784
+really got into the Cloud but
+they want to expand into the Cloud.
+
+9
+00:00:41,784 --> 00:00:46,468
+And so now they want to have
+this hybrid infrastructure where
+
+10
+00:00:46,468 --> 00:00:50,104
+it's hybrid Cloud and on premise.
+
+11
+00:00:50,104 --> 00:00:55,171
+What's special about these
+colocation facilities is that they
+
+12
+00:00:55,171 --> 00:01:01,226
+have great network connectivity, and
+so you can get a direct connection.
+
+13
+00:01:01,226 --> 00:01:04,499
+It's not going over necessarily
+the public Internet, or
+
+14
+00:01:04,499 --> 00:01:09,482
+it's not going over the public Internet,
+you can get a direct connection to Google.
+
+15
+00:01:09,482 --> 00:01:11,882
+So let's see how that kind of works.
+
+16
+00:01:11,882 --> 00:01:14,210
+So first, a little bit about colocation.
+
+17
+00:01:14,210 --> 00:01:19,200
+If you're not familiar with it,
+these are a provider where they own and
+
+18
+00:01:19,200 --> 00:01:22,114
+operate a physical building.
+
+19
+00:01:22,114 --> 00:01:25,417
+Commonly these would be popular areas or
+
+20
+00:01:25,417 --> 00:01:30,844
+highly populated areas like cities and
+things like that.
+
+21
+00:01:30,844 --> 00:01:36,204
+And these customers can place their
+physical equipment in the building.
+
+22
+00:01:36,204 --> 00:01:38,588
+So it's multi tenant.
+
+23
+00:01:38,588 --> 00:01:44,052
+So, company one can put their
+physical equipment in there.
+
+24
+00:01:44,052 --> 00:01:47,988
+Company two can also put
+their equipment in there.
+
+25
+00:01:47,988 --> 00:01:53,569
+And so these companies such as,
+you know, Equinix, Digital Realty,
+
+26
+00:01:53,569 --> 00:01:59,430
+CoreSite, they provide the space,
+the power, network connectivity and
+
+27
+00:01:59,430 --> 00:02:04,920
+physical security, like guards to
+not let people into the building,
+
+28
+00:02:04,920 --> 00:02:08,104
+video cameras, all that kind of stuff.
+
+29
+00:02:10,044 --> 00:02:15,344
+So the first thing to
+know about is the cage.
+
+30
+00:02:17,064 --> 00:02:20,792
+So each company gets its own secured cage.
+
+31
+00:02:20,792 --> 00:02:24,265
+So when I go lease from
+a colocation facility,
+
+32
+00:02:24,265 --> 00:02:28,903
+I would get one of these cages and
+my own secure access to that.
+
+33
+00:02:28,903 --> 00:02:34,572
+So I can come in and out of the building,
+they would check my ID and all that and
+
+34
+00:02:34,572 --> 00:02:40,664
+my access privileges, and then I'm
+the only one allowed into this cage.
+
+35
+00:02:40,664 --> 00:02:43,968
+That's how my equipment
+is protected from others,
+
+36
+00:02:43,968 --> 00:02:47,584
+you know somebody else has
+a cage right next door to mine.
+
+37
+00:02:49,564 --> 00:02:53,356
+The next thing to know
+about is the meet me room.
+
+38
+00:02:53,356 --> 00:02:58,787
+And this is where network
+provider equipment is placed
+
+39
+00:02:58,787 --> 00:03:06,380
+in kind of a centralized kind of part
+of the building, and cross connects.
+
+40
+00:03:06,380 --> 00:03:12,650
+So the, the colocation providers all
+offer the ability to get across connect.
+
+41
+00:03:12,650 --> 00:03:17,534
+So it'll cost you money,
+but it's effectively think
+
+42
+00:03:17,534 --> 00:03:22,100
+of it as a cable that goes
+from my cage to some network
+
+43
+00:03:22,100 --> 00:03:26,894
+provider such that I can
+get connectivity from them.
+
+44
+00:03:28,594 --> 00:03:35,180
+A lot of the colocation providers are
+moving towards a virtual cross connect or
+
+45
+00:03:35,180 --> 00:03:40,656
+network fabric where my cage is
+just connected to that fabric.
+
+46
+00:03:40,656 --> 00:03:44,783
+That fabric has the connectivity
+to the network providers and
+
+47
+00:03:44,783 --> 00:03:48,824
+then it's a simple software
+defined networking.
+
+48
+00:03:48,824 --> 00:03:53,221
+If they use that configuration
+to be able to say,
+
+49
+00:03:53,221 --> 00:03:59,570
+make a connection between my cage and
+a particular network provider.
+
+50
+00:03:59,570 --> 00:04:06,764
+All right, and then in some facilities,
+Cloud providers have network equipment.
+
+51
+00:04:07,924 --> 00:04:13,190
+So customers of this colocation
+provider can get a port on for example,
+
+52
+00:04:13,190 --> 00:04:19,184
+Google's physical switch, which connects
+them directly to Google's Cloud.
+
+53
+00:04:20,204 --> 00:04:23,144
+This is what's known as direct connects.
+
+54
+00:04:24,164 --> 00:04:28,530
+Each provider has
+
+55
+00:04:28,530 --> 00:04:34,064
+their own term for it.
+
+56
+00:04:36,184 --> 00:04:41,528
+So not always did you get a connection
+on Google's physical switch,
+
+57
+00:04:41,528 --> 00:04:48,024
+it might be to another provider that
+has access to that physical switch.
+
+58
+00:04:48,024 --> 00:04:53,566
+So there's some providers like Megaport,
+console Connect,
+
+59
+00:04:53,566 --> 00:04:57,850
+Equinix itself,
+that have a global fabric, and
+
+60
+00:04:57,850 --> 00:05:02,342
+you can get connections to them,
+and then they have
+
+61
+00:05:02,342 --> 00:05:07,694
+the connections directly into
+Google's infrastructure.
+
+62
+00:05:08,954 --> 00:05:13,387
+On the Google side,
+it looks all the same, but
+
+63
+00:05:13,387 --> 00:05:19,426
+it's how do you actually get
+connected to Google's network.
+
+64
+00:05:19,426 --> 00:05:23,211
+With all that, what does it look like?
+
+65
+00:05:23,211 --> 00:05:28,836
+After ordering the cross connect and
+the direct connect,
+
+66
+00:05:28,836 --> 00:05:33,313
+that's ordering a port on Google's switch,
+
+67
+00:05:33,313 --> 00:05:38,135
+whether that's through
+a third party provider or
+
+68
+00:05:38,135 --> 00:05:43,454
+Google itself or Amazon or
+whoever in the Cloud side.
+
+69
+00:05:43,454 --> 00:05:45,870
+So this is the colocation side I need.
+
+70
+00:05:45,870 --> 00:05:47,006
+Here's my cage.
+
+71
+00:05:47,006 --> 00:05:49,794
+Got a firewall, got a router,
+
+72
+00:05:49,794 --> 00:05:55,156
+I got a physical connection to
+something on the Cloud side,
+
+73
+00:05:55,156 --> 00:06:02,094
+I need to instantiate a cloud router and
+then add a VLAN attachment to it.
+
+74
+00:06:02,094 --> 00:06:07,361
+So let's assume to set up a Cloud router,
+
+75
+00:06:07,361 --> 00:06:11,575
+we've done it in the context of,
+
+76
+00:06:11,575 --> 00:06:16,574
+I think, Cloud NAT and other VPN.
+
+77
+00:06:16,574 --> 00:06:19,662
+You can create a cloud router on its own.
+
+78
+00:06:19,662 --> 00:06:23,344
+Just search for Cloud router and
+you can go through that.
+
+79
+00:06:24,524 --> 00:06:30,024
+The way to add the VLAN attachment
+is we're looking for interconnect.
+
+80
+00:06:31,324 --> 00:06:36,848
+And here you would say
+either dedicated Internet
+
+81
+00:06:36,848 --> 00:06:41,704
+connection or partner interconnection.
+
+82
+00:06:44,564 --> 00:06:49,756
+If you're going directly to Google's
+infrastructure, it would be dedicated.
+
+83
+00:06:49,756 --> 00:06:55,564
+If you're going through third party
+provider, it would be the partner.
+
+84
+00:06:55,564 --> 00:07:00,939
+All right, so then,
+effectively it just brings up
+
+85
+00:07:00,939 --> 00:07:05,939
+another wizard, and
+you go through kind of each
+
+86
+00:07:05,939 --> 00:07:11,064
+of the steps very similar
+to how we set up VPN's.
+
+87
+00:07:12,084 --> 00:07:17,064
+But in this case, you're just going to
+select, you know, your VLANs.
+
+88
+00:07:19,084 --> 00:07:24,027
+And with that, that's a little harder
+to kind of try out on your own
+
+89
+00:07:24,027 --> 00:07:27,356
+because you need that co-location space.
+
+90
+00:07:27,356 --> 00:07:32,824
+But if you work for a company that has
+that, and you want to give it a try,
+
+91
+00:07:32,824 --> 00:07:38,324
+that would be certainly interesting
+to try to get it to work.
+
+92
+00:07:38,324 --> 00:07:41,250
+All right.
+With that, we'll end here, thanks.

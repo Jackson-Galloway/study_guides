@@ -1,0 +1,54 @@
+In this video, we cover the concept
+of encoding into frames. To start, let's revisit what a link is. So in between network devices is
+some physical transmission medium. Whether it's a wire or it's wirelessly. A link is the abstraction on
+top of that physical medium, which enables communication. So the first component of that
+abstraction that's solved by the link layer is how to encode the signals
+such that they make sense. That they indicate who
+the data is meant for and how to actually interpret the data. So, let's assume that
+you can transmit 1s and 0s through whatever
+medium that's being used. So the link layer is responsible for helping make sense of this series of
+1s and 0s, which needs structure. At the link layer,
+this structure is called a frame. So a frame is broken down
+into three parts a header, a trailer and the payload. The payload is the actual data
+that the sender wants to exchange with the receiver. The header and trailer are extra metadata, which provides information
+about the frame. Each of the header and
+trailer can be broken down into fields. So let's get a little
+bit more concrete here. Let's talk about Ethernet, which is pretty ubiquitous as
+the main wired link layer protocol. So shown at the bottom is
+the frame format for Ethernet. The dest, field for
+destination is 48 bits and it indicates who the frame is meant for. It allows a receiver, namely the NIC or
+Network interface card, to filter messages that
+aren't destined for it. The source tells who the sender of
+the frame is, and this is useful. So, if there's a reply message that is
+needed, we can know who to reply to. The type field is 16 bits and tells
+the receiver what the payload actually is. So on the right is a chart of
+some of the different values of the type field in Ethernet and
+what they mean. So, for example,
+if the type field is x0800, that means what's in the payload should be interpreted by the receiver
+as an IPV4 packet. So finally, the FCS field,
+which stands for Frame Check Sequence,
+provides some error handling. And here it's shown at the right hand side
+of the frame because it's the trailer. And it's put as the trailer because
+those are the last bits to be received. And so the network card can then
+check if there's any errors that occurred because it has all
+the bits before it already received. Now, we said that the source and
+destination addresses were 48 bits. So in Ethernet these are called MAC
+addresses for media access control. And it's typically displayed in hex with
+colons separating each eight bits or two hex characters,
+as shown in the example. So historically,
+these were assigned as part of the global manufacturing process and
+they were meant to be globally unique. So a vendor would get
+assigned the upper bits and then when it's manufacturing devices
+it would choose the lower bits and make them unique for
+each of the devices it manufactured. With Virtualization this isn't really the
+case as much anymore as the virtualization software will commonly just use any
+addresses for the virtual machines. One special address to know
+about is the broadcast address, which is all 48 bits are 1s or
+all hex characters are Fs. So this is set as a destination
+address in the frame and it indicates that this frame is meant to
+be received by all nodes in this network. Now we discussed Ethernet in detail, but there are many different
+link layer protocols. So each will have its own frame format. So shown here are on the left is ATM and
+802.11, also known as WiFi is shown on the right. The key takeaway is that some
+standard defines the frame format so everyone that's using it can know
+how to speak to one another. Thanks, this is the end and
+we will see you in the next video.

@@ -1,0 +1,215 @@
+1
+00:00:06,360 --> 00:00:09,460
+Hello. I'm Eric Keller.
+
+2
+00:00:09,460 --> 00:00:12,765
+I'm going to bring
+this course to you.
+
+3
+00:00:12,765 --> 00:00:15,540
+I'm a professor at the
+University of Colorado,
+
+4
+00:00:15,540 --> 00:00:20,450
+and I do research in networking.
+
+5
+00:00:20,450 --> 00:00:24,910
+The last class that I
+created on Coursera was
+
+6
+00:00:24,910 --> 00:00:29,130
+called Network Principles and
+Practice Linux Networking.
+
+7
+00:00:29,130 --> 00:00:31,830
+I was very excited
+about that one because
+
+8
+00:00:31,830 --> 00:00:35,735
+just how pervasive Linux
+is and how powerful it is.
+
+9
+00:00:35,735 --> 00:00:39,270
+Really as I said in
+that intro video,
+
+10
+00:00:39,270 --> 00:00:41,810
+it was the class that I wish I
+
+11
+00:00:41,810 --> 00:00:46,050
+had when I first started
+my journey in networking.
+
+12
+00:00:46,050 --> 00:00:48,830
+Just because of just
+really understanding how
+
+13
+00:00:48,830 --> 00:00:51,530
+Linux networking works is
+
+14
+00:00:51,530 --> 00:00:54,575
+really important and really
+useful in a lot of areas.
+
+15
+00:00:54,575 --> 00:00:57,980
+This class, I'm excited
+for a different reason.
+
+16
+00:00:57,980 --> 00:01:02,640
+So a little context, I
+started my PhD in 2006.
+
+17
+00:01:02,640 --> 00:01:06,625
+You can look it up and
+see that [inaudible]
+
+18
+00:01:06,625 --> 00:01:12,460
+was also started in
+that 2006 time frame.
+
+19
+00:01:12,460 --> 00:01:16,400
+This whole area of
+cloud computing
+
+20
+00:01:16,400 --> 00:01:21,360
+really led to a lot of
+innovation in networking.
+
+21
+00:01:21,360 --> 00:01:27,045
+Because what the Cloud was
+trying to do and still is with
+
+22
+00:01:27,045 --> 00:01:29,760
+the automation and the
+scale that's working
+
+23
+00:01:29,760 --> 00:01:33,000
+at just required a ton of
+innovation in networking.
+
+24
+00:01:33,000 --> 00:01:35,145
+So it was a really
+exciting time.
+
+25
+00:01:35,145 --> 00:01:38,230
+Then now, it's really grown to
+
+26
+00:01:38,230 --> 00:01:41,310
+be the central platform
+to develop on.
+
+27
+00:01:41,310 --> 00:01:43,030
+So just knowing how
+
+28
+00:01:43,030 --> 00:01:46,805
+cloud networking works
+is an important skill.
+
+29
+00:01:46,805 --> 00:01:51,575
+In this class, we're
+going to cover,
+
+30
+00:01:51,575 --> 00:01:53,550
+it's going to be a mix of
+
+31
+00:01:53,550 --> 00:01:56,250
+the hands on practical
+aspects of it,
+
+32
+00:01:56,250 --> 00:01:58,490
+but then also understanding
+
+33
+00:01:58,490 --> 00:02:00,590
+the technology that
+runs the Cloud.
+
+34
+00:02:00,590 --> 00:02:02,410
+This is what's
+unique about this.
+
+35
+00:02:02,410 --> 00:02:04,610
+You won't get this
+in other classes.
+
+36
+00:02:04,610 --> 00:02:09,550
+It's not just about how to
+use a start cloud platform.
+
+37
+00:02:09,550 --> 00:02:12,030
+But really, how does
+it actually work?
+
+38
+00:02:12,030 --> 00:02:14,995
+We'll cover the abstractions,
+
+39
+00:02:14,995 --> 00:02:17,235
+and how to build it in,
+
+40
+00:02:17,235 --> 00:02:19,200
+the console, the websites.
+
+41
+00:02:19,200 --> 00:02:21,570
+We'll learn about automation.
+
+42
+00:02:21,570 --> 00:02:25,650
+We'll also introduce some
+academic papers that
+
+43
+00:02:25,650 --> 00:02:27,430
+were the underpinnings of a lot
+
+44
+00:02:27,430 --> 00:02:29,970
+of these cloud technologies.
+
+45
+00:02:29,970 --> 00:02:35,650
+With that, I'm looking forward
+to working through this,
+
+46
+00:02:35,650 --> 00:02:39,850
+and I really hope you enjoy
+it. All right. Thanks.

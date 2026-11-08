@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Network Layer Quiz</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>We noted that IP prefixes can be aggregated. Which of the following are equivalent</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~WE8IRJ" type="radio"/> <div class="quiz-option-text"><p>Neither</p></div></li>
+<li><input name="autoGradableResponseId~WE8IRJ" type="radio"/> <div class="quiz-option-text"><p>(10.0.0.0/16, 10.1.0.0/16, 10.2.0.0/16, 10.3.0.0/16) and 10.0.0.0/14</p></div></li>
+<li><input name="autoGradableResponseId~WE8IRJ" type="radio"/> <div class="quiz-option-text"><p>(10.0.0.0/16, 10.1.0.0/16, 10.2.0.0/16, 10.3.0.0/16) and 10.0.0.0/18</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is the service model offered by the Internet Protocol</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1Y249R" type="radio"/> <div class="quiz-option-text"><p>Best Effort</p></div></li>
+<li><input name="autoGradableResponseId~1Y249R" type="radio"/> <div class="quiz-option-text"><p>Reliable stream of in order packets</p></div></li>
+<li><input name="autoGradableResponseId~1Y249R" type="radio"/> <div class="quiz-option-text"><p>Guaranteed delivery of packets</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is a prefix for which 1.2.3.4 is covered by.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~JGpHBd" type="radio"/> <div class="quiz-option-text"><p>1.0.0.0/24</p></div></li>
+<li><input name="autoGradableResponseId~JGpHBd" type="radio"/> <div class="quiz-option-text"><p>1.2.0.0/22</p></div></li>
+<li><input name="autoGradableResponseId~JGpHBd" type="radio"/> <div class="quiz-option-text"><p>1.2.4.0/24</p></div></li>
+<li><input name="autoGradableResponseId~JGpHBd" type="radio"/> <div class="quiz-option-text"><p>1.0.0.0/16</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the data plane, the destination IP address is looked up in what table?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~LvGOMA" type="radio"/> <div class="quiz-option-text"><p>Forwarding Table</p></div></li>
+<li><input name="autoGradableResponseId~LvGOMA" type="radio"/> <div class="quiz-option-text"><p>MAC Learning Table</p></div></li>
+<li><input name="autoGradableResponseId~LvGOMA" type="radio"/> <div class="quiz-option-text"><p>Routing Table</p></div></li>
+<li><input name="autoGradableResponseId~LvGOMA" type="radio"/> <div class="quiz-option-text"><p>ARP Table</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>With IP forwarding, the entries in the forwarding table are prefixes. If two entries overlap (e.g., 11.11.11.0/24 and 11.11.0.0/16, for which 11.11.11.11 matches both), how is it determined which entry to use?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ReZJgf" type="radio"/> <div class="quiz-option-text"><p>The oldest entry is preferred</p></div></li>
+<li><input name="autoGradableResponseId~ReZJgf" type="radio"/> <div class="quiz-option-text"><p>The entry with the longest prefix is preferred</p></div></li>
+<li><input name="autoGradableResponseId~ReZJgf" type="radio"/> <div class="quiz-option-text"><p>The newest entry is preferred</p></div></li>
+<li><input name="autoGradableResponseId~ReZJgf" type="radio"/> <div class="quiz-option-text"><p>A round robin selector is used to rotate between them</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>For a switching fabric, what is a benefit of a cross bar over a bus?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0O4nYb" type="radio"/> <div class="quiz-option-text"><p>It is standardized by the IETF</p></div></li>
+<li><input name="autoGradableResponseId~0O4nYb" type="radio"/> <div class="quiz-option-text"><p>It uses thicker wires</p></div></li>
+<li><input name="autoGradableResponseId~0O4nYb" type="radio"/> <div class="quiz-option-text"><p>It can support multiple packets being switched simultaneously</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>BGP (path vector) or OSPF (link state) or both? Knows entire topology. </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~RH58g2" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~RH58g2" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~RH58g2" type="radio"/> <div class="quiz-option-text"><p>Both</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>BGP (path vector) or OSPF (link state) or both? Handles failure of devices. </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~sCcbyB" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~sCcbyB" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~sCcbyB" type="radio"/> <div class="quiz-option-text"><p>Both</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>BGP (path vector) or OSPF (link state) or both? May pick a different best route than its neighbor. </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Fl4aLm" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~Fl4aLm" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~Fl4aLm" type="radio"/> <div class="quiz-option-text"><p>Both</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>BGP (path vector) or OSPF (link state) or both? Is the main protocol used in the Internet. </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~a8n4Nc" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~a8n4Nc" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~a8n4Nc" type="radio"/> <div class="quiz-option-text"><p>Both</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>BGP (path vector) or OSPF (link state) or both? Exchanges with neighbor all routes known. </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~fulJpp" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~fulJpp" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~fulJpp" type="radio"/> <div class="quiz-option-text"><p>Both</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>BGP (path vector) or OSPF (link state) or both? Works in a decentralized manner. </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~u2X6kK" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~u2X6kK" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~u2X6kK" type="radio"/> <div class="quiz-option-text"><p>Both</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Before an IP packet can be sent to a destination it needs to know the MAC address of the destination if on the same LAN or of the next hop router otherwise. What protocol can be used</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XvaAo1" type="radio"/> <div class="quiz-option-text"><p>DNS</p></div></li>
+<li><input name="autoGradableResponseId~XvaAo1" type="radio"/> <div class="quiz-option-text"><p>ARP</p></div></li>
+<li><input name="autoGradableResponseId~XvaAo1" type="radio"/> <div class="quiz-option-text"><p>TCP</p></div></li>
+<li><input name="autoGradableResponseId~XvaAo1" type="radio"/> <div class="quiz-option-text"><p>DHCP</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which best describes how ping works</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~HNpoid" type="radio"/> <div class="quiz-option-text"><p>IP header specified ICMP as the protocol, and sends an ICMP request to the desired IP destination, who then responds with an ICMP reply.</p></div></li>
+<li><input name="autoGradableResponseId~HNpoid" type="radio"/> <div class="quiz-option-text"><p>Ethernet header specifies ICMP as the type, and routers will forward or respond based on the ICMP header.</p></div></li>
+<li><input name="autoGradableResponseId~HNpoid" type="radio"/> <div class="quiz-option-text"><p>Through a separate management channel, a link layer protocol, ICMP, is used.</p></div></li>
+<li><input name="autoGradableResponseId~HNpoid" type="radio"/> <div class="quiz-option-text"><p>An IP options field has a flag in it specifying this is a ping request</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

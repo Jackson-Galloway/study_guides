@@ -1,0 +1,44 @@
+This video marks the start of a new module on the
+transport layer. As we've done in
+the last couple, we're going to use this video to basically give an overview of what the problems are and what are the things that
+we're going to be covering in the
+rest of the module. Stepping back, recall
+Ethernet addressing. Each network card
+has a MAC address. When you're sending traffic
+through the network, each frame will contain a source and destination
+MAC address. That's how the
+communication occurs. We then later on top of
+that, some IP addressing. With Ethernet, we saw each table at one
+entry per destination. We noted that doesn't scale to billions of devices worldwide. The solution to this
+was add structure to addresses so that devices
+could be grouped. The first problem that the transport layer tackles
+or addresses is multiplexing. We talked about Ethernet is associated with
+the network card, the IP address is
+associated with the host, but we're going to have
+multiple applications running. So when we receive a packet with a certain IP
+address and MAC address, which application
+is that packet for? We need a concept
+of multiplexing and this is what the transport
+layer takes care of. The next thing to address is
+when we looked at the IP, the Internet protocol, we saw that the service
+model was best effort, that packets may get dropped, there's no guarantee of how long it takes to deliver a packet, packets may get reordered
+in the network, and this had good reasoning because different link layers might have different properties. We needed that lowest
+common denominator. But the problem is when we have applications that are trying to be communicating
+with one another, we want them to be
+assured that what they send is what is received. We want it to be the same
+order and the same data. The second problem that
+the transport layer can address is providing
+for reliable transfer. Then finally, the third
+problem is congestion control. The problem is congestion. The solution is
+congestion control. Congestion in the network will
+occur and this is what can lead to packets being dropped
+and things like that. We'll go over why and
+how congestion occurs. But what if senders could detect this and
+back off as needed? What is the implications
+if we just allow this to keep happening without taking any
+corrective action? What we do is we introduce
+at the transport layer some congestion
+control to make it so that there's ability to
+actually get traffic through. This is going to be our outline for the rest of this module. Different topics may have multiple videos
+associated with it, but these are the
+three core properties of transport that are important.

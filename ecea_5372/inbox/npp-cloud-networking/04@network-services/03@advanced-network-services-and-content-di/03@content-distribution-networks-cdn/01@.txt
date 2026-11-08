@@ -1,0 +1,64 @@
+Let's go ahead and get started. This time, we're
+going to talk about content distribution
+networks or CDNs. This whole module is
+about network services, and the first network service we went through is a
+really important one. That's load balancing. Here is another network service Google provides, and that's CDN. Let's take a review of HTTP. We showed this before when we went through load balancing. It's worth showing again. HTTP is the web's
+application layer protocol, and client and server
+exchange web objects, like HTML files,
+JPEGs, and so forth. A PC running a browser sends a request to the server
+and it gets a response, and that file is sent to it. A different device
+would do request, perhaps for the same file, and then get the response. Maybe it's looking for blah.gif. How this looks
+across the Internet? If you recall, the Internet is a bunch of autonomous systems. A client, these are our two clients and
+let's say our server, well, they're going to make their requests across
+this Internet. It's going to traverse
+many of these networks. This leads to potentially
+some poor performance, reliability, scalability issues. There's a single point
+of failure back here, easy to be overloaded,
+to overload the server. There's a long latency
+of the request. There's a lot of peering
+traffic that's happening. It's not a great situation. Now, we can alleviate
+some of those, adding extra servers
+and load balancing, but you still don't have all that challenge or those problems going
+across the Internet. What a CDN is looks like this. It's this virtual network
+where the CDN provider creates a network
+with servers at the edge and a lot of peering agreements with
+network providers. Then content providers, namely the one that's
+running the server, signs up with the
+CDN provider and specifies here's
+my origin server. Client requests then
+go to the CDN servers. Completely, they don't ever interact directly with
+the origin server. The client would go to its
+nearest CDNs edge server. That edge server would
+say, do I have it? No. It will contact
+the origin server, and then it will
+cache the content. It may exchange it with other
+servers in its network, but let's assume it's real simplistic and it
+just caches it here. Let's say this other client then accesses the same content. It will hit it directly at
+this server and return. Because the content is cached, it was basically very
+minimal network traffic across this full path and very minimal load
+on the origin server. Just enough for this guy, this CDN server, to get the content. Google provides
+basically this service. Well, the three main things is you're going to
+create the origin, you specify what
+that origin server is or origin of the content, point it to some
+backend service, and configure how it
+should cache the content. Let's go over to our console. I can type in CDN and
+upward Cloud CDN. In this, if you
+wanted to find it, it would be under network
+services, those main things. Now, the different
+backends you can have, a backend bucket, so using Google storage. We could specify
+a backend service like that flask gap that we ran, put some load balancers
+in front of it, and we can say that
+backend service. I don't have that
+running anymore. Another thing you can do
+is this custom origin. Maybe I have a server. Let's say it's
+running at my house. I have an IP address. I'm just going to make up
+a fake one for right now, and it's port 8888 let's say. We're going to call
+this Eric's origin. I could just point Google to my backend server
+that I'm running. Then I would attach it to an existing load balancer or I can create a
+new load balancer, and they'll do it for me. Then I can configure the cache. A bunch of different settings, and this is going to depend
+on what makes sense for your particular web server that you're running and all of that. It's pretty
+straightforward, and then Google's global network
+basically takes over from there. I'm not going to click "Create". It takes a bit to spin up. You can get the drift just
+from looking at this. We went through those
+really straightforward. With that, we'll
+stop here. Thanks.

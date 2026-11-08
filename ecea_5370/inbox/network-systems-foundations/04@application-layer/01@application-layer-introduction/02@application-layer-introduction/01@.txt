@@ -1,0 +1,32 @@
+Now we get to start a new module on the application layer. Our goal in a lot of times using the Internet is to use services or visit
+websites like YouTube. You can view it as, I'm on my laptop and I go to visit YouTube to
+watch some videos. We learned at the link and network layer about how this
+connectivity can happen. We saw the link layer enables a device to talk on
+some local network. For example, this
+laptop talking over Wi-Fi to the gateway router. The network layer enables the global scalability and interconnecting
+different network types, for example, Wi-Fi and Ethernet. Then we moved up to
+the transport layer, which then enabled us to communicate at the
+process to process level and it provided
+this abstraction of a reliable in order stream
+when we were using TCP. The application layer is put actual functionality inside of that process and putting
+some meaning behind it. Some of the problems
+that are addressed at this level or at this layer are the first
+one is addressing. We could use IP addresses
+to visit YouTube, but that's not really
+human readable. It's much easier to think about going to youtube.com instead of some arbitrary
+looking set of numbers. But even more, the IP
+addresses really represent a single machine whereas
+YouTube may have servers in Denver and New York
+and many other locations. A second problem to address is how do you actually
+go about programming? The link, network, and transport layer protocols
+are really just concepts. It's the operating
+system's network stack that is their implementation. How do we write programs or applications to interface
+to this network stack? Then the third would
+be the application, like we said has two processes, so we can at the transport layer provide them the ability to communicate, have a reliable in order stream, but what does that
+data actually mean? How does the client
+or one process tell the other process what it
+wants to do with YouTube? For example, I can go watch a video or I can upload a video. Then how do these
+processes encode that data such that
+we're effectively speaking the same language
+between these two processes so that they understand each other? We'll address all of
+these in the rest of this module. With that, thanks.

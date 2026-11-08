@@ -1,0 +1,457 @@
+1
+00:00:09,770 --> 00:00:13,320
+This video marks the start of
+
+2
+00:00:13,320 --> 00:00:16,940
+a new module on
+the network layer.
+
+3
+00:00:16,940 --> 00:00:19,960
+In it, we're going to
+overview what the problem is,
+
+4
+00:00:19,960 --> 00:00:22,025
+why the network layer is needed,
+
+5
+00:00:22,025 --> 00:00:25,800
+what capabilities it has in it,
+
+6
+00:00:25,800 --> 00:00:29,520
+and provide a little roadmap
+
+7
+00:00:29,520 --> 00:00:33,100
+for where we're going
+to go in this module.
+
+8
+00:00:33,100 --> 00:00:36,240
+As an introduction, let's take
+
+9
+00:00:36,240 --> 00:00:41,275
+a little recap of what we
+looked at in the link layer.
+
+10
+00:00:41,275 --> 00:00:45,860
+We saw in the link
+layer it talked about,
+
+11
+00:00:45,860 --> 00:00:49,500
+we introduced the concept
+of structuring data.
+
+12
+00:00:49,500 --> 00:00:52,300
+Structuring these series of ones
+
+13
+00:00:52,300 --> 00:00:55,675
+and zeros that can be
+transmitted across a wire.
+
+14
+00:00:55,675 --> 00:00:58,675
+In the link layer, we
+call this a frame.
+
+15
+00:00:58,675 --> 00:01:01,220
+We had some information such as
+
+16
+00:01:01,220 --> 00:01:04,360
+source and destination
+addresses and so forth.
+
+17
+00:01:04,360 --> 00:01:08,380
+We also then went into how
+does it handle errors.
+
+18
+00:01:08,380 --> 00:01:11,000
+We looked at parity
+and we looked
+
+19
+00:01:11,000 --> 00:01:15,075
+at how CRCs are calculated.
+
+20
+00:01:15,075 --> 00:01:18,570
+We then went into say,
+
+21
+00:01:18,570 --> 00:01:20,420
+this is actually potentially
+
+22
+00:01:20,420 --> 00:01:23,100
+a shared transmission medium,
+
+23
+00:01:23,100 --> 00:01:29,080
+whether it's a cable with
+multiple computers or nodes,
+
+24
+00:01:29,080 --> 00:01:34,230
+network devices hanging off
+of it, or through wireless.
+
+25
+00:01:34,230 --> 00:01:36,360
+We discussed how do you
+
+26
+00:01:36,360 --> 00:01:41,710
+provide share to
+access to that medium.
+
+27
+00:01:41,710 --> 00:01:44,710
+We talked about
+the carrier sense
+
+28
+00:01:44,710 --> 00:01:47,570
+multiple access and then
+the collision detection
+
+29
+00:01:47,570 --> 00:01:49,415
+and collision avoidance.
+
+30
+00:01:49,415 --> 00:01:53,430
+Then we wrapped up
+and noted that, well,
+
+31
+00:01:53,430 --> 00:01:58,950
+that single cable or the
+range of the wireless,
+
+32
+00:01:58,950 --> 00:02:03,570
+really it provides the
+single link but a lot of
+
+33
+00:02:03,570 --> 00:02:09,000
+times we have a need to scale
+beyond that single link
+
+34
+00:02:09,000 --> 00:02:14,830
+whether it's an entire
+campus network or inside of
+
+35
+00:02:14,830 --> 00:02:18,105
+the building there's limits
+
+36
+00:02:18,105 --> 00:02:21,490
+on how big the physical
+aspect can be.
+
+37
+00:02:21,490 --> 00:02:24,250
+We talked about
+Ethernet switching
+
+38
+00:02:24,250 --> 00:02:26,970
+and wireless access points.
+
+39
+00:02:29,050 --> 00:02:31,370
+Some of the challenges like what
+
+40
+00:02:31,370 --> 00:02:34,170
+if the nodes that
+one could be able
+
+41
+00:02:34,170 --> 00:02:35,950
+to communicate are on
+
+42
+00:02:35,950 --> 00:02:39,170
+different links or
+different link types?
+
+43
+00:02:39,170 --> 00:02:44,380
+On the left is a node that's
+communicating over 5G,
+
+44
+00:02:44,380 --> 00:02:47,650
+and on the right
+communicating over Ethernet.
+
+45
+00:02:47,650 --> 00:02:50,730
+Here, the data is going to
+be structured differently.
+
+46
+00:02:50,730 --> 00:02:53,940
+We saw an example of that
+and error handling is
+
+47
+00:02:53,940 --> 00:02:58,840
+different so we need
+something there.
+
+48
+00:02:59,120 --> 00:03:03,960
+What if the nodes have
+different admins?
+
+49
+00:03:03,960 --> 00:03:10,505
+For example, Company
+1 and Company 2 are
+
+50
+00:03:10,505 --> 00:03:13,620
+two different companies
+but does Company 1 really
+
+51
+00:03:13,620 --> 00:03:17,895
+want broadcast traffic
+from Company 2?
+
+52
+00:03:17,895 --> 00:03:20,100
+We saw that was
+
+53
+00:03:20,100 --> 00:03:25,000
+something that was happening
+on the link layer.
+
+54
+00:03:25,550 --> 00:03:28,570
+Then also do they
+agree on how and
+
+55
+00:03:28,570 --> 00:03:32,150
+when to access this network?
+
+56
+00:03:32,150 --> 00:03:35,670
+We talked about the shared
+transmission medium,
+
+57
+00:03:35,670 --> 00:03:38,225
+but if we have different admins
+
+58
+00:03:38,225 --> 00:03:41,320
+do they actually agree on that?
+
+59
+00:03:41,620 --> 00:03:45,200
+What if the nodes are
+in different locations?
+
+60
+00:03:45,200 --> 00:03:50,050
+Shown here are something
+on the East Coast
+
+61
+00:03:50,050 --> 00:03:54,330
+in California or on the
+West Coast in California,
+
+62
+00:03:54,330 --> 00:03:55,700
+the East Coast in New York,
+
+63
+00:03:55,700 --> 00:03:57,160
+something in South America,
+
+64
+00:03:57,160 --> 00:04:00,740
+and something in Europe or you
+don't need to communicate.
+
+65
+00:04:00,740 --> 00:04:03,240
+We talked about Mac tables,
+
+66
+00:04:03,240 --> 00:04:06,420
+those lookups and the
+learning process and
+
+67
+00:04:06,420 --> 00:04:09,940
+the flooding and the broadcast
+is that really going
+
+68
+00:04:09,940 --> 00:04:11,780
+to scale to the billions of
+
+69
+00:04:11,780 --> 00:04:19,240
+devices that need to be able
+to potentially communicate,
+
+70
+00:04:19,240 --> 00:04:21,565
+and the distances that
+they need to communicate
+
+71
+00:04:21,565 --> 00:04:24,885
+and will that work
+at a global scale?
+
+72
+00:04:24,885 --> 00:04:28,680
+This is where the
+network layer comes in.
+
+73
+00:04:28,680 --> 00:04:32,335
+The assumptions at the link
+layer do not work here.
+
+74
+00:04:32,335 --> 00:04:35,620
+We introduced a new layer,
+
+75
+00:04:35,620 --> 00:04:39,200
+the network layer, that
+addresses these needs.
+
+76
+00:04:39,200 --> 00:04:42,620
+We can see there's
+this communication,
+
+77
+00:04:42,620 --> 00:04:44,800
+it's going to be
+happening between
+
+78
+00:04:44,800 --> 00:04:47,800
+different hosts and
+they'll go through,
+
+79
+00:04:47,800 --> 00:04:51,560
+for example, IP, the
+Internet protocol.
+
+80
+00:04:51,560 --> 00:04:53,200
+That's something we'll talk
+
+81
+00:04:53,200 --> 00:04:55,940
+about in the next
+video but then you
+
+82
+00:04:55,940 --> 00:05:00,250
+can have one node on
+the left using 802.11,
+
+83
+00:05:00,250 --> 00:05:01,895
+and then a node on the right
+
+84
+00:05:01,895 --> 00:05:04,280
+using Ethernet and they're still
+
+85
+00:05:04,280 --> 00:05:06,500
+able to talk to each
+other because of
+
+86
+00:05:06,500 --> 00:05:09,930
+this network layer between.
+
+87
+00:05:10,880 --> 00:05:14,110
+To overview, what
+we're going to discuss
+
+88
+00:05:14,110 --> 00:05:17,690
+over the next several videos is,
+
+89
+00:05:17,690 --> 00:05:19,610
+one, how do we address
+
+90
+00:05:19,610 --> 00:05:23,085
+node scalability across
+different networks?
+
+91
+00:05:23,085 --> 00:05:26,850
+Two, given the
+destination address,
+
+92
+00:05:26,850 --> 00:05:31,130
+how do we actually forward
+it and do so scalably?
+
+93
+00:05:31,130 --> 00:05:35,510
+Three, how do the different
+networks coordinate?
+
+94
+00:05:35,510 --> 00:05:40,180
+Each can reach destinations
+beyond their boundaries.
+
+95
+00:05:40,180 --> 00:05:44,040
+Four, how are
+addresses assigned and
+
+96
+00:05:44,040 --> 00:05:48,370
+mapped to the link
+layer addresses?
+
+97
+00:05:48,680 --> 00:05:52,270
+Finally, what tools
+can an admin use to
+
+98
+00:05:52,270 --> 00:05:56,290
+troubleshoot beyond its
+network boundaries?

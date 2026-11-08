@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Week 3 Resources and Practice Exercises</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2>Lecture Slides</h2><p class="asset">npp-linux-03-gateway.pdf</p><p></p><p><em><strong>Note: Each link below is an external link that opens in a new tab.</strong></em></p><h2>Assignment Repo</h2><p><a href="https://github.com/eric-keller/npp-linux-03-gateway/">Git repo for this week (with exercises).</a></p><p>Note: the Vagrantfile is the same for Weeks 1, 2 , and 3.  You can use the same VM for each if you'd like - cloning the three repos into that VM.</p><p></p><h2>Additional Resources and Practice Exercises</h2><p><strong>Filtering</strong></p><ul><li><p><a href="https://www.cyberciti.biz/tips/linux-iptables-examples.html">Linux iptables command examples for new sysadmins</a> </p></li><li><p><a href="https://scalingo.com/blog/iptables">Turning IPTables into a TCP load balancer for fun and profit</a> </p></li></ul><p></p><p><strong>Load Balancing</strong></p><ul><li><p><a href="https://www.usenix.org/conference/lisa16/conference-program/presentation/shuff">Building a Billion User Load Balancer</a> </p></li></ul><p></p><p><strong>QoS</strong></p><ul><li><p><a href="https://netbeez.net/blog/how-to-use-the-linux-traffic-control/">How to Use the Linux Traffic Control</a> </p></li><li><p>Background on some of the different shaping/scheduling algorithms:</p><ul><li><p><a href="https://intronetworks.cs.luc.edu/current/html/fairqueuing.html">Queuing and Scheduling (An Introduction to Computer Networks)</a></p></li><li><p><a href="https://intronetworks.cs.luc.edu/current/html/tokenbucket.html">Token Bucket Rate Limiting (An Introduction to Computer Networks)</a> </p></li><li><p><a href="http://luxik.cdi.cz/~devik/qos/htb/manual/userg.htm">HTB Linux Queuing Discipline Manual</a> </p></li></ul></li></ul><p></p><h3>Extra Videos</h3><p>Here are some additional videos that are really good for learning more about tc:</p><ul><li><p><a href="https://www.youtube.com/watch?v=0R89bT7HHdk&amp;ab_channel=DevConf">Doing Network Magic with the tc Tool (DevConf 2017) (YouTube Video)</a></p></li><li><p><a href="https://youtu.be/Ylf4J736JIg?si=7zLo804C7j-mhVbe">Shaping Linux Traffic with tc</a> </p></li></ul><p></p>
+  </div>
+</body>
+</html>

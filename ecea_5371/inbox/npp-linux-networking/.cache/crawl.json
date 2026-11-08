@@ -1,0 +1,1259 @@
+{
+    "type": "Course",
+    "id": "m1Hn-DLwEe6U4g7a-RyA1w",
+    "name": "Network Principles in Practice: Linux Networking",
+    "slug": "npp-linux-networking",
+    "modules": [
+        {
+            "type": "Module",
+            "id": "o0H0t",
+            "name": "Introduction to Linux Networking",
+            "slug": "introduction-to-linux-networking",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "bBDV9",
+                    "name": "Welcome and Course Introduction",
+                    "slug": "welcome-and-course-introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "MO9NO",
+                            "name": "For-Credit Students: Welcome and Where to Find Help",
+                            "slug": "for-credit-students-welcome-and-where-to-find-help",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h1>Welcome, students! </h1><p>We are excited to have you with us here at the University of Colorado Boulder and we look forward to supporting you throughout your time with us!\u00a0</p><h1><strong>Course Content Support\u00a0</strong></h1><ol type=\"1\"><li><p>Attend your Course Facilitator\u2019s Office Hours</p><ol type=\"1\"><li><p>You can access these via the Live Events tab on the left-hand side of the Course home page</p></li></ol></li><li><p>Reach out to your Course Facilitator via the course support email: <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a></p><ol type=\"1\"><li><p>Please include the ECEA XXXX where XXXX is your course number in the subject line</p></li></ol></li><li><p>Ask your peers for support or suggestions in a discussion forum</p><ol type=\"1\"><li><p>Note that Course Facilitators do not monitor discussion forums</p></li></ol></li></ol><h1><strong>Technical Support\u00a0</strong></h1><ol type=\"1\"><li><p>Reach out to your Course Facilitator via the course support email: <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a></p><ol type=\"1\"><li><p>Please include the ECEA XXXX where XXXX is your course number in the subject line</p></li></ol></li><li><p><a href=\"https://www.coursera.support/s/article/learner-000001031?language=en_US\"><u>Contact Coursera's technical support team</u></a></p></li><li><p><a href=\"https://www.coursera.support/s/article/learner-000001489?language=en_US\"><u>Flag the issue</u></a> in the course (<em>non-urgent issues only</em>)</p><ol type=\"1\"><li><p>Course Facilitators check flags weekly, but an email to the course support email is preferred!\u00a0</p></li></ol></li></ol><h1><strong>Any other degree related support</strong></h1><ol type=\"1\"><li><p>Please include the reason you are reaching out in the subject line</p><ol type=\"1\"><li><p>Reach out to Program Staff via the course support email: <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a></p></li></ol></li></ol>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "OYbuG",
+                            "name": "Course Syllabus",
+                            "slug": "course-syllabus",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h1><strong>ECEA 5371 </strong>Network Principles in Practice: Linux Networking</h1><p><strong>Instructor: Eric Keller</strong></p><p></p><h2><strong>Course Description</strong></h2><p>Welcome! In this course, titled \"Network Principles in Practice: Linux Networking,\" we delve into the dynamic domain of Linux Networking, featuring a robust set of features essential for contemporary networked systems. Departing from traditional approaches, our emphasis is on practical application over foundational knowledge. Throughout the course, you'll explore the integration of concepts into Linux, gaining hands-on experience in architecting and implementing complex networks and systems. From understanding the Linux kernel's role to building gateways and navigating virtual networking and container orchestration with Kubernetes, each week offers valuable insights and practical skills. Join us on this journey where understanding meets real-world application, providing a comprehensive exploration of network systems.</p><h2><strong>Drops, Tuition Refunds, and Withdrawals</strong></h2><p>Because the MS-ECE has flexible course start dates, all drops, tuition refunds, withdrawals, and grades are handled at the individual course level. It is the student\u2019s responsibility to monitor these deadlines. Coursera and CU Boulder are not responsible for notifying the students of these deadlines. You can drop or withdraw from a course via <a href=\"https://buffportal.colorado.edu/card/your-programs-enrollment\">Your Programs &amp; Enrollment Card</a> via BuffPortal. </p><h3><strong>Drops and Refunds</strong></h3><p>Each student has 14 days from a class start date or their enrollment date (whichever is later) to drop for 100% tuition refund. Students are only eligible to drop a course if they have not accessed the restricted content (final exam or project).\u00a0When a course is dropped under these conditions, it will not appear on the student\u2019s record.</p><p>Students who access the final exam or project are assigned a grade and ineligible for a drop, withdrawal, or refund.</p><h3><strong>Withdrawal</strong></h3><p>Students may withdraw from a course after the 14-day period only if they have not accessed restricted content (final exam or project). In such cases, the course will not be eligible for a refund. When a student withdraws or does not complete the restricted content (final exam or project), a grade of \"W\" will be recorded on their academic transcript. This \"W\" grade does not impact the student's GPA or total earned credits. </p><h2><strong>Grading </strong></h2><h3><strong>Course Grading Policy</strong></h3><table><tr><th><p>Assignment</p></th><th><p>Percentage of Grade</p></th></tr><tr><td><p>Creating a Bridge</p></td><td><p>18%</p></td></tr><tr><td><p>Introduction to Linux Networking Summary</p></td><td><p>5%</p></td></tr><tr><td><p>Peering a BGP Router</p></td><td><p>18.5%</p></td></tr><tr><td><p>IP Layer with Linux Networking Summary</p></td><td><p>5%</p></td></tr><tr><td><p>Creating a Gateway with Linux Summary</p></td><td><p>5%</p></td></tr><tr><td><p>Investigating Network Namespaces</p></td><td><p>18.5%</p></td></tr><tr><td><p>Virtual Networking in Linux Summary</p></td><td><p>5%</p></td></tr><tr><td><p>Kubernetes Networking with Linux Summary</p></td><td><p>5%</p></td></tr><tr><td><p>Final Exam</p></td><td><p>20%</p></td></tr></table><h3><strong>Uniform Letter Grade Rubric</strong></h3><p>Grade percentages convert to letter grades according to the scheme below. </p><table><tr><th><p><strong>Letter Grade</strong></p></th><th><p><strong>Minimum Percentage</strong></p></th></tr><tr><td><p>A</p></td><td><p>93%</p></td></tr><tr><td><p>A-</p></td><td><p>90%</p></td></tr><tr><td><p>B+</p></td><td><p>86%</p></td></tr><tr><td><p>B</p></td><td><p>83%</p></td></tr><tr><td><p>B-</p></td><td><p>80%</p></td></tr><tr><td><p>C+</p></td><td><p>76%</p></td></tr><tr><td><p>C</p></td><td><p>73%</p></td></tr><tr><td><p>C-</p></td><td><p>70%</p></td></tr><tr><td><p>D+</p></td><td><p>66%</p></td></tr><tr><td><p>D</p></td><td><p>60%</p></td></tr><tr><td><p>F</p></td><td><p>0</p></td></tr></table><h2><strong>Artificial Intelligence (AI) Guidance</strong></h2><p><strong>Conditional AI Tool Usage: </strong>You may use AI tools for all assignments. You must critically evaluate and modify any AI-generated content, and disclose and document your usage per the AI Usage Documentation Best Practices below.</p><h3><strong>AI Usage Documentation Best Practices</strong></h3><p>When using AI tools in your academic work, it is essential to accurately document how and why you used them. AI tools should be considered as aids rather than primary sources. Therefore, remember to:</p><ul><li><p>Reference AI assistance<strong>.</strong> In your references or bibliography section, mention the AI tool used and the nature of its contribution. For example: \"Assistance provided by [AI Tool Name] for generating initial content ideas, response to [prompt], [month, day, year]\u201d.</p></li><li><p>Document your process. Save screenshots, dialog, prompt, queries or version history to document your process if you used AI. Include documentation in the submission if the assignment format allows. Otherwise, save it in your system in case you are asked by a program or university staff.</p></li></ul><h3><strong>Suspected Violations of this Policy</strong></h3><p>If program staff suspects you may have used AI tools to complete assignments in ways not explicitly authorized or suspect other violations of the honor code, they will contact you via email. Be sure to respond promptly to any related communication so your perspective is included in the case review. Failure to respond timely will not prevent the completion of a case review.</p><p>Turnitin and similar AI detection tools may be used in these courses for initial detection of possible honor code violations.<strong> </strong>All suspected violations will be reviewed by a human. AI tools alone will not be used to determine if an assignment is plagiarized, and results from these tools will not be used alone as evidence to penalize students.</p><h2><strong>University Policies</strong></h2><h3>Accommodation for Disabilities</h3><p>If you qualify for accommodations because of a disability, please submit your accommodation letter to your program at <a href=\"mailto:msece-accomodations@colorado.edu\">msece-accomodations@colorado.edu</a> in a timely manner so that your needs can be addressed. Disability Services determines accommodations based on documented disabilities in the academic environment. Information on requesting accommodations is located on the <a href=\"https://www.colorado.edu/disabilityservices/\">Disability Services website</a>. Contact Disability Services at 303-492-8671 or <a href=\"mailto:dsinfo@colorado.edu\">dsinfo@colorado.edu</a> for further assistance. If you have a temporary medical condition or injury, see <a href=\"https://www.colorado.edu/disabilityservices/students/temporary-medical-conditions\">Temporary Medical Conditions</a> under the Students tab on the Disability Services website.</p><h3>Classroom Behavior</h3><p>Students and faculty each have responsibility for maintaining an appropriate learning environment. Those who fail to adhere to such behavioral standards may be subject to discipline. Professional courtesy and sensitivity are especially important with respect to individuals and topics dealing with race, color, national origin, sex, pregnancy, age, disability, creed, religion, sexual orientation, gender identity, gender expression, veteran status, political affiliation or political philosophy. Class rosters are provided to the instructor with the student's legal name. We will gladly honor your request to address you by an alternate name or gender pronoun. Please advise us of this preference early in the semester so that we may make appropriate changes to my records. For more information, see the <a href=\"http://www.colorado.edu/osccr/\">Student Code of Conduct</a>.</p><h3>Honor Code</h3><p>The University of Colorado Boulder takes issues of academic dishonesty extremely seriously.\u00a0</p><p>Students in all of CU Boulder\u2019s courses, whether not-for-credit or for-credit, are expected to perform to the highest standards of academic honesty.\u00a0</p><p>Students enrolled in for-credit courses are members of the CU Boulder\u2019s community and are subject to the Honor Code Office\u2019s policies and procedures. Information on the Honor Code can be found at the <a href=\"https://www.colorado.edu/sccr/students/honor-code-and-student-code-conduct\">Honor Code Office website</a>.</p><p>Students who violate the Honor Code are subject to discipline. Violations of the policy may include: plagiarism, cheating, fabrication, lying, bribery, threats, unauthorized access to academic materials, submitting the same or similar work in more than one course without permission from all course instructors involved, and aiding academic dishonesty. Students are specifically expected to turn in original work and cite portions created by other authors. If a student has doubts regarding what collaboration is permissible in the course, the student should consult the discussion forums or the course facilitator directly.</p><p>Violations also include facilitating any act which may help a student to gain an unfair academic advantage including:</p><ol type=\"1\"><li><p>Sharing course materials, including but not limited to personal notes, in an unauthorized online bank or forum, whether for profit or for free, is strongly discouraged and may result in a referral to the Honor Code. This includes sharing course materials on Slack.</p></li><li><p>Sharing personal authentication credentials/login information to third party sites is strongly discouraged and may result in a referral to the Honor Code process</p></li></ol><h3>Sexual Misconduct, Discrimination, Harassment and/or Related Retaliation</h3><p>The University of Colorado Boulder (CU Boulder) is committed to fostering a positive and welcoming learning, working, and living environment. CU Boulder will not tolerate acts of sexual misconduct, intimate partner abuse (including dating or domestic violence), stalking, or protected-class discrimination or harassment by members of our community. Individuals who believe they have been subject to misconduct or retaliatory actions for reporting a concern should contact the Office of Institutional Equity and Compliance (OIEC) at 303-492-2127 or <a href=\"mailto:cureport@colorado.edu\">cureport@colorado.edu</a>. Information about the OIEC, university policies, <a href=\"https://cuboulder.qualtrics.com/jfe/form/SV_0PnqVK4kkIJIZnf\">anonymous reporting</a>, and the campus resources can be found on the <a href=\"http://www.colorado.edu/institutionalequity/\">OIEC website</a>.\u00a0</p><p>Please know that faculty and instructors have a responsibility to inform OIEC when made aware of incidents of sexual misconduct, discrimination, harassment and/or related retaliation, to ensure that individuals impacted receive information about options for reporting and support resources.</p><h3>Religious Holidays</h3><p>Campus policy regarding religious observances requires that faculty make every effort to deal reasonably and fairly with all students who, because of religious obligations, have conflicts with scheduled exams, assignments or required attendance. Since this is an online class, with no fixed weekly calendar schedule, we ask that you arrange your workload to accommodate your religious practice. See the <a href=\"https://www.colorado.edu/oiec/religious-accommodations\">campus policy regarding religious observances</a> for full details. </p>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "tvlFc",
+                            "name": "Assessment Expectations",
+                            "slug": "assessment-expectations",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Auto-graded Assessments</h2><p>As you complete any auto-graded assessment, please consider the following: </p><ul><li><p>Some assessments may include a set of instructions with a list of resources you are and aren't to use. While these assessments may not be proctored, please consider adhering to this list of resources as the assessment was designed with the list in mind. </p></li><li><p>Most auto-graded assessments will allow for multiple attempts. Between attempts, it is recommended you review feedback provided for correct and incorrect responses and relevant course materials before starting your next attempt. </p></li><li><p>Some programming assignments will contain hidden test cases that are graded. If you do not receive full credit for your submission, please review your assignment summary for the passed and failed tests so you can further optimize your solutions. </p></li></ul><h2>Artificial Intelligence (AI) Usage Guidance</h2><p>Artificial intelligence tools\u2014software that reproduces text, images, computer code, audio, video, and other content\u2014have become widely available. Well-known examples include ChatGPT for text and DALL\u2022E for images. This statement governs all such tools, including those released during your enrolled session.\u00a0</p><p><strong>It is your responsibility\u2014not the tool\u2019s\u2014to assure the quality, integrity, and accuracy of work you submit in all CU Boulder courses. </strong>Keep in mind that AI tools are designed to create content that seems to have been produced by a human, not to produce accurate or reliable content; therefore, relying on an AI tool may result in inaccurate content.\u00a0Be wary of unintentional plagiarism or data fabrication. Act with integrity, for the sake of both your personal character and your academic record.</p><p>Consider the impact of using AI tools on your learning goals: in most cases, using an AI-generated answer without critical review and significant input from your end is contrary to the overall goal of personal learning and development in your chosen area.\u00a0</p><p><strong>Respect copyright and privacy. </strong>You may only enter your own data into AI tools. Do not enter private, sensitive, or copyrighted data from others into AI tools without their consent. Avoid using AI for purposes that are private, sensitive, or high-risk.</p><p><strong>Consider your environmental impact. </strong>Using AI models requires large amounts of electricity, water, and rare earth minerals. When using AI, keep in mind there are environmental concerns associated with its use.</p><h2>Artificial Intelligence (AI) Usage Allowed by this Course</h2><p>The following table indicates each assessment in this course and the AI usage allowed for that assessment. </p><p><strong>Note: If you are taking this course for credit or transfer prior work into a for-credit version of this course, you will be held to this standard.</strong></p><table><tr><th><p><strong>Assessment</strong></p></th><th><p><strong>AI Usage Policy</strong></p></th></tr><tr><td><p>Creating a Bridge</p></td><td><p>Conditional</p></td></tr><tr><td><p>Introduction to Linux Networking Summary</p></td><td><p>Conditional</p></td></tr><tr><td><p>Peering a BGP Router</p></td><td><p>Conditional</p></td></tr><tr><td><p>IP Layer with Linux Networking Summary</p></td><td><p>Conditional</p></td></tr><tr><td><p>Creating a Gateway with Linux Summary</p></td><td><p>Conditional</p></td></tr><tr><td><p>Investigating Network Namespaces</p></td><td><p>Conditional</p></td></tr><tr><td><p>Virtual Networking in Linux Summary</p></td><td><p>Conditional</p></td></tr><tr><td><p>Kubernetes Networking with Linux Summary</p></td><td><p>Conditional</p></td></tr><tr><td><p>Final Exam (for-credit only)</p></td><td><p>Conditional</p></td></tr></table><p><u><strong>For assessments that allow Conditional AI Usage</strong></u></p><p>You may use AI tools on these assessments. However, you must critically evaluate and modify any AI-generated content, and disclose and document your usage per the <em>AI Usage Documentation Guidelines </em>below.</p><h4><em>You CAN use AI tools to...</em></h4><ul><li><p><strong>Supplement your understanding of course material</strong> (e.g., summarizing a PDF that you have read to ensure comprehension)</p></li><li><p><strong>Generate practice questions</strong> for assignments, quizzes, and tests</p></li><li><p><strong>Check your spelling and grammar</strong></p></li><li><p><strong>Translate </strong>course materials or your own work</p></li><li><p><strong>Act as a tutor </strong>to identify and explain weaknesses in your draft answers</p></li><li><p>Ask AI to help you debug your code.</p></li><li><p><strong>Generate project ideas</strong>, outlines, and help with brainstorming</p></li><li><p><strong>Edit answers that you have written </strong>yourself, but not create additional content or ideas</p></li></ul><h4><em>You CANNOT use AI tools to...</em></h4><ul><li><p><strong>Submit exact or similar/paraphrased assignment questions </strong>or prompts into the AI tool</p></li><li><p><strong>Edit your submission in other ways </strong>not listed in the allowable examples above</p></li><li><p><strong>Generate partial or entire answers </strong>for graded assignments in place of your own work or thinking</p></li><li><p><strong>Help with a graded assignment in any way without attaching documentation of that usage </strong>(see <em>AI Usage Documentation Guidelines </em>below)</p></li></ul><h2>AI Usage Documentation Best Practices</h2><p>When using AI tools in your academic work, it is essential to accurately document how and why you used them. AI tools should be considered as aids rather than primary sources. Therefore, remember to:</p><ul><li><p><strong>Reference AI assistance.</strong> In your references or bibliography section, mention the AI tool used and the nature of its contribution. For example: \"Assistance provided by [AI Tool Name] for generating initial content ideas, response to [prompt], [month, day, year]\u201d.</p></li><li><p><strong>Document your process.</strong> Save screenshots, dialog, prompt, queries or version history to document your process if you used AI. Include documentation in the submission if the assignment format allows. Otherwise, save it in your system in case you are asked by a program or university staff.\u00a0\u00a0</p></li></ul><h2>Assessments and Academic Honesty</h2><p>As you complete assessments, you are expected to perform to the highest standards of academic honesty. Please keep the following in mind: </p><ul><li><p>Copying the provided rubrics to use as your own work is considered plagiarism.</p></li><li><p>Copying your peers work that you have reviewed in peer review assignments is considered plagiarism.</p></li><li><p>Using generative AI services, such as ChatGPT, to write your peer review assignments or answer other graded assignment questions and submitting those as your own work is considered plagiarism. </p></li><li><p>Using question-and-answer websites, such as Stack Overflow or Chegg, to post assessment questions and solicit solutions and then submitting responses as your own work is considered plagiarism. </p></li></ul>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "kJUhj",
+                            "name": "Course Facilitation",
+                            "slug": "course-facilitation",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>Meet your course facilitator for <em>Network Principles in Practice: Linux Networking</em>! He will be available to assist you during your learning experience by answering questions and offering weekly office hours over Zoom. Please click \"Live Events\" in the course menu on the left to participate in office hours.</p><p>To contact your course facilitator, email: <a href=\"mailto:msee-support@colorado.edu\">msece-support@colorado.edu</a>.\u00a0Please include <strong>ECEA 5371</strong> in the subject line!</p><p> </p><h1><strong>Mayuresh Pitale</strong></h1><img alt=\"CF_image.jpeg\" src=\"CF_image.jpeg\"></img><p>Hi everyone! I am Mayuresh, a Master's student studying Embedded Systems here at CU Boulder. I am really passionate about bringing hardware and software together to solve real world problems. I have had the chance to work on some incredibly fun projects recently, like building a custom handheld gaming console and developing a EEG controlled drone.  </p><p>When I am not deep into coding or circuit debugging, you can usually find me traveling and exploring new places. I am so excited to be your course facilitator this semester and look forward to chatting with you all in office hours!</p><p></p><p><strong>Office Hours:</strong></p><ul><li><p><strong>Monday</strong> 6:30 PM to 10:30 PM MT</p></li><li><p><strong>Thursday</strong> 6:30 PM to 10:30 PM MT</p></li></ul><p><strong>Best Contact Method:</strong> <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a> | Please include ECEA 5371 in the subject line</p><p><strong>Slack:</strong> MSECE on Coursera | <a href=\"https://cubouldermsee.slack.com\">cubouldermsee.slack.com</a> | #ecea-5371</p>",
+                                    "assets": [
+                                        {
+                                            "id": "eRud3pZWTcaP4VMkzAsbUw",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/imageAssetProxy.v1/_61cc1beee3d448b8809a4817fad1b059_CF_image.jpeg?expiry=1793232075323&hmac=WY57kwtcombNuWRbcxZLiqBOIOm-zF6YkmgVIRbKtbA",
+                                            "name": "CF_image.jpeg"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "kz6MW",
+                            "name": "Course Introduction",
+                            "slug": "course-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/dCeLu_jVS46hsy0lSnoFAg.processed/full/720p/index.mp4?Expires=1793318400&Signature=CWLw3QypuVXjgZ~zbb~qUBSPe4clOBYeS5Z6KEOzvbXXfqTMAbJibNaPA~yL0Xd9eNrZTgeeaQ2IHEckWyLd6Zka6SkVetAqlspMKpG~T4OMWIZYczJwuyfwzqRP5FuHFlyXo0IPq6hxn~1c5LBv2nn8INLpwwGEeoLDAM6XvjI_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/3twr84xsQ8ycK_OMbAPM5w?expiry=1793318400000&hmac=COMyDfmQOGwZdtzpHGAB15EzhG8DiO6yWBET2aPMdT0&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/R8Oe9O1qRKiDnvTtanSo_A?expiry=1793318400000&hmac=OyIu1rvlmpHRjujZ7-Yx8iu3pAcaS9Ld_d079aCRiWY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/K3P1mcg2T6mz9ZnINt-pWw?expiry=1793318400000&hmac=w2U304AzNJN3dh8aFFsRa9vi9Pxw6ErgZi7yrV_DoPE&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/3twr84xsQ8ycK_OMbAPM5w?expiry=1793318400000&hmac=GEQnncoHGFasXpz1TqdEebg2qCy8hLaAQ8YPG7Xt8s4&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/R8Oe9O1qRKiDnvTtanSo_A?expiry=1793318400000&hmac=f6THR6sk9E_1gO5lAbH5ZW_ptyoM2gtAqYudK0yIhvA&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/K3P1mcg2T6mz9ZnINt-pWw?expiry=1793318400000&hmac=OToDkOUmCmnBa_zVlL2MM_Rf_0QVkTTcy1N7BkSnY3I&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "dwWiB",
+                            "name": "Course GitHub Repositories",
+                            "slug": "course-github-repositories",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>Throughout the course, we have hands on practice exercises and demos.  The material is all provided in github repos.</p><p>Feel free to interact through github - open issues for any discussions or suggestions, or submit pull requests if there are bugs or any other suggested changes.</p><p></p><p><a href=\"https://github.com/eric-keller/npp-linux-01-intro\">Week 1 - Introduction to Linux </a></p><p><a href=\"https://github.com/eric-keller/npp-linux-02-router\">Week 2 - Building a Router (forwarding, routing)</a></p><p><a href=\"https://github.com/eric-keller/npp-linux-03-gateway\">Week 3 - Building a Gateway (filtering, load balancing, qos)</a> </p><p><a href=\"https://github.com/eric-keller/npp-linux-04-virtual\">Week 4 - Virtual Networking</a> </p><p><a href=\"https://github.com/eric-keller/npp-linux-05-kubernetes\">Week 5 - Kubernetes</a> </p>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "4yKH2",
+                    "name": "Linux Data Plane",
+                    "slug": "linux-data-plane",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "a6JU1",
+                            "name": "Week 1 Problem and Overview",
+                            "slug": "week-1-problem-and-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/Zc2iyagnS7mPeSqGjIq6tg.processed/full/720p/index.mp4?Expires=1793318400&Signature=lDboxlxiN6b2PqwUDUZo2ZvJOa78I9aNctJQQ~VRu8njWL5zx8DsQF1LCaiZZwYp~XmYSPwWE386tLDz73-iF6OEMc~DzWqQFXM-LMXN2ad-5E4i5~zz6r8cKUXFifqB77eSFTXaJ4ekZmpXe-duJISriwh1FJgIB305dDIxXyA_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/eaC1Tz4vQ7agtU8-L_O2Xg?expiry=1793318400000&hmac=upVCjEbzGGba4Vnq1vxvihXyPplFq8K-c93xWJKE9eA&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/WxvBpr0sS8ybwaa9LOvM3g?expiry=1793318400000&hmac=1y7rfedhOkSKvONpyzWVqOe1Oo4IxPb9t3xBkey8OUE&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ZnuE_en7QpK7hP3p-3KSwg?expiry=1793318400000&hmac=QaolPymElqZR-JtSQDRqech8uIPo8t9xuEcvyc5vhHE&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/eaC1Tz4vQ7agtU8-L_O2Xg?expiry=1793318400000&hmac=a1rif5igGb_u0A8HOD1AgFawTh6MlkXXKwd3MgRG1kY&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/WxvBpr0sS8ybwaa9LOvM3g?expiry=1793318400000&hmac=Kcabi3Gyp3U4zXiYkFIyawtlphowz5_Jv4mHTyOQPDk&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ZnuE_en7QpK7hP3p-3KSwg?expiry=1793318400000&hmac=N9POqulOPRJhF-KA1qPILFlLKsweGa6bEkxJdT1a5fo&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "DsJ5c",
+                            "name": "Week 1 Resources and Practice Exercises",
+                            "slug": "week-1-resources-and-practice-exercises",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Lecture Slides</h2><p class=\"asset\">npp-linux-01-linux-intro.pdf</p><p></p><p><em><strong>Note: Each link below is an external link that opens in a new tab.</strong></em></p><h2>Assignment Repo</h2><p><a href=\"https://github.com/eric-keller/npp-linux-01-intro\">Git repo for this week (with exercises).</a></p><p>Note: the Vagrantfile is the same for Weeks 1, 2 , and 3.  You can use the same VM for each if you'd like - cloning the three repos into that VM.</p><p></p><h2>Additional Resources and Practice Exercises</h2><h3>Tools for the lab setup</h3><ul><li><p><a href=\"https://www.vagrantup.com/\">Vagrant</a> </p></li><li><p><a href=\"https://www.virtualbox.org/\">Virtual Box</a> </p></li><li><p><a href=\"https://mobaxterm.mobatek.net/\">MobaXterm</a></p></li><li><p><a href=\"https://containerlab.dev/\">ContainerLab</a></p></li><li><p><a href=\"https://scapy.net/\">Scapy</a></p></li><li><p><a href=\"https://www.wireshark.org/docs/man-pages/tshark.html\">tshark</a></p></li></ul><h3>Scapy tutorial</h3><ul><li><p><a href=\"https://github.com/guedou/guedou.github.io/blob/master/talks/2022_GreHack/Scapy%20in%200x30%20minutes.ipynb\">Scapy in 0x30 Minutes</a></p></li></ul><h3>NetLink Tutorial</h3><ul><li><p><a href=\"https://medium.com/thg-tech-blog/on-linux-netlink-d7af1987f89d\">On Linux NetLinx (Medium Article)</a> </p></li><li><p><a href=\"https://www.yaroslavps.com/weblog/genl-intro/\">Introduction to Generic Netlink, or How to Talk with the Linux Kernel</a></p></li></ul><h3>Docker Tutorial</h3><ul><li><p><a href=\"https://www.geeksforgeeks.org/docker-tutorial/\">Docker Tutorial</a></p></li></ul><h3>Cheat Sheet of Linux Networking Commands</h3><ul><li><p><a href=\"https://access.redhat.com/sites/default/files/attachments/rh_ip_command_cheatsheet_1214_jcs_print.pdf\">ip Command Cheat Sheet</a></p></li></ul><h3>Network Operating Systems (NOS)</h3><ul><li><p><a href=\"https://sonicfoundation.dev/\">Sonic Foundation</a></p></li><li><p><a href=\"https://www.nvidia.com/en-in/networking/ethernet-switching/cumulus-linux/\">How NVIDIA Cumulus Linux Works</a></p></li><li><p><a href=\"https://dent.dev/\">DENT OS</a></p></li></ul><h3>Extra Reading</h3><ul><li><p><a href=\"https://book.systemsapproach.org/index.html\">Computer Networks: A Systems Approach</a>: A great book that is freely available for background on any networking concept (e.g., learning switches).</p></li></ul><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "ncDYdXfDSjuuPc-Jp5DM9Q",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/ncDYdXfDSjuuPc-Jp5DM9Q_8dd6975d50d34005be095534885948f1_npp-linux-01-linux-intro.pdf?Expires=1793232074&Signature=PZGGgcAez3RSSko6XeUMONylII-Lp2fSokmr6yYFs80GqstydUPsiN4gJ0meHabJ~Awe7RrruNJJatCfS~i1FJguYi3TjKAfogDLXeClZq3sM7k9A8BrqYMsfUXsHB5AMf~GDAYj3m3NBBFctg1uQzlzhNTxcq07Hu3OwB788Ac_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "npp-linux-01-linux-intro.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "uLj9z",
+                            "name": "Linux Data Plane",
+                            "slug": "linux-data-plane",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/10mehsVrSZuk6OkOzHI-Eg.processed/full/720p/index.mp4?Expires=1793318400&Signature=ND2ZGZrEv8OGWUqFxvSW~LTxj-TNaQA7jNUA05FTmaPDgwLORUqJqxv2ONpcpEkDtItz0fvJUxZHxEMqBA1NQlIisnzmQ7pLRvCJnyVX5TQH8Tx1Dv1mxyQFL0uLn6kS62l8UQWKQyiY1piFKfZ3LB-SWINPGAsYuaH0VRJ81jA_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/ACDMgRtBR2qgzIEbQddqAw?expiry=1793318400000&hmac=1rmgK6w7K7JjRIuq5OHQYJZ0mKsT8M5yxFqYHajrytU&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/JSADhVD6T0ugA4VQ-r9L7Q?expiry=1793318400000&hmac=scldAbPgX8mTazdD_1a8yzNr2DxcB3Smj7Vo0ASOYzk&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/44u-MvEPS5GLvjLxD9uRiQ?expiry=1793318400000&hmac=bFFMG4xx4JEnj5pFEaShAvjuuCsPHaZTK3rZ9fWjxUg&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/ACDMgRtBR2qgzIEbQddqAw?expiry=1793318400000&hmac=94t_j7n8yXX263SLTQ0EM_-3n09_kS5JFuo-dEQdEM8&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/JSADhVD6T0ugA4VQ-r9L7Q?expiry=1793318400000&hmac=K1zm8WH0TGX75oMMjYRAcwLWv0Wn9EZ6sR9VywcvY7c&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/44u-MvEPS5GLvjLxD9uRiQ?expiry=1793318400000&hmac=nJFn3Na6cyliwTV1hhzjSOBx9mSlba15YPLcnBUVUlA&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "6PgnM",
+                    "name": "Lab Environment",
+                    "slug": "lab-environment",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "asXzw",
+                            "name": "Lab Environment",
+                            "slug": "lab-environment",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/7evtDGjlQeu2Y2ObhivW3w.processed/full/720p/index.mp4?Expires=1793318400&Signature=IgBl2Gery27amGT6Iiz2TH137Ke8qFrMCnGM4ZfEwTJHfWD0hLfJ8NRDoxHLJ7KwYMkNBCSSIYvH4h5zy0oPiyvYQJ52Krd2zUuSPRnR2BQZTpOfZcfV~4ETLJ1QrsXJsTXq5CUbd0tvP3tHdAYPP6k3R6ZNaOG8T7fn4PVIIv0_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Ro9MoQmFQpGPTKEJhTKRHw?expiry=1793318400000&hmac=tJa7Oye9WdRP9o6CUFKh0xuOItZt7OtV7zJB4DZEN_s&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/jhpruWfKR_Saa7lnypf0Rg?expiry=1793318400000&hmac=zIT1xRExTTFW37lFHoA7OyW6_MZD1TtP-5cyRi_oGQs&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/1QsKJpAHSHiLCiaQB4h4tg?expiry=1793318400000&hmac=gm7FR3P6n6F4G1Ed4T-k_hnaYNWlgG4ZjytTSLzmKmQ&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Ro9MoQmFQpGPTKEJhTKRHw?expiry=1793318400000&hmac=xIxdnHF3Xn1uPVSbzEnROaFq4n2JcRdSQDCt4_38jQc&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/jhpruWfKR_Saa7lnypf0Rg?expiry=1793318400000&hmac=F_4cvoK1vZGU4wIrR5zVSgunxuHnuz-3e6f5KFmhdWw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/1QsKJpAHSHiLCiaQB4h4tg?expiry=1793318400000&hmac=BOklX-OYQkkW6fHJUe2TzKjO9dcSIuaeQgZhsJBfzdI&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "CcXq2",
+                    "name": "Troubleshooting Tools",
+                    "slug": "troubleshooting-tools",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "ijWmV",
+                            "name": "Troubleshooting Tools",
+                            "slug": "troubleshooting-tools",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/RbvVcpEiSaqucvoepHZHoA.processed/full/720p/index.mp4?Expires=1793318400&Signature=Tn7JtDTsNCSi5LgHKA0AxHgAxOiyeAzHu7I1EE1aq1SgeTubeUsHUo~LNGawd-aajr2R3DhrlMZkzATp7zJu4RZRbh26oUOAwEH6slepFtDMt31tKgTJ8GrASSlcG4~~gCw3dxF8pNuU0yYRVeuXnphLkFcBF6OlWj1Afz6PzLw_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/dgrIyfX2TESKyMn19mxEzQ?expiry=1793318400000&hmac=4K7AgcZc5ieOSjimxVjPLNC0qAUFWQrbTY4nE8WCpo4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/ILvF8tZLSMO7xfLWS2jDGA?expiry=1793318400000&hmac=3n143R7YIfa1eWowLDkhvQzURx20mLrKG3ICr3ysy3M&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/cuj4xDcrSKio-MQ3K7ioLQ?expiry=1793318400000&hmac=3rNuciTXeKHgo5FMh5mFotknPZHWFht5wtAnjdKinLw&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/dgrIyfX2TESKyMn19mxEzQ?expiry=1793318400000&hmac=uWG8S2HXN8QemEjFhL_npw40D9uinFvEpRP8imRSTt0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/ILvF8tZLSMO7xfLWS2jDGA?expiry=1793318400000&hmac=xHi44xqCHIGYkYOdBJbwJxqLJ0W9r4Yo7ksp4YTioOQ&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/cuj4xDcrSKio-MQ3K7ioLQ?expiry=1793318400000&hmac=EoRBQzui7p_b_XiO4-flFuc76LM6mK2pXHewP7Y1yt8&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "Zf4K5",
+                    "name": "Linux network device configuration (ip link)",
+                    "slug": "linux-network-device-configuration-ip-link",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "oMYoq",
+                            "name": "Linux network device configuration (ip link)",
+                            "slug": "linux-network-device-configuration-ip-link",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/USf41xirSsaE6bEHbeejxg.processed/full/720p/index.mp4?Expires=1793318400&Signature=ZHbgCMpuCVlvbYeVfe5-cdxc1tOnaARAaS50zawo6WUpaCR0GP8o-IzIsINtp5VcJE8~s~BoFJXq-19zjyzayDONN3Y-FVWTsVSJFFWiIl7mByUgNoe0gfF~1MxT9ASzcB99R4q7hHt0BpbiBvhkNZBzY2MtmNxilV2tVGCr6EE_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/SCy7bhxERYasu24cRPWG3A?expiry=1793318400000&hmac=QH-nmXJUQy3ARB3SggWfdKWgASdUn344czjCPT6rO0A&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/oP0egiSsSHq9HoIkrEh6cw?expiry=1793318400000&hmac=3BnhLJelhIk1X9vPdwYRSbmqrUqhA3bV1D9NUl_us88&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/MTUBj1yyQQK1AY9cspECRg?expiry=1793318400000&hmac=eunNBi1gHqsLftPFt3A2NX37fho-7JIH6xPtpdewS_g&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/SCy7bhxERYasu24cRPWG3A?expiry=1793318400000&hmac=SqMkEBGEgpGMaEE9tL1XA9IlWMjbBh5Rl27P2at2QR0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/oP0egiSsSHq9HoIkrEh6cw?expiry=1793318400000&hmac=h4xRtP1361POung-KhFyrkuYH-f8FQbdBROTAIRj28o&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/MTUBj1yyQQK1AY9cspECRg?expiry=1793318400000&hmac=tlqe5yGtwmKwcYXtghqUF0UgAtM_brOO80GJAJ7HSjk&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "krif9",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "KTsL1",
+                            "name": "Introduction to Linux Networking Summary",
+                            "slug": "introduction-to-linux-networking-summary",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>As defined in this course, what benefits does the trend towards disaggregation provide.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~FTCvoI\"> <div class=\"quiz-option-text\"><p>Increased standardization</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~FTCvoI\"> <div class=\"quiz-option-text\"><p>More choice, extensibility</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~FTCvoI\"> <div class=\"quiz-option-text\"><p>Improved support from major vendors</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is the means of communication between Linux user space processes and the Linux kernel, which is used for configuring the data plane.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~g4NCLO\"> <div class=\"quiz-option-text\"><p>REST API</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~g4NCLO\"> <div class=\"quiz-option-text\"><p>ip link</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~g4NCLO\"> <div class=\"quiz-option-text\"><p>Netlink</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~g4NCLO\"> <div class=\"quiz-option-text\"><p>net-fs</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is containerlab?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~bQ2BxW\"> <div class=\"quiz-option-text\"><p>An entire networking lab delivered as a single container</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~bQ2BxW\"> <div class=\"quiz-option-text\"><p>A tool that leverages docker containers to create networking experiments.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~bQ2BxW\"> <div class=\"quiz-option-text\"><p>A tool to extract configurations from network devices to use in a lab</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~bQ2BxW\"> <div class=\"quiz-option-text\"><p>A container runtime that is poised to replace Docker within 5 years</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is a pcap?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~uHUrIi\"> <div class=\"quiz-option-text\"><p>A utility in Linux that lists packet processing capabilities</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~uHUrIi\"> <div class=\"quiz-option-text\"><p>A file format for storing a set of packets</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~uHUrIi\"> <div class=\"quiz-option-text\"><p>A service in Linux to test network connectivity</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~uHUrIi\"> <div class=\"quiz-option-text\"><p>A configuration format for describing how to capture packets</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Say I'm able to send a packet, but the connection doesn't seem to be working.  I'd like to test whether a packet was being received on some interface, which tool would be most useful.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~lvtSl4\"> <div class=\"quiz-option-text\"><p>docker</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~lvtSl4\"> <div class=\"quiz-option-text\"><p>ping</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~lvtSl4\"> <div class=\"quiz-option-text\"><p>ip link</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~lvtSl4\"> <div class=\"quiz-option-text\"><p>tshark</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following can the utility 'ip link' set up.  Select all that apply.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~wvIpOy\"> <div class=\"quiz-option-text\"><p>gre tunnel</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~wvIpOy\"> <div class=\"quiz-option-text\"><p>bridge</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~wvIpOy\"> <div class=\"quiz-option-text\"><p>vxlan</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~wvIpOy\"> <div class=\"quiz-option-text\"><p>Ethernet device</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What does using VLANs provide.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~G1Shtx\"> <div class=\"quiz-option-text\"><p>Smaller packets</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~G1Shtx\"> <div class=\"quiz-option-text\"><p>Higher throughput</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~G1Shtx\"> <div class=\"quiz-option-text\"><p>Isolation</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~G1Shtx\"> <div class=\"quiz-option-text\"><p>Lower latency</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>We used scapy in the demo for setting up a bridge.  What was it used for?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~wnAqJ0\"> <div class=\"quiz-option-text\"><p>To test the bandwidth of the created bridge.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~wnAqJ0\"> <div class=\"quiz-option-text\"><p>Crafting a single packet with a given source and destination MAC address</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~wnAqJ0\"> <div class=\"quiz-option-text\"><p>To inspect the state of the Linux network devices</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~wnAqJ0\"> <div class=\"quiz-option-text\"><p>Capture and analyze the received packets to ensure correct transmission.</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "YzSJG",
+            "name": "IP Layer with Linux Networking",
+            "slug": "ip-layer-with-linux-networking",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "fHlWH",
+                    "name": "Problem / Overview",
+                    "slug": "problem-overview",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "M4YDE",
+                            "name": "Week 2 Problem and Overview",
+                            "slug": "week-2-problem-and-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/WeRCoB4iSby5kVi6XZocQQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=JtiHqwwcP1BnbmPa37G7NX9vkFmmF6Rhj07wSxC5WzNJxzgVaai~O6dCO8N0laOqYtimigtVLOQ-QgCSzymPIOn6StS8aOV5xXTnF~hPlFRa-bve7XOijfRnCTYa7afgBAsdMD5rZLSGhEQv0QKz0RDdFikPVhHIhm5HhMFb-xQ_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/T64_OYdxTGyuPzmHcXxs8Q?expiry=1793318400000&hmac=0H1L27u8OodNILSPoJxi3zdcJ_CkM64vW78aG7jAmWQ&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/69JCZv5jQliSQmb-Y6JYSQ?expiry=1793318400000&hmac=dQreHSSznWDpJ01UX5_SeugBbkcEvcwfhYR58dq4oAM&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/r3u19g3vTOO7tfYN72zjyA?expiry=1793318400000&hmac=sj7xe0-KM2M2WaHOhZZoZWTkf7VpqMFzplo1ZzEaV9U&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/T64_OYdxTGyuPzmHcXxs8Q?expiry=1793318400000&hmac=fnXiX41xgPo8eB6H7ry_fHDZMjd8OK3YOPbfpyxL39g&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/69JCZv5jQliSQmb-Y6JYSQ?expiry=1793318400000&hmac=OeeEsG0gmc_fcY6P5cq4qugcsHLwlUjHMCHweDO1yrg&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/r3u19g3vTOO7tfYN72zjyA?expiry=1793318400000&hmac=-1u2_XHUnOfg50D03W3u-yXM3mkzLRA2QiaK0gl7HK4&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "oTmKE",
+                            "name": "Week 2 Resources and Practice Exercises",
+                            "slug": "week-2-resources-and-practice-exercises",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Lecture Slides</h2><p class=\"asset\">npp-linux-02-router.pdf</p><p></p><p><em><strong>Note: Each link below is an external link that opens in a new tab.</strong></em></p><h2>Assignment Repo</h2><p><a href=\"https://github.com/eric-keller/npp-linux-02-router\">Git repo for this week (with exercises).</a></p><p>Note: the Vagrantfile is the same for Weeks 1, 2 , and 3.  You can use the same VM for each if you'd like - cloning the three repos into that VM.</p><p></p><h2>Additional Resources and Practice Exercises</h2><ul><li><p><a href=\"https://man7.org/linux/man-pages/man8/ip-tunnel.8.html\">ip-tunnel(8) - Linux Main Page</a>:  I used ip tunnel to create the gre tunnel, but did not cover the implementation.</p></li><li><p><a href=\"https://www.ripe.net/analyse/internet-measurements/routing-information-service-ris\">RIPE Routing Information Service (RIS</a>)</p></li><li><p><a href=\"https://github.com/Exa-Networks/exabgp\">ExaBGP GitHub Repo</a></p></li><li><p><a href=\"https://seedsecuritylabs.org/\">SEED Internet Emulator</a></p></li></ul><p></p><h3>Extra reading:</h3><ul><li><p><a href=\"https://book.systemsapproach.org/index.html\">Computer Networks: A Systems Approach</a>: A great book that is freely available for background on any networking concept (e.g., learning switches).</p></li><li><p>BGP in the Data Center by Dinesh Dutt: uses FRR configuration as examples, accessible through: </p><ul><li><p><a href=\"https://www.oreilly.com/library/view/bgp-in-the/9781491983416/\">BGP in the Data Center (O'Reilly)</a></p></li><li><p><a href=\"https://docs.jetstream-cloud.org/attachments/bgp-in-the-data-center.pdf\">BGP in the Data Center (Jetstream2)</a></p></li></ul></li></ul><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "k8dQkfauREWkkuTi2WEtKg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/k8dQkfauREWkkuTi2WEtKg_0ee2f6146b434f9a81c35713df7abbf1_npp-linux-02-router.pdf?Expires=1793232073&Signature=OZIJ1rm19WXA4kdnMhd4H872x7Abfi7KMZPGl~X4HJIw6FfxNYq6kgjlzom2US9Fh4CThBauQorpQeXFa65cN0OaVmTPUbMNoT1kmnX5RGFHb~towSaPVq0OFaAvZGSlY8qNsNm7hJZcEorjDgJtPGSx4EO92nlgpymOn25UJZQ_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "npp-linux-02-router.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "JUsup",
+                    "name": "Linux Utilities for IP Layer",
+                    "slug": "linux-utilities-for-ip-layer",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "CIYGs",
+                            "name": "Linux Utilities for IP Layer",
+                            "slug": "linux-utilities-for-ip-layer",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/2XMyd3uXREeOfOwMUUKxnQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=BfH4u4X1fkD3pWJTT6Icclele1Ii444L~LSt2W8vYmhM66VpohXgw17~3OMdb4Tg7HOny0k3PyodBPDQ0Nkj90ycBzrn3kbxT6Mov4q~F3rAEnVYjC54Ta0rIy3~ehQJRwfF77X0oNWlkhOMdSLlL04L18ewQt2ezVFuiDzqsb0_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/s6lzfhGaT1upc34Rmn9b8Q?expiry=1793318400000&hmac=HZ0l5WDRNSy-Vok-UbmlEUiRLQL1dbXBaBcZKkFNMLk&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/E1MsQizQS8iTLEIs0NvIuw?expiry=1793318400000&hmac=X1oPYg_I7WPpHSEj1XnAA1jHfjGmABfOY3xdj9BtF1I&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bUBL9VIjSHyAS_VSI0h8eQ?expiry=1793318400000&hmac=y2_qk8v5VMyBD7zbUeCpZgU0yE0sPhk7eYAgAHpjKns&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/s6lzfhGaT1upc34Rmn9b8Q?expiry=1793318400000&hmac=rTy3d43EJnPvDtSjcgBPMDd3l_AMu3pb7FCOwbnxW-c&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/E1MsQizQS8iTLEIs0NvIuw?expiry=1793318400000&hmac=4Bhf6fUBwUo48uwVz-mAgPFGUzjYz8u9F9F6HAiZ4Lc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bUBL9VIjSHyAS_VSI0h8eQ?expiry=1793318400000&hmac=Rgpp5W9z2poC9VRxOb-5_eJabTFIOVS1_yigBiGkOP8&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "v2r86",
+                    "name": "Example IP Layer Walkthroughs",
+                    "slug": "example-ip-layer-walkthroughs",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "mStKP",
+                            "name": "Example IP Layer Walkthroughs",
+                            "slug": "example-ip-layer-walkthroughs",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/ckbTi6Y1RTeDa7lcHhUo1w.mediaconvert/full/ckbTi6Y1RTeDa7lcHhUo1w_abf3ce3f5ef4427d8ae04bdb691005f1_CES2-M1-L8_MP4_720.mp4?Expires=1793318400&Signature=ZrLYG6r9847J8eXDbj~K6Ksjxtl-P7dTZAZQQHwXrU18jZP-viZtSlj~pzPbx8kOlGwTm4YpVbYn-tKJoP6fcxafq0JMkqpvZJzEh3I1GkDtz8biRUHKosmzzI9BbY0PI4RA~ACWe6u8-mJz8D7lJpocxQ3nK~nvaAtZWaRlwa8_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/1A7ir6ZvQL6O4q-mb0C-nw?expiry=1793318400000&hmac=K6HvzNNXlRa4ikcUR3dtW97OYcWx-3Sz9EMRrZkoUH0&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/EVcOi8e8TDOXDovHvCwzXQ?expiry=1793318400000&hmac=VIHRwZljEBjFDwBp6U0aPAfCaVy-fUIp8P3hpgCsrt4&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/dPQegm2ZTjS0HoJtmU405A?expiry=1793318400000&hmac=zjDXSyaiA7SQZdewwv7t8JxJ01gl8FZFS7eQNhL0rc0&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/1A7ir6ZvQL6O4q-mb0C-nw?expiry=1793318400000&hmac=OD1ljcwKKTvQP1ocP3Wo5hAFLkaCYNGeEAPaFWYQdF0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/EVcOi8e8TDOXDovHvCwzXQ?expiry=1793318400000&hmac=IAfkSsCMk-VV8svueG8vb_OwKVKMqFzfQhJGwPazj9w&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/dPQegm2ZTjS0HoJtmU405A?expiry=1793318400000&hmac=rQ0qvQexuofsiBPDLeKNXHYG4hytisP8WQOuRKwHxko&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "yZyMZ",
+                    "name": "Routing in Linux",
+                    "slug": "routing-in-linux",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "Lczhc",
+                            "name": "Routing in Linux",
+                            "slug": "routing-in-linux",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/AaomZhoiQKmXJD_fyof8UA.mediaconvert/full/AaomZhoiQKmXJD_fyof8UA_ab2e87111b7d4ada9dc3af3d54871df1_CES2-M1-L9_MP4_720.mp4?Expires=1793318400&Signature=YVGWvQoyF-4ky5HYIxDNYHtCWfLG9B79Py9GHC4GYwcvGOdQagNbh0lPUEcYVBJ1VWCZaTPP5h78AToObnnPuyv7rQhDHQUL3ykNmRSGWPzQ~5prGWRnrKXtX0FVkqtkZYQfDkdJhnScSYhYkWYMIRXSn0bYvCCejGOMZvNn1Nc_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/59-VLg3DT5SflS4Nw8-U3A?expiry=1793318400000&hmac=9B_iEX0mpKfUCVR2hGgILb_iqyNHUhrAFryca3n5hKk&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XiNvKZmQQmujbymZkKJrrA?expiry=1793318400000&hmac=Z_uoYCKmcqqS0KyPO34o2bSHl5BObPvbqlPl0KShcb0&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OKg0xZ_YQXeoNMWf2EF3Gw?expiry=1793318400000&hmac=lfOtdz6wqzG5mHvbnt6Erthjc8Umu7OQiNhm1LMBQVE&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/59-VLg3DT5SflS4Nw8-U3A?expiry=1793318400000&hmac=UOMCtEH85KGmmO4S5kYXmbR-yER26915mPXiO86LMBE&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XiNvKZmQQmujbymZkKJrrA?expiry=1793318400000&hmac=QM3LBTIPCW-O9XEuvo5ryM06A32tjqORe9yFtSH_Stc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OKg0xZ_YQXeoNMWf2EF3Gw?expiry=1793318400000&hmac=IZvwzwvJM-AUZ_7bvyY6ASj_AZKYKg2w1p-qCNxYJw0&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "7rsrq",
+                    "name": "Routing Walkthrough with Bird",
+                    "slug": "routing-walkthrough-with-bird",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "uam2x",
+                            "name": "Routing Walkthrough with Bird",
+                            "slug": "routing-walkthrough-with-bird",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/fEpvGF9UTGugcj0vd2akGg.mediaconvert/full/fEpvGF9UTGugcj0vd2akGg_1e69eb2bff61447880c3f2aa59681ff1_CES2-M1-L10_MP4_720.mp4?Expires=1793318400&Signature=dLEJQGcHxZvlc4Wij-5BOA2q4dgVMwDDU1huD3O90D2ioDn2zuC8YzUvTgf2NrNPB2ksy4-lubT6hlTixjkrohdvdD9nmbEZ8OCxHe13gx6BlWYK50dpm8a7afale~AbTy6NQE3Edft~Y5xYNQhJrJ9ywyzwq1KYpDAt8h2F8RE_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/PG73nD6-QGuu95w-vuBrgw?expiry=1793318400000&hmac=Vxp-6sNPVQneaFDwRj_c-e-NuOSOa1YsvTG8JVVswQ4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/FGh3LkEtRHOody5BLbRzrQ?expiry=1793318400000&hmac=rnwL6wOd4JvLAka7W6MrgrhAJ7ttD_SsBKkUm3KEpzc&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/fCyK3ooYTh-sit6KGB4fwg?expiry=1793318400000&hmac=eCugMfHPXXdhfSHtI32eLZa8ELLMhw_llsTzxkHJabQ&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/PG73nD6-QGuu95w-vuBrgw?expiry=1793318400000&hmac=jSnbQrT2F8RLg_cvl0gYAeyXp7Cq7jCCn6cX9ny45DY&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/FGh3LkEtRHOody5BLbRzrQ?expiry=1793318400000&hmac=Yjd96DHR4YrtnKCTUSTGOTgto7XqjgZ9KqJ9Gn-gEL8&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/fCyK3ooYTh-sit6KGB4fwg?expiry=1793318400000&hmac=kN5-399VoHiGNyw1zrrSmnMEglDzE8yBlpdzSDRdIFY&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "W7JlQ",
+                    "name": "Larger Routing Experimentation",
+                    "slug": "larger-routing-experimentation",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "pb19S",
+                            "name": "Larger Routing Experimentation",
+                            "slug": "larger-routing-experimentation",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/7umcutTCQHmx816IakiiUQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=ibxppNXhIbXqEefoKQGiSiLuzXNlKRaNm-kZ97nkazLNdUFXRfY-E6A6wDkino3ZGh6NTQP8WZlWUmYlv4~VODG8eWtkPBneOpHpsRTx6atD4~ciTiggJMxb8b6d7pMmOYJOHZkBEFigs9fFn~AvICo~EPhLVGhf9sKZKVBrKRo_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/bKlIaEXFTrapSGhFxb62aQ?expiry=1793318400000&hmac=DHSaCpGVKNJazoZ_55poURJiR06aLUBSIDG7vto8iys&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/GB7lHIf7RwOe5RyH-1cD3Q?expiry=1793318400000&hmac=kofF1ZtGIBMs2oTXrU6rUNoEzjN-JIQhXQ0NtcN3keg&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/6yXUyMpJT-al1MjKST_m1A?expiry=1793318400000&hmac=EgTbKF9tJVJmPawVJ5TKn3IBIvMZgA8bdL_X7cM-Nvc&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/bKlIaEXFTrapSGhFxb62aQ?expiry=1793318400000&hmac=AgpbYr7gcNNebdlF98WXyqqCfiZV0yLnHUKmgwmDcEA&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/GB7lHIf7RwOe5RyH-1cD3Q?expiry=1793318400000&hmac=U_De0-n-_f7tDVj1z5CJicSt3qWuhi1EWBroXRnrnNw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/6yXUyMpJT-al1MjKST_m1A?expiry=1793318400000&hmac=QKarm1RvdVXjFGrdd3Czt5053ZF6QNgjP-Aob-AWvys&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "SmfJ1",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "4vmcN",
+                            "name": "IP Layer with Linux Networking Summary",
+                            "slug": "ip-layer-with-linux-networking-summary",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What does the Internet Protocol (IP) provide?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~XDaVdd\"> <div class=\"quiz-option-text\"><p>It helps ensure reliable transmission of data.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XDaVdd\"> <div class=\"quiz-option-text\"><p>It enables communication between locally connected devices</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XDaVdd\"> <div class=\"quiz-option-text\"><p>It enables communication between multiple, heterogeneous networks</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XDaVdd\"> <div class=\"quiz-option-text\"><p>It helps structure the format of data being exchanged.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In IPv4 addressing, what does the 16 signify in the following 10.11.0.0/16</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~LY9xup\"> <div class=\"quiz-option-text\"><p>It identifies how many bits addresses are in IPv4</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LY9xup\"> <div class=\"quiz-option-text\"><p>It indicates that 16 devices with the given IP address should be created</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LY9xup\"> <div class=\"quiz-option-text\"><p>It is the number of upper order bits that uniquely specify the group of IP addresses in that subnet.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What does via do in 'ip route add'?  e.g., ip route add 11.11.0.0/16 via 192.168.2.1 dev eth3 vs ip route add 11.11.0.0/16 dev eth3.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~N2AYGy\"> <div class=\"quiz-option-text\"><p>Linux will ARP for the destination in the packet (without via), or ARP for the next hop (with via).</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~N2AYGy\"> <div class=\"quiz-option-text\"><p>Linux will send the traffic through a network monitor in addition to sending it to its destination (with via), as opposed to just to the destination (without via)</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~N2AYGy\"> <div class=\"quiz-option-text\"><p>Linux will send traffic through a GRE tunnel (with via) or directly to the destination (without via)</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following are needed for configuration in the Bird routing daemon to configure a BGP peering session? Select all that apply</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~XGRy5U\"> <div class=\"quiz-option-text\"><p>Autonomous System (AS) number of neighbor</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~XGRy5U\"> <div class=\"quiz-option-text\"><p>IP address of neighbor</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~XGRy5U\"> <div class=\"quiz-option-text\"><p>contact information for admin</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~XGRy5U\"> <div class=\"quiz-option-text\"><p>The AS path to root DNS servers</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of these organization provides a collection of real routing tables that individuals can download.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~gbV4WN\"> <div class=\"quiz-option-text\"><p>RIPE</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~gbV4WN\"> <div class=\"quiz-option-text\"><p>NSDI</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~gbV4WN\"> <div class=\"quiz-option-text\"><p>Router Table Lab</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~gbV4WN\"> <div class=\"quiz-option-text\"><p>Amazon</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which command would output the current routing table in the Bird routing daemon?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~nI9bXD\"> <div class=\"quiz-option-text\"><p>ip route -n bird</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~nI9bXD\"> <div class=\"quiz-option-text\"><p>birdc show protocols</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~nI9bXD\"> <div class=\"quiz-option-text\"><p>birdc show route all</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~nI9bXD\"> <div class=\"quiz-option-text\"><p>ip route</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following is a reason why a tool like ExaBGP is useful?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~FfQ4q3\"> <div class=\"quiz-option-text\"><p>It supports scripting the deployment of router configurations to very large scale networks</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~FfQ4q3\"> <div class=\"quiz-option-text\"><p>It provides a means to emulate a large set of network nodes as a single process.  (or, So we don't have to build out a full Internet topology to be able to experiment with real Internet routes)</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~FfQ4q3\"> <div class=\"quiz-option-text\"><p>It increases the memory for routing tables in routers which are increasingly growing in scale.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~FfQ4q3\"> <div class=\"quiz-option-text\"><p>It allows testing multiple routing software in a containerized environment</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "M7DJE",
+            "name": "Creating a Gateway with Linux",
+            "slug": "creating-a-gateway-with-linux",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "ufisA",
+                    "name": "Problem / Overview",
+                    "slug": "problem-overview",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "aeE97",
+                            "name": "Week 3 Problem and Overview",
+                            "slug": "week-3-problem-and-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/-vVzO4AGSgG7SKVst_-cUg.processed/full/720p/index.mp4?Expires=1793318400&Signature=KZoRlnEhJhGunulfdg2IblN2m41iMKEg900QRQw~gKXW83WVVBgAmWMinIRucFbvNOyvcheCkPCHWYGWyBIrb-Fb1nc5UmmJ6llYqB~DnnpVnzLz2WfStbDPDZpMJv31T1NrEXCmhF~S0SKxdkHdEdonW21q32pC-74DP9bV3p4_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/iLs-anR9RQy7Pmp0fYUM-g?expiry=1793318400000&hmac=_MDqjZYFixY2TsHdPKH0AaJKPaAfi8lQOO41B_0SQck&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/oZw5kO_BRZecOZDvwQWXAQ?expiry=1793318400000&hmac=f3yhxUk4-AwgcuXoc135vrPbr-KiPMgu1U3I99pIGyo&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ppFv2T2YRfuRb9k9mHX7nQ?expiry=1793318400000&hmac=rakDrWeg3m5fB1DvKAY25bHZBpeMIv7wKS3oAgiMSxQ&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/iLs-anR9RQy7Pmp0fYUM-g?expiry=1793318400000&hmac=uTyPMlabr-Q6Xkk-IZfrcsMUWArlM_Cw6bnHZbuyjrk&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/oZw5kO_BRZecOZDvwQWXAQ?expiry=1793318400000&hmac=MwvdWNFrSrgJcyv2r1ELMqRLs-PLvRnaWxPB1E4kP5c&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ppFv2T2YRfuRb9k9mHX7nQ?expiry=1793318400000&hmac=3knR4wkocq5WI_Tq_86_WD6VgMbHXVl5dr1MPCJjI10&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "HY6eA",
+                            "name": "Week 3 Resources and Practice Exercises",
+                            "slug": "week-3-resources-and-practice-exercises",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Lecture Slides</h2><p class=\"asset\">npp-linux-03-gateway.pdf</p><p></p><p><em><strong>Note: Each link below is an external link that opens in a new tab.</strong></em></p><h2>Assignment Repo</h2><p><a href=\"https://github.com/eric-keller/npp-linux-03-gateway/\">Git repo for this week (with exercises).</a></p><p>Note: the Vagrantfile is the same for Weeks 1, 2 , and 3.  You can use the same VM for each if you'd like - cloning the three repos into that VM.</p><p></p><h2>Additional Resources and Practice Exercises</h2><p><strong>Filtering</strong></p><ul><li><p><a href=\"https://www.cyberciti.biz/tips/linux-iptables-examples.html\">Linux iptables command examples for new sysadmins</a> </p></li><li><p><a href=\"https://scalingo.com/blog/iptables\">Turning IPTables into a TCP load balancer for fun and profit</a> </p></li></ul><p></p><p><strong>Load Balancing</strong></p><ul><li><p><a href=\"https://www.usenix.org/conference/lisa16/conference-program/presentation/shuff\">Building a Billion User Load Balancer</a> </p></li></ul><p></p><p><strong>QoS</strong></p><ul><li><p><a href=\"https://netbeez.net/blog/how-to-use-the-linux-traffic-control/\">How to Use the Linux Traffic Control</a> </p></li><li><p>Background on some of the different shaping/scheduling algorithms:</p><ul><li><p><a href=\"https://intronetworks.cs.luc.edu/current/html/fairqueuing.html\">Queuing and Scheduling (An Introduction to Computer Networks)</a></p></li><li><p><a href=\"https://intronetworks.cs.luc.edu/current/html/tokenbucket.html\">Token Bucket Rate Limiting (An Introduction to Computer Networks)</a> </p></li><li><p><a href=\"http://luxik.cdi.cz/~devik/qos/htb/manual/userg.htm\">HTB Linux Queuing Discipline Manual</a> </p></li></ul></li></ul><p></p><h3>Extra Videos</h3><p>Here are some additional videos that are really good for learning more about tc:</p><ul><li><p><a href=\"https://www.youtube.com/watch?v=0R89bT7HHdk&amp;ab_channel=DevConf\">Doing Network Magic with the tc Tool (DevConf 2017) (YouTube Video)</a></p></li><li><p><a href=\"https://youtu.be/Ylf4J736JIg?si=7zLo804C7j-mhVbe\">Shaping Linux Traffic with tc</a> </p></li></ul><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "2K-j7oPMTaSja8rjjJlpKg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/2K-j7oPMTaSja8rjjJlpKg_c21a19f4b78c46e2bd7fc921404456f1_npp-linux-03-gateway.pdf?Expires=1793232063&Signature=Qqg1iRqedYDyShj~IVh6t7e~MPmRetpPCzI6E8NcYPiWsXNFtbb9xR5Q77yj5QGeQfHUewkUL3022g4vmDABBtoYn0CGXIEYQxW~Xbjpdx441Payqfr00aB2bmY3xAPPhM618RKUZspQbi8yOhjrrGM6LD9L9XkxqSuCRvF2pH4_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "npp-linux-03-gateway.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "EEINR",
+                    "name": "Filtering / Address Translation",
+                    "slug": "filtering-address-translation",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "7AFxw",
+                            "name": "Filtering / Address Translation",
+                            "slug": "filtering-address-translation",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/_wW9bB6TR8mmtX_nzPJL6g.processed/full/720p/index.mp4?Expires=1793318400&Signature=YoXUoChJH6K8Rx7FSbJQEbjID5Se6F3kqE1uPF3s7NmQ0TV65TUs6rpdsQLLwoNE-P7cilsC3iziE7S38Ga8w2N5FWKe8VE-rewXt7Ucg-7yJ0LpqkKE8j-RxV2mCWqP02FnS-yPjNQ-s4ZHTmq6rHNoRiSRNIPOKl2wHRZDwJo_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/FTFf6yWlRU6xX-slpQVO_Q?expiry=1793318400000&hmac=LZIZfY4C71RJnguDoAdmL38Rul8YBJiiXVVPphuDoB4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/kbNcQBaqQgyzXEAWqrIMEA?expiry=1793318400000&hmac=gIqyxUD90p9RFv0AUEC68RwkaRJSnw4jWjoTqdiUJCM&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bNbB6i5GSCuWweouRigr-Q?expiry=1793318400000&hmac=1HYroJBVVMbwDaXi_eHbo7dxDmI3-l7Sqm0ZpkKKRl8&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/FTFf6yWlRU6xX-slpQVO_Q?expiry=1793318400000&hmac=v70B0nfc4jNWkW_fUlpEcG03c-E8YbsZLZ4_mDMgNRg&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/kbNcQBaqQgyzXEAWqrIMEA?expiry=1793318400000&hmac=F0nvAVLJdSQoHTP3CYxIHpCIqo1KMCLOGxvoo9LWdFs&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bNbB6i5GSCuWweouRigr-Q?expiry=1793318400000&hmac=-19u7xTkSzui7R1DfvW_9XH7RVZc9DIbUf5tDr_eH0k&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "RuEZM",
+                    "name": "iptables",
+                    "slug": "iptables",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "SSWOI",
+                            "name": "iptables",
+                            "slug": "iptables",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/2Z3fdNa0SYyFFYIQMLoGyA.processed/full/720p/index.mp4?Expires=1793318400&Signature=Eoi6P65Fz6FhkA7NkGy1ECtCQulX3dqnJpk5tYqm-YbAx9Zt81zKy4ze7LpdlDx6adOhByMF8ZJ0n16pZH7b2TH5fLnQ-6z38KJK2cXU3DQbmaWP0Cm3rsaCb6UOISSHNDYcAdGvg-mxtlkhkw1Z5HxCTIh3rrT71ZRYpS4lj4U_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/iflme5FYQ3u5ZnuRWLN7sw?expiry=1793318400000&hmac=8JPm6RXILL2_0IUlJ0wOaoYKITPUZAdk9Jsx6xNmTXg&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/uAehXL87S_SHoVy_O_v01w?expiry=1793318400000&hmac=ID-7J5kBZ6dr3H6gJWVziRxuC01Yi7yz545PFl4RO5A&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8C144DUIQLateOA1CAC2jA?expiry=1793318400000&hmac=w-oZFb8gGxYGxA1MonUZA_wjrW_d2gFn1bdHPM-p10s&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/iflme5FYQ3u5ZnuRWLN7sw?expiry=1793318400000&hmac=MXc7Nj1GTRIOxGHq6Id06JH_E2j8Y1LdYLedPXuwAHs&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/uAehXL87S_SHoVy_O_v01w?expiry=1793318400000&hmac=2682H0G51kbew06Pfhux8nqtz_kISY5TwpErQPxctHc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8C144DUIQLateOA1CAC2jA?expiry=1793318400000&hmac=HQ7n7froGda0UDYqABWijaNM0W_IqQKRSAkhQxRu9zM&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "llXyZ",
+                    "name": "Load Balancing",
+                    "slug": "load-balancing",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "lEc1v",
+                            "name": "Load Balancing",
+                            "slug": "load-balancing",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/h-f5DDLMRv27dQUsh5lbpQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=dIgjw2f3pEplNjYwaG3iog5g07Cuv81kTER1jzVMieWsANCAsLAu4tJhBh9i9G5Ikbb~NDkCEqanbK7DNlkqAJyDZmiqS~fIhSiWohbjMI8xfGCc7MDcQPoBP6Ds6uU6aQ0DeGwUIEM~KtShJR2tMXdntW67FlGcpRMcpn0~mqY_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/FkrZzcX9QguK2c3F_XILlQ?expiry=1793318400000&hmac=e4UWcx6JksIjLeB_blwkXGeTDLdNzwMLhiXGzV6sqx4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/hDU1MfhoTky1NTH4aF5MNw?expiry=1793318400000&hmac=1ey5FbPooIRTdSb98pDFiz_FzVvIR1q6hlDynb8E910&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/6fVGiBnmQP-1RogZ5uD_mA?expiry=1793318400000&hmac=gdYS2GH5TGuukdKyBUUz74sOtUnyPKEJmu20qZKLo_U&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/FkrZzcX9QguK2c3F_XILlQ?expiry=1793318400000&hmac=Nsd5w1gEEqYlcu3Ksmk9mmHoUL8fDN_EU_sybd_WX80&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/hDU1MfhoTky1NTH4aF5MNw?expiry=1793318400000&hmac=ZqiuAysGg1WuRJdMCKy24ZnVydsG6Q4jR9EEYVeDScc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/6fVGiBnmQP-1RogZ5uD_mA?expiry=1793318400000&hmac=a5oV0eXvu7QYoCC7Dd9CuqTx9EOrR2IEPs2ahMnIwz4&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "GixFN",
+                    "name": "ipvs",
+                    "slug": "ipvs",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "RH9Km",
+                            "name": "ipvs",
+                            "slug": "ipvs",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/kUybro_SSQSAoOlJ8fjX5A.processed/full/720p/index.mp4?Expires=1793318400&Signature=RH8WnmHfAeeyXPO92lriMgFqxWqBXUBcUIQWr7zH-u4eBUECTmpDfgXa5rNPdHXidQ06Lj36SeDOri6DqHMrml695pij16mDFaqRVf07gHZ05~HYNT4BzpaHEq68LfOiHfJmDYkptP8DO5aF5l0-rIs1Nnx-KUJNN~2OfIfMbVI_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/e-xGsCBPQt2sRrAgT3LdPA?expiry=1793318400000&hmac=KufobbFH4-btFJU_s9bTa_MQ1fvCSqLWxy4r4Zxwn-4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/l0jU8hQ0SxqI1PIUNNsaTg?expiry=1793318400000&hmac=E3j9cDVpU90RRchlMsQWwf3YTPV8M5l2L7qBWI3Y9Tc&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/vWVUfkynQ7WlVH5Mp3O1mA?expiry=1793318400000&hmac=lePdfo18Kn7ZbOe0-m8Te8c6zxLuR75waAKLNcmi0bI&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/e-xGsCBPQt2sRrAgT3LdPA?expiry=1793318400000&hmac=jbbWI1llEyx_gyhhU_bvQet23jdCBjzXJIWPZhXLmWk&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/l0jU8hQ0SxqI1PIUNNsaTg?expiry=1793318400000&hmac=sz3gCYKPDWn3FkLu6n5P0r4kzQeqXGfeuIZcsCofqwc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/vWVUfkynQ7WlVH5Mp3O1mA?expiry=1793318400000&hmac=MMMhI-Y-fSwkELyCBB5SB3U7a5YbQMdJK7XdHW71TxM&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "Xy48X",
+                    "name": "Quality of Service",
+                    "slug": "quality-of-service",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "rtNdc",
+                            "name": "Quality of Service",
+                            "slug": "quality-of-service",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/QRCyqqluTj2I_XjOdXSOuQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=TMGfFSaJP0L3hkO6yqJzU6umVWrSkiKKRBGDZKKZo1yb3-E127Hmrl7uV8q1V1PzKx~9M3W8BqDigIl9fJa4FQT~veczQGhrZnqmrHbJu3gzCyBUc73Mazaj5sJeSSno2RDQeOa9WBITSpsE3LESAlWyw7AmSsq0B9fOJ6y5KPw_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/tYrxmfARQeyK8ZnwERHsQg?expiry=1793318400000&hmac=xodDZ3dI_YcxBH130Pq0VcImNRMiQD82lYOPpnw08ig&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/0G1ZU_S7TPatWVP0u9z2SQ?expiry=1793318400000&hmac=BLP_8zojOC5sGrxhJ1KKM1hdnTIG8yS4oiZE-zHPzmA&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8V9aeGS2RPifWnhktqT4JA?expiry=1793318400000&hmac=pwLZlaCzSQFKAuRytySAs6A71xIXaVczP29CjFz4Pxg&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/tYrxmfARQeyK8ZnwERHsQg?expiry=1793318400000&hmac=ma3xPELOcS2fLBnsxMzMgmyR-LYQEQ8XZAqH8zPPRvs&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/0G1ZU_S7TPatWVP0u9z2SQ?expiry=1793318400000&hmac=28MZx2fHb7hC1Sb1Hfjo5sShN2QEqo0GUCJw08LpT-I&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8V9aeGS2RPifWnhktqT4JA?expiry=1793318400000&hmac=ZrSNSSsZfHqbVmMnPq1ZFouGtfmEOy_9jhidAuoOvZc&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "cLdkG",
+                    "name": "tc",
+                    "slug": "tc",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "mBG0a",
+                            "name": "tc",
+                            "slug": "tc",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/2vF3-QLfSfOMsoV3f0Qwng.processed/full/720p/index.mp4?Expires=1793318400&Signature=BiLVcjtrvej2shBAdyoyoBASuAdWL8uQ8NNG13v2ezvuYuZPktsihZ0k6o2qVeCmp~RknTXgBtyz05UYyAe3lKgkcVbf3yWiBGj84KJAIz4n4-LaP5VLdvqC85FgGohHwsaolYOxMVsj6cZwHsDLOuGnuKzB-uyZhea9Hjc3MuY_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/MgOaBOWaRlODmgTlmgZTYw?expiry=1793318400000&hmac=RxiJCJDDiOVzT2AFKO6jPCGpjlQ4slrGOcOkow5EUIs&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/kzxF2HUNSca8Rdh1DfnGrw?expiry=1793318400000&hmac=CN291FgOz2CYGPRHJRbx_-inOLp2EwciRSHxY_MQrUg&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/S48SiXUJRS2PEol1CdUtMQ?expiry=1793318400000&hmac=JBZ_V4NDG2W5BSZKOltfPGEOhmL4CgwD_7y2YWTuc40&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/MgOaBOWaRlODmgTlmgZTYw?expiry=1793318400000&hmac=KekJpygNIAf_nFjSEy2PepM_zeyaDkVUJp2kOW1Qk7Q&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/kzxF2HUNSca8Rdh1DfnGrw?expiry=1793318400000&hmac=a18gUFVFvKgcVtI8D820l4uKYTgYC2-uqz4h1jZ-jug&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/S48SiXUJRS2PEol1CdUtMQ?expiry=1793318400000&hmac=4JkOHCknVsFTI35VWHMR0kyU7Tkd_XKuySiDbHzH60w&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "8TfZ0",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "RCtC9",
+                            "name": "Creating a Gateway with Linux Summary",
+                            "slug": "creating-a-gateway-with-linux-summary",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Why would you want to filter traffic?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~MuTw74\"> <div class=\"quiz-option-text\"><p>To ensure that priority traffic gets through first</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~MuTw74\"> <div class=\"quiz-option-text\"><p>To ensure adherence to best practices in Internet routing</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~MuTw74\"> <div class=\"quiz-option-text\"><p>To reduce the load on the gateway that is performing the filtering</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~MuTw74\"> <div class=\"quiz-option-text\"><p>To keep traffic from reaching end host applications and overwhelming them</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>When doing address translation for the purposes of port forwarding, which field(s) need to get modified on the ingress direction.  Select all that apply.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Sq51yP\"> <div class=\"quiz-option-text\"><p>Source TCP port</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Sq51yP\"> <div class=\"quiz-option-text\"><p>Source IP address</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Sq51yP\"> <div class=\"quiz-option-text\"><p>Destination TCP port</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Sq51yP\"> <div class=\"quiz-option-text\"><p>Destination IP address</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What table is used for the following command: iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZvRckq\"> <div class=\"quiz-option-text\"><p>filter</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZvRckq\"> <div class=\"quiz-option-text\"><p>nat</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZvRckq\"> <div class=\"quiz-option-text\"><p>It does not target a table</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZvRckq\"> <div class=\"quiz-option-text\"><p>mangle</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In a practice exercise, we ran a command, 'iptables -t nat -A PREROUTING -d 111.111.0.1 -p tcp --dport 1000 -j DNAT --to-destination 10.10.0.2'.  What is this doing?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~58OVEw\"> <div class=\"quiz-option-text\"><p>This is an illegal command and would not have any affect.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~58OVEw\"> <div class=\"quiz-option-text\"><p>For ingress traffic destined to the public facing IP address of the gateway (111.111.0.1), it translates the destination to 10.10.0.2, a private IP address of an internal host.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~58OVEw\"> <div class=\"quiz-option-text\"><p>For traffic coming from an internal host, with the address 10.10.10.2, translate the destination to the IP address of the public facing address, 111.111.0.2</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~58OVEw\"> <div class=\"quiz-option-text\"><p>For traffic that is marked to be translated (with the nat mark in the packet), translate destination to 10.10.0.2.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Round robin is an example load balancing scheduling algorithm (choosing a backend server).  It can ensure the load on each server is roughly the same, assuming which of the following.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~sqsPAQ\"> <div class=\"quiz-option-text\"><p>Each request takes roughly the same amount of processing to handle.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sqsPAQ\"> <div class=\"quiz-option-text\"><p>There is an odd number of backend servers</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sqsPAQ\"> <div class=\"quiz-option-text\"><p>There is an even number of backend server</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sqsPAQ\"> <div class=\"quiz-option-text\"><p>Each request is to a unique API end point</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In the command 'ipvsadm -A -t 207.175.44.110:80 -s rr', which of the following best describes what it is doing?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~sGE3HV\"> <div class=\"quiz-option-text\"><p>It is not a valid command in Linux</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sGE3HV\"> <div class=\"quiz-option-text\"><p>Adding a TCP service at IP address 207.175.44.110 port 80, and will select a backend server in a round robin manner.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sGE3HV\"> <div class=\"quiz-option-text\"><p>Adding a backend server with IP address 207.175.44.110 to all traffic destined to port 80, and add it to the round robin scheduler.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sGE3HV\"> <div class=\"quiz-option-text\"><p>Adding a backend server to the service running at IP address 207.175.44.110 port 80, and add it to the round robin scheduler.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In the context of quality of service, which of the following best defines shaping.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~R3QgIW\"> <div class=\"quiz-option-text\"><p>Determining which packet to transmit next and which packets to drop</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~R3QgIW\"> <div class=\"quiz-option-text\"><p>Ensuring a given class of traffic conforms to desired properties such as rates</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~R3QgIW\"> <div class=\"quiz-option-text\"><p>Inspecting packets to identify what class of traffic they belong to</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In the context of quality of service, which of the following best defines scheduling.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~q4Vex7\"> <div class=\"quiz-option-text\"><p>Inspecting packets to identify what class of traffic they belong to</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~q4Vex7\"> <div class=\"quiz-option-text\"><p>Determining which packet to transmit next and which packets to drop</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~q4Vex7\"> <div class=\"quiz-option-text\"><p>Ensuring a given class of traffic conforms to desired properties such as rates</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In traffic shaping two key properties are traffic rate and allowed burst, In the token bucket algorithm, which correctly associates the concept in the algorithm and the assocated key property</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~BGgaNo\"> <div class=\"quiz-option-text\"><p>rate at which the bucket is dumped out, and width of the hole in the bucket.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~BGgaNo\"> <div class=\"quiz-option-text\"><p>rate at which tokens are added to the bucket, and depth of the bucket.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~BGgaNo\"> <div class=\"quiz-option-text\"><p>rate at which the bucket depth changes, and width of the hole in the bucket.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~BGgaNo\"> <div class=\"quiz-option-text\"><p>rate at which tokens are removed from the bucket, and depth of the bucket.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Given 'tc qdisc add dev eth0 root handle 1: tbf rate 1mbit burst 32kbit latency 400ms', what queueing discipline is used.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~GYi2pX\"> <div class=\"quiz-option-text\"><p>The root qdisc</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~GYi2pX\"> <div class=\"quiz-option-text\"><p>The rate qdisc</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~GYi2pX\"> <div class=\"quiz-option-text\"><p>The default qdisc for dev eth0</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~GYi2pX\"> <div class=\"quiz-option-text\"><p>The token bucket filter (tbf) qdisc</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "cDDXI",
+            "name": "Virtual Networking in Linux",
+            "slug": "virtual-networking-in-linux",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "wikZd",
+                    "name": "Problem / Overview",
+                    "slug": "problem-overview",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "EguM6",
+                            "name": "Week 4 Problem and Overview",
+                            "slug": "week-4-problem-and-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/RrGHa3ymQgeWvACFZNllyw.processed/full/720p/index.mp4?Expires=1793318400&Signature=VxSMtqMZiHyY5DeVAlSl2Y3BhP5rQdYOXH0EfcsRgmPlQsRsIgEjgjbrpLHBX4Lb764v09zqzO57oXxcnUFi0wHFJJKmhsqai7CRNM3ws8~5dqlKQD5udslSVswr3xf7D2cZ2dZaUpamcJ8ec61ri~BtEVaLRRzOYfPOH5cXm~I_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Rb2Ip2kuQFi9iKdpLtBYtQ?expiry=1793318400000&hmac=AlWX-lhXcltb5-PKrYRhJr0U2w5Hg9LBGZ0oBzWdEHQ&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/CXVdA5e_T3G1XQOXvw9x2Q?expiry=1793318400000&hmac=D6o3sy89xPbjwNOlxTefTh1zHgmyb5PWCZbuCair0yI&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ChnpQG-CRc6Z6UBvgjXOtg?expiry=1793318400000&hmac=y_ZzqPQrGNCJ7nlKI63ciOIhzZ9xFhg3Uu_pnm5zcdg&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Rb2Ip2kuQFi9iKdpLtBYtQ?expiry=1793318400000&hmac=MzthNnnZK7rJyiOXFQOaW8xoVap6feJQyY7JYX6v5xk&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/CXVdA5e_T3G1XQOXvw9x2Q?expiry=1793318400000&hmac=tWeA5BDcsEVRmd1ZAxl2_pZeO584RhVFfZa25U41fVQ&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ChnpQG-CRc6Z6UBvgjXOtg?expiry=1793318400000&hmac=Fo3vN9-GXL27ngykttd9gAsehVWPXw-2GxmPl_L7WyQ&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "3drEe",
+                            "name": "Week 4 Resources and Practice Exercises",
+                            "slug": "week-4-resources-and-practice-exercises",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Lecture Slides</h2><p class=\"asset\">npp-linux-04-virtual.pdf</p><h2>Assignment Repo</h2><p><a href=\"https://github.com/eric-keller/npp-linux-04-virtual\">Github repo for this module.</a> (opens in a new tab, external link)</p><p>Note: this is a different vagrantfile than the first three modules \u2013 it can be used to create two VMs that are networked together.</p><p></p><h2>Additional Resources and Practice Exercises</h2><h3>Container Networking</h3><ul><li><p><a href=\"https://adil.medium.com/container-networking-under-the-hood-network-namespaces-6b2b8fe8dc2a\">Container Networking Under The Hood: Network Namespaces</a> (opens in a new tab, external link)</p></li><li><p><a href=\"https://lwn.net/Articles/580893/\">Network Namespaces</a> (opens in a new tab, external link)</p></li></ul><h3>Linux Kernel and Network Namespaces:</h3><ul><li><p><a href=\"https://medium.com/@jain.sm/linux-kernel-and-namespaces-114439b76c2c\">Linux Kernel and Namespaces</a> (opens in a new tab, external link)</p></li></ul><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "2k69NqEyQMqq-1bqxY9SRg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/2k69NqEyQMqq-1bqxY9SRg_7e149a652d874cc09d331670a22e4df1_npp-linux-04-virtual.pdf?Expires=1793232061&Signature=giL5kVH0QPTAFokOhsmjMfIHeUZ-LVHEeo7UiBQoOXjXTAOXgtMasfrH6PgUSEJtjv5SWPpf4hN7dH9Ec8lYiLDYOT8~zljRqaf04KCM9cNiVbo6rSGVVt3jHr3xJ0vz1Op3JOyeNXGnfKxM0Ko91L1rru2Az5asMadyBcxRgGQ_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "npp-linux-04-virtual.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "4ZYR9",
+                    "name": "Network Namespaces",
+                    "slug": "network-namespaces",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "qsydm",
+                            "name": "Network Namespaces",
+                            "slug": "network-namespaces",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/0MJqOPymT2KI3HTOrnIFdw.processed/full/720p/index.mp4?Expires=1793318400&Signature=fh8aphctfo0KkRa1KO0kFxlYMLF6CNqY7TERXrsyKIURr-MuejfeM5l9YQo6PeYxLBY47jYWXdvJQWWwk4uQ1SyQQN1KyZM49TS7nbVbEOEa7TZ0rvRIeEu~dCNd8PwbNrYqwduAF2bT4fxvEzK3rA0zeNF80wV~IJzlPuhg8O8_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/6FvoQtlxQrab6ELZcTK2Xg?expiry=1793318400000&hmac=XxqI-ABKk4Va9yXExc8wlGDqC9nVSSSnVzPx0u1tm7E&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/BrMPgjkWRnCzD4I5FnZw3w?expiry=1793318400000&hmac=znJeaGMfrGJuO1sToqh17HsRqtxNP5nfzX5h0FoTXB4&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OuyQ46H-RNqskOOh_gTakQ?expiry=1793318400000&hmac=5MNfHHlxlmTfe6tB_Gq6_DOD4qlJKsHO6DpGXQEorxY&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/6FvoQtlxQrab6ELZcTK2Xg?expiry=1793318400000&hmac=tWKhTDkb2LBGrUzFcXz8WThLJOCJyPPr0fjV6r6Rg5o&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/BrMPgjkWRnCzD4I5FnZw3w?expiry=1793318400000&hmac=oA79chVMK4xOqIx0uj0RM03xQsP5OmH0cwcSSAu5z3k&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OuyQ46H-RNqskOOh_gTakQ?expiry=1793318400000&hmac=7eIUG4UjyC45_1PeqB802f1G0bSoXFTT4LkFHL2YqKA&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "sHK7I",
+                    "name": "ip netns",
+                    "slug": "ip-netns",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "cZPsT",
+                            "name": "ip netns",
+                            "slug": "ip-netns",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/LNBoc67MQgmVe1aPg1Y28g.processed/full/720p/index.mp4?Expires=1793318400&Signature=brF4qdy2PNtlAIjtVnyJjVedCdvBmuTuM7x-qmdFs8VrBCF4wjVVCiNUA2mBUV49L~XFZHQp86wQRmAHiKi6mIlH4iLMM3AZi1T93bL3~~7iq1CDLS8BmsnRh0V~mQ0XrHTaJNMxBunCOFC84cwATjeGNQJfdqmCOSKDf7y-xUU_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Pf1n_2c3SFS9Z_9nN-hUTA?expiry=1793318400000&hmac=W_Cx-9HGOdxnkRxROWmWR2xqSQTkrmOjbNhIX0pPA6g&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/Rx1sfgz5RtGdbH4M-dbRgg?expiry=1793318400000&hmac=LWgilh_1ZUkvcgqvBZCzWW_aorl-Vzdidjeaf6TBfMY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/S7_dGtsPQCu_3RrbDwArTg?expiry=1793318400000&hmac=sbk39KKQxIvToc0pBmyhypCphbe-Wrqf84nBiv6nfqg&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Pf1n_2c3SFS9Z_9nN-hUTA?expiry=1793318400000&hmac=5e1_2G5vhw4DPW5kmMwRd8EkswvURayrJUHnv6a8Fuw&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/Rx1sfgz5RtGdbH4M-dbRgg?expiry=1793318400000&hmac=NmikKmHJKLJZB9Gr_WxdB7xFqTQeQDtBhKHT_O27I7c&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/S7_dGtsPQCu_3RrbDwArTg?expiry=1793318400000&hmac=sxUHCrgR7XLQ1ubyk3y7oSWJfdcX39A8iImOzhJwCUE&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "D6QlB",
+                    "name": "Networking Between Namespaces",
+                    "slug": "networking-between-namespaces",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "nqHdQ",
+                            "name": "Networking Between Namespaces",
+                            "slug": "networking-between-namespaces",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/f6w-fkHSSieFa7l0AnZnow.processed/full/720p/index.mp4?Expires=1793318400&Signature=BbD-UZTqGdupYd1cEFPXVGrS0ORF1-pUSW-PHuPSLO73hltxPuwPPwVU4k~68Vp9Y0dS3IgZZINPutF874B7H9P0giPI0dKNb7vpk0caEQF0cGh7IvHri2fS~hWCj26S9lO~IqL-2QAtanydznULJpGOLzekj-snATdOsrCdJBc_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/W8V00D0kSmKFdNA9JGpi2g?expiry=1793318400000&hmac=LuvIeHQGoB3tT1vLt8zdIN-UtQgYliP4LDC1N8B-aS0&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/dtNFYqnwTJ-TRWKp8Oyf4g?expiry=1793318400000&hmac=4Hxwwb4IuRIWTbTYERVzHq4vAFpMvCzx9xm3ER_-qQw&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/XQEnolF3QOOBJ6JRd_Dj4Q?expiry=1793318400000&hmac=KbsQv0fta6KOwkwSQFDL_mrx6ncvYQnONJ391z6K5kU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/W8V00D0kSmKFdNA9JGpi2g?expiry=1793318400000&hmac=325LD6pgaUFIM5Mfb2mOivUWCvIkUCZSUYjxcxssVj0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/dtNFYqnwTJ-TRWKp8Oyf4g?expiry=1793318400000&hmac=YWrYoZ-vzNBYwJ042JS3ZlylHvBHGZ7-5vYnM7rjoTw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/XQEnolF3QOOBJ6JRd_Dj4Q?expiry=1793318400000&hmac=xIKq_rJxfpDqx9icJajRoCxY1wMOHZA7AtOOSfIefGo&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "Z7eQM",
+                    "name": "Docker Networking",
+                    "slug": "docker-networking",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "CRdkv",
+                            "name": "Docker Networking",
+                            "slug": "docker-networking",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/DaOy3O0uTxiutAsje2GPAg.processed/full/720p/index.mp4?Expires=1793318400&Signature=N6K1Dt4~Oi2PlxU4TTF3oWFFBSfqSR7u1xU9vQ6rfmaE2aqCXzxVTkcybD12J0dHRhvKYxMytqKqYPUG8yAB7d9RciUzwbLVoa1p8Ivera9WRwCWlMDFp9~7tuQmtZpcl3HCfPSuKfd-pvmqYUZHdajkyidffAHsPpwVocf7-5w_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Tj7E2Is1Q6S-xNiLNVOkQw?expiry=1793318400000&hmac=DCsrIowkbLi9_L_BI-DiQ2_MZuRAlEnCaNhR33lq42U&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/VixmWg1nS1OsZloNZ4tT1g?expiry=1793318400000&hmac=IfZDVxzMhZzc7lzdolNfpNNyY8yo5my7E86MYH2OiT4&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/lBZxKLlCR82WcSi5QqfNdQ?expiry=1793318400000&hmac=iDl7jtNud8-xtkdxW42PLF5SmTB5KTPj4g8JG82QD_w&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Tj7E2Is1Q6S-xNiLNVOkQw?expiry=1793318400000&hmac=e5Yn42SJeIiG2Ke86hXWQsn4Twc0RxvYklGDD6nnfx0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/VixmWg1nS1OsZloNZ4tT1g?expiry=1793318400000&hmac=gXXN8Eg3a5wakQyNA9CQhHnAg-JvLhOrPrgNd1S6IsQ&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/lBZxKLlCR82WcSi5QqfNdQ?expiry=1793318400000&hmac=Zi_r-M4BntB4ZgpkSKywAmuMkEyb8xm800ePVGhdDGM&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "V16f6",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "itlcx",
+                            "name": "Investigating Network Namespaces",
+                            "slug": "investigating-network-namespaces",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>How many namespaces are there?</p></div></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which veth(s) are in ns z?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~3nYt9i\"> <div class=\"quiz-option-text\"><p>vethE, vethB, vethC</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~3nYt9i\"> <div class=\"quiz-option-text\"><p>vethG</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~3nYt9i\"> <div class=\"quiz-option-text\"><p>vethA, vethB</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~3nYt9i\"> <div class=\"quiz-option-text\"><p>vethH</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following lists two valid veth pairs?  </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~qxJJjX\"> <div class=\"quiz-option-text\"><p>vethC and vethF, vethE and vethH</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qxJJjX\"> <div class=\"quiz-option-text\"><p>vethA and vethV, vethD and vethE</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qxJJjX\"> <div class=\"quiz-option-text\"><p>vethC and vethD, vethE and vethF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qxJJjX\"> <div class=\"quiz-option-text\"><p>vethA and vethH, vethB and vethG</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Does this ping get a response?  sudo ip netns exec w ping 11.0.0.2</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~P6Op3h\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~P6Op3h\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Does this ping get a response?  sudo ip netns exec w ping 15.15.16.16</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~cQie6d\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~cQie6d\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Does this ping get a response?  sudo ip netns exec z ping 12.0.0.1</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~XmA7g1\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XmA7g1\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Does this ping get a response?  sudo ip netns exec x ping 10.0.0.2</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~2IsBtq\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~2IsBtq\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is the path taken in the forward direction only if you were to run sudo ip netns exec y ping -I 15.15.16.16 15.15.15.15?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZlANVi\"> <div class=\"quiz-option-text\"><p>vethC, vethA, vethC</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZlANVi\"> <div class=\"quiz-option-text\"><p>vethF, vethC, vethE, vethD</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZlANVi\"> <div class=\"quiz-option-text\"><p>vethA, vethB, vethE, vethF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZlANVi\"> <div class=\"quiz-option-text\"><p>vethF, vethC, vethD</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Quiz",
+                            "id": "tPe61",
+                            "name": "Virtual Networking in Linux Summary",
+                            "slug": "virtual-networking-in-linux-summary",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-instructions\"><p> None provided</p></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following is a benefit of virtualization.  Select all that apply.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~jZSiLw\"> <div class=\"quiz-option-text\"><p>Faster execution</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~jZSiLw\"> <div class=\"quiz-option-text\"><p>Simpler deployment</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~jZSiLw\"> <div class=\"quiz-option-text\"><p>More efficient use of resources</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~jZSiLw\"> <div class=\"quiz-option-text\"><p>It puts less strain on congested network links</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>If you want to know what a given veth device is paired to, how could you figure that out.  Select all that apply.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~i9i5ye\"> <div class=\"quiz-option-text\"><p>Using scapy (to generate a packet) and tshark to inspect</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~i9i5ye\"> <div class=\"quiz-option-text\"><p>Look at their assigned IP addresses, they must be consecutive.</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~i9i5ye\"> <div class=\"quiz-option-text\"><p>Using ethtool combined with 'ip link'</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~i9i5ye\"> <div class=\"quiz-option-text\"><p>The 'ip netns' command can tell you</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>True or False.  Only one side of a veth pair can reside inside of a namespace that is not the root namespace?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~r8PLUL\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~r8PLUL\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p> Once you've moved a veth device into a namespace nsDemo, it does not show up with 'ip link'.\u00a0 Running a command like 'ip link set vethZ netns nsDemo-new' will not work.\u00a0 How can you move that veth to the other namespace?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~tpmeQs\"> <div class=\"quiz-option-text\"><p>Run the command from within the current namespace.  'ip netns exec nsDemo ip link set vethZ netns nsDemo-new'</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~tpmeQs\"> <div class=\"quiz-option-text\"><p>This is not possible, you must delete the namespaces then start over.</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~tpmeQs\"> <div class=\"quiz-option-text\"><p>First move it back to the root namespace with ip link set vethZ netns 0</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~tpmeQs\"> <div class=\"quiz-option-text\"><p>Move the veth device that is currently in the root namespace, to the new namespace, which will automatically put the veth it is paired to back into the root namespace.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In Docker networking, what is docker0?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~nYEkvl\"> <div class=\"quiz-option-text\"><p>The default bridge that each of the veth devices in the root namespace connect to.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~nYEkvl\"> <div class=\"quiz-option-text\"><p>The default command to reset the docker networking configuration.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~nYEkvl\"> <div class=\"quiz-option-text\"><p>The name of the root network namespace</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~nYEkvl\"> <div class=\"quiz-option-text\"><p>The network configuration of the first container created.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>True or False.  Docker does not use network address translation in any aspect of docker networking.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~x03sW1\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~x03sW1\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "gw0En",
+            "name": "Kubernetes Networking with Linux",
+            "slug": "kubernetes-networking-with-linux",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "s5Tvv",
+                    "name": "Problem / Overview",
+                    "slug": "problem-overview",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "b2ia5",
+                            "name": "Week 5 Problem and Overview",
+                            "slug": "week-5-problem-and-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/IwYbCRN1Q22feoFGogV4jQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=T2sYjm-DcEnEJWXccHcutkv1AL0RKSWoEE~Ag-Ap8jmxLmJ~kazAC6qyaGPrxDIaF0H4~5rWCWsWo~BZVLYk6lM-gbxmsh12xzIS5D5OW5y73nM9v69J8Jkr2gol~ZZ9kp0vOeYeULu2Wj3fXKV17ew105qNND0i~mD8ybl5PWg_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/gBiqWQNSRcaYqlkDUuXGiw?expiry=1793318400000&hmac=c4_N6pPDZlfyYubULEyUYuRy0CejCKcuFQvT4zaKSwM&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/SqISx_KoR-6iEsfyqIfuSg?expiry=1793318400000&hmac=zAPNpyfpK6GTAmc2wKmI65-I2Mp-ScViD9o9MAMoQUY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/rTWbvXhaQ4e1m714WoOHkQ?expiry=1793318400000&hmac=EVaLYfsu7BgHA8VJQgd0d6Ar7a20s6uzTaMw9QQVHAk&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/gBiqWQNSRcaYqlkDUuXGiw?expiry=1793318400000&hmac=_ioWAwi8uoAZYuHERVbif0vdHJhxu2897EXRTZt5JoM&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/SqISx_KoR-6iEsfyqIfuSg?expiry=1793318400000&hmac=LQcZUKumFItkoam_YxVmELCd5rFePEifVo7Pr6PmdNc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/rTWbvXhaQ4e1m714WoOHkQ?expiry=1793318400000&hmac=D0jm4Jm6YhWzFFVZnx1vAU46INy6KIK7y6LmURmEj0U&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "Qn41U",
+                            "name": "Week 5 Resources and Practice Exercises",
+                            "slug": "week-5-resources-and-practice-exercises",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Lecture Slides</h2><p class=\"asset\">npp-linux-05-kubernetes.pdf</p><h2>Assignment Repo</h2><p><a href=\"https://github.com/eric-keller/npp-linux-05-kubernetes\">GitHub repo for this module</a> (opens in a new tab, external link)</p><p></p><h2>Additional Resources and Practice Exercises</h2><ul><li><p><a href=\"https://github.com/techiescamp/vagrant-kubeadm-kubernetes/tree/main\">Setup Cluster with kubeadm</a> (opens in a new tab, external link)</p></li><li><p><a href=\"https://github.com/kelseyhightower/kubernetes-the-hard-way\">Kubernetes the Hard Way</a> (opens in a new tab, external link): I learned about the internals of Kubernetes through this \u2013 it looks like it might not have been updated in years, but it seems like it\u2019s still a great resource).</p></li></ul><p></p><p><strong>eBPF (suggested as a next topic to learn more about):</strong></p><p>eBPF is a more general technology than just for networking, but since this is a networking course, it\u2019d be a great place to start learning about it. The first resource is an academic paper and some tutorials. The second is resources from Brendan Gregg, who\u2019s videos and writing I find to be very informative and detailed \u2013 it\u2019s straddles the line of being simple to understand and yet incredibly deep, which is incredibly challenging to do.</p><p><a href=\"https://dl.acm.org/doi/10.1145/3281411.3281443\">The eXpress data path: fast programmable packet processing in the operating system kernel.CoNEXT 2018. </a>(opens in a new tab, external link)</p><ul><li><p>This was an academic paper that introduced XDP, which leverages eBPF and integrated into the Linux kernel.</p></li><li><p>You can then find tutorials on XDP: <a href=\"https://github.com/xdp-project/xdp-tutorial\">XDP Project</a> (opens in a new tab, external link)</p></li></ul><p></p><p>From Brendan Gregg: </p><ul><li><p><a href=\"https://www.brendangregg.com/blog/2019-01-01/learn-ebpf-tracing.html\">Learn eBPF Tracing: Tutorial and Examples</a> (opens in a new tab, external link)</p></li><li><p><a href=\"https://www.youtube.com/@BrendanGregg/videos\">Brendan Gregg YouTube Channel</a> (opens in a new tab, external link)</p></li></ul><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "RCihYMCeRn6TREzEooJ3Bg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/RCihYMCeRn6TREzEooJ3Bg_0e35f4cec12b430daa1614c3871b45f1_npp-linux-05-kubernetes.pdf?Expires=1793232053&Signature=S9FEok5TM1lkunDbl~XC8URYK-6Gm1f4VVAlldYRgVSZUZFjcedfmzQJW9O4wRxC9qZhGCi5IkWLvKBq2bQ2cX2pOwNl4KrBG1tnsBjgTtArgN1Q8FYPeII8tgn~Wi4sOCIQEZy7~eHF~KMW~F~e9UbP0FzgGUp-y70sFPN~cc4_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "npp-linux-05-kubernetes.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "6FDIn",
+                    "name": "Kubernetes Use",
+                    "slug": "kubernetes-use",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "Rd4w8",
+                            "name": "Kubernetes Use",
+                            "slug": "kubernetes-use",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/jJGgVujoTq-tNFJb-qsaUQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=V-PFSSyBDovCotAhT7EEW-rnPLqkwvRjBPzvpLVJE1OqeVilaqtKXZuJaQrKVI1aKKLP8fmgfmch0~TFYmPaQ9mBH~7PJYEYRTb06LJNygSDv~opNRha9jDxhZj2D8AVRdSjatQN-UBPhmnwTj-ob3DeMgVBcWWGUx5h9Kdyu3E_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/1XP08pWGS0Wz9PKVhktFnQ?expiry=1793318400000&hmac=ir2vc_N2JDK2mcnWcCpV5e8KrNyI7iF1zogekZfr3ko&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XozNJYKuTHKMzSWCrrxy4g?expiry=1793318400000&hmac=gxRJNY_umQzFY8LKkEsddhtEI7pBPBbx780jr-Zh1pI&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/9qkGhvOGSdmpBobzhgnZag?expiry=1793318400000&hmac=e2qDKfFwtjfLudCqPDVe4pSAaSD1Vj66uES6Vnoevlo&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/1XP08pWGS0Wz9PKVhktFnQ?expiry=1793318400000&hmac=AbWALlQ9w1w47MDuhRp8PENAMbfMtItw63fKqIAqiHY&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XozNJYKuTHKMzSWCrrxy4g?expiry=1793318400000&hmac=CdF3puSSd_GdKH0o3VVk25vrZEpM1jQUJj6ppiGM9OI&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/9qkGhvOGSdmpBobzhgnZag?expiry=1793318400000&hmac=o25DCfT4cI74b3ri_A95hDk5IWXeAlN6c5NSRABSA8k&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "4nPo2",
+                    "name": "Kubernetes Architecture",
+                    "slug": "kubernetes-architecture",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "WhsXa",
+                            "name": "Kubernetes Architecture",
+                            "slug": "kubernetes-architecture",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/l67FptYtQN6V-YQpNgU0Cg.processed/full/720p/index.mp4?Expires=1793318400&Signature=fZZHrRYhGpazuib5Np9Ibz4h6MpZdW6CNxzHL2vj~Co1rwVo0U8aSWygJ7bpHvnCJ5OPUhtpfO9BM2HTt4~rnd58X6qaebVfwxj1ZX7waJi2nmoGt5JR-SnGjOIJNr9wfanuAu7N5B82mIGIJhvm1DQG~7wiFYFEY2d2m8oYlqw_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/jy-0ZMN7TSqvtGTDe80q3Q?expiry=1793318400000&hmac=PU0rhuTDrwrS9SG4nXtiTgIUtB1qG9V9Nkx3cXHYgoY&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/YxhOWtYFSuSYTlrWBZrk7g?expiry=1793318400000&hmac=ylp_-93n8JHxn6z4z5iEd-4AXIA1UacVUV08f-Pd0AU&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/EumrOXWcSrSpqzl1nAq0qA?expiry=1793318400000&hmac=6Ss9ZhT_EdWTKuuAUZFko0KXZabnjER8bSg9D-mNqB0&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/jy-0ZMN7TSqvtGTDe80q3Q?expiry=1793318400000&hmac=swD46e4lU8QY-MJHk5NhK26gMUbwVsRQ48kwZxQutj0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/YxhOWtYFSuSYTlrWBZrk7g?expiry=1793318400000&hmac=u9K-n_SIB86N-W6CeGgZWDAeDfpLByj9PE39i3XDFsI&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/EumrOXWcSrSpqzl1nAq0qA?expiry=1793318400000&hmac=LYq2yRU4dY-UjZ1h_NfBpFxljRHo1EBKY7kSy0sIXlo&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "viWnw",
+                    "name": "Kubernetes Networking",
+                    "slug": "kubernetes-networking",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "ylTH2",
+                            "name": "Kubernetes Networking",
+                            "slug": "kubernetes-networking",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/HCZbjPgER_Si_wZ4V45Qew.processed/full/720p/index.mp4?Expires=1793318400&Signature=h95Ae6rKpymcdB0Fqzf6F8px-~o9XYEJHPWWqaJCM0iwWfI7euhZbOVVg9GwUydCQK0XM1IlxcByHZj01OrziDM7E9z7sbhl9m~0Uyx3KHvD2W8XIMDyJOOgcVQRJvT1GuhrTSLA-2~yOJHsa5PNZVGIvhO7B5wXPknaR31CKpc_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/chd9mJODQ-aXfZiTg2PmUA?expiry=1793318400000&hmac=TU89oPCuNPoY9yuJWb_HGp9NZJnUVzPd2JsZQK4pczI&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/ImAPwE82QoCgD8BPNpKAsA?expiry=1793318400000&hmac=Rm6KtjKMaWeAjMsR-pJWyb2ahNQICbR-BfX7TCCLrAY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/luuF_ghPQz2rhf4IT4M91g?expiry=1793318400000&hmac=Mtm9sDY3l9YqjOv-wCybj7_Wr9gLE-j3s9gU_VCCEss&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/chd9mJODQ-aXfZiTg2PmUA?expiry=1793318400000&hmac=VwtKb06IZjPkphWgKDPVVYQozA1-jA7bUt8v7tr-65Q&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/ImAPwE82QoCgD8BPNpKAsA?expiry=1793318400000&hmac=OWQEZhtRYI7wjTPn0_3K_LCQmWKps5QpDPbogQ6NSZg&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/luuF_ghPQz2rhf4IT4M91g?expiry=1793318400000&hmac=_2VIS2ASX8qyBTthlSYmuMqFVxGLfFdJSmcU2Reol-w&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "Dmy5m",
+                    "name": "Creating a Network Plugin",
+                    "slug": "creating-a-network-plugin",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "lHHQk",
+                            "name": "Creating a Network Plugin",
+                            "slug": "creating-a-network-plugin",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/2Aq0U7R7ThCGy3RFyxC8wg.processed/full/720p/index.mp4?Expires=1793318400&Signature=dcCK8cFOTKc1BaTepD6NTiIC7OkCOHObkmAls6gUrZS8t3aU6gyrGLDjNITlgVf-0bjQtROiizgJtnfbibGAwMVTe1dfe9ebxQcSRxaxwixMsS3hvHCsqDku5H0xzbmsLPohaGIm53cPCEQNqL5GXy7x4YAnw3o9xw53WG9va8A_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/wG4dZlOWSe2uHWZTltntkQ?expiry=1793318400000&hmac=6DpOEoU4s-MDHD5iDhZ7fMXbqwOg-htNpwMlkgyBedE&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/2ulLS7y-RqypS0u8voasdg?expiry=1793318400000&hmac=KBNzomaZJQmqLb145fDa5dx7nqCxcqpMiT3CydeSQ-4&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/MzRPavYrQ7W0T2r2K8O1Jg?expiry=1793318400000&hmac=iJ6BInPtmpB9FrAq9IbJqRE8ckx_GYzM2HOUO7fredU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/wG4dZlOWSe2uHWZTltntkQ?expiry=1793318400000&hmac=yFcvSABNkDne6SvoIDfKajUZOFnf5IM3199FDlH_Yjk&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/2ulLS7y-RqypS0u8voasdg?expiry=1793318400000&hmac=yAeYGW-AFbnmmrVBKzwuTN1gKw7HcldsobpcDpdUiFg&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/MzRPavYrQ7W0T2r2K8O1Jg?expiry=1793318400000&hmac=a403TtR95z8EfUNn6IFW1IG6EINoGkjCBHTnrvchk7Y&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "SreTW",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "PaTls",
+                            "name": "Kubernetes Networking with Linux Summary",
+                            "slug": "kubernetes-networking-with-linux-summary",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>True or False.  Each container in a Pod gets a unique IP address.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~K8dnKR\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~K8dnKR\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>True or False.  kube-proxy does not process network traffic.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~QIw7Hy\"> <div class=\"quiz-option-text\"><p>true</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~QIw7Hy\"> <div class=\"quiz-option-text\"><p>false</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What does the Ingress construct do?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~c9U8kE\"> <div class=\"quiz-option-text\"><p>Specifies how to configure a deployed load balancer like nginx.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~c9U8kE\"> <div class=\"quiz-option-text\"><p>Deploys a network load balancer for management traffic (i.e., to/from kubectl).</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~c9U8kE\"> <div class=\"quiz-option-text\"><p>Specifies a set of Pods to load balance traffic to.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~c9U8kE\"> <div class=\"quiz-option-text\"><p>Specifies how to forward traffic through the kube-proxy.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>There are two main files for creating a network plugin, what are they.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~AZ7zZd\"> <div class=\"quiz-option-text\"><p>A yaml file that describes a Service</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~AZ7zZd\"> <div class=\"quiz-option-text\"><p>An executable that implements the CNI spec</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~AZ7zZd\"> <div class=\"quiz-option-text\"><p>A Golang source file to add to the Kubernetes source code.</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~AZ7zZd\"> <div class=\"quiz-option-text\"><p>A configuration file describing the network plugin</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>If I made a mistake in my network plugin, which might give me a clue on what went wrong.  Select all that apply.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~lIQyWp\"> <div class=\"quiz-option-text\"><p>journalctl -u kubelet</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~lIQyWp\"> <div class=\"quiz-option-text\"><p>cat /path/to/network-plugin-log</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~lIQyWp\"> <div class=\"quiz-option-text\"><p>kubectl describe pod podname</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~lIQyWp\"> <div class=\"quiz-option-text\"><p>kubectl describe node nodename</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "GIPUW",
+            "name": "Final Exam",
+            "slug": "final-exam",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "CSGXv",
+                    "name": "Prepare for the Final Exam",
+                    "slug": "prepare-for-the-final-exam",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "bSvDG",
+                            "name": "About the Final Exam",
+                            "slug": "about-the-final-exam",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>The course final examination is similar in format to the other graded assignments, with the following characteristics: </p><ul><li><p>The exam is <strong>unproctored</strong>.</p></li><li><p>The exam is <strong>two hours long</strong>.</p></li><li><p>The exam is <strong>22 questions.</strong></p></li><li><p>You are allowed<strong> 1 attempt</strong>.</p><ul><li><p>An attempt is one complete try at the exam within the given time limit.  </p></li></ul></li><li><p>Each attempt allows <strong>1</strong> <strong>submission</strong>.</p><ul><li><p>A submission occurs when you click \u201cSubmit\u201d during an attempt.</p></li></ul></li><li><p>After the attempt window has ended, you will not be able to change or re-take the exam.</p></li><li><p>The exam contains multiple-choice questions and one free-response question. There are no programming questions.</p></li><li><p><strong>You are not allowed to use any notes or access external websites during the exam.</strong></p></li></ul><p>You may drop or withdraw from this course at any time before accessing the final exam. Once you begin the exam, you will be assigned a course grade based on the announced grading formula, and this grade will appear on your university transcript after the eight-week session concludes. After the final exam has ended, you may continue submitting homework assignments until the conclusion of the eight-week session. </p>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "pFfUf",
+                    "name": "Take the Final Exam",
+                    "slug": "take-the-final-exam",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "UgjmS",
+                            "name": "NOTE: Do Not Open the Honor Code Verification Until You Are Ready to Take the Final Exam",
+                            "slug": "note-do-not-open-the-honor-code-verification-until-you-are-ready-to-take-the",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p><strong>Please do not complete the \"Honor Code Verification\", which is the next quiz item after this reading, until you are ready to complete the final exam.  Once the \"Honor Code Verification\" has been submitted, you will no longer be eligible to drop or withdraw from the course, even if you do not access or complete the final assessment.</strong></p><p>See the <em>Course Drop &amp; Refund</em> in your program handbook for details.</p>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Quiz",
+                            "id": "B9ohA",
+                            "name": "Honor Code Verification (Similar to a Password Quiz)",
+                            "slug": "honor-code-verification-similar-to-a-password-quiz",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><h3>WARNING - PLEASE READ\n</h3><p><strong>WARNING - PLEASE READ</strong></p><p>You will complete the honor code verification quiz to access restricted content. Once you submit this quiz below, you will not be eligible to drop or withdraw from a class or receive a refund <em>even if you do not access the final exam/project itself</em>. See <em>Course Drop &amp; Refund</em> in the program handbook for details.</p></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>By selecting \"agree\" below, I hereby affirm that I have read the CU honor code and that, on my honor, as a University of Colorado Boulder student,\u00a0I have neither given nor received unauthorized assistance.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~GcpPNdT8Ee6qbgr_8ma7tQ\"> <div class=\"quiz-option-text\"><p>Agree</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~GcpPNdT8Ee6qbgr_8ma7tQ\"> <div class=\"quiz-option-text\"><p>Disagree</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "references": [],
+    "workspaces": []
+}

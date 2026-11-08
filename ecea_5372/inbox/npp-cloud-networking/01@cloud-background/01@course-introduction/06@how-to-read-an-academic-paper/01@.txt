@@ -1,0 +1,129 @@
+Hello, and welcome. Right now, we're going to talk
+about how to read a paper. Sounds basic, but really
+there's some tips and tricks that can really make the ability to understand what the paper is, make it much quicker,
+definitely will help you out. As you know, what's unique about this course
+is we are going to go into the underlying
+technology for cloud networks, how Google, how
+Amazon and Microsoft, how they've actually built their underlying infrastructure. That's something
+that we're going to need to understand
+how to read a paper. These slides are going
+to be pretty text heavy, and I apologize for that. Here, I'll just show pictures, breaks it up a little bit,
+make it a little exciting. This is a picture of Boulder, Colorado, where I'm from, the University of Colorado. Then this is our logo. There you go, there's
+the pictures. That's all you're
+going to get. Why are we reading academic papers? The key thing is that modern cloud
+infrastructure required a huge amount of
+innovation to create, and academic papers are how those innovations were and still are communicated
+to the world. For example, you
+might have heard the term software
+defined networking. It's pervasive now, but
+it really came from a bunch of academics and publications across
+a number of years. Really understanding
+the academic work that led to it and it's being widely used in cloud systems. Another reason is
+cloud providers, especially Google and Microsoft, have a strong commitment to
+the research communities. They publish a lot
+of their work, and we're going to really
+focus on those works. Some of the key network systems conferences
+you might find, if you're going out and looking
+for papers on your own, these are great places to start. Every single paper there
+will be high quality. It'll be reviewed by many
+experts in the field. You're just getting really
+thoroughly vetted papers. Then a lot of
+networking work also ends up in more
+systems-oriented conferences, whether this is the
+SOSP, ASPLOS, OSDI, more operating system
+type conferences, general systems, or some security conferences,
+and many more. I'm just flashing these
+up so that if you see something like one of these,
+you know it's a good place. But there's many others as well. Now, to really understand
+how to read a paper, let's talk about the main
+components of a paper. The abstract is a sure
+1-2 paragraph overview. This is helpful if you're
+skimming through proceedings. The title doesn't
+necessarily tell you, should I be reading this or not? Maybe the abstract will give
+you that quick overview of, all right, this is a paper I want to invest more time in. The introduction provides a
+summary of the entire paper, why this work is important, what the alternative is, what is the key
+insight of this paper, what's the system behind it
+that they're introducing, and what are the findings. Really, you can get the full overview of
+the paper in the intro. A lot of times, you have a motivation section or a background or related work. I've grouped these
+together because they're all worked together, and each paper is going
+to have their own way of presenting their
+contributions. Sometimes they have
+to really focus on the motivation or sometimes there's a lot of related work, and then they have to explain that to put it in context of why their paper is novel, or maybe sometimes it's the background to make
+sure the reader has the background
+knowledge to be able to understand what actually is unique and interesting
+about this paper. Then they go into the
+architecture section, so this provides an
+overview of the system. It's largely at a high level. Then you go into
+the implementation. This is details about
+how the architecture was realized and what
+programming language they use and things like that. Then you get into
+the evaluation, and this is a key part
+of the paper because it's what is used to
+both prove the claims, so every paper is
+making claims about. Here, we're introducing
+something new and they make claims about it performs this well better than
+these other systems. Then also the evaluation can be used to help alleviate
+any potential concerns, like I introduced some
+extra processing. Maybe that's going to
+really slow things down. What's the overhead? You try to alleviate any potential
+concerns there. There's different types
+of things that you show. There's microbenchmarks
+that focus on key details, and then there's
+macrobenchmarks that focus on the system
+working as a whole. Then you go into discussion, which is really just any extra notes that weren't addressed, and it may be a concern, and the authors want to
+suggest how they would address it or it may
+be extra use of it. That's not proven out, but it's worth mentioning. Then finally, you get the
+conclusions and feature work. This is something that
+summarizes the paper again, and then you add in what
+might be some next steps. I just want to mention
+that we're really focused on
+systems-oriented papers, like a computing system
+paper as opposed to a measurement paper
+or a theoretical paper. This is what we're focusing
+on in this course. There's different approaches
+to reading a paper. There may be different reasons for an individual
+to read a paper, so there's really different
+approaches people could take. Again, explicitly focus on
+published work where you as a reader want to learn something
+as opposed to reading, maybe reviewing
+papers that are maybe it's a student of
+mine that wants to submit it for publication. There, you might take a more critical view to help
+try to improve the paper. But we're going to focus
+on the published work. We're trying to learn
+something new from the paper. One of the main ways is look at the introduction and maybe look at some
+architecture figures. Like I said, the introduction is basically a summary of the whole paper. It
+tells you everything. Then maybe if you want
+to see a little details on how it actually works, look at the architecture. This gives you a good overview. If you're trying
+to read a lot of papers in a short amount
+of time just to understand what's the current state of the world in a particular
+area, this is important. Another thing that
+you might do is focus on the background and
+related work section. Maybe I'm jumping into a new research
+area and I want to understand what's all
+the work in this space. In these related work sections, they'll provide the references. They'll provide summaries
+of other works, and you can get a really
+good understanding of what's going on. Then you can also get
+some of the background. Then I might go to those papers and read those related work, and that seeds me to really jump into the area and then start reading these
+papers in more depth. Then last but certainly not, it is not an exhaustive
+list or anything. But a lot of times, you
+want a really deep read. This is a key thing that I really want to
+understand how it works. You particularly focus
+on the evaluation, what systems did they use, what datasets did they use, how did they prove their point, and that helps me understand
+one for my own work, but then also understand
+their work a lot better. Then the last point I'll make is just talking about
+industry papers. We'll read a lot of
+papers from industry and like from Google
+or Microsoft. Some of these have less of a feel of introducing
+something new, but really it's useful to
+see what approaches they took and the background
+that they built on. It really does provide a
+lot of important context. One of the key
+things about these, if it's a publication
+by Microsoft or Google, they're working at
+a different scale than academics work at. It's really useful to see what worked or what was
+challenging at scale. A lot of times, these
+papers also give important context for challenges that still need to be solved. You can look at it
+and say, here's some open challenges for that. With that, keep
+these little tips in mind while you're reading the various papers that
+we're going to go through. With that, I will see
+you next time. Thanks.

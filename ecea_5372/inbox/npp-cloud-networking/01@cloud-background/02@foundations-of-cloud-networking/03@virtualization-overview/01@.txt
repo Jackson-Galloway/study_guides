@@ -1,0 +1,94 @@
+Let's get started. Welcome to the next little bit of
+lesson that we got. This time we're going to
+get into virtualization. It's a key technology
+in Cloud computing. We just want to walk
+through that a little bit, make sure we're all knowledgeable
+about what that is. The problem of why
+virtualization exists is really around that enterprise IT center support many service
+applications. They might have
+Microsoft Exchange, it might have some Oracle, and SAP, some web
+servers and so forth. Each service application
+demands its own environment. Maybe it's a specific version
+of an operating system, or multiple processors
+and disks that they need, or maybe it's specialized
+configurations or things like that. Combining these services on
+the same host is difficult. Part of it is because of
+those different requirements. But then also they might have conflicting demand and
+incompatible loads, so they might interfere
+with one another. On top of that, upgrading or commissioning of service
+is very difficult. You might have a
+shadow server machines for debugging and testing, and complicated
+changeover tactics. The solution for all of this that emerged many years
+ago, was virtualization. This is about decoupling the operating system and the service from the
+hardware itself. It also allows you to
+multiplex lightly use services on common
+host hardware. It can also help with migrating services from
+host to host as needed. Then the last one says introduce new OS service pairs as needed. Commissioning new services, testing upgrades of
+existing services, and just experimental usage. This was the key reason
+for virtualization. What is a virtual machine? A virtual machine provides an interface to software
+that's running, that's identical to the
+underlying bare hardware. It has the view of all devices, and interrupts, and memory, and page tables and so forth. A virtual machine
+operating system known as a hypervisor or virtual
+machine monitor, creates the solution
+of multiple processors each capable of
+executing independently. There's no necessarily sharing except via network protocols, sharing between the
+virtual machines. Clusters and SMP can be
+simulated with this. Showing a view of different
+layers in a computing system. Bare metal is where that's, think of running a
+traditional application, an operating system
+directly on the hardware. You can have the hardware. You have the operating
+system layer that provides CPU scheduling, memory management,
+has a network stack. On top of that,
+you have some sort of operating system
+distribution, which has all the
+binaries and libraries. Like Ubuntu, or Arch Linux, or Windows 7, provides the file structure
+and maybe it's using APT, for package management, and that it has some commands
+like LS is in slash bin. Then on top of all of that,
+you run applications. That's bare metal.
+The challenges, as we talked about, were
+things like resource wastage. You might be only using
+part of a server, so it's desirable to run multiple applications
+on the same server. But applications might need
+different operating systems, they might have
+variable workloads, so they might compete
+for resources, and applications might have
+conflicting dependencies. Maybe one application
+needs Python 2, another one needs Python 3, and sometimes these dependencies
+are complex to resolve. With virtualization, here's
+the view of virtualization, it's running a software layer, the hypervisor, that makes it possible to run multiple
+independent operating systems. Maybe in one side
+I can run Linux, and the other I can run Windows, or maybe it's two different
+distributions of Linux. The challenges of bare metal, whereas this resource wastage, and then the problems that existed when wanting to
+run multiple applications on the same server
+that's been solved with virtualization is what we talked about the needing different
+operating systems, variable workloads,
+conflicting dependencies. Problem with virtualization is it is still potentially
+a little heavy weight. It's got CPU memory disc
+for extra operating system, full set of binaries. It has some overhead. The operating system assumes it's running directly
+on hardware, and so this interface
+layer does that overhead. It's gotten a lot better with some modern hardware support, but it's still a thing. This brings us into
+what about containers? You might have heard containers. What they are is. If we didn't need different
+operating systems. Maybe it's just I need different
+distributions of Linux. This allows us to introduce isolation mechanisms
+into the operating system. This has been around for
+decades, Shrut, 1982, some early containerization
+capabilities in the early 2000s. LXC required, no
+patches to the kernel. It's getting more and
+more common as we go on, and it's certainly
+pretty prevalent today. The two key things are it needs in the operating system
+support for name spaces, like what resources
+and naming of those resources of processes. For example, file descriptors or IP addresses, and
+things like that. Then a C group or control group. Groups processes and allocates resources such as CPU and memory that the kernel enforces. Now just to wrap up, where is virtual
+machines computing. We'll see that
+there's data centers. These are big
+buildings that have a lot of space that are operated
+by the cloud providers. Inside of them they have
+lots and lots of servers. The Cloud providers provide a portal where a developer
+could come in and say, I need to provision
+a virtual machine, and it can get launched
+on one of these servers. Then users of that
+developer's application could come in over
+the Internet and access what's running on
+that virtual machine. With that, we're going
+to end the lesson here, and next time we'll get a little more into the
+data center fabric. Thanks.

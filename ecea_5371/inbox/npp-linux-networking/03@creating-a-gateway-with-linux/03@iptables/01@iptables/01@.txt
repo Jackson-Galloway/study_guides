@@ -1,0 +1,194 @@
+Now that we understand filtering
+and address translation, let's go over the utility in Linux that supports
+that capability. This is IP tables. IP tables is part of the
+broader net filter framework. Here's the address, if you
+want to go look it up. It's a bunch of user
+space utilities that could configure
+the Linux kernels filtering framework shown
+down here in the picture. This is just reminder that the kernel is the data plane has this packet
+processing capabilities, has some tables and
+functionality there. Then user space utilities
+which we're going to be using help program what's happening
+inside of the kernel. You might have seen some
+examples, but if not, here are several examples of IP tables rules that perform something that
+is genuinely useful. You can look at this and maybe it makes sense to
+you and it's so great. If not, well, what we're going to do
+is we're going to break down how these commands are structured and put it in the context of the functionality
+that is performing. The basic concepts. There's three main
+things to know about tables, chains and rules. We can read directly from the IP tables man page and we can see those three concepts as part of that description, IP tables is used to
+set up, maintain, and inspect the tables of
+IP packet filter rules. In the Linux kernel, several different
+tables may be defined. Each table contains
+a number of built in chains and may also contain
+user defined chains. Each chain is a list of rules which can match
+a set of packets. The commands that you'll see are going to generally follow this structure where
+we're going to see IP tables as the command name. Then what we're going to do, we're adding, removing,
+changing, whatever. It's going to be some form
+of how do we specify that. Then it's going to
+have the table, the chain, and the rule. We're going to work
+our way backwards. We're going to
+start at the rules. If you recall, rules
+in filtering are really just the match
+in action in pairs. A match on some
+criteria and then take some action such as drop
+or allow a packet through. Let's go over the
+basics of matching. Here is coming
+from the man page. We could specify
+things like -p,-- protocol and then specify a protocol that we want
+to match on, say TCP. We can match the
+source IP address, we can match the destination, We can match specific interface and specific output interface. Those would be some basic
+commands that you can or basic parameters or command line arguments that you can
+specify for basic matching. Then there's what is known as
+extensions to the matching. If you specify a -p,--protocol, then there's some protocol specific
+extensions that get loaded. For TCP for example. It's saying, great, we can now also match on the
+destination port. Then you can specify the port, you can specify a
+range of ports. What that looks
+like is the -p tcp, that's the basic, but then
+specific ones for it. Destinations one
+another is tcp-flags and these are the flag fields
+within the TCP header. You can match on those. Alternatively, we could
+say -m for module or --match module and you would specify what
+module you want to load. This allows you to match or
+load some match extensions. Shown here are a
+couple of examples. The con limit for
+connection limit, we can say -m connlimit. For this particular module
+we want to get loaded. Then we want to say if the
+connection limit is above 16 or the mask is 24, then we're going to match
+on this particular rule. Or if we're doing connection
+tracking contract, if we say the ctstate
+connection track and state is in the
+established or related state, then it's going to
+match this rule. These are the general structure for how do you
+write the matches. You can put together several of these into
+one long expression. Then you pair it with actions. Actions would take the form of -j or --jump to some target. The default targets
+are accept or drop. There's some extra
+ones, -j DROP. You would have your match and then the action is
+-j DROP for that. There's also some
+extension ones here, there's reject, this would REJECT with a
+icmp-port-unreachable. It'll actually send a
+response to the sender. You can do logging. We can say -j LOG and that will have its
+specific parameters. We'll use this nating
+for source and destination nating to do some translation
+and masquerading to also do address translation. Now as a reminder, we talked about tables,
+chains and rules. Those rules would be that
+part of the command. Now let's look at tables and
+chains and what those are. There's four defined tables. Filter, which is
+the default table. Nat, which is the
+table that's consulted when a packet that creates a new connection is encountered. Mangle, which is used for specialized packet
+alteration and raw, used mainly for
+configuration exemptions from connection tracking. We'll focus on
+these first three, but let's see where
+they fit in though. First, let's zoom
+out to understand how a packet traverses
+the Linux kernel. It comes in the device driver, it's on the receive function, and then it gets
+passed and it goes through this pipeline
+of processing. If we zoom in on the IP
+layer part of the handling, we could see that there's
+these different hook points. This is where these various
+tables and chains reside that consist of where
+we're going to do all these decision making
+for looking up the rules. Keep these different
+hook points in mind. But if we go through, we get a packet,
+that's IP packet. Before we even do any routing to decide is this a
+local one or not, we're going to do
+pre-routing hook. Then we come to do
+this routing decision. Is it input or should
+it be forwarded? If it's input, it'll
+come to the input hook. Like it's local, meaning it's an
+IP address that's associated with
+one of the devices on this node, this host. If not, we go to the
+forwarding hook where it goes through the
+forwarding packet processing. Then it goes to the
+post routing hook before being send out. The application
+would be above this, so shown up here and would
+come down and then say, now I need to send this
+particular packet out. It'll go to the output hook and then the post routing hook and keep going.
+There's four tables. Keep that in mind. We'll
+get a little more into that and then defining
+what a chain is. Chain is just a set of rules that are
+evaluated sequentially. Rules can be terminating
+or non terminating. If you recall the -j
+or jump to a target. The target can be user defined chain other than
+the one this rule is in. For example, Rule 3 it's
+jumping to Chain 2. It could be one of
+the special built in targets which is to
+decide the fate of the packet immediately or
+one of those extension ones. This built in ones would be
+like ACCEPT and DROP, sorry. Coming back to this, so that's what a chain is. It's a set of these rules that
+we sequentially evaluate, and if it doesn't
+match the first rule, it goes to the second
+rule and third rule and if it match this and
+the jump action is this, then we would start evaluating each of the rules in that chain. Ultimately it says
+ACCEPT or DROP, then it stops processing
+through the chains. At each hook point that we talked about, there's
+predefined chains. We can see in this picture, which I'll zoom in on, we can see that as part of
+pre-routing right here, there's the mangle
+table, nat table. As part of forwarding, there's the mangle table and
+filter table, and so forth. If you recall, filter, nat, mangle, those are our tables. Each of those tables consists of multiple chains and the chains are named for their hook point. We can see the chain here is called pre-routing as
+part of the nat table, as part of the mangle table. The chain is called input as
+part of the mangle table. It is called input as
+part of the nat table, it's called input as part of the filter table, and so forth. Each table consists
+of multiple chains. Chains are the
+sequence of rules. Now, hopefully it's
+starting to come together. Now we specify tables and
+chains as part of this, each of the IP tables commands. We say -t<table> to specify what table we're referring to, and then -a, then the chain. A for add. If we're deleting we would
+have a different command, but you would specify the chain. Now let's look at a
+couple of examples. We say iptables -t
+filter -A FORWARD. This is saying this rule
+that we're going to specify applies to the forward
+chain of the filter table. Now, filter is the default one. If I don't specify
+it, it's assumed. This is the exact
+same set of commands. The second one is
+saying in that table, and within that table, I'm specifically referring
+to the pre-routing chain. Then I'm going to specify
+a rule after that. Now, let's revisit
+these examples. Here, look at what is the table, what is the chain, what is the match condition,
+what is the action? Take a second, look at this. Can you actually pick this out? For the first one,
+what's the table? Well, it's not specified. If you recall, it would
+be the default one, is -t filter that's the same, so it's the filter table. The chain, it's adding a rule to the forward chain of
+the filter table. Now, what is it going to
+do? What's the match? It's going to match when
+this condition is true. It's saying I want to
+load the module state. State has a specific parameter where it can say
+--state ESTABLISHED. When I match some state that's being tracked
+by this module, it's either established
+or related, then this match
+condition was true. Then it goes to the action, and this would go
+to the default or the built-in action of ACCEPT. Let's look back at the
+picture real quick. Packet comes in, it would exist
+in this table right here. Why that's important to
+really have this picture in mind is because this would not apply to traffic that's destined for this
+particular host. You might add this
+rule and then say, why is my rules not working? Well, this is why,
+is because you have to understand the
+flow of traffic in this. That's where understanding
+the specific tables comes in. This would not apply to
+traffic in destined to me. Let's look at the
+next one IP tables, so it doesn't specify the table, so that's the default
+filter table. It's going to have
+the input chain. Then the match condition
+will be -p tcp --dport 80. The TCP protocol which loads protocol-specific
+extra options, and I'll say the
+destination port of 80. If that's the case,
+I want to drop it. The next one set the input
+chain, default filter table. It's going to match anything
+coming from the input. Anything coming in on eth1 device matching the
+source address of 10.0.0.0/8. What it's going to do
+is going to jump to the log which has some extra things and says
+specify a prefix there. All of that is an overview. What we're going
+to do is going to allow you to practice
+on your own. Provided is a GitHub
+repo which will be linked in in Coursera, if it's providing
+a vagrant file, we're going to be able to
+launch a virtual machine. We're going to launch a
+container lab set up, which is going to have
+this specific topology. We're going to set up
+two external nodes, a gateway and two
+internal nodes. Then we have a Read Me that goes through a set of commands that you can
+go and try on your own. Launch the container lab, go through some of
+these commands, and then try some
+different ones on your own and with the basics
+that we give you, like how to send the traffic, how to inspect it and
+things like that, try some new commands
+on your own and see how they actually work. With that we'll
+end here. Thanks.

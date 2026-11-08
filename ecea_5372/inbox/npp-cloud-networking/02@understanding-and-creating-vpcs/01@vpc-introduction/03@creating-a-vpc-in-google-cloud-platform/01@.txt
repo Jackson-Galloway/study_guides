@@ -1,0 +1,312 @@
+Let's get started. At this time, we're going to learn how
+to create a VPC in GCP. Last time, we learned
+what a VPC is, a virtual private cloud. That's where I can
+create this partition, this isolated unit
+of an infrastructure and be able to create
+stuff within it. We talked in the
+abstract last time. Now we're going to get it to
+show how it's done both in the console and then what
+it looks like in Terraform. This is what we're
+going to create. If you recall, we got the VPC, it's this outer container,
+this representation, this subtraction of
+our infrastructure. I can create subnets within that that have a particular
+IP address range. I'm going to create
+just one subnet here, but you can create multiple. Within that subnet, I'm going to create a
+virtual machine, and it will be assigned
+an IP address within this subnet's IP address range. We're going to also specify that the VM is going to have
+an external IP address. In some cases, I might just want no external IP address
+and only an internal one, maybe it's for some
+backend services, but we're going to give it
+an external IP address. Then I'm going to
+create a firewall to allow my ping traffic or ICMP, my SSH traffic, which
+comes in on TCP port 22, and then some custom
+traffic as well. Let's now walk through building
+that in the GCP console. I'm going to create a VPC with a subnet and then
+I'll create a VM. Let's go to the console, and normally we
+would, start here. I can get to VPCs through this navigation or I
+can start typing VPC, and it'll come up. Either way works,
+and you see I got a couple of I already created
+for some other stuff. Then you also see this default. That's one that Google
+creates by default. When we created a VM
+in the last module, I didn't specify anything
+with networking. It just used this
+default network. Let's go ahead and
+create a VPC network. I'll give it a name mod2-vpc1. Then within that, I'm
+going to create a subnet. We can either do custom, which allows me to
+define a subnet, which is combined to
+a particular region, and I get to define what it is, or I can say automatic, and like Google, create one
+subnet in every region. This is what it would do
+if I clicked automatic, it'll do all of those. We're just going to create
+subnet in a single region, so mod2-sub1, and we're going to say
+it's in us-central1. Now we're going to give
+it a IP address range. I'll do 10.0.1.0/24 so that it can fit up to the IP addresses for
+the VMs it creates, will be 10.0.1.2,.3,.100, whatever it is, but it'll
+be within this range. Then we're going to
+ignore firewall. For now, I'm going to come back to that and create
+those manually. Create this VPC. I
+missed something. I didn't name my
+subnet, mod2-sub1. I guess when I
+clicked on the button to show what it does if it was
+automatic, that went away. 10.0.2.0/24. It doesn't really
+matter, we're not building. I already have. Well,
+let's create two of these. Create two subnets. This will be subnet 2. Actually, let me just
+delete this one. What had happened is I got cute and started clicking
+some buttons. I had the subnet and then had this extra
+form which had empty. This is what it is to fill out. I deleted that other one, so we only have one
+subnet being created. I ignore the firewall rules, and I'll say create. The beauty of the cloud
+is you can make mistakes, you can delete
+things, change them. It'll all be fine. Now,
+while this is creating, it's creating both the
+VPC and the subnet. It's created. You can see the
+subnets within it, 10.0.1.0, and other
+information about it. Let's go if I wanted to
+create another subnet, I could just click "Add Subnet" and the same forms can exist. Now I want to go create a VM. I don't have anything running, so let me create a VM instance, and I'll give it
+a name mod2-vm1. Go to have in us-central1, and I'm going to put
+it in the A region. We've already gone through
+all of this before, but I'm going to choose
+the machine type. The series, the category
+is E2 that says low cost. Then I'm going to, within
+those, choose the micro. It's just different amounts
+of resources that exist. For what we're
+doing, we don't need more than one quarter of a
+CPU and a gig of memory. Well, it looks like I
+have to fix this and choose which version
+of Debian I'm running. There's other choose
+your own flavor of whatever you want. Select as an image. At
+some point in the future, we'll show you how to
+create a custom image. We're going to then go
+under advanced options. This is the new part. Main thing we're going to do
+is look under networking. Previous time when
+we created a VM, we just left this
+all as the default. What we're going to do
+this time is actually say, I want to use a
+specific VPC network, I want to use the network, put that VPC inside
+of this subnet. If I had more subnets, they would show up there and I could choose which one
+I wanted to go in. Next thing I can look at
+for the internal addresses, I can do things like reserve
+an internal IP address. It chooses specific one, but we're just going to
+let Google choose it. I can also specify if I want an external address or not. Likewise, I can get a specific IP address
+that I get all the time. We're just going
+to use from a pool and allow Google to choose it. We'll get into, in
+a future lesson, the difference between
+premium and standard. You can also hover over these
+and there's learn more. We'll go into that. Other thing that I'll note
+here is this management. If you recall, talking about that metadata and
+the startup script, I can specify that
+startup script here and specify any other
+metadata I want. This was where I could do
+apt install, something. We'll do that manually
+if we want to use that. With that, we can
+click "Create", and this will go
+ahead and create this VM inside of that subnet, inside of that VPC
+that we created. We'll give this a minute. While it's doing that
+thing we didn't do is, we said we're going to
+leave firewall to later. the firewall is filtering. When filtering, as
+a general concept, it allows us to block or allow traffic according
+to some policy. If I'm running a web server, I want to block all traffic, except for traffic that's
+destined to port 80, where I'm running my web server. Maybe if it's a home gateway, I want my internal
+networks to be able to access the external Internet, but I want to block everything, that's initiated out
+from the external. That's just general filtering. These go a lot of times
+at the edge of a network, could be at the host themselves, so you can have rules. We're going to focus on
+this edge of the network because this is going
+to represent our VPC. How these are realized, if you're doing
+on the host or in a separate device is really around these
+match action tables. Traffic comes in,
+looks in this table. If it matches a particular rule, it then looks at
+what action to take. Here's showing a rule that
+all traffic destined to 1.2.3.0/24 and port 80, I want to drop that traffic. Then the actions could be
+drop, allow, whatever. It's a good practice to have
+a default drop and then only add rules that have an action other than
+drop, namely allow. Let's say I wanted to
+drop everything except for the traffic
+destined for port 80, I would put that rule
+and then say allow. This is how Google does it. By default, everything
+is blocked, and you have to go in and
+explicitly allow traffic. Let's go back into GCP, and we're going to
+add these rules. Now the VM is created. You could see this
+internal IP address is within that subnet range, and if I went inside of it, I could see more
+details about it. It tells me what network and sub network it's part
+of and all that. Now firewalls. I can do it one of two ways. I can look at Firewall. This will show all
+the firewall rules across all the VPCs I have, and you can see which VPC
+it's associated with. That's one way I could do it. Or I can go inside and I can add an explicit rule here,
+create firewall rule. Or I can go into
+the VPC networks, and see here's this
+VPC we created. I can go under firewall and then look at all the
+rules I have here. It's going to come
+up with nothing because we didn't create one. Let's create one now. We'll call it
+mod2-firewallrule1. We're going to put
+it it's associated with this VPC network. The target tags, I'm going to say all instances
+in this network. One thing you can do,
+which we haven't gone over is you can tag VMs, specify a VM and give it
+a tag, like, backend. Maybe you call another
+tag is front-end. Then maybe I'll
+say for front-end, this is a specific rule. We're just going to say this
+applies to all instances. Next, I can say source filter, so I can filter on
+the traffic and match on what the source
+IP address is. Here we're just going to say we're going to accept
+traffic from anywhere. Then the last piece is what protocols and ports
+I want to allow. I can do allow all. That's probably not a good idea. We're going to explicitly
+talk about allowing port 22, and that's SSH and port 1234, which is going to
+be a custom one that maybe we're running
+a custom application on. I'm also going to say I want to allow ICMP traffic
+to get through. Let's go ahead and create
+that firewall rule. Great. Now, it is
+going to show up, and there it is. That's how you go about creating VPC and a VM and firewall rule. Next, we're going to
+talk about Terraform. We talked about Terraform, it's this infrastructures code framework that allows me to specify in a textual manner what I want my
+infrastructure to look like. There's all these
+different documentation for all the resources
+we're going to need. If you recall, the
+resource is one of the types of
+blocks we can have. Let's go back to the browser. Here's the Google
+Compute network. This is the VPC. What's cool about
+this documentation is they give you some examples. If this meets my needs right
+out of the box, great, I can just use that
+or further down, it gives me all the different
+fields that I can include. If you read through these, they're going to match
+up pretty closely. They might have a different
+naming or whatever, but it's going to
+match up to what you can do in the portal. Below the arguments further on the page is these attributes. These are things that
+once they're created are values that Terraform
+itself will fill in. We can look at the documentation
+for a compute instance. Same thing. It shows
+you some example. You can see it's defining the name and machine
+type and location, what zone it's in, the network interface,
+just say to put it on the
+default VPC network. But we're going to be able
+to customize these again, all these arguments
+that are possible. Let's look at the code. Again, I'm going to use VS Code. Again, we have this provider.tf. This is all what's
+in that GitHub link. Well, so I didn't show
+that yet. There you go. We're going to walk
+through Terraform. We're going to create
+this exact same setup. All of this code is
+available on GitHub, and this is what we're
+going to show right here. Here's this directory,
+mod2-demo1, main, and provider. The provider is Google, and recall it references this JSON file that I downloaded as part of creating that service account
+and then adding a key. Then I'm going to give
+it some defaults. Let's scroll through this. First, we're going
+to create the VPC. Remember, the resource block has a type and that's the different types that
+Google provider defined. Then the extra element here is some identifier,
+some name for it. Then these are the
+different arguments that were documented. We're going to create a VPC named tf-mod2-demo1-network1, and we're not going
+to auto create. This was that
+little radio button between automatic or custom,
+we're going to do custom. Next, we're going to
+create the subnetwork. Again, here's the
+Google resource type and fill in the parameters
+like the IP, the CIDR range. This is defined in the
+subnet to be 10.2.0.0/16, and it's going to
+be in US-central1. To specify what network
+to put this in, we're going to reference the google_compute_network.ft-network1, so that's this element. It's this element and it's going to reference
+the ID field. That was one of these attributes that Terraform will fill
+in once it's created. This now allows me to say, put this subnet
+into this network. Next is the firewall rule. We're going to say
+what VPC it's part of, give it a name, and then we're going to
+say what to allow. We had those two
+different fields, one was allowing TCP traffic, and I had to specify
+ports 22 and 1234. That's what this looks like. Then the other one
+was ICMP and then we specified the source
+range is 0.0.0.0/0. I've noticed you need the VPC to be up before you can add a
+firewall rule to it. I noticed sometimes
+Terraform didn't really detect the dependency so
+I made that explicit. I said, this resource
+depends on this google_ compute_network.tf-mod2-demo1-network1
+being created. That's explicitly
+defining that dependency. Then the last part
+is creating the VM. We went through some
+of this, machine type, e2-micro, put in central1-a. This is the new part. Before we said the
+network was default. Here, we're going to say to
+be in this network1 and this subnet1 that we defined above
+and we're going to say, I do want a public IP address, and it's going to, when you specify it like this, you get an external IP address and specify that we're
+in a standard tier. Then also recall I needed that startup script or not needed, but I could optionally add a startup script and
+so when it's created, it's going to install
+some stuff for us. With this, well, then that's all the code. Now, we can do init, plan, apply, and then
+see what happened. I'll go back to console. This is that same
+directory, terraform init. Great. If it didn't
+have the provider, it would have installed
+that terraform plan. This will show me
+all the changes that it's planning to make. I can scroll through and
+look at some of these. We can see it's creating
+a network, subnetwork, and then terraform apply, and I want to say yes to this. You could check on these. Some of these are
+known after apply. Those are those attributes. Here's the ID that
+we were using. Let's give this a moment. It'll be creating. We saw that takes a
+little bit of time. It's getting close. Now, so you can see it created
+network1, subnet1, fwrule1. Now, it's down into
+VM1 that's creating, and all of these should start showing up
+inside of the console. There we go. They're all there. Let's go back into the
+console to see if they exist. Fingers crossed
+that it all worked. There we go. There's this
+VPC that I just created. I can look and see it
+created that subnet. Now, let's look at the VMs and fingers crossed
+that it created the VM, and there's that VM
+that I just specified. You could see it's within that address range
+that we specified, and it got an
+external IP address. With this, we now look at how do I know
+that it actually worked? How do I test the firewall's
+working as expected? This first tool I can
+use is something called Netcat and that was
+what we had installed. This is a simple utility which reads and
+writes data across a network connections
+using TCP or UDP. On the server, I could say
+something like nc -l -p, specify a port number, listen on port 1234,
+and on the client side, I can do nc, whatever the IP address is, whatever the port is, and then I can either say
+type it on standard in or I can type something in
+like a message from echo. That's one utility. Let's actually do that. Let me get the
+external IP address. Let me SSH into this machine. If you recall, I can click that button or I could
+have gone into G Cloud or into my terminal
+and used the G Cloud interface to do either of those. Now, it's transferring
+keys into it, makes it a lot simpler, use the Google authorization. Right now, I have access. What I can run here
+is I wanted to run for local nc
+listen, on port 1234. Now, I'm listening on port 1234. I can come over
+into my terminal, and I can say nc, give it that external
+IP address, and 1234. I could just type random
+stuff and you can see it showing up here. That's open up a connection, and you can see it went
+through. That's great. Now, let's try to
+open up a port 1235. Still valid to do. Let me try to do that and now
+start entering random text. You could see it's not working. Over here, it didn't
+come through, because it never actually
+made a connection. Why that is is because the firewall is
+blocking port 1235, but it's allowed
+1234 to go through. That's just different ways. You can look at the nc utility, the main page to see all the
+different options for it. Another tool that's really useful is called
+socat for socket cat. How it works is you can specify. Here's the utility name, and then you specify
+what the source is, and then common-separated
+list of options, what the destination
+is and again, comma-separated list of options. If I just want the source
+to be standard in, like we just had with
+the nc or Netcat, I would use dash. I can also specify it to listen
+on a tcp port like that, or I can open SSL. With destination, I
+can do the same thing. I use the dash for standard out. I can use tcp4 or tcp6 and that's saying to
+connect to some endpoint. Let's see an example of
+this if I specify socat, running this on the source. This would be my server. Let's do this one first.
+Socat tcp4 listen, port 8080, and then put
+everything out on standard out. Then this one, I would
+run on a source, socat-tcp4, whatever
+the IP address I want to connect to 4:8080. I would run this, and
+that's effectively, very similar to what we
+just showed with Netcat. But some other examples, you can set up as a proxy, where I can specify this
+chain of different utilities, so I can say, take standard in, connect on Machine
+A, run this command. Tcp 1234 and port 1234, I can then connect
+that to Machine B, where it's listening, and
+then it would connect to its output on tcp port 1234, probably, have to give it
+an IP address in there. Then on Machine C, the IP address of
+Machine C give it say, listen on that port. You can set up as a proxy. This is a little incorrect code, but it's close or it can
+run as a echo server. I can specify the same thing
+on sending to a server. But now, I can also say
+things like, instead, I want to listen on this and
+where I want the option, I want to fork the cat
+commanders as part of my output. There's different things
+that you can do like this. In the interest of time, we're not going to
+run through these. You can play with
+that. We've ran through the example of nc, showed how it was
+blocking things. But you do some
+socat on your own. Try different ports
+and things like that, like we did and be sure
+to run Terraform destroy. You don't want to be charged
+for all these resources. Let me say terraform destroy, and we will be good to go. Another thing you're going
+to want to play with is maybe in the console, you want to change something up a little bit and then
+re-run Terraform apply, and see what happens. See that it's
+detected, like, hey, you added or changed
+this firewall rule, and so I'm going to get it back to what I expect it to be. When I say I, Terraform
+is saying that. With that, that ends our lesson
+on creating a VPC in GCP, doing it through the console, and then doing it
+through Terraform. Thanks.

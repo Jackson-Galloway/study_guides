@@ -1,0 +1,217 @@
+All right, let's jump into some basics for
+network security. And so this is going to be the different
+techniques that we'll see come up in those various solutions that we
+discussed in the last video and that we'll go through in detail
+in the subsequent videos. All right, so
+starting with confidentiality. So a reminder what this means is what we
+want is to be able to send a message and keep it secret from anyone
+other than the recipient. Now, to understand this, let's first talk about
+a little bit of terminology. So when we say there's two
+parties that are communicating, we commonly give them names,
+Alice and Bob. So you'll see that a lot in
+kind of network security. Then any attacker we'll see
+will also be given a name. And so here we're concerned
+about eavesdropping, so we name the attacker Eve. And so some other names you
+might see might be Eve or Mallory or Trudy and
+it all depends on the context. But in general,
+there's some third party that's not part of that communication and
+shown as the attacker. We then want to be able
+to transmit the data. And so in this, the unencrypted traffic, the one that is what Alice is sending
+directly is what we call plain text. So that is what we don't want Eve
+in this example to be able to see. So we then use an encryption algorithm to
+change that into what we call ciphertext, which is, we don't mind if Eve can see
+that because it has to them no meaning. But then through a decryption algorithm, it can be converted back
+into plain text for Bob. And then the last kind of
+bit is some information that is needed as part of this encryption and decryption process
+are something known as keys. So here it's showing that Alice
+has an encryption key and Bob has a decryption key and those
+are used as part of those algorithms. So we'll go over a little
+more what those keys are because there's a couple
+of different types. And then you might see in
+the bottom left this kind of terminology where we might use M to
+indicate the plain text message and then K subscript A of M parentheses M. And that's indicating some ciphertext
+that's been encrypted with key KA. And then to decrypt it, you can take
+that message, this ciphertext message, the KA of M, wrap that, and
+now we see KB being applied to it. So that's applying key B or key B, and then we can get back to message. All right, so
+now in terms of what these keys are. So the first type of encryption
+is symmetric encryption. And this is where there's a shared key. So all a key is some bit pattern that was generated through some mechanism. And in this case, Alice and
+Bob share this key and that's used in both encryption and
+decryption. So the properties of this,
+when we have symmetric encryption is that it's fast
+to encrypt and decrypt but the challenge here is that you need
+a way to be able to share this key. So as a trivial example, we're
+going to use XOR as our encryption and decryption algorithm. So we're going to have a shared key
+with this bit pattern as above. And let's say we want to transmit
+the word Eric in ASCII characters, and then we want to be able to receive it. All right, so
+let's look at just the first character. If we do it block by block,
+where each block is eight bits and the key is also eight bits,
+and the algorithm is XOR. So in hex, the character e
+in ASCII would be in hex 45, or if we've wrote it out in binary 0100 0101 and so that's the capital E. And then we can XOR it
+with the key as down here. And if you recall, XOR one,
+XOR with one is a zero. Zero XOR with one is one,
+one XOR with one is zero, zero XOR with zero, zero,
+and so forth, all right? And so what we end up with
+is the hex value 92 or 9,2. And if you convert that to ASCII,
+that would be that apostrophe, all right? So that's on the encrypt side. So if we continued all the characters
+these would be the symbols, the ASCII symbols that
+would be transmitted. And then we can apply XOR. So now we take that 92 or
+the apostrophe and run it through this decryption, which is in this case
+xoring it with the key. And we can see that it ends up with 4,5 or ASCII character E, all right? So you can see this is a simple example. This wouldn't be too secure,
+but a better example is a protocol called or
+an algorithm called AES. This has been a standard
+from NIST since 2001. And you can use 128, 192, 256 bit keys. And if you go through
+the details which we won't, it's similar in spirit to kind of XOR, but a lot more complex operations
+where we're substituting bytes and shifting different rows and
+mixing up the bytes of data and using different parts of
+the key in different areas. But it's basically you
+take the plain text, run it through this algorithm
+with the key, you get ciphertext, and then you run it in reverse and
+you can get the plain text. All right, so the other kind of encryption
+is called asymmetric encryption. And so this is where one of the parties, in this case it's Bob,
+will generate a key pair. One, Bob will keep private, and
+then the other one, Bob can share. With anybody, it doesn't matter who
+has it, so it's Bob's Public key. And what this can do is the way
+these algorithms are constructed is you can use Bob's public key to do
+the encryption to create the ciphertext. Now, the only person that could decrypt
+it is Bob, who has the private key. So you need that private
+key to do the decryption. Now, this is slow and
+we'll see it can only really handles shorter messages, but
+it's simple to share the key. You can share this public key with
+anybody, doesn't matter who has it. So the common algorithm, or a popular
+algorithm here is something called RSA for the encryption and decryption. So given a public key and a private key, n and e and n and d. So e for encryption, d for decryption. In that case,
+message m is just a bit pattern that can be interpreted as an integer. So to encrypt the message, you can take the message,
+which is just an integer, raise it to the power of
+whatever that key is, e, and then do mod n and
+that becomes the ciphertext. And then you do a similar process, you take that ciphertext,
+raise it to d, and then do mod n. And this works because of the properties
+of mod and how n, e, and d are chosen. And this is briefly
+illustrated on the next slide. So here is an example. So let's say, as part of this
+generating what e and d are, you choose some values, p and q, and
+that ends up kind of resulting in n, which is 35,
+which is the multiplication of those. And then another factor that you use is z,
+which is p-1 and q-1 multiply those together and
+you get 24. So the end result, if you were to go through the process, you get an encryption key or
+the e is 5 and then d is 29, all right? So with those, let's say we're
+encrypting an 8 bit message. We have this bit pattern right there. If we convert that to a number,
+an integer, it's 12. So then we do 12 raised to the power of 5. And this is what we would get, 24,832, and then mod n. So since n was 35,
+we mod it and we get 17. So now we can take in the decrypt side,
+take 17, raise it to d, and
+you get a really long number, and then mod that by n and
+then you get 12. And you can see that these two
+values are the same, and so this is just an example of going
+through the math and how it works. And I know we glossed
+over kind of how e and d. So there's certainly
+documentation out there that you can look at to
+get the concrete details. But this gives you an overview
+of kind of why it's slow, why it only works for
+smaller bit patterns, because you have to do this. All right, so
+now we saw these two properties. We have this shared key, which is faster,
+can handle longer messages. We have the public,
+the asymmetric encryption which can handle shorter messages, but
+it's easier to distribute. So a lot of times you
+can use the asymmetric encryption to be able to
+exchange a shared key. And here it's being called the session
+key, because it's just created just for the communication between Alice and
+Bob for right now. So the part one of this is that Bob or that Alice picks some session key, and then uses Bob's public key to
+encrypt it and send to Bob. And then Bob is the only one That
+can decrypt it with its private key. So that the wording here, there's a typo,
+that should say public key, but you can see it in the picture. It's using the Bob's public key, encrypted session key and
+now Bob has that. And so now, since they're the only
+two that know the session key, because Alice picked it, and
+then Bob was the only one that could decrypt the message that included
+it, now they can use a shared key and use symmetric encryption in
+the actual longer communication. All right, so
+the next property is message integrity. So here, we don't want this attacker, we don't want the messages
+to be able to be modified. So in this case, Alice sends something,
+sends a message, but then what Bob is actually
+receiving is a different message. And so we need a know to be able
+to ensure that at a minimum, Bob knows that it's a different message. So now, starting off,
+we're going to use hashing. So a hash function is something
+where you can calculate a fixed length digest from
+a variable length message. And a desired property here is that,
+it's computationally infeasible to find another message
+that would result in the same digest. Now, it assumes that the message digest is unmodified. And because of this, this is something
+that's useful in integrity checking, like software downloads. So you go to a website, you're downloading
+some software on that website, they'll list out some
+hash number that digest. And so that you can, when you download it, you run the same hash
+algorithm to then check. So here's your downloaded software,
+you run that same hash on it, compare it to what that digest is,
+and if they're the same, then there wasn't any
+corruption in the data. All right, but this transfer
+the message digest is a problem. And so here,
+this message authentication code. Particularly hash-keyed
+one removes the assumption that the digest is known or unmodified. And so here the sender and
+receiver share a secret key, and that secret key is used as part of
+what's being used in the hashing, right? So here we can append well, so
+this is how you would calculate it. So you would take a hash of the key, concatenated with the message,
+and then you hash the key, concatenated with that hash,
+and that's what you can send. Now, it would be challenging for anybody to message or
+modify both the message and this Mac code,
+this message authentication code, in the same way such that now when you
+perform this calculation of hashing it, comparing it to what you received and
+saying that they're the same. All right, so this allows you this
+provides that kind of protection where it would have been previously
+easy to modify both the message and the digest if you're in
+the middle of that communication. All right, so
+the next thing is a Digital Signature. So this is where you
+can use asymmetric keys to enable checking that the message hasn't changed and that it came from Alice. So here Alice would use
+her private key to "sign", encrypt effectively, and then Bob uses Alice's
+public key to verify and it looks like this,
+that, you're using this message comes down here,
+it gets transmitted. Now, to ensure that it comes from Alice, Alice would use her private
+key to encrypt that message. That creates the combination of the hash
+and encrypt will create this signature. And since the public key widely available, can be used to decrypt that and
+perform the hash, only Alice's private key would have been able to be one that could
+generated the actual signature. because if it was anything else, when you went to use the public
+key to decrypt it and then compare it with
+the hash of the message, it would be kind of different. It would be different. So that's a digital signature
+it's basically using the property of asymmetric encryption, but
+doing it a little differently, where you're using the private
+key on the encryption side. But this allows you to say, this only could have come from Alice. All right, so
+the next thing is Authentication. So we want to ensure that
+you're only communicating with who you expect to
+be communicating with. And so, as an illustration,
+say we have Not Alice, and Not Alice is distributing a public key,
+pretending to be Alice. And Bob gets that and says,
+this is Alice's public key. Well, now it doesn't matter what
+we saw in the previous slide, because Not Alice could
+use that private key. And then Bob would think,
+yeah, this is Alice. All right, so
+this is where authentication comes in. So to do this, we use something
+called a Digital Certificate. And this is something that combined
+a public key and an identity. And the definition of identity
+depends on the context. But shown here is something where
+you have your name it's Alice, the Organization, whatever,
+AliceCo in the USA. The combination of these get
+bound together of the extra identity information and
+the public key get bound together. And then Bob could validate when
+I'm using a public key well, this extra information
+says that it's Alice. All right, so one problem with that
+is the integrity of the certificate. So an attacker could
+modify this certificate. So put in Not Alice's public key, but keep the rest of the information and
+still pretend to be Alice. So to solve that,
+we use a Certificate Authority. And this is some trusted
+authority that can verify Alice's identity and
+use its own private key there, that is the private key of
+the certificate authority to sign. And if you recall,
+what does it mean to sign something? That means that it only could
+have come from that if you have the public key of that entity,
+the certificate authority, well,
+then when it signed something, it could have only been signed
+by that certificate authority. Now, because it uses that public
+key of the certificate authority, anybody can verify
+the digital certificate using the certificate authority's public key or
+CA's public key. Now, of course, this means that the CA that they have to
+have their public key has to be trusted. And how this is commonly handled
+is these are things that are like pre-installed in a browser. So there's some commonly
+accepted certificate authorities, when you install software, you do that
+kind of in a more manual process. But now what the power of that is,
+is Alice, so I don't have to pre-install Alice or
+manually do something. If Alice went to
+the certificate authority, was able to prove her identity to the CA, and how that happens is going to
+be in different contexts. And we'll show a couple examples
+later in subsequent videos. And then that CA says, yep,
+that happened, and now it signs it and now it's available to anybody. And now this is bound together and signed and verified by the CA. All right, so that ends kind of
+the overview of the basics. We'll see these in practice for
+various approaches to handling the security problems that we
+identified in the last video. All right, thanks.

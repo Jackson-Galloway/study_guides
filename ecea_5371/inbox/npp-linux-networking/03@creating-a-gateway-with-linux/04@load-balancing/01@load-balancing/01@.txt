@@ -1,0 +1,113 @@
+Now let's get into load balancing. So what is load balancing? So a load balancer serves as
+the point of entry for a service, and directs traffic to one of N servers
+that can handle the request. It's used both for
+scaling and for resilience, and it likely involves NAT. So just to kind of clarify all that, so
+shown here, we're running some service. So let's say we're running some
+web application that accepts individual requests. And for
+scaling purposes we can add multiple hosts because our services
+is pretty popular. And so now I want to be able for
+each given request, choose a server to handle that request. And maybe a different request comes in and
+goes to a different server. So it's balancing the load
+across the service. So, part of this is going to
+include a load balancing algorithm. So the client's going to initiate
+a TCP connection to the service. And some load balancer must select which
+server to forward the request to and establish the connection other end and
+handle the ultimate request. And this is where a load
+balancing algorithm comes in. And so this is important because you have
+a lot of different choices of algorithms, and you can choose them based
+on what fits your needs. An important consideration
+here is the server set. So that's which servers are part
+of the set to choose from. So the set is typically
+assigned statically. So you just add the servers, but
+it may include some liveness checks. So maybe the load balancer
+itself is sending out heartbeats to say are you still okay? Are you okay? Are you okay? And then keeping track
+of that in some table, which is the set of servers
+that it can choose among, and that kind of forms one of
+the inputs to the algorithm. Another important consideration is
+something called flow affinity. And so why this is important
+is because TCP is stateful. So, we need to ensure all packets
+from the same flow from the same (TCP connection) go to the same server. So the first packet,
+an algorithm will select the server. It'll use the IP of the server
+is called the VIP or virtual IP. And so it'll pick the VIP, and then subsequent packets
+all need to look in a table. So the first packet will come through,
+it'll use the algorithm to select the server, then it'll write
+into the table an entry that has a mapping between the source IP and
+port, and the VIP, the virtual IP. So which backend server it chose. All right, so why that's important
+again is now we have a TCP connection. So let me flip back to this picture. So we have client,
+it opened a TCP session, and that TCP session is going to be
+terminated on one of these servers. So it's going to have all those
+sequence numbers, the packet buffers, what's been acknowledged, and that's
+going to be all stored on this host. So the client always must
+talk to the same server. That's what flow affinity means. All right, so
+now getting into the algorithm. So let's go through a couple. So one would be source hashing. So for source hashing,
+for a source IP and port, a hash function determines
+the back-end server. So this balances connections among
+servers under the assumption that you have a distribution of
+source IP addresses and ports. So if you have a lot of clients,
+chances are they're going to have a nice distribution of source IP addresses and
+port numbers that they're using. It comes into the load balancer. The algorithm is going to
+pull that pair out, run a hash function on it, and
+then use that hash function. What's not really shown here is,
+it'll select from the set and that will choose which server. All right, so we're just hashing on that. Now this is stateless, which is one
+of the kind of main benefits of it. And this means that flow affinity is
+taken care of by the hash function. So whenever we have
+the exact same session, we'll always have the same source IP and
+source port coming from the client. So flow affinity doesn't need
+to be tracked, it just happens. A next algorithm would be round robin. So here a server selection iterates
+through each server in order. So the first connection that comes
+through, it would choose server one. Next connection that comes
+through would choose server two. Next connection it would choose server
+three, and then it would go back, and then the next connection would
+choose server one again. And this ensures a balanced load, assuming
+each request is roughly the same load. And in this case now, the load balancer
+needs to keep state for flow affinity, it needs to know when there's a packet
+that came in, if it looks in a table and says this particular flow was already
+chosen to go to server three. So the algorithm is basically start
+at zero, select from the set zero, that's the server that you're going to go,
+and then just increment next and mod it by the set length
+to be able to wrap around. And then each time this is called,
+it'll change, it'll pick the next one in the list. So that's round robin. And a third one we'll mention is
+something called least connections. And this adds a little bit of state so
+that's why we're mentioning it. So, here it'll select a server
+based on which server has the least number of active connections. So the load balancer here will
+track how many open connections. So, it's keeping a table for
+the flow affinity, and so it needs to keep that state anyway. So, it can count how many
+active connections there are. So this takes into account that some
+requests may be longer in duration, but assumes each connection imposes
+a similar load on a server. So maybe a client opens up one connection,
+TCP connection, but then is able to send multiple
+requests over that connection. And so if we end up with a lot of
+connections on the same server because of round robin,
+that would overload a particular server. So that kind of takes this into account. And so here we would look up which has
+the minimum active connections and then use that to choose the server,
+all right, and then kind of keep track of
+the number of connections in each. All right, so now let's step back. And then what we've been talking
+about is a layer 4 load balancer. Well, we really haven't distinguished, but we're going to imply that
+we're talking about layer 4. So,let's talk about the difference between
+a layer 4 and a layer 7 load balancer. So layer 4 only considers the network and
+transport layer headers. This is also called
+a network load balancer. Layer 7 load balancer also
+considers the application, for example HTTP, its header. So this is also called a web proxy. So for example,
+we might have some website and maybe for the page sign up
+we want to go to server 1, but for the page purchase
+we can go to server 2 or 3. So the layer 7 load balancer
+can allow you to route different kind of requests to
+different servers based on that. It's not either or,
+a lot of the times both are used together. So there was a nice presentation by
+Facebook about some of their internal architecture and they were talking
+about load balancing there. And interestingly enough,
+they're using IPVS, and that's exactly what we'll
+talk about next time. So they have different layers
+of load balancing here. So they talk about DNS, so
+they can load balance requests and direct them to the given data center
+that they want them to go to. Once they get to the data center,
+now they're using a network load balancer to load balance, and
+this is kind of quick. It's a lot simpler to load
+balance between a layer 7 proxy, which then they want this kind of
+scale out architecture for, which then will load balance between
+their kind of actual service. So I thought that was an interesting feel
+free to check out this presentation. They have both the paper as
+well as the presentation there. And this is a screen grab
+from that presentation. And with that we'll end here, and
+next time we're going to go into IPVS, which is the Linux framework for
+load balancing. All right, until then.

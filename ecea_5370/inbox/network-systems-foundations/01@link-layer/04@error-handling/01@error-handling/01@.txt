@@ -1,0 +1,187 @@
+All right, let's get into error
+handling at the link layer. So, as a reminder, the problem we're
+trying to solve here is the fact that we're transmitting signals over some
+physical medium, wired, wireless. And the assumption is they're not perfect, that there can be some
+of errors that happen. And in the digital world, what this means
+is that some bits might get flipped, might get flipped from a 0 to a 1 or
+a 1 to a 0. And so what we need, at the very least, is to be able to detect
+that an error has occurred. Better yet, if we can correct it,
+that's great. So one common approach to being able
+to detect errors is through parity. So shown here are just
+examples of two values. Well, it's the same value
+being transmitted, but in one case, one of the bits got
+flipped and it caused an error. And in the other case, it was correct. All right, so let me pull up a pen. So our goal is to detect if there
+was an error in the transmission. But how do we know if we just
+received these bits right here? I don't know if the 1 was
+actually intended or not. So what parity does is it
+forces every transmission to have an even number of
+1s by adding an extra 1 or an extra bit set to either 0 or
+1 based on the number of 1s in the data. So this would be called even parity. We can also, as indicated in
+the parentheses, have odd parity, where the goal is to make the transmission
+have an odd number of 1s. And so if a single bit gets flipped, we would be able to detect whether
+the transmission had an error or not by looking how many 1s are there. And if it's odd, in the case of even
+parity, we would say, all right, that's not what we were expecting,
+so there was an error. So, as an aside, let's look at the
+function of or the functionality of xor. This is a truth table shown right here. And so XOR is a logic operation. And so how to read this if
+you've never seen a truth table before is on the top right here. We have one of the inputs, and
+it has two different possible values. And then on the left,
+we have the second input, and it also has two different possible values. So in this case, you would say
+if the first input is a 0 and the second input is a 0, so
+0 xor 0, the result is a 0. Likewise, if the first input is a 1 and the second is a 0, 1 xor 0 is a 1. And so this tells the whole truth table. And if you're trying to
+do it kind of bit wise, you would just line the bits up and
+with 1, we know that's a 0, 0,
+XOR, 1 with 1 is a 1. 1 xor with 0 is a 1. 0 xor with 0 is a 0. All right, so why am I telling you this? Well, it's the function or
+the logic that we can use to easily count the number
+of 1s in an array of bits. So shown here is an example of four bits,
+1010. Visually, we can look at it and
+see that there's two 1s, and so we know that that's even. But if we were to either use code or
+logic, we can use this XOR
+functionality to check this. So we would do 1 XOR with 0, which is 1, and then 1 xor with 1 is now 0, and then now 0 XOR with 0 equals 0. All right, so that indicates to
+us that there was an even number of 1s in this bit string ring here. Now, if we look at another example that
+we can see has three, should be odd. Let's double check that using XOR. So one XOR with 1, we look at the table,
+we can see that that's a 0. Then we say 0 XOR with 0. Now that's 1, and
+then one XOR with 0 is now 1. And that's odd, all right? So now we know how to be able to
+calculate whether there's an even or an odd number of bits in some bit pattern. So let's go through a concrete example. And here we're going to use
+specifically even parity. That means that our
+transmission has to have an equal number or
+an even number of 1s in it. All right, so let's look at this. input data, that's the data that
+we want to be able to transmit. We would go through and
+determine by xorring each of these bits to see how many is it currently
+even or is it currently odd? And we can see that the data that
+we want to transmit ends up with 0 when we XOR all of them,
+meaning it's already even. So what we're going to do is we're
+going to add a 0 to the transmission. So now with that one extra bit,
+which is shown here at the end, we can see that the transmitted
+number of bits is going to be even. All right, so as another example,
+here's the data we want to transmit. So to calculate whether this has an even
+or odd number of 1s, we would XOR them. So we would 0, XOR, 1,
+XOR with 0 and so forth. And we can see that the end result is 1,
+meaning this value right here that we want to transmit
+has an odd number of 1s in it. So it's odd, so to make it even, what we're going to do is we're going to
+add a one to this transmission. So we take the original value and
+then we append on the value 1 onto it, making it this whole value,
+have an even number of 1s in it. So how do we use that
+on the receiving side? So let's say now we've
+received this value, and we want to be able to say,
+is this what was actually sent or not? So we would do the same operation. We would double-check,
+we would go through and XOR every single bit, including this bit. And if the end result is 0,
+we know it was correct, because that indicates this
+transmission had an even number, which both sides agreed to,
+that we're going to make sure that that's the case, and so
+this ended up being correct. Looking at the second example
+we had on the previous slide, we can go through the exact same exercise. We can XOR. All of these bits, including this extra
+parity bit and we would see the end result is zero, meaning that there's
+an even number of ones in here. So we can do this kind of manually. One, two, three, four, five,
+six, six is an even number. So our math is working. So that means this value was correctly
+transmitted and received it. There's no errors. Now let's look at this value. But let's say one of the bits flipped, but we don't know that
+this is actually flipped. We wouldn't receive a red zero or
+anything like that. So we would go through and
+we would XOR each of these bits, including that bit that flipped was zero. So what would be the end result is a one. There's now an odd number of ones,
+one, two, three, four, five. And so what that means is I was expecting
+it to be even, but it's actually odd. So I know it's an error. All right, so parity is great, but it's limited. So for example,
+if there's two errors that occur, you wouldn't be able to detect that
+because it's flipping two values, meaning it goes the first flip
+changes it from even to odd. And then the second flip would
+then change it back to even. All right, so a CRC or a cyclic redundancy check is a more powerful
+form of error detection. So cyclic codes are particularly
+suited to detect burst errors. And it's been adopted for
+the FCS field in Ethernet. So let's go through how to calculate this,
+and you might need to kind of look at
+this extra material on the web. I provide a link at the end of a really
+good website that overviews this. But we'll go through an example here. All right, so
+just kind of this shows the setup. All right, so
+D is the data to be transmitted and then G is going to be called
+a generator polynomial. And this is some value defined
+by the Ethernet standard. Then our job as part of
+calculating the CRC is to find these extra bits that we're going
+to add to it, which we'll call R. So that we're going to calculate R,
+where DR is what will be transmitted. And our goal is to make it
+find the value such that DR, which viewed as all as one,
+is divisible by G. All right, so the check would be then
+we've received this whole value. We also divide it by G, and
+if the remainder is zero, that there is no error,
+otherwise there was an error. All right, so let's go through an example. We're going to use R equals three for
+three bits. So not capital r but r bits. We're going to use the polynomial 1010 and we're going to use
+the data value 11101011. And our goal is to find R. Actually, this is incorrect. This is a zero. So ignore this last bit. But let's go through this example. So how we do this is here's
+the data to be transmitted and then we're going to start with R as zeros. And so this is going to allow
+us to determine what we need to transmit to make DR to be
+exactly divisible by G. So once we've done that,
+we can now start going doing division. And this looks like it
+would be hard to implement, but actually it's just
+involving an XOR operation. So it actually turns out to be a pretty
+straightforward algorithm to calculate, but to illustrate it,
+we show it as kind of doing long division. All right, so here's our data. Here's these R bits. Now here's G. All right, so DRG, and
+we're trying to find R, said initially to be all zeros and
+we're going to find the remainder. All right, so how we can do this division is if the value G can fit into this, whatever the bits that we're looking at, then the quotient is going to be a one. And if it can't fit into it,
+basically, meaning this needs to be four bits starting with a one,
+because this Is four bits. And we'll go through and
+we'll see examples of that, otherwise the value will be zero. And so modulo two division simply
+involves the XOR operation, all right? So first bit that would fit is
+once we get to here, and so that means this is our first bit,
+that's an zero one. Doing the kind of division operation, we put the 1010 here and
+then we XOR these two values. So zero XOR zero is zero,
+one XOR one is zero, one XOR zero is one and
+one XOR one is zero, all right? So then we carry the next or pull the next
+bit down, and so now we have 1001. And do we say this can fit into that? Yes, it can. So then that bits of one, we multiply that down 1010 XOR these values. So one XOR zero is zero,
+zero XOR one is one, zero XOR zero is zero,
+and one XOR one is zero. All right, so then this would be a case
+where even if we pull down the zero, this can't fit into, so
+G cannot fit into this value. All right, this is only three bits with
+that leading one, this is four bits, so it can't fit. So at this point,
+this quotient bit is a zero, all right? So then we would pull down the next bit, we would pull the next bit down
+to make it a one, all right? So let's look at where we left off
+instead of going through all of this. So we had this one right
+there that we pulled down. So this is where we left
+off is right there. So we now pull down a one. Now it fits do the modulo two division. So one XOR zero,
+one zero XOR one one and so forth. Now, if we keep going,
+going through all of this, we're going to end up
+with a value down here. That's the remainder, all right? And so, this then becomes, this 110 is the value of R. And so, that's what we would
+add on to the transmission. So, we'd take our original value of D,
+which is actually a zero, pend it on R, and
+then that's what we're transmitting. And much as with parity, so
+that's what we're transmit. Now, much with parity on the check side,
+we basically do the exact same operation. So this is corrected,
+we do the exact same operation. We take this value,
+all of it, divide it by G. And once we get down to the bottom, if the remainder that we
+would calculate is all zeros, then we knew it was correct,
+because it was exactly divisible by G. Otherwise, there's an error
+in our transmission. So what are some properties
+of CRCs in Ethernet? So it detects any 1 bit error, it also detects any two
+adjacent single bit errors. It detects any odd number
+of single bit errors, and any burst ff errors with
+the length of 32 or less. So that's pretty powerful,
+that's much better than parity. And it's also important, because it can be
+calculated as bytes arrive off the wire. So this is something that can
+have a simple hardware or firmware implementation
+on the network card. And it really only evolves to xor
+operation, and can be done in line. So those are really great
+properties of this. And as mentioned,
+I'll point you to kind of more resources, but if you were to look
+at the Ethernet standard, you're going to see it
+described in this way. So I just wanted to point out
+kind of what all this text means in relation to what we just actually saw. So you'll see this part, G(x). And so, as we talked about G
+is this generator polynomial that's pre-chosen as part of the standard. And if you were to use
+something other than Ethernet, it can be used with a different
+generator polynomial. And so, in our case,
+it's this bit pattern. And so, you can just see that x is zero,
+so the zeroth bit is 1. The first bit is 1, 1, and then since x
+to the three is not shown, that's a zero. So 0,1, 1, 1 is 7. Then if you go through, four is 1, x to the five is 1,
+x to the six is not shown. So that's a zero, and
+then x to the seven is 1. So 1011 is the value x character B,
+and so forth. So that's how you can kind
+of read this polynomial. And then,
+the rest of the kind of description comes with dealing with
+cases of leading zeros. So it's a little more complicated than we
+showed, but we didn't show the case where if the transmission actually started with
+some zeros, which causes some problems. Then, it also goes through and talks about D, which is the frame data. This M that it references,
+this D,R that we've talked about. And we talked about G,
+and we talked about R. So it has all the components there. It's the exact same with what we showed,
+but with a little bit of extra. Where you complement
+the bits to start with, and to end with,
+to deal with a case of leading zeros. All right, so
+if you want to kind of learn more, and get another description of this,
+I found this article to be incredibly well written and
+easy to understand. So I highly recommend, and
+I'll put this as a reading document, a link kind of outside
+of these slides as well. So with that, we'll end here. And next time, in the next video, we're going to talk about how
+to handle the sharing the link.

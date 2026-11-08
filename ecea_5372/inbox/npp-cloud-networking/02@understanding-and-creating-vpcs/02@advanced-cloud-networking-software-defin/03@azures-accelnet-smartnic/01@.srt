@@ -1,0 +1,824 @@
+1
+00:00:08,843 --> 00:00:11,222
+All right, let's go ahead and get started.
+
+2
+00:00:11,222 --> 00:00:17,761
+So this time we're going to switch over
+and actually look at Azure's network and
+
+3
+00:00:17,761 --> 00:00:23,717
+it's something they call AccelNet,
+which is focusing on a SmartNIC.
+
+4
+00:00:23,717 --> 00:00:29,734
+All right, so
+this is effectively really complementary
+
+5
+00:00:29,734 --> 00:00:35,261
+to what we just saw looking
+at Google's Andromeda.
+
+6
+00:00:35,261 --> 00:00:39,514
+So, have that in mind
+when we go through this.
+
+7
+00:00:39,514 --> 00:00:44,778
+They have similar needs,
+need to create the abstraction of a VPC,
+
+8
+00:00:44,778 --> 00:00:49,760
+need to create policies for
+VMs to be able to talk to each other,
+
+9
+00:00:49,760 --> 00:00:53,224
+and all of the same problem setup.
+
+10
+00:00:53,224 --> 00:00:57,898
+This is extra interesting
+because it describes how they
+
+11
+00:00:57,898 --> 00:01:01,884
+went one step further
+to improve performance.
+
+12
+00:01:03,384 --> 00:01:08,320
+All right, so this was a paper
+that was published in NSDI.
+
+13
+00:01:08,320 --> 00:01:15,884
+Again, I'll provide link to it and
+highly encourage you to go read it.
+
+14
+00:01:16,904 --> 00:01:21,413
+So what I was just saying was Google or
+
+15
+00:01:21,413 --> 00:01:28,255
+Microsoft runs Azure,
+which is their cloud platform,
+
+16
+00:01:28,255 --> 00:01:34,367
+equally allows you to
+create virtual machines and
+
+17
+00:01:34,367 --> 00:01:40,324
+basically provide this VPC abstraction.
+
+18
+00:01:40,324 --> 00:01:43,891
+This is a really nice picture,
+
+19
+00:01:43,891 --> 00:01:49,402
+saying it's their virtual switch for
+Azure.
+
+20
+00:01:49,402 --> 00:01:53,183
+It provides the core software
+defined networking functionality for
+
+21
+00:01:53,183 --> 00:01:54,914
+networking services.
+
+22
+00:01:54,914 --> 00:01:59,772
+And this is, kind of goes interestingly
+a little deeper in terms of
+
+23
+00:01:59,772 --> 00:02:04,554
+describing the types of things
+that they're processing.
+
+24
+00:02:04,554 --> 00:02:09,990
+So they're doing address
+virtualization for
+
+25
+00:02:09,990 --> 00:02:13,889
+the VNET, the virtual IP to the,
+
+26
+00:02:13,889 --> 00:02:20,194
+I forget what D stands for,
+the IP translation.
+
+27
+00:02:20,194 --> 00:02:26,733
+They're doing for
+basically the external IP addresses,
+
+28
+00:02:26,733 --> 00:02:31,672
+converting them to internal IP addresses,
+
+29
+00:02:31,672 --> 00:02:36,634
+and mapping that to physical machines.
+
+30
+00:02:36,634 --> 00:02:41,766
+And then access control lists,
+metering, security,
+
+31
+00:02:41,766 --> 00:02:48,004
+all those different things are what
+they do inside of their switch.
+
+32
+00:02:49,264 --> 00:02:53,581
+Much like Google,
+they use programmable rule or
+
+33
+00:02:53,581 --> 00:02:58,784
+flow tables to perform
+the per packet actions.
+
+34
+00:02:58,784 --> 00:03:04,305
+Also programmed by Azure's
+centralized SDN controllers,
+
+35
+00:03:04,305 --> 00:03:10,844
+supports all the data plan policy
+at line rate with offloads.
+
+36
+00:03:10,844 --> 00:03:13,305
+All right, so what does that mean?
+
+37
+00:03:13,305 --> 00:03:14,839
+What does it look like?
+
+38
+00:03:14,839 --> 00:03:17,924
+Again, coming back to
+the match action table.
+
+39
+00:03:17,924 --> 00:03:23,044
+So this is, even say inspired by OpenFlow.
+
+40
+00:03:23,044 --> 00:03:28,151
+But they designed it their own kind
+of proprietary version of this for
+
+41
+00:03:28,151 --> 00:03:30,184
+their own specific needs.
+
+42
+00:03:32,244 --> 00:03:39,199
+So running in a particular node will
+be the fast path of where their,
+
+43
+00:03:39,199 --> 00:03:44,689
+kind of virtual switch where
+takes packets off the NIC
+
+44
+00:03:44,689 --> 00:03:50,319
+goes through a sequence of
+these match action tables.
+
+45
+00:03:50,319 --> 00:03:56,082
+So you can see the encapsulation
+like if you're sending
+
+46
+00:03:56,082 --> 00:04:01,231
+to another VPC maybe,
+they do some encapsulation
+
+47
+00:04:01,231 --> 00:04:07,239
+sending to another different
+subnet within the same one,
+
+48
+00:04:07,239 --> 00:04:13,278
+maybe it's encapsulated to that host,
+whatever it is.
+
+49
+00:04:13,278 --> 00:04:17,410
+I don't know exactly what all these are
+doing, but there's encapsulations right
+
+50
+00:04:17,410 --> 00:04:20,314
+when they need to put it out
+onto their data center fabric.
+
+51
+00:04:21,374 --> 00:04:25,164
+Think back to the VL2
+paper that we read and
+
+52
+00:04:25,164 --> 00:04:29,718
+that really described
+their data center fabric.
+
+53
+00:04:29,718 --> 00:04:36,494
+Now, think of, kind of things that you
+would have to do in conjunction with that.
+
+54
+00:04:38,234 --> 00:04:42,731
+So here's some netting to
+convert between the public and
+
+55
+00:04:42,731 --> 00:04:48,069
+private IP addresses, I imagine,
+and then kind of the filtering,
+
+56
+00:04:48,069 --> 00:04:51,454
+the block and allow, all those policies.
+
+57
+00:04:53,794 --> 00:04:58,233
+Looks familiar so far.
+
+58
+00:04:58,233 --> 00:05:03,457
+One of the optimizations
+they did was kind of unified
+
+59
+00:05:03,457 --> 00:05:08,569
+the flow tables in
+a particular interesting way.
+
+60
+00:05:08,569 --> 00:05:17,050
+So they noted that going through this
+sequence of table lookups was expensive,
+
+61
+00:05:17,050 --> 00:05:21,353
+but you only need to do that really once,
+
+62
+00:05:21,353 --> 00:05:24,914
+the first packet in a given flow.
+
+63
+00:05:24,914 --> 00:05:30,694
+And when we say flow, typically
+that's referring to a TCP connection.
+
+64
+00:05:30,694 --> 00:05:35,692
+All of the packets related to that TCP
+connection should all get processed in
+
+65
+00:05:35,692 --> 00:05:36,806
+the same way.
+
+66
+00:05:36,806 --> 00:05:42,575
+So once you determine that based on
+that first packet, you can then,
+
+67
+00:05:42,575 --> 00:05:47,948
+what they do is, they put this
+into this transposition engine,
+
+68
+00:05:47,948 --> 00:05:51,641
+which then kind of makes
+it just one lookup.
+
+69
+00:05:51,641 --> 00:05:56,460
+It's basically a hash of the packet
+that's really cheap to do.
+
+70
+00:05:56,460 --> 00:06:02,084
+And then all of the actions to perform
+all the modifications to the packet,
+
+71
+00:06:02,084 --> 00:06:08,154
+whether it's encapsulating or modifying
+the IP addresses, rewriting those,
+
+72
+00:06:08,154 --> 00:06:14,064
+metering it, whatever it is, they can
+do all of that in basically one lookup.
+
+73
+00:06:15,864 --> 00:06:24,496
+All right, problem is that the network
+speeds in azure were scaling really fast.
+
+74
+00:06:24,496 --> 00:06:31,088
+So they mapped out from 2009 through 2017.
+
+75
+00:06:31,088 --> 00:06:37,878
+And at the time of this paper, I think it
+was 2018 is when this paper was published,
+
+76
+00:06:37,878 --> 00:06:45,240
+they said, soon we'll be reaching 100Gb,
+and 400 is not far out, far beyond that.
+
+77
+00:06:45,240 --> 00:06:52,912
+All right, so they noted they got a 50x
+improvement in network throughput,
+
+78
+00:06:52,912 --> 00:06:59,672
+but the CPU power did not increase
+by 50x in this eight year period.
+
+79
+00:06:59,672 --> 00:07:05,341
+So they began exploring how could they
+actually keep up with those speeds.
+
+80
+00:07:05,341 --> 00:07:11,611
+And they kind of noted, right,
+ASICs do provide a mechanism to be able
+
+81
+00:07:11,611 --> 00:07:16,821
+to achieve native performance,
+meaning the 100 gig or
+
+82
+00:07:16,821 --> 00:07:21,501
+50 gig throughput that
+the network can support and
+
+83
+00:07:21,501 --> 00:07:25,012
+the network interface can support.
+
+84
+00:07:25,012 --> 00:07:29,418
+And getting that directly
+into the virtual machines, so
+
+85
+00:07:29,418 --> 00:07:33,641
+there's something called SR-IOV,
+or single root,
+
+86
+00:07:33,641 --> 00:07:39,642
+IO virtualization, which is down here
+in this green is this network card.
+
+87
+00:07:39,642 --> 00:07:45,068
+Inside of the network card is
+some hardware where you can
+
+88
+00:07:45,068 --> 00:07:53,674
+create rules to say, this traffic should
+go directly to this virtual machine.
+
+89
+00:07:53,674 --> 00:07:59,659
+And it's as if it's splitting
+the PCI express space up and
+
+90
+00:07:59,659 --> 00:08:06,395
+in some manner, but it gets it
+directly to the virtual machines.
+
+91
+00:08:06,395 --> 00:08:10,714
+So that's something, but
+there's no SDN policy.
+
+92
+00:08:10,714 --> 00:08:16,960
+There's no ability to do all of
+the processing that they need.
+
+93
+00:08:16,960 --> 00:08:21,658
+So, then they began exploring,
+all right, what are the alternatives?
+
+94
+00:08:21,658 --> 00:08:26,386
+And this is just showing a spectrum from
+
+95
+00:08:26,386 --> 00:08:30,970
+CPUs which are very general purpose,
+
+96
+00:08:30,970 --> 00:08:36,271
+CPUs, GPUs, which are highly parallel and
+
+97
+00:08:36,271 --> 00:08:44,007
+still fairly general purpose to
+FPGAs which are programmable,
+
+98
+00:08:44,007 --> 00:08:48,250
+but much more closer to hardware.
+
+99
+00:08:48,250 --> 00:08:55,370
+And then a full ASIC, they said option
+five, they could do other stuff,
+
+100
+00:08:55,370 --> 00:09:01,807
+but the spectrum goes from highly
+flexible to highly efficient.
+
+101
+00:09:01,807 --> 00:09:06,394
+So what they kind of settled on is
+kind of contrasting CPUs and FPGAs, so
+
+102
+00:09:06,394 --> 00:09:08,782
+they're going to settle on FPGAs.
+
+103
+00:09:08,782 --> 00:09:14,100
+And so understand this, a CPU is
+basically, you take all the data and
+
+104
+00:09:14,100 --> 00:09:18,534
+then you perform a series
+of instructions on it.
+
+105
+00:09:18,534 --> 00:09:23,994
+FPGAs, you can have this,
+they call it spatial and temporal compute,
+
+106
+00:09:23,994 --> 00:09:29,326
+where you can have all of those
+instructions operating in parallel.
+
+107
+00:09:29,326 --> 00:09:33,854
+They're just different
+components on the hardware.
+
+108
+00:09:33,854 --> 00:09:40,179
+So it's a much more parallel capability.
+
+109
+00:09:40,179 --> 00:09:41,878
+So what is an FPGA?
+
+110
+00:09:41,878 --> 00:09:44,790
+So shown here is kind of picture of it.
+
+111
+00:09:44,790 --> 00:09:50,529
+So it's really these logic blocks
+connected by these little routing and
+
+112
+00:09:50,529 --> 00:09:52,194
+wire elements.
+
+113
+00:09:52,194 --> 00:09:57,349
+With this, you can design in
+a hardware description language,
+
+114
+00:09:57,349 --> 00:10:02,894
+compile it, and then load in what
+is specific circuit that you want.
+
+115
+00:10:04,394 --> 00:10:10,823
+It has a large quantity of programmable
+gates that are highly parallel, and
+
+116
+00:10:10,823 --> 00:10:17,524
+you can program these specialized
+circuits that communicate directly.
+
+117
+00:10:17,524 --> 00:10:21,940
+Now, there's two kinds of parallelism,
+there's thread level parallelism and
+
+118
+00:10:21,940 --> 00:10:23,716
+then pipeline parallelism.
+
+119
+00:10:23,716 --> 00:10:29,724
+So thread level, well, pipeline parallel
+we saw, which is, take the data,
+
+120
+00:10:29,724 --> 00:10:35,003
+let's say it's one packet,
+it does the first stage of processing,
+
+121
+00:10:35,003 --> 00:10:39,851
+and then that gets passed over
+to the next stage of processing.
+
+122
+00:10:39,851 --> 00:10:44,674
+Meanwhile, the first stage of
+processing can handle the next packet.
+
+123
+00:10:44,674 --> 00:10:50,119
+So, two stages are happening in
+parallel and you do them sequentially,
+
+124
+00:10:50,119 --> 00:10:53,762
+one after the other,
+but it's in a pipeline.
+
+125
+00:10:53,762 --> 00:10:58,305
+And then thread level is,
+you can stamp out multiple of these,
+
+126
+00:10:58,305 --> 00:11:01,314
+whatever the hardware can support.
+
+127
+00:11:01,314 --> 00:11:05,857
+And so you would kind of
+redirect different flows of
+
+128
+00:11:05,857 --> 00:11:08,354
+traffic to each pipeline.
+
+129
+00:11:10,134 --> 00:11:13,121
+And they're large enough,
+
+130
+00:11:13,121 --> 00:11:17,851
+the FPGAs have embedded
+processors in them,
+
+131
+00:11:17,851 --> 00:11:22,714
+so you can run control
+plane software on them.
+
+132
+00:11:24,014 --> 00:11:29,994
+All right, so what's their
+solution is the Azure SmartNIC,
+
+133
+00:11:29,994 --> 00:11:36,594
+they needed hardware for scale,
+the performance, and the cost.
+
+134
+00:11:36,594 --> 00:11:40,605
+Performance, once it
+got really high speeds,
+
+135
+00:11:40,605 --> 00:11:44,058
+they could have rolled their own ASIC.
+
+136
+00:11:44,058 --> 00:11:50,250
+Microsoft has a lot of money, but
+it's really too slow to develop that.
+
+137
+00:11:50,250 --> 00:11:55,743
+They also have that kind of
+software mindset that Google has,
+
+138
+00:11:55,743 --> 00:12:00,589
+where they want to roll out
+new capabilities rapidly,
+
+139
+00:12:00,589 --> 00:12:03,070
+and so they need agility.
+
+140
+00:12:03,070 --> 00:12:10,474
+And so, they want an FPGA on the SmartNIC.
+
+141
+00:12:11,494 --> 00:12:14,579
+And so what it looks like is,
+
+142
+00:12:14,579 --> 00:12:19,596
+they still had all this
+complex processing and
+
+143
+00:12:19,596 --> 00:12:23,152
+capability in their software.
+
+144
+00:12:23,152 --> 00:12:25,919
+So they still are doing that.
+
+145
+00:12:25,919 --> 00:12:31,570
+But then, instead of transposing
+into a table where the second packet
+
+146
+00:12:31,570 --> 00:12:38,096
+gets processed in software, now they can
+mirror that table down into the FPGA.
+
+147
+00:12:38,096 --> 00:12:43,651
+So if the FPGA can support
+the different types of actions, well,
+
+148
+00:12:43,651 --> 00:12:50,284
+then now we can perform the packet
+processing at really high rates for that.
+
+149
+00:12:50,284 --> 00:12:55,162
+And then they can leverage the SR-IOV
+to bypass any processing in
+
+150
+00:12:55,162 --> 00:13:00,584
+the operating system or the hypervisor and
+go directly to the guests VM.
+
+151
+00:13:02,084 --> 00:13:06,873
+All right, so
+in an academic paper you then kind of
+
+152
+00:13:06,873 --> 00:13:11,218
+compare against what's the alternatives.
+
+153
+00:13:11,218 --> 00:13:16,552
+And so they show Azure
+compared to Google and AWS,
+
+154
+00:13:16,552 --> 00:13:22,394
+and they show Azure can get
+higher VM to VM throughput,
+
+155
+00:13:22,394 --> 00:13:29,842
+lower latency, comparatively, and
+then a lot lower tail latency.
+
+156
+00:13:29,842 --> 00:13:34,316
+And so tail latency,
+if you haven't heard that term, so
+
+157
+00:13:34,316 --> 00:13:38,466
+on average,
+this would be the 50th percentile.
+
+158
+00:13:38,466 --> 00:13:43,712
+If you looked at how long every single
+packet takes, you sorted them, and
+
+159
+00:13:43,712 --> 00:13:50,094
+you got the 50th right in the middle,
+that's the average or median, I guess.
+
+160
+00:13:50,094 --> 00:13:53,253
+And that's what normally you can expect.
+
+161
+00:13:53,253 --> 00:13:56,250
+There's some packets that are outliers.
+
+162
+00:13:56,250 --> 00:14:02,984
+And so, a lot of times you don't want
+that latency to be really high for
+
+163
+00:14:02,984 --> 00:14:11,320
+those outliers because then the difference
+between some of the packets, the median,
+
+164
+00:14:11,320 --> 00:14:17,868
+this now causes huge disruptions
+in how your application behaves.
+
+165
+00:14:17,868 --> 00:14:23,104
+So everything is kind of even as you can.
+
+166
+00:14:24,364 --> 00:14:29,166
+All right, so that's AccelNet,
+they kind of kind of
+
+167
+00:14:29,166 --> 00:14:34,182
+posit this question or
+pose this question of software or
+
+168
+00:14:34,182 --> 00:14:39,860
+hardware, and came to the conclusion
+that each has its place.
+
+169
+00:14:39,860 --> 00:14:44,954
+And presented this really
+interesting system of how they
+
+170
+00:14:44,954 --> 00:14:50,684
+leverage the benefits of software,
+which is that complexity,
+
+171
+00:14:50,684 --> 00:14:54,716
+ability to process things and
+the hardware,
+
+172
+00:14:54,716 --> 00:14:59,833
+which is able to perform things
+really fast in parallel.
+
+173
+00:14:59,833 --> 00:15:03,476
+And with that, we're going to stop here.
+
+174
+00:15:03,476 --> 00:15:04,054
+All right, thanks.

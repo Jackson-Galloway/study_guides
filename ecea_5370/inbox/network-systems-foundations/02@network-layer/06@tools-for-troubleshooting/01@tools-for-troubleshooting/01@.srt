@@ -1,0 +1,421 @@
+1
+00:00:09,481 --> 00:00:15,753
+All right, for the last video in this
+module that we're going to talk about for
+
+2
+00:00:15,753 --> 00:00:21,192
+the network layer are really
+about tools for troubleshooting.
+
+3
+00:00:21,192 --> 00:00:24,913
+So troubleshooting is one of
+the most kind of important and
+
+4
+00:00:24,913 --> 00:00:29,680
+sometimes the most challenging
+parts of network administration.
+
+5
+00:00:29,680 --> 00:00:35,233
+And so there's some common
+tools that are the go-tos for
+
+6
+00:00:35,233 --> 00:00:39,248
+at least kind of the first level checks.
+
+7
+00:00:39,248 --> 00:00:44,570
+And so we'll cover what those are and
+roughly how they work.
+
+8
+00:00:45,820 --> 00:00:48,463
+So the first one is ping.
+
+9
+00:00:48,463 --> 00:00:53,833
+So this is really helpful
+to do a quick check
+
+10
+00:00:53,833 --> 00:00:58,913
+if a server is up and if it's reachable.
+
+11
+00:00:58,913 --> 00:01:02,444
+It also includes information
+such as round trip time so
+
+12
+00:01:02,444 --> 00:01:05,938
+you can identify if there's
+some latency issues.
+
+13
+00:01:05,938 --> 00:01:12,780
+And so shown here is an example of
+performing a ping to colorado.edu and
+
+14
+00:01:12,780 --> 00:01:17,226
+you can see that you're
+getting responses and
+
+15
+00:01:17,226 --> 00:01:21,570
+you can get how long
+the round trip time took.
+
+16
+00:01:22,680 --> 00:01:28,246
+So how ping works is it's
+actually just a kind of
+
+17
+00:01:28,246 --> 00:01:36,391
+specific type of packet that's
+within the payload of an IP packet.
+
+18
+00:01:36,391 --> 00:01:41,378
+So it uses a protocol called ICMP and
+
+19
+00:01:41,378 --> 00:01:45,700
+it performs the type of echo.
+
+20
+00:01:45,700 --> 00:01:51,807
+And so shown here is basically your
+1.1.1.1, you want to perform ping.
+
+21
+00:01:51,807 --> 00:01:57,410
+What actually is happening is
+it forms a message of this form,
+
+22
+00:01:57,410 --> 00:02:01,935
+an Ethernet, IP and
+ICMP headers, sends the ICMP
+
+23
+00:02:01,935 --> 00:02:06,894
+request destined to the IP
+address 2.2.2.2 and
+
+24
+00:02:06,894 --> 00:02:10,800
+then that will respond with an ICMP reply.
+
+25
+00:02:11,880 --> 00:02:18,410
+And you could see in the IPV4 header,
+we saw this before, the protocol field.
+
+26
+00:02:18,410 --> 00:02:22,280
+So that would be protocol = 1 for ICMP.
+
+27
+00:02:22,280 --> 00:02:28,395
+And then within the ICMP header which
+would be the payload of the IP packet,
+
+28
+00:02:28,395 --> 00:02:34,040
+it would just say type which would
+be 0 for a request, 1 for a reply.
+
+29
+00:02:35,500 --> 00:02:39,020
+So that's ping and ICMP.
+
+30
+00:02:40,400 --> 00:02:45,634
+The next tool that's kind of
+useful is called traceroute and
+
+31
+00:02:45,634 --> 00:02:49,288
+this gives you a path to a destination.
+
+32
+00:02:49,288 --> 00:02:54,190
+So this is helpful if you think,
+all right, there's either latency issues
+
+33
+00:02:54,190 --> 00:02:58,260
+going through the network or
+reachability issues.
+
+34
+00:02:58,260 --> 00:03:01,810
+And you want to say, right,
+let me run a traceroute,
+
+35
+00:03:01,810 --> 00:03:04,842
+there is reachability or latency issues.
+
+36
+00:03:04,842 --> 00:03:07,868
+I want to see the path of routers
+that it's going through and
+
+37
+00:03:07,868 --> 00:03:09,985
+maybe there's something unexpected.
+
+38
+00:03:09,985 --> 00:03:15,458
+So for example, I see in a message go,
+I'm in Colorado and
+
+39
+00:03:15,458 --> 00:03:19,594
+I'm just connecting to
+a server locally but
+
+40
+00:03:19,594 --> 00:03:25,950
+my messages are going all the way
+to Europe or something like that.
+
+41
+00:03:25,950 --> 00:03:30,580
+And so that's some sort of indication
+of a problem and I can identify that by
+
+42
+00:03:30,580 --> 00:03:35,150
+looking at the routers, this trace
+of routers that it's going through.
+
+43
+00:03:36,240 --> 00:03:40,359
+So how this is implemented is if you
+
+44
+00:03:40,359 --> 00:03:45,197
+recall the TTL field, the time to live.
+
+45
+00:03:45,197 --> 00:03:53,186
+So what you do is, let's say we have this
+kind of topology in between the client.
+
+46
+00:03:53,186 --> 00:03:57,132
+This is my machine that I
+want to do a traceroute from and
+
+47
+00:03:57,132 --> 00:04:01,955
+then in between that to the server
+that I want to do a traceroute to,
+
+48
+00:04:01,955 --> 00:04:06,700
+and then there's the sequence
+of routers in between.
+
+49
+00:04:06,700 --> 00:04:09,425
+So how do I discover each?
+
+50
+00:04:09,425 --> 00:04:14,755
+Is I first send a message with
+the destination to 2.2.2.2 and
+
+51
+00:04:14,755 --> 00:04:17,582
+I set the time to live field = 1.
+
+52
+00:04:17,582 --> 00:04:22,991
+So when I send that out, when it gets
+to the first router, it's going to
+
+53
+00:04:22,991 --> 00:04:28,680
+decrement the time to live field and
+then it's going to drop the packet.
+
+54
+00:04:28,680 --> 00:04:35,500
+But many routers will actually say,
+not just drop the packet silently but
+
+55
+00:04:35,500 --> 00:04:43,452
+they'll actually respond with an ICMP
+message that says the type, time exceeded.
+
+56
+00:04:43,452 --> 00:04:46,972
+So it actually indicates
+there's a problem here and
+
+57
+00:04:46,972 --> 00:04:51,690
+this is a good troubleshooting,
+that's the reason why they do it.
+
+58
+00:04:51,690 --> 00:04:56,238
+But to support traceroute
+also it can be used for that.
+
+59
+00:04:56,238 --> 00:05:00,045
+So it'll set its source address,
+
+60
+00:05:00,045 --> 00:05:05,559
+send it back to whoever was
+the original source and
+
+61
+00:05:05,559 --> 00:05:08,568
+set the ICMP as type 11.
+
+62
+00:05:08,568 --> 00:05:13,644
+So when that gets back,
+now this traceroute utility knew,
+
+63
+00:05:13,644 --> 00:05:18,904
+all right,
+at one hop I have 5.5.5.5 is the router.
+
+64
+00:05:18,904 --> 00:05:23,938
+Then I'll send another packet
+as destined to 2.2.2.2,
+
+65
+00:05:23,938 --> 00:05:28,300
+set the time to live field now 2,
+I want to go two hops.
+
+66
+00:05:28,300 --> 00:05:33,560
+And so it goes to the second hop and
+it gets the time exceeded.
+
+67
+00:05:33,560 --> 00:05:38,750
+Now, some of the kind of responses,
+not all routers support this and
+
+68
+00:05:38,750 --> 00:05:45,050
+so that's where you might see just kind of
+blank lines or the starred lines in that.
+
+69
+00:05:46,460 --> 00:05:49,276
+All right, so that's traceroute.
+
+70
+00:05:49,276 --> 00:05:55,998
+Now, the last one is called iperf or
+iperf3 for the third version of it.
+
+71
+00:05:55,998 --> 00:06:02,360
+Now, iperf allows you to determine the max
+throughput between a client and a server.
+
+72
+00:06:02,360 --> 00:06:07,225
+And so this is useful when you start
+seeing some performance issues and
+
+73
+00:06:07,225 --> 00:06:11,062
+you want to start narrowing
+it down to what's going on.
+
+74
+00:06:11,062 --> 00:06:12,695
+Is it something with the application?
+
+75
+00:06:12,695 --> 00:06:15,580
+Is it something inside of the network?
+
+76
+00:06:15,580 --> 00:06:21,782
+And so you can run an iperf test
+by running a client version,
+
+77
+00:06:21,782 --> 00:06:28,119
+that's what the dash C stands for
+and then a server version.
+
+78
+00:06:28,119 --> 00:06:34,021
+So what this will do is it'll open up,
+it'll listen for connections, and
+
+79
+00:06:34,021 --> 00:06:41,160
+then the iperf program will start sending
+traffic to the destination to 2.2.2.2.
+
+80
+00:06:41,160 --> 00:06:44,558
+And it'll keep increasing and
+it'll try to find,
+
+81
+00:06:44,558 --> 00:06:48,270
+what is the maximum amount
+of traffic that it can send?
+
+82
+00:06:48,270 --> 00:06:51,792
+And then it'll start reporting
+at each interval and
+
+83
+00:06:51,792 --> 00:06:55,362
+then it'll kind of stabilize
+once it's found that.
+
+84
+00:06:55,362 --> 00:07:00,318
+And you can see in this case it's saying
+the rate that it's able to send at
+
+85
+00:07:00,318 --> 00:07:02,361
+is 94 megabits per second.
+
+86
+00:07:04,720 --> 00:07:10,244
+All right, so those are just
+some tools that are useful for
+
+87
+00:07:10,244 --> 00:07:14,288
+troubleshooting at the network layer.
+
+88
+00:07:14,288 --> 00:07:20,193
+And with that, we kind of wrap up
+the videos for the network layer module.
+
+89
+00:07:20,193 --> 00:07:21,129
+Thanks.

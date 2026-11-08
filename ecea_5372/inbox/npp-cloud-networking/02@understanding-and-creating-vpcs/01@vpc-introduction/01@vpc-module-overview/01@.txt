@@ -1,0 +1,76 @@
+Let's get started.
+Welcome. This is a new module around the VPC. To overview this, we're going to really talk about how
+the Cloud is organized. This is a picture I found that
+really captures that down. We talked about the
+Infrastructure as a Service. You could think of the compute, the network, all of that. On top of that, platforms are built,
+applications are built, and then users all get to access the services that are
+running inside of the Cloud. Digging deeper into that, the most coarse building block
+would be the data center. Here's a picture of
+a data center in Netherlands that you can see really is just really big buildings close
+to a good energy source. If you're curious, Google actually has a nice
+video where they actually walk through and describe
+what's going on inside of a data center. These data centers are
+placed all over the world. In the case of Google, where you want to deploy your infrastructure
+is called the region, and these correlate to locations of where Google
+has data centers. They're named based
+on their location, like US-West would be the West Coast of
+the United States, Asia-East would be, obviously, in Asia on the east side. If you want to see
+a list of regions, you can use G Cloud
+to list out that, but here's also a picture. But the list continually gets updated as Google rolls
+out more and more regions. Within a region, we have a zone. Critical shared resources for compute infrastructure
+include the power, the cooling, and the networking. Power, obviously, to
+power up your servers. Cooling, servers run pretty hot, and so you need to make
+sure they're pretty cool. If you've ever been
+in a data center, it gets really loud
+because of the cooling. Then networking is
+pretty fundamental. Those are shared
+across all tenants. What zone does is it provides fault isolation
+within a region. These regions can be
+interconnected with fiber. Here's one region that
+might have its own power, cooling, and networking, and whatever isolation
+mechanisms that makes sense, whether it's a different room or just different power
+source or whatever. Then there would
+be another region. Then obviously, the
+different regions are interconnected with a lot of
+bandwidth and high speed. Within a zone, then
+you're going to create the virtual
+private Cloud, or VPC. Well, technically,
+that was wrong. VPC is a construct or an abstraction that's not necessarily tied to
+a particular region. But now we're getting
+into abstractions, and the VPC is the core networking abstraction
+inside of the Cloud. There's similar constructs
+in other Clouds, like AWS, also called the VPC, Azure, called a VNet. If we look at this
+picture, represents, if I was to build my own private Cloud or private infrastructure, I would have racks of servers, I would have some storage, I would have some routing, maybe some firewall and be able to interconnect
+all of those. A virtual private
+Cloud is effectively that abstraction of being able to run my own
+private Cloud, but it runs on top of the providers physical
+infrastructure. Within a VPC, I can further subdivide my
+infrastructure into subnets. This is the subdivision
+of a network through partitioning the IP address
+space into subnets. I can have 10.0.1.0 on the left and 10.0.2.0
+on the right. Any servers that are
+created inside of here or virtual machines would get an IP address allocated
+in that subnet range. Next, we have routes or rules. Within a VPC, I can control
+how traffic is handled, the routing table,
+to be able to direct traffic between different
+subnets and external networks. Then I can also
+specify rules and my firewall policy for what
+traffic to block and allow. That gives you that abstraction, all the terms that
+we need to know about inside of Google or GCP. In the rest of the module, we're going to walk through
+how to create a VPC in GCP. We're going to
+then get into some of the background material. We're going to talk about
+software defined networking, which is really a key
+enabling technology that grew out of academia 15, 20 years ago that certainly influences how modern
+infrastructure is built. We'll then get into
+Google's Andromeda. That's how they realize
+their VPC abstraction. We'll then get
+into Azure and how they realize their
+VPC abstraction. The key difference here
+is the use of SmartNIC. We'll talk about
+the design of that. Then we'll get into the
+VPC a little deeper. Then as part of that, we'll talk about how to do
+the programming assignment. This module is focusing
+on a single VPC. Next module, we'll
+talk a little wider, widen the net to a
+wide area network. But let's really focus and
+understand what a VPC is here. Until next time. Thanks.

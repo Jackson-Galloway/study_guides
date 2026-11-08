@@ -1,0 +1,156 @@
+1
+00:00:08,530 --> 00:00:10,974
+All right, let's go ahead and get started.
+
+2
+00:00:10,974 --> 00:00:15,942
+So this is the start of a new module where
+we're going to be talking about network
+
+3
+00:00:15,942 --> 00:00:16,714
+services.
+
+4
+00:00:18,534 --> 00:00:25,106
+All right, so I found this, I don't know,
+marketing graphic from Google and
+
+5
+00:00:25,106 --> 00:00:29,102
+you can,
+here's the link down at the bottom.
+
+6
+00:00:29,102 --> 00:00:32,739
+But I thought it really captured a lot
+of things we're talking about, and
+
+7
+00:00:32,739 --> 00:00:34,984
+we've actually seen two of these pictures.
+
+8
+00:00:38,044 --> 00:00:42,295
+First, there's how the Cloud is organized,
+
+9
+00:00:42,295 --> 00:00:47,636
+it captures that there's Google and
+other providers have
+
+10
+00:00:47,636 --> 00:00:52,760
+this global infrastructure
+with data centers in a bunch
+
+11
+00:00:52,760 --> 00:00:59,314
+of places organize the abstraction
+into these regions and into zones.
+
+12
+00:01:00,854 --> 00:01:05,839
+We also saw that they have
+this physical infrastructure
+
+13
+00:01:05,839 --> 00:01:10,758
+between the WAN and
+the Datacenter which we covered.
+
+14
+00:01:10,758 --> 00:01:15,870
+And we saw this picture which came from
+
+15
+00:01:15,870 --> 00:01:20,515
+the espresso slides from Google.
+
+16
+00:01:20,515 --> 00:01:25,170
+This last picture that they're,
+that they showed really
+
+17
+00:01:25,170 --> 00:01:30,206
+highlighted a lot of the network
+services that Google offers.
+
+18
+00:01:30,206 --> 00:01:34,806
+So we already talked about three
+of them in previous modules,
+
+19
+00:01:34,806 --> 00:01:37,554
+VPC, firewall rules and cloud Nat.
+
+20
+00:01:39,134 --> 00:01:45,814
+And in the rest of this module we're
+going to be covering other ones,
+
+21
+00:01:45,814 --> 00:01:53,534
+namely the load balancer, CDN and
+the premium and standard tiers.
+
+22
+00:01:53,534 --> 00:02:00,150
+In the fifth module on hybrid
+networking we'll talk about
+
+23
+00:02:00,150 --> 00:02:06,371
+some of the other connect
+oriented network services.
+
+24
+00:02:06,371 --> 00:02:11,238
+As an outline of this module, we're going
+to give an introduction to load balancing.
+
+25
+00:02:11,238 --> 00:02:15,886
+We're going to walk through
+an example of that inside of GCP.
+
+26
+00:02:15,886 --> 00:02:20,744
+We'll have a little side discussion
+on a topic called auto scaling.
+
+27
+00:02:20,744 --> 00:02:26,487
+We'll then get into how Google builds
+their load balancing infrastructure,
+
+28
+00:02:26,487 --> 00:02:29,184
+namely a system called Maglev.
+
+29
+00:02:29,184 --> 00:02:34,984
+And we'll also look at how Akamai,
+we'll introduce the concept
+
+30
+00:02:34,984 --> 00:02:41,533
+of content distribution networks,
+see how it's done inside of Google.
+
+31
+00:02:41,533 --> 00:02:45,992
+And then we'll get into
+some the academic work of
+
+32
+00:02:45,992 --> 00:02:51,614
+seeing how Akamai has built
+their infrastructure.
+
+33
+00:02:51,614 --> 00:02:54,427
+And with that we'll end here,
+all right, thanks.

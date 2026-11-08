@@ -1,0 +1,1870 @@
+1
+00:00:08,510 --> 00:00:12,000
+Welcome back. This
+time we're going to go
+
+2
+00:00:12,000 --> 00:00:15,270
+through some example IP
+layer OR network layer.
+
+3
+00:00:15,270 --> 00:00:18,040
+I keep saying IP layer really,
+
+4
+00:00:18,040 --> 00:00:21,620
+IP is the dominant
+network layer protocol.
+
+5
+00:00:21,620 --> 00:00:26,370
+I use them ubiquitously
+or synonymously.
+
+6
+00:00:26,370 --> 00:00:28,540
+We're going to walk
+through the commands
+
+7
+00:00:28,540 --> 00:00:30,060
+that we've been learning,
+
+8
+00:00:30,060 --> 00:00:36,120
+namely adding addresses
+and adding routes.
+
+9
+00:00:36,120 --> 00:00:38,625
+In this, we're going to use
+
+10
+00:00:38,625 --> 00:00:41,580
+Container Lab again and
+we're going to set up
+
+11
+00:00:41,580 --> 00:00:44,740
+a topology that looks
+
+12
+00:00:44,740 --> 00:00:48,260
+like this with three
+nodes that we call lan1,
+
+13
+00:00:48,260 --> 00:00:53,580
+lan2, lan3 and one that we're
+calling rtr for router.
+
+14
+00:00:54,370 --> 00:00:58,365
+Let's switch over.
+This right here,
+
+15
+00:00:58,365 --> 00:01:00,040
+what I'm showing is
+the directory of
+
+16
+00:01:00,040 --> 00:01:01,830
+a GitHub repo that will
+
+17
+00:01:01,830 --> 00:01:06,040
+post a link in the exercises,
+
+18
+00:01:06,040 --> 00:01:08,475
+the reading for this module.
+
+19
+00:01:08,475 --> 00:01:11,320
+You can get all this code.
+
+20
+00:01:11,320 --> 00:01:15,220
+You'll note that what's
+provided is a vagrant file,
+
+21
+00:01:15,220 --> 00:01:18,420
+which is setting up a
+single virtual machine,
+
+22
+00:01:18,420 --> 00:01:20,480
+installs, container lab, docker,
+
+23
+00:01:20,480 --> 00:01:22,120
+all the stuff that you need.
+
+24
+00:01:22,120 --> 00:01:25,420
+Now I've created SSH into this.
+
+25
+00:01:25,420 --> 00:01:27,860
+I'm using Mobi X term.
+
+26
+00:01:27,860 --> 00:01:32,720
+Now what we're going to do
+for this particular video
+
+27
+00:01:32,720 --> 00:01:38,050
+is look into this
+directory demo1 CLI.
+
+28
+00:01:38,050 --> 00:01:40,720
+The first thing
+that you'll know is
+
+29
+00:01:40,720 --> 00:01:44,620
+this container lab
+configuration file.
+
+30
+00:01:44,620 --> 00:01:48,840
+Let me open that up and
+go to the first line.
+
+31
+00:01:48,840 --> 00:01:51,660
+You can see the name mod2-play.
+
+32
+00:01:51,660 --> 00:01:53,900
+Now we can see that
+
+33
+00:01:53,900 --> 00:01:56,900
+the container that will
+be created will be named
+
+34
+00:01:56,900 --> 00:02:04,795
+something like
+clab-mod2-play-lan1, for example.
+
+35
+00:02:04,795 --> 00:02:07,620
+The play just means
+we're playing
+
+36
+00:02:07,620 --> 00:02:10,365
+around trying to
+testing things out.
+
+37
+00:02:10,365 --> 00:02:14,060
+The topology, you can see
+it has the four nodes.
+
+38
+00:02:14,060 --> 00:02:15,930
+As mentioned, we're again using
+
+39
+00:02:15,930 --> 00:02:20,530
+that same docker
+image that I created,
+
+40
+00:02:20,530 --> 00:02:23,610
+has a bunch of different
+network utilities on it.
+
+41
+00:02:23,610 --> 00:02:25,630
+What we're not doing,
+
+42
+00:02:25,630 --> 00:02:29,390
+I commented out
+the part to create
+
+43
+00:02:29,390 --> 00:02:32,970
+the various bindings
+because we're not
+
+44
+00:02:32,970 --> 00:02:36,250
+going to necessarily past
+any files back and forth,
+
+45
+00:02:36,250 --> 00:02:37,830
+but left it in there.
+
+46
+00:02:37,830 --> 00:02:40,950
+You can uncomment
+it if you want to.
+
+47
+00:02:40,950 --> 00:02:44,830
+Then finally, the endpoints
+which connects lan1,
+
+48
+00:02:44,830 --> 00:02:48,470
+lan2 and lan3 up to the router.
+
+49
+00:02:48,620 --> 00:02:53,860
+The next thing to
+note is that there's
+
+50
+00:02:53,860 --> 00:02:57,240
+four different scripts that are
+
+51
+00:02:57,240 --> 00:02:59,760
+provided and these correspond
+
+52
+00:02:59,760 --> 00:03:04,150
+to four different demos
+we're going to go through.
+
+53
+00:03:05,780 --> 00:03:08,670
+What they're going to be is
+
+54
+00:03:08,670 --> 00:03:11,990
+the four different
+demos are going to be.
+
+55
+00:03:11,990 --> 00:03:15,050
+The first we're going
+to show setting up
+
+56
+00:03:15,050 --> 00:03:17,110
+some routes and
+addresses and we're not
+
+57
+00:03:17,110 --> 00:03:19,500
+going to use the via keyword.
+
+58
+00:03:19,500 --> 00:03:21,285
+The next we're going to use
+
+59
+00:03:21,285 --> 00:03:25,830
+the via keyword and
+then we're going to
+
+60
+00:03:25,830 --> 00:03:27,690
+assign multiple IP addresses
+
+61
+00:03:27,690 --> 00:03:28,990
+per interface and see what that
+
+62
+00:03:28,990 --> 00:03:33,235
+looks like and then we're
+going to set up a GRE tunnel.
+
+63
+00:03:33,235 --> 00:03:38,040
+The first thing that
+we're going to do is not
+
+64
+00:03:38,040 --> 00:03:42,570
+using via or via however
+you want to say it.
+
+65
+00:03:42,570 --> 00:03:45,045
+We're going to have
+this basic set up.
+
+66
+00:03:45,045 --> 00:03:47,160
+In terms of the addresses,
+
+67
+00:03:47,160 --> 00:03:49,420
+we're going to have
+a addressing scheme
+
+68
+00:03:49,420 --> 00:03:52,350
+where it's going to be 10.0.1.2,
+
+69
+00:03:52,350 --> 00:03:56,820
+10.0.2.2 and 10.0.3.2 for
+
+70
+00:03:56,820 --> 00:04:02,310
+the three different lan
+nodes or these hosts.
+
+71
+00:04:02,310 --> 00:04:04,340
+Then for the router, each of
+
+72
+00:04:04,340 --> 00:04:06,640
+those interfaces
+will have an address
+
+73
+00:04:06,640 --> 00:04:11,980
+that will be the
+same first 24 bits
+
+74
+00:04:11,980 --> 00:04:14,300
+but then change up the last bit.
+
+75
+00:04:14,300 --> 00:04:19,700
+It'll be 10.0.1.1, 2.1 and 3.1.
+
+76
+00:04:19,700 --> 00:04:24,380
+That gives the address
+t to these interfaces.
+
+77
+00:04:24,380 --> 00:04:26,480
+Now we need routes.
+
+78
+00:04:26,480 --> 00:04:29,705
+We're also going to
+add routes t to these.
+
+79
+00:04:29,705 --> 00:04:34,180
+We're going to say
+anything in here that is
+
+80
+00:04:34,180 --> 00:04:39,665
+to another destination,
+10.0.0.0/16.
+
+81
+00:04:39,665 --> 00:04:41,915
+Anything that starts with 10.0,
+
+82
+00:04:41,915 --> 00:04:46,230
+just send it out
+the eth1 interface
+
+83
+00:04:46,230 --> 00:04:51,250
+and the same route is going
+to be added to lan2 and lan3.
+
+84
+00:04:51,250 --> 00:04:54,120
+For the router,
+
+85
+00:04:54,490 --> 00:04:57,045
+it's going to be a
+little more specific.
+
+86
+00:04:57,045 --> 00:04:58,670
+We're going to 10.0.1,
+
+87
+00:04:58,670 --> 00:05:01,710
+so the first 24 bits to specify,
+
+88
+00:05:01,710 --> 00:05:04,050
+when we see traffic
+that's destined
+
+89
+00:05:04,050 --> 00:05:06,760
+to 10.0.1. something,
+
+90
+00:05:06,760 --> 00:05:10,150
+send it out eth1,
+10.0.2. something,
+
+91
+00:05:10,150 --> 00:05:13,950
+send it out eth2 and
+10.0.3. something,
+
+92
+00:05:13,950 --> 00:05:15,795
+send it out eth3.
+
+93
+00:05:15,795 --> 00:05:17,770
+Those will be the
+three routes that
+
+94
+00:05:17,770 --> 00:05:20,370
+we want to add to the router.
+
+95
+00:05:21,680 --> 00:05:24,890
+You should hopefully remember
+
+96
+00:05:24,890 --> 00:05:27,690
+the two main commands
+that we'll use,
+
+97
+00:05:27,690 --> 00:05:29,795
+IP adder, ad,
+
+98
+00:05:29,795 --> 00:05:32,285
+and IP route add.
+
+99
+00:05:32,285 --> 00:05:35,490
+Let me open up set.
+
+100
+00:05:36,400 --> 00:05:39,260
+Let me explain this
+file real quick.
+
+101
+00:05:39,260 --> 00:05:42,620
+It's got two functions,
+
+102
+00:05:42,620 --> 00:05:47,540
+create set up, and
+delete set up.
+
+103
+00:05:47,540 --> 00:05:52,130
+You can run it where as
+
+104
+00:05:52,130 --> 00:05:54,200
+the command line argument you
+
+105
+00:05:54,200 --> 00:05:56,780
+specify either delete or create.
+
+106
+00:05:56,780 --> 00:06:02,000
+We'll say set up ex1, create.
+
+107
+00:06:02,000 --> 00:06:04,190
+What that will do is create
+
+108
+00:06:04,190 --> 00:06:08,040
+the function or call the
+create set up function.
+
+109
+00:06:08,140 --> 00:06:12,845
+The second thing to
+note is I'm using
+
+110
+00:06:12,845 --> 00:06:16,835
+these variables to represent
+
+111
+00:06:16,835 --> 00:06:18,935
+all of this part of the command.
+
+112
+00:06:18,935 --> 00:06:20,660
+Instead of having
+every line saying
+
+113
+00:06:20,660 --> 00:06:23,990
+docker exec, all of that.
+
+114
+00:06:23,990 --> 00:06:29,270
+Then the command, I'm just
+be able to say $lan1.
+
+115
+00:06:29,270 --> 00:06:30,950
+That will get replaced with
+
+116
+00:06:30,950 --> 00:06:36,030
+docker exec -it
+clab-mod2-play -lan1.
+
+117
+00:06:36,070 --> 00:06:39,785
+That makes it a lot
+easier to read.
+
+118
+00:06:39,785 --> 00:06:43,235
+Now let's look at what
+this script actually does.
+
+119
+00:06:43,235 --> 00:06:45,840
+Let's look at the first line.
+
+120
+00:06:47,260 --> 00:06:51,185
+This is executing this inside of
+
+121
+00:06:51,185 --> 00:06:54,830
+the lan1 container and
+we're running ip addr
+
+122
+00:06:54,830 --> 00:07:02,450
+add 10.0.1.2 dev eth1.
+
+123
+00:07:02,450 --> 00:07:07,445
+Great. Then we're going
+to add the ip route
+
+124
+00:07:07,445 --> 00:07:14,705
+add 10.0.0.0/16 dev eth1.
+
+125
+00:07:14,705 --> 00:07:19,025
+That matches that
+set up for lan1.
+
+126
+00:07:19,025 --> 00:07:21,080
+Same exact commands with
+
+127
+00:07:21,080 --> 00:07:25,970
+the different address
+for lan2 and lan3.
+
+128
+00:07:25,970 --> 00:07:28,220
+Then the router, we're
+
+129
+00:07:28,220 --> 00:07:33,090
+assigning the address
+teach of the interfaces.
+
+130
+00:07:34,090 --> 00:07:37,320
+That's those three lines.
+
+131
+00:07:37,630 --> 00:07:41,240
+Then we're adding
+the route ip route
+
+132
+00:07:41,240 --> 00:07:45,785
+add10.0.1.0 go out eth1,
+
+133
+00:07:45,785 --> 00:07:48,620
+2.0 go out eth2,
+
+134
+00:07:48,620 --> 00:07:51,780
+3.0 go out eth3.
+
+135
+00:07:53,080 --> 00:07:56,210
+If I were to run this
+
+136
+00:07:56,210 --> 00:08:00,390
+set up IP and then I'm
+going to say Create.
+
+137
+00:08:00,420 --> 00:08:04,105
+It's going to run through
+each of those commands
+
+138
+00:08:04,105 --> 00:08:07,435
+and it just executed them as
+if we did it individually.
+
+139
+00:08:07,435 --> 00:08:08,770
+I can validate that.
+
+140
+00:08:08,770 --> 00:08:11,000
+I can say things like docker,
+
+141
+00:08:11,000 --> 00:08:16,070
+exec, whatever the
+container name is,
+
+142
+00:08:16,070 --> 00:08:17,915
+IP route to see it.
+
+143
+00:08:17,915 --> 00:08:20,840
+Let's do that. But first there's
+
+144
+00:08:20,840 --> 00:08:26,285
+another file right
+here, make aliases.
+
+145
+00:08:26,285 --> 00:08:28,790
+I want to create aliases that
+
+146
+00:08:28,790 --> 00:08:30,470
+I can use on the
+command line as well,
+
+147
+00:08:30,470 --> 00:08:33,740
+not just inside of that script.
+
+148
+00:08:33,740 --> 00:08:35,615
+If I source this,
+
+149
+00:08:35,615 --> 00:08:40,370
+I'll be able to say
+lan1 to reference lan1.
+
+150
+00:08:40,370 --> 00:08:42,200
+Let me source that.
+
+151
+00:08:42,200 --> 00:08:44,030
+Make aliases.
+
+152
+00:08:44,030 --> 00:08:50,250
+Great. All right, so now
+I can say lan1 ip adder.
+
+153
+00:08:51,160 --> 00:08:54,200
+Great. Let's look at eth1.
+
+154
+00:08:54,200 --> 00:08:57,455
+So let me clear this.
+
+155
+00:08:57,455 --> 00:09:04,650
+Lan1 ip addr show eth1.
+
+156
+00:09:04,990 --> 00:09:10,025
+Great. So we can see it's there.
+
+157
+00:09:10,025 --> 00:09:16,340
+I can also say lan
+1 IP route show.
+
+158
+00:09:16,340 --> 00:09:20,645
+Or if I wanted to use IP
+route. Same exact thing.
+
+159
+00:09:20,645 --> 00:09:28,205
+You could see it'll add that
+route entry that we added.
+
+160
+00:09:28,205 --> 00:09:30,290
+These other ones were installed
+
+161
+00:09:30,290 --> 00:09:35,315
+by container lab for the
+management interface,
+
+162
+00:09:35,315 --> 00:09:38,645
+but this is the one we added.
+
+163
+00:09:38,645 --> 00:09:43,010
+If we do the same
+for the router,
+
+164
+00:09:43,010 --> 00:09:48,515
+I could see those three
+routes that we added.
+
+165
+00:09:48,515 --> 00:09:53,330
+Now what I want to do is
+let's test it out and
+
+166
+00:09:53,330 --> 00:09:59,675
+ping from lan1 to lan2.
+
+167
+00:09:59,675 --> 00:10:05,855
+From lan1, I'm going to
+ping the address 10.0.3.2.
+
+168
+00:10:05,855 --> 00:10:09,990
+That was the address of lan2.
+
+169
+00:10:10,180 --> 00:10:13,485
+You can see it's not working.
+
+170
+00:10:13,485 --> 00:10:17,440
+Destination host unreachable.
+
+171
+00:10:17,440 --> 00:10:24,335
+If we go into let me pull
+open another terminal.
+
+172
+00:10:24,335 --> 00:10:28,130
+Let me source the
+make aliases here.
+
+173
+00:10:28,130 --> 00:10:31,130
+Let me do router T,
+
+174
+00:10:31,130 --> 00:10:34,800
+shark I E one.
+
+175
+00:10:37,080 --> 00:10:40,315
+Let's see what's going on there.
+
+176
+00:10:40,315 --> 00:10:46,245
+You could see it's doing
+ARP for who has 10.0.3.2.
+
+177
+00:10:46,245 --> 00:10:49,355
+Let me flip back to the slide.
+
+178
+00:10:49,355 --> 00:10:51,440
+What we're doing from LAN 1,
+
+179
+00:10:51,440 --> 00:10:56,045
+we're trying to ping
+LAN 3, so 10.0.3.2.
+
+180
+00:10:56,045 --> 00:10:59,040
+But because we
+didn't have the via,
+
+181
+00:10:59,800 --> 00:11:06,590
+this guy is saying
+ARP who has 10.0.3.2.
+
+182
+00:11:06,590 --> 00:11:10,025
+Because it's not this
+router that has that,
+
+183
+00:11:10,025 --> 00:11:11,345
+there's nothing to respond.
+
+184
+00:11:11,345 --> 00:11:13,130
+These guys, LAN 1 and LAN 2,
+
+185
+00:11:13,130 --> 00:11:15,530
+were not on the same
+layer 2 domain.
+
+186
+00:11:15,530 --> 00:11:19,100
+That's why we need the
+router to do something,
+
+187
+00:11:19,100 --> 00:11:23,480
+or the router to do forwarding,
+so we need the via.
+
+188
+00:11:23,480 --> 00:11:27,360
+Let me cancel that.
+
+189
+00:11:31,030 --> 00:11:34,205
+That's hopefully showed that
+
+190
+00:11:34,205 --> 00:11:36,155
+without the via it's
+not going to work.
+
+191
+00:11:36,155 --> 00:11:41,450
+Let me do the setup delete.
+
+192
+00:11:41,450 --> 00:11:43,850
+That's going to clear
+everything and we
+
+193
+00:11:43,850 --> 00:11:47,750
+can check that IP route.
+
+194
+00:11:47,750 --> 00:11:51,500
+See, all those
+routes disappeared.
+
+195
+00:11:51,500 --> 00:11:56,150
+Now, let me run the second one.
+
+196
+00:11:56,150 --> 00:11:58,910
+Let's look at the second one.
+
+197
+00:11:58,910 --> 00:12:01,535
+If I flip back to the slides,
+
+198
+00:12:01,535 --> 00:12:08,585
+now the second one, instead
+of saying just dev eth 1,
+
+199
+00:12:08,585 --> 00:12:13,085
+it's going to add
+this via 10.0.1.1.
+
+200
+00:12:13,085 --> 00:12:16,130
+This should be 2.1 and 3.1.
+
+201
+00:12:16,130 --> 00:12:19,530
+It should be via whatever
+it's connected to.
+
+202
+00:12:19,750 --> 00:12:22,880
+It's going to do that.
+
+203
+00:12:22,880 --> 00:12:29,480
+But now we've added one
+extra route, 10.0.1.1.
+
+204
+00:12:29,480 --> 00:12:33,485
+Well, because for
+that specific one,
+
+205
+00:12:33,485 --> 00:12:35,660
+it is directly connected.
+
+206
+00:12:35,660 --> 00:12:38,330
+For this address, it's
+directly connected.
+
+207
+00:12:38,330 --> 00:12:42,110
+For 10.0.3.1 is
+directly connected.
+
+208
+00:12:42,110 --> 00:12:47,250
+We don't want to go via for
+the directly connected one.
+
+209
+00:12:49,210 --> 00:12:51,380
+If we switch back,
+
+210
+00:12:51,380 --> 00:13:00,185
+we can open up this and
+we can see the first one,
+
+211
+00:13:00,185 --> 00:13:02,570
+it's adding the address again.
+
+212
+00:13:02,570 --> 00:13:07,760
+Second line is
+saying IP route add.
+
+213
+00:13:07,760 --> 00:13:11,105
+That's the directly
+connected one to the router.
+
+214
+00:13:11,105 --> 00:13:14,090
+This is the address of
+the router's interface.
+
+215
+00:13:14,090 --> 00:13:17,195
+Then we're going to add
+
+216
+00:13:17,195 --> 00:13:22,235
+the route via whatever the
+address on the router is.
+
+217
+00:13:22,235 --> 00:13:24,410
+For the router, we
+didn't have to change
+
+218
+00:13:24,410 --> 00:13:26,360
+anything. It's still
+going to work.
+
+219
+00:13:26,360 --> 00:13:32,735
+Now, if we say ping 10.0.3.2,
+
+220
+00:13:32,735 --> 00:13:34,595
+it'll come in in here.
+
+221
+00:13:34,595 --> 00:13:38,705
+It'll ARP for 10.0.1.1.
+It'll get that.
+
+222
+00:13:38,705 --> 00:13:40,370
+It'll send a MAC address
+
+223
+00:13:40,370 --> 00:13:43,475
+destined to whatever the
+MAC address of eth 1 is,
+
+224
+00:13:43,475 --> 00:13:47,270
+but the destination
+will still be 10.0.3.2.
+
+225
+00:13:47,270 --> 00:13:50,960
+The router will look up
+in its routing table or
+
+226
+00:13:50,960 --> 00:13:54,995
+its forwarding table,
+where is 10.0.3.2?
+
+227
+00:13:54,995 --> 00:13:56,360
+It'll match this entry,
+
+228
+00:13:56,360 --> 00:13:59,450
+and so it'll send it out eth 3.
+
+229
+00:13:59,450 --> 00:14:02,100
+That's what we should see.
+
+230
+00:14:02,830 --> 00:14:11,870
+If I run this setup
+to create, great.
+
+231
+00:14:11,870 --> 00:14:16,655
+Let me look at LAN 1, IP route.
+
+232
+00:14:16,655 --> 00:14:20,735
+Great. We can see the via,
+
+233
+00:14:20,735 --> 00:14:26,340
+the router, and then the
+directly connected one there.
+
+234
+00:14:26,800 --> 00:14:30,200
+Now, this is important
+because we're telling it
+
+235
+00:14:30,200 --> 00:14:34,535
+to go via this router,
+
+236
+00:14:34,535 --> 00:14:40,865
+and now we can do
+the ARP for that.
+
+237
+00:14:40,865 --> 00:14:47,450
+Let me do LAN 1 ping
+10.0.3.2 again,
+
+238
+00:14:47,450 --> 00:14:51,360
+and we could see that it works.
+
+239
+00:14:51,610 --> 00:14:55,595
+If I was to go and
+
+240
+00:14:55,595 --> 00:14:59,930
+run TShark again on
+that eth 1 interface,
+
+241
+00:14:59,930 --> 00:15:03,330
+we're going to be
+able to see it.
+
+242
+00:15:03,580 --> 00:15:07,070
+If you went and
+you expanded this,
+
+243
+00:15:07,070 --> 00:15:09,140
+I don't remember the exact
+command off the top of
+
+244
+00:15:09,140 --> 00:15:12,770
+my head to show the
+MAC addresses as well,
+
+245
+00:15:12,770 --> 00:15:14,300
+it would be destined to
+
+246
+00:15:14,300 --> 00:15:19,380
+the MAC address of
+eth 1 of the router.
+
+247
+00:15:20,980 --> 00:15:30,015
+Which we could see if we did
+router IP link show eth 1,
+
+248
+00:15:30,015 --> 00:15:32,890
+it would be this is
+
+249
+00:15:32,890 --> 00:15:37,190
+the MAC address of
+eth 1 in the router.
+
+250
+00:15:38,310 --> 00:15:41,185
+That's great.
+
+251
+00:15:41,185 --> 00:15:43,815
+Let me stop that.
+
+252
+00:15:43,815 --> 00:15:48,440
+Let me delete this setup.
+
+253
+00:15:48,440 --> 00:15:54,425
+All delete is doing is the
+reverse of every command.
+
+254
+00:15:54,425 --> 00:15:56,090
+You can come down here.
+
+255
+00:15:56,090 --> 00:15:57,920
+Every command that was up here
+
+256
+00:15:57,920 --> 00:16:01,410
+exists down here as a delete.
+
+257
+00:16:05,030 --> 00:16:07,650
+If you delete something,
+
+258
+00:16:07,650 --> 00:16:11,640
+the address of the
+interface and there were
+
+259
+00:16:11,640 --> 00:16:16,395
+some routes correlating to that,
+
+260
+00:16:16,395 --> 00:16:19,365
+it's not necessary
+to delete it itself.
+
+261
+00:16:19,365 --> 00:16:21,465
+That will automatically happen.
+
+262
+00:16:21,465 --> 00:16:26,625
+We can confirm that
+lan1 IP route,
+
+263
+00:16:26,625 --> 00:16:34,200
+say it doesn't have
+that lan1 IP addr
+
+264
+00:16:34,200 --> 00:16:38,280
+show eth1 and it doesn't
+
+265
+00:16:38,280 --> 00:16:43,830
+have the IP address associated
+with it, so it's clean.
+
+266
+00:16:44,330 --> 00:16:48,570
+Let's go back and check
+out the third set up.
+
+267
+00:16:48,570 --> 00:16:51,700
+Now, we're going to add
+multiple addresses.
+
+268
+00:16:53,810 --> 00:16:57,270
+Same exact setup with
+the Via and all that.
+
+269
+00:16:57,270 --> 00:16:59,550
+Now for each of these,
+I'm just going to add
+
+270
+00:16:59,550 --> 00:17:05,320
+an additional IP address for
+each of these interfaces.
+
+271
+00:17:07,670 --> 00:17:14,830
+Setup 3, we go up here.
+
+272
+00:17:16,040 --> 00:17:19,125
+Three of these lines
+are the exact same.
+
+273
+00:17:19,125 --> 00:17:21,885
+The only difference is
+this line right here,
+
+274
+00:17:21,885 --> 00:17:28,200
+I added a third or second
+IP address to eth1,
+
+275
+00:17:28,200 --> 00:17:30,315
+added a second address,
+
+276
+00:17:30,315 --> 00:17:32,440
+added a second address.
+
+277
+00:17:33,470 --> 00:17:36,435
+The only thing to note, now,
+
+278
+00:17:36,435 --> 00:17:41,350
+let's run this setup 3.
+
+279
+00:17:44,360 --> 00:17:48,135
+Create. If we do IP or
+
+280
+00:17:48,135 --> 00:17:56,400
+lan1 IP addr show eth1.
+
+281
+00:17:56,400 --> 00:17:59,205
+We can see that it has
+two addresses with it,
+
+282
+00:17:59,205 --> 00:18:01,500
+and so this just means if it
+
+283
+00:18:01,500 --> 00:18:08,130
+gets a result or gets a
+message destined to it.
+
+284
+00:18:08,130 --> 00:18:13,110
+Both of these would be
+something that they would say,
+
+285
+00:18:13,110 --> 00:18:17,095
+yes, this is destined for
+me, I should respond.
+
+286
+00:18:17,095 --> 00:18:19,445
+Now the thing to note,
+
+287
+00:18:19,445 --> 00:18:23,370
+and I think this is
+noted inside of this.
+
+288
+00:18:23,600 --> 00:18:26,955
+Now let's say we're
+going to ping,
+
+289
+00:18:26,955 --> 00:18:33,585
+I want to ping the 10.0.3.3
+address from lan1.
+
+290
+00:18:33,585 --> 00:18:37,230
+Let's try that. lan1,
+
+291
+00:18:37,230 --> 00:18:47,610
+ping 10.0.3,3, so that's
+great, it's working.
+
+292
+00:18:47,610 --> 00:18:51,960
+But is this necessarily
+going to be the address?
+
+293
+00:18:51,960 --> 00:18:54,540
+Question is, what is
+the source address?
+
+294
+00:18:54,540 --> 00:18:55,800
+What is the destination address?
+
+295
+00:18:55,800 --> 00:18:57,150
+What are we actually seeing?
+
+296
+00:18:57,150 --> 00:18:59,820
+Let's look with tshark.
+
+297
+00:18:59,820 --> 00:19:02,310
+I'm going to look on
+
+298
+00:19:02,310 --> 00:19:06,670
+the router eth1 to see what's
+coming through the router.
+
+299
+00:19:10,190 --> 00:19:14,350
+There we go, router,
+tshark eth1.
+
+300
+00:19:14,810 --> 00:19:17,295
+You could see it's using
+
+301
+00:19:17,295 --> 00:19:25,425
+10.0.1.2 and destined
+to 10.0.3.2 or 3.3.
+
+302
+00:19:25,425 --> 00:19:28,680
+It's using this address as
+
+303
+00:19:28,680 --> 00:19:31,200
+the source and this address
+
+304
+00:19:31,200 --> 00:19:33,315
+as the destination, because
+that's what I'm pinging.
+
+305
+00:19:33,315 --> 00:19:38,355
+Now, let's say I wanted
+to actually use 10.0.1.3.
+
+306
+00:19:38,355 --> 00:19:42,330
+That's possible. How
+is that possible?
+
+307
+00:19:42,330 --> 00:19:48,750
+This is also specified in this.
+
+308
+00:19:48,750 --> 00:19:50,520
+If I can specify
+
+309
+00:19:50,520 --> 00:19:54,690
+this -I to tell
+
+310
+00:19:54,690 --> 00:19:59,070
+it what I wanted the
+source to actually be.
+
+311
+00:19:59,070 --> 00:20:07,785
+Let me take this whole
+command and do that.
+
+312
+00:20:07,785 --> 00:20:11,070
+Great. Now let's
+go back to tshark,
+
+313
+00:20:11,070 --> 00:20:15,180
+and now I can see it's
+using that other address.
+
+314
+00:20:15,180 --> 00:20:17,430
+We don't have an
+example for this,
+
+315
+00:20:17,430 --> 00:20:22,590
+but there's a way that you
+can specify as part of
+
+316
+00:20:22,590 --> 00:20:25,770
+the IP route command to
+
+317
+00:20:25,770 --> 00:20:27,450
+say when it's going out
+
+318
+00:20:27,450 --> 00:20:31,155
+this particular interface
+or matching this entry.
+
+319
+00:20:31,155 --> 00:20:34,590
+Use this source address
+instead of another one,
+
+320
+00:20:34,590 --> 00:20:38,385
+and so look in the
+man page for that.
+
+321
+00:20:38,385 --> 00:20:41,070
+Actually, let me cancel this.
+
+322
+00:20:41,070 --> 00:20:44,925
+Delete this.setup 3,
+
+323
+00:20:44,925 --> 00:20:54,375
+delete, let me stop
+tshark, and clear that.
+
+324
+00:20:54,375 --> 00:20:58,005
+Let's go to the final setup
+
+325
+00:20:58,005 --> 00:21:00,660
+which is setting
+up a GRE tunnel.
+
+326
+00:21:00,660 --> 00:21:03,090
+Here, what we're going to do,
+
+327
+00:21:03,090 --> 00:21:06,150
+if you recall a GRE
+tunnel is basically just
+
+328
+00:21:06,150 --> 00:21:11,130
+creating a device of type GRE,
+
+329
+00:21:11,130 --> 00:21:15,075
+and here, we're going
+to give it a name gre1,
+
+330
+00:21:15,075 --> 00:21:18,975
+and then we're going to
+give it an IP address.
+
+331
+00:21:18,975 --> 00:21:22,020
+Now any traffic
+that we can get to
+
+332
+00:21:22,020 --> 00:21:26,355
+go through interface gre1,
+
+333
+00:21:26,355 --> 00:21:28,305
+is going to tunnel,
+
+334
+00:21:28,305 --> 00:21:33,250
+is going to add address,
+
+335
+00:21:34,250 --> 00:21:37,170
+so it's going to
+say the local is
+
+336
+00:21:37,170 --> 00:21:39,450
+this address, the 10.0.1.2.
+
+337
+00:21:39,450 --> 00:21:42,670
+The remote is 10.0.3.2.
+
+338
+00:21:43,070 --> 00:21:50,040
+Then what we're going to see
+is the 192.168 addresses.
+
+339
+00:21:50,040 --> 00:21:51,960
+It'll go through this, it'll
+
+340
+00:21:51,960 --> 00:21:57,075
+add the extra
+header of 10.0.1.2,
+
+341
+00:21:57,075 --> 00:21:58,755
+such that it can go through
+
+342
+00:21:58,755 --> 00:22:01,380
+this internal network
+because there's going to be
+
+343
+00:22:01,380 --> 00:22:06,360
+no route table entries for 192.
+
+344
+00:22:06,360 --> 00:22:08,980
+It'll come to this,
+
+345
+00:22:09,590 --> 00:22:14,250
+which will then direct
+it to the GRE tunnel.
+
+346
+00:22:14,250 --> 00:22:16,350
+Then once it pops out,
+
+347
+00:22:16,350 --> 00:22:20,170
+it'll be looking
+like that address.
+
+348
+00:22:21,110 --> 00:22:24,250
+Now let's look at what,
+
+349
+00:22:26,120 --> 00:22:31,170
+well, actually this notes here.
+
+350
+00:22:31,170 --> 00:22:33,720
+We'll tunnel it, the
+local and remote.
+
+351
+00:22:33,720 --> 00:22:39,360
+We'll see the inner
+header with those 192s.
+
+352
+00:22:39,360 --> 00:22:42,940
+The outer headers will
+be the 10 dot something.
+
+353
+00:22:43,430 --> 00:22:49,380
+The rounding tables will say
+anything destined to 192.
+
+354
+00:22:49,380 --> 00:22:52,785
+We're going to have
+it go through gre1.
+
+355
+00:22:52,785 --> 00:22:54,390
+Anything for 10 dot something,
+
+356
+00:22:54,390 --> 00:22:56,770
+we're going to have
+it go through eth1.
+
+357
+00:22:56,840 --> 00:22:59,745
+Let's look at that.
+
+358
+00:22:59,745 --> 00:23:03,940
+This is set up IP example 4.
+
+359
+00:23:09,860 --> 00:23:15,880
+Here we're going to create
+the addresses for eth1,
+
+360
+00:23:16,040 --> 00:23:24,315
+and I kept multiple
+addresses and the routes.
+
+361
+00:23:24,315 --> 00:23:27,315
+This is all basically the same.
+
+362
+00:23:27,315 --> 00:23:30,360
+The new part is on lan1,
+
+363
+00:23:30,360 --> 00:23:31,770
+we're going to set
+up the tunnel,
+
+364
+00:23:31,770 --> 00:23:34,570
+and then lan3, we're
+going to set up a tunnel.
+
+365
+00:23:34,580 --> 00:23:39,945
+The command, we're going to say
+
+366
+00:23:39,945 --> 00:23:48,280
+ip tunnel add gre1
+mode gre local.
+
+367
+00:23:49,100 --> 00:23:52,540
+You can read the command.
+
+368
+00:23:53,320 --> 00:23:57,080
+This is saying create
+a device local
+
+369
+00:23:57,080 --> 00:24:02,135
+address 10.0.1.2 remote
+address, all of that.
+
+370
+00:24:02,135 --> 00:24:06,300
+I'm going to add an
+address to that device,
+
+371
+00:24:06,530 --> 00:24:13,755
+and then I'm going to set
+that link up to stay up.
+
+372
+00:24:13,755 --> 00:24:16,410
+Now anything that
+goes through that,
+
+373
+00:24:16,410 --> 00:24:23,700
+we'll get this address
+outer header put onto it.
+
+374
+00:24:23,700 --> 00:24:26,970
+Then they'll say, now
+I need to send that,
+
+375
+00:24:26,970 --> 00:24:29,250
+and they'll look that up in
+
+376
+00:24:29,250 --> 00:24:32,460
+the route table and
+they'll say, oh,
+
+377
+00:24:32,460 --> 00:24:38,740
+I need to send that
+out eth1 via 10.0.1.1.
+
+378
+00:24:39,380 --> 00:24:45,220
+Let's run this setup 4 create.
+
+379
+00:24:49,220 --> 00:24:55,650
+Let's look at lan1's
+IP route table.
+
+380
+00:24:55,650 --> 00:25:00,660
+We can see that's going
+to go through gre1.
+
+381
+00:25:00,660 --> 00:25:06,900
+We're going to see the rest
+is going to be the same.
+
+382
+00:25:06,900 --> 00:25:12,850
+Now, which is also
+specified in the file,
+
+383
+00:25:13,160 --> 00:25:21,150
+I can say something like
+lan1 ping on the other end,
+
+384
+00:25:21,150 --> 00:25:25,150
+the 192 address on lan3.
+
+385
+00:25:26,810 --> 00:25:29,985
+If I want to see it go through,
+
+386
+00:25:29,985 --> 00:25:35,430
+I can say, we'll have
+the encapsulation,
+
+387
+00:25:35,430 --> 00:25:36,630
+won't have the capsulation,
+
+388
+00:25:36,630 --> 00:25:41,320
+so let's look at
+it coming on lan1.
+
+389
+00:25:42,650 --> 00:25:47,500
+Clear this. Let me get this.
+
+390
+00:25:53,120 --> 00:25:57,735
+This is looking at lan1 eth1.
+
+391
+00:25:57,735 --> 00:26:00,705
+This is after it
+gets encapsulated.
+
+392
+00:26:00,705 --> 00:26:08,375
+Now I can ping there.
+
+393
+00:26:08,375 --> 00:26:13,190
+It's pinging, it's saying
+it's coming to and from 192.
+
+394
+00:26:13,190 --> 00:26:23,010
+We can see the source is
+10.0.3.2 destination,
+
+395
+00:26:23,010 --> 00:26:24,810
+and then it's going
+to have inside of
+
+396
+00:26:24,810 --> 00:26:28,155
+it the inner header of that.
+
+397
+00:26:28,155 --> 00:26:33,760
+If I was to just look at gre1,
+
+398
+00:26:35,660 --> 00:26:43,870
+it would not have that extra
+information put on yet.
+
+399
+00:26:44,390 --> 00:26:49,695
+That shows an example of
+how to create a GRE tunnel.
+
+400
+00:26:49,695 --> 00:26:57,310
+Let me clean this up
+and summarize, delete.
+
+401
+00:26:57,440 --> 00:27:01,380
+All of this is available
+for you to try on your
+
+402
+00:27:01,380 --> 00:27:06,040
+own and you can see what
+we did right there.
+
+403
+00:27:06,380 --> 00:27:09,390
+Well hopefully that provides
+
+404
+00:27:09,390 --> 00:27:11,025
+a nice overview of
+
+405
+00:27:11,025 --> 00:27:12,990
+some commands you
+could try on your own.
+
+406
+00:27:12,990 --> 00:27:14,580
+Play around with it, try to
+
+407
+00:27:14,580 --> 00:27:16,725
+change the different addresses,
+
+408
+00:27:16,725 --> 00:27:19,020
+create tunnels of your own.
+
+409
+00:27:19,020 --> 00:27:20,970
+Just try different things.
+
+410
+00:27:20,970 --> 00:27:24,405
+Use TShark to see what traffic
+is actually going through.
+
+411
+00:27:24,405 --> 00:27:26,430
+But with that, we'll end
+
+412
+00:27:26,430 --> 00:27:30,100
+here and we'll see you
+next time. Thanks.

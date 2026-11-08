@@ -1,0 +1,1218 @@
+1
+00:00:09,196 --> 00:00:14,997
+So last time we talked about QoS and
+we talked about classification,
+
+2
+00:00:14,997 --> 00:00:20,396
+shaping, and scheduling, and
+how they all fit together to form
+
+3
+00:00:20,396 --> 00:00:26,607
+the ability to put some sort of quality
+of service properties on traffic.
+
+4
+00:00:26,607 --> 00:00:31,771
+So here we're going to talk about
+the Linux utility that's available to
+
+5
+00:00:31,771 --> 00:00:37,388
+be able to do all of those QoS things and
+it's called tc for traffic control.
+
+6
+00:00:40,823 --> 00:00:45,076
+So tc is used for QoS setup, but
+
+7
+00:00:45,076 --> 00:00:49,174
+it can actually do much more.
+
+8
+00:00:49,174 --> 00:00:54,117
+We'll hint at some of the additional
+things that you can do with it,
+
+9
+00:00:54,117 --> 00:00:57,164
+but we'll leave that for you to explore.
+
+10
+00:00:57,164 --> 00:01:00,216
+So what we're going to do here is really,
+
+11
+00:01:00,216 --> 00:01:05,023
+this is a pretty complicated utility,
+pretty powerful, but
+
+12
+00:01:05,023 --> 00:01:09,924
+once you kind of start understanding
+the key constructs in it,
+
+13
+00:01:09,924 --> 00:01:14,369
+it becomes something that you
+can more easily work with.
+
+14
+00:01:14,369 --> 00:01:20,588
+So the key constructs are the qdisc,
+the class, and filter.
+
+15
+00:01:20,588 --> 00:01:23,721
+So we'll go through each of those and
+
+16
+00:01:23,721 --> 00:01:28,686
+talk about how you specify them and
+what their purpose is.
+
+17
+00:01:28,686 --> 00:01:36,025
+So the queuing discipline or qdisc is the
+main object for shaping and scheduling.
+
+18
+00:01:36,025 --> 00:01:38,758
+So it kind of groups them together.
+
+19
+00:01:38,758 --> 00:01:42,366
+We have them as separate things, but
+it kind of groups them together.
+
+20
+00:01:42,366 --> 00:01:46,655
+So this is where you put in
+the properties onto the traffic.
+
+21
+00:01:46,655 --> 00:01:52,499
+So every interface must have
+an ingress and egress qdisc.
+
+22
+00:01:52,499 --> 00:01:56,493
+So what these are is
+packets go into a qdisc and
+
+23
+00:01:56,493 --> 00:02:01,331
+then they go out the other
+side according to some policy
+
+24
+00:02:01,331 --> 00:02:06,499
+based on whatever queuing
+discipline that you inserted.
+
+25
+00:02:06,499 --> 00:02:13,378
+So there's a simple example is a pfifo,
+it's first in, first out.
+
+26
+00:02:13,378 --> 00:02:18,140
+So this is the default one used by
+Linux if you don't configure anything.
+
+27
+00:02:20,829 --> 00:02:26,305
+So how do you go about adding and
+removing a qdisc?
+
+28
+00:02:26,305 --> 00:02:30,521
+So there's a lot to
+the individual command.
+
+29
+00:02:30,521 --> 00:02:35,656
+So we're breaking it down into
+its individual pieces and
+
+30
+00:02:35,656 --> 00:02:40,264
+then we're going to build it
+up as an example as we go.
+
+31
+00:02:40,264 --> 00:02:46,749
+So the first part is much like
+with all of the other utilities,
+
+32
+00:02:46,749 --> 00:02:51,752
+it starts with the command name tc,
+all right?
+
+33
+00:02:51,752 --> 00:02:57,251
+Then here we're specifying that we're
+going to want to apply this to a qdisc.
+
+34
+00:02:57,251 --> 00:03:02,819
+So this particular construct
+that's important in this case.
+
+35
+00:03:02,819 --> 00:03:07,985
+Then we can do stuff like add,
+delete, replace,
+
+36
+00:03:07,985 --> 00:03:16,363
+and you apply it to whatever device you're
+applying it to, so you specify that.
+
+37
+00:03:16,363 --> 00:03:21,652
+So as an example we're
+going to say tc qdisc
+
+38
+00:03:21,652 --> 00:03:26,328
+add to device, eth0, all right?
+
+39
+00:03:26,328 --> 00:03:31,264
+So, we've said each qdisc must be
+associated with the device and
+
+40
+00:03:31,264 --> 00:03:35,416
+this allows us to add, and
+delete, and remove qdisc.
+
+41
+00:03:35,416 --> 00:03:40,817
+The next part of the command
+says parent qdisc-id or
+
+42
+00:03:40,817 --> 00:03:44,883
+root, followed by handle qdisc-id.
+
+43
+00:03:44,883 --> 00:03:48,672
+So qdiscs can be hierarchical.
+
+44
+00:03:48,672 --> 00:03:52,209
+So you need to specify the parent or
+
+45
+00:03:52,209 --> 00:03:56,484
+root if this is the root of the hierarchy.
+
+46
+00:03:56,484 --> 00:04:00,961
+So it doesn't necessarily mean that they
+have to have children, but they could.
+
+47
+00:04:00,961 --> 00:04:05,457
+And so if this is the top level one,
+it would be considered the root.
+
+48
+00:04:05,457 --> 00:04:08,884
+And then you can also specify a handle.
+
+49
+00:04:08,884 --> 00:04:14,400
+And so this is something that would
+be referenced by the children.
+
+50
+00:04:14,400 --> 00:04:19,286
+All right, so here we're adding to this,
+we're saying root,
+
+51
+00:04:19,286 --> 00:04:24,078
+since this is the root of the hierarchy
+and we're going to specify
+
+52
+00:04:24,078 --> 00:04:28,610
+a handle of 1:, so
+it's an implied kind of number there.
+
+53
+00:04:28,610 --> 00:04:32,119
+But this is kind of what
+you see in examples.
+
+54
+00:04:32,119 --> 00:04:35,956
+So this is something
+now we can refer to for
+
+55
+00:04:35,956 --> 00:04:40,902
+future commands if we want to
+refer to this as a parent.
+
+56
+00:04:40,902 --> 00:04:49,195
+All right, so the next part of
+the command we would say the qdisc.
+
+57
+00:04:49,195 --> 00:04:53,724
+So this is the type and we have
+some examples in the coming slides.
+
+58
+00:04:53,724 --> 00:04:59,454
+And then the qdisc specific parameters,
+so that's all of what's here.
+
+59
+00:04:59,454 --> 00:05:02,300
+So this first one is the qdisc.
+
+60
+00:05:02,300 --> 00:05:07,505
+And so this one refers to tbf or
+token bucket filter.
+
+61
+00:05:07,505 --> 00:05:11,090
+And then the parameters we
+would have to go look up for
+
+62
+00:05:11,090 --> 00:05:14,689
+the token bucket filter,
+what are its parameters?
+
+63
+00:05:14,689 --> 00:05:17,481
+And it allows you to have a rate so
+
+64
+00:05:17,481 --> 00:05:21,633
+I could specify that I want
+it to be at this rate.
+
+65
+00:05:21,633 --> 00:05:24,928
+I could specify the burst size,
+
+66
+00:05:24,928 --> 00:05:29,817
+I could specify a latency if I want,
+all right?
+
+67
+00:05:29,817 --> 00:05:34,165
+And so there's other ones
+that we'll see as an example.
+
+68
+00:05:34,165 --> 00:05:39,002
+So this all right here forms a single,
+
+69
+00:05:39,002 --> 00:05:42,183
+creates a single qdisc.
+
+70
+00:05:42,183 --> 00:05:49,006
+So some example qdisc,
+we talked about a simple packet fifo or
+
+71
+00:05:49,006 --> 00:05:55,583
+a byte fifo, I believe and
+it's just first in, first out.
+
+72
+00:05:55,583 --> 00:05:59,883
+The one we showed earlier,
+this pfifo fast, well,
+
+73
+00:05:59,883 --> 00:06:04,477
+this is looking at based on
+some type of service fields,
+
+74
+00:06:04,477 --> 00:06:09,582
+classifying it into different
+queues internal to the qdisc.
+
+75
+00:06:09,582 --> 00:06:14,555
+And then it'll transmit packets in
+
+76
+00:06:14,555 --> 00:06:19,031
+kind of a prioritized first in,
+
+77
+00:06:19,031 --> 00:06:23,190
+first out order, all right?
+
+78
+00:06:23,190 --> 00:06:30,382
+Another SFQ stochastic fair queuing,
+right?
+
+79
+00:06:30,382 --> 00:06:37,279
+So this is applying a fair queuing
+algorithm to apply to different queues and
+
+80
+00:06:37,279 --> 00:06:43,122
+then use a round robin algorithm
+to transmit from those queues.
+
+81
+00:06:43,122 --> 00:06:46,529
+Again, this is all internal to one qdisc.
+
+82
+00:06:46,529 --> 00:06:50,669
+And so this is not like we're going to do,
+
+83
+00:06:50,669 --> 00:06:55,572
+specify the classification and
+then do that.
+
+84
+00:06:55,572 --> 00:07:02,708
+All right, so that's that algorithm and
+you can go look up more about it.
+
+85
+00:07:02,708 --> 00:07:06,445
+Token bucket filter, so this is TBF and
+
+86
+00:07:06,445 --> 00:07:10,976
+this is kind of what we
+learned about last time,
+
+87
+00:07:10,976 --> 00:07:17,122
+where tokens are kind of entered
+into a bucket at a specific rate.
+
+88
+00:07:17,122 --> 00:07:22,630
+And then you have a bucket size
+to determine the burst size,
+
+89
+00:07:22,630 --> 00:07:27,822
+and then it's just packets
+would conform at that rate.
+
+90
+00:07:27,822 --> 00:07:30,866
+So those are just some examples.
+
+91
+00:07:30,866 --> 00:07:35,902
+Now, qdiscs can be classless or classful,
+
+92
+00:07:35,902 --> 00:07:42,707
+so examples on the previous
+two slides were all classless,
+
+93
+00:07:42,707 --> 00:07:46,805
+so it just applies without a class.
+
+94
+00:07:46,805 --> 00:07:53,155
+Some qdiscs can contain classes which
+contain further qdiscs, so traffic
+
+95
+00:07:53,155 --> 00:07:59,821
+may then be enqueued in any number of
+inner qdisc which are within the classes.
+
+96
+00:08:01,120 --> 00:08:05,299
+So we got another command
+where we can add a class,
+
+97
+00:08:05,299 --> 00:08:09,720
+right, and
+we'll walk through this as well.
+
+98
+00:08:09,720 --> 00:08:14,231
+But first,
+as an illustration of this here,
+
+99
+00:08:14,231 --> 00:08:21,160
+we might have a qdisc and
+this is the hierarchical token bucket.
+
+100
+00:08:21,160 --> 00:08:28,828
+So we're going to apply some filters to it
+which is put it into different classes and
+
+101
+00:08:28,828 --> 00:08:34,030
+then those classes then feed
+into qdiscs themselves.
+
+102
+00:08:35,040 --> 00:08:40,239
+All right, so
+this is when we have a class full qdisc,
+
+103
+00:08:40,239 --> 00:08:44,180
+like hierarchical token bucket.
+
+104
+00:08:44,180 --> 00:08:50,840
+This is when we would have these things,
+these classes, all right?
+
+105
+00:08:50,840 --> 00:08:54,896
+And so
+you can see there's other ones like pfifo.
+
+106
+00:08:54,896 --> 00:09:02,608
+Fast, is not classful,
+it's a classless qdisc.
+
+107
+00:09:02,608 --> 00:09:06,270
+And so just whatever goes in, goes out.
+
+108
+00:09:06,270 --> 00:09:10,010
+There's no kind of parents and
+children from that.
+
+109
+00:09:11,820 --> 00:09:16,510
+All right, so
+use this picture in the back of your mind.
+
+110
+00:09:17,520 --> 00:09:23,240
+All right, so let's go back to adding and
+removing classes.
+
+111
+00:09:23,240 --> 00:09:29,530
+So it's nearly identical to qdisc,
+but it can't be root.
+
+112
+00:09:29,530 --> 00:09:35,831
+Instead, you have a class-id instead of
+a handle, but it's the same basic type and
+
+113
+00:09:35,831 --> 00:09:40,019
+the type(qdisc) must be
+the same as the parent qdisc.
+
+114
+00:09:40,019 --> 00:09:42,150
+All right, so let's look at an example.
+
+115
+00:09:43,640 --> 00:09:51,328
+So this is an example of a classful qdisc,
+the hierarchical token bucket.
+
+116
+00:09:51,328 --> 00:09:57,065
+So let's say, we have a token bucket
+where we want to have different
+
+117
+00:09:57,065 --> 00:10:04,100
+classes of traffic, where we want to
+start rate limiting in different manners.
+
+118
+00:10:04,100 --> 00:10:10,066
+I want to rate limit some of the traffic
+at 30 and some at 70, right?
+
+119
+00:10:10,066 --> 00:10:18,240
+And then that feeds into class list qdisc,
+fq_codel.
+
+120
+00:10:18,240 --> 00:10:22,924
+All right, so here we would add
+the queuing disk, the qdisc.
+
+121
+00:10:22,924 --> 00:10:28,820
+So qdisc add dev eth0,
+is going to be the root.
+
+122
+00:10:28,820 --> 00:10:31,349
+We're going to give it a handle and
+
+123
+00:10:31,349 --> 00:10:36,324
+we're going to say it's type
+hierarchical token bucket, htb.
+
+124
+00:10:36,324 --> 00:10:38,938
+So now we want to add a class under it.
+
+125
+00:10:38,938 --> 00:10:46,338
+So maybe the first level,
+we're only adding the first class,
+
+126
+00:10:46,338 --> 00:10:51,310
+so we can say add .tcclass add dev eth0.
+
+127
+00:10:51,310 --> 00:10:53,900
+So that's that kind of first
+part that we looked at.
+
+128
+00:10:53,900 --> 00:10:59,680
+The parent is 99, so that's this 99.
+
+129
+00:10:59,680 --> 00:11:03,840
+The classid is going to be 99:1.
+
+130
+00:11:03,840 --> 00:11:09,540
+And we're going to say we
+want it to be the qdisc htb.
+
+131
+00:11:09,540 --> 00:11:12,971
+Remember, it has to match and
+
+132
+00:11:12,971 --> 00:11:18,500
+we're going to have it a rate of 100Mbit.
+
+133
+00:11:18,500 --> 00:11:21,840
+Then under that we're going to
+add these two classes.
+
+134
+00:11:23,220 --> 00:11:26,040
+All right, so
+we're going to have these two classes.
+
+135
+00:11:26,040 --> 00:11:33,560
+The parent is both this one, so you can
+see the parent is 99:1 + classid, 99:1.
+
+136
+00:11:33,560 --> 00:11:34,974
+All right, so that's that.
+
+137
+00:11:34,974 --> 00:11:39,660
+And then we give them
+each their own classid.
+
+138
+00:11:39,660 --> 00:11:44,702
+And then we're going to say, as part of
+this hierarchical token bucket, rate, 30.
+
+139
+00:11:44,702 --> 00:11:48,238
+So we're dividing that
+100 into this 30 and 70.
+
+140
+00:11:50,376 --> 00:11:56,978
+And then we're going to now
+add these qdisc at the end.
+
+141
+00:11:56,978 --> 00:12:02,328
+So qdisc add dev eth0,
+the parent is going to
+
+142
+00:12:02,328 --> 00:12:07,940
+be 99:10, so that's this one.
+
+143
+00:12:07,940 --> 00:12:13,158
+And then we're going to set
+the qdisc to be fq_codal.
+
+144
+00:12:15,240 --> 00:12:21,310
+All right, so now we're not going to
+get into hierarchical token bucket,
+
+145
+00:12:21,310 --> 00:12:27,546
+but there's some properties where
+the tokens can be shared among these.
+
+146
+00:12:27,546 --> 00:12:32,741
+So it's a little more than just,
+we're dividing them,
+
+147
+00:12:32,741 --> 00:12:37,106
+the bandwidth equally
+among these children.
+
+148
+00:12:37,106 --> 00:12:43,680
+So that's something that you
+can read into on your own.
+
+149
+00:12:43,680 --> 00:12:49,950
+But this is showing how we can use
+Linux to set up the q and disc policy.
+
+150
+00:12:52,420 --> 00:12:56,180
+All right, so finally,
+let's talk about filters.
+
+151
+00:12:56,180 --> 00:13:01,800
+These filters are for specifying
+which traffic is in which class.
+
+152
+00:13:01,800 --> 00:13:05,728
+So we would have similar command,
+tc filter.
+
+153
+00:13:05,728 --> 00:13:09,872
+So instead of tc qdisc or tc class, again,
+
+154
+00:13:09,872 --> 00:13:14,594
+add|replace|delete, assign it to a device,
+
+155
+00:13:14,594 --> 00:13:19,544
+dev eth0, give it its parent,
+give it a handle and
+
+156
+00:13:19,544 --> 00:13:24,169
+the rest of protocol priority and
+filter type.
+
+157
+00:13:24,169 --> 00:13:25,934
+So let's walk through these.
+
+158
+00:13:25,934 --> 00:13:31,531
+So the top, you need to specify
+the device associated with it.
+
+159
+00:13:31,531 --> 00:13:35,520
+Also you need to specify the parent qdisc.
+
+160
+00:13:35,520 --> 00:13:41,095
+All right, so the next part is specify
+
+161
+00:13:41,095 --> 00:13:45,635
+the protocol this applies to.
+
+162
+00:13:45,635 --> 00:13:50,950
+So commonly, you'll just see all,
+but you might see ip or
+
+163
+00:13:50,950 --> 00:13:56,688
+ipv6 for narrowing it down into
+specific types of traffic.
+
+164
+00:13:56,688 --> 00:14:01,456
+And then priority will specify
+the order of evaluation.
+
+165
+00:14:01,456 --> 00:14:05,320
+So a lower priority number
+means higher priority.
+
+166
+00:14:06,540 --> 00:14:11,050
+All right, so that's protocol ip prior 1.
+
+167
+00:14:12,140 --> 00:14:15,613
+And then the last part
+is a filter type and
+
+168
+00:14:15,613 --> 00:14:19,900
+then the filter type specific parameters.
+
+169
+00:14:19,900 --> 00:14:22,396
+And now there's many
+different types of filters.
+
+170
+00:14:22,396 --> 00:14:25,090
+I think on the next slide,
+we list out a few of them.
+
+171
+00:14:25,090 --> 00:14:28,094
+Each of them will have its own man page.
+
+172
+00:14:28,094 --> 00:14:31,798
+So shown is a basic one, the u32.
+
+173
+00:14:31,798 --> 00:14:38,958
+So I specify the filter type and
+then the u32,
+
+174
+00:14:38,958 --> 00:14:44,507
+I can say stuff like, match ip src and
+
+175
+00:14:44,507 --> 00:14:50,906
+then have my action to apply it into this.
+
+176
+00:14:50,906 --> 00:14:55,410
+Basically, put it into this
+particular class, classid 99:10.
+
+177
+00:14:57,740 --> 00:15:00,468
+All right, so here's examples.
+
+178
+00:15:00,468 --> 00:15:05,095
+So the u32 is a generic filtering
+on arbitrary packet data.
+
+179
+00:15:05,095 --> 00:15:08,940
+It's assisted by syntax to
+abstract common operations.
+
+180
+00:15:10,160 --> 00:15:15,570
+The fw is a filter based on fwmark.
+
+181
+00:15:15,570 --> 00:15:22,900
+And so it directly maps fwmark values,
+sorry, values to traffic classes.
+
+182
+00:15:22,900 --> 00:15:28,891
+And then a really interesting one is
+flow or was a related one flower,
+
+183
+00:15:28,891 --> 00:15:36,140
+which does some flow based classifiers and
+filtering packets based on their flow.
+
+184
+00:15:38,372 --> 00:15:42,957
+All right, so these filters,
+as we kind of did point out,
+
+185
+00:15:42,957 --> 00:15:47,364
+but these filters have a match part and
+an action part.
+
+186
+00:15:47,364 --> 00:15:52,004
+And each has syntax that is
+specific to the match condition.
+
+187
+00:15:52,004 --> 00:15:56,267
+And each has the ability to
+specify the action of the form,
+
+188
+00:15:56,267 --> 00:16:00,860
+either classid,
+followed by the actual classid.
+
+189
+00:16:00,860 --> 00:16:04,257
+So the keyword classid,
+and then the number,
+
+190
+00:16:04,257 --> 00:16:07,056
+which pushes the packets that match.
+
+191
+00:16:07,056 --> 00:16:14,905
+So anything that matches this will
+be pushed into this classid, right?
+
+192
+00:16:14,905 --> 00:16:17,459
+So if you recall,
+we created these classes,
+
+193
+00:16:17,459 --> 00:16:19,686
+we showed how you can create a class.
+
+194
+00:16:19,686 --> 00:16:24,500
+This is one of the mechanisms so
+you can push traffic to it.
+
+195
+00:16:24,500 --> 00:16:30,244
+And then an action is another
+thing you can specify.
+
+196
+00:16:30,244 --> 00:16:34,440
+And this is perform some action
+specific to the match filter.
+
+197
+00:16:34,440 --> 00:16:38,368
+So you can look at the man page for that.
+
+198
+00:16:38,368 --> 00:16:41,061
+We're not really going to go into it, but
+
+199
+00:16:41,061 --> 00:16:45,150
+that's where a lot of this
+additional power of tc comes in.
+
+200
+00:16:47,440 --> 00:16:51,578
+So there's another interesting
+qdisc that I'll mention,
+
+201
+00:16:51,578 --> 00:16:54,924
+it's called NetEm, for network emulation.
+
+202
+00:16:54,924 --> 00:16:57,211
+So it provides functionality for
+
+203
+00:16:57,211 --> 00:17:02,492
+testing protocols by emulating
+the properties of real-world networks.
+
+204
+00:17:02,492 --> 00:17:05,382
+So maybe you want to add
+delays to packets, or
+
+205
+00:17:05,382 --> 00:17:11,320
+add packet loss with some probability,
+so that's something that NetEm can do.
+
+206
+00:17:11,320 --> 00:17:15,808
+So let's look at an example use of NetEm.
+
+207
+00:17:15,808 --> 00:17:20,263
+So say I want to create a new application
+or protocol, and I want to test how it
+
+208
+00:17:20,263 --> 00:17:24,340
+would behave under different
+conditions on a wireless network.
+
+209
+00:17:24,340 --> 00:17:28,093
+So I want to say, great,
+imagine I had a wireless network,
+
+210
+00:17:28,093 --> 00:17:31,630
+I have this application,
+how would it actually work?
+
+211
+00:17:32,880 --> 00:17:38,274
+So what we can do is we can
+insert a Linux node in between.
+
+212
+00:17:38,274 --> 00:17:41,762
+So you can see this,
+this could be a container lab set up.
+
+213
+00:17:41,762 --> 00:17:45,720
+So here's one node, here's another node,
+here's another node.
+
+214
+00:17:45,720 --> 00:17:46,669
+Inside of it,
+
+215
+00:17:46,669 --> 00:17:51,980
+I would do stuff like use ip route to be
+able to forward traffic back and forth.
+
+216
+00:17:51,980 --> 00:17:58,526
+And then I would use tc to
+add some properties that is
+
+217
+00:17:58,526 --> 00:18:04,017
+emulating the wireless network, right?
+
+218
+00:18:04,017 --> 00:18:09,101
+So here we're replacing,
+so tc qdisc replace,
+
+219
+00:18:09,101 --> 00:18:13,100
+much as we do add device eth0.
+
+220
+00:18:13,100 --> 00:18:15,500
+This is going to be the root.
+
+221
+00:18:15,500 --> 00:18:20,303
+The qdisc that I'm using is netem,
+and then the qdisc
+
+222
+00:18:20,303 --> 00:18:25,546
+properties are, I want to delay for
+100 milliseconds.
+
+223
+00:18:32,217 --> 00:18:36,040
+With, I don't remember
+the exact parameters,
+
+224
+00:18:36,040 --> 00:18:40,609
+with a 12-millisecond,
+I think this is variance, and
+
+225
+00:18:40,609 --> 00:18:44,915
+then at a 10% probability to drop packets,
+right?
+
+226
+00:18:44,915 --> 00:18:50,028
+So what that's going to do is make it
+look like this is on a wireless network,
+
+227
+00:18:50,028 --> 00:18:54,240
+and I'm going to do this associated
+with both eth0 and eth1.
+
+228
+00:18:57,320 --> 00:19:02,286
+So at this point, the best thing is for
+you to go practice on your own.
+
+229
+00:19:02,286 --> 00:19:09,120
+I gave you the basics, showed you how
+to understand the various commands.
+
+230
+00:19:09,120 --> 00:19:12,324
+What we provide, again, is a vagrant file.
+
+231
+00:19:12,324 --> 00:19:17,582
+So you can launch a VM, a container
+lab setup that forms this topology,
+
+232
+00:19:17,582 --> 00:19:22,740
+with two external nodes,
+two internal nodes, and a gateway.
+
+233
+00:19:22,740 --> 00:19:27,700
+And then we have a readme with
+a set of commands that you can run.
+
+234
+00:19:27,700 --> 00:19:33,611
+So what's kind of provided there is,
+so there's a tool called iperf,
+
+235
+00:19:33,611 --> 00:19:38,768
+and it's used for being able to
+do kind of performance tests.
+
+236
+00:19:38,768 --> 00:19:43,712
+So you can say run iperf server on int1,
+
+237
+00:19:43,712 --> 00:19:46,625
+iperf client on ext1.
+
+238
+00:19:46,625 --> 00:19:51,575
+And then when you run iperf,
+let's say we're not doing any qos,
+
+239
+00:19:51,575 --> 00:19:58,098
+we're just forwarding, it'll measure how
+much bandwidth is in between these two.
+
+240
+00:19:58,098 --> 00:20:05,360
+It'll try to probe until it gets
+the fastest rate that it can send at.
+
+241
+00:20:05,360 --> 00:20:09,306
+And so we're going to run iperf now,
+then we show, great,
+
+242
+00:20:09,306 --> 00:20:13,620
+now let's actually do
+some rate limiting on it.
+
+243
+00:20:13,620 --> 00:20:18,660
+Let's say we are able to do on our
+machine one gigabit per second.
+
+244
+00:20:18,660 --> 00:20:24,890
+Well, let's limit this to 100 megabits
+per second and run iperf again.
+
+245
+00:20:24,890 --> 00:20:29,231
+So I will use tc here to limit it, right?
+
+246
+00:20:29,231 --> 00:20:33,056
+So there's various other
+things that you can play with,
+
+247
+00:20:33,056 --> 00:20:37,500
+I would suggest running some
+of the examples we had.
+
+248
+00:20:37,500 --> 00:20:40,260
+Search the Internet for other examples.
+
+249
+00:20:40,260 --> 00:20:44,265
+Try to create classification classes and
+filters and
+
+250
+00:20:44,265 --> 00:20:47,726
+things on your own and
+just see what happens.
+
+251
+00:20:47,726 --> 00:20:52,140
+But with this setup,
+you can run a lot of different tests.
+
+252
+00:20:53,920 --> 00:20:56,233
+So with that, we're going to end.
+
+253
+00:20:56,233 --> 00:21:03,770
+And that ends this particular module
+on a variety of Linux utilities and
+
+254
+00:21:03,770 --> 00:21:09,801
+their foundations,
+the kind of background behind them,
+
+255
+00:21:09,801 --> 00:21:15,452
+where we went through tc for
+qos, we went with IPVS for
+
+256
+00:21:15,452 --> 00:21:20,350
+load balancing, and
+we went over iptables for
+
+257
+00:21:20,350 --> 00:21:24,820
+filtering and address translation.
+
+258
+00:21:24,820 --> 00:21:26,495
+All right, thanks.

@@ -1,0 +1,1357 @@
+1
+00:00:07,760 --> 00:00:10,335
+Let's go ahead and get started.
+
+2
+00:00:10,335 --> 00:00:14,660
+Welcome. This time we're
+going to talk about Terraform
+
+3
+00:00:14,660 --> 00:00:20,170
+and give examples of
+how to use it with GCP.
+
+4
+00:00:20,170 --> 00:00:23,720
+Last time we saw
+that Terraform is
+
+5
+00:00:23,720 --> 00:00:28,065
+an infrastructure as
+code framework that
+
+6
+00:00:28,065 --> 00:00:31,320
+infrastructure as code is
+
+7
+00:00:31,320 --> 00:00:33,220
+really powerful
+because it provides
+
+8
+00:00:33,220 --> 00:00:35,320
+you this ability to bring
+
+9
+00:00:35,320 --> 00:00:39,300
+software practices to the
+management of infrastructure.
+
+10
+00:00:39,300 --> 00:00:42,260
+We can describe it
+in a textual format.
+
+11
+00:00:42,260 --> 00:00:47,175
+We can check that
+format into GitHub.
+
+12
+00:00:47,175 --> 00:00:51,035
+We can do code reviews
+on things like
+
+13
+00:00:51,035 --> 00:00:56,030
+this We also saw that
+Terraform was declarative.
+
+14
+00:00:56,030 --> 00:00:58,180
+You describe the state
+
+15
+00:00:58,180 --> 00:01:00,660
+that I want the
+infrastructure to be in,
+
+16
+00:01:00,660 --> 00:01:03,350
+and then Terraform
+will make it happen.
+
+17
+00:01:03,350 --> 00:01:05,180
+If the state ever changes,
+
+18
+00:01:05,180 --> 00:01:07,880
+it can reconcile that and get it
+
+19
+00:01:07,880 --> 00:01:11,115
+back into the state
+that it needs.
+
+20
+00:01:11,115 --> 00:01:13,200
+Now, of course,
+it's not perfect,
+
+21
+00:01:13,200 --> 00:01:15,500
+but it's pretty powerful,
+
+22
+00:01:15,500 --> 00:01:18,830
+and we'll see how to use it.
+
+23
+00:01:19,700 --> 00:01:22,330
+With that, one of
+the things that
+
+24
+00:01:22,330 --> 00:01:24,230
+we're going to do
+is we want to have
+
+25
+00:01:24,230 --> 00:01:29,020
+Terraform be able to manage
+our Google infrastructure.
+
+26
+00:01:29,020 --> 00:01:33,030
+There's not this ability for
+
+27
+00:01:33,030 --> 00:01:36,900
+me as a user to do this
+because it's a tool.
+
+28
+00:01:36,900 --> 00:01:40,785
+There's this concept
+of a service account.
+
+29
+00:01:40,785 --> 00:01:46,200
+A service account is a special
+account that is typically
+
+30
+00:01:46,200 --> 00:01:47,420
+used by an application or
+
+31
+00:01:47,420 --> 00:01:51,705
+compute workload such as
+compute engine instance,
+
+32
+00:01:51,705 --> 00:01:53,835
+or in our case,
+
+33
+00:01:53,835 --> 00:01:56,985
+Terraform running on
+our local machine.
+
+34
+00:01:56,985 --> 00:02:03,520
+It's kind of that account
+rather than it's a person.
+
+35
+00:02:03,520 --> 00:02:07,455
+You can see an overview
+of it in that link.
+
+36
+00:02:07,455 --> 00:02:10,785
+Here's just some pictures
+of the walk-through.
+
+37
+00:02:10,785 --> 00:02:16,410
+You just click on
+the "IAM & Admin".
+
+38
+00:02:16,410 --> 00:02:18,150
+There's going to
+be this spot next.
+
+39
+00:02:18,150 --> 00:02:20,820
+Click "Create a Service
+Account" or go to
+
+40
+00:02:20,820 --> 00:02:21,990
+Service Account
+and then you click
+
+41
+00:02:21,990 --> 00:02:24,595
+"Create Service Account".
+
+42
+00:02:24,595 --> 00:02:26,785
+Enter in some information.
+
+43
+00:02:26,785 --> 00:02:30,890
+What's most important for
+
+44
+00:02:30,890 --> 00:02:34,250
+us to know is that basically
+once it creates that,
+
+45
+00:02:34,250 --> 00:02:36,490
+it creates this account,
+and then it gives
+
+46
+00:02:36,490 --> 00:02:39,630
+you a key that you can download.
+
+47
+00:02:39,630 --> 00:02:43,515
+You download it in
+this JSON format.
+
+48
+00:02:43,515 --> 00:02:46,710
+Let me quick run through that.
+
+49
+00:02:46,710 --> 00:02:50,415
+You can see we're both
+back at this dashboard.
+
+50
+00:02:50,415 --> 00:02:53,445
+I can click on the
+"Navigation Menu".
+
+51
+00:02:53,445 --> 00:02:58,260
+Go down find IAM and
+find Service Accounts.
+
+52
+00:02:58,260 --> 00:03:00,070
+That's one approach.
+
+53
+00:03:00,070 --> 00:03:04,970
+Likewise, I can start
+typing service accounts,
+
+54
+00:03:04,970 --> 00:03:06,370
+and you can see there it is.
+
+55
+00:03:06,370 --> 00:03:08,870
+Either one brings you
+to this exact thing.
+
+56
+00:03:08,870 --> 00:03:10,990
+You can see I've
+already created one
+
+57
+00:03:10,990 --> 00:03:13,910
+for me to run Terraform.
+
+58
+00:03:13,910 --> 00:03:16,370
+Let me create a service account.
+
+59
+00:03:16,370 --> 00:03:21,525
+I'll just call it Terraform 2.
+
+60
+00:03:21,525 --> 00:03:24,430
+It gives it its account ID,
+
+61
+00:03:24,430 --> 00:03:26,155
+I create it and continue.
+
+62
+00:03:26,155 --> 00:03:29,070
+I select a role for it.
+
+63
+00:03:29,070 --> 00:03:31,950
+Roles are basically
+permissions to be
+
+64
+00:03:31,950 --> 00:03:35,320
+able to manage different
+infrastructure.
+
+65
+00:03:35,450 --> 00:03:37,680
+The best practice would be
+
+66
+00:03:37,680 --> 00:03:40,830
+to restrict access
+to what's needed.
+
+67
+00:03:40,830 --> 00:03:44,910
+We're going to focus on
+compute engine a lot.
+
+68
+00:03:44,910 --> 00:03:47,055
+I'm going to use
+this as the role.
+
+69
+00:03:47,055 --> 00:03:48,450
+If it's not showing up because
+
+70
+00:03:48,450 --> 00:03:50,490
+it's under currently
+used for me,
+
+71
+00:03:50,490 --> 00:03:54,190
+you could just start
+typing in this filter,
+
+72
+00:03:54,190 --> 00:03:56,605
+and it will show up.
+
+73
+00:03:56,605 --> 00:03:58,745
+We can click that,
+
+74
+00:03:58,745 --> 00:04:03,090
+click "Continue" and you
+can modify all of that
+
+75
+00:04:03,090 --> 00:04:08,470
+after you create
+and grant users,
+
+76
+00:04:08,470 --> 00:04:12,120
+I don't need to do
+that, and I'm done.
+
+77
+00:04:12,120 --> 00:04:14,430
+Once I have this,
+
+78
+00:04:14,430 --> 00:04:18,345
+here's my Terraform 2.
+
+79
+00:04:18,345 --> 00:04:21,285
+I go to Keys,
+
+80
+00:04:21,285 --> 00:04:25,395
+and I want to say
+Create a New Key.
+
+81
+00:04:25,395 --> 00:04:28,290
+Create this private
+key for Terraform 2,
+
+82
+00:04:28,290 --> 00:04:30,180
+Key Type, JSON,
+
+83
+00:04:30,180 --> 00:04:37,240
+and click "Create" and
+now it downloaded.
+
+84
+00:04:37,550 --> 00:04:41,130
+Keep note of that, and
+that'll be named based on
+
+85
+00:04:41,130 --> 00:04:45,230
+your project and some random
+characters and whatnot.
+
+86
+00:04:45,840 --> 00:04:48,310
+That key is there.
+
+87
+00:04:48,310 --> 00:04:51,350
+You could set the
+expiration and all that,
+
+88
+00:04:51,350 --> 00:04:55,370
+where it has an
+expiration, and so forth.
+
+89
+00:04:55,370 --> 00:04:57,290
+What that will have is
+
+90
+00:04:57,290 --> 00:05:01,970
+basically it's now
+an ability for me to
+
+91
+00:05:01,970 --> 00:05:09,100
+authenticate with Google
+whenever I'm using Terraform.
+
+92
+00:05:09,470 --> 00:05:12,660
+Let me go back to the slides,
+
+93
+00:05:12,660 --> 00:05:14,735
+and that's what we just did.
+
+94
+00:05:14,735 --> 00:05:19,100
+Now let's go over into
+the Terraform code.
+
+95
+00:05:19,100 --> 00:05:22,810
+All this code is
+available on GitHub.
+
+96
+00:05:22,810 --> 00:05:26,840
+This is the repo, the NPP Cloud.
+
+97
+00:05:26,840 --> 00:05:31,340
+Then for this whole
+course, under it,
+
+98
+00:05:31,340 --> 00:05:36,560
+there's a directory called TF
+Mod 1 for Terraform Mod 1,
+
+99
+00:05:36,560 --> 00:05:39,345
+and this is the demo
+we're going through.
+
+100
+00:05:39,345 --> 00:05:42,075
+Let's switch over.
+
+101
+00:05:42,075 --> 00:05:46,680
+Last time I mentioned VS
+Code or Visual Studio.
+
+102
+00:05:46,680 --> 00:05:50,580
+This is what it looks like.
+
+103
+00:05:50,580 --> 00:05:53,260
+If you've never used
+it, it's really cool.
+
+104
+00:05:53,260 --> 00:05:58,500
+It has some syntax highlighting,
+
+105
+00:05:58,500 --> 00:06:00,520
+a nice file explorer over here,
+
+106
+00:06:00,520 --> 00:06:02,030
+so you can see
+here's my directory
+
+107
+00:06:02,030 --> 00:06:04,980
+TF Mod 1 demo under it.
+
+108
+00:06:04,980 --> 00:06:11,095
+I have two files named TF
+for Terraform provider.tf.
+
+109
+00:06:11,095 --> 00:06:12,855
+These other ones are
+
+110
+00:06:12,855 --> 00:06:16,650
+temporary files that
+Terraform creates.
+
+111
+00:06:16,650 --> 00:06:21,100
+If you're doing
+Python development,
+
+112
+00:06:21,100 --> 00:06:24,700
+this is also useful
+because I can run things.
+
+113
+00:06:24,700 --> 00:06:31,630
+It also makes it so that
+I can have a terminal.
+
+114
+00:06:32,240 --> 00:06:37,755
+Where's new terminal?
+
+115
+00:06:37,755 --> 00:06:41,025
+I can pull open
+my terminal here.
+
+116
+00:06:41,025 --> 00:06:43,120
+You can note I'm, again,
+
+117
+00:06:43,120 --> 00:06:46,520
+connecting it to a
+directory in this WSL,
+
+118
+00:06:46,520 --> 00:06:48,695
+the Windows Subsystem for Linux.
+
+119
+00:06:48,695 --> 00:06:50,795
+Move on to machine.
+
+120
+00:06:50,795 --> 00:06:53,760
+You can see it opened
+up a terminal.
+
+121
+00:06:53,760 --> 00:06:56,700
+I'm going to use a separate
+terminal just because
+
+122
+00:06:56,700 --> 00:07:00,375
+it'll be a little easier to see,
+
+123
+00:07:00,375 --> 00:07:03,640
+but you can do that.
+
+124
+00:07:05,450 --> 00:07:08,385
+The first thing we'll see
+
+125
+00:07:08,385 --> 00:07:12,070
+is it'll specify these
+required providers.
+
+126
+00:07:12,070 --> 00:07:14,495
+You're going to specify Google.
+
+127
+00:07:14,495 --> 00:07:19,120
+Once we run it,
+
+128
+00:07:19,120 --> 00:07:23,610
+if we don't have the
+Google's provider installed,
+
+129
+00:07:23,610 --> 00:07:26,200
+it'll get it installed.
+
+130
+00:07:26,300 --> 00:07:28,875
+Let me walk through
+some of the code.
+
+131
+00:07:28,875 --> 00:07:32,280
+The first is this
+provider block.
+
+132
+00:07:32,280 --> 00:07:36,240
+Here, it's the provider.
+
+133
+00:07:36,240 --> 00:07:38,310
+We're going to say we're
+going to use Google.
+
+134
+00:07:38,310 --> 00:07:42,080
+The important part is
+these credentials.
+
+135
+00:07:42,080 --> 00:07:45,000
+This is that file I created.
+
+136
+00:07:45,000 --> 00:07:46,940
+This isn't the one
+I just created.
+
+137
+00:07:46,940 --> 00:07:50,260
+It was for the account
+I already had,
+
+138
+00:07:50,260 --> 00:07:52,190
+and it's that JSON file.
+
+139
+00:07:52,190 --> 00:07:55,245
+This is what's going
+to provide Terraform
+
+140
+00:07:55,245 --> 00:08:00,450
+the credentials needed to
+deploy stuff inside of Google.
+
+141
+00:08:01,100 --> 00:08:03,420
+This is like any other account.
+
+142
+00:08:03,420 --> 00:08:05,160
+If I delete that
+service account,
+
+143
+00:08:05,160 --> 00:08:07,420
+even if this JSON
+file still exists,
+
+144
+00:08:07,420 --> 00:08:08,960
+it won't be able to do anything.
+
+145
+00:08:08,960 --> 00:08:10,380
+When it tries to authenticate
+
+146
+00:08:10,380 --> 00:08:12,820
+with Google, it'll just fail.
+
+147
+00:08:13,310 --> 00:08:15,780
+Define the project.
+
+148
+00:08:15,780 --> 00:08:21,105
+These are the
+defaults that I want.
+
+149
+00:08:21,105 --> 00:08:24,350
+If you note that I'm
+
+150
+00:08:24,350 --> 00:08:29,020
+doing everything in
+this project for class.
+
+151
+00:08:29,290 --> 00:08:31,990
+But if I go under the accounts,
+
+152
+00:08:31,990 --> 00:08:33,850
+you can see the ID,
+and that's what I
+
+153
+00:08:33,850 --> 00:08:36,970
+actually want to use is
+whatever's under that ID.
+
+154
+00:08:37,460 --> 00:08:40,755
+Let me go back to VS Code.
+
+155
+00:08:40,755 --> 00:08:43,130
+I'm going to say
+my default region
+
+156
+00:08:43,130 --> 00:08:44,970
+that if I don't specify it,
+
+157
+00:08:44,970 --> 00:08:47,170
+default to US Central 1.
+
+158
+00:08:47,170 --> 00:08:52,310
+The default zone, if I don't
+specify it, US Central 1C.
+
+159
+00:08:52,310 --> 00:08:55,020
+Now let's go into,
+
+160
+00:08:55,020 --> 00:08:59,100
+the rest of the Terraform code,
+
+161
+00:08:59,100 --> 00:09:04,060
+and I think I have only
+have one resource in it.
+
+162
+00:09:04,060 --> 00:09:07,070
+The one resource is going to
+
+163
+00:09:07,070 --> 00:09:10,930
+be this Google compute instance.
+
+164
+00:09:11,170 --> 00:09:15,475
+I'll bring up a link to that.
+
+165
+00:09:15,475 --> 00:09:20,690
+This is something that the
+Google provider specified.
+
+166
+00:09:20,690 --> 00:09:22,510
+That's the resource type.
+
+167
+00:09:22,510 --> 00:09:25,390
+Then I'm giving it a name.
+
+168
+00:09:25,390 --> 00:09:29,685
+I'm going to say it's
+Module 1 TF VM1.
+
+169
+00:09:29,685 --> 00:09:32,290
+I'm going to give it a name.
+
+170
+00:09:32,330 --> 00:09:36,790
+This is saying create
+a virtual machine.
+
+171
+00:09:37,340 --> 00:09:43,425
+I'm going to tell it the
+machine type, E2-micro.
+
+172
+00:09:43,425 --> 00:09:47,900
+That was the same as
+what we did last time.
+
+173
+00:09:47,900 --> 00:09:50,640
+I can specify a different zone.
+
+174
+00:09:50,640 --> 00:09:52,840
+I can say US West
+
+175
+00:09:53,330 --> 00:10:00,280
+1-C. You put the region and
+the zone together like that.
+
+176
+00:10:01,310 --> 00:10:05,960
+Then I can specify my
+network interface.
+
+177
+00:10:05,960 --> 00:10:12,460
+I'm going to say use the
+default network parameters
+
+178
+00:10:12,460 --> 00:10:17,580
+and use the default image
+that's specified there.
+
+179
+00:10:17,580 --> 00:10:23,595
+Here, I'm going to say this
+extra thing is metadata.
+
+180
+00:10:23,595 --> 00:10:27,240
+What that is is on
+
+181
+00:10:27,240 --> 00:10:32,990
+a Google server only
+accessible internal to Google.
+
+182
+00:10:32,990 --> 00:10:36,550
+They have this server called
+metadata server running,
+
+183
+00:10:36,550 --> 00:10:42,570
+and your virtual machine can
+interface to that server.
+
+184
+00:10:42,570 --> 00:10:44,760
+One of the things
+that it does is
+
+185
+00:10:44,760 --> 00:10:47,790
+a default look at some of these,
+
+186
+00:10:47,790 --> 00:10:51,315
+and here it creates
+these key-value pairs.
+
+187
+00:10:51,315 --> 00:10:53,750
+We're specifying
+a startup script
+
+188
+00:10:53,750 --> 00:10:56,390
+to basically install some stuff.
+
+189
+00:10:56,390 --> 00:11:00,900
+You don't need that, but I
+wanted some stuff installed.
+
+190
+00:11:01,220 --> 00:11:04,205
+That's the code.
+
+191
+00:11:04,205 --> 00:11:10,070
+Now, what I will do is let
+me go back to the slides.
+
+192
+00:11:10,070 --> 00:11:11,770
+I think the next slide, say,
+
+193
+00:11:11,770 --> 00:11:17,010
+let's go into the console and
+see any virtual machines.
+
+194
+00:11:17,130 --> 00:11:23,030
+Let me go back to
+the VM Instances,
+
+195
+00:11:23,030 --> 00:11:27,370
+and we'll see there's
+nothing there.
+
+196
+00:11:28,400 --> 00:11:31,185
+How you run Terraform
+
+197
+00:11:31,185 --> 00:11:36,345
+is first you need to
+initialize the directory.
+
+198
+00:11:36,345 --> 00:11:38,270
+That's stuff like it'll download
+
+199
+00:11:38,270 --> 00:11:40,875
+the provider and
+things like that.
+
+200
+00:11:40,875 --> 00:11:44,650
+Then you can run this
+command Terraform plan,
+
+201
+00:11:44,650 --> 00:11:47,490
+which will look at
+the infrastructure
+
+202
+00:11:47,490 --> 00:11:50,850
+and then say here's all the
+changes that I would make.
+
+203
+00:11:50,850 --> 00:11:55,650
+I then want to run Terraform
+apply to say, yes,
+
+204
+00:11:55,650 --> 00:11:58,385
+go ahead and make all
+of these changes,
+
+205
+00:11:58,385 --> 00:12:01,020
+and it'll show you
+what changes are made.
+
+206
+00:12:01,190 --> 00:12:04,275
+Let's go into the terminal.
+
+207
+00:12:04,275 --> 00:12:08,230
+I'm in this directory
+TF Mod 1 demo.
+
+208
+00:12:08,230 --> 00:12:10,260
+These are the files
+that I was just
+
+209
+00:12:10,260 --> 00:12:12,775
+showing you the main.tf.
+
+210
+00:12:12,775 --> 00:12:18,205
+You can see it's,
+describing all that.
+
+211
+00:12:18,205 --> 00:12:22,105
+I could say Terraform in it.
+
+212
+00:12:22,105 --> 00:12:24,870
+It's initializing the back end,
+
+213
+00:12:24,870 --> 00:12:26,315
+getting the provider plug-ins.
+
+214
+00:12:26,315 --> 00:12:28,380
+All of them already existed for
+
+215
+00:12:28,380 --> 00:12:31,560
+me because I've already
+initialized this,
+
+216
+00:12:31,560 --> 00:12:33,660
+but that's what you're going
+to want to do first time you
+
+217
+00:12:33,660 --> 00:12:36,520
+do anything Terraform plan.
+
+218
+00:12:36,520 --> 00:12:39,425
+This is going to look
+at my Terraform code.
+
+219
+00:12:39,425 --> 00:12:42,860
+Then because it
+specified the provider,
+
+220
+00:12:42,860 --> 00:12:45,025
+it'll look inside of
+the provider and say
+
+221
+00:12:45,025 --> 00:12:48,180
+what's the current state.
+
+222
+00:12:48,180 --> 00:12:51,750
+Actually, I look in
+these temporary files.
+
+223
+00:12:51,750 --> 00:12:55,920
+You could see it's saying
+here's all the changes that I
+
+224
+00:12:55,920 --> 00:13:01,090
+would make these pluses
+all this create.
+
+225
+00:13:02,780 --> 00:13:05,480
+The next thing, and all of
+
+226
+00:13:05,480 --> 00:13:08,590
+these extra fields
+are just taking
+
+227
+00:13:08,590 --> 00:13:11,540
+the default or the ones that
+
+228
+00:13:11,540 --> 00:13:15,810
+you can know after
+it's been applied.
+
+229
+00:13:17,000 --> 00:13:21,370
+Now I can say Terraform apply.
+
+230
+00:13:21,800 --> 00:13:24,060
+It's also going to say here's
+
+231
+00:13:24,060 --> 00:13:25,220
+all the changes
+I'm going to make.
+
+232
+00:13:25,220 --> 00:13:28,555
+If we scrolled up,
+it'll show all of that.
+
+233
+00:13:28,555 --> 00:13:31,530
+Then it's going to
+say do you really
+
+234
+00:13:31,530 --> 00:13:34,335
+want to perform these actions?
+
+235
+00:13:34,335 --> 00:13:37,960
+Here we have to type yes just as
+
+236
+00:13:37,960 --> 00:13:42,760
+an extra safeguard against
+modifying your infrastructure.
+
+237
+00:13:42,760 --> 00:13:48,520
+Now it's going about and
+making these changes.
+
+238
+00:13:48,650 --> 00:13:51,740
+The stakes we showed
+in the console.
+
+239
+00:13:51,740 --> 00:13:56,650
+It took a little bit of time
+to create virtual machines,
+
+240
+00:13:56,650 --> 00:13:59,225
+but now it's done.
+
+241
+00:13:59,225 --> 00:14:02,820
+I can now go into the console,
+
+242
+00:14:02,820 --> 00:14:07,120
+let me reload, and there we go.
+
+243
+00:14:07,120 --> 00:14:10,660
+There's that VM that
+I just created.
+
+244
+00:14:10,660 --> 00:14:14,580
+It has all the exact
+parameters that I wanted.
+
+245
+00:14:14,580 --> 00:14:20,660
+We'll see how you can
+get these other fields.
+
+246
+00:14:20,740 --> 00:14:24,750
+Actually, let me show that
+right now real quick.
+
+247
+00:14:24,750 --> 00:14:28,600
+Another thing you could
+do is Terraform show.
+
+248
+00:14:28,600 --> 00:14:35,220
+That'll show what all the
+different fields are.
+
+249
+00:14:35,220 --> 00:14:36,540
+Some of these got filled in,
+
+250
+00:14:36,540 --> 00:14:38,860
+and you can look down under
+network interface you
+
+251
+00:14:38,860 --> 00:14:42,075
+can see in the network
+IP. There we go.
+
+252
+00:14:42,075 --> 00:14:45,245
+Under nat IP,
+
+253
+00:14:45,245 --> 00:14:47,625
+and that's same thing as
+
+254
+00:14:47,625 --> 00:14:50,260
+external IP, and you
+can get those out.
+
+255
+00:14:50,260 --> 00:14:54,685
+You can get all this
+in JSON format.
+
+256
+00:14:54,685 --> 00:15:00,580
+If you like, I can pipe
+that into a tool like JQ,
+
+257
+00:15:00,580 --> 00:15:02,800
+which would make
+it look prettier,
+
+258
+00:15:02,800 --> 00:15:07,205
+but then I can also run
+queries on it to do subset.
+
+259
+00:15:07,205 --> 00:15:14,775
+You'll need to do that in
+Module 2 as part of the lab.
+
+260
+00:15:14,775 --> 00:15:17,930
+Now, I have
+infrastructure running,
+
+261
+00:15:17,930 --> 00:15:19,350
+but let's say I want to just say
+
+262
+00:15:19,350 --> 00:15:21,450
+tear down everything
+that I just created.
+
+263
+00:15:21,450 --> 00:15:24,555
+That's where I can run
+Terraform, destroy.
+
+264
+00:15:24,555 --> 00:15:27,290
+This makes it great
+because I don't need to
+
+265
+00:15:27,290 --> 00:15:29,855
+go into a bunch of
+different menu items,
+
+266
+00:15:29,855 --> 00:15:31,820
+but I get to delete
+
+267
+00:15:31,820 --> 00:15:34,530
+all the infrastructure
+I just created.
+
+268
+00:15:35,110 --> 00:15:39,410
+Now I get to save
+
+269
+00:15:39,410 --> 00:15:41,550
+money because one of the
+worst things that you can
+
+270
+00:15:41,550 --> 00:15:45,110
+do is leave all your
+infrastructure up
+
+271
+00:15:45,110 --> 00:15:46,710
+and running and forget about it
+
+272
+00:15:46,710 --> 00:15:49,500
+because it's charging
+you when it's running.
+
+273
+00:15:49,500 --> 00:15:54,000
+By doing this, I'm
+turning everything off.
+
+274
+00:15:54,000 --> 00:15:58,550
+It's the end of my day,
+great, turn everything off.
+
+275
+00:15:58,550 --> 00:15:59,970
+I'm not using it anymore.
+
+276
+00:15:59,970 --> 00:16:05,130
+It automated all of that
+and it's shut it down.
+
+277
+00:16:05,130 --> 00:16:06,870
+Once this is complete,
+
+278
+00:16:06,870 --> 00:16:12,690
+we can go back in and validate
+that it was destroyed.
+
+279
+00:16:12,860 --> 00:16:16,455
+Let me see if there's any
+more slides. There are not.
+
+280
+00:16:16,455 --> 00:16:21,080
+Let's just wait for
+this to have completed.
+
+281
+00:16:21,080 --> 00:16:24,100
+Go back to this.
+
+282
+00:16:24,290 --> 00:16:28,960
+This is good fun
+for you to watch.
+
+283
+00:16:29,840 --> 00:16:32,920
+How about the
+weather? There we go.
+
+284
+00:16:32,920 --> 00:16:34,640
+Now it's done.
+
+285
+00:16:34,640 --> 00:16:39,275
+I could go back into
+here, reload this.
+
+286
+00:16:39,275 --> 00:16:42,060
+Great. There's no VM instances.
+
+287
+00:16:42,060 --> 00:16:43,580
+Now, you might think, it's
+
+288
+00:16:43,580 --> 00:16:45,960
+only one VM that would
+have been easy to do.
+
+289
+00:16:45,960 --> 00:16:48,640
+Now imagine, it's several VMs.
+
+290
+00:16:48,640 --> 00:16:50,600
+It's different infrastructure
+
+291
+00:16:50,600 --> 00:16:51,850
+that we're actually creating.
+
+292
+00:16:51,850 --> 00:16:55,800
+We're only scratching the
+surface here right now.
+
+293
+00:16:55,800 --> 00:16:59,660
+It'll become much more
+useful as we go along.
+
+294
+00:16:59,660 --> 00:17:01,755
+With that, we'll end here
+
+295
+00:17:01,755 --> 00:17:05,590
+and we'll see you
+next time. Thanks.

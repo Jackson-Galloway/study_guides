@@ -1,0 +1,120 @@
+Now let's get into Kubernetes Networking. So here we're not just going to see
+what the networking contracts are and how we can handle them or
+how we can use them but we're also going to see how
+they're actually implemented. So it's this kind of combination
+which I think is quite powerful to really understand. And be able to troubleshoot and
+kind of know what you're doing with a system like Kubernetes and
+then potentially even extend it. So what types of communication
+do we actually need? So we broke down in the slide some
+of the basic communications we need. We need a pod to a pod, I need for
+a pod to be able to talk to a set of pods. I need a pod to be able to talk
+to some external service that's outside of the cluster. And then I need some external service to
+be able to talk to a pod or a set of pods. So we're going to go through
+one by one each of these, so first let's start with pod to pod. So if you recall,
+each pod gets its own IP address. Shown said here is inside of some
+kind of address range in some subnet, and this kind of represents
+this Kubernetes network. So across networks, nodes where the nodes
+would be in a different kind of subnet. So we got to figure out how to
+make things happen internally. So this is where the container
+network interface, or CNI comes in. So the container runtime
+creates the pod and calls a network plugin to set up
+the networking for that pod, right? So the configuration and API of a network plugin is
+what follows the CNI spec. So the CNI spec is just,
+or the CNI is just a spec which says how these things
+is the interface well, between the components of the container
+runtime and a network plugin. Then you can go and create Kubernetes
+can use a bunch of different plugins. And in fact, next lesson we're going to
+actually create our own network plugin. So the spec talks about how
+to do the configuration, but then also what to do when
+a container gets added or deleted. Maybe there's some checks
+that need to be performed, so those are kinds of
+the things that it does. So one popular network plugin
+is something called Flannel and so this is a picture of what
+flannel actually creates. And so this should look familiar,
+all right? So here it creates
+inside of a container or as part of the container,
+it's going to create a vethpair, attach that vethpair to a bridge, cni0. There's going to set up some
+networking on a physical node. So this is node0, node1, and then it's going to use some
+sort of tunneling mechanism. So this picture is showing
+it using VXLAN tunneling. But if you recall
+the picture that we said, the use case three set up on your own,
+we said GRE tunneling, that would be another viable alternative. But you could see great,
+all of this networking inside of Linux, that's what flannel sets up. And so now through what it's set up, a container inside of this flannel
+network could have an address, 10.244.0.1, maybe this one is 10.244.1.1. And they can communicate with
+each other through the veth, through the bridge, through this tunnel. The vxlan device through the physical
+node, go across a physical network, come into here and
+then do the reverse, all right? So that's flannel and
+that's what kind of a network plugin does. Now the next thing is how do pod
+to multiple pods communicate? So we talked about last time,
+but kind of reiterating here, the contract in Kubernetes is
+called a service to represent this. So a service is an abstraction which
+defines a local logical set of pods and a policy by which to access them. And then it load balances between them, so it uses a selector to see
+which nodes should be in its set. All right, so we know that we saw
+the YAML files, we deployed it, it's in the GitHub repo,
+you can try it yourself. So how is this implemented? Is with a component called kube-proxy. So Kube-proxy is a component shown
+right here, that makes sure clients can connect to the services,
+you define load balanced when needed. It runs on every node and now it's not an actual proxy in
+that it's in the path of traffic. It's actually not in the path of traffic, it's just an interface to iptables or
+ipvs. All right, so the API server,
+when it changes something like maybe the endpoints
+that are part of a service, great, kube-proxy will see that. And since it's running on each node,
+it will update the iptables or ipvs running in Kubernetes. So when you set up your cluster, you can
+say which one you want to actually use. So I believe iptables is the default, but you can also say to use ipvs. So now when a client talks to a pod,
+it's actually going through iptables or ipvs to load balance between those pods,
+all right? So we clearly saw how to do ipvs,
+it does load balancing. But how do you do load
+balancing with iptables? So luckily there's this nice
+site that had a really nice example of how you could do
+load balancing with iptables. So you can use this module
+called statistic and then basically say with probability
+match this particular rule, all right? So you're going to match
+all this other stuff, so this is the nat table prerouting chain. Match this destination IP address, match this destination port, and
+with probability match this. So if it matches that with 33%
+probability it'll match this and then it'll choose destination 10.0.0.2. And the next one with 50% probability,
+choose that and then the last one is
+with 100% probability. So why it's kind of 33 5100 percent is because if it didn't match this, now you need to select between these two, so that gives each a 33%
+chance of matching. [COUGH] So
+kind of walking through an example, let's say we mentioned that
+the service gets an IP address. No interfaces are created,
+just it's a virtual IP address and then let's say we have example endpoints. 10.244.1.2, that's over here on node 1 and 2.2 on node 2, so
+that's this one right here. So let's say it's zero wants
+to talk to the service. It comes into the source, and destination
+is the source of this container, destination is the destination
+of the service. It'll come into the iptables node and iptables is set to
+rewrite from the service address to one of the actual endpoints. And then once it's rewritten, now we have
+basically this pod to pod communication. So now it can go through that CNI zero,
+it can go through that VXLAN tunnel, whatever is needed to get it
+to the particular destination. And so this case,
+it'll be able to make its way there. All right,
+now let's look at pod to external. So this is the case
+where we have a pod and maybe we have some
+address of a database or DNS URL of a database running in AWS. So all this is,
+it's a different type of service. So it's still service,
+but when you define it, you're saying type external name and
+tell it where to find it. So now this pod, same exact
+mechanism to talk to that service, uses that IP address, but then the translation translates
+it to something external. All right, now [COUGH],
+excuse me, external to internal. So we mentioned this in the case
+of the port forwarding and Kubecontrol port forwarding, but that's not really a production
+thing that you would use. So instead we're going to use ingress and
+ingress controllers. So the ingress is a resource
+that you would kind of define per service that you want to run or
+entry point you want. And then the ingress controller
+is some load balancer. So let's go through that. So the ingress controller is
+a load balancer such as nginx, traffic, haproxy, whatever. So you need to deploy
+an ingress controller first. So if you want to deploy,
+I think this is for nginx, for the system, this is for
+the system to use, you say all of that. All right, now, no cloud providers. If you're using like AWS or
+Google and their Kubernetes clusters, they've already deployed an ingress
+controller, so you don't have to do that. Now once that's done for the cluster, now we can actually use it as a user,
+this is where an ingress comes in. You create an ingress to tell the ingress
+controller how to reach a service. So I can say create an ingress,
+give it some stuff, basically saying it's using nginx and
+then here's some specs. The main thing to look at is
+ultimately it's saying for this path, which is everything in this case
+go to the service, blog service. So Kubernetes, the ingress will see that when it gets deployed, it will then configure nginx. What's the ingress controller? It'll configure that to load
+balance to this particular service. And it's a layer seven load balancer so you can have it go into
+multiple different services. All right, so we went over how the main constructs of networking
+are done in Kubernetes. So up next we're actually
+going to dive in and see how do we create a network
+plugin ourselves, all right? And with that we'll end here and thanks.

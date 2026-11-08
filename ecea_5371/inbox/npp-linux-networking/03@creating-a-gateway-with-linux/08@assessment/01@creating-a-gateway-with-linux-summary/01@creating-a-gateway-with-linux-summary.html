@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Creating a Gateway with Linux Summary</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Why would you want to filter traffic?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MuTw74" type="radio"/> <div class="quiz-option-text"><p>To ensure that priority traffic gets through first</p></div></li>
+<li><input name="autoGradableResponseId~MuTw74" type="radio"/> <div class="quiz-option-text"><p>To ensure adherence to best practices in Internet routing</p></div></li>
+<li><input name="autoGradableResponseId~MuTw74" type="radio"/> <div class="quiz-option-text"><p>To reduce the load on the gateway that is performing the filtering</p></div></li>
+<li><input name="autoGradableResponseId~MuTw74" type="radio"/> <div class="quiz-option-text"><p>To keep traffic from reaching end host applications and overwhelming them</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When doing address translation for the purposes of port forwarding, which field(s) need to get modified on the ingress direction.  Select all that apply.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Sq51yP" type="checkbox"/> <div class="quiz-option-text"><p>Source TCP port</p></div></li>
+<li><input name="autoGradableResponseId~Sq51yP" type="checkbox"/> <div class="quiz-option-text"><p>Source IP address</p></div></li>
+<li><input name="autoGradableResponseId~Sq51yP" type="checkbox"/> <div class="quiz-option-text"><p>Destination TCP port</p></div></li>
+<li><input name="autoGradableResponseId~Sq51yP" type="checkbox"/> <div class="quiz-option-text"><p>Destination IP address</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What table is used for the following command: iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ZvRckq" type="radio"/> <div class="quiz-option-text"><p>filter</p></div></li>
+<li><input name="autoGradableResponseId~ZvRckq" type="radio"/> <div class="quiz-option-text"><p>nat</p></div></li>
+<li><input name="autoGradableResponseId~ZvRckq" type="radio"/> <div class="quiz-option-text"><p>It does not target a table</p></div></li>
+<li><input name="autoGradableResponseId~ZvRckq" type="radio"/> <div class="quiz-option-text"><p>mangle</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In a practice exercise, we ran a command, 'iptables -t nat -A PREROUTING -d 111.111.0.1 -p tcp --dport 1000 -j DNAT --to-destination 10.10.0.2'.  What is this doing?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~58OVEw" type="radio"/> <div class="quiz-option-text"><p>This is an illegal command and would not have any affect.</p></div></li>
+<li><input name="autoGradableResponseId~58OVEw" type="radio"/> <div class="quiz-option-text"><p>For ingress traffic destined to the public facing IP address of the gateway (111.111.0.1), it translates the destination to 10.10.0.2, a private IP address of an internal host.</p></div></li>
+<li><input name="autoGradableResponseId~58OVEw" type="radio"/> <div class="quiz-option-text"><p>For traffic coming from an internal host, with the address 10.10.10.2, translate the destination to the IP address of the public facing address, 111.111.0.2</p></div></li>
+<li><input name="autoGradableResponseId~58OVEw" type="radio"/> <div class="quiz-option-text"><p>For traffic that is marked to be translated (with the nat mark in the packet), translate destination to 10.10.0.2.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Round robin is an example load balancing scheduling algorithm (choosing a backend server).  It can ensure the load on each server is roughly the same, assuming which of the following.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~sqsPAQ" type="radio"/> <div class="quiz-option-text"><p>Each request takes roughly the same amount of processing to handle.</p></div></li>
+<li><input name="autoGradableResponseId~sqsPAQ" type="radio"/> <div class="quiz-option-text"><p>There is an odd number of backend servers</p></div></li>
+<li><input name="autoGradableResponseId~sqsPAQ" type="radio"/> <div class="quiz-option-text"><p>There is an even number of backend server</p></div></li>
+<li><input name="autoGradableResponseId~sqsPAQ" type="radio"/> <div class="quiz-option-text"><p>Each request is to a unique API end point</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the command 'ipvsadm -A -t 207.175.44.110:80 -s rr', which of the following best describes what it is doing?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~sGE3HV" type="radio"/> <div class="quiz-option-text"><p>It is not a valid command in Linux</p></div></li>
+<li><input name="autoGradableResponseId~sGE3HV" type="radio"/> <div class="quiz-option-text"><p>Adding a TCP service at IP address 207.175.44.110 port 80, and will select a backend server in a round robin manner.</p></div></li>
+<li><input name="autoGradableResponseId~sGE3HV" type="radio"/> <div class="quiz-option-text"><p>Adding a backend server with IP address 207.175.44.110 to all traffic destined to port 80, and add it to the round robin scheduler.</p></div></li>
+<li><input name="autoGradableResponseId~sGE3HV" type="radio"/> <div class="quiz-option-text"><p>Adding a backend server to the service running at IP address 207.175.44.110 port 80, and add it to the round robin scheduler.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the context of quality of service, which of the following best defines shaping.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~R3QgIW" type="radio"/> <div class="quiz-option-text"><p>Determining which packet to transmit next and which packets to drop</p></div></li>
+<li><input name="autoGradableResponseId~R3QgIW" type="radio"/> <div class="quiz-option-text"><p>Ensuring a given class of traffic conforms to desired properties such as rates</p></div></li>
+<li><input name="autoGradableResponseId~R3QgIW" type="radio"/> <div class="quiz-option-text"><p>Inspecting packets to identify what class of traffic they belong to</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the context of quality of service, which of the following best defines scheduling.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~q4Vex7" type="radio"/> <div class="quiz-option-text"><p>Inspecting packets to identify what class of traffic they belong to</p></div></li>
+<li><input name="autoGradableResponseId~q4Vex7" type="radio"/> <div class="quiz-option-text"><p>Determining which packet to transmit next and which packets to drop</p></div></li>
+<li><input name="autoGradableResponseId~q4Vex7" type="radio"/> <div class="quiz-option-text"><p>Ensuring a given class of traffic conforms to desired properties such as rates</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In traffic shaping two key properties are traffic rate and allowed burst, In the token bucket algorithm, which correctly associates the concept in the algorithm and the assocated key property</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~BGgaNo" type="radio"/> <div class="quiz-option-text"><p>rate at which the bucket is dumped out, and width of the hole in the bucket.</p></div></li>
+<li><input name="autoGradableResponseId~BGgaNo" type="radio"/> <div class="quiz-option-text"><p>rate at which tokens are added to the bucket, and depth of the bucket.</p></div></li>
+<li><input name="autoGradableResponseId~BGgaNo" type="radio"/> <div class="quiz-option-text"><p>rate at which the bucket depth changes, and width of the hole in the bucket.</p></div></li>
+<li><input name="autoGradableResponseId~BGgaNo" type="radio"/> <div class="quiz-option-text"><p>rate at which tokens are removed from the bucket, and depth of the bucket.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given 'tc qdisc add dev eth0 root handle 1: tbf rate 1mbit burst 32kbit latency 400ms', what queueing discipline is used.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~GYi2pX" type="radio"/> <div class="quiz-option-text"><p>The root qdisc</p></div></li>
+<li><input name="autoGradableResponseId~GYi2pX" type="radio"/> <div class="quiz-option-text"><p>The rate qdisc</p></div></li>
+<li><input name="autoGradableResponseId~GYi2pX" type="radio"/> <div class="quiz-option-text"><p>The default qdisc for dev eth0</p></div></li>
+<li><input name="autoGradableResponseId~GYi2pX" type="radio"/> <div class="quiz-option-text"><p>The token bucket filter (tbf) qdisc</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2198 @@
+1
+00:00:08,780 --> 00:00:12,660
+Let's get started. This time
+we're actually going to
+
+2
+00:00:12,660 --> 00:00:16,300
+dive into Linux networking.
+
+3
+00:00:16,300 --> 00:00:18,340
+We'll do this,
+we'll ease into it
+
+4
+00:00:18,340 --> 00:00:21,500
+with Linux network
+device configuration,
+
+5
+00:00:21,500 --> 00:00:25,410
+and we're going to
+use the IP link tool.
+
+6
+00:00:27,100 --> 00:00:32,460
+Our goal here is network
+device configuration.
+
+7
+00:00:32,460 --> 00:00:34,900
+When we say device,
+what do we mean?
+
+8
+00:00:34,900 --> 00:00:38,300
+There's all types of devices
+that Linux supports.
+
+9
+00:00:38,300 --> 00:00:42,140
+This could refer to
+
+10
+00:00:42,140 --> 00:00:46,810
+physical interfaces
+like Ethernet devices.
+
+11
+00:00:46,810 --> 00:00:49,420
+It can refer to devices that
+
+12
+00:00:49,420 --> 00:00:53,545
+attach to another
+device like a VLAN.
+
+13
+00:00:53,545 --> 00:00:55,825
+They can connect together
+
+14
+00:00:55,825 --> 00:01:00,940
+multiple devices like
+a bridge device.
+
+15
+00:01:01,670 --> 00:01:05,715
+Devices exist that can tunnel
+
+16
+00:01:05,715 --> 00:01:10,420
+traffic like VXLAN or GENEVE.
+
+17
+00:01:10,680 --> 00:01:15,260
+We can also create
+virtual devices.
+
+18
+00:01:15,260 --> 00:01:16,840
+That's something
+we're going to have
+
+19
+00:01:16,840 --> 00:01:20,695
+a whole module dedicated to.
+
+20
+00:01:20,695 --> 00:01:25,580
+But for now, let's get
+into the IP link tool.
+
+21
+00:01:25,600 --> 00:01:30,595
+Now, as a little set the stage,
+
+22
+00:01:30,595 --> 00:01:33,040
+there's different utilities that
+
+23
+00:01:33,040 --> 00:01:36,580
+could actually serve
+the same purpose.
+
+24
+00:01:36,580 --> 00:01:39,860
+We have one set of
+utilities as part of
+
+25
+00:01:39,860 --> 00:01:42,240
+this iproute2 package and
+
+26
+00:01:42,240 --> 00:01:45,320
+then another set as
+part of net-tools.
+
+27
+00:01:45,320 --> 00:01:49,460
+Iproute2 is a collection
+
+28
+00:01:49,460 --> 00:01:53,580
+of utilities for controlling
+TCP/IP networking,
+
+29
+00:01:53,580 --> 00:01:56,225
+and traffic control in Linux.
+
+30
+00:01:56,225 --> 00:01:58,400
+Net-tools is a collection of
+
+31
+00:01:58,400 --> 00:02:01,280
+base networking
+utilities for Linux,
+
+32
+00:02:01,280 --> 00:02:03,030
+like I have config,
+
+33
+00:02:03,030 --> 00:02:05,505
+arp, route, and so forth.
+
+34
+00:02:05,505 --> 00:02:08,085
+We'll use iproute2.
+
+35
+00:02:08,085 --> 00:02:10,280
+But a lot of
+
+36
+00:02:10,280 --> 00:02:12,800
+the things that you can
+do that we'll talk about,
+
+37
+00:02:12,800 --> 00:02:18,310
+there's other tools and other
+ways that you can do them.
+
+38
+00:02:18,380 --> 00:02:24,380
+We're going to focus in this
+part right now on IP link.
+
+39
+00:02:24,380 --> 00:02:28,140
+This is for network
+device configuration
+
+40
+00:02:28,140 --> 00:02:32,275
+for Linux and it's part
+of this iproute2 package.
+
+41
+00:02:32,275 --> 00:02:36,675
+The key commands are show,
+
+42
+00:02:36,675 --> 00:02:40,570
+set, add, and delete.
+
+43
+00:02:41,120 --> 00:02:47,475
+With everything there's a man
+page that exists for this.
+
+44
+00:02:47,475 --> 00:02:52,380
+Shown here is a
+screen capture of it.
+
+45
+00:02:52,380 --> 00:02:55,560
+You can see the commands
+structure will be
+
+46
+00:02:55,560 --> 00:03:00,135
+IP link and then whatever
+the command is like
+
+47
+00:03:00,135 --> 00:03:03,240
+IP link ad and then this shows
+
+48
+00:03:03,240 --> 00:03:05,500
+the various options that you can
+
+49
+00:03:05,500 --> 00:03:09,600
+associate or add on
+to that command.
+
+50
+00:03:09,600 --> 00:03:12,270
+We'll go through this.
+
+51
+00:03:12,270 --> 00:03:17,120
+The main thing is just look
+at the man page yourself.
+
+52
+00:03:17,120 --> 00:03:20,095
+Let's start with ip link show.
+
+53
+00:03:20,095 --> 00:03:24,555
+Let's flip over to the man page.
+
+54
+00:03:24,555 --> 00:03:29,380
+Let's search for ip link show.
+
+55
+00:03:29,420 --> 00:03:33,570
+It says display
+device attributes.
+
+56
+00:03:33,570 --> 00:03:36,080
+You've already created devices
+
+57
+00:03:36,080 --> 00:03:39,290
+and you want to show
+their attributes.
+
+58
+00:03:39,290 --> 00:03:43,630
+You could just type ip
+link show by itself.
+
+59
+00:03:47,930 --> 00:03:50,560
+There's more options
+that allow you
+
+60
+00:03:50,560 --> 00:03:53,380
+to filter down what
+exactly you're displaying.
+
+61
+00:03:53,380 --> 00:03:56,450
+If we look at the very top,
+
+62
+00:03:57,150 --> 00:04:00,290
+well, that's the bottom.
+
+63
+00:04:00,290 --> 00:04:08,200
+Ip link show device and
+then some options here.
+
+64
+00:04:10,790 --> 00:04:14,140
+This gets a little more details.
+
+65
+00:04:15,140 --> 00:04:20,425
+Getting back to the slides.
+
+66
+00:04:20,425 --> 00:04:23,570
+We could just run
+an ip link show.
+
+67
+00:04:23,570 --> 00:04:27,980
+We can limit the output
+ip link show some device,
+
+68
+00:04:27,980 --> 00:04:32,460
+we can show only those
+that have the up state.
+
+69
+00:04:32,460 --> 00:04:34,950
+We can provide some
+extra options.
+
+70
+00:04:34,950 --> 00:04:37,260
+Some useful ones that you might
+
+71
+00:04:37,260 --> 00:04:42,155
+see like being able
+to output in JSON.
+
+72
+00:04:42,155 --> 00:04:44,040
+That allows you to create
+
+73
+00:04:44,040 --> 00:04:47,300
+some tools that can parse
+that and things like that.
+
+74
+00:04:48,590 --> 00:04:52,370
+How these options would
+be run is you just put
+
+75
+00:04:52,370 --> 00:04:55,730
+these before like IP.
+
+76
+00:04:55,730 --> 00:05:00,330
+Here's your options and
+then link and show.
+
+77
+00:05:00,640 --> 00:05:06,260
+IP link set. This is to change
+
+78
+00:05:06,260 --> 00:05:12,905
+the state or the configuration
+of an RD existing device.
+
+79
+00:05:12,905 --> 00:05:17,165
+We can go over to the man page,
+
+80
+00:05:17,165 --> 00:05:21,030
+now search for set.
+
+81
+00:05:24,730 --> 00:05:27,440
+Again, here's all the options,
+
+82
+00:05:27,440 --> 00:05:29,855
+so you specify in the device.
+
+83
+00:05:29,855 --> 00:05:36,840
+Then what different option are
+you going to set for that.
+
+84
+00:05:38,110 --> 00:05:41,360
+Some of the key ones are
+
+85
+00:05:41,360 --> 00:05:48,690
+address there and then setting
+the device up or down.
+
+86
+00:05:49,270 --> 00:05:54,810
+Going back, showing those
+would be IP link set.
+
+87
+00:05:54,940 --> 00:06:00,875
+Specify the device, so we
+say device or dev eth0,
+
+88
+00:06:00,875 --> 00:06:03,110
+and then we're going to apply
+
+89
+00:06:03,110 --> 00:06:05,210
+the option of the address and
+
+90
+00:06:05,210 --> 00:06:09,725
+then what value
+we're setting it to.
+
+91
+00:06:09,725 --> 00:06:12,110
+Another example would be to
+
+92
+00:06:12,110 --> 00:06:16,385
+set the device eth0
+into the up state.
+
+93
+00:06:16,385 --> 00:06:20,000
+We can see IP link set,
+
+94
+00:06:20,000 --> 00:06:24,755
+device would be dev
+eth0 into the up state.
+
+95
+00:06:24,755 --> 00:06:30,320
+Or we could have said
+IP link set dev eth0,
+
+96
+00:06:30,320 --> 00:06:36,600
+address and then provide
+the address to it.
+
+97
+00:06:38,050 --> 00:06:40,640
+That's set.
+
+98
+00:06:40,640 --> 00:06:43,805
+Now IP link add,
+
+99
+00:06:43,805 --> 00:06:46,470
+let's see what that does.
+
+100
+00:06:49,720 --> 00:06:53,840
+It adds a virtual link.
+
+101
+00:06:53,840 --> 00:06:56,520
+It adds a device.
+
+102
+00:06:57,190 --> 00:07:02,960
+Here, it's specifying the
+device types or link types.
+
+103
+00:07:02,960 --> 00:07:06,650
+We could have a bridge, a bond.
+
+104
+00:07:06,650 --> 00:07:10,370
+Some other ones we
+talked about, VETH,
+
+105
+00:07:10,370 --> 00:07:14,855
+VLAN, VXLAN, GRE.
+
+106
+00:07:14,855 --> 00:07:18,180
+There's a bunch of
+different options.
+
+107
+00:07:20,350 --> 00:07:23,480
+Recall the different
+types of devices?
+
+108
+00:07:23,480 --> 00:07:28,505
+We saw that all of those exist
+as one of those options.
+
+109
+00:07:28,505 --> 00:07:31,610
+And then each uses IP link a bit
+
+110
+00:07:31,610 --> 00:07:32,930
+differently because they all
+
+111
+00:07:32,930 --> 00:07:35,850
+have different possible
+configurations.
+
+112
+00:07:35,850 --> 00:07:39,670
+If we come back to this.
+
+113
+00:07:39,670 --> 00:07:43,225
+Now here, say under VLAN,
+
+114
+00:07:43,225 --> 00:07:48,260
+this is what setting
+
+115
+00:07:48,260 --> 00:07:52,325
+a device or adding a device
+of type VLAN would include.
+
+116
+00:07:52,325 --> 00:07:58,460
+We're going to include
+the device, the name,
+
+117
+00:07:58,460 --> 00:08:01,415
+and we're going to specify
+that it's type VLAN,
+
+118
+00:08:01,415 --> 00:08:08,345
+then there's VLAN specific
+things like the VLAN ID.
+
+119
+00:08:08,345 --> 00:08:11,360
+So these are all
+different things and if
+
+120
+00:08:11,360 --> 00:08:13,925
+you keep searching,
+
+121
+00:08:13,925 --> 00:08:17,210
+there's probably different
+ones that exist.
+
+122
+00:08:17,210 --> 00:08:20,030
+So here's for VXLAN
+and this would
+
+123
+00:08:20,030 --> 00:08:25,050
+have VXLAN specific parameters.
+
+124
+00:08:27,490 --> 00:08:30,590
+Now, how could you use this?
+
+125
+00:08:30,590 --> 00:08:33,575
+Let's see full examples of this.
+
+126
+00:08:33,575 --> 00:08:35,150
+We mentioned bridge.
+
+127
+00:08:35,150 --> 00:08:36,950
+What exactly is a bridge?
+
+128
+00:08:36,950 --> 00:08:39,785
+A bridge is the device that
+
+129
+00:08:39,785 --> 00:08:43,355
+effectively implements
+a learning switch.
+
+130
+00:08:43,355 --> 00:08:48,860
+We've seen in the past some
+pictures that look like this.
+
+131
+00:08:48,860 --> 00:08:50,780
+We have a host and this is
+
+132
+00:08:50,780 --> 00:08:54,065
+representing a physical switch.
+
+133
+00:08:54,065 --> 00:08:56,000
+We know we could plug this in
+
+134
+00:08:56,000 --> 00:08:57,650
+if this is a learning switch,
+
+135
+00:08:57,650 --> 00:09:02,880
+when this tries to
+send out traffic,
+
+136
+00:09:03,040 --> 00:09:05,270
+the learning switch doesn't have
+
+137
+00:09:05,270 --> 00:09:08,120
+any MAC in its MAC table.
+
+138
+00:09:08,120 --> 00:09:11,690
+Any entries for the
+particular destination
+
+139
+00:09:11,690 --> 00:09:12,980
+, it'll broadcast that.
+
+140
+00:09:12,980 --> 00:09:16,475
+It'll flood it on all outputs.
+
+141
+00:09:16,475 --> 00:09:21,420
+Then whenever there's a
+response, it'll learn that.
+
+142
+00:09:21,940 --> 00:09:24,895
+A all of this is
+working at layer 2,
+
+143
+00:09:24,895 --> 00:09:28,065
+so it will all be MAC addresses.
+
+144
+00:09:28,065 --> 00:09:30,815
+How do you use it in Linux?
+
+145
+00:09:30,815 --> 00:09:32,930
+Well, we're going
+to create a device.
+
+146
+00:09:32,930 --> 00:09:35,375
+We're going to call
+it whatever we want.
+
+147
+00:09:35,375 --> 00:09:37,835
+On the pictures,
+bridge 0 or br0.
+
+148
+00:09:37,835 --> 00:09:43,165
+Then we're connect
+Ethernet devices to it,
+
+149
+00:09:43,165 --> 00:09:47,650
+effectively inside of
+Linux, creating a bridge.
+
+150
+00:09:47,650 --> 00:09:50,860
+You first create
+the bridge device,
+
+151
+00:09:50,860 --> 00:09:58,010
+then you make the other
+devices slaves to that bridge.
+
+152
+00:09:58,010 --> 00:10:03,725
+Shown here, we're going
+to say IP link add name,
+
+153
+00:10:03,725 --> 00:10:07,470
+mybridge; type, bridge.
+
+154
+00:10:07,510 --> 00:10:11,285
+It starts in the down
+state, it's not active.
+
+155
+00:10:11,285 --> 00:10:13,130
+We first have to bring it up.
+
+156
+00:10:13,130 --> 00:10:16,010
+We say IP link set the
+name of the bridge,
+
+157
+00:10:16,010 --> 00:10:19,250
+which is my bridge or
+the name of the device.
+
+158
+00:10:19,250 --> 00:10:24,150
+Then the state we want to
+bring it up into, which is up.
+
+159
+00:10:25,090 --> 00:10:28,280
+Then we're going to use
+
+160
+00:10:28,280 --> 00:10:31,595
+the set command for
+these other devices,
+
+161
+00:10:31,595 --> 00:10:33,755
+eth1, eth2, eth3,
+
+162
+00:10:33,755 --> 00:10:38,160
+to make its master, my bridge.
+
+163
+00:10:40,750 --> 00:10:43,460
+So this picture
+doesn't match it.
+
+164
+00:10:43,460 --> 00:10:45,005
+If this said my bridge,
+
+165
+00:10:45,005 --> 00:10:46,610
+that's exactly what this set
+
+166
+00:10:46,610 --> 00:10:49,080
+of commands would be building.
+
+167
+00:10:49,630 --> 00:10:52,535
+Let's look at VLAN,
+
+168
+00:10:52,535 --> 00:10:54,515
+and we saw the
+main page briefly.
+
+169
+00:10:54,515 --> 00:10:59,030
+You can go look on your own
+to see it at your own pace.
+
+170
+00:10:59,030 --> 00:11:03,215
+But what is a VLAN device?
+
+171
+00:11:03,215 --> 00:11:06,545
+It's a device that
+adds VLAN tagging.
+
+172
+00:11:06,545 --> 00:11:09,890
+VLAN is useful for
+
+173
+00:11:09,890 --> 00:11:14,015
+enabling isolation in a
+shared Layer 2 network.
+
+174
+00:11:14,015 --> 00:11:16,085
+Let's say we had
+
+175
+00:11:16,085 --> 00:11:18,515
+a shared Layer 2 network
+
+176
+00:11:18,515 --> 00:11:20,685
+represented by this
+single switch.
+
+177
+00:11:20,685 --> 00:11:22,840
+We had four hosts on it,
+
+178
+00:11:22,840 --> 00:11:25,060
+but we wanted to
+isolate their traffic.
+
+179
+00:11:25,060 --> 00:11:26,830
+We wanted only host 1 and
+
+180
+00:11:26,830 --> 00:11:29,005
+host 2 to be able to
+talk to each other,
+
+181
+00:11:29,005 --> 00:11:30,340
+and then host 3 and host
+
+182
+00:11:30,340 --> 00:11:31,930
+4 to be able to
+talk to each other,
+
+183
+00:11:31,930 --> 00:11:34,890
+but not between them.
+
+184
+00:11:34,890 --> 00:11:37,355
+We could use VLAN.
+
+185
+00:11:37,355 --> 00:11:40,175
+We can assign host 1 and 2,
+
+186
+00:11:40,175 --> 00:11:44,840
+all their traffic could
+be a particular VLAN ID,
+
+187
+00:11:44,840 --> 00:11:48,690
+then host 3 and 4, could
+get a different one.
+
+188
+00:11:49,180 --> 00:11:53,465
+How this shows up in
+the Ethernet header,
+
+189
+00:11:53,465 --> 00:12:02,645
+there's a little extra that
+it can specify the VLAN ID's.
+
+190
+00:12:02,645 --> 00:12:07,370
+How you would create a
+device like this is,
+
+191
+00:12:07,370 --> 00:12:09,950
+you would basically
+do it on top of
+
+192
+00:12:09,950 --> 00:12:13,985
+a physical network device.
+
+193
+00:12:13,985 --> 00:12:16,625
+We would say IP link ad,
+
+194
+00:12:16,625 --> 00:12:18,200
+we're going to specify
+
+195
+00:12:18,200 --> 00:12:22,415
+the Ethernet device to
+associate the VLAN with.
+
+196
+00:12:22,415 --> 00:12:24,815
+In this case it's zero.
+
+197
+00:12:24,815 --> 00:12:26,570
+We're going to give it a name,
+
+198
+00:12:26,570 --> 00:12:28,895
+the VLAN device a name,
+
+199
+00:12:28,895 --> 00:12:34,315
+the convention is to
+whatever the device name is,
+
+200
+00:12:34,315 --> 00:12:37,465
+eth0 then dot something.
+
+201
+00:12:37,465 --> 00:12:41,755
+Where dot something is
+going to be the VLAN ID.
+
+202
+00:12:41,755 --> 00:12:46,485
+We're going to say that
+this type of type vlan,
+
+203
+00:12:46,485 --> 00:12:49,970
+then the VLAN
+specific parameters
+
+204
+00:12:49,970 --> 00:12:52,520
+which we're saying ID 2.
+
+205
+00:12:52,520 --> 00:12:56,825
+Then any traffic that
+goes through eth0.2
+
+206
+00:12:56,825 --> 00:13:01,655
+device will get
+tagged with an ID 2.
+
+207
+00:13:01,655 --> 00:13:05,850
+It'll set this part
+
+208
+00:13:06,670 --> 00:13:12,630
+here specifically with
+that value of two.
+
+209
+00:13:13,030 --> 00:13:17,405
+A tunnel is something
+that encapsulates
+
+210
+00:13:17,405 --> 00:13:22,290
+traffic for transmission
+over some network.
+
+211
+00:13:22,960 --> 00:13:32,990
+Over here, we have one device
+and here we have one node,
+
+212
+00:13:32,990 --> 00:13:36,035
+let's call it a
+host and over here,
+
+213
+00:13:36,035 --> 00:13:37,835
+we have another host.
+
+214
+00:13:37,835 --> 00:13:41,630
+Within that host,
+let's say each of
+
+215
+00:13:41,630 --> 00:13:46,080
+them has a network card
+that has eth1 on it.
+
+216
+00:13:47,710 --> 00:13:52,070
+These might be
+across the internet.
+
+217
+00:13:52,070 --> 00:13:55,040
+What we're going to do
+is create a new device
+
+218
+00:13:55,040 --> 00:13:58,415
+called gen0 for geneve,
+
+219
+00:13:58,415 --> 00:14:02,120
+where any traffic
+that goes into it,
+
+220
+00:14:02,120 --> 00:14:04,640
+we'll get some extra headers put
+
+221
+00:14:04,640 --> 00:14:06,800
+onto it such that it's creating
+
+222
+00:14:06,800 --> 00:14:09,410
+this tunnel to the other side
+
+223
+00:14:09,410 --> 00:14:12,185
+so that it could go
+out over this network,
+
+224
+00:14:12,185 --> 00:14:14,105
+reach the other side.
+
+225
+00:14:14,105 --> 00:14:16,145
+When it reaches this device,
+
+226
+00:14:16,145 --> 00:14:20,130
+it can pull off all that
+header information.
+
+227
+00:14:20,290 --> 00:14:23,420
+This is work in geneve tunnels,
+
+228
+00:14:23,420 --> 00:14:26,000
+work across an IP network.
+
+229
+00:14:26,000 --> 00:14:29,820
+It adds an extra set of headers.
+
+230
+00:14:30,250 --> 00:14:33,875
+You can see it adds some
+extra headers which
+
+231
+00:14:33,875 --> 00:14:39,230
+allows you to transit
+it across the network.
+
+232
+00:14:39,230 --> 00:14:41,555
+That's not the
+local area network.
+
+233
+00:14:41,555 --> 00:14:44,765
+If you had it directly
+on this eth1,
+
+234
+00:14:44,765 --> 00:14:47,550
+that's all it would
+be able to do.
+
+235
+00:14:47,740 --> 00:14:50,720
+Had the traffic go
+through just eth1,
+
+236
+00:14:50,720 --> 00:14:53,105
+it would only be able to talk to
+
+237
+00:14:53,105 --> 00:14:55,850
+that network unless they
+
+238
+00:14:55,850 --> 00:14:58,835
+had more destination
+and so forth.
+
+239
+00:14:58,835 --> 00:15:02,585
+What we're doing is we're
+using an IP link add again,
+
+240
+00:15:02,585 --> 00:15:04,820
+we're giving it a name,
+
+241
+00:15:04,820 --> 00:15:09,455
+gen0, we're give it type geneve.
+
+242
+00:15:09,455 --> 00:15:11,720
+Then the geneve specific,
+
+243
+00:15:11,720 --> 00:15:14,915
+we're going to give
+it an ID of 55.
+
+244
+00:15:14,915 --> 00:15:17,285
+We're going to say
+the remote end of
+
+245
+00:15:17,285 --> 00:15:20,555
+this tunnel that's over here,
+
+246
+00:15:20,555 --> 00:15:25,410
+it's going to be 1.2.3,4
+so my IP address.
+
+247
+00:15:26,350 --> 00:15:29,390
+If you're interested in that,
+
+248
+00:15:29,390 --> 00:15:31,790
+just look more into
+geneve tunnel.
+
+249
+00:15:31,790 --> 00:15:33,500
+What we're trying to
+convey here is more of
+
+250
+00:15:33,500 --> 00:15:37,710
+the syntax of the command
+and what you can do with it.
+
+251
+00:15:38,140 --> 00:15:41,270
+Now that's the Add.
+
+252
+00:15:41,270 --> 00:15:43,595
+Then finally Delete.
+
+253
+00:15:43,595 --> 00:15:46,625
+If you don't want it,
+the device anymore,
+
+254
+00:15:46,625 --> 00:15:47,690
+you could just say IP link
+
+255
+00:15:47,690 --> 00:15:51,300
+delete and then give
+it the device name.
+
+256
+00:15:52,720 --> 00:15:56,675
+Now let's go into a demo,
+
+257
+00:15:56,675 --> 00:15:59,240
+just to show what's going on,
+
+258
+00:15:59,240 --> 00:16:06,380
+let's look at creating
+container lab deployment.
+
+259
+00:16:06,380 --> 00:16:09,515
+Again, let's go over,
+
+260
+00:16:09,515 --> 00:16:12,575
+we have the same vagrant file,
+
+261
+00:16:12,575 --> 00:16:15,050
+created a virtual machine.
+
+262
+00:16:15,050 --> 00:16:19,775
+I created two SSH sessions.
+
+263
+00:16:19,775 --> 00:16:22,775
+I'm splitting this horizontally.
+
+264
+00:16:22,775 --> 00:16:26,330
+This is the GitHub
+repo that we'll
+
+265
+00:16:26,330 --> 00:16:28,160
+provide a link for and then I'm
+
+266
+00:16:28,160 --> 00:16:30,740
+inside of the Demo 3 directory,
+
+267
+00:16:30,740 --> 00:16:35,570
+you can see there's various
+files inside of here.
+
+268
+00:16:35,570 --> 00:16:38,645
+Let's look at, well
+
+269
+00:16:38,645 --> 00:16:41,615
+first let's make sure
+nothing is running.
+
+270
+00:16:41,615 --> 00:16:47,250
+There's no previous container
+lab or anything running.
+
+271
+00:16:47,470 --> 00:16:50,360
+Let's look at what
+we're building here.
+
+272
+00:16:50,360 --> 00:16:51,860
+Let's go up to the top.
+
+273
+00:16:51,860 --> 00:16:55,430
+I'm going to call
+it mod1- devconfig.
+
+274
+00:16:55,430 --> 00:17:00,200
+It's going to consist
+of two hosts,
+
+275
+00:17:00,200 --> 00:17:04,050
+host 1, host 2, and a switch.
+
+276
+00:17:06,100 --> 00:17:10,100
+This is optional, but
+I chose to provide
+
+277
+00:17:10,100 --> 00:17:15,690
+these bindings because we'll
+do something with that.
+
+278
+00:17:15,850 --> 00:17:20,735
+What we'll do now, let's
+deploy this pseudo container.
+
+279
+00:17:20,735 --> 00:17:24,020
+So you could see
+first I've already
+
+280
+00:17:24,020 --> 00:17:29,850
+pre-created these directories
+so that the bindings work.
+
+281
+00:17:29,860 --> 00:17:35,220
+Pseudo container lab deploy
+
+282
+00:17:35,830 --> 00:17:39,710
+and you can see everything's
+
+283
+00:17:39,710 --> 00:17:43,800
+working and we created
+those three containers.
+
+284
+00:17:44,710 --> 00:17:47,240
+The next thing, this is
+
+285
+00:17:47,240 --> 00:17:51,750
+mentioning is to look
+at these aliases.
+
+286
+00:17:52,480 --> 00:17:58,320
+Also provided in this is
+a file called make alias.
+
+287
+00:18:01,270 --> 00:18:03,635
+What does that look like?
+
+288
+00:18:03,635 --> 00:18:07,205
+Say, run the command alias.
+
+289
+00:18:07,205 --> 00:18:11,345
+I want to name it sw.
+
+290
+00:18:11,345 --> 00:18:13,940
+Whenever I do that
+on the command line,
+
+291
+00:18:13,940 --> 00:18:18,095
+it's going to get replaced
+effectively with this.
+
+292
+00:18:18,095 --> 00:18:22,490
+If you recall, we could
+do stuff like doc,
+
+293
+00:18:22,490 --> 00:18:25,310
+IT, all of that.
+
+294
+00:18:25,310 --> 00:18:29,900
+I could say I have
+config or in this case,
+
+295
+00:18:29,900 --> 00:18:32,790
+let's say IP link show.
+
+296
+00:18:33,610 --> 00:18:40,880
+We're showing eth2, eth1, eth2.
+
+297
+00:18:40,880 --> 00:18:45,890
+We're seeing devices
+inside of it.
+
+298
+00:18:45,890 --> 00:18:49,220
+I could look at this
+inside of the host,
+
+299
+00:18:49,220 --> 00:18:57,300
+host 1 and we could see
+eth0 eth1 right there.
+
+300
+00:19:01,900 --> 00:19:05,525
+Now that's great. So
+what this is doing,
+
+301
+00:19:05,525 --> 00:19:12,290
+is when I run this.
+
+302
+00:19:12,290 --> 00:19:19,235
+It allows me, if I run that,
+
+303
+00:19:19,235 --> 00:19:21,635
+now when I run,
+
+304
+00:19:21,635 --> 00:19:26,600
+just sw and let's say list,
+
+305
+00:19:26,600 --> 00:19:32,495
+I'm running all of that
+plus this command.
+
+306
+00:19:32,495 --> 00:19:35,450
+Now I could say what
+
+307
+00:19:35,450 --> 00:19:37,880
+this allows me to do is
+if I run all three of
+
+308
+00:19:37,880 --> 00:19:42,080
+these except I deleted
+
+309
+00:19:42,080 --> 00:19:47,870
+the character alias host 1
+and then alias for host 2.
+
+310
+00:19:47,870 --> 00:19:51,395
+Now I could say host 1,
+
+311
+00:19:51,395 --> 00:19:54,785
+IP link show,
+
+312
+00:19:54,785 --> 00:19:59,940
+host 2, IP link show,
+
+313
+00:20:00,910 --> 00:20:06,510
+IP host show eth0.
+
+314
+00:20:07,150 --> 00:20:14,010
+So it allows us to shorthand
+all of these commands.
+
+315
+00:20:15,970 --> 00:20:19,580
+Let me source that file,
+
+316
+00:20:19,580 --> 00:20:26,345
+now I can use them on each
+terminal that I have opened.
+
+317
+00:20:26,345 --> 00:20:29,255
+Let's provide as a file,
+
+318
+00:20:29,255 --> 00:20:30,770
+as part of the git-repo,
+
+319
+00:20:30,770 --> 00:20:33,515
+use it, don't use it, up to you.
+
+320
+00:20:33,515 --> 00:20:38,730
+Let's go back to the slide show.
+
+321
+00:20:39,010 --> 00:20:43,715
+The next thing is to go
+over this one packet.
+
+322
+00:20:43,715 --> 00:20:47,840
+Python. This is scape code,
+
+323
+00:20:47,840 --> 00:20:49,925
+so let me open that up.
+
+324
+00:20:49,925 --> 00:20:54,275
+It's also provided vi one pkt.
+
+325
+00:20:54,275 --> 00:21:02,270
+py. It's a Python program
+at the beginning,
+
+326
+00:21:02,270 --> 00:21:07,380
+it can have a usage
+string which I define.
+
+327
+00:21:07,920 --> 00:21:11,485
+It's basically one packet.
+
+328
+00:21:11,485 --> 00:21:14,005
+Tell it what the
+source Mac address is,
+
+329
+00:21:14,005 --> 00:21:15,805
+what the destination
+Mac address is,
+
+330
+00:21:15,805 --> 00:21:17,575
+what interface you
+want to send it out,
+
+331
+00:21:17,575 --> 00:21:19,645
+and then some message.
+
+332
+00:21:19,645 --> 00:21:22,180
+That's how we'll use it.
+
+333
+00:21:22,180 --> 00:21:24,775
+What does the code look like?
+
+334
+00:21:24,775 --> 00:21:30,115
+At first, pulling off of the
+command line arguments is
+
+335
+00:21:30,115 --> 00:21:34,285
+various values and then
+
+336
+00:21:34,285 --> 00:21:38,470
+setting some internal things
+that's not configurable.
+
+337
+00:21:38,470 --> 00:21:41,305
+This is just what I chose to do.
+
+338
+00:21:41,305 --> 00:21:44,440
+Now I'm crafting a packet.
+
+339
+00:21:44,440 --> 00:21:47,455
+If you recall, I
+could craft a packet,
+
+340
+00:21:47,455 --> 00:21:51,085
+I could define the
+Ethernet type.
+
+341
+00:21:51,085 --> 00:21:53,305
+In here, I'm using
+
+342
+00:21:53,305 --> 00:21:58,420
+the init function when I'm
+
+343
+00:21:58,420 --> 00:22:00,865
+creating the class or
+creating the object
+
+344
+00:22:00,865 --> 00:22:03,865
+and I'm passing in the values.
+
+345
+00:22:03,865 --> 00:22:05,290
+These came off of
+the command line,
+
+346
+00:22:05,290 --> 00:22:07,525
+the source and
+destination Mac address.
+
+347
+00:22:07,525 --> 00:22:11,785
+If you recall this
+right here, this slash,
+
+348
+00:22:11,785 --> 00:22:17,665
+allows me to craft packets
+by putting headers together.
+
+349
+00:22:17,665 --> 00:22:20,020
+I could say the Ethernet header.
+
+350
+00:22:20,020 --> 00:22:21,100
+I want to follow that by
+
+351
+00:22:21,100 --> 00:22:24,460
+an IP header with the source
+and destination IP address,
+
+352
+00:22:24,460 --> 00:22:28,360
+followed by a TCP address
+or header with source and
+
+353
+00:22:28,360 --> 00:22:30,820
+destination port and
+then I want to add
+
+354
+00:22:30,820 --> 00:22:34,330
+on some message as my
+payload of my TCP.
+
+355
+00:22:34,330 --> 00:22:37,370
+This will come from
+the command line.
+
+356
+00:22:37,470 --> 00:22:40,555
+If I wanted to debug
+it and show it,
+
+357
+00:22:40,555 --> 00:22:41,920
+I could say packet.show.
+
+358
+00:22:41,920 --> 00:22:43,405
+I left that in there.
+
+359
+00:22:43,405 --> 00:22:46,100
+You can uncomment it out.
+
+360
+00:22:46,770 --> 00:22:50,740
+I'm going to say, sendp.
+
+361
+00:22:50,740 --> 00:22:52,630
+This particular packet out
+
+362
+00:22:52,630 --> 00:22:54,700
+the particular interface that
+
+363
+00:22:54,700 --> 00:22:57,100
+was specified on
+the command line.
+
+364
+00:22:57,100 --> 00:22:59,680
+Alternatively, I could
+have just done all of
+
+365
+00:22:59,680 --> 00:23:01,960
+this really in a
+single command line.
+
+366
+00:23:01,960 --> 00:23:04,060
+It might look
+something like that.
+
+367
+00:23:04,060 --> 00:23:09,370
+That's what one packet does.
+
+368
+00:23:09,370 --> 00:23:12,850
+To run it, we'll see
+that in a second.
+
+369
+00:23:12,850 --> 00:23:17,695
+Now what are we going to
+do as part of this demo?
+
+370
+00:23:17,695 --> 00:23:19,300
+We're going to create a bridge.
+
+371
+00:23:19,300 --> 00:23:26,275
+What I want to do is, inside
+of Host 2, run tshark.
+
+372
+00:23:26,275 --> 00:23:29,530
+If you remember, tshark
+is this packet capture.
+
+373
+00:23:29,530 --> 00:23:31,615
+Then on Host 1,
+
+374
+00:23:31,615 --> 00:23:38,290
+I want to run this one
+packet function to craft
+
+375
+00:23:38,290 --> 00:23:42,790
+a packet with source
+
+376
+00:23:42,790 --> 00:23:47,060
+and destination Mac addresses
+and I want to go out eth1.
+
+377
+00:23:47,900 --> 00:23:50,760
+I want to say 1,
+
+378
+00:23:50,760 --> 00:23:53,140
+2, 3 is part of the message.
+
+379
+00:23:56,100 --> 00:24:00,565
+That shouldn't work until
+we create the bridge.
+
+380
+00:24:00,565 --> 00:24:07,150
+But the packet you will
+see this on the switch.
+
+381
+00:24:07,150 --> 00:24:09,775
+Let's switch back over.
+
+382
+00:24:09,775 --> 00:24:14,360
+All of this is shown
+in the read me.
+
+383
+00:24:17,100 --> 00:24:20,860
+Start up. Let me just go
+all the way to the top.
+
+384
+00:24:20,860 --> 00:24:24,955
+Here's the set up,
+running container lab,
+
+385
+00:24:24,955 --> 00:24:27,415
+talks about one packet.
+
+386
+00:24:27,415 --> 00:24:30,410
+Here's what we're
+going to actually run.
+
+387
+00:24:31,410 --> 00:24:35,770
+First, I need to make sure that
+
+388
+00:24:35,770 --> 00:24:37,330
+this one packet is
+
+389
+00:24:37,330 --> 00:24:40,630
+inside the host where
+I'm going to run it.
+
+390
+00:24:40,630 --> 00:24:45,260
+I'm going to copy one packet
+inside of mod1-host1.
+
+391
+00:24:46,950 --> 00:24:50,170
+That's now going to be inside of
+
+392
+00:24:50,170 --> 00:24:55,370
+lab folder one packet inside
+of the container of Host 1.
+
+393
+00:24:56,700 --> 00:25:03,445
+Let me get that
+command ready to run.
+
+394
+00:25:03,445 --> 00:25:06,550
+I'm going to have to
+
+395
+00:25:06,550 --> 00:25:10,430
+exit out of this but let
+me capture that command.
+
+396
+00:25:10,440 --> 00:25:15,145
+What this is saying is
+on Host 2, run tshark.
+
+397
+00:25:15,145 --> 00:25:18,970
+I want to look at the fields.
+
+398
+00:25:18,970 --> 00:25:23,170
+Type Ethernet, VLAN, VXLAN.
+
+399
+00:25:23,170 --> 00:25:27,770
+I want to look at
+capture off of eth1.
+
+400
+00:25:28,980 --> 00:25:32,350
+Let me run that first.
+
+401
+00:25:32,350 --> 00:25:34,600
+It's now capturing and now I'm
+
+402
+00:25:34,600 --> 00:25:36,700
+going to generate
+that one packet,
+
+403
+00:25:36,700 --> 00:25:39,010
+the source and destination
+
+404
+00:25:39,010 --> 00:25:44,900
+with sending out
+of eth1 of Host 1.
+
+405
+00:25:48,570 --> 00:25:54,650
+It's sending it and
+we saw nothing.
+
+406
+00:25:55,020 --> 00:25:59,320
+Now let's say maybe
+it didn't work.
+
+407
+00:25:59,320 --> 00:26:03,935
+Let me actually run the
+same thing on the switch.
+
+408
+00:26:03,935 --> 00:26:06,240
+Also look at eth1 because
+
+409
+00:26:06,240 --> 00:26:09,190
+that's what Host 1
+is connected to.
+
+410
+00:26:10,910 --> 00:26:14,080
+Let me run this again.
+
+411
+00:26:16,140 --> 00:26:19,705
+So we did see that it actually,
+
+412
+00:26:19,705 --> 00:26:23,740
+this one right here, we
+
+413
+00:26:23,740 --> 00:26:27,130
+saw that it actually
+arrived on the switch.
+
+414
+00:26:27,130 --> 00:26:30,310
+It's not actually doing
+anything on the switch,
+
+415
+00:26:30,310 --> 00:26:32,660
+it's just getting dropped.
+
+416
+00:26:33,540 --> 00:26:37,405
+Let's go back and
+see what to do next.
+
+417
+00:26:37,405 --> 00:26:39,505
+Next, we're going
+to create a bridge.
+
+418
+00:26:39,505 --> 00:26:41,920
+We're going to use the
+exact same commands
+
+419
+00:26:41,920 --> 00:26:44,035
+we used on the previous slide.
+
+420
+00:26:44,035 --> 00:26:48,890
+We're going to run them
+inside of the switch itself.
+
+421
+00:26:49,650 --> 00:26:55,130
+Let me open up to read me
+so we can follow along.
+
+422
+00:26:56,670 --> 00:26:59,320
+Now inside of the switch,
+
+423
+00:26:59,320 --> 00:27:01,975
+I'm going to do IP link ad name,
+
+424
+00:27:01,975 --> 00:27:07,540
+my bridge type
+bridge. There you go.
+
+425
+00:27:07,540 --> 00:27:11,990
+I'm going to bring it
+to the state of up,
+
+426
+00:27:12,000 --> 00:27:23,330
+I'm going to set eth1 and
+eth2 sleeves to my bridge.
+
+427
+00:27:24,540 --> 00:27:28,270
+Yeah, that's eth2.
+Now if I was to
+
+428
+00:27:28,270 --> 00:27:33,560
+run on the source
+which IP link show,
+
+429
+00:27:34,020 --> 00:27:41,450
+we're going to see
+here's my bridge.
+
+430
+00:27:42,600 --> 00:27:45,890
+We're going to see in eth1.
+
+431
+00:27:45,960 --> 00:27:49,210
+You can see that's
+now saying it's
+
+432
+00:27:49,210 --> 00:27:52,970
+master is my bridge state is up.
+
+433
+00:27:53,670 --> 00:27:57,410
+The state of this
+guy is up as well.
+
+434
+00:27:58,860 --> 00:28:02,485
+Now we have a bridge.
+
+435
+00:28:02,485 --> 00:28:07,585
+Now let's run those
+tshark command again.
+
+436
+00:28:07,585 --> 00:28:10,100
+Run on host 2.
+
+437
+00:28:10,740 --> 00:28:13,435
+I want to again,
+
+438
+00:28:13,435 --> 00:28:17,140
+from host 1 craft a packet that
+
+439
+00:28:17,140 --> 00:28:22,310
+should be flooded out to host 2.
+
+440
+00:28:23,220 --> 00:28:26,675
+I didn't actually run tshark,
+
+441
+00:28:26,675 --> 00:28:32,290
+so let me run it
+again. There it is.
+
+442
+00:28:32,290 --> 00:28:36,970
+What just happened was the
+packet went out of host
+
+443
+00:28:36,970 --> 00:28:46,340
+1 out of eth 1 into
+our switch container,
+
+444
+00:28:46,340 --> 00:28:48,000
+into the device eth
+
+445
+00:28:48,000 --> 00:28:52,060
+1 which is then
+attached to the bridge.
+
+446
+00:28:52,060 --> 00:28:56,275
+My bridge, We could
+see it on my bridge.
+
+447
+00:28:56,275 --> 00:28:59,140
+Then because my bridge
+didn't know where
+
+448
+00:28:59,140 --> 00:29:02,950
+the destination
+was, it flooded it.
+
+449
+00:29:02,950 --> 00:29:05,890
+Since eth 2 was
+also on the bridge,
+
+450
+00:29:05,890 --> 00:29:09,010
+it sent it out to eth 2 which is
+
+451
+00:29:09,010 --> 00:29:15,190
+attached to host 2 eth 1.
+
+452
+00:29:15,190 --> 00:29:19,310
+If you recall the
+picture thing I have it.
+
+453
+00:29:19,800 --> 00:29:24,620
+Well, it'd be
+something like that,
+
+454
+00:29:24,840 --> 00:29:29,050
+so ignore eth3 but this
+
+455
+00:29:29,050 --> 00:29:33,650
+is what we had on
+the switch node.
+
+456
+00:29:36,270 --> 00:29:41,020
+With that, if we wanted to,
+
+457
+00:29:41,020 --> 00:29:47,020
+we could run tshark on the
+switch again. We would see it.
+
+458
+00:29:47,020 --> 00:29:49,210
+If we wanted to, we can
+run the packets and we
+
+459
+00:29:49,210 --> 00:29:51,550
+can do it on each device that I
+
+460
+00:29:51,550 --> 00:29:53,530
+just said to see the packet
+
+461
+00:29:53,530 --> 00:29:56,305
+along its path.
+We won't do that.
+
+462
+00:29:56,305 --> 00:29:57,820
+Instead, I'll let you do that if
+
+463
+00:29:57,820 --> 00:30:00,020
+you wanted to on your own.
+
+464
+00:30:00,210 --> 00:30:02,830
+The next thing that we
+
+465
+00:30:02,830 --> 00:30:07,225
+have structure for
+is creating a VLAN.
+
+466
+00:30:07,225 --> 00:30:11,530
+What this will look
+like is on host 1,
+
+467
+00:30:11,530 --> 00:30:15,580
+we want to create a V land.
+
+468
+00:30:15,580 --> 00:30:21,625
+We're going to say link
+or IP link add link eth1,
+
+469
+00:30:21,625 --> 00:30:30,355
+name eth1.2, type vlan and
+then the parameter ID 2.
+
+470
+00:30:30,355 --> 00:30:34,525
+Then we're going to bring
+that device up all.
+
+471
+00:30:34,525 --> 00:30:38,210
+Now when we run the one packet,
+
+472
+00:30:38,250 --> 00:30:43,885
+we're going to send
+it through eth1.2.
+
+473
+00:30:43,885 --> 00:30:46,570
+What you should
+see is when we're
+
+474
+00:30:46,570 --> 00:30:49,975
+capturing this in
+tshark for host 2,
+
+475
+00:30:49,975 --> 00:30:52,795
+is it will have
+that extra header
+
+476
+00:30:52,795 --> 00:30:56,600
+on it and it'll
+be a VLAN header.
+
+477
+00:30:56,880 --> 00:30:59,290
+For this I think it would be
+
+478
+00:30:59,290 --> 00:31:02,815
+great if you do this on
+your own as practice.
+
+479
+00:31:02,815 --> 00:31:06,800
+We could see. Let me
+open up the Read me.
+
+480
+00:31:07,980 --> 00:31:13,780
+All those instructions are
+right there in the Read me,
+
+481
+00:31:13,780 --> 00:31:18,110
+why don't you do that on
+your own as practice?
+
+482
+00:31:19,590 --> 00:31:23,545
+With that, we'll end here.
+
+483
+00:31:23,545 --> 00:31:29,580
+Thanks. Don't forget to look at
+
+484
+00:31:29,580 --> 00:31:33,040
+the quiz and the lab that's
+
+485
+00:31:33,040 --> 00:31:38,300
+associated with
+Module 1. Thanks.

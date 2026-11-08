@@ -1,0 +1,202 @@
+All right, let's go ahead and get started. This time we're going to talk
+about Software Defined Networking. So, in the last lesson,
+we showed how to create a VPC inside of GCP and
+went through that abstraction. We talked about how to
+do it with terraform. But one of the things that we talked
+about wanting to do with this course as a whole is to really understand,
+all right, when I did that, when I created that VPC,
+what actually happened? What happened inside of
+Google's infrastructure? And so
+we'll talk about that in the next lesson. But to really understand that and
+appreciate that, we're going to talk about a,
+provide a little bit of background in something called
+software defined networking. You might have heard this term before but, to really understand what exactly it is. I wanted to kind of share my,
+my thinking on it. And this really comes
+from a lot of experience. This is a core area that I've
+worked in for for quite a while and so, I have a little,
+little bit of history behind it. So, just to kind of give
+a little backdrop on, on SDN, what, like what was
+the feeling in the networking community right as SDN emerged or
+kind of what led to it? And, there was this kind of
+feeling of a glacial process of innovation was made worse by
+captive standards processes. And, this is kind of there was
+a feeling that really the Internet has become ossified, that,
+really the innovation that we wanted as networking researchers,
+it just wasn't as possible. And that's because you have this idea go
+through some standardization process where you're waiting years and then ultimately
+there's some sort of deployment. And this process is
+really driven by vendors, consumers were largely locked out. And because it was
+a standardization process, lowest common denominator features is
+kind of what, what made it through. So this led to glacial innovation. Another feeling is that
+really we in networking built an artifact, not a discipline. Other fields and systems,
+like operating systems, databases and so
+forth teach basic principles and then are easily managed and
+they continue to evolve. If you look at how
+networking class is taught, it's really this big bag of
+protocols that you learn about. It's historically notoriously
+difficult to manage, and the network has been a piece
+that has really evolved slowly. Why it lags behind networks
+used to be simple. We had Ethernet, IP, TCP, but
+there's been a lot of control, new control requirements that
+led to great complexity. There's isolation, we added VLAns and
+access control lists, traffic engineering,
+MPLs and ECMP and so forth. Added middle boxes like firewalls and
+NATs and payload analysis and so forth. And these mechanisms are designed and
+deployed independently. All that said,
+the infrastructure still works, but it works really because of our
+ability to master complexity. And that's both a blessing and a curse. Complexity versus simplicity, networking
+still focused on mastering complexity. There was little emphasis on extracting
+the simplicity from the control plane, and really no recognition
+that there's a difference. Extracting simples,
+simplicity builds those intellectual foundations that are necessary for
+creating a discipline. And that's why networking lags behind, or lagged behind in at the time. So, as an example,
+the OSPF open shortest path, shortest path first, a protocol really
+is just finding the shortest path. It's 400,
+245 pages document that describes this, it's really just a distributed system. But since it's not using any abstractions,
+it just does it all. And it has this distributed
+system to build up a consistent, up to date map of the network,
+turns to 101 pages. And then Dijkstra's algorithm, which
+is defining the shortest path, is just, that's the core, that's all the protocol
+really is and that was 4 pages. And so,
+kind of this just highlights kind of the, one of the challenges in networking. Another example to kind of illustrate
+this concept is programming. So imagine back in the day,
+we used to work in machine languages. There was no abstractions we had to master
+complexity, and yeah that was crucial. Then some higher level
+languages were introduced. Operating systems and
+other abstractions came along, like file systems, virtual memory,
+abstract data types and so forth. And then we've evolved to more
+modern languages with object oriented garbage collection and so forth. Each iteration is a new abstraction that allowed us to extract
+simplicity on top of it. So now, stepping back, let's just make sure we're on
+the same page do we understand? Let's look at legacy switches. So here's a picture of a switch,
+it has a hardware component to it and a software component to it. And then some way to configure it. So the hardware has a lot of
+times an underlying ASIC that's this fixed pipeline,
+the fixed functionality. And then there's software. These switches are packaged
+with software with, that have routing processes and
+ways to configure them. So back in 2005, there was a paper in CCR,
+and I'll have a link to it, called a clean slate 4D approach
+to network control and management. And this was really kind of
+the first paper outlining a lot of the software defined networking
+principles before it even had a name. The problem with legacy
+approach is that routers make uncoordinated
+changes to their routes. I can go in, configure one router and
+put on its own policy, but I don't know how that's really
+going to affect the whole network. If it will coordinate, it'll exchange
+information with other routers, but that change to that one
+router wasn't really coordinated. This leads to poor stability and
+thrashing. The first observation in this paper
+was that we need a network wide view, which is needed to have
+a network level objective. That's really what we care about, make
+this network behave in a particular way. Second kind of core problem that
+they identified was that you have to predict and
+undo the effects of the control plane. The control plane you can
+configure the OSPF parameters and BGP configuration and things like that,
+but that's not what I actually want. I know how I want my network to behave,
+but I have to translate that solution into these settings, of these kind of
+knobs that are provided by the various routing protocols and
+configuration interfaces by the vendors. And so the second insight, or
+second principle that they identified was that we need the ability to
+express the desired solution. So they were noting that the switch
+software gets in the way of automation and network wide management. You don't really need to trick
+protocols into doing what you need on a switch by switch basis. So they introduced a new
+architecture called 4D's, where they went kind of replaced
+the standard data plane, control plane management plane. With these as the kind of interfaces
+between planes, with the data plane dissemination plane, decision plane, and
+discovery plane, which is not shown. And so in this case,
+the decision plane can do those network wide objectives,
+disseminate the findings, and then more directly instruct the data
+plane to do what it needs to do. So in 2007,
+a paper came out called Ethane, Erick and I also have a link to that. And Ethane's contribution, so
+this is not to trivialize or anything, this was a very critical paper, but really
+took a lot of those principles from 4D and put them into practice,
+which is a huge step. And this became open flow,
+and then really kind of created the whole movement behind SDN. So they introduced specific mechanisms for
+finding and mapping namespaces. This would be the discovery plane,
+like you plug in a server into a switch. How does the centralized
+controller find out about it? Right, so the centralized controller is what is
+doing these network wide objectives. And so they kind of were introducing. I think this picture came out after,
+this concept where you have this effectively centralized control,
+where you have this network operating system which builds
+up a view of the entire network. And then you can write control
+programs on top of it. So this Ethan paper also described
+an interface to describe policy and this is the decision plane. Like there are examples, Nick can
+talk to Martin over instant message, and that was something
+that you can describe. And it would be realized
+in the data plane. So they introduced a mechanism to enforce
+the policy through the data plane and dissemination through a series of
+max action tables in the data plane, and a protocol to write those tables. So this kind of link led to Openflow
+as a kind of standardization of this. Right, so we have software centralized
+controller that can talk to various switches that have both
+the hardware and the software. And so the Openflow, the key
+innovation here was an abstraction. It was the abstraction of the hardware and
+an API on top of it, and a protocol for how a centralized
+controller to talk to it. So kind of key abstraction
+was really this match action table that we can view a lot of
+networking as a match action table. If we have these kind of
+set of actions that are fairly flexible,all of my
+traffic I can match on things. So here is showing a switch
+with two rules inside of it. So star means wildcard, so
+match on, IP destination and then send it out port one, or
+match on the source destination. The source and destination TCP port,
+send it out in port two. All right,
+this unifies different kinds of devices. A router matches on the longest
+destination IP prefix the action is forwarding out a link. A switch matching on
+the destination Mac address, the action is either forwarded on a
+particular port or flooded out all ports. A firewall would match on IP addresses and
+TCP or UDP port numbers, and
+the action is permit or deny it. A NAT would match on IP address and ports, action would be to rewrite
+those addresses and the ports. So this is kind of match in action,
+in action, I guess. The problem with Openflow was
+it had a fixed set of things you can match on and
+the reason was they were trying to fit within a ecosystem of
+switch ASICs that existed. So here's all the fields and then
+a fixed set of actions that you can do, and it's all dedicated,
+dictated by that fixed ASIC. And they kept adding kind of
+more header fields to parse and things like that but
+it still wasn't enough. New things like VXLAN or NVGRE or whatever came out so
+we continued needing more. So that's where in 2013, there was the introduction of
+the reconfigurable match action table. All right, so this is now bringing
+flexibility into that hardware. So in classic openflow,
+this software defined control plane installs and
+queries rules in the target switch. What this new thing allows is
+basically a compiler to be able to see where you
+can specify the parsing. How packets should be parsed,
+different tables, control flows build up your actions and there's a compiler that can then
+build that into the target switch. All right, and then the control plane
+interfaces with that, installing and querying rules. And then something translates that to where those specific tables
+in the target switch are. So the abstract model, and there was a language that was
+created around this called P4. It's a reconfigurable parser
+plus a non-sequential match action pipeline plus protocol
+independent processing. So you can see it's built as
+this parser plan where part of the configuration tells a parser. That's the all and we can go read
+that paper to see understand really how that works and
+that could be parse any protocol. Then there's these match action
+tables that are set up in a pipeline where there's this high programmability
+of what those kind of actions could be. And how you can put these
+together can get pretty powerful. So another view of it is you take
+your P4 program, you compile it, it builds a structure of kind of
+different tables in a pipeline, each of them with their own little memory. You can pass metadata,
+you can have stateful memory and you have programmable parsing. All right, that's kind of
+where we got to and we'll see. It's actually key in enabling these cloud
+infrastructures so we'll dive into those. But one of the analogies that emerged
+in the early days of software defined networking that was quite
+powerful was an analogy to mainframes. So on the left was your
+traditional IBM mainframe. It had specialized applications on it,
+specialized operating system, specialized hardware. All of that was vertically integrated,
+it was closed, it was proprietary, there was slow innovation, and
+there was a small industry for it. Once we kind of opened that
+environment up through the kind of innovation of a microprocessor with
+an open interface, namely x86. That can run different operating
+systems on top of it each with their own interface where you can
+build applications on top of it. Right, so this horizontal, open interfaces led to rapid
+innovation and the huge industry. The personal computer, the server market, the phone,
+kind of all kind of emerged out of that. The analogy in the routing world
+is again a big router like from a vendor like Cisco. Specialized features, specialized
+control plane, specialized hardware, vertically integrated, closed,
+proprietary, slow innovation. And what the SDN movement and
+Openflow were trying to do was let's evolve to take
+in these merchant silicon switching chips,
+have those open interface. That's kind of the open flow where
+you can build different control planes on top of them. There's a number of different controllers, and then you can build
+applications on top of those. All right, open interfaces,
+rapid innovation and we saw that actually came to fruition. All right, with that we're going to
+kind of end this little bit on SDN, and next time we'll see it in practice. All right, thanks.

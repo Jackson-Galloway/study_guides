@@ -1,0 +1,645 @@
+1
+00:00:06,830 --> 00:00:10,480
+Let's get started. We're going
+
+2
+00:00:10,480 --> 00:00:12,620
+to start a new module right now,
+
+3
+00:00:12,620 --> 00:00:14,670
+and it's about the WAN.
+
+4
+00:00:14,670 --> 00:00:17,270
+This little lesson is
+
+5
+00:00:17,270 --> 00:00:20,975
+going to give an overview
+of the whole module.
+
+6
+00:00:20,975 --> 00:00:24,320
+We've seen these slides before,
+
+7
+00:00:24,320 --> 00:00:27,315
+but just to refresh.
+
+8
+00:00:27,315 --> 00:00:29,730
+We have the Cloud,
+
+9
+00:00:29,730 --> 00:00:33,300
+which offers all these
+as-a-service models.
+
+10
+00:00:33,300 --> 00:00:36,765
+There's different ways I
+can build my application.
+
+11
+00:00:36,765 --> 00:00:39,380
+Then once it's built on top of
+
+12
+00:00:39,380 --> 00:00:44,140
+this physical infrastructure
+that a cloud provider runs,
+
+13
+00:00:44,140 --> 00:00:48,580
+then external things like
+users of an application I
+
+14
+00:00:48,580 --> 00:00:55,370
+built might access these
+across the Internet.
+
+15
+00:00:55,970 --> 00:01:02,115
+Just going into the different
+parts of the Cloud again.
+
+16
+00:01:02,115 --> 00:01:04,860
+We have the data
+center and shown
+
+17
+00:01:04,860 --> 00:01:07,320
+here it's just a big building.
+
+18
+00:01:07,320 --> 00:01:09,870
+It's where Google and
+
+19
+00:01:09,870 --> 00:01:14,790
+Microsoft and Amazon put
+all of their servers.
+
+20
+00:01:14,790 --> 00:01:23,045
+They then create this allow
+you to deploy infrastructure.
+
+21
+00:01:23,045 --> 00:01:27,200
+You saw when we created a VM,
+
+22
+00:01:27,200 --> 00:01:29,440
+we chose what region it was in,
+
+23
+00:01:29,440 --> 00:01:33,300
+and these correlate
+to the location of
+
+24
+00:01:33,300 --> 00:01:34,830
+Google data centers and really
+
+25
+00:01:34,830 --> 00:01:38,850
+named based on their location.
+
+26
+00:01:38,850 --> 00:01:42,135
+Within that,
+
+27
+00:01:42,135 --> 00:01:46,740
+the abstraction as a user
+we can create is a VPC for
+
+28
+00:01:46,740 --> 00:01:50,540
+virtual private Cloud and
+this allows us to run
+
+29
+00:01:50,540 --> 00:01:52,760
+our own private cloud on
+
+30
+00:01:52,760 --> 00:01:55,570
+top of the providers
+physical infrastructure.
+
+31
+00:01:55,570 --> 00:01:58,680
+I could put a bunch of VMs,
+
+32
+00:01:58,680 --> 00:02:01,610
+put them inside of a subnet.
+
+33
+00:02:01,610 --> 00:02:05,340
+There's some routes
+to allow going
+
+34
+00:02:05,340 --> 00:02:09,850
+between different VMs
+and external gateways.
+
+35
+00:02:09,850 --> 00:02:11,400
+Then I can also add
+
+36
+00:02:11,400 --> 00:02:14,890
+firewall and policy
+and things like that.
+
+37
+00:02:15,800 --> 00:02:18,410
+Now the question is,
+
+38
+00:02:18,410 --> 00:02:26,745
+how do we communicate beyond
+the bounds of the VPC?
+
+39
+00:02:26,745 --> 00:02:30,530
+There's two things we're
+going to focus on here.
+
+40
+00:02:30,530 --> 00:02:35,690
+One is going to be the
+VPC to VPC communication.
+
+41
+00:02:35,690 --> 00:02:41,545
+Then another is going to
+be the VPC to an end user.
+
+42
+00:02:41,545 --> 00:02:44,605
+That's what we're
+going to focus on.
+
+43
+00:02:44,605 --> 00:02:48,600
+This highlights this distinction
+
+44
+00:02:48,600 --> 00:02:51,105
+between the WAN and the LAN.
+
+45
+00:02:51,105 --> 00:02:52,980
+You've probably
+heard these terms,
+
+46
+00:02:52,980 --> 00:02:57,165
+but LAN is the
+local area network.
+
+47
+00:02:57,165 --> 00:03:01,470
+Here we're using that
+to correspond to
+
+48
+00:03:01,470 --> 00:03:05,650
+what's happening inside of
+the data center to an extent.
+
+49
+00:03:05,650 --> 00:03:09,850
+We saw this picture of the
+Cisco reference design,
+
+50
+00:03:09,850 --> 00:03:19,655
+the VL2 work was shown for
+how Azure created a better,
+
+51
+00:03:19,655 --> 00:03:22,550
+at least for them, data
+center architecture.
+
+52
+00:03:22,550 --> 00:03:28,060
+But that would be the local
+area where I create my VPCs.
+
+53
+00:03:28,060 --> 00:03:34,365
+I'm communicating over
+private infrastructure
+
+54
+00:03:34,365 --> 00:03:37,950
+within private IP addresses
+and things like that.
+
+55
+00:03:37,950 --> 00:03:42,220
+The wide area is we're
+going to consider basically
+
+56
+00:03:42,220 --> 00:03:46,590
+beyond the bounds of a
+region or a data center.
+
+57
+00:03:46,590 --> 00:03:52,020
+This may go across the
+Internet or Google and
+
+58
+00:03:52,020 --> 00:03:58,155
+the likes all have private
+networks that interconnect.
+
+59
+00:03:58,155 --> 00:03:59,980
+They have some fiber that runs
+
+60
+00:03:59,980 --> 00:04:02,560
+between the different
+infrastructures,
+
+61
+00:04:02,560 --> 00:04:05,060
+between their different
+data centers.
+
+62
+00:04:05,060 --> 00:04:07,325
+That would be a private
+infrastructure.
+
+63
+00:04:07,325 --> 00:04:12,020
+Either one that's what
+we're referring to as WAN.
+
+64
+00:04:12,020 --> 00:04:16,020
+Now, I mentioned the
+private IP addresses,
+
+65
+00:04:16,020 --> 00:04:19,070
+just to refresh what those are.
+
+66
+00:04:19,170 --> 00:04:24,030
+In an RFC, requests
+for comments,
+
+67
+00:04:24,030 --> 00:04:28,875
+which is like the Internet
+way of doing some standards,
+
+68
+00:04:28,875 --> 00:04:33,460
+there's one particular RFC
+which establishes a set of
+
+69
+00:04:33,460 --> 00:04:42,910
+IP ranges that are
+considered to be private.
+
+70
+00:04:43,390 --> 00:04:45,890
+They're set aside.
+
+71
+00:04:45,890 --> 00:04:48,190
+Nobody will be assigned these,
+
+72
+00:04:48,190 --> 00:04:50,790
+and every one of
+
+73
+00:04:50,790 --> 00:04:53,670
+us can use them inside
+of our infrastructure.
+
+74
+00:04:53,670 --> 00:04:58,800
+10.0.0.0 all the
+way up to 10.255,
+
+75
+00:04:58,800 --> 00:05:03,550
+so as to 10.0.0.0/8 prefix,
+
+76
+00:05:03,550 --> 00:05:06,075
+everything in that is
+considered private.
+
+77
+00:05:06,075 --> 00:05:08,900
+It won't hit the
+public Internet.
+
+78
+00:05:08,900 --> 00:05:11,080
+It can't be addressable
+
+79
+00:05:11,080 --> 00:05:14,420
+outside because it's not
+going to be globally unique.
+
+80
+00:05:14,420 --> 00:05:17,520
+These are the other two ranges,
+
+81
+00:05:17,520 --> 00:05:20,160
+and those are all
+considered private.
+
+82
+00:05:20,160 --> 00:05:23,600
+You've probably seen these if
+you look at IP addresses of
+
+83
+00:05:23,600 --> 00:05:28,920
+your own home network
+and things like that.
+
+84
+00:05:31,730 --> 00:05:35,510
+The internal IP
+addresses are going to
+
+85
+00:05:35,510 --> 00:05:39,020
+be decided within the subnet,
+
+86
+00:05:39,020 --> 00:05:41,740
+which is within the VPC.
+
+87
+00:05:43,580 --> 00:05:47,215
+These will be private
+IP addresses.
+
+88
+00:05:47,215 --> 00:05:49,840
+If you recall when
+we created VMs,
+
+89
+00:05:49,840 --> 00:05:53,185
+we saw this little
+piece of the wizard,
+
+90
+00:05:53,185 --> 00:05:55,745
+or we did this in terraform.
+
+91
+00:05:55,745 --> 00:05:59,420
+But you can specify the
+network, the subnet,
+
+92
+00:05:59,420 --> 00:06:03,805
+and then internal IP address
+and external IP address.
+
+93
+00:06:03,805 --> 00:06:07,340
+If you select this one is none,
+
+94
+00:06:07,340 --> 00:06:11,560
+well, then you wouldn't get
+an external IP address.
+
+95
+00:06:11,570 --> 00:06:14,625
+That's what this
+is referring to.
+
+96
+00:06:14,625 --> 00:06:19,450
+Now, you recall AccelNet
+and Andromeda, which is,
+
+97
+00:06:19,450 --> 00:06:20,830
+two of the academic papers,
+
+98
+00:06:20,830 --> 00:06:25,090
+AccelNet from Microsoft
+and Andromeda from Google.
+
+99
+00:06:25,090 --> 00:06:27,130
+This was the architecture
+
+100
+00:06:27,130 --> 00:06:30,670
+for how they do
+packet processing on
+
+101
+00:06:30,670 --> 00:06:33,390
+each host to provide
+
+102
+00:06:33,390 --> 00:06:37,995
+the network abstractions of
+the VPC and things like that.
+
+103
+00:06:37,995 --> 00:06:41,830
+If you recall,
+there's some public
+
+104
+00:06:41,830 --> 00:06:47,410
+to private translation
+that would occur,
+
+105
+00:06:47,410 --> 00:06:50,990
+and this is exactly
+where it happens.
+
+106
+00:06:52,310 --> 00:06:56,760
+When you're communicating
+with public IP addresses,
+
+107
+00:06:57,000 --> 00:07:01,680
+generally, those would
+go across the Internet.
+
+108
+00:07:01,680 --> 00:07:05,155
+But if it's another
+Google IP address,
+
+109
+00:07:05,155 --> 00:07:08,500
+so like I launch a
+virtual machine and say,
+
+110
+00:07:08,500 --> 00:07:10,775
+give me an IP address,
+and it's from Google,
+
+111
+00:07:10,775 --> 00:07:13,795
+you have your own
+virtual machine,
+
+112
+00:07:13,795 --> 00:07:17,060
+and it's signed by Google.
+
+113
+00:07:17,060 --> 00:07:20,220
+That's all still within
+Google's infrastructure.
+
+114
+00:07:20,220 --> 00:07:24,475
+That's likely going to
+traverse their own backbone,
+
+115
+00:07:24,475 --> 00:07:26,625
+so their own network.
+
+116
+00:07:26,625 --> 00:07:29,670
+Otherwise, Google will use
+
+117
+00:07:29,670 --> 00:07:36,260
+ISPs to connect up to
+the broader Internet.
+
+118
+00:07:37,010 --> 00:07:41,595
+We're going to go
+over two mechanisms.
+
+119
+00:07:41,595 --> 00:07:48,435
+We said we can launch a VM
+without public IP addresses.
+
+120
+00:07:48,435 --> 00:07:50,420
+We're going to go over the two
+
+121
+00:07:50,420 --> 00:07:52,260
+key mechanisms within Google
+
+122
+00:07:52,260 --> 00:07:56,900
+on communicating over
+private IP addresses.
+
+123
+00:07:56,900 --> 00:07:59,760
+Even if you're in
+two different VPCs,
+
+124
+00:07:59,760 --> 00:08:03,080
+which normally
+wouldn't be able to.
+
+125
+00:08:03,080 --> 00:08:06,720
+The first is VPC peering,
+
+126
+00:08:06,720 --> 00:08:09,700
+and then the second
+is Cloud NAT.
+
+127
+00:08:10,340 --> 00:08:12,660
+Over the view of the module,
+
+128
+00:08:12,660 --> 00:08:13,940
+we'll go over those two things.
+
+129
+00:08:13,940 --> 00:08:15,260
+Then we're going to go into
+
+130
+00:08:15,260 --> 00:08:21,570
+some academic papers
+on how Microsoft
+
+131
+00:08:21,940 --> 00:08:26,790
+manages their backbone
+network and then how
+
+132
+00:08:26,790 --> 00:08:32,740
+Google interfaces to these ISPs.
+
+133
+00:08:32,740 --> 00:08:35,980
+It really covers
+those two key aspects
+
+134
+00:08:35,980 --> 00:08:37,320
+of the wide area network.
+
+135
+00:08:37,320 --> 00:08:41,640
+Then we're going to spend a
+lesson going over the lab.
+
+136
+00:08:41,640 --> 00:08:44,920
+Definitely don't
+suggest, don't skip
+
+137
+00:08:44,920 --> 00:08:46,900
+that because they'll provide
+
+138
+00:08:46,900 --> 00:08:50,050
+some useful insights into
+how to get it to work.
+
+139
+00:08:50,050 --> 00:08:54,940
+With that, we will
+stop here. Thanks.

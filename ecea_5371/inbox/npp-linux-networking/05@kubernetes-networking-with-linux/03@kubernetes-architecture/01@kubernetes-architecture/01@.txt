@@ -1,0 +1,142 @@
+So now that we've seen
+basic use of Kubernetes, let's dive into
+the architecture a little bit. And this will help us really understand
+how networking works, because we need to understand kind of all the components and
+the general structure of the architecture. So here's a high level picture of
+the Kubernetes architecture, right? So we have the control plane where it's
+running a bunch of different things. We talked about the scheduler,
+controller manager, and then we have a bunch of workers,
+all right? So we talked about container runtime,
+that's something like Docker and you can run proxies and things like that. So we'll dive into a bunch of these. Now how components are run. So the kubelet is the only component that
+always runs as a regular system component. Kubelet then runs all
+other components as pods. So what kubelet is, it runs on each node,
+including the control plane. It's what can communicate with the server
+when you say I need a pod created, kubelet is the one that will make that
+happen [COUGH] on that local node. So it'll interact with a container
+runtime like docker, but Docker is not the only option. It will to create the containers and
+set up the pod. So that's what runs as a system component,
+but all of these other components run as pods. So let's explore this a little bit. All right, so
+let me pull open our terminal. We can run docker ps, see our nodes, let's log into the control plane node. So docker exec -it, give it the container name and we'll say /bin/bash. All right, I could say ps aux,
+I could see a bunch of things like the kube-scheduler,
+kube-controller, kube-apiserver. But let's use the, so
+inside of the container, the container runtime in
+this case is not docker. And so to interact with it, I'm saying
+crictl and I can say ps, all right? And so here are the various components,
+the containers or pods that are running inside
+of the control pit plane node. So that's looking at it for the
+perspective of the container runtime fFrom the perspective of Kubernetes,
+I could say kubectl get all. And when I do that it's not
+going to show much, but if I add -a,
+it'll start showing something. So this is take a quick detour
+to mention what a namespace is. So in namespace, in Kubernetes, that's basically
+a grouping of resources in a particular partition or isolation. So they're all running, but, so
+the default namespace when we say kubectl, apply and then create a pod,
+that's the default namespace. But there's other namespaces, kubectl get namespaces that exist. And where a lot of the system components
+get run is within this kube system. So if I say kubectl get all -a, I'm saying for all namespaces. All right, and so
+we could see the various components. So here's all the pods
+that are running and we could say -o wide if we want to see
+where their extra information about them. All right, kube system, so this is kind of one entry and you can kind of see all the, well sorry, this is one entry. So you can see this component is
+running on the node control plane, has this IP address and so forth. So there's a lot of
+components that are running. So explore that a little bit on your own. All right, so
+let's dive into some of these components. One that you might have
+seen is called etcd. What etcs is,
+is a distributed key value store. So it stores all the state for
+a Kubernetes cluster, information about the pods,
+about the deployments. And it uses the RAFT
+consensus algorithm to ensure consensus because this is
+run in a replicated manner, it'll be run on multiple nodes. So this is showing just two, and when
+anything kind of reads or writes to or writes to one of the nodes,
+it'll synchronize to another node. So the RAFT algorithm will ensure
+that each node state is either what the majority of the nodes
+agree is the current state or is one of the previously
+agreed upon states. So that's the property of etcd and
+it's a system that exists, you can go it's not only used in
+Kubernetes, but it is used in Kubernetes. Next we can mention the API Server and
+this provides a CRUD interface or create, read, update,
+delete interface for querying and modifying the cluster
+state over a REST API. And then it stores all the state in etcd. So as we mentioned, we're interacting with
+the Kubernetes cluster, with kubectl. So that's just a client
+of this API server. So it'll send request REST API
+through the REST API. And then there's the series
+of kind of things that perform authentication which
+we don't have enabled. Does some admission control which can
+do things like modifying resources, initializing missing fields, and so
+forth, and then resource validation. Once it gets past all that it goes into
+etcd and says great, now we've got a request to create a resource or
+updates the state in some manner. Now how that then interacts with
+all the other components is all of the other components are just
+watching on the API server. So the components open an HTTP session and
+then say watch = true. So this means they're basically
+setting themselves up as a listener. So now anytime a command,
+so that's the first step, each of these components would do that. Now let's say kubectl does something
+that it does a post, it creates a pod. Well, API server, as we mentioned,
+will send to etcd update the state. etcd will send a modification
+notification to the API server, which will then send the updated
+object to all of the watchers. We can also have kubectl itself
+watch if we ran that command. Next, the scheduler. So the scheduler waits for
+newly created pods, then it assigns a node to each new pod. So it doesn't actually instruct
+the selected node to run the pod, it just updates the state of the pod
+that it goes from not scheduled to it selects a node, updates the state
+to say it should run on node two, and then updates the state
+to say that it's scheduled. So the basic operation of
+the scheduler is a multi-step process. And it's quite interesting and you can
+highly recommend you kind of dig in and read it if there's something
+of interest to you. But it'll first filter, so it'll find the set of nodes where
+it's feasible to schedule the pod. So you can specify for
+example using labels and say, I want this to run on any
+node that matches this label. So it'll filter out any that it doesn't or maybe there's nodes that are down and
+not ready. Then it'll perform a scoring
+of all the nodes that made it past the filter to choose
+the most suitable pod placement. And this is broken down into a bunch of
+extension points where you can kind of look through. And there's a lot of
+interesting things in that. The controller manager
+component runs multiple controllers as processes
+performing various reconciliation loop tasks or
+reconciliation loops. So we have replication manager replication
+manager, ReplicaSet, DaemonSet, Deployment, Node, Service. So we talked about
+the deployment last time. So this will run as a process within the
+controller manager and it'll be watching. All right, for example,
+did something change, did pod, the configuration change or
+the number of pods and things like that. [COUGH] So
+it will watch the API Server for changes to resources they care about and
+perform operations for each change. So the ReplicaSet watches,
+ReplicaSet resources and Pod resources, and creates and
+deletes Pod resources. Endpoints, watch Services resources and
+Pod resources and creates Endpoint resources. And each of these runs
+a reconciliation loop, so you can actually look inside
+of the Kubernetes source code. There's a directory controller that
+you can look at all of these and basically see that in action. Next that we'll talk about is kubelet. So we've briefly mentioned this,
+but it'll register the node it's running on by creating a node
+resource in the API server. It watches the API server for
+Pods that have been scheduled to its node. So if you recall,
+the scheduler doesn't do that. So the scheduler just
+updates the state and kubelet will see that this
+Pod state has been updated. So that's what it's watching on. It'll then start the Pods containers
+by telling the container runtime to run a container from a given image. Then it monitors the running containers,
+reports any events. It runs liveness probes,
+restarts containers when the probes fail, and then deletes the containers
+when the Pod is deleted. It can also run things called static Pods. There's a special
+directory that you can say, here are some Pods I want to
+create automatically, statically as part of the system. Right, so let's look at a kind of
+summary of the chain of events. Right, so let's say in kubectl we say,
+I want to create some resource. Here, I'm going to create a deployment,
+right? So we're going to kind of match this
+as etcd and API server, all of this. So I come in and
+I say create a deployment. So in etcd and the API server will
+notify the resource controller and the particular process, the deployment
+controller that's watching it. The deployment controller
+will update the ReplicaSet, ReplicaSet will then,
+that's all gets updated. The ReplicaSet controller
+will see that and it will update the Pod,
+create Pods and whatnot, which once it creates this Pod resource,
+it'll be unscheduled. So then the scheduler which is
+watching on Pods sees that and says, this Pod needs to be scheduled. It'll figure out which node,
+it'll update that state. And then once that state is updated,
+the kubelet is watching on that and it will contact the local runtime which could be Docker which will
+then create the containers. So that's a summary of a chain of events
+when you're creating a deployment. So kind of summarizing,
+showing this picture again, we've talked about the API server, etcd, the scheduler, controller manager,
+kubelet, and the container runtime. We've talked plenty about. So next time we're going to go into
+the networking aspect of Kubernetes. But now that we have the overarching
+context of the architecture in mind, we can now better understand networking. And then ultimately we can write our own networking constructs
+inside of Kubernetes. And with that, we'll end here, thanks.

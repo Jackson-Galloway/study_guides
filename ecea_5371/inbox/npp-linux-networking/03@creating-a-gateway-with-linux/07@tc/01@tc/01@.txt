@@ -1,0 +1,188 @@
+So last time we talked about QoS and
+we talked about classification, shaping, and scheduling, and
+how they all fit together to form the ability to put some sort of quality
+of service properties on traffic. So here we're going to talk about
+the Linux utility that's available to be able to do all of those QoS things and
+it's called tc for traffic control. So tc is used for QoS setup, but it can actually do much more. We'll hint at some of the additional
+things that you can do with it, but we'll leave that for you to explore. So what we're going to do here is really, this is a pretty complicated utility,
+pretty powerful, but once you kind of start understanding
+the key constructs in it, it becomes something that you
+can more easily work with. So the key constructs are the qdisc,
+the class, and filter. So we'll go through each of those and talk about how you specify them and
+what their purpose is. So the queuing discipline or qdisc is the
+main object for shaping and scheduling. So it kind of groups them together. We have them as separate things, but
+it kind of groups them together. So this is where you put in
+the properties onto the traffic. So every interface must have
+an ingress and egress qdisc. So what these are is
+packets go into a qdisc and then they go out the other
+side according to some policy based on whatever queuing
+discipline that you inserted. So there's a simple example is a pfifo,
+it's first in, first out. So this is the default one used by
+Linux if you don't configure anything. So how do you go about adding and
+removing a qdisc? So there's a lot to
+the individual command. So we're breaking it down into
+its individual pieces and then we're going to build it
+up as an example as we go. So the first part is much like
+with all of the other utilities, it starts with the command name tc,
+all right? Then here we're specifying that we're
+going to want to apply this to a qdisc. So this particular construct
+that's important in this case. Then we can do stuff like add,
+delete, replace, and you apply it to whatever device you're
+applying it to, so you specify that. So as an example we're
+going to say tc qdisc add to device, eth0, all right? So, we've said each qdisc must be
+associated with the device and this allows us to add, and
+delete, and remove qdisc. The next part of the command
+says parent qdisc-id or root, followed by handle qdisc-id. So qdiscs can be hierarchical. So you need to specify the parent or root if this is the root of the hierarchy. So it doesn't necessarily mean that they
+have to have children, but they could. And so if this is the top level one,
+it would be considered the root. And then you can also specify a handle. And so this is something that would
+be referenced by the children. All right, so here we're adding to this,
+we're saying root, since this is the root of the hierarchy
+and we're going to specify a handle of 1:, so
+it's an implied kind of number there. But this is kind of what
+you see in examples. So this is something
+now we can refer to for future commands if we want to
+refer to this as a parent. All right, so the next part of
+the command we would say the qdisc. So this is the type and we have
+some examples in the coming slides. And then the qdisc specific parameters,
+so that's all of what's here. So this first one is the qdisc. And so this one refers to tbf or
+token bucket filter. And then the parameters we
+would have to go look up for the token bucket filter,
+what are its parameters? And it allows you to have a rate so I could specify that I want
+it to be at this rate. I could specify the burst size, I could specify a latency if I want,
+all right? And so there's other ones
+that we'll see as an example. So this all right here forms a single, creates a single qdisc. So some example qdisc,
+we talked about a simple packet fifo or a byte fifo, I believe and
+it's just first in, first out. The one we showed earlier,
+this pfifo fast, well, this is looking at based on
+some type of service fields, classifying it into different
+queues internal to the qdisc. And then it'll transmit packets in kind of a prioritized first in, first out order, all right? Another SFQ stochastic fair queuing,
+right? So this is applying a fair queuing
+algorithm to apply to different queues and then use a round robin algorithm
+to transmit from those queues. Again, this is all internal to one qdisc. And so this is not like we're going to do, specify the classification and
+then do that. All right, so that's that algorithm and
+you can go look up more about it. Token bucket filter, so this is TBF and this is kind of what we
+learned about last time, where tokens are kind of entered
+into a bucket at a specific rate. And then you have a bucket size
+to determine the burst size, and then it's just packets
+would conform at that rate. So those are just some examples. Now, qdiscs can be classless or classful, so examples on the previous
+two slides were all classless, so it just applies without a class. Some qdiscs can contain classes which
+contain further qdiscs, so traffic may then be enqueued in any number of
+inner qdisc which are within the classes. So we got another command
+where we can add a class, right, and
+we'll walk through this as well. But first,
+as an illustration of this here, we might have a qdisc and
+this is the hierarchical token bucket. So we're going to apply some filters to it
+which is put it into different classes and then those classes then feed
+into qdiscs themselves. All right, so
+this is when we have a class full qdisc, like hierarchical token bucket. This is when we would have these things,
+these classes, all right? And so
+you can see there's other ones like pfifo. Fast, is not classful,
+it's a classless qdisc. And so just whatever goes in, goes out. There's no kind of parents and
+children from that. All right, so
+use this picture in the back of your mind. All right, so let's go back to adding and
+removing classes. So it's nearly identical to qdisc,
+but it can't be root. Instead, you have a class-id instead of
+a handle, but it's the same basic type and the type(qdisc) must be
+the same as the parent qdisc. All right, so let's look at an example. So this is an example of a classful qdisc,
+the hierarchical token bucket. So let's say, we have a token bucket
+where we want to have different classes of traffic, where we want to
+start rate limiting in different manners. I want to rate limit some of the traffic
+at 30 and some at 70, right? And then that feeds into class list qdisc,
+fq_codel. All right, so here we would add
+the queuing disk, the qdisc. So qdisc add dev eth0,
+is going to be the root. We're going to give it a handle and we're going to say it's type
+hierarchical token bucket, htb. So now we want to add a class under it. So maybe the first level,
+we're only adding the first class, so we can say add .tcclass add dev eth0. So that's that kind of first
+part that we looked at. The parent is 99, so that's this 99. The classid is going to be 99:1. And we're going to say we
+want it to be the qdisc htb. Remember, it has to match and we're going to have it a rate of 100Mbit. Then under that we're going to
+add these two classes. All right, so
+we're going to have these two classes. The parent is both this one, so you can
+see the parent is 99:1 + classid, 99:1. All right, so that's that. And then we give them
+each their own classid. And then we're going to say, as part of
+this hierarchical token bucket, rate, 30. So we're dividing that
+100 into this 30 and 70. And then we're going to now
+add these qdisc at the end. So qdisc add dev eth0,
+the parent is going to be 99:10, so that's this one. And then we're going to set
+the qdisc to be fq_codal. All right, so now we're not going to
+get into hierarchical token bucket, but there's some properties where
+the tokens can be shared among these. So it's a little more than just,
+we're dividing them, the bandwidth equally
+among these children. So that's something that you
+can read into on your own. But this is showing how we can use
+Linux to set up the q and disc policy. All right, so finally,
+let's talk about filters. These filters are for specifying
+which traffic is in which class. So we would have similar command,
+tc filter. So instead of tc qdisc or tc class, again, add|replace|delete, assign it to a device, dev eth0, give it its parent,
+give it a handle and the rest of protocol priority and
+filter type. So let's walk through these. So the top, you need to specify
+the device associated with it. Also you need to specify the parent qdisc. All right, so the next part is specify the protocol this applies to. So commonly, you'll just see all,
+but you might see ip or ipv6 for narrowing it down into
+specific types of traffic. And then priority will specify
+the order of evaluation. So a lower priority number
+means higher priority. All right, so that's protocol ip prior 1. And then the last part
+is a filter type and then the filter type specific parameters. And now there's many
+different types of filters. I think on the next slide,
+we list out a few of them. Each of them will have its own man page. So shown is a basic one, the u32. So I specify the filter type and
+then the u32, I can say stuff like, match ip src and then have my action to apply it into this. Basically, put it into this
+particular class, classid 99:10. All right, so here's examples. So the u32 is a generic filtering
+on arbitrary packet data. It's assisted by syntax to
+abstract common operations. The fw is a filter based on fwmark. And so it directly maps fwmark values,
+sorry, values to traffic classes. And then a really interesting one is
+flow or was a related one flower, which does some flow based classifiers and
+filtering packets based on their flow. All right, so these filters,
+as we kind of did point out, but these filters have a match part and
+an action part. And each has syntax that is
+specific to the match condition. And each has the ability to
+specify the action of the form, either classid,
+followed by the actual classid. So the keyword classid,
+and then the number, which pushes the packets that match. So anything that matches this will
+be pushed into this classid, right? So if you recall,
+we created these classes, we showed how you can create a class. This is one of the mechanisms so
+you can push traffic to it. And then an action is another
+thing you can specify. And this is perform some action
+specific to the match filter. So you can look at the man page for that. We're not really going to go into it, but that's where a lot of this
+additional power of tc comes in. So there's another interesting
+qdisc that I'll mention, it's called NetEm, for network emulation. So it provides functionality for testing protocols by emulating
+the properties of real-world networks. So maybe you want to add
+delays to packets, or add packet loss with some probability,
+so that's something that NetEm can do. So let's look at an example use of NetEm. So say I want to create a new application
+or protocol, and I want to test how it would behave under different
+conditions on a wireless network. So I want to say, great,
+imagine I had a wireless network, I have this application,
+how would it actually work? So what we can do is we can
+insert a Linux node in between. So you can see this,
+this could be a container lab set up. So here's one node, here's another node,
+here's another node. Inside of it, I would do stuff like use ip route to be
+able to forward traffic back and forth. And then I would use tc to
+add some properties that is emulating the wireless network, right? So here we're replacing,
+so tc qdisc replace, much as we do add device eth0. This is going to be the root. The qdisc that I'm using is netem,
+and then the qdisc properties are, I want to delay for
+100 milliseconds. With, I don't remember
+the exact parameters, with a 12-millisecond,
+I think this is variance, and then at a 10% probability to drop packets,
+right? So what that's going to do is make it
+look like this is on a wireless network, and I'm going to do this associated
+with both eth0 and eth1. So at this point, the best thing is for
+you to go practice on your own. I gave you the basics, showed you how
+to understand the various commands. What we provide, again, is a vagrant file. So you can launch a VM, a container
+lab setup that forms this topology, with two external nodes,
+two internal nodes, and a gateway. And then we have a readme with
+a set of commands that you can run. So what's kind of provided there is,
+so there's a tool called iperf, and it's used for being able to
+do kind of performance tests. So you can say run iperf server on int1, iperf client on ext1. And then when you run iperf,
+let's say we're not doing any qos, we're just forwarding, it'll measure how
+much bandwidth is in between these two. It'll try to probe until it gets
+the fastest rate that it can send at. And so we're going to run iperf now,
+then we show, great, now let's actually do
+some rate limiting on it. Let's say we are able to do on our
+machine one gigabit per second. Well, let's limit this to 100 megabits
+per second and run iperf again. So I will use tc here to limit it, right? So there's various other
+things that you can play with, I would suggest running some
+of the examples we had. Search the Internet for other examples. Try to create classification classes and
+filters and things on your own and
+just see what happens. But with this setup,
+you can run a lot of different tests. So with that, we're going to end. And that ends this particular module
+on a variety of Linux utilities and their foundations,
+the kind of background behind them, where we went through tc for
+qos, we went with IPVS for load balancing, and
+we went over iptables for filtering and address translation. All right, thanks.

@@ -1,0 +1,102 @@
+All right, let's go ahead and get started. So this time we're
+going to talk about VPNs. We talked about the scenario that I built
+some infrastructure in Google Cloud. But a lot of times companies will have
+some IT infrastructure in their corporate offices that needs to interface to
+the infrastructure deployed to the cloud. The example we gave was maybe I
+have some data stored in GCP, and my employees need to
+be able to access it, make queries on it from the office. Why is VPN needed or
+virtual private network? Say a company has 2 sites. This is one of the origins of
+it not involving the cloud, but let's say they want to be able to
+share information with each other. And in our case, we're talking about data in the cloud
+that employee needs access to. So, if an attacker can see the traffic, they'll get access to that
+company's secret data. And so the solution is a protocol
+named IPsec, which underpins virtual private networks, or VPN, or at least
+one of the technologies that does. So you might be asking, well,
+how would somebody eavesdrop? Well, the first is Wi Fi is
+a broadcast communication. So if you can have physical
+proximity to anybody using a Wi Fi network to access,
+that's one way. A network provider could be
+compelled by a government agency, or maybe they have a rogue employee, or
+maybe they have a compromised router. So that could happen,
+maybe there's a misconfiguration. So nothing malicious, but
+it redirects traffic to the wrong place. And if some it's redirected
+to the wrong place, that happens to have somebody with
+bad intents, that's another way. And then also route hijacking can
+intentionally redirect the traffic. So you can look at my other
+course you can look at, we talk a little bit about hijacking,
+how that works. But generally it's about really the fact
+that BGP doesn't have much security. So with that we can go what IPsec does is
+it basically you put it on either end. And it creates an encrypted tunnel
+between the two endpoints can be for the whole site or for one machine. And it's commonly used as
+we're using it for VPNs. So how IPsec works is to set up
+the IPsec tunnel a protocol is used to set up the parameters and
+keys used and authenticate on each side. So you need to configure each side, and then they exchange what
+parameters they're using. Exchange some keys,
+perform some authentication, and then finally the traffic can be exchanged. All right, so now we'll kind of walk
+through how you can set this up in GCP. So say we have a VPC with two subnets,
+a couple of vms, and here's my private
+infrastructure in my office that I have a server, a router, firewall. It's going to across the Internet. And I want to be able to access
+through kind of privately, private connections,
+it's both vm1 and vm2. All right, so again, you can search, and we're going to do a little
+different this time. I just did little screen captures so we don't have to click buttons and
+wait for them. But I can search for
+a VPN, it'll come up and they'll say, create VPN connection. Then the first thing step of that
+process is to create a VPN gateway. So something that's going to be able
+to talk that IPsec protocol with the other end, a lot of times the firewall
+will be what you can talk IPsec with. All right, so in this, it'll ask, do you want to do high availability,
+meaning create two tunnels or use classic VPN,
+which is a single tunnel, right? So we clicked on high availability. Then you go through, give the gateway
+a name what network you want it to be associated with, what region. So like VPC 1, what region? Us-central on, and that's good to go. So they're going to allocate IP
+addresses automatically for us, click, create, and continue. So next thing that it's going to
+have us do is add some tunnels. All right, so we got the gateway spun up. Now we need to basically say
+create those tunnels, all right? So you go into the next step,
+add VPN tunnels. These are the interfaces that
+Google gave to us on our side. And it's going to say, where's the peer? You got to create a peer gateway. And basically all that's doing is saying
+give it some name and some IP addresses. And these are the IP addresses of,
+in my case, the example we're going through is what are the IP addresses
+of the firewall in my office, all right? As part of that,
+we're going to want to do routing, we're going to want to add a cloud router. So the cloud router allows us
+to dynamically exchange routes between the VPC and
+the on premise infrastructure, all right? So the way you give
+the cloud router a name, I could choose whatever as
+number that's autonomous system. So this will be, it's not going over
+the public Internet, it's just between Google's, the thing that it launches
+inside of Google and my own network. So I can just give it a number,
+it'll be 64,000 something, all right? And then main thing is you want to
+advertise all the subnets that are visible to the cloud router,
+all right? You click create and
+with that we can now set up some of the VPN parameters,
+this is why I mentioned IPsec. IKE is that protocol that's used in,
+so when you see what this, these are going to have
+parameters are specific to IPsec. All right, so we added the router. And so what that's going to do is
+basically we're going to create this connection between the cloud
+router running inside of this and it has the routes to
+each of these subnets. We want to be able to advertise those
+such that this router over here seizes so that the server can address vm1 and
+vm2 directly, all right? So now I added the router but
+now I need to configure the session. So the next step will be
+configure the BGP session and we just say there will be
+a configure button on each side and it's basically going to give
+the IP address of the peer router. And then the autonomous system,
+the ASN of the peer router that's running inside of my infrastructure,
+my private enterprise office. All right, so this is what it
+looks like standard stuff and create those,
+use the route advertisements. All right, so
+with that it would save and configure. And now we have the BGP session
+configured on this side, we have the tunnels
+configured on the side. Last part is set up the private
+side router and firewall. So we need to specify those on this side. So Google has,
+because you'll see that it's waiting for the peer, it allows you to go and download the configuration that
+you can use on your own side. You don't have to do this,
+you can manually configure it if you're good at that but you'll have it for
+different common platforms. And then with that the configure
+everything is all set. And so now with that this router
+knows about these subnets, these subnets know about
+the subnets that were on this, the private side or the on prem side. And now traffic would flow through those. The final note here, IPSec connection
+is not restricted to an office, you could connect to other clouds. And we saw that as an option
+like AWS has their VPN service, Azure has their VPN service as well. And, really,
+the main thing you need to know is the IP address of the peer that's
+assigned by AWS or Azure. So you create the VPN on one side,
+create the VPN on other side, get the IP addresses. And then there's a second step
+of configuration where you can build those tunnels. And that's about it,
+it's pretty straightforward to do, and kind of with that, we'll end here. All right, thanks.

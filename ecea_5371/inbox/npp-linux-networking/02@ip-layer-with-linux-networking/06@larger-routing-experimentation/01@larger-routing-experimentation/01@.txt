@@ -1,0 +1,131 @@
+Let's get started.
+We've gone through running BIRD in a topology
+using container lab. Now in this lesson, I just want to talk about
+some other resources that are available that might
+help you create larger router experiments
+and things like that. A couple of the key questions
+here would be like, how do we get real routing
+tables and announcements? In our little walk through, we used just some static
+routes that we set in BIRD, we saw those get announced. But how do we get some realness
+to some routing tables, some announcements
+and inject those. How can we use those to inject those announcements in
+a programmatic manner? Container Lab is nice
+but it's pretty manual. Namely they'll set up
+a BIRD and all that. Can we get something with
+richer capabilities? There's resources
+for each of these, so there's RIPE which runs a routing data collector
+to get injected. There's a tool called ExaBGP. Then with richer capabilities we have the SEED
+Internet emulator. Let me walk through each. RIPE is a regional Internet
+registry for Europe, the Middle East, parts
+of Central Asia. They run a routing data
+collection platform, so that's basically
+they're running routers. They have them peered to other
+routers on the Internet, and they're actually
+collecting and storing all of the route announcements
+that they get and then taking snapshots of
+those routing tables. Here's an example of
+routing table dump. If you go to this
+particular date in 2023, you can get a routing
+table dump from that. It's stored in a
+format called MRT, you can search for it. It's an open standard for it, and there are some
+utilities that they provide that can read
+these different formats, and they provide a
+container docker image that has this installed, and here's an example, if you unzip that you can run this command bgpdump
+with some of these things and just provide what you just downloaded
+and then unzipped. It will have lines like this. This is one line in that it's the dump of
+the routing table. Here, it'll have the
+prefix and the AS path. We saw this in our routers. But now we can say, this is a real Internet router and we can get a real
+Internet routing table, and then it will be
+the correct size. Then how do you use that? One possible tool to
+use is called ExaBGP. ExaBGP is cool in that
+it's a BGP agent, but it's really just
+meant for testing. It has a degree of
+programmability in it. You can add these routes
+in the configuration, and what's cool is you can
+add the actual AS paths. Let's say we had a MRT, a line from that
+routing table dump that had a particular
+prefix and an AS path. This is not something I can
+add to a BIRD configuration, but it's something that I can
+add to an ExaBGP process. What it will do is it will
+announce this to its peers. It will announce that
+route with this AS path, and then it'll add on its own. Then it looks like
+to the neighbor, oh, this is multiple hops away. This allows us to
+basically take a corner of the Internet and then just emulate that maybe there's
+a handful of routers there, and then we have the routes
+from what the rest of the Internet would look like. So there is a Python
+programmable, BGP agent. You can programatically
+do some announcements. This can be useful,
+like if I want to say, announce something, withdraw it, whatever I'm trying to test out. I can create some Python program
+to do that using ExaBGP. The last tool that I'm
+going to mention is called the SEED
+Internet emulator. This is a project that came
+out of Syracuse University, some academics, and it's been
+around for several years, but it's a really
+powerful thing. I would highly encourage you
+to look at their slides, look at their Github,
+is freely available. These slides are from them,
+just to introduce it. The design of it provides
+a bunch of primitives. Instead of just a container
+and then you can run bird. It provides some
+different abstractions like I can run ton system
+or an Internet exchange, or group these as a network
+or just run a router, create a host to service all
+these different primitives. You specify their topology
+in a Python program. Then it will go
+and compose that. It will leverage docker and
+you can also use it across, it works beyond
+just a single node. You can run it on
+multiple nodes. Take each part of
+the topology so it can get larger topologies. But then it's very similar to
+container lab in that way. As an example, to
+create a transit, AS. Here is just to show an
+example of all the Python, I would create a network
+net0, net1, net2. Then I want to say
+create a router, r0. I want to join to
+these two networks, create a router r1, join it to these two networks. It's going to take care of some of the default router
+configuration file. I didn't have to
+specify any of that. Here's an example
+of the BGP peering. I can say add
+private peering and just specify the various links. You could specify what
+the relationship is. This is a peer relationship, or this is a client, a provider, or a
+consumer relationship. All of that helps determine what the
+configuration looks like. What's nice about
+this is they created this really cool UI
+where you can go in, you can click on a router and you can see
+information about it. Yes, of course we
+can type IP or bird, to see what it showed out, or route show all and
+get some of this. Well, I could just do that from inside of this user interface. I think that's pretty
+powerful as well. Then they have the whole
+map that you can show. You can even launch
+a terminal to this. You can connect and
+disconnect the various links. There's a lot that you
+could do inside of the GUI. Additional information. You can go to their
+website and get it. They have a lot
+of experiments or demos on different things
+like BGP routing attacks, that's focused on the
+security of the Internet, but it's really
+useful beyond that, they show DNS attacks, block chain attacks, botnet
+attacks, and so forth. Getting back to ExaBGP, we're
+not going to show this, but I provide this inside of the git-repo as an
+extra directory. Let me see that. Here's the base directory,
+this demo3-exabgp. It's basically the exact same. The only difference is this
+one extra configuration file. It's going to have basically
+a small part of one of those routing table dumps and you're going to
+be able to add it. Where do you do this is, all of these are the exact same but this Lan1
+we're going to pretend, that's basically like the
+rest of the internet. We're going to run ExaBGP here and we're going to specify
+it to peer with router A, and he will inject into
+router A all of those routes. Then you should see that
+will propagate to B, and D, and C and all of that.
+When you run it. Everything else is the same. There's a router
+A-bird configuration, we just showed the exa.conf for the ExaBGP to start
+bird. Same thing. It's going to be
+that bird command. The only change is on line 1, run ExaBGP and then give it
+that configuration file. Then the same things that
+you can do inside birdc. This is also, you can
+look in the Linux kernel or Linux command line and look at what it has installed in a kernel
+and all of that, all of those tools
+can provide you with the ability to run more powerful experiments
+than we're showing. If you want to go further,
+definitely check these out. With that, we'll end here and we'll see you
+next time. Thanks.

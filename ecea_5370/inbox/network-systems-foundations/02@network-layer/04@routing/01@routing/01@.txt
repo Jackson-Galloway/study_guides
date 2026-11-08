@@ -1,0 +1,66 @@
+Now that we've talked about
+the router data plane, let's talk about
+the control plane and routing in general. This video will overview what routing is and
+then we'll have subsequent videos that go into the details of
+certain protocols. As a recapping the
+role of a router, we talked about how is this gateway to be
+able to interface to different networks
+and then it also has the role of forwarding
+traffic to a destination. We also talked about
+the distinction between forwarding and routing and the data plane and
+control plane. As a reminder, forwarding, which is what happens
+in the data plane, is the part of a
+router which directs a data packet to an
+output port or link, and it uses a forwarding table. The control plane which
+performs routing. This is the part that
+computes paths by coordinating with
+neighbors and this is what's used to create
+the forwarding tables. The key function of the control plane is calculating
+the forwarding table. You can view the
+network as a graph. What routing is really about this distributed
+calculation. That happens to be able to pick paths
+through the network. There's different protocols
+that exists and they're distinguished by
+three key properties. One is, what information
+does each router know about the other participants
+in the network? Does it know the entire topology or does it know
+just its neighbor? Second is what information
+does each router exchange? Is it exchanging all of
+the information it knows about or just selective
+pieces of information? Then the third would be what
+calculation is performed? Is it calculating a
+shortest path calculation? Is it picking what
+it best locally? The answers to those types of questions is what distinguishes each routing protocol
+and we'll see in subsequent videos two
+different examples. I mentioned that you can
+view the network as a graph. The calculation
+though, is really this decentralized
+control plane. This is what's traditionally
+known as routing protocols. You have different components of that decentralized
+control plan. There's the aspect
+of intra domain. This is within a single network, typically run by a single
+administrative administrator or administrative
+domain or a company. Then you have the inter domain
+which is the coordination between different
+business entities, or departments organizations. What protocol you want to
+be able to use depends on which you're
+trying to target. We're going to look
+at two protocols. One is what's known as
+a link state protocol. The protocol for that is OSPF. That's typically
+used intra domain. Then we're also going to look
+at a path vector protocol. We're going to look
+at BGP which is commonly used inter
+domain protocol. There's also a concept that has emerged over
+the past decade or so, something called software
+defined networking. This is the concept of having a centralized control plane. Instead of each router
+running routing software itself and then exchanging
+messages with its neighbors, and then come up with this big decentralized
+calculation to figure out how to forward
+paths collectively, instead, there's a separate piece
+of software called a controller that basically uses an API that the routers perform to be able to
+say information about, what links it has and so forth. The controller does
+all the calculations for the entire network and then installs forwarding
+table entries into the individual routers. Then in this case, the routers become just the data plane. This is something that's
+very interesting topic, but next time we're
+going to focus in on the routing protocols and so these would be the
+decentralized control plane.

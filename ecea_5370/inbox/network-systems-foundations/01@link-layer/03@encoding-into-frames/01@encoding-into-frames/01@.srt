@@ -1,0 +1,320 @@
+1
+00:00:08,148 --> 00:00:14,090
+In this video, we cover the concept
+of encoding into frames.
+
+2
+00:00:15,310 --> 00:00:18,910
+To start, let's revisit what a link is.
+
+3
+00:00:18,910 --> 00:00:24,198
+So in between network devices is
+some physical transmission medium.
+
+4
+00:00:24,198 --> 00:00:27,290
+Whether it's a wire or it's wirelessly.
+
+5
+00:00:28,670 --> 00:00:33,742
+A link is the abstraction on
+top of that physical medium,
+
+6
+00:00:33,742 --> 00:00:36,605
+which enables communication.
+
+7
+00:00:36,605 --> 00:00:41,929
+So the first component of that
+abstraction that's solved by the link
+
+8
+00:00:41,929 --> 00:00:46,626
+layer is how to encode the signals
+such that they make sense.
+
+9
+00:00:46,626 --> 00:00:50,304
+That they indicate who
+the data is meant for and
+
+10
+00:00:50,304 --> 00:00:53,240
+how to actually interpret the data.
+
+11
+00:00:55,290 --> 00:00:59,797
+So, let's assume that
+you can transmit 1s and
+
+12
+00:00:59,797 --> 00:01:04,990
+0s through whatever
+medium that's being used.
+
+13
+00:01:04,990 --> 00:01:07,908
+So the link layer is responsible for
+
+14
+00:01:07,908 --> 00:01:14,370
+helping make sense of this series of
+1s and 0s, which needs structure.
+
+15
+00:01:14,370 --> 00:01:18,190
+At the link layer,
+this structure is called a frame.
+
+16
+00:01:19,890 --> 00:01:25,201
+So a frame is broken down
+into three parts a header,
+
+17
+00:01:25,201 --> 00:01:28,050
+a trailer and the payload.
+
+18
+00:01:29,350 --> 00:01:33,766
+The payload is the actual data
+that the sender wants to exchange
+
+19
+00:01:33,766 --> 00:01:35,190
+with the receiver.
+
+20
+00:01:36,730 --> 00:01:39,830
+The header and trailer are extra metadata,
+
+21
+00:01:39,830 --> 00:01:43,610
+which provides information
+about the frame.
+
+22
+00:01:43,610 --> 00:01:49,215
+Each of the header and
+trailer can be broken down into fields.
+
+23
+00:01:49,215 --> 00:01:51,728
+So let's get a little
+bit more concrete here.
+
+24
+00:01:51,728 --> 00:01:53,936
+Let's talk about Ethernet,
+
+25
+00:01:53,936 --> 00:01:59,490
+which is pretty ubiquitous as
+the main wired link layer protocol.
+
+26
+00:01:59,490 --> 00:02:03,978
+So shown at the bottom is
+the frame format for Ethernet.
+
+27
+00:02:03,978 --> 00:02:08,847
+The dest, field for
+destination is 48 bits and
+
+28
+00:02:08,847 --> 00:02:13,270
+it indicates who the frame is meant for.
+
+29
+00:02:13,270 --> 00:02:18,812
+It allows a receiver, namely the NIC or
+Network interface card,
+
+30
+00:02:18,812 --> 00:02:23,060
+to filter messages that
+aren't destined for it.
+
+31
+00:02:24,150 --> 00:02:32,090
+The source tells who the sender of
+the frame is, and this is useful.
+
+32
+00:02:32,090 --> 00:02:38,540
+So, if there's a reply message that is
+needed, we can know who to reply to.
+
+33
+00:02:39,950 --> 00:02:47,790
+The type field is 16 bits and tells
+the receiver what the payload actually is.
+
+34
+00:02:47,790 --> 00:02:52,459
+So on the right is a chart of
+some of the different values of
+
+35
+00:02:52,459 --> 00:02:56,420
+the type field in Ethernet and
+what they mean.
+
+36
+00:02:56,420 --> 00:03:01,757
+So, for example,
+if the type field is x0800,
+
+37
+00:03:01,757 --> 00:03:06,226
+that means what's in the payload should be
+
+38
+00:03:06,226 --> 00:03:11,330
+interpreted by the receiver
+as an IPV4 packet.
+
+39
+00:03:12,790 --> 00:03:17,112
+So finally, the FCS field,
+which stands for
+
+40
+00:03:17,112 --> 00:03:22,478
+Frame Check Sequence,
+provides some error handling.
+
+41
+00:03:22,478 --> 00:03:29,190
+And here it's shown at the right hand side
+of the frame because it's the trailer.
+
+42
+00:03:29,190 --> 00:03:35,437
+And it's put as the trailer because
+those are the last bits to be received.
+
+43
+00:03:35,437 --> 00:03:40,773
+And so the network card can then
+check if there's any errors
+
+44
+00:03:40,773 --> 00:03:47,082
+that occurred because it has all
+the bits before it already received.
+
+45
+00:03:49,650 --> 00:03:55,510
+Now, we said that the source and
+destination addresses were 48 bits.
+
+46
+00:03:55,510 --> 00:04:02,630
+So in Ethernet these are called MAC
+addresses for media access control.
+
+47
+00:04:02,630 --> 00:04:09,745
+And it's typically displayed in hex with
+colons separating each eight bits or
+
+48
+00:04:09,745 --> 00:04:14,570
+two hex characters,
+as shown in the example.
+
+49
+00:04:14,570 --> 00:04:19,821
+So historically,
+these were assigned as part of the global
+
+50
+00:04:19,821 --> 00:04:25,712
+manufacturing process and
+they were meant to be globally unique.
+
+51
+00:04:25,712 --> 00:04:29,605
+So a vendor would get
+assigned the upper bits and
+
+52
+00:04:29,605 --> 00:04:35,542
+then when it's manufacturing devices
+it would choose the lower bits and
+
+53
+00:04:35,542 --> 00:04:40,325
+make them unique for
+each of the devices it manufactured.
+
+54
+00:04:40,325 --> 00:04:46,535
+With Virtualization this isn't really the
+case as much anymore as the virtualization
+
+55
+00:04:46,535 --> 00:04:51,821
+software will commonly just use any
+addresses for the virtual machines.
+
+56
+00:04:55,130 --> 00:05:02,973
+One special address to know
+about is the broadcast address,
+
+57
+00:05:02,973 --> 00:05:10,523
+which is all 48 bits are 1s or
+all hex characters are Fs.
+
+58
+00:05:10,523 --> 00:05:15,004
+So this is set as a destination
+address in the frame and
+
+59
+00:05:15,004 --> 00:05:21,790
+it indicates that this frame is meant to
+be received by all nodes in this network.
+
+60
+00:05:24,450 --> 00:05:27,567
+Now we discussed Ethernet in detail, but
+
+61
+00:05:27,567 --> 00:05:31,418
+there are many different
+link layer protocols.
+
+62
+00:05:31,418 --> 00:05:34,474
+So each will have its own frame format.
+
+63
+00:05:34,474 --> 00:05:41,251
+So shown here are on the left is ATM and
+802.11,
+
+64
+00:05:41,251 --> 00:05:46,377
+also known as WiFi is shown on the right.
+
+65
+00:05:46,377 --> 00:05:51,838
+The key takeaway is that some
+standard defines the frame format so
+
+66
+00:05:51,838 --> 00:05:57,110
+everyone that's using it can know
+how to speak to one another.
+
+67
+00:06:00,202 --> 00:06:06,768
+Thanks, this is the end and
+we will see you in the next video.

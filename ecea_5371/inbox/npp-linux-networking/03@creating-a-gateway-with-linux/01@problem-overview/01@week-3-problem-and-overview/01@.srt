@@ -1,0 +1,229 @@
+1
+00:00:09,092 --> 00:00:11,092
+All right.
+
+2
+00:00:12,997 --> 00:00:17,621
+Module and this one is going to be
+about creating a gateway with Linux.
+
+3
+00:00:17,621 --> 00:00:19,730
+Now we've heard the term gateway.
+
+4
+00:00:19,730 --> 00:00:25,146
+If you recall that was
+the term used in that 1970.
+
+5
+00:00:25,146 --> 00:00:30,227
+I think it was 1974 paper and
+it defined this gateway in
+
+6
+00:00:30,227 --> 00:00:35,722
+the context of the Internet protocol
+as a router that allows for
+
+7
+00:00:35,722 --> 00:00:40,097
+the connection between
+two different networks.
+
+8
+00:00:40,097 --> 00:00:44,112
+So we're going to kind of take that
+definition and extend it a little bit.
+
+9
+00:00:44,112 --> 00:00:48,428
+We're going to define it as something
+that sits at the edge of the network and
+
+10
+00:00:48,428 --> 00:00:52,490
+provides some functionality beyond
+just routing and forwarding.
+
+11
+00:00:52,490 --> 00:00:56,274
+So we're going to go deeper
+into the depths of what
+
+12
+00:00:56,274 --> 00:00:59,032
+Linux networking can provide.
+
+13
+00:00:59,032 --> 00:01:03,837
+So this may be the public
+Internet might be on one side and
+
+14
+00:01:03,837 --> 00:01:07,910
+the private network on the other side.
+
+15
+00:01:07,910 --> 00:01:12,504
+Or the edge might be kind of
+between maybe two segments of
+
+16
+00:01:12,504 --> 00:01:16,630
+a network under the same
+administrative domain.
+
+17
+00:01:17,850 --> 00:01:22,001
+So what functionality are we
+going to be looking at and
+
+18
+00:01:22,001 --> 00:01:28,350
+what constitutes things that you
+might see in a gateway of a network.
+
+19
+00:01:28,350 --> 00:01:33,398
+So the first is filtering and
+some address translation.
+
+20
+00:01:33,398 --> 00:01:37,975
+So this allows you to have a policy for
+what traffic is allowed in and
+
+21
+00:01:37,975 --> 00:01:39,465
+out of your network.
+
+22
+00:01:39,465 --> 00:01:44,072
+And possibly translating addresses,
+allowing you to keep private
+
+23
+00:01:44,072 --> 00:01:48,536
+addresses internally with a public
+facing address separately.
+
+24
+00:01:51,643 --> 00:01:55,677
+Next, functionality might be
+something like load balancing.
+
+25
+00:01:55,677 --> 00:02:00,538
+So say we're running
+a replicated service where each
+
+26
+00:02:00,538 --> 00:02:05,399
+of these hosts can perform
+the same functionality and
+
+27
+00:02:05,399 --> 00:02:12,109
+we have it replicated so that we can
+handle more requests at the same time.
+
+28
+00:02:12,109 --> 00:02:17,479
+So load balancing enables
+forwarding to the back end
+
+29
+00:02:17,479 --> 00:02:24,078
+servers to choose a specific
+back end server algorithmically.
+
+30
+00:02:24,078 --> 00:02:28,628
+And then we can balance the load
+by sending different requests to
+
+31
+00:02:28,628 --> 00:02:30,151
+different servers.
+
+32
+00:02:30,151 --> 00:02:35,349
+And then the last one we're going to
+cover is quality of service.
+
+33
+00:02:35,349 --> 00:02:40,029
+And so
+this enables you to have this policy that
+
+34
+00:02:40,029 --> 00:02:44,834
+describes the limits and
+priority on traffic.
+
+35
+00:02:44,834 --> 00:02:49,184
+And as you could guess,
+Linux covers them all.
+
+36
+00:02:49,184 --> 00:02:53,772
+So we have tools like iptables, ipvs,
+
+37
+00:02:53,772 --> 00:02:59,201
+tc that covers each of
+these different areas.
+
+38
+00:02:59,201 --> 00:03:04,180
+And so for each of them we're going to
+cover first some foundational
+
+39
+00:03:04,180 --> 00:03:08,630
+background to explain what is
+the functionality we want.
+
+40
+00:03:08,630 --> 00:03:14,729
+Then we're going to go into
+an overview of the Linux utility and
+
+41
+00:03:14,729 --> 00:03:16,889
+how to make use of it.
+
+42
+00:03:16,889 --> 00:03:23,438
+And for each we're going to provide
+practice exercises in a github repo.
+
+43
+00:03:23,438 --> 00:03:27,180
+Now it's not just enough to have that and
+
+44
+00:03:27,180 --> 00:03:31,596
+then execute those
+commands in that exercise.
+
+45
+00:03:31,596 --> 00:03:37,706
+The goal would be for you to take that and
+use that as a platform to then go
+
+46
+00:03:37,706 --> 00:03:43,630
+a little further to really explore
+the ins and outs of each of these.
+
+47
+00:03:43,630 --> 00:03:48,840
+So with that we're going to end here and
+start this up next time.
+
+48
+00:03:48,840 --> 00:03:50,583
+All right, thanks.

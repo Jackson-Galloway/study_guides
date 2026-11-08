@@ -1,0 +1,253 @@
+This time we're going to talk about networking
+between namespaces. Just to recap, what we did
+last time was we introduced network namespaces and then how do you actually create
+them and create veth pair? There was three main steps
+that we talked about. Create the network namespace, so that nsDemo, we could create it with
+Ip netns ad nsDemo. We then step 2, create the veth pair ip
+link ad vethY type veth, and then peer name vethZ. That creates the two devices. Then we attach one of the veth devices to
+a network namespace, and we can use ip
+link set for that. So that's setting vethZ
+inside of nsDemo. We talked about you
+could do it between two different containers and
+there's different setups. But those were the
+three main steps. Then there's a lot of other
+Linux networking stuff. Set the device state up so these veth devices
+set in address, add routes and do
+things like that. What we're going to do is
+then take that one step further and now create
+a whole network. We showed this last time.
+We have this vagrant file. Let me quickly show it. I'm inside the GitHub repo, so I can list and we have a vagrant file that
+we provided that we showed last time that
+includes two nodes. What that allows me to
+do if I say vagrant up that I'll bring up
+both virtual machines. If I say vagrant up node1, then I'll just bring up
+one virtual machine. You can find all the code or the vagrant file and
+the other code that we'll show today
+inside of that repo. First, what we're going
+to show is basically two cases that
+we'll work together and how to do and then we
+provide as part of the repo, and then we'll outline
+a third case which you can do on your own as extra practice and then
+we'll talk about a lab. The first case we want to
+do something like this. We want to create
+three namespaces, create the veth pairs, and then bridge
+them all together. This is almost
+like going back to the very first week
+of this course. We basically set up a bridge. Now we put that inside
+of its own namespace, but here we're going to not, we're going to have it just
+in the root namespace. Keep this picture in mind. We'll flip back and
+forth between it. But let's think about
+what we need to do. I got two terminals pulled up. What we're going to do, I'm
+going to create a file called outline and we're going to talk about the steps
+that we need to do. What are the three main steps? We talked about, I don't
+need these to be comments, create the network namespaces, and in the picture, this was ns1, ns2, and ns3. Flip back to the picture, ns1, ns2, ns3. Second step is create
+the veth pairs, so B, C, D, E, F. Note, this is just the
+convention I'm using. You can really name
+these whatever you want, but it makes it a
+lot simpler for me. Second step, we're
+going to need to create the veth pairs. This is vethA, we'll just say through
+veth I think it was F. Then what's the
+last thing that you need to do is attach one end to
+network namespace. We showed it was
+vethB inside of ns1, vethD in ns2, and vethF in ns3. If we go back to the picture B, D and F in namespaces ns1, ns2, ns3, and then we'll keep A, C, E inside the root namespace. Once we do that, then
+what do we want to do? Well, next step, we're going to bring all the veth devices up. Just make sure they're up. Then we're going to get
+into some networking. We're going to
+create the bridge. Then we're going to attach each of these devices to the bridge. Then we can add some
+addresses inside of these namespaces
+to these devices and then enable them
+to ping one another. Let's recap that. Go back. What did we say? We said bring veths up. We're going to create a bridge and then
+we're going to attach the veths in root
+namespace to bridge. This was vethA,
+vethC, and vethE. Then we're going to set, or I'll use the terminology, add an address to
+the veths in ns1, which is vethB, ns2, which is vethD, and ns3, which is vethF. Those are the steps
+that we're going to take. Take a look at that. Let's work through it. First, create the
+network namespaces. Here the command was ip netns add and then the
+namespace name, so ns1. Then we're going to
+add ns2 and ns3. If I want to look at this, I can say I think I need
+the pseudo netns list. I can see I just want 2
+and 3, have been created. Next is create some veth pairs. What command do we need
+for that? IP link. So pseudo op link add vethA type veth peer name vethB. This is add the device vethA. Saying it's going to be
+type veth and we're going to also create a peer
+that's named vethB. Run that. I want to do
+this again with C and D, I want to do this
+again with E and F. If I were to do IP link, I should see all these
+devices of vethD, C, F, E. I scroll up a little bit, I should say C, A, and B. We just created the veth pairs, now I need to attach
+one end of each of those pairs into the
+network namespace. I want to attach B, D, and F into the
+respective namespace. What was the command
+we used for that? It was ip link set. Hopefully you remember
+how to use it, but what we're saying
+is the device name, so vethB, and then netns and then the
+network namespace name. We set that D goes into
+ns2 and F goes into ns3. If we did ip netns exec inside
+of ns1 ip link, I would see vethB inside of it, I do it inside of ns2, I see vethD, and inside of ns3, just for completeness, I could see vethF. Now I want to bring
+the veth devices up. So that's the IP
+link set command where I set this
+device state up. For the devices A, C, and E that are in
+the root name space, I'll just run that
+command directly. IP link set device vethA up, I'll say C and E. Those are
+all in the root namespace. Then if I do IP link, I'll see veth is now one. It's saying the
+lower layer is down. Well that's because
+both sides aren't up, so the veth pair is not up. Let me clear that. I'll just type it new. Now
+we need to exec inside of each of the namespaces, do basically the same
+command I just did. IP link set device vethB up, ns1, sudo and I forgot the exec. Now we'll repeat that for D inside of ns2, and inside of ns3, we'll do device F. If
+I do IP link again, now vethA is in state up. If I look inside of ns2, I should see vethB
+and its state is up. Then we just brought all
+the veth devices up. Let's now create a bridge. A command to do that
+was again also IP link, but where we say add and
+we can give it a name, I'll call it mybridge, and we're going to
+say it's type bridge. Then it's a device. I need to bring it to
+the upstate sudo IP link set device mybridge up. Excellent. We created a bridge. Now we need to attach the veths in the root
+namespace to the bridge. Going back to the picture,
+we've just created the bridge. Now I need to say this one, its master is mybridge. This device, it's
+master is mybridge. And this device, it's
+master is mybridge. That's again the IP
+link set command, sudo IP link set vethA
+master mybridge. Before I do that command, let's actually look at vethA, I wanted to say show.
+Let me do that again. Sudo IP link show device vethA, and we can see there's no
+mention of the master. But now if I say sudo IP link
+set vethA master mybridge, and then I run that show again. Here we can see that it added that configuration
+to this device. That's what that
+set command does. It sets some property
+of a device. Let me run that again for C and E. Now all of the devices vethA, C, and E are all
+attached to my bridge. That's what we just
+did. Now the next thing we do need to do is add some addresses to the
+veths in the namespaces. We're going to use 10.0.0.123. I'll call this 10.0.0.1.2.3. How do we do that?
+It's going to be the IP addr add command, but I want to execute this
+inside of a namespace. I say sudo IP netns exec, inside of ns1, I want to run IP addr add
+10.0.0.1/24 device vethB. No we're not going
+to need this the via or anything like
+that because these are all directly connected the local area network
+through a single bridge. Set that inside of names-pace 2. I'm going to give it IP
+address 2, and that's D, then inside of names-pace 3, I'm going to give it address 3, and that's device vethF. Now if I want to look
+at any of these, I can see great vethF
+has that address, I can say IP route
+has that nice route. Inside of it. Let me clear now, let's do some pinging. At this point, maybe we
+want to see this pseudo IP, the NS exec, let's do ns3 and I want
+to run tshark -i vethF. Now tshark is running
+inside of ns3. Inside of ns3, I'm running tshark that's up here and then down here I want to
+ping ns3 from ns1. I can say pseudo IP netns exec, ns1 ping I'll do account of
+four and I'll do 10.0.0. 3, that's the address
+of ns3. There you go. We can see that it
+sent those requests. We can scroll up, we
+can see it actually did darp, who has 10.0.0.3? Tell 10.0.0.1, that's ns ones. You can see it did the ARB. Let's go back to the picture. We said, ping first, it's in ARB and said,
+who has 10.0.0.3? Because it went to the
+bridge. It's a broadcast. It broadcast down into vethF. It responded, and then, great, now we can do a ping. It did a ping through this path. I could have done
+tshark on vethE. I could have done
+it on my bridge could have done a vethA or my vethB and I would have seen the
+packet as it traverses. That's all the set up. Now one thing I
+want to point out, let me clear all that. Is all of that is provided inside of
+this case one bridge. We have this create all script which is all of the
+commands that we just ran. There's the delete all
+where you basically just deleting the name spaces
+and then deleting the bridge and you
+have to run that sudo, I think you have to
+run both as sudo, I would say sudo. /del- all, and now
+everything is deleted. I say IP link, great, all those veth devices are gone. If I say IP net and netns list, all of the name spaces are gone. That was one example. Highly recommend you
+go do practice on your own all the codes available
+in this GitHub link. Second example is now
+let's go across two nodes, let's say we want to connect
+to the external world. I'm going to use this other VM to represent the external world. I want to do port forwarding. I want to set up IP tables
+inside of this node to direct one set of ports port 80. I wanted to go to
+this names-pace, and then port 25565, I wanted to go to
+this names-pace. I'm going to run a
+service in each of these, but they're going to be
+listening on different ports. Once a web server,
+once a Mine-craft. We're not actually
+running those, we'll just use the
+NC tool to do that. But this allows us
+to run IP tables or just shows how we can use IP tables to then
+direct to the veths. We're not going to go
+through every single command here where we're going to say, great, we have, this is another example that we
+provided all the code for. The create all and
+the delete all. Before I do that, one thing
+I would do want to point out about this directory. This is the GitHub repo. Is this clear
+firewall.sh script? Docker networking, and we will learn more about
+Docker networking. It sets up all kinds of
+rules inside of IP tables. What we want to do just
+make sure that they don't interfere with
+anything we're doing. I just want to clear everything. I just basically say
+clear out everything. This came from something that DigitalOcean posted on how
+to just delete everything. Then the end result, if I list out in the IP tables,
+it's basically nothing. T nat it will be nothing, is inside of any of those. I ran that already. Now let's go into Case
+2 and just look at it. I'll create all, go to the top of the file. Actually I should say two, two name spaces two pairs. Create the two name spaces. Create the two veth
+pairs and then attach one end of the veth pair to
+each of the name spaces. Come back to create
+two name spaces, two pairs, attach one to each. That's all basically the
+exact same that we just did. Bring all the devices up, add some route
+addresses to them. Yeah, add routing in the host, that's routing in the host to
+direct traffic to veth A or C when I receive a packet
+that's destined to 10.10.10.1, send destination veth A. It's now how we can see when I added an
+address to veth A. It's adding routing table entry. Now I'm adding the
+address to veth B and D. Then the last part
+is set default routes within each name space
+and we're going to say go via the address in veth A. Let me break that down. So inside of here we assigned
+IP address to veth A. We gave it the slash
+24 so that it added a route entry so that
+whenever the host says, I need something that goes
+to 10.10.10 something, send it into veth A. Inside of veth A, we
+gave it an address here, and we set the default
+route to go via 10.10.10.1. So if this is our
+destination, great. But anything that we're
+sending to send it via that. Because we're going to
+be getting messages from 192.168.1.101. That's what all of that is. Then we're setting
+some IP tables rules. Let's walk through these, so IP tables -t nat. If you recall that's
+the nat table. -A means add a rule and
+we're going to add it to the pre routing chain of nat, and we're going to
+match if it's coming in on interface emp0s8 with the destination 192.168.1.100
+destined for port 80. I want to do some
+destination nat and change the destination to 10.10.10.1. We're going to do the
+exact same thing but when it's port 2565, changes the destination
+to 11.11.11.1. When it's going to come in and it's destined to this
+address right here, I'm going to change
+the destination to one of these two addresses
+based on the port number. On the egress direction, we're going to say similarly, when it's destined for the emp0s8 with the
+source of 10.10.10.1, where the source
+is also port 80, I want to source nat it. I want to change the source address to
+that of the machine. We're going to run
+that, then what we're going to do is
+we're going to run something in each node and
+see how that all works. Let me clear this and say pseudo create all. It did all of that. Now I want to pull open actually something
+inside of node2. I can't do this in split mode. Let me put a single
+terminal mode. Now it's freezing on me. Let me open something to node2. Well, let me just go to node2. Close that, zoom in. Yeah. I don't have the
+software running on that, so does matter or don't
+have the GitHub-repo. What I want to do is on node1, I want to run the service inside of each network name space. This is just running it. It's saying NC, just listen on port 80 and the
+other terminal again say listen on
+port 25565, ns2. Then on node2, I'm going to basically
+say hello ns1. Hopefully that showed
+up. Hello ns1. Then I would 25565. Let me send a message
+to the other one. So you can see in ns2 there
+was nothing that printed out. If I say hello ns2 that
+will have showed up there. You can use tshark
+to track all of these different things but that's where the packets
+are, all of that. So with that, let me
+stop that service, stop this service and
+I'll do the clean up, pseudo delete, deleted
+everything, now we're clean. Go try that on your own. For the last one we're going to extend the network
+between machines. You saw how we used IP
+tables to do the netting. Well, instead, see
+if you could set up a tunnel between
+these two and see if you can get a name space on one to be able to talk to
+a name space on another. We don't provide code for that. That's something as a
+practice on your own. Now, one note about the lab, we're just to set it up. This is the programming
+assignment that's provided. What you're provided with is a create and delete script
+that's been obfuscated. Let me quickly show
+what that means. It's in the GitHub-repo. It's this ob-create, and you can see it's obfuscated. This actually is real
+commands that gets executed. So I wrote a real script that
+creates some name spaces, networks them
+together, all of that. Then I ran something
+that obfuscates it, but you can still
+run that command. We only need one node for this. Do vagrant up node1, I would make sure to
+clear the firewall, all those IP tables and then
+you just run the script. Then go to Coursera, answer questions about it. We're going to ask how many
+name spaces are there? We're going to
+ask, I don't know, can these two IP addresses
+communicate with each other? You're going to have to go
+do a little bit of digging and troubleshooting
+to figure it out. Here's some commands
+that might be useful, but feel free to do
+it however you want. Then then you'll capture some output as described in
+the Read Me and upload that. All right, with that we showed how to do a
+bunch of networking between some name spaces and now you can start
+seeing the power behind it. Next time we're going to see how Docker is setting up its
+network. All right, thanks.

@@ -1,0 +1,1345 @@
+1
+00:00:09,315 --> 00:00:10,755
+All right, welcome back.
+
+2
+00:00:10,755 --> 00:00:15,663
+So last time we looked at
+routing in general, and
+
+3
+00:00:15,663 --> 00:00:21,532
+introduced that there's
+a variety of routing software,
+
+4
+00:00:21,532 --> 00:00:24,882
+GoBGP, FRR, BIRD, Quaga, and
+
+5
+00:00:24,882 --> 00:00:29,335
+we went through the configuration of BIRD.
+
+6
+00:00:29,335 --> 00:00:33,844
+This time we're going to
+actually run BIRD, and so
+
+7
+00:00:33,844 --> 00:00:38,464
+with that we're going to
+again use containerlab and
+
+8
+00:00:38,464 --> 00:00:42,433
+we're going to use
+a topology as shown here.
+
+9
+00:00:42,433 --> 00:00:47,204
+So these two down here are going to
+be our host where we're
+
+10
+00:00:47,204 --> 00:00:51,559
+going to be able to ping from
+land one to land two, and
+
+11
+00:00:51,559 --> 00:00:57,605
+each of these nodes will be a router
+that we're going to run our BIRD on.
+
+12
+00:00:57,605 --> 00:01:02,626
+Okay, so the configuration and
+operation for
+
+13
+00:01:02,626 --> 00:01:08,937
+this would be for each container,
+the router container,
+
+14
+00:01:08,937 --> 00:01:15,891
+we're going to mount a file that
+contains configuration files for
+
+15
+00:01:15,891 --> 00:01:19,521
+each of the individual routers.
+
+16
+00:01:19,521 --> 00:01:24,357
+So this would mount to /etc/bird.
+
+17
+00:01:24,357 --> 00:01:29,893
+So if you recall,
+that's kind of the default location for
+
+18
+00:01:29,893 --> 00:01:34,753
+configuration files and
+there's a default bird,
+
+19
+00:01:34,753 --> 00:01:38,035
+but you can also specify your own.
+
+20
+00:01:38,035 --> 00:01:42,898
+So we're going to actually mount
+it to some alternative to that so
+
+21
+00:01:42,898 --> 00:01:46,035
+that we can specify our own, all right?
+
+22
+00:01:46,035 --> 00:01:49,568
+And we'll go through the BGP
+configuration of this.
+
+23
+00:01:49,568 --> 00:01:54,078
+We're going to add in some
+static routes to those.
+
+24
+00:01:54,078 --> 00:02:00,448
+And then to run it, we just say BIRD and
+then pass in the configuration file.
+
+25
+00:02:00,448 --> 00:02:04,857
+We'll do that for
+each of these four routers, and
+
+26
+00:02:04,857 --> 00:02:10,953
+then we're going to interact with
+BIRD to be able to show the protocol.
+
+27
+00:02:10,953 --> 00:02:13,924
+So we'll be able to see the peerings and
+
+28
+00:02:13,924 --> 00:02:18,437
+then show all the routes and
+all that kind of stuff, right?
+
+29
+00:02:18,437 --> 00:02:22,108
+So with that, let's switch over.
+
+30
+00:02:23,562 --> 00:02:28,540
+So what's shown here is again
+this GitHub repo that we'll
+
+31
+00:02:28,540 --> 00:02:30,888
+have a link to in Coursera.
+
+32
+00:02:30,888 --> 00:02:39,167
+The first set of demos where we are doing
+everything on command line was demo one,
+
+33
+00:02:39,167 --> 00:02:44,177
+we're going to look at demo two right now,
+right?
+
+34
+00:02:44,177 --> 00:02:50,083
+So everything is very clearly
+described in the readMe,
+
+35
+00:02:50,083 --> 00:02:54,860
+but let's open up this configuration file,
+
+36
+00:02:54,860 --> 00:02:59,899
+diamond-mod2 for the containerlab, okay?
+
+37
+00:02:59,899 --> 00:03:02,847
+And we're going to call
+the topology mod2-bgp.
+
+38
+00:03:02,847 --> 00:03:08,674
+And here,
+we're going to have our four nodes lan1,
+
+39
+00:03:08,674 --> 00:03:14,916
+router A, router B, router C,
+router D, and lan2.
+
+40
+00:03:14,916 --> 00:03:19,660
+And then for each of the routers,
+we're going to mount inside of
+
+41
+00:03:19,660 --> 00:03:24,133
+the container will be
+the directory etc/bird-alt, and
+
+42
+00:03:24,133 --> 00:03:29,349
+then our local bird configurations
+that we're going to show in a bit.
+
+43
+00:03:29,349 --> 00:03:34,372
+And then I have the links set up and
+if you want to take this offline and
+
+44
+00:03:34,372 --> 00:03:40,139
+draw them out, it'll look like what's
+in that picture we showed, right?
+
+45
+00:03:40,139 --> 00:03:44,386
+But it's that kind of diamond
+looking topology, all right.
+
+46
+00:03:44,386 --> 00:03:46,636
+So what else is in here?
+
+47
+00:03:46,636 --> 00:03:51,925
+We'll see some IP addresses that we need
+
+48
+00:03:51,925 --> 00:03:56,599
+to set up and a script to start BIRD.
+
+49
+00:03:56,599 --> 00:04:03,861
+So before I do all that,
+let me start containelab deploy.
+
+50
+00:04:05,221 --> 00:04:13,226
+So it's deploying all those routers,
+Great.
+
+51
+00:04:13,226 --> 00:04:21,004
+And now, let me look into
+some of these things, right?
+
+52
+00:04:21,004 --> 00:04:22,500
+So what's the first thing
+we want to look at?
+
+53
+00:04:22,500 --> 00:04:25,319
+Let's look at the IP addresses.
+
+54
+00:04:26,788 --> 00:04:31,988
+All right, so again,
+all this is doing is in the lan.
+
+55
+00:04:31,988 --> 00:04:40,265
+It's going to say I want to just
+add some static routes addresses.
+
+56
+00:04:40,265 --> 00:04:45,898
+So add some addresses, 1.1.1.1 or
+
+57
+00:04:45,898 --> 00:04:50,442
+3.3.3.3 as part of eth1.
+
+58
+00:04:50,442 --> 00:04:57,464
+So that's if I go over to the picture
+that's going to be with eth1 for lan1 and
+
+59
+00:04:57,464 --> 00:05:03,720
+then on eth1 of lan2, I'm going to
+do some other static addresses or
+
+60
+00:05:03,720 --> 00:05:07,893
+another set of addresses 2.2.2.2 and
+
+61
+00:05:07,893 --> 00:05:11,435
+4.4.4.4 so that's on lan2.
+
+62
+00:05:11,435 --> 00:05:16,558
+And then I'm going to put
+some route table entries or
+
+63
+00:05:16,558 --> 00:05:23,886
+forwarding table entries on lan1 to
+be able to know how to get to lan2.
+
+64
+00:05:23,886 --> 00:05:29,004
+So this is 1.1.1.1 and
+then you'll see on lan2,
+
+65
+00:05:29,004 --> 00:05:32,095
+here's an route table entry, and
+
+66
+00:05:32,095 --> 00:05:37,228
+they're going to go through
+via their first hop router.
+
+67
+00:05:37,228 --> 00:05:42,850
+So this 10.10.0.1, That's
+
+68
+00:05:42,850 --> 00:05:48,051
+going to be this device for
+router A, right.
+
+69
+00:05:48,051 --> 00:05:55,007
+And we can come down and
+we can see that, All right,
+
+70
+00:05:55,007 --> 00:05:59,901
+and we're going to give each of
+the interfaces for router A an address.
+
+71
+00:05:59,901 --> 00:06:03,752
+We're going to give each of
+the interfaces in router B an address, and
+
+72
+00:06:03,752 --> 00:06:06,400
+each of the interfaces
+in router C an address.
+
+73
+00:06:06,400 --> 00:06:10,690
+All right, so what's actually interesting,
+we didn't talk about this before, but
+
+74
+00:06:10,690 --> 00:06:11,938
+I'll just note it here.
+
+75
+00:06:11,938 --> 00:06:18,053
+When I say ip addr add and
+then before we were just that part here,
+
+76
+00:06:18,053 --> 00:06:20,778
+we're adding this /30.
+
+77
+00:06:20,778 --> 00:06:23,785
+And so
+this actually creates a route entry.
+
+78
+00:06:23,785 --> 00:06:29,247
+It's as if you're calling ip route add for
+
+79
+00:06:29,247 --> 00:06:33,053
+this prefix for this device.
+
+80
+00:06:33,053 --> 00:06:35,271
+So it's a little kind of shortcut.
+
+81
+00:06:36,824 --> 00:06:42,970
+All right, so that's the IP addresses and
+again, if you want to go draw this out,
+
+82
+00:06:42,970 --> 00:06:48,513
+it's basically just putting IP
+addresses for each of these interfaces.
+
+83
+00:06:48,513 --> 00:06:52,681
+Okay, so let me run that set up.
+
+84
+00:06:52,681 --> 00:06:55,561
+Forgot to create, okay?
+
+85
+00:06:55,561 --> 00:07:02,176
+So now all the routers would have
+IP addresses so I could say router.
+
+86
+00:07:02,176 --> 00:07:05,783
+Well, first I should
+source my make aliases.
+
+87
+00:07:05,783 --> 00:07:09,993
+Now I can say router A,
+
+88
+00:07:09,993 --> 00:07:14,873
+IP route or IP adder show.
+
+89
+00:07:14,873 --> 00:07:22,819
+And you can see the three interfaces
+with the IP addresses right there,
+
+90
+00:07:22,819 --> 00:07:27,602
+I could say IP route and
+we could see those.
+
+91
+00:07:27,602 --> 00:07:32,174
+And this is needed because I need the
+routers to be able to talk to one another.
+
+92
+00:07:32,174 --> 00:07:35,632
+So before I even put
+some routing software up,
+
+93
+00:07:35,632 --> 00:07:40,597
+I need those routers when it creates
+a connection to its neighbor,
+
+94
+00:07:40,597 --> 00:07:46,469
+there need to be something that says,
+how do I even talk to my neighbor, okay?
+
+95
+00:07:46,469 --> 00:07:50,950
+All right, so that's the first
+is assigning some IP addresses.
+
+96
+00:07:50,950 --> 00:07:55,407
+So the next is,
+let's look at the BIRD configuration.
+
+97
+00:07:55,407 --> 00:08:01,040
+So all of these, are going to be in
+this directory mod2 And you can see for
+
+98
+00:08:01,040 --> 00:08:05,930
+convenience I just put all
+of them in one directory.
+
+99
+00:08:05,930 --> 00:08:11,586
+And if we look inside
+of each etc/bird.alt,
+
+100
+00:08:11,586 --> 00:08:17,681
+we're going to see those exact same files,
+right?
+
+101
+00:08:17,681 --> 00:08:22,484
+because we mounted this particular
+directory to this directory inside of that
+
+102
+00:08:22,484 --> 00:08:23,884
+container, right?
+
+103
+00:08:23,884 --> 00:08:26,464
+And that was because of,
+
+104
+00:08:31,351 --> 00:08:35,844
+Diamond, this mount command
+
+105
+00:08:35,844 --> 00:08:40,702
+right there, the bird, okay?
+
+106
+00:08:40,702 --> 00:08:45,698
+All right, so let's go back into this,
+let me clear this and list.
+
+107
+00:08:45,698 --> 00:08:52,803
+All right, so
+I included the default bird configuration,
+
+108
+00:08:52,803 --> 00:08:58,678
+it kind of includes a lot
+of commented out stuff.
+
+109
+00:08:58,678 --> 00:09:02,278
+And so it's basically like
+you can go through this and
+
+110
+00:09:02,278 --> 00:09:06,520
+say, this is how I create a table,
+let me uncomment that.
+
+111
+00:09:06,520 --> 00:09:11,797
+I always need these kind of default ones,
+that device kernel,
+
+112
+00:09:11,797 --> 00:09:17,784
+here if I wanted to create some static
+routes, here's how it would do.
+
+113
+00:09:17,784 --> 00:09:21,778
+And here's the input or filter,
+
+114
+00:09:21,778 --> 00:09:25,773
+different protocols like OSPF,
+
+115
+00:09:25,773 --> 00:09:30,490
+there's probably one for BGP in here.
+
+116
+00:09:31,980 --> 00:09:36,198
+And so
+these are all kind of the defaults and so
+
+117
+00:09:36,198 --> 00:09:41,840
+what I did was basically crafted one for
+each of these.
+
+118
+00:09:41,840 --> 00:09:44,726
+All right, so
+let's look at one particular one.
+
+119
+00:09:44,726 --> 00:09:48,420
+Let's look at router A but
+let me flash back to the picture.
+
+120
+00:09:48,420 --> 00:09:53,377
+This is router A,
+it's going to need a peering to router B,
+
+121
+00:09:53,377 --> 00:10:00,794
+it's going to need peering to router C and
+then it doesn't need this, but I added it.
+
+122
+00:10:00,794 --> 00:10:04,912
+It's going to have some static routes for
+
+123
+00:10:04,912 --> 00:10:09,310
+those 1.1.1.1 and all of those.
+
+124
+00:10:09,310 --> 00:10:13,999
+And what that's going to do is make it so
+that router A is
+
+125
+00:10:13,999 --> 00:10:19,543
+announcing those static routes
+to these other kind of nodes so
+
+126
+00:10:19,543 --> 00:10:23,400
+that they all know how
+to reach these lans.
+
+127
+00:10:25,360 --> 00:10:32,260
+All right, so let's open up router A,
+let's start up at the top.
+
+128
+00:10:32,260 --> 00:10:36,843
+We're going to log everything and
+then if we wanted to look at it,
+
+129
+00:10:36,843 --> 00:10:41,348
+the logs, they would be in this
+file inside of the container.
+
+130
+00:10:41,348 --> 00:10:46,526
+[COUGH] Specify the IP address
+as the ID of this router.
+
+131
+00:10:49,293 --> 00:10:54,154
+And then these are all the same,
+here's the static
+
+132
+00:10:54,154 --> 00:10:59,726
+routes that I added and
+then the main thing is right here.
+
+133
+00:10:59,726 --> 00:11:01,476
+So the peering session.
+
+134
+00:11:01,476 --> 00:11:04,896
+So this is from router A to router B,
+
+135
+00:11:04,896 --> 00:11:09,840
+I just named it A to B to
+help me understand it.
+
+136
+00:11:09,840 --> 00:11:15,576
+And I'm going to specify
+the neighbor 10.10.1.2, so
+
+137
+00:11:15,576 --> 00:11:21,780
+that's router B and
+router B's as number is 65001.
+
+138
+00:11:21,780 --> 00:11:24,792
+And then router A to C,
+
+139
+00:11:24,792 --> 00:11:29,550
+its neighbor is that address of C and
+
+140
+00:11:29,550 --> 00:11:34,638
+this is the as number of C, all right?
+
+141
+00:11:34,638 --> 00:11:41,925
+[COUGH] So that's great.
+
+142
+00:11:41,925 --> 00:11:48,426
+Now I can look at,
+[COUGH] Excuse me, router B.
+
+143
+00:11:53,435 --> 00:12:01,340
+It's going to have an equal peering,
+[COUGH] Like this.
+
+144
+00:12:01,340 --> 00:12:06,394
+And the reason why I
+commented these out was just
+
+145
+00:12:06,394 --> 00:12:12,960
+to show an alternative that
+you can use if you wanted.
+
+146
+00:12:12,960 --> 00:12:19,950
+All right, so it's creating the B to A,
+peering B to D peering, and all that.
+
+147
+00:12:21,120 --> 00:12:26,360
+All right, [COUGH] So now the question is,
+how do we start bird?
+
+148
+00:12:26,360 --> 00:12:28,453
+So I provided a script, and
+
+149
+00:12:28,453 --> 00:12:33,280
+all of this is stuff that you
+can run manually, individually.
+
+150
+00:12:34,340 --> 00:12:37,542
+I like to script things, so
+what this is going to do?
+
+151
+00:12:37,542 --> 00:12:43,800
+So this is the command to start bird,
+it's just the executable called bird.
+
+152
+00:12:43,800 --> 00:12:48,870
+And if I didn't specify anything,
+it'll say it'll
+
+153
+00:12:48,870 --> 00:12:54,452
+use /etc/bird/bird.com as
+the configuration file.
+
+154
+00:12:54,452 --> 00:13:00,540
+But by specifying .c, I can specify
+the specific configuration file.
+
+155
+00:13:00,540 --> 00:13:04,404
+And so you can see with router A,
+we're going to use the A's,
+
+156
+00:13:04,404 --> 00:13:08,482
+configuration B,
+we're going to use B's configuration C.
+
+157
+00:13:08,482 --> 00:13:11,959
+And this is really only practical
+in this particular setup,
+
+158
+00:13:11,959 --> 00:13:15,064
+this container lab setup
+where I have this mounted.
+
+159
+00:13:15,064 --> 00:13:19,071
+Normally these would be on kind
+of different physical nodes and
+
+160
+00:13:19,071 --> 00:13:23,798
+you'd have to do this differently,
+but for our purposes, this works.
+
+161
+00:13:23,798 --> 00:13:28,600
+And again,
+using these kind of aliases internally.
+
+162
+00:13:28,600 --> 00:13:32,611
+All right, great, so
+
+163
+00:13:32,611 --> 00:13:38,743
+now to start, I could start bird.
+
+164
+00:13:43,223 --> 00:13:46,420
+So it just went and executed bird,
+
+165
+00:13:46,420 --> 00:13:51,182
+and now I can start
+interacting with bird itself.
+
+166
+00:13:51,182 --> 00:13:56,976
+So if I open up the readme, so
+this is at the very top, scroll down,
+
+167
+00:13:56,976 --> 00:14:01,952
+it's basically all the stuff
+that we just went through.
+
+168
+00:14:03,081 --> 00:14:07,980
+All right, now this section
+right here is kind of the main
+
+169
+00:14:07,980 --> 00:14:11,247
+thing of there's a command, bird C,
+
+170
+00:14:11,247 --> 00:14:17,060
+that allows you to interact
+with the running bird process.
+
+171
+00:14:17,060 --> 00:14:22,313
+So I could say stuff like bird show
+protocols or bird or bird C show route all
+
+172
+00:14:22,313 --> 00:14:27,472
+to show the routing table, and
+you can look up bird's documentation.
+
+173
+00:14:27,472 --> 00:14:29,280
+There's much more that you can do,
+
+174
+00:14:29,280 --> 00:14:33,340
+these are the main ones we'll look at,
+that's really all we need to do.
+
+175
+00:14:33,340 --> 00:14:36,650
+All right, so
+let me execute each of these, right?
+
+176
+00:14:39,020 --> 00:14:44,000
+So if I say router A, so again,
+that's the alias that I already set up,
+
+177
+00:14:44,000 --> 00:14:48,664
+it's executing this command
+inside of the router A container.
+
+178
+00:14:48,664 --> 00:14:53,801
+And you could see here's the different
+protocols it has running and
+
+179
+00:14:53,801 --> 00:14:58,470
+we could see two of these
+are the peering sessions we set up.
+
+180
+00:14:58,470 --> 00:15:05,490
+I could see this in B,
+I could see this in C,
+
+181
+00:15:05,490 --> 00:15:09,590
+and I could see this in D.
+
+182
+00:15:10,840 --> 00:15:16,051
+All right, luckily, they're all
+established, meaning the peering, all of
+
+183
+00:15:16,051 --> 00:15:21,740
+the things that needed to happen happened,
+and so we're in a good shape there.
+
+184
+00:15:21,740 --> 00:15:25,640
+So now let's look at if they've
+actually exchanged some routes.
+
+185
+00:15:26,700 --> 00:15:31,831
+So again,
+if I wanted to refer back to this,
+
+186
+00:15:31,831 --> 00:15:37,103
+I would see that the command
+is bird show route
+
+187
+00:15:37,103 --> 00:15:42,670
+all that I want to run,
+okay, so let me run that.
+
+188
+00:15:43,680 --> 00:15:47,331
+And now we could see this routing table.
+
+189
+00:15:47,331 --> 00:15:52,830
+All right, so here are the static
+routes that I set up and
+
+190
+00:15:52,830 --> 00:16:00,255
+let's look at something a little
+more interesting, router B, right?
+
+191
+00:16:00,255 --> 00:16:04,309
+So what we're looking at is router B.
+
+192
+00:16:04,309 --> 00:16:07,249
+Router A set up a couple of static routes,
+
+193
+00:16:07,249 --> 00:16:10,367
+then it should advertise
+those to router B.
+
+194
+00:16:10,367 --> 00:16:17,815
+And we do see those showing right here,
+all right?
+
+195
+00:16:17,815 --> 00:16:22,127
+And we could see the as path is great.
+
+196
+00:16:22,127 --> 00:16:24,004
+Could see these various things.
+
+197
+00:16:24,004 --> 00:16:29,093
+So this would be,
+I think that's for router D.
+
+198
+00:16:29,093 --> 00:16:30,975
+And this is router A.
+
+199
+00:16:30,975 --> 00:16:36,169
+And we could see where
+it got this information.
+
+200
+00:16:36,169 --> 00:16:40,033
+Right, because it came
+from this pairing session.
+
+201
+00:16:40,033 --> 00:16:41,390
+So that's the routing table.
+
+202
+00:16:41,390 --> 00:16:45,607
+And those were BGP messages that
+
+203
+00:16:45,607 --> 00:16:50,299
+router a sent to router B for these.
+
+204
+00:16:50,299 --> 00:16:57,208
+And then, like this one, that was
+router D sent this to router A, right?
+
+205
+00:16:57,208 --> 00:17:03,124
+And then if we look at router A, right?
+
+206
+00:17:04,421 --> 00:17:10,511
+It would also have this 2.2.
+
+207
+00:17:10,511 --> 00:17:14,207
+So let's look at this one,
+and let's look at this path.
+
+208
+00:17:14,207 --> 00:17:21,830
+So this path says it's 6001,
+I think that's router B,
+
+209
+00:17:21,830 --> 00:17:26,473
+and 65003, that's router D.
+
+210
+00:17:26,473 --> 00:17:30,484
+So D had a static route,
+it announced it to B.
+
+211
+00:17:30,484 --> 00:17:35,715
+B announced it to A, and
+now we can see it in the table.
+
+212
+00:17:35,715 --> 00:17:39,520
+All right, there's also another,
+
+213
+00:17:39,520 --> 00:17:45,298
+under the same prefix,
+there's another entry for it.
+
+214
+00:17:45,298 --> 00:17:50,701
+All right, so that's because D announced
+it to C, which announced it to A.
+
+215
+00:17:50,701 --> 00:17:57,938
+And so now A has the choice between
+these two routes, all right?
+
+216
+00:17:57,938 --> 00:18:01,786
+And the star kind of
+indicates not kind of.
+
+217
+00:18:01,786 --> 00:18:08,327
+It does indicate which one it chose,
+I believe.
+
+218
+00:18:08,327 --> 00:18:11,112
+And so with that,
+
+219
+00:18:11,112 --> 00:18:16,321
+we can now should be able to ping.
+
+220
+00:18:16,321 --> 00:18:19,632
+All right, with ping.
+
+221
+00:18:19,632 --> 00:18:21,916
+Let me pull up the readme again.
+
+222
+00:18:21,916 --> 00:18:26,714
+Note that we got to use
+that 1.1.1 the dash I,
+
+223
+00:18:26,714 --> 00:18:30,484
+to specify what the source address is,
+
+224
+00:18:30,484 --> 00:18:35,415
+because those are what
+the static routes we added.
+
+225
+00:18:35,415 --> 00:18:41,196
+So let me add this or run this command,
+
+226
+00:18:41,196 --> 00:18:46,447
+and we can see that it's working.
+
+227
+00:18:46,447 --> 00:18:51,303
+All right, now I could go if we wanted
+
+228
+00:18:51,303 --> 00:18:55,543
+to look at source, make alias.
+
+229
+00:18:55,543 --> 00:19:02,687
+If I wanted to see
+the traffic going through,
+
+230
+00:19:02,687 --> 00:19:08,139
+I would do stuff like, what is it,
+
+231
+00:19:08,139 --> 00:19:12,840
+router B, tshark-I eth1.
+
+232
+00:19:12,840 --> 00:19:17,568
+And I should be seeing
+the traffic go through.
+
+233
+00:19:17,568 --> 00:19:20,332
+So that's knowing it's
+going through router B.
+
+234
+00:19:20,332 --> 00:19:26,162
+If I looked at router C,
+I won't see any traffic.
+
+235
+00:19:26,162 --> 00:19:33,773
+All right, so we can see that
+it picked this path, right?
+
+236
+00:19:33,773 --> 00:19:39,623
+Now let's use another
+utility called trace route.
+
+237
+00:19:39,623 --> 00:19:42,303
+So let me pull open the readme again.
+
+238
+00:19:42,303 --> 00:19:50,854
+So what trace route does it's
+different syntax or different flag -s.
+
+239
+00:19:50,854 --> 00:19:54,913
+I again want to provide it
+with the source address, but
+
+240
+00:19:54,913 --> 00:19:59,512
+I'm saying do a trace route
+to destination 4.4.4.4.
+
+241
+00:19:59,512 --> 00:20:01,978
+So what this does is.
+
+242
+00:20:01,978 --> 00:20:06,119
+Well, let's just see it in action.
+
+243
+00:20:08,936 --> 00:20:16,495
+You can see it actually is telling
+you the entire path along the way.
+
+244
+00:20:16,495 --> 00:20:22,272
+So this is router A, router B,
+router D, those are the IP addresses.
+
+245
+00:20:22,272 --> 00:20:27,423
+So how it works is we're running
+it from here, running trace route.
+
+246
+00:20:27,423 --> 00:20:32,298
+It'll send a ping to destination, but
+
+247
+00:20:32,298 --> 00:20:37,616
+it'll set, the first time it sends ping,
+
+248
+00:20:37,616 --> 00:20:43,097
+it'll set the time to
+live field of IP to 1.
+
+249
+00:20:43,097 --> 00:20:49,388
+So it'll get one hop and then this
+router will say, the time to live ended.
+
+250
+00:20:49,388 --> 00:20:54,320
+So let me respond with like an error
+message, an ICMP error message.
+
+251
+00:20:54,320 --> 00:20:57,364
+So now land,
+one knows what the first hop is,
+
+252
+00:20:57,364 --> 00:21:01,387
+then it'll send it again with two,
+the time to live to two.
+
+253
+00:21:01,387 --> 00:21:05,490
+So it'll get to here router,
+the next hop, the second hop,
+
+254
+00:21:05,490 --> 00:21:09,354
+it'll fail there,
+the time to live will go down to zero,
+
+255
+00:21:09,354 --> 00:21:12,995
+it'll respond and
+now it knows that router B, rigt?
+
+256
+00:21:12,995 --> 00:21:15,555
+And it'll do it with the three and
+
+257
+00:21:15,555 --> 00:21:19,677
+get that response until it
+reaches the destination.
+
+258
+00:21:19,677 --> 00:21:26,250
+And so that's how we got this
+full path between those.
+
+259
+00:21:26,250 --> 00:21:32,859
+Okay, so that's the basics of routing.
+
+260
+00:21:32,859 --> 00:21:36,452
+There's a lot of different
+things you can do.
+
+261
+00:21:36,452 --> 00:21:41,450
+What we're going to do for
+the lab now known that what
+
+262
+00:21:41,450 --> 00:21:46,091
+we've set up is a lab
+that you'll programming
+
+263
+00:21:46,091 --> 00:21:51,212
+assignment that you'll do
+as part of this module.
+
+264
+00:21:51,212 --> 00:21:58,468
+So the first step that you're going to
+have to do is go through an ad appearing.
+
+265
+00:21:58,468 --> 00:22:01,695
+So we're going to start with
+that same diamond topology.
+
+266
+00:22:01,695 --> 00:22:05,263
+So start with this kind
+of demo two topology and
+
+267
+00:22:05,263 --> 00:22:07,925
+just add one additional peering.
+
+268
+00:22:07,925 --> 00:22:11,929
+So that means you need to modify
+router B's configuration,
+
+269
+00:22:11,929 --> 00:22:16,178
+router C's configuration to add
+this one other extra peering.
+
+270
+00:22:16,178 --> 00:22:19,728
+Okay, then you should play with that.
+
+271
+00:22:19,728 --> 00:22:24,391
+Look at the routes,
+see which ones it's choosing
+
+272
+00:22:24,391 --> 00:22:28,064
+because you'll see extra long paths.
+
+273
+00:22:28,064 --> 00:22:34,551
+All right, then the second step is
+we're going to now fail some links.
+
+274
+00:22:34,551 --> 00:22:39,803
+So we're going to fail the links
+between A and B and between C and D.
+
+275
+00:22:39,803 --> 00:22:45,828
+And then we're going to see that BGP
+without any kind of intervention on our
+
+276
+00:22:45,828 --> 00:22:51,676
+part is going to figure that out and
+then say, well, I still have a path.
+
+277
+00:22:51,676 --> 00:22:54,961
+It's through A, C, B, D and
+
+278
+00:22:54,961 --> 00:22:59,965
+it'll start sending traffic through that.
+
+279
+00:22:59,965 --> 00:23:05,426
+Okay, so that's going to be what
+the lab that you're going to do and
+
+280
+00:23:05,426 --> 00:23:08,517
+hopefully seeing how we ran burn and
+
+281
+00:23:08,517 --> 00:23:12,860
+all that will make that
+pretty straightforward.
+
+282
+00:23:12,860 --> 00:23:15,958
+So with that, we're going to end here.
+
+283
+00:23:15,958 --> 00:23:18,751
+And next time, which I just flashed up,
+
+284
+00:23:18,751 --> 00:23:23,774
+we're going to talk about if you want
+to run some even larger experiments?
+
+285
+00:23:23,774 --> 00:23:25,948
+What might that look like?
+
+286
+00:23:25,948 --> 00:23:30,642
+If you want to use some real routing
+tables, what might that look like?
+
+287
+00:23:30,642 --> 00:23:34,665
+And what resources do
+we have as a community?
+
+288
+00:23:34,665 --> 00:23:37,823
+All right, until then, thanks, bye.

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Week 1 Resources and Practice Exercises</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2>Lecture Slides</h2><p class="asset">npp-linux-01-linux-intro.pdf</p><p></p><p><em><strong>Note: Each link below is an external link that opens in a new tab.</strong></em></p><h2>Assignment Repo</h2><p><a href="https://github.com/eric-keller/npp-linux-01-intro">Git repo for this week (with exercises).</a></p><p>Note: the Vagrantfile is the same for Weeks 1, 2 , and 3.  You can use the same VM for each if you'd like - cloning the three repos into that VM.</p><p></p><h2>Additional Resources and Practice Exercises</h2><h3>Tools for the lab setup</h3><ul><li><p><a href="https://www.vagrantup.com/">Vagrant</a> </p></li><li><p><a href="https://www.virtualbox.org/">Virtual Box</a> </p></li><li><p><a href="https://mobaxterm.mobatek.net/">MobaXterm</a></p></li><li><p><a href="https://containerlab.dev/">ContainerLab</a></p></li><li><p><a href="https://scapy.net/">Scapy</a></p></li><li><p><a href="https://www.wireshark.org/docs/man-pages/tshark.html">tshark</a></p></li></ul><h3>Scapy tutorial</h3><ul><li><p><a href="https://github.com/guedou/guedou.github.io/blob/master/talks/2022_GreHack/Scapy%20in%200x30%20minutes.ipynb">Scapy in 0x30 Minutes</a></p></li></ul><h3>NetLink Tutorial</h3><ul><li><p><a href="https://medium.com/thg-tech-blog/on-linux-netlink-d7af1987f89d">On Linux NetLinx (Medium Article)</a> </p></li><li><p><a href="https://www.yaroslavps.com/weblog/genl-intro/">Introduction to Generic Netlink, or How to Talk with the Linux Kernel</a></p></li></ul><h3>Docker Tutorial</h3><ul><li><p><a href="https://www.geeksforgeeks.org/docker-tutorial/">Docker Tutorial</a></p></li></ul><h3>Cheat Sheet of Linux Networking Commands</h3><ul><li><p><a href="https://access.redhat.com/sites/default/files/attachments/rh_ip_command_cheatsheet_1214_jcs_print.pdf">ip Command Cheat Sheet</a></p></li></ul><h3>Network Operating Systems (NOS)</h3><ul><li><p><a href="https://sonicfoundation.dev/">Sonic Foundation</a></p></li><li><p><a href="https://www.nvidia.com/en-in/networking/ethernet-switching/cumulus-linux/">How NVIDIA Cumulus Linux Works</a></p></li><li><p><a href="https://dent.dev/">DENT OS</a></p></li></ul><h3>Extra Reading</h3><ul><li><p><a href="https://book.systemsapproach.org/index.html">Computer Networks: A Systems Approach</a>: A great book that is freely available for background on any networking concept (e.g., learning switches).</p></li></ul><p></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,260 @@
+Let's get started. This time
+we're actually going to dive into Linux networking. We'll do this,
+we'll ease into it with Linux network
+device configuration, and we're going to
+use the IP link tool. Our goal here is network
+device configuration. When we say device,
+what do we mean? There's all types of devices
+that Linux supports. This could refer to physical interfaces
+like Ethernet devices. It can refer to devices that attach to another
+device like a VLAN. They can connect together multiple devices like
+a bridge device. Devices exist that can tunnel traffic like VXLAN or GENEVE. We can also create
+virtual devices. That's something
+we're going to have a whole module dedicated to. But for now, let's get
+into the IP link tool. Now, as a little set the stage, there's different utilities that could actually serve
+the same purpose. We have one set of
+utilities as part of this iproute2 package and then another set as
+part of net-tools. Iproute2 is a collection of utilities for controlling
+TCP/IP networking, and traffic control in Linux. Net-tools is a collection of base networking
+utilities for Linux, like I have config, arp, route, and so forth. We'll use iproute2. But a lot of the things that you can
+do that we'll talk about, there's other tools and other
+ways that you can do them. We're going to focus in this
+part right now on IP link. This is for network
+device configuration for Linux and it's part
+of this iproute2 package. The key commands are show, set, add, and delete. With everything there's a man
+page that exists for this. Shown here is a
+screen capture of it. You can see the commands
+structure will be IP link and then whatever
+the command is like IP link ad and then this shows the various options that you can associate or add on
+to that command. We'll go through this. The main thing is just look
+at the man page yourself. Let's start with ip link show. Let's flip over to the man page. Let's search for ip link show. It says display
+device attributes. You've already created devices and you want to show
+their attributes. You could just type ip
+link show by itself. There's more options
+that allow you to filter down what
+exactly you're displaying. If we look at the very top, well, that's the bottom. Ip link show device and
+then some options here. This gets a little more details. Getting back to the slides. We could just run
+an ip link show. We can limit the output
+ip link show some device, we can show only those
+that have the up state. We can provide some
+extra options. Some useful ones that you might see like being able
+to output in JSON. That allows you to create some tools that can parse
+that and things like that. How these options would
+be run is you just put these before like IP. Here's your options and
+then link and show. IP link set. This is to change the state or the configuration
+of an RD existing device. We can go over to the man page, now search for set. Again, here's all the options, so you specify in the device. Then what different option are
+you going to set for that. Some of the key ones are address there and then setting
+the device up or down. Going back, showing those
+would be IP link set. Specify the device, so we
+say device or dev eth0, and then we're going to apply the option of the address and then what value
+we're setting it to. Another example would be to set the device eth0
+into the up state. We can see IP link set, device would be dev
+eth0 into the up state. Or we could have said
+IP link set dev eth0, address and then provide
+the address to it. That's set. Now IP link add, let's see what that does. It adds a virtual link. It adds a device. Here, it's specifying the
+device types or link types. We could have a bridge, a bond. Some other ones we
+talked about, VETH, VLAN, VXLAN, GRE. There's a bunch of
+different options. Recall the different
+types of devices? We saw that all of those exist
+as one of those options. And then each uses IP link a bit differently because they all have different possible
+configurations. If we come back to this. Now here, say under VLAN, this is what setting a device or adding a device
+of type VLAN would include. We're going to include
+the device, the name, and we're going to specify
+that it's type VLAN, then there's VLAN specific
+things like the VLAN ID. So these are all
+different things and if you keep searching, there's probably different
+ones that exist. So here's for VXLAN
+and this would have VXLAN specific parameters. Now, how could you use this? Let's see full examples of this. We mentioned bridge. What exactly is a bridge? A bridge is the device that effectively implements
+a learning switch. We've seen in the past some
+pictures that look like this. We have a host and this is representing a physical switch. We know we could plug this in if this is a learning switch, when this tries to
+send out traffic, the learning switch doesn't have any MAC in its MAC table. Any entries for the
+particular destination , it'll broadcast that. It'll flood it on all outputs. Then whenever there's a
+response, it'll learn that. A all of this is
+working at layer 2, so it will all be MAC addresses. How do you use it in Linux? Well, we're going
+to create a device. We're going to call
+it whatever we want. On the pictures,
+bridge 0 or br0. Then we're connect
+Ethernet devices to it, effectively inside of
+Linux, creating a bridge. You first create
+the bridge device, then you make the other
+devices slaves to that bridge. Shown here, we're going
+to say IP link add name, mybridge; type, bridge. It starts in the down
+state, it's not active. We first have to bring it up. We say IP link set the
+name of the bridge, which is my bridge or
+the name of the device. Then the state we want to
+bring it up into, which is up. Then we're going to use the set command for
+these other devices, eth1, eth2, eth3, to make its master, my bridge. So this picture
+doesn't match it. If this said my bridge, that's exactly what this set of commands would be building. Let's look at VLAN, and we saw the
+main page briefly. You can go look on your own
+to see it at your own pace. But what is a VLAN device? It's a device that
+adds VLAN tagging. VLAN is useful for enabling isolation in a
+shared Layer 2 network. Let's say we had a shared Layer 2 network represented by this
+single switch. We had four hosts on it, but we wanted to
+isolate their traffic. We wanted only host 1 and host 2 to be able to
+talk to each other, and then host 3 and host 4 to be able to
+talk to each other, but not between them. We could use VLAN. We can assign host 1 and 2, all their traffic could
+be a particular VLAN ID, then host 3 and 4, could
+get a different one. How this shows up in
+the Ethernet header, there's a little extra that
+it can specify the VLAN ID's. How you would create a
+device like this is, you would basically
+do it on top of a physical network device. We would say IP link ad, we're going to specify the Ethernet device to
+associate the VLAN with. In this case it's zero. We're going to give it a name, the VLAN device a name, the convention is to
+whatever the device name is, eth0 then dot something. Where dot something is
+going to be the VLAN ID. We're going to say that
+this type of type vlan, then the VLAN
+specific parameters which we're saying ID 2. Then any traffic that
+goes through eth0.2 device will get
+tagged with an ID 2. It'll set this part here specifically with
+that value of two. A tunnel is something
+that encapsulates traffic for transmission
+over some network. Over here, we have one device
+and here we have one node, let's call it a
+host and over here, we have another host. Within that host,
+let's say each of them has a network card
+that has eth1 on it. These might be
+across the internet. What we're going to do
+is create a new device called gen0 for geneve, where any traffic
+that goes into it, we'll get some extra headers put onto it such that it's creating this tunnel to the other side so that it could go
+out over this network, reach the other side. When it reaches this device, it can pull off all that
+header information. This is work in geneve tunnels, work across an IP network. It adds an extra set of headers. You can see it adds some
+extra headers which allows you to transit
+it across the network. That's not the
+local area network. If you had it directly
+on this eth1, that's all it would
+be able to do. Had the traffic go
+through just eth1, it would only be able to talk to that network unless they had more destination
+and so forth. What we're doing is we're
+using an IP link add again, we're giving it a name, gen0, we're give it type geneve. Then the geneve specific, we're going to give
+it an ID of 55. We're going to say
+the remote end of this tunnel that's over here, it's going to be 1.2.3,4
+so my IP address. If you're interested in that, just look more into
+geneve tunnel. What we're trying to
+convey here is more of the syntax of the command
+and what you can do with it. Now that's the Add. Then finally Delete. If you don't want it,
+the device anymore, you could just say IP link delete and then give
+it the device name. Now let's go into a demo, just to show what's going on, let's look at creating
+container lab deployment. Again, let's go over, we have the same vagrant file, created a virtual machine. I created two SSH sessions. I'm splitting this horizontally. This is the GitHub
+repo that we'll provide a link for and then I'm inside of the Demo 3 directory, you can see there's various
+files inside of here. Let's look at, well first let's make sure
+nothing is running. There's no previous container
+lab or anything running. Let's look at what
+we're building here. Let's go up to the top. I'm going to call
+it mod1- devconfig. It's going to consist
+of two hosts, host 1, host 2, and a switch. This is optional, but
+I chose to provide these bindings because we'll
+do something with that. What we'll do now, let's
+deploy this pseudo container. So you could see
+first I've already pre-created these directories
+so that the bindings work. Pseudo container lab deploy and you can see everything's working and we created
+those three containers. The next thing, this is mentioning is to look
+at these aliases. Also provided in this is
+a file called make alias. What does that look like? Say, run the command alias. I want to name it sw. Whenever I do that
+on the command line, it's going to get replaced
+effectively with this. If you recall, we could
+do stuff like doc, IT, all of that. I could say I have
+config or in this case, let's say IP link show. We're showing eth2, eth1, eth2. We're seeing devices
+inside of it. I could look at this
+inside of the host, host 1 and we could see
+eth0 eth1 right there. Now that's great. So
+what this is doing, is when I run this. It allows me, if I run that, now when I run, just sw and let's say list, I'm running all of that
+plus this command. Now I could say what this allows me to do is
+if I run all three of these except I deleted the character alias host 1
+and then alias for host 2. Now I could say host 1, IP link show, host 2, IP link show, IP host show eth0. So it allows us to shorthand
+all of these commands. Let me source that file, now I can use them on each
+terminal that I have opened. Let's provide as a file, as part of the git-repo, use it, don't use it, up to you. Let's go back to the slide show. The next thing is to go
+over this one packet. Python. This is scape code, so let me open that up. It's also provided vi one pkt. py. It's a Python program
+at the beginning, it can have a usage
+string which I define. It's basically one packet. Tell it what the
+source Mac address is, what the destination
+Mac address is, what interface you
+want to send it out, and then some message. That's how we'll use it. What does the code look like? At first, pulling off of the
+command line arguments is various values and then setting some internal things
+that's not configurable. This is just what I chose to do. Now I'm crafting a packet. If you recall, I
+could craft a packet, I could define the
+Ethernet type. In here, I'm using the init function when I'm creating the class or
+creating the object and I'm passing in the values. These came off of
+the command line, the source and
+destination Mac address. If you recall this
+right here, this slash, allows me to craft packets
+by putting headers together. I could say the Ethernet header. I want to follow that by an IP header with the source
+and destination IP address, followed by a TCP address
+or header with source and destination port and
+then I want to add on some message as my
+payload of my TCP. This will come from
+the command line. If I wanted to debug
+it and show it, I could say packet.show. I left that in there. You can uncomment it out. I'm going to say, sendp. This particular packet out the particular interface that was specified on
+the command line. Alternatively, I could
+have just done all of this really in a
+single command line. It might look
+something like that. That's what one packet does. To run it, we'll see
+that in a second. Now what are we going to
+do as part of this demo? We're going to create a bridge. What I want to do is, inside
+of Host 2, run tshark. If you remember, tshark
+is this packet capture. Then on Host 1, I want to run this one
+packet function to craft a packet with source and destination Mac addresses
+and I want to go out eth1. I want to say 1, 2, 3 is part of the message. That shouldn't work until
+we create the bridge. But the packet you will
+see this on the switch. Let's switch back over. All of this is shown
+in the read me. Start up. Let me just go
+all the way to the top. Here's the set up,
+running container lab, talks about one packet. Here's what we're
+going to actually run. First, I need to make sure that this one packet is inside the host where
+I'm going to run it. I'm going to copy one packet
+inside of mod1-host1. That's now going to be inside of lab folder one packet inside
+of the container of Host 1. Let me get that
+command ready to run. I'm going to have to exit out of this but let
+me capture that command. What this is saying is
+on Host 2, run tshark. I want to look at the fields. Type Ethernet, VLAN, VXLAN. I want to look at
+capture off of eth1. Let me run that first. It's now capturing and now I'm going to generate
+that one packet, the source and destination with sending out
+of eth1 of Host 1. It's sending it and
+we saw nothing. Now let's say maybe
+it didn't work. Let me actually run the
+same thing on the switch. Also look at eth1 because that's what Host 1
+is connected to. Let me run this again. So we did see that it actually, this one right here, we saw that it actually
+arrived on the switch. It's not actually doing
+anything on the switch, it's just getting dropped. Let's go back and
+see what to do next. Next, we're going
+to create a bridge. We're going to use the
+exact same commands we used on the previous slide. We're going to run them
+inside of the switch itself. Let me open up to read me
+so we can follow along. Now inside of the switch, I'm going to do IP link ad name, my bridge type
+bridge. There you go. I'm going to bring it
+to the state of up, I'm going to set eth1 and
+eth2 sleeves to my bridge. Yeah, that's eth2.
+Now if I was to run on the source
+which IP link show, we're going to see
+here's my bridge. We're going to see in eth1. You can see that's
+now saying it's master is my bridge state is up. The state of this
+guy is up as well. Now we have a bridge. Now let's run those
+tshark command again. Run on host 2. I want to again, from host 1 craft a packet that should be flooded out to host 2. I didn't actually run tshark, so let me run it
+again. There it is. What just happened was the
+packet went out of host 1 out of eth 1 into
+our switch container, into the device eth 1 which is then
+attached to the bridge. My bridge, We could
+see it on my bridge. Then because my bridge
+didn't know where the destination
+was, it flooded it. Since eth 2 was
+also on the bridge, it sent it out to eth 2 which is attached to host 2 eth 1. If you recall the
+picture thing I have it. Well, it'd be
+something like that, so ignore eth3 but this is what we had on
+the switch node. With that, if we wanted to, we could run tshark on the
+switch again. We would see it. If we wanted to, we can
+run the packets and we can do it on each device that I just said to see the packet along its path.
+We won't do that. Instead, I'll let you do that if you wanted to on your own. The next thing that we have structure for
+is creating a VLAN. What this will look
+like is on host 1, we want to create a V land. We're going to say link
+or IP link add link eth1, name eth1.2, type vlan and
+then the parameter ID 2. Then we're going to bring
+that device up all. Now when we run the one packet, we're going to send
+it through eth1.2. What you should
+see is when we're capturing this in
+tshark for host 2, is it will have
+that extra header on it and it'll
+be a VLAN header. For this I think it would be great if you do this on
+your own as practice. We could see. Let me
+open up the Read me. All those instructions are
+right there in the Read me, why don't you do that on
+your own as practice? With that, we'll end here. Thanks. Don't forget to look at the quiz and the lab that's associated with
+Module 1. Thanks.

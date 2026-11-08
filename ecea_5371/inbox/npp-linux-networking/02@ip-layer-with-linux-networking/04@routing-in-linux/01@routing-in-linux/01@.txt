@@ -1,0 +1,154 @@
+All right, hello again. So previously, we've learned how to
+interact with the Linux forwarding table through the command line. We can use ip route add,
+add some entries, we can delete those, change them, whatever. So here we're now going to shift
+into being able to do that through routing protocols. So we're going to run control plane
+software that will set up those tables for us. All right, so little word on
+the wording forwarding versus routing. So if we were being precise,
+forwarding happens in the data plane, and its job is to direct a data
+packet to an output port or link, and it uses a forwarding table. Routing, on the other hand,
+is for the control plane. It's what computes paths by
+coordinating with neighbors and it creates the forwarding table, right? So you would see a lot of the routers
+would have both the control plane and data plane. So the traffic goes through the data
+plane, the control plane is for coordination with neighbors. We're going to focus on configuring BGP,
+the Border Gateway Protocol. So as a quick refresher about BGP,
+the Internet is many interconnected networks called
+autonomous systems, right? So each of these kind of clouds is
+representing one network that's an autonomous system. And this might be a network like Level 3,
+or Lumen now. Another might be AT&T, another might
+be Verizon, and so forth, all right? So BGP is the protocol used
+to coordinate between them. So two different companies, they both
+run routers that are running BGP. It allows them to communicate with each
+other about the part of the Internet that they know about. So the first key concept
+with BGP is peering. So routers will peer with a neighbor. And so what that means,
+let's say, look at this one. This one will establish a TCP
+connection with its neighbor router. They'll both exchange some
+properties about each other. Like, the first one will say,
+hey, I'm AS1. This guy will say, hey, I'm AS2. Here's the capabilities that I have and
+so forth. [COUGH] And then a state
+machine running inside of this, through this exchange of messages,
+will ultimately lead to the established state once
+these routers are peered. So once they're peered,
+now they can exchange routes and all that routing information,
+and now they can forward traffic. So the message exchange part
+of it is there's two parts, there's an announcement, and so this tells neighbors of the availability
+of a path to some destination. So let's say AS2 knows how
+to get to some prefix D, and it knows that its path
+would be to go via AS4, right? So it would send an announcement
+to its peer, AS1, it would say something to the effect of,
+hey, I can get to D, and if you were to choose this route,
+you would go via AS2 and then AS4. So this is the AS path. All other kind of connections that
+might have routes to it would say, like, maybe AS3 also has a path,
+as shown in this picture, and would say, great, I can get to
+D as well via AS3 and then AS4. This would allow, AS1 has now two choices, and it could choose whichever one
+it thinks is, quote unquote, best. And we'll see shortly
+what best is defined as. So withdrawals are basically the opposite. It tells the neighbors that those
+routes are no longer available. Maybe this happened because of failure. So let's say this link between AS2 and
+AS4 went down. Well, then AS2 would detect that and
+then say, I no longer have a route to AS4, and so I would send a message,
+a withdrawal, that would say, I'm withdrawing the D because
+I can no longer reach it. Now, in this picture, there is
+shown that there is this link here. So in that case, potentially,
+it would have an update or it would have received
+another route from AS3. But either way, this is kind of how it
+works, what the withdrawals would do. All right, and now I mentioned,
+what is the best path? And this is where the route
+decision comes in. Each BGP router will independently
+make their own choice from all the routes that they've received,
+which one they think is best, and then that's the one they would announce,
+if they're announcing it. And so BGP sets up this kind of priority
+list of, here's how you go about choosing. So local preference, and so this is just
+a numerical value that you can assign as part of the configuration,
+really, to override anything. There's the AS path length, so
+you could see, like in this one, the path length is 2, this path length
+is also 2, so those would be equal. And then you keep going down the list. [COUGH] All right, so
+what it all ends up looking like, and here's the kind of view of a router. You have these line cards
+connected to a switch fabric, and running inside of the router
+is a route processor. So think of this as like a general purpose software running routing processes and
+so forth. The control plane runs
+on this route processor. It runs these routing protocols,
+it calculates a table, which is called the routing table or
+routing information base or RIB, and that's what's stored up here. It then chooses the particular paths, and then it sets inside of each of these
+line cards a forwarding table. And this is what would be able to
+forward packets in the data plane. Now, Linux obviously
+doesn't have all of these. You could have the forwarding table
+offloaded to the network cards, but let's say it doesn't. The switch fabric is basically
+just going to be PCIe, and then all the data plane actually
+happens inside of software as well. And so the forwarding table will be
+inside of the forwarding table or inside of Linux in the software. All right, so now Linux,
+the ecosystem of Linux, has plenty of routing software
+that's open source and available. There's Quagga, Bird, FRR, GoBGP, and there's a number of other
+kind of routing software. And you might even recognize some
+of these when we were talking about those open network operating
+systems like Sonic and Dent and Cumulus, they leverage these open
+source Linux routing software. So these aren't part of Linux, these are part of this Linux ecosystem
+that we kind of talked about. So we're going to use Bird as our example,
+and so really, all Bird is, is basically
+provided a configuration file. And here we're going to talk
+about what the contents of that configuration file is, and
+then provide this to a running process, and then it will kind of do all
+the kind of routing for you. All right, and so here it just lists off a
+bunch of the different things that you can include in this configuration, and we'll
+go through each one of these briefly. So the first is some protocol
+blocks related to Linux, and these will just be kind of
+standard blocks you just include. So the first one says protocol device,
+and this serves as a module for getting information about
+network interfaces from Linux. The next is protocol kernel. And you specify, in this case,
+it's saying ipv4, export all,
+whatever configuration you want. But this synchronizes the BIRD tables,
+the forwarding table that BIRD calculates, with whatever's calculated
+in the OS kernel, right? And it synchronizes the two sides, right? So that's another standard
+block that you'll have. In our case,
+we're going to look at BGP, and so here shows the basic BGP configuration. So you can give it some description,
+whatever you want to name it, after you say protocol bpg and
+give it a name. And you would specify kind
+of one of these blocks for each peering that you would have. So I'm a router, I have, say,
+four different neighbors, I would have four of these blocks, right? And then I would say,
+here's my local address and my local AS number, so this is mine,
+and then what the address, the AS number and
+the IP address of the neighbor is. So this allows the routing software or
+BIRD to know, all right, I need to open a TCP
+connection to this IP address. And then when we're
+exchanging information, I'm going to know, all right, I should
+be expecting it to be this AS number. All right, and then there's another [COUGH] configuration
+that you can customize with. The next part of a BGP protocol
+block is the filters, right? So what filtering allows you to do in
+routing in BGP is to be able to say, there are certain things I don't
+want to advertise to my neighbors, or if my neighbors advertise to me,
+I want to ignore them. And so if you think about BGP and
+the business relationships, you might not want kind of
+your neighbors to send traffic through you if you're
+kind of paying them money. And so you kind of wouldn't export certain
+kind of routes that you learn to them. But to create these filters,
+you would kind of create these blocks and you just say import filter. So this is all on the receive side and
+then export side. And you can either say reference
+a specific filter that's defined elsewhere or
+just put it all in right here, all right? And then BIRD has some specific syntax for how to specify these, but
+let's look at this import, right? So then for
+that you just say filter rt_import, and here is just if some certain conditions,
+then accept them, otherwise reject the routes
+that we're receiving. And then other configuration
+that you can specify. So you can use templates, so you could specify a protocol
+block very much like we had, but make it a template such
+that now I can extend it. And this is useful if all of
+the configuration is the exact same except for, for example, the IP address of
+the neighbor or something like that. So going back to this,
+let's say all of this one, all of this is the exact same except for
+this line. I can create a template
+out of all of this and then extend it and
+then just add in that one line. So this makes it a lot more manageable. All right, we can have tables. So the tables that we're referring to
+are like the routing table, the RIB. And there exist default tables,
+but you can specify and reference in the protocol
+block custom tables, right? Just in case you want to kind of separate
+out different routing tables and things like that. You could specify some logging,
+indicate what logging level you'd like, where to output, and
+then you can do some debug if you want. All right, so in this lesson,
+we're not going to go through a demo and actually run it. We just gave a quick overview
+of what routing protocols are, the kind of intro to
+the configuration of them. In a future lesson, we're going to
+set up a topology using Containerlab [COUGH] that looks lumped in like this. On each one of these,
+we'll run the Bird process with its own configuration to set
+up a neighbor to B, like for A, it'll set up a neighbor to B and
+to C and so forth, right? And then with this, we won't configure any
+of the actual forwarding inside of there, but then we would be able
+to ping from lan1 to lan2. All right, so with that,
+we're going to end here, and we'll get to that in a bit. All right, thanks.

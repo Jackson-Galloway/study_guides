@@ -1,0 +1,92 @@
+Now let's dive into network
+namespaces a little more. So, just as a recap,
+we've seen this picture before. So kind of recapping the kind
+of progression of technology. So originally we have bare metal, and
+when we refer to bare metal we're just talking about the hardware
+running an operating system and you want to run some
+application on top of it. So the problem with that
+was there's some resource wastage if you're only running
+one application on it. So people want to run multiple
+applications to make best use of the hardware that they're paying for. But the problem is that these aren't
+kind of isolated environments. You might have dependencies and things
+like that, that might be hard to resolve. Maybe it's requiring different
+versions of operating systems or different packages or things like that. So we then move to virtual machines, which is a technology where
+you run a hypervisor, that's a layer of software that
+effectively mimics physical hardware. You run an operating system on
+top of it and it makes use of, or it looks like to that operating system, it's running on hardware that
+it's the only thing running. And what this provides is
+the ability to have this isolation. But it's a bit heavyweight, right? So you've seen this and
+the examples we've been running. We've been running virtualbox,
+running a virtual machine which runs
+Ubuntu Linux inside of it. And I've been using vagrant
+to kind of manage that. So we've been using that. But the problem is that it's heavyweight. And so the kind of question arose is what if we don't need different
+operating systems? So the solution there was,
+can we take advantage of that? And let's introduce isolation mechanisms
+into the operating system itself. And so we've talked about namespaces, which are resources that
+basically make it so that what resources and
+naming of those resources a process sees. So this is like file descriptors,
+IP addresses and things like that. So that helps with isolation
+of the naming of resources. And then we have c groups or
+control groups, which group processes and allocates resources, meaning like CPU and
+memory that the kernel then enforces. All right, so those provide these
+isolation mechanisms that we need. And we've seen this in all of our labs. So we've been using container lab. So we've had a container
+lab configuration file. Then we've run container lab deploy,
+which created docker containers. And so
+we've seen an example like this before. And then we can do docker exec to run commands inside of each container. And in our labs and
+our demos inside of this router we were setting up things like IP forwarding or
+using iptables to set up filtering rules. And then we were able to ping
+between different hosts as if they were completely different machines
+because this router had its own namespace, so it had its own ability
+to do things in networking. So a namespace, it just is
+a mechanism that creates isolation in the kernel that allows processes to have
+its own namespace for those resources. So let's look at what this means. So this is some code
+from the Linux kernel. So down here is a link to
+where you can find this code in one of the online
+source code browsers that are available, really great resource. As I've said stated before, we're not going to become
+kernel hackers in this course. Even if you don't know c code, you probably could still understand
+what this code is actually showing. So inside of the Linux kernel it maintains
+data structures on a per process basis. So we can see one of the key data
+structures is called a task struct. So every process will have this. Whenever you run a program
+the Linux kernel is going to have one of these structures allocated for
+that process. And there's a whole bunch of stuff in it. The main thing that I want to call out was
+this particular variable called nsproxy. So it's of type struct nsproxy and
+it's a pointer to that. So this right here is showing that
+it's associated with the process. So now if we dive into that
+structure a little bit, the structure itself contains
+a bunch of different things that are all saying
+something namespace. So this is the interprocess communication,
+the mounting the process ids. Well, low and behold we have
+something called struct net and the variable name is called net_ns for
+network namespace. All right, so the process has one of
+these structures allocated which then contains one of these structures which
+shows there's a whole bunch of different namespaces for all the different types
+of resources that we might care about. The one we're going to focus
+on is the networking one. So if we dive into that structure, what you can see is there's
+variables called like ipv4. And so this is of struct type netns_ipv4. We see another one where it says nf for
+net filter. So those are all those filtering and
+address translation rules and this is handling all the stuff for ipv4. So the relevant structure is this net and it contains all these different
+ones I didn't include all of them. But let's now look
+inside of this ipv4 one. And so here we can see things that
+we should kind of be familiar with. This again is just a snapshot or a small set of the lines of
+code that are under this, but we can see kind of words that
+are probably familiar to us, fib. This is the forwarding information base. This is the forwarding table that's
+stored inside of the Linux kernel. So anytime we did things
+like IP route add, well, we were adding entries into the fib,
+right? And so that is what's getting stored. So you can see that now
+associated with a given process is a given forwarding table. And so if you had a different process, it would have a different task struct and it can have a different forwarding table. So the end result of all that is that each
+namespace gets its own set of tables. And we saw this in practice
+where we saw in host1. I can set what forwarding table entry. I did IP route add and
+then if I went inside the router and looked at its routing table,
+I wouldn't see that entry. And I can add my own entries or different entries into the router, right? So each of these was a container. Each of these had its own namespace,
+which meant it had its own tables. So kind of wrapping it all up,
+what we're kind of saying is we're providing the concept
+of virtualization, which is basically creating that isolation
+so you can have better use of resources, more efficient use of resources and
+better deployability. because we can create these
+isolated packages of deployments, we're going to use
+namespaces in this manner. And this is just an illustration
+showing a process tree we're getting its own view of networking,
+its own, all of that. And then that's all running
+on top of a physical host where you would have
+an actual physical device. So with that we're going to end here, and then next time we'll dive
+into the IP netns utility. All right, thanks.

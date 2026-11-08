@@ -1,0 +1,12 @@
+In this lab for the transport layer,
+we're going to use scapy again. So we're going to use it in a way to basically look through
+a single TCP session. And the job is to calculate
+the max number of bytes that are in flight at any given time. So if you recall, the number of bytes
+that are in flight can be calculated through a combination of looking at
+the last sequence number that I, as a client, have sent out or
+on the other side. And a combination with what should
+those bytes have been acknowledged. So you're going to need to go through and
+find and take into account that there may be packets out of order,
+packets might be lost. But this is all a Python
+program that can calculate this using scapy to look
+through those packets.

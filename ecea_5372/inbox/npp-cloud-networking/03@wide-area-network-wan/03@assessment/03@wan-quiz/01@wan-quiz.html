@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WAN Quiz</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p></p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is a private IP address, as defined in RFC 1918</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MPh1GhuZEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>172.0.0.1</p></div></li>
+<li><input name="autoGradableResponseId~MPh1GhuZEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>172.16.0.1</p></div></li>
+<li><input name="autoGradableResponseId~MPh1GhuZEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>10.1.2.3</p></div></li>
+<li><input name="autoGradableResponseId~MPh1GhuZEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>192.168.100.100</p></div></li>
+<li><input name="autoGradableResponseId~MPh1GhuZEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>8.8.8.8</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the following picture, VM1 and VM2 are provisioned with an Internal IP address only. Assuming the firewall allows ICMP messages, can VM1 ping VM2?</p><img alt="image.png" src="image.png"/></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MWbuXRuZEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>No</p></div></li>
+<li><input name="autoGradableResponseId~MWbuXRuZEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Yes</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is true about VPC peering?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MeO_bBuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Allows VMs in separate VPCs to communicate by bypassing the firewalls</p></div></li>
+<li><input name="autoGradableResponseId~MeO_bBuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A VPC can serve as a central hub to transit traffic to other VPCs</p></div></li>
+<li><input name="autoGradableResponseId~MeO_bBuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Must have overlapping subnet IP address space in the two VPCs being peered</p></div></li>
+<li><input name="autoGradableResponseId~MeO_bBuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p> Allows VMs in separate VPCs to communicate using private IP addresses</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>If a VM is provisioned without an External IP address, it cannot access the public Internet unless:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Mmp7nxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A Cloud NAT is provisioned for that VPC</p></div></li>
+<li><input name="autoGradableResponseId~Mmp7nxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A user submits a support ticket to Google </p></div></li>
+<li><input name="autoGradableResponseId~Mmp7nxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>iptables on the VM is used to add a firewall rule</p></div></li>
+<li><input name="autoGradableResponseId~Mmp7nxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>The gcloud utility is installed on the VM</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In Microsoft’s Software-driven WAN, in the context of handling traffic on its backbone network, the authors propose that legacy routing is inefficient because of:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~MtHwAxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Local, Greedy resource allocation</p></div></li>
+<li><input name="autoGradableResponseId~MtHwAxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A lack of coordination</p></div></li>
+<li><input name="autoGradableResponseId~MtHwAxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>The router vendors do not create routers fast enough for Microsoft’s traffic needs</p></div></li>
+<li><input name="autoGradableResponseId~MtHwAxuZEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>The Internet being run by multiple companies</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In Google’s Espresso, which routing protocol was central to the work?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~M0JlIBuZEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>ISIS</p></div></li>
+<li><input name="autoGradableResponseId~M0JlIBuZEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>BGP</p></div></li>
+<li><input name="autoGradableResponseId~M0JlIBuZEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>OSPF</p></div></li>
+<li><input name="autoGradableResponseId~M0JlIBuZEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>It didn’t use a routing protocol, it was based on SDN principles</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

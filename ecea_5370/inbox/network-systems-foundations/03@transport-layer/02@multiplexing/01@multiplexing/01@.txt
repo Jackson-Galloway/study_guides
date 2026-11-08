@@ -1,0 +1,82 @@
+Let's jump into multiplexing. This is probably the
+core requirement for the transport layer
+to be able to handle. We can be revisiting this
+again, Ethernet addressing, each network card
+has a Mac address and when you send a frame
+through the network, the frame contains the source and destination Mac addresses. This is used by the
+receiver to say yes, it's destined for me, and used by network devices to be able to forward it
+to the particular host. We saw then that that
+really doesn't scale well. This is where we introduced IP addressing or for the
+Internet Protocol which added structure to addresses so that devices could be
+grouped and you can make it so that you
+can reach beyond a local network but
+to a global network. Then we saw in the introduction that
+the first problem is, well, both of those addressing schemes
+can get me to a host, but will likely have multiple
+applications running. Which application
+is the packet for? This is where the
+transport layer comes in, the networking layer,
+and the thonic layer is for communication
+between hosts. The transport layer is really
+about communication between processes or applications
+running on a host. How is this solved?
+You guessed it. Another header shown
+down in the bottom left. We can see we put a
+Ethernet header on it. We put the IP header on it. Well, we're going to
+introduce a new header for the transport layer, Much as each of those had a source and
+destination address. These are going to
+the transport layer also effectively a source
+and destination address. The addresses here are called ports inside of your computer, inside the host the
+operating system. As a notion of ports for different communication paths,
+different applications, we would commonly run a
+web server on port 80, an SSH server would
+be run on port 22. Those ports are what's
+relating to the fields, the source and
+destination port numbers in the transport header. Now, there's two main protocols that are commonly
+used, UDP and TCP. Let's go over those briefly. Now, taking a step aside, let's talk about message naming. We've used a lot of
+different names. There are a lot of
+different names for the contents of what
+is a message called. At the link layer,
+we call it a frame. At the network layer, we call it a packet. At the transport layer, we call it a datagram. That's where we're going to
+be calling it this time. Then at the application layer, which we'll talk about
+in the next module, we'll call it a message. Now, a lot of times you can use these casually
+interchangeably, but if you want to be accurate, these are the commonly
+accepted namings for these. A distinction that you'll
+see in transport protocols is the distinction
+between whether it's connection less or
+connection-oriented. If it's connection
+less, the host, the operating system
+within the host uses just the destination
+IP address and the destination port to demultiplex it to the
+specific process. This doesn't require
+any pre-establishment or establishment process. There's no state that's really needed on
+the host other than this tuple of IP port
+to process mapping. That's connection less
+connection-oriented, does have state, so a four tuple of the
+source IP destination, IP addresses and the
+source and destination ports identifies a
+unique connection. You can have
+multiple connections to being handled by
+a single process. That's where all this
+extra information is needed because
+that represents that. Now, this requires establishment before the
+actual data transfer. The host, as we'll see, keeps a lot more state
+about the connection. UDP, the first main protocol in the transport
+layer is connection less. This is real simple. The main thing it provides is the multiplexing
+and demultiplexing, then it just inherits
+IP's service model. The best effort delivery
+of each datagram. You could see the header
+for UDP is quite simple. It has the source
+and destination ports and then a length field to be able to say know how much data is
+inside of the payload. TCP, on the other hand,
+is connection-oriented. As I mentioned, a single process can have multiple connections. This four tuple of the source destination
+IP addresses and the source destination
+port numbers identifies that connection. A lot of times you'll hear
+this called a five tuple, which includes the
+protocol type as well, whether it's TCP or UDP. In this case, it would
+be the five tuple of TCP as the protocol. Then those four addresses. The service model
+for TCP is that it provides an in order
+reliable stream. We'll get into the details of how TCP provides this
+reliable stream, but all we needed to introduce in this
+video was the concept of multiplexing.
+Until next time.

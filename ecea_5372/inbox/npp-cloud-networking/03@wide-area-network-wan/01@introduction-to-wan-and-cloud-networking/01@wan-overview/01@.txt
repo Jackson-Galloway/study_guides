@@ -1,0 +1,91 @@
+Let's get started. We're going to start a new module right now, and it's about the WAN. This little lesson is going to give an overview
+of the whole module. We've seen these slides before, but just to refresh. We have the Cloud, which offers all these
+as-a-service models. There's different ways I
+can build my application. Then once it's built on top of this physical infrastructure
+that a cloud provider runs, then external things like
+users of an application I built might access these
+across the Internet. Just going into the different
+parts of the Cloud again. We have the data
+center and shown here it's just a big building. It's where Google and Microsoft and Amazon put
+all of their servers. They then create this allow
+you to deploy infrastructure. You saw when we created a VM, we chose what region it was in, and these correlate
+to the location of Google data centers and really named based on their location. Within that, the abstraction as a user
+we can create is a VPC for virtual private Cloud and
+this allows us to run our own private cloud on top of the providers
+physical infrastructure. I could put a bunch of VMs, put them inside of a subnet. There's some routes
+to allow going between different VMs
+and external gateways. Then I can also add firewall and policy
+and things like that. Now the question is, how do we communicate beyond
+the bounds of the VPC? There's two things we're
+going to focus on here. One is going to be the
+VPC to VPC communication. Then another is going to
+be the VPC to an end user. That's what we're
+going to focus on. This highlights this distinction between the WAN and the LAN. You've probably
+heard these terms, but LAN is the
+local area network. Here we're using that
+to correspond to what's happening inside of
+the data center to an extent. We saw this picture of the
+Cisco reference design, the VL2 work was shown for
+how Azure created a better, at least for them, data
+center architecture. But that would be the local
+area where I create my VPCs. I'm communicating over
+private infrastructure within private IP addresses
+and things like that. The wide area is we're
+going to consider basically beyond the bounds of a
+region or a data center. This may go across the
+Internet or Google and the likes all have private
+networks that interconnect. They have some fiber that runs between the different
+infrastructures, between their different
+data centers. That would be a private
+infrastructure. Either one that's what
+we're referring to as WAN. Now, I mentioned the
+private IP addresses, just to refresh what those are. In an RFC, requests
+for comments, which is like the Internet
+way of doing some standards, there's one particular RFC
+which establishes a set of IP ranges that are
+considered to be private. They're set aside. Nobody will be assigned these, and every one of us can use them inside
+of our infrastructure. 10.0.0.0 all the
+way up to 10.255, so as to 10.0.0.0/8 prefix, everything in that is
+considered private. It won't hit the
+public Internet. It can't be addressable outside because it's not
+going to be globally unique. These are the other two ranges, and those are all
+considered private. You've probably seen these if
+you look at IP addresses of your own home network
+and things like that. The internal IP
+addresses are going to be decided within the subnet, which is within the VPC. These will be private
+IP addresses. If you recall when
+we created VMs, we saw this little
+piece of the wizard, or we did this in terraform. But you can specify the
+network, the subnet, and then internal IP address
+and external IP address. If you select this one is none, well, then you wouldn't get
+an external IP address. That's what this
+is referring to. Now, you recall AccelNet
+and Andromeda, which is, two of the academic papers, AccelNet from Microsoft
+and Andromeda from Google. This was the architecture for how they do
+packet processing on each host to provide the network abstractions of
+the VPC and things like that. If you recall,
+there's some public to private translation
+that would occur, and this is exactly
+where it happens. When you're communicating
+with public IP addresses, generally, those would
+go across the Internet. But if it's another
+Google IP address, so like I launch a
+virtual machine and say, give me an IP address,
+and it's from Google, you have your own
+virtual machine, and it's signed by Google. That's all still within
+Google's infrastructure. That's likely going to
+traverse their own backbone, so their own network. Otherwise, Google will use ISPs to connect up to
+the broader Internet. We're going to go
+over two mechanisms. We said we can launch a VM
+without public IP addresses. We're going to go over the two key mechanisms within Google on communicating over
+private IP addresses. Even if you're in
+two different VPCs, which normally
+wouldn't be able to. The first is VPC peering, and then the second
+is Cloud NAT. Over the view of the module, we'll go over those two things. Then we're going to go into some academic papers
+on how Microsoft manages their backbone
+network and then how Google interfaces to these ISPs. It really covers
+those two key aspects of the wide area network. Then we're going to spend a
+lesson going over the lab. Definitely don't
+suggest, don't skip that because they'll provide some useful insights into
+how to get it to work. With that, we will
+stop here. Thanks.

@@ -1,0 +1,120 @@
+All right, let's go ahead and get started. This time we're going to
+just go through VPC again. I'm going to do a little
+more complex example, and then that's going to lead into
+the programming assignment. So what we're going to build is, we're going to walk through
+this in the GCP console. And then you're going to have to do this
+in Terraform as part of the programming assignment. So were going to create, this is
+the demo we did the first time where we created a single VPC with
+a single subnet, with a single VPN. We're going to now create a second
+VPC that has two subnets, and VMs in the different
+resources as follows. And when you do this, what you're
+going to kind of think about is, all right, which of these should
+be able to talk to each other. And kind of ping each other
+using their public IP addresses, and their private IP addresses. Only ones that are going to have public
+IP addresses are going to be VM1 and VM2. So I'll note that you're not going to have
+Internet access on VM3 or VM4, right? And so even though they don't have public
+IP addresses, we'll still be able to SSH into them, because we're
+going to use the gcloud utility. All right, so this is what we're building,
+so let me go through and try to do this as quick
+as I can in the console. All right, so the first thing we're going to do is
+create these VPC networks, all right? Create a VPC network,
+I'm going to call it vpc1. And I'm going to create the first subnet,
+sub1. And I'm going to put it in us-central1,
+and give it an IP address range
+of 10.0.1.0/24, all right? We'll come back to the firewall rules and
+create those separately. So let me create vpc1. And we'll just have to kind of
+wait a little bit for that. One of the things I can do
+is in a different tab, so we can actually,
+create vpc2 while vpc1 is being created. All right, so I'll say vpc2, I'm going to create 2 new subnets, sub 2, us-central1. And I'm going to give it
+IP range 10.0.2.0/24. And we'll come back to the firewall rules. I will create that. There we go. So, vpc1, you see, is created,
+let me add the, and we can see that it has one subnet,
+excellent. And let me create firewall rules for it. All right,
+I'm going to call this firewall fwvpc1, apply it to VPC network 1. All instances in the network, all incoming traffic, and I'm going to allow ports 22 and 1234, and then protocols ICMP, create that. Now, let me come back and
+I see vpc2 is created. Looks like I forgot to create subnet 3, so let me add this second subnet in this. So I'll call it sub 3, and
+also be in us-central1. Right. And IP address range will be 10.0.3.0/24. All right, so
+added a new subnet there, vpc1, we created these firewall rules,
+excellent. Vpc2, while that's getting created, let me create the firewall rules for it. All right, firewall vpc2. And I will apply it to all instances in the network, source is everything. And then I'll do specific ports, and other ICMP, and specific ports 22 and 1234. All right, so now vpc1 should be set up,
+vpc2 should be set up, With their firewall rules,
+there we go, and subnets. So let's make sure we got
+2 subnets in there, yep. All right, so
+now we can go start creating the VMs. All right, so let me create an instance,
+I'm going to put vm1. I'm going to make it an e2-micro. And the main thing I'm going to
+change is the networking. And I'm going to make it, so that it's using vpc1. All right, and then there's only
+one subnet, so I'm good there. This one will get
+an external IPV4 address. So we're good there. While it's creating,
+we'll come into a different tab, create these at the same time, create VM2. All right, create instance. And part of why doing this,
+you can now start appreciating Terraform a lot better. Especially when you get
+into the more complex or powerful capabilities like the looping,
+and variables, and things like that. All right, let me go in and
+do the networking. Network interface is vpc2, I'll put this one in subnet 2, all right? This one also gets an external IP address. I think this would be a good time
+to show this equivalent code, yeah, you can see one of
+the options is Terraform. And so this is code that has
+all these things filled in. Now, you don't need all these,
+a lot of these are kind of defaults, and that's why you'll see the ones I'm
+showing are much smaller, but, But if you want to see how
+something actually works, well, just you create it in here and then look at how it was
+set inside of the console. All right, so created vm1 is there,
+2 is creating. Let me create vm3. And if we go back to our diagram,
+we can see it's in subnet 2, all right? So this particular one, vm3 and vm4 will not have external IP addresses. So when I come down to the networking options, I can say thing. I'll show you. Whoops, it's not those vpc2 and it's in subnet 2, that's correct. And I don't want an external IP address. Create that. And then over here I'm
+going to create vm4. Medium, that's going to be a micro. Let me go into the best
+options of networking. Put it in vpc2, subnet3, and it will also not get
+an external address. And I will create that. All right, so now we just have to wait. And since vm1 and vm2 were already
+created, let me SSH into them. All right, so let me, I'll pull this open in a separate place. There we go. Let me open a new tab. So this should be SSH into vm1. It's being super slow. So let me cancel that and let me actually
+go through the Google interface. I don't know what's going on,
+but we'll just go through. The console. All right, so I can SSH into each
+of these and then just wait. Authorize that. Authorize that. All right. Don't know why it's taking so long. Well, in the meantime,
+I can do things like look at my address. Great. 10.0.2.2. That's what I expect within this subnet, you can see these two
+are in the same subnet. So let me ping that guy from vm3. So from vm2, I'm going to ping vm3. Great, it worked. From vm2, I'm going to try to ping vm4. So it's in a different subnet. Let's see if that works. All right, look like that works. And what I want to do is try to ping vm1,
+but if it's not even being
+able to SSH into concerned it's something wrong with the vm
+starting in the first place. But we could try it. Let's get its internal IP address. So we're again looking at this picture. So can I just address 10.0.1., whatever. Well, we will see. So let me ping that and
+we can see it's not letting it through. Well, that's because
+they're in different vpcs. So now let me. Looks like this is making progress. Go back to the console and get its external IP address, and then go back into vm2 and ping vm1. All right, looks like vm1 is
+completely just non-responsive. So good fun. So one thing I could do is I can reset it, see if that helps anything. Never had this happen before. But makes sense. Infrastructure is not perfect,
+so how do you cope with it? Is you carry on, you debug,
+you delete things, you create them. Whatever you can do. Start the pinging, and
+maybe it'll show when it comes up. And if not, let me. Delete vm1. And in the meantime,
+I will create a new one. I'll call it vm5. I will put it in the same region. It's going to be a micro. I'm going to have
+everything else the same. Go back to the networking. going to put it in to vpc1, sub1, give it an external address, and we're good to go, all right? So we're creating vm5, which is basically just going to be vm1, but
+I need to recreate it. All right, so vm1 has been deleted. vm5 looks like it's up now. Let me ping. Oops, not from that one from here. Ping. And is not going through. All right, so one potential thing
+that this could be is it could be. Firewall issue,
+that is not letting SSH through, or ping through, or anything like that. So, what I could do is
+I can go to my VPCs, Look at VPC1, look at my firewall rules, and see if there's anything wrong. All right, So that's it. So it's filtering incorrectly. I said, so this should be, 0.0.0.0/0. So I'm allowing all traffic,
+not, 0.0.0/24. All right, sorry you had to see
+me kind of struggle through this. But now we can ping and
+gray to start going through. So you can go and
+test your connectivity, but the firewall is somewhere you're
+going to be wanting to look. All right, with all those created, what we
+did was we built this infrastructure and we tested some of the connectivity. Now, let me double check from VM2 to VM1. And see that again because
+the firewall was blocking everything. But let me try that
+internal address again. So there is 10.0.1.3. So ping, and as expected,
+it shouldn't work because they're in two
+completely different VPCs. So the private IP addresses
+aren't beyond those VPCs. All right, so now getting into
+the programming assignment is basically creating that infrastructure, this exact
+diagram, but doing it in terraform. And I'll note that we make
+dimension to call this, this is just the shortened name VPC1. What we used in that console,
+do something more descriptive. I think we specify exactly
+what it should be, TF-mod2,-lab1-VPC1, put a prefix
+in front of it, I think. I would highly recommend using the demo
+code that we provide as the starter, and then expand it. So how we'll assess is you'll
+create your terraform code and when you believe it's correct,
+run terraform, apply. And there's going to be two things. We're going to have you capture
+all the IP addresses and you know how to get those now. You're going to also run a command, terraform show --json, output json. To make it look nice, multiple lines, run it through this utility, jq and
+output that to a file, right? You're going to then perform some manual
+connectivity tests much as we did. We describe each of these in the write up, you're going to perform
+specific jq queries. Also jq is just a command line utility
+that you can run and pipe in the json. And so we show you exactly how to do that. And then you want to note when that output
+of all these connectivity tests and the jq queries that we tell you to run. And then answer some questions
+on the Coursera site. So it's like a quiz that you would do. Don't forget to run terraform,
+destroy once you're all done. There's an in development kind of
+utility that we're creating. You're welcome to try it out, but
+it's not really robust just yet. But how you would run it is,
+Python3, run, there's cloud_extract. Specify that you want this for
+module 2, and provide it your terraform show output,
+right? And what it'll do is it'll check
+the structure, and say, all right, yeah. You created the correct VMs in
+the correct subnets and the correct VPCs. It'll also SSH into various VMs, and perform a connectivity test for them. Still in development, but
+something you can try if you want. So with that, we're going to end here. And again, don't forget to shut down
+all your resources, terraform destroy. And with that,
+we'll see you next time, thanks.

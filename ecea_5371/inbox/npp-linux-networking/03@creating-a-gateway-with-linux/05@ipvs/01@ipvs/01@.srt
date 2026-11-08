@@ -1,0 +1,673 @@
+1
+00:00:09,800 --> 00:00:13,892
+So, we just went over load
+balancing in general.
+
+2
+00:00:13,892 --> 00:00:21,890
+Now we'll get into the specific
+utility for Linux ipvs.
+
+3
+00:00:21,890 --> 00:00:27,205
+So, ipvs and ipvsadm.
+
+4
+00:00:27,205 --> 00:00:31,091
+So, here's link to the man page.
+
+5
+00:00:31,091 --> 00:00:36,718
+But just to distinguish these two, and
+I kind of use them interchangeably,
+
+6
+00:00:36,718 --> 00:00:42,630
+but ipvs implements transport layer
+load balancing inside the Linux kernel.
+
+7
+00:00:42,630 --> 00:00:46,564
+And Ipvasadm is used to set up,
+maintain, or
+
+8
+00:00:46,564 --> 00:00:51,336
+inspect the virtual server
+table in the Linux kernel.
+
+9
+00:00:51,336 --> 00:00:57,504
+So this is the actual command that we'll
+be using and this is the service inside
+
+10
+00:00:57,504 --> 00:01:03,491
+of the kernel which handles the packet
+processing to do the load balancing.
+
+11
+00:01:03,491 --> 00:01:09,253
+Now, you must have the ipvs
+kernel module loaded,
+
+12
+00:01:09,253 --> 00:01:13,946
+and you can load it with modprobe ip_vs.
+
+13
+00:01:13,946 --> 00:01:19,108
+So, when you now want to create
+Linux as a load balancer
+
+14
+00:01:19,108 --> 00:01:23,594
+to a set of servers,
+there's two main parts.
+
+15
+00:01:23,594 --> 00:01:27,708
+So the first is you have
+to define the service.
+
+16
+00:01:27,708 --> 00:01:32,166
+So what IP address is it,
+what port number is it, is it TCP,
+
+17
+00:01:32,166 --> 00:01:34,140
+all of that kind of stuff.
+
+18
+00:01:34,140 --> 00:01:37,066
+What scheduling algorithm
+we're going to use.
+
+19
+00:01:37,066 --> 00:01:41,175
+And the second part is
+to define the servers.
+
+20
+00:01:41,175 --> 00:01:45,516
+So we talked about the set
+of servers is important and
+
+21
+00:01:45,516 --> 00:01:51,944
+that's what we're going to, so these
+are the two parts that we have to define.
+
+22
+00:01:51,944 --> 00:01:53,976
+So, let's define the service.
+
+23
+00:01:53,976 --> 00:01:58,944
+So, shown here, ipvs, and
+then here's from the kind
+
+24
+00:01:58,944 --> 00:02:03,377
+of structure of the command,
+from the man page.
+
+25
+00:02:03,377 --> 00:02:08,036
+And what we're going to do is we're
+going to walk through each part
+
+26
+00:02:08,036 --> 00:02:13,069
+individually and we're going to
+have a running example down below.
+
+27
+00:02:13,069 --> 00:02:16,619
+So once you see it kind
+of broken down this way,
+
+28
+00:02:16,619 --> 00:02:22,192
+it makes it real simple to kind of define
+these and look at them on your own.
+
+29
+00:02:22,192 --> 00:02:25,766
+So, the first part is the command.
+
+30
+00:02:25,766 --> 00:02:32,449
+So here we're going to talk about if we
+want to add, edit, or delete a service.
+
+31
+00:02:32,449 --> 00:02:37,020
+So, recall,
+the service is the public facing or
+
+32
+00:02:37,020 --> 00:02:42,931
+the outward facing single IP
+address that clients connect to,
+
+33
+00:02:42,931 --> 00:02:47,184
+and then it gets load
+balance to the servers.
+
+34
+00:02:47,184 --> 00:02:50,559
+So the service, we gotta add first.
+
+35
+00:02:50,559 --> 00:02:58,107
+All right, so, add, edit,
+delete, so ipvsadm- A.
+
+36
+00:02:58,107 --> 00:03:01,319
+So next up is the protocol.
+
+37
+00:03:01,319 --> 00:03:05,662
+So for the protocol,
+it'll be either TCP or UDP.
+
+38
+00:03:05,662 --> 00:03:10,808
+So,- t, -u, so chances are it's
+going to be the TCP service.
+
+39
+00:03:10,808 --> 00:03:13,496
+So we'll use that as our running example.
+
+40
+00:03:13,496 --> 00:03:16,489
+So, -t.
+
+41
+00:03:16,489 --> 00:03:21,169
+Next up is the service address, all right?
+
+42
+00:03:21,169 --> 00:03:24,695
+So this is the publicly facing address.
+
+43
+00:03:24,695 --> 00:03:29,976
+So it's in the form, host:port,
+
+44
+00:03:29,976 --> 00:03:34,033
+the port part is optional.
+
+45
+00:03:34,033 --> 00:03:41,110
+And a host may be one of a plain IP
+address or a hostname, all right?
+
+46
+00:03:41,110 --> 00:03:47,005
+And then a port may be either a plain port
+number or the service name of a port.
+
+47
+00:03:47,005 --> 00:03:49,738
+Here we'll just assume we're
+just going to use numbers.
+
+48
+00:03:49,738 --> 00:03:55,492
+So we'll say, -t for
+the TCP and then the service
+
+49
+00:03:55,492 --> 00:04:00,562
+address is 207.175.44.110
+
+50
+00:04:00,562 --> 00:04:06,320
+as the IP address, and
+then port 80 as the port.
+
+51
+00:04:06,320 --> 00:04:13,140
+And then the last bit is
+the scheduling method.
+
+52
+00:04:13,140 --> 00:04:16,508
+So, the scheduling method here is,
+
+53
+00:04:16,508 --> 00:04:21,841
+we would specify with -s and
+then whatever the method is.
+
+54
+00:04:21,841 --> 00:04:25,618
+So the method could be rr for
+round robin, lc for
+
+55
+00:04:25,618 --> 00:04:29,120
+lease connection, sh for source hashing.
+
+56
+00:04:29,120 --> 00:04:33,983
+They have some others, but these are the
+ones we covered in the last lesson, and so
+
+57
+00:04:33,983 --> 00:04:35,760
+showing those as an example.
+
+58
+00:04:35,760 --> 00:04:41,771
+All right, so we would have -s rr.
+
+59
+00:04:41,771 --> 00:04:46,968
+All right, so then the next piece
+is now we have the service defined,
+
+60
+00:04:46,968 --> 00:04:51,909
+we now need to define the servers or
+add servers to the server set.
+
+61
+00:04:51,909 --> 00:04:58,770
+So here we would have a similar command,
+ipvsadm command, bunch of stuff.
+
+62
+00:04:58,770 --> 00:05:03,278
+All right, so the commands, again,
+would be add, edit, or delete.
+
+63
+00:05:03,278 --> 00:05:07,849
+And these are just lowercase
+versions of the previous,
+
+64
+00:05:07,849 --> 00:05:10,386
+when we were adding a service.
+
+65
+00:05:10,386 --> 00:05:15,666
+So, ipvsadmin- A, to add a server.
+
+66
+00:05:15,666 --> 00:05:21,808
+So next up is the protocol and
+service address parts.
+
+67
+00:05:21,808 --> 00:05:27,006
+So, basically, just match whatever
+was specified for adding the service.
+
+68
+00:05:27,006 --> 00:05:33,208
+So here we're adding the service,
+we said -t, in this address.
+
+69
+00:05:33,208 --> 00:05:37,980
+So just include that again
+when you're adding the server.
+
+70
+00:05:37,980 --> 00:05:42,927
+Then the next part we're
+going to add the server address.
+
+71
+00:05:42,927 --> 00:05:46,644
+And this is the address
+of the backend server.
+
+72
+00:05:46,644 --> 00:05:51,798
+So for this, we would say -r and
+then the server address.
+
+73
+00:05:51,798 --> 00:05:53,621
+But before we add that into an example,
+
+74
+00:05:53,621 --> 00:05:56,282
+we need to talk about
+packet-forwarding method first.
+
+75
+00:05:56,282 --> 00:06:00,873
+So let me take a quick aside here.
+
+76
+00:06:00,873 --> 00:06:04,901
+Actually it's going to be, well,
+so it's sort of an aside, but
+
+77
+00:06:04,901 --> 00:06:09,007
+it's going to talk about this
+packet-forwarding method first,
+
+78
+00:06:09,007 --> 00:06:13,433
+because that influences what you
+have to put for the server address.
+
+79
+00:06:13,433 --> 00:06:18,807
+So, the packet-forwarding
+method can be one of g,
+
+80
+00:06:18,807 --> 00:06:22,226
+i, or m, for gatewaying, ip and
+
+81
+00:06:22,226 --> 00:06:26,520
+ip, encapsulation, or masquerading.
+
+82
+00:06:26,520 --> 00:06:32,217
+So, what this really means is, what is
+the address that's seen right here?
+
+83
+00:06:32,217 --> 00:06:34,645
+What does this kind of look like?
+
+84
+00:06:34,645 --> 00:06:38,441
+So in gatewaying, there's going to
+be no change in the address.
+
+85
+00:06:38,441 --> 00:06:42,965
+So this is the default,
+they also call it direct routing, but
+
+86
+00:06:42,965 --> 00:06:48,022
+you don't have the change,
+there's no address translation here.
+
+87
+00:06:48,022 --> 00:06:53,174
+Challenge with that is if you're
+going to have the same IP address for
+
+88
+00:06:53,174 --> 00:06:57,866
+each of the servers,
+well then it's going to happen at the kind
+
+89
+00:06:57,866 --> 00:07:02,200
+of Mac address level,
+that something needs to change.
+
+90
+00:07:02,200 --> 00:07:05,781
+And so
+that adds a little extra complexity.
+
+91
+00:07:05,781 --> 00:07:12,999
+Ip and ip encapsulation is basically
+going to tunnel to the particular server.
+
+92
+00:07:12,999 --> 00:07:18,243
+And then masquerading will be using
+network address translation or
+
+93
+00:07:18,243 --> 00:07:20,451
+NAT to direct to the server.
+
+94
+00:07:20,451 --> 00:07:26,335
+So, for the most part, just assume you're
+going to be using masquerading, but feel
+
+95
+00:07:26,335 --> 00:07:32,066
+free to kind of play around with these
+other ones and see what they're all about.
+
+96
+00:07:32,066 --> 00:07:37,986
+As an aside, let me talk about
+direct server return or DSR.
+
+97
+00:07:37,986 --> 00:07:43,093
+So, when a server, so
+client sends a request to the server,
+
+98
+00:07:43,093 --> 00:07:45,610
+the server is going to respond.
+
+99
+00:07:45,610 --> 00:07:51,448
+Now, when a server replies to the request,
+how is the traffic forwarded?
+
+100
+00:07:51,448 --> 00:07:55,872
+So the first option is to go back
+through the load balancer, all right?
+
+101
+00:07:55,872 --> 00:07:57,274
+Certainly seems reasonable.
+
+102
+00:07:57,274 --> 00:08:00,900
+It has all the address translation and
+all that kind of stuff.
+
+103
+00:08:00,900 --> 00:08:06,347
+Option 2, which is widely
+used in production services,
+
+104
+00:08:06,347 --> 00:08:12,808
+is to directly respond to the client,
+bypassing the load balancer.
+
+105
+00:08:12,808 --> 00:08:17,022
+So this keeps the load
+less on the load balancer.
+
+106
+00:08:17,022 --> 00:08:20,434
+So it just needs to make the translations,
+but
+
+107
+00:08:20,434 --> 00:08:25,869
+this requires support on the server
+side to be able to handle this as well.
+
+108
+00:08:25,869 --> 00:08:30,242
+But this is something called DSR or
+direct server return.
+
+109
+00:08:30,242 --> 00:08:35,101
+And I only want to mention that just so
+that if you see this,
+
+110
+00:08:35,101 --> 00:08:37,842
+you're kind of aware what it is.
+
+111
+00:08:37,842 --> 00:08:42,234
+All right, so now back to adding a server,
+
+112
+00:08:42,234 --> 00:08:48,578
+the server address part at
+the address of the backend server,
+
+113
+00:08:48,578 --> 00:08:52,497
+we would say -r real server address.
+
+114
+00:08:52,497 --> 00:08:55,284
+And so with masquerading,
+
+115
+00:08:55,284 --> 00:09:00,129
+the port can be different
+from the service, and
+
+116
+00:09:00,129 --> 00:09:06,202
+with tunneling or direct routing,
+the port must be equal.
+
+117
+00:09:06,202 --> 00:09:08,302
+In this example,
+we're just going to keep it equal.
+
+118
+00:09:08,302 --> 00:09:12,443
+We're going to use masquerading -m, and
+
+119
+00:09:12,443 --> 00:09:20,618
+the real server that we're
+adding is 192.168.10.1, port 80.
+
+120
+00:09:20,618 --> 00:09:24,081
+All right, and then,
+a final extra optional note is,
+
+121
+00:09:24,081 --> 00:09:28,072
+if you have the different servers
+have different capacities,
+
+122
+00:09:28,072 --> 00:09:30,119
+you can add a weighting to this.
+
+123
+00:09:30,119 --> 00:09:34,142
+And so you can specify -w
+followed by some weight, and
+
+124
+00:09:34,142 --> 00:09:38,966
+it's just an integer that specifies
+the capacity of the server.
+
+125
+00:09:38,966 --> 00:09:43,292
+And it'll be used in
+algorithms with a weight.
+
+126
+00:09:43,292 --> 00:09:51,513
+So for example, weighted round robin
+would use that, round robin would not.
+
+127
+00:09:51,513 --> 00:09:56,103
+All right, so, with all that as the base,
+now it's time for
+
+128
+00:09:56,103 --> 00:09:58,445
+you to go practice on your own.
+
+129
+00:09:58,445 --> 00:10:03,030
+This is all in the GitHub repo,
+provided as a vagrant file.
+
+130
+00:10:03,030 --> 00:10:05,676
+It's the same vagrant file and
+
+131
+00:10:05,676 --> 00:10:10,364
+the same container lab setup
+that we use for iptables.
+
+132
+00:10:10,364 --> 00:10:15,173
+And we're going to set up this
+topology where two external nodes,
+
+133
+00:10:15,173 --> 00:10:18,123
+a gateway node and two internal nodes.
+
+134
+00:10:18,123 --> 00:10:21,742
+And so what I would suggest and
+what we have a readme for
+
+135
+00:10:21,742 --> 00:10:27,387
+with a bunch of commands that you can run,
+is run a service on these internal nodes.
+
+136
+00:10:27,387 --> 00:10:33,621
+We're going to use a tool called NC to be
+able to kind of just do this real simply.
+
+137
+00:10:33,621 --> 00:10:38,850
+And then run ipvsadm to load
+balance between those, and
+
+138
+00:10:38,850 --> 00:10:44,203
+do this in various configurations and
+see what happens.
+
+139
+00:10:44,203 --> 00:10:50,836
+And we're going to use NC on the client
+side to connect to this service.
+
+140
+00:10:50,836 --> 00:10:54,625
+All right, so go practice on your own and
+
+141
+00:10:54,625 --> 00:10:59,649
+see how these different
+commands all work together.
+
+142
+00:10:59,649 --> 00:11:02,065
+And with that, we'll end here.
+
+143
+00:11:02,065 --> 00:11:02,871
+Thanks.

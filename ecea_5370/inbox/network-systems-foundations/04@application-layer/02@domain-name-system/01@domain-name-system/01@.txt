@@ -1,0 +1,193 @@
+Let's jump into the
+Domain Name System. The problem that we're
+looking at here is that the application layer
+has its own addressing. The reason why this is
+the case is because IP addresses aren't
+really human readable. We would want to go
+to a website like YouTube.com not some arbitrary
+collection of numbers, and moreover, IP addresses
+represent a single machine, whereas YouTube may
+have servers in Denver, New York, and many others. With that, as we saw
+with the link layer, the network layer, we saw
+with the transport layer, with the ports where
+at each layer there's a different way to address the
+part of the communication. With the application layer we're going to focus
+on host names. Shown here is an example,
+cs.colorado.edu, which would have an equivalent
+IP address as shown 128.138.7.156 and an equivalent
+Mac address shown there. Now we went through
+the differences that Mac addresses are flat,
+they're machine readable. IP addresses are hierarchical to provide us this
+global scalability, they're also machine readable, they're fixed length, and host names are meant
+to be human readable. These are also now
+variable length. When we say hierarchical naming, in this case with IP addresses to help us get
+to particular destination. Well, here they're organizing
+in different levels. There's these top level domains, we see the edu.com.gov. mil.org and many others. Within those, we then see
+domains that precede that. We might have Princeton as part of the edu top level domain, and then within Princeton
+there might be a cs. You just depend these cs. princeton.edu and what this
+provides, as we'll see, is a way for us to be able to actually
+perform the mapping between this human readable form and IP addresses as part
+of the domain name system. The domain name
+system is effectively a distributed database of these mappings between the
+host names and IP addresses. There is actually an
+application layer protocol that runs on top of UDP, and that's what performs this
+domain name system or DNS. Shown here is an example, it's not accurate in terms
+of the actual fields, but effectively, you would
+have another layer in there. You would have an
+Ethernet header, you would have an IP header, you would have a UDP header, and Then the payload of the UDP datagram is a DNS message for our
+query is effectively says, where is YouTube.com and then this distributed database
+that's known as DNS, will respond also with
+all those headers, with basically saying, here's the IP address for YouTube.com. How this works is that DNS, we said this
+distributed database, what it stores are
+resource records. The resource records
+are the format name, value, type, time to leave. Shown here are two examples. These would be
+commonly used ones, but there's others
+and you can look up whether it's
+the RFC or there's plenty of other explanations
+of DNS out there on the web. One type is type A, and this is providing
+that mapping between a host name
+and an IP address. Another type would be the NS, and this is where
+given some domain, what the value is some host name of an authoritative name
+server for that domain. Look at an example of how these
+queries would go perhaps, and this is all taken from the site right here
+as an example. Over here we have
+some host that's requesting doing a DNS lookup. This is just an illustration. The first message
+it would send in a query to its local DNS server, or sometimes are also
+called a resolver. That if it potentially might have the record for
+the site that it's looking for cached and
+can respond immediately. If it doesn't, it
+then needs to do another query to another
+resolver or DNS server. Let's assume it has
+nothing cached. It actually has to
+go up and find out to one of the root DNS servers, and we'll talk about
+those to say where is even the top level domain. It does their query for
+the top level domain , gets a response, it then goes to
+another DNS server, which is one of the top
+level domain DNS servers. Gets a response for that. What these response is
+response in three is, I don't know the full address
+you're looking for but, the next thing, say.edu
+is what it's looking for. We'll know where
+this address is. It sends back as Message 3. You should look at
+this name server, which is responsible for.edu so then that's where
+Message 4 is querying, hey, do you have this domain? The response would be, well, I don't know where
+this end host is, this what we're looking up. This gaia.cs.unmass.edu I
+don't know where that is, but I know where umass's
+DNS resolver is. This is going to be
+the authoritative one that does have knowledge of the actual fully
+qualified domain name is. It will respond with
+the IP address. These would all be type NS 3 and 5 and then 7 would be a type A because it would
+have the actual IP address. Then this resolver, the local
+DNS server can respond with Message A with the fully
+resolved IP address. That's the general overview of the process of
+how this works. Now what you can see
+here is there was two modes of how
+this DNS worked. We saw the first mode, which we saw the
+local DNS server. That's something
+called recursive. When Request 1 came in, it didn't actually
+respond immediately. It had this recursive look up. It said, I'll actually go
+find the results for you. It recursively looked
+at another DNS server. After that, these
+other ones you'll notice the say to
+the root DNS server, these were an iterative query. Because this local DNS made a query to the
+root DNS server, it didn't respond with
+the actual address, but it said, here's the next
+place that you can go look. Then it went and looked there, and I got a response,
+and then finally went to the next one. You don't have to distinguish
+as part of the DNS query, but this is different modes that the resolver may work at. It may work in recursive
+mode or iterative mode. Now we mentioned
+these root servers, and these are pretty important. DNS is critical infrastructure
+for the Internet and Web. The root servers are
+critical within DNS. They're the ones that basically is the root of this
+hierarchical tree. They are the ones that
+can know how to find these top-level
+domains which then should be able to
+find everything else. It's a known set of
+13 root servers. There's no mechanism or protocol to find
+these root servers. Their IP addresses are stable and they're configured
+into the resolvers, and then each root server is
+replicated for redundancy. When we say replicated, a lot of times they take care or take advantage of
+something called AnyCast. We're going to take
+a step back and revisit routing at
+the network layer. But each what it does
+is you can advertise a single IP prefix for
+multiple distinct locations. We can have effectively
+the single DNS, root server K, deployed in a distributed manner for redundancy in two
+different locations. It has that set and
+known IP address and what can happen is it's in two different networks and
+each of those networks, or autonomous systems, would advertise through BGP to its neighboring networks that it can reach that
+particular prefix. It will effectively say, I can reach this address through
+this path which is AS 1. Then likewise AS 2 will
+advertise that same address, but a different path that
+it can get to through AS 2, and so forth, and then AS
+3 will also advertise. Then wherever you
+are in the Internet, so this router right here would say I have
+a shortest path. If I go to AS 1, so any traffic that
+comes through here will use this route
+server on the left. Whereas maybe something over on the right hand side would end up at this
+other root server. Now they're both
+the same address. This is redundant that if say
+AS 2 goes down completely, there's a natural disaster
+or some misconfiguration. Well, BGP provides for
+facilities can check for errors or find when
+there's link failures and advertise and
+redirect traffic. Then all of this traffic
+that might have been going to the root server and AS 2 might get redirected
+to go to what's in AS 1. Just as AnyCast is the DNS root servers highly leverage that for
+the redundancy. Now, getting back to DNS itself, the message format
+for those queries, we said this was the payload for inside
+of a UDP datagram. It all happens in a single packet and the query and the reply
+has the exact same format, and it's shown here on
+the right-hand side. The first part is
+this identification. Now what that's important
+for is that when you send in a query as say the laptop
+doing a DNS query, it will set some of that
+identification field. The response that it gets will include the exact same
+identification number. This will allow you to match
+the replies and the queries. There's flags that tell you, for example, if it's a query or if it's a reply, for example. Then you have four different
+fields that are variable. This is questions, answers, authority, and additional info and we'll go through
+each one briefly. The questions are
+the main function of DNS is to make a query of the host
+name being looked up. You'll say the names. Here's an example
+of a snapshot of the traffic that was then parsed out into what
+the request was. It says the name google.com
+or www.google.com. Type: A for a host address
+and then some class. The answers field is the responses to the queries if the resolver has the answer. Here's an example of a response
+to the query previously, so the same name, same
+type, same class. Here it includes the
+address field add, specifying the IP address of it. Then authority is if the resolver doesn't
+know the answer, it responds with a name server that it knows is
+authoritative for the name or part of the name of the host name
+that's being requested. Here you can see this
+particular one responded that the authoritative
+name server for google.com would
+be ns2.google.com. It didn't know, but it
+knew where to look next. Then finally, this
+additional field is to help prevent
+further look ups. If the resolver can actually
+resolve that address of the name server in
+the authority record, it includes that as
+additional record. In this previous one, we saw that it responded
+with ns2.google.com. If it didn't include
+this extra information, well, now you would have
+to go do a look up. Well, how do I reach
+ns2.google.com. The resolver would have to
+do a DNS query for that. But instead, the response actually included an
+additional record that said, if you're going to
+look this up here would actually be
+the address for it. That covers DNS and
+it's important. Let me go back a
+couple slides that you don't necessarily
+need all of these. In that joule, so each. Then the header, it'll say
+how many questions are there? How many answers are there? How many authority? How
+many additional are there? It's just one query, you would have the value
+1 in number of questions, and then zero in the
+rest of these fields, include the question,
+and then there will be nothing in after that. Likewise, if there's
+just one query, you would have zero
+questions, one answer value. Then there would be nothing in the questions and then
+there would be one answer. That's how you can
+that group these together and that covers DNS. There's a lot more
+information about it, but that's the level
+of depth that's really covered the fundamentals of DNS. Next time we'll get
+into how do you do the programming and
+use this interface. Thanks.

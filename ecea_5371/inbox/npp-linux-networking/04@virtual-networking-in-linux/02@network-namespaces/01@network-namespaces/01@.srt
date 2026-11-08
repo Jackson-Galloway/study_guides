@@ -1,0 +1,598 @@
+1
+00:00:09,389 --> 00:00:15,434
+Now let's dive into network
+namespaces a little more.
+
+2
+00:00:15,434 --> 00:00:21,496
+So, just as a recap,
+we've seen this picture before.
+
+3
+00:00:21,496 --> 00:00:26,924
+So kind of recapping the kind
+of progression of technology.
+
+4
+00:00:26,924 --> 00:00:32,157
+So originally we have bare metal, and
+when we refer to bare metal we're
+
+5
+00:00:32,157 --> 00:00:36,871
+just talking about the hardware
+running an operating system and
+
+6
+00:00:36,871 --> 00:00:40,205
+you want to run some
+application on top of it.
+
+7
+00:00:40,205 --> 00:00:45,084
+So the problem with that
+was there's some resource
+
+8
+00:00:45,084 --> 00:00:50,424
+wastage if you're only running
+one application on it.
+
+9
+00:00:50,424 --> 00:00:54,556
+So people want to run multiple
+applications to make best use of
+
+10
+00:00:54,556 --> 00:00:57,317
+the hardware that they're paying for.
+
+11
+00:00:57,317 --> 00:01:01,897
+But the problem is that these aren't
+kind of isolated environments.
+
+12
+00:01:01,897 --> 00:01:06,939
+You might have dependencies and things
+like that, that might be hard to resolve.
+
+13
+00:01:06,939 --> 00:01:12,518
+Maybe it's requiring different
+versions of operating systems or
+
+14
+00:01:12,518 --> 00:01:16,009
+different packages or things like that.
+
+15
+00:01:16,009 --> 00:01:19,874
+So we then move to virtual machines,
+
+16
+00:01:19,874 --> 00:01:25,108
+which is a technology where
+you run a hypervisor,
+
+17
+00:01:25,108 --> 00:01:32,852
+that's a layer of software that
+effectively mimics physical hardware.
+
+18
+00:01:32,852 --> 00:01:37,395
+You run an operating system on
+top of it and it makes use of, or
+
+19
+00:01:37,395 --> 00:01:40,427
+it looks like to that operating system,
+
+20
+00:01:40,427 --> 00:01:45,082
+it's running on hardware that
+it's the only thing running.
+
+21
+00:01:45,082 --> 00:01:51,076
+And what this provides is
+the ability to have this isolation.
+
+22
+00:01:51,076 --> 00:01:53,404
+But it's a bit heavyweight, right?
+
+23
+00:01:53,404 --> 00:01:57,503
+So you've seen this and
+the examples we've been running.
+
+24
+00:01:57,503 --> 00:02:03,158
+We've been running virtualbox,
+running a virtual
+
+25
+00:02:03,158 --> 00:02:08,175
+machine which runs
+Ubuntu Linux inside of it.
+
+26
+00:02:08,175 --> 00:02:12,153
+And I've been using vagrant
+to kind of manage that.
+
+27
+00:02:12,153 --> 00:02:14,865
+So we've been using that.
+
+28
+00:02:14,865 --> 00:02:17,063
+But the problem is that it's heavyweight.
+
+29
+00:02:17,063 --> 00:02:20,467
+And so the kind of question arose is what
+
+30
+00:02:20,467 --> 00:02:24,706
+if we don't need different
+operating systems?
+
+31
+00:02:24,706 --> 00:02:28,855
+So the solution there was,
+can we take advantage of that?
+
+32
+00:02:28,855 --> 00:02:35,052
+And let's introduce isolation mechanisms
+into the operating system itself.
+
+33
+00:02:35,052 --> 00:02:38,452
+And so we've talked about namespaces,
+
+34
+00:02:38,452 --> 00:02:42,252
+which are resources that
+basically make it so
+
+35
+00:02:42,252 --> 00:02:47,853
+that what resources and
+naming of those resources a process sees.
+
+36
+00:02:47,853 --> 00:02:54,220
+So this is like file descriptors,
+IP addresses and things like that.
+
+37
+00:02:54,220 --> 00:03:00,434
+So that helps with isolation
+of the naming of resources.
+
+38
+00:03:00,434 --> 00:03:06,008
+And then we have c groups or
+control groups, which group processes and
+
+39
+00:03:06,008 --> 00:03:12,635
+allocates resources, meaning like CPU and
+memory that the kernel then enforces.
+
+40
+00:03:12,635 --> 00:03:19,408
+All right, so those provide these
+isolation mechanisms that we need.
+
+41
+00:03:19,408 --> 00:03:24,191
+And we've seen this in all of our labs.
+
+42
+00:03:24,191 --> 00:03:26,597
+So we've been using container lab.
+
+43
+00:03:26,597 --> 00:03:29,993
+So we've had a container
+lab configuration file.
+
+44
+00:03:29,993 --> 00:03:35,444
+Then we've run container lab deploy,
+which created docker containers.
+
+45
+00:03:35,444 --> 00:03:40,806
+And so
+we've seen an example like this before.
+
+46
+00:03:40,806 --> 00:03:45,163
+And then we can do docker exec to run
+
+47
+00:03:45,163 --> 00:03:49,828
+commands inside of each container.
+
+48
+00:03:49,828 --> 00:03:54,885
+And in our labs and
+our demos inside of this router we were
+
+49
+00:03:54,885 --> 00:04:02,318
+setting up things like IP forwarding or
+using iptables to set up filtering rules.
+
+50
+00:04:02,318 --> 00:04:07,335
+And then we were able to ping
+between different hosts as if
+
+51
+00:04:07,335 --> 00:04:14,861
+they were completely different machines
+because this router had its own namespace,
+
+52
+00:04:14,861 --> 00:04:19,478
+so it had its own ability
+to do things in networking.
+
+53
+00:04:19,478 --> 00:04:25,050
+So a namespace, it just is
+a mechanism that creates isolation in
+
+54
+00:04:25,050 --> 00:04:32,079
+the kernel that allows processes to have
+its own namespace for those resources.
+
+55
+00:04:32,079 --> 00:04:33,850
+So let's look at what this means.
+
+56
+00:04:33,850 --> 00:04:37,317
+So this is some code
+from the Linux kernel.
+
+57
+00:04:37,317 --> 00:04:42,144
+So down here is a link to
+where you can find this
+
+58
+00:04:42,144 --> 00:04:46,973
+code in one of the online
+source code browsers
+
+59
+00:04:46,973 --> 00:04:51,949
+that are available, really great resource.
+
+60
+00:04:51,949 --> 00:04:54,106
+As I've said stated before,
+
+61
+00:04:54,106 --> 00:04:58,175
+we're not going to become
+kernel hackers in this course.
+
+62
+00:04:58,175 --> 00:05:00,637
+Even if you don't know c code,
+
+63
+00:05:00,637 --> 00:05:06,533
+you probably could still understand
+what this code is actually showing.
+
+64
+00:05:06,533 --> 00:05:14,915
+So inside of the Linux kernel it maintains
+data structures on a per process basis.
+
+65
+00:05:14,915 --> 00:05:21,566
+So we can see one of the key data
+structures is called a task struct.
+
+66
+00:05:21,566 --> 00:05:24,324
+So every process will have this.
+
+67
+00:05:24,324 --> 00:05:28,444
+Whenever you run a program
+the Linux kernel is going to have
+
+68
+00:05:28,444 --> 00:05:32,400
+one of these structures allocated for
+that process.
+
+69
+00:05:32,400 --> 00:05:35,146
+And there's a whole bunch of stuff in it.
+
+70
+00:05:35,146 --> 00:05:42,789
+The main thing that I want to call out was
+this particular variable called nsproxy.
+
+71
+00:05:42,789 --> 00:05:48,863
+So it's of type struct nsproxy and
+it's a pointer to that.
+
+72
+00:05:48,863 --> 00:05:54,362
+So this right here is showing that
+it's associated with the process.
+
+73
+00:05:54,362 --> 00:05:59,010
+So now if we dive into that
+structure a little bit,
+
+74
+00:05:59,010 --> 00:06:03,770
+the structure itself contains
+a bunch of different
+
+75
+00:06:03,770 --> 00:06:08,432
+things that are all saying
+something namespace.
+
+76
+00:06:08,432 --> 00:06:15,766
+So this is the interprocess communication,
+the mounting the process ids.
+
+77
+00:06:15,766 --> 00:06:22,635
+Well, low and behold we have
+something called struct net and
+
+78
+00:06:22,635 --> 00:06:29,517
+the variable name is called net_ns for
+network namespace.
+
+79
+00:06:29,517 --> 00:06:35,044
+All right, so the process has one of
+these structures allocated which then
+
+80
+00:06:35,044 --> 00:06:41,011
+contains one of these structures which
+shows there's a whole bunch of different
+
+81
+00:06:41,011 --> 00:06:46,821
+namespaces for all the different types
+of resources that we might care about.
+
+82
+00:06:46,821 --> 00:06:51,738
+The one we're going to focus
+on is the networking one.
+
+83
+00:06:51,738 --> 00:06:55,334
+So if we dive into that structure,
+
+84
+00:06:55,334 --> 00:07:01,415
+what you can see is there's
+variables called like ipv4.
+
+85
+00:07:01,415 --> 00:07:06,677
+And so this is of struct type netns_ipv4.
+
+86
+00:07:06,677 --> 00:07:11,860
+We see another one where it says nf for
+net filter.
+
+87
+00:07:11,860 --> 00:07:16,956
+So those are all those filtering and
+address translation rules and
+
+88
+00:07:16,956 --> 00:07:20,147
+this is handling all the stuff for ipv4.
+
+89
+00:07:20,147 --> 00:07:23,675
+So the relevant structure is this net and
+
+90
+00:07:23,675 --> 00:07:29,608
+it contains all these different
+ones I didn't include all of them.
+
+91
+00:07:29,608 --> 00:07:36,235
+But let's now look
+inside of this ipv4 one.
+
+92
+00:07:36,235 --> 00:07:44,778
+And so here we can see things that
+we should kind of be familiar with.
+
+93
+00:07:44,778 --> 00:07:48,002
+This again is just a snapshot or
+
+94
+00:07:48,002 --> 00:07:53,334
+a small set of the lines of
+code that are under this,
+
+95
+00:07:53,334 --> 00:08:00,279
+but we can see kind of words that
+are probably familiar to us, fib.
+
+96
+00:08:00,279 --> 00:08:03,035
+This is the forwarding information base.
+
+97
+00:08:03,035 --> 00:08:07,862
+This is the forwarding table that's
+stored inside of the Linux kernel.
+
+98
+00:08:07,862 --> 00:08:12,501
+So anytime we did things
+like IP route add, well,
+
+99
+00:08:12,501 --> 00:08:16,707
+we were adding entries into the fib,
+right?
+
+100
+00:08:16,707 --> 00:08:20,110
+And so that is what's getting stored.
+
+101
+00:08:20,110 --> 00:08:25,341
+So you can see that now
+associated with a given
+
+102
+00:08:25,341 --> 00:08:29,753
+process is a given forwarding table.
+
+103
+00:08:29,753 --> 00:08:33,763
+And so if you had a different process,
+
+104
+00:08:33,763 --> 00:08:38,024
+it would have a different task struct and
+
+105
+00:08:38,024 --> 00:08:42,551
+it can have a different forwarding table.
+
+106
+00:08:42,551 --> 00:08:49,099
+So the end result of all that is that each
+namespace gets its own set of tables.
+
+107
+00:08:49,099 --> 00:08:53,620
+And we saw this in practice
+where we saw in host1.
+
+108
+00:08:53,620 --> 00:08:56,139
+I can set what forwarding table entry.
+
+109
+00:08:56,139 --> 00:09:00,238
+I did IP route add and
+then if I went inside the router and
+
+110
+00:09:00,238 --> 00:09:04,624
+looked at its routing table,
+I wouldn't see that entry.
+
+111
+00:09:04,624 --> 00:09:07,578
+And I can add my own entries or
+
+112
+00:09:07,578 --> 00:09:12,268
+different entries into the router, right?
+
+113
+00:09:12,268 --> 00:09:15,434
+So each of these was a container.
+
+114
+00:09:15,434 --> 00:09:22,388
+Each of these had its own namespace,
+which meant it had its own tables.
+
+115
+00:09:22,388 --> 00:09:27,201
+So kind of wrapping it all up,
+what we're kind of saying is
+
+116
+00:09:27,201 --> 00:09:31,428
+we're providing the concept
+of virtualization,
+
+117
+00:09:31,428 --> 00:09:38,407
+which is basically creating that isolation
+so you can have better use of resources,
+
+118
+00:09:38,407 --> 00:09:43,451
+more efficient use of resources and
+better deployability.
+
+119
+00:09:43,451 --> 00:09:50,009
+because we can create these
+isolated packages of deployments,
+
+120
+00:09:50,009 --> 00:09:55,001
+we're going to use
+namespaces in this manner.
+
+121
+00:09:55,001 --> 00:10:00,709
+And this is just an illustration
+showing a process tree we're
+
+122
+00:10:00,709 --> 00:10:06,208
+getting its own view of networking,
+its own, all of that.
+
+123
+00:10:06,208 --> 00:10:11,282
+And then that's all running
+on top of a physical host
+
+124
+00:10:11,282 --> 00:10:16,020
+where you would have
+an actual physical device.
+
+125
+00:10:16,020 --> 00:10:20,400
+So with that we're going to end here, and
+
+126
+00:10:20,400 --> 00:10:26,391
+then next time we'll dive
+into the IP netns utility.
+
+127
+00:10:26,391 --> 00:10:27,585
+All right, thanks.

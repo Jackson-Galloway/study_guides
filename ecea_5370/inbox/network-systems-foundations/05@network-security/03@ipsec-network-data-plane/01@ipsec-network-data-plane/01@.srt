@@ -1,0 +1,884 @@
+1
+00:00:09,432 --> 00:00:11,541
+All right, let's jump into IPsec.
+
+2
+00:00:11,541 --> 00:00:13,259
+So we have the basics in place.
+
+3
+00:00:13,259 --> 00:00:16,713
+Now let's see them being applied.
+
+4
+00:00:16,713 --> 00:00:19,922
+So, getting back to why we need this.
+
+5
+00:00:19,922 --> 00:00:25,623
+And so the example here is, a company
+has two sites and they have employees at
+
+6
+00:00:25,623 --> 00:00:31,154
+these different sites that want to
+share information with each other.
+
+7
+00:00:31,154 --> 00:00:37,194
+Now, if the attacker can see the traffic,
+they'll get access to some secret data.
+
+8
+00:00:37,194 --> 00:00:41,750
+And so we're going to talk about
+IPsec as a solution to this.
+
+9
+00:00:43,400 --> 00:00:51,428
+So stepping back, it'd be useful to even
+talk about how would somebody eavesdrop.
+
+10
+00:00:51,428 --> 00:00:56,429
+So we learned at the link layer,
+WiFi is a broadcast medium,
+
+11
+00:00:56,429 --> 00:00:59,640
+so it's broadcast communication.
+
+12
+00:00:59,640 --> 00:01:04,620
+And so if you're in a public space,
+you can see that broadcast traffic.
+
+13
+00:01:05,840 --> 00:01:12,437
+A network provider where your traffic goes
+through could be compelled by a government
+
+14
+00:01:12,437 --> 00:01:18,508
+agency to provide a backdoor for them,
+or maybe they have a rogue employee.
+
+15
+00:01:18,508 --> 00:01:23,310
+Or maybe there's
+a compromised router that has
+
+16
+00:01:23,310 --> 00:01:28,240
+a software bug in it,
+security vulnerability.
+
+17
+00:01:28,240 --> 00:01:32,840
+So it could be at
+the network provider level.
+
+18
+00:01:32,840 --> 00:01:39,636
+We've also talked about kind of BGP and
+OSPF and routing protocols.
+
+19
+00:01:39,636 --> 00:01:46,480
+And a simple misconfiguration
+could actually cause problems.
+
+20
+00:01:46,480 --> 00:01:48,420
+So it might not be intentional, but
+
+21
+00:01:48,420 --> 00:01:51,470
+it might actually redirect
+traffic to the wrong place.
+
+22
+00:01:52,480 --> 00:01:57,382
+Or it could have been intentional
+through route hijacking,
+
+23
+00:01:57,382 --> 00:02:00,420
+which can redirect the traffic.
+
+24
+00:02:00,420 --> 00:02:04,340
+It would be something that
+the attacker would intentionally do.
+
+25
+00:02:04,340 --> 00:02:09,146
+So all of these provide this
+opportunity to eavesdrop,
+
+26
+00:02:09,146 --> 00:02:13,930
+and there's no one solution
+that solves everything.
+
+27
+00:02:13,930 --> 00:02:18,754
+And that's why we're talking about
+a bunch of different solutions that you
+
+28
+00:02:18,754 --> 00:02:23,140
+might want to use in different
+scenarios or use them in combination.
+
+29
+00:02:24,700 --> 00:02:31,716
+So IPsec, what it does is it creates
+an encrypted tunnel between two endpoints.
+
+30
+00:02:31,716 --> 00:02:36,549
+It could be used for
+a whole site as shown in this picture,
+
+31
+00:02:36,549 --> 00:02:40,664
+or it could be one machine
+to another machine.
+
+32
+00:02:40,664 --> 00:02:45,740
+And this is commonly used in VPNs,
+or virtual private networks.
+
+33
+00:02:48,000 --> 00:02:53,631
+So as an overview to set
+up the IPsec tunnel,
+
+34
+00:02:53,631 --> 00:02:58,501
+a protocol is a camp or IKE is used to set
+
+35
+00:02:58,501 --> 00:03:03,418
+up the parameters and the keys used.
+
+36
+00:03:03,418 --> 00:03:07,274
+And then you can authenticate each side.
+
+37
+00:03:07,274 --> 00:03:11,168
+And then after all that,
+the traffic can be exchanged.
+
+38
+00:03:11,168 --> 00:03:17,020
+So we'll go through kind of
+each of these steps in order.
+
+39
+00:03:17,020 --> 00:03:22,228
+So the first is the SA-1
+parameter exchange.
+
+40
+00:03:22,228 --> 00:03:25,317
+So this is where the initiator, so
+
+41
+00:03:25,317 --> 00:03:31,079
+this is the one who's initiating
+the IPsec tunnel to the other.
+
+42
+00:03:31,079 --> 00:03:37,103
+Says what algorithms it supports
+across four main categories,
+
+43
+00:03:37,103 --> 00:03:41,453
+what type of encryption
+it can support using,
+
+44
+00:03:41,453 --> 00:03:45,707
+what type of hashing it
+could support using.
+
+45
+00:03:45,707 --> 00:03:51,859
+We're going to get into
+the Diffie-Hellman group, but
+
+46
+00:03:51,859 --> 00:03:56,985
+these groups can impact
+the level of security,
+
+47
+00:03:56,985 --> 00:04:03,924
+but also the amount of CPU resources
+that it takes to implement.
+
+48
+00:04:03,924 --> 00:04:08,908
+And then how authentication
+is going to be done.
+
+49
+00:04:08,908 --> 00:04:13,544
+And so, this is based on the software or
+
+50
+00:04:13,544 --> 00:04:19,313
+hardware that this
+initiator has implemented.
+
+51
+00:04:19,313 --> 00:04:24,973
+And then, the responder then
+chooses among this list and says,
+
+52
+00:04:24,973 --> 00:04:29,674
+I support AES, and that's a better,
+I prefer that one.
+
+53
+00:04:29,674 --> 00:04:33,590
+And I support this hash,
+and I choose this.
+
+54
+00:04:33,590 --> 00:04:37,051
+So whatever the responder it chooses and
+
+55
+00:04:37,051 --> 00:04:42,660
+then sends back the results,
+its choices back to the initiator.
+
+56
+00:04:44,360 --> 00:04:49,504
+They then move into the next phase,
+which is this Diffie-Hellman key exchange.
+
+57
+00:04:49,504 --> 00:04:53,792
+And so, IPsec uses shared keys for
+encryption.
+
+58
+00:04:53,792 --> 00:04:59,742
+So it uses symmetric encryption and
+uses that for integrity as well.
+
+59
+00:04:59,742 --> 00:05:04,297
+And so what Diffie-Hellman is,
+is a protocol to secretly create and
+
+60
+00:05:04,297 --> 00:05:06,480
+share private keys.
+
+61
+00:05:06,480 --> 00:05:11,912
+So if you recall, we saw this picture
+where we can use a public key or
+
+62
+00:05:11,912 --> 00:05:16,277
+asymmetric encryption to
+exchange a session key, or
+
+63
+00:05:16,277 --> 00:05:22,500
+something that could be shared so
+they can use symmetric encryption.
+
+64
+00:05:22,500 --> 00:05:29,140
+And so we saw this before, and we saw
+that in the context of the RSA algorithm.
+
+65
+00:05:29,140 --> 00:05:32,608
+So Diffie-Hellman is in that vein, but
+
+66
+00:05:32,608 --> 00:05:38,014
+it allows two parties that have
+no prior knowledge of each other
+
+67
+00:05:38,014 --> 00:05:43,830
+to jointly establish a shared secret
+key over an insecure channel.
+
+68
+00:05:44,940 --> 00:05:51,740
+So this is quite useful, and
+let's walk through how it works.
+
+69
+00:05:51,740 --> 00:05:56,563
+So one side, we'll say it's the initiator,
+
+70
+00:05:56,563 --> 00:06:03,200
+in this side picks two numbers,
+a prime p and some base g.
+
+71
+00:06:03,200 --> 00:06:07,984
+It sends those in clear text
+to the other side that it's
+
+72
+00:06:07,984 --> 00:06:13,200
+initiating a connection to,
+we'll say, the responder.
+
+73
+00:06:15,140 --> 00:06:19,380
+Then it will pick a secret x.
+
+74
+00:06:19,380 --> 00:06:25,935
+And with this secret x that it's not
+going to share, it will calculate g,
+
+75
+00:06:25,935 --> 00:06:31,960
+which was this base that it
+previously shared and picked.
+
+76
+00:06:31,960 --> 00:06:39,050
+It'll calculate g to the x mod p,
+and we'll call this h of A.
+
+77
+00:06:40,220 --> 00:06:40,782
+All right?
+
+78
+00:06:40,782 --> 00:06:46,440
+So it takes this h and
+sends it to the other party.
+
+79
+00:06:48,720 --> 00:06:53,100
+The other party, in this case, party B,
+
+80
+00:06:53,100 --> 00:06:57,741
+or the responder will
+pick its own secret y.
+
+81
+00:06:57,741 --> 00:07:01,934
+And it's not going to share y, but
+
+82
+00:07:01,934 --> 00:07:10,020
+it will share a calculation using
+y hB equals g to the y mod p.
+
+83
+00:07:10,020 --> 00:07:13,865
+All right?
+And then it will send that calculated
+
+84
+00:07:13,865 --> 00:07:18,760
+value h of B back to party A,
+or the initiator.
+
+85
+00:07:18,760 --> 00:07:20,576
+All right, so with this,
+
+86
+00:07:20,576 --> 00:07:25,214
+they now actually have enough
+information to have a shared key.
+
+87
+00:07:25,214 --> 00:07:27,260
+So let's see what this is.
+
+88
+00:07:27,260 --> 00:07:35,952
+So the shared key is actually if they
+take the value that was shared with them,
+
+89
+00:07:35,952 --> 00:07:42,706
+raised to the secret that they picked,
+and then mod it by p.
+
+90
+00:07:42,706 --> 00:07:48,511
+So this K equals h of B, so
+party A is over on the left hand side,
+
+91
+00:07:48,511 --> 00:07:51,384
+it received from B, the hB.
+
+92
+00:07:51,384 --> 00:07:56,263
+It raises that to x, which is that secret
+
+93
+00:07:56,263 --> 00:08:00,982
+that only A knows about and does mod p.
+
+94
+00:08:00,982 --> 00:08:06,420
+Likewise, B or
+the responder does the same calculation
+
+95
+00:08:06,420 --> 00:08:10,931
+using the value hA,
+which is what A sent to it,
+
+96
+00:08:10,931 --> 00:08:16,300
+raises it to y, its secret,
+and then does mod p.
+
+97
+00:08:16,300 --> 00:08:20,728
+So why this works,
+why this is the same is,
+
+98
+00:08:20,728 --> 00:08:27,122
+if we actually expand out what h of B is,
+it's g to the y mod p.
+
+99
+00:08:27,122 --> 00:08:31,994
+So, A doesn't know what y is, but
+it knows what's in parentheses,
+
+100
+00:08:31,994 --> 00:08:36,880
+but we're expanding that out,
+and then raises that to x.
+
+101
+00:08:36,880 --> 00:08:39,888
+When you use the properties of mod,
+
+102
+00:08:39,888 --> 00:08:45,460
+this actually just is the equivalent
+to g to the xy mod p.
+
+103
+00:08:45,460 --> 00:08:48,500
+So let's look at that on the other side.
+
+104
+00:08:48,500 --> 00:08:56,138
+We take the hA, which is g to the x mod p,
+we raise that to y.
+
+105
+00:08:56,138 --> 00:09:01,400
+So even though B doesn't know what x is,
+it knows what's in this parentheses.
+
+106
+00:09:01,400 --> 00:09:06,397
+But again, if we did the math or
+do the properties of mod,
+
+107
+00:09:06,397 --> 00:09:11,709
+we can do when you raise something
+that's mod to some power,
+
+108
+00:09:11,709 --> 00:09:15,102
+you kind of distribute that through.
+
+109
+00:09:15,102 --> 00:09:18,220
+So it would be g to the xy mod p.
+
+110
+00:09:18,220 --> 00:09:22,464
+So, they both end up with the exact
+same value, even though party
+
+111
+00:09:22,464 --> 00:09:26,978
+A didn't know the value of y and
+party B didn't know the value of x.
+
+112
+00:09:26,978 --> 00:09:31,900
+And now why this is secure,
+given what was exchanged p,
+
+113
+00:09:31,900 --> 00:09:35,250
+g, hA and hB, the assumption here and
+
+114
+00:09:35,250 --> 00:09:40,594
+others have calculated the math and
+the difficulty of this,
+
+115
+00:09:40,594 --> 00:09:47,400
+that it's hard to actually calculate
+K with only this information.
+
+116
+00:09:47,400 --> 00:09:51,664
+You need one of these secrets and
+that's hard to guess.
+
+117
+00:09:54,779 --> 00:09:58,884
+All right, so with that,
+we now have a shared secret,
+
+118
+00:09:58,884 --> 00:10:03,366
+a session key that could be used for
+symmetric encryption.
+
+119
+00:10:03,366 --> 00:10:08,470
+So the next part of IPsec is to
+authenticate and this allows each party
+
+120
+00:10:08,470 --> 00:10:13,950
+to verify that they're communicating
+with who they think they are.
+
+121
+00:10:13,950 --> 00:10:18,052
+Now, one of the parameters that
+we saw in the parameter exchange,
+
+122
+00:10:18,052 --> 00:10:23,090
+SA-1 parameter exchange, was how
+they're going to do authentication.
+
+123
+00:10:23,090 --> 00:10:28,292
+And there's two steps here or
+two options listed here.
+
+124
+00:10:28,292 --> 00:10:33,629
+One, is they could have had
+a shared private key in advance or
+
+125
+00:10:33,629 --> 00:10:37,518
+they could go with a digital certificate.
+
+126
+00:10:37,518 --> 00:10:44,101
+So if you recall, this digital certificate
+was some binding between an identity and
+
+127
+00:10:44,101 --> 00:10:48,834
+a public key and
+it's signed by a certificate authority.
+
+128
+00:10:48,834 --> 00:10:53,590
+So that could be kind of how they
+go through the authentication.
+
+129
+00:10:54,730 --> 00:11:00,365
+And this step is encrypted using
+the key that was decided in this
+
+130
+00:11:00,365 --> 00:11:07,490
+kind of first part, the Diffie-Hellman
+session keys that were calculated and
+
+131
+00:11:07,490 --> 00:11:14,430
+used in the parameters that were
+established in SA-1 parameter exchange.
+
+132
+00:11:16,610 --> 00:11:21,774
+Then, they go into a second
+SA-2 parameter exchange,
+
+133
+00:11:21,774 --> 00:11:26,030
+where SA stands for
+a security association.
+
+134
+00:11:26,030 --> 00:11:30,989
+And that's basically just saying,
+we're going to set up this encryption,
+
+135
+00:11:30,989 --> 00:11:36,810
+we're agreeing on the parameters,
+here's everything associated with it.
+
+136
+00:11:36,810 --> 00:11:41,969
+And so they do this just in case
+different parameters are desired for
+
+137
+00:11:41,969 --> 00:11:47,530
+the encrypted traffic, then for
+the authentication step.
+
+138
+00:11:47,530 --> 00:11:54,214
+And this step can also be used to set
+up what's known as traffic selectors.
+
+139
+00:11:54,214 --> 00:11:58,406
+And this determines what traffic
+is allowed through the tunnel.
+
+140
+00:11:58,406 --> 00:12:02,740
+So this is a five tuple of
+the IP source and destination,
+
+141
+00:12:02,740 --> 00:12:08,750
+the protocol like TCP or UDP and the
+transport source and destination ports.
+
+142
+00:12:10,690 --> 00:12:13,720
+And then finally,
+we can have the traffic exchange.
+
+143
+00:12:13,720 --> 00:12:18,653
+So after all of that, we have keys
+calculated, we know how we're going to
+
+144
+00:12:18,653 --> 00:12:23,934
+encrypt it, but there's different
+modes of how traffic can be exchanged.
+
+145
+00:12:23,934 --> 00:12:27,456
+So there's effectively
+two different categories.
+
+146
+00:12:27,456 --> 00:12:33,687
+The first is whether it's just
+the header in the HAH mode for
+
+147
+00:12:33,687 --> 00:12:40,168
+authenticating header, and
+this just provides integrity,
+
+148
+00:12:40,168 --> 00:12:46,151
+or we can have ESP for
+encapsulating security payload and
+
+149
+00:12:46,151 --> 00:12:51,283
+this provides integrity and
+confidentiality.
+
+150
+00:12:51,283 --> 00:12:55,730
+And then we have two other modes.
+
+151
+00:12:55,730 --> 00:12:59,099
+So we would choose one of these, Or ESP,
+
+152
+00:12:59,099 --> 00:13:02,670
+and then one of these,
+transport or tunnel.
+
+153
+00:13:04,550 --> 00:13:08,466
+And transport is mostly used for
+single endpoints,
+
+154
+00:13:08,466 --> 00:13:12,630
+whereas tunnels are mostly used for
+whole sites.
+
+155
+00:13:12,630 --> 00:13:18,250
+And so we could see the illustration
+of tunnel versus transport.
+
+156
+00:13:18,250 --> 00:13:23,794
+So in transport mode, so this is for
+like a single kind of endpoint.
+
+157
+00:13:23,794 --> 00:13:26,764
+So there, we're not encrypting or
+
+158
+00:13:26,764 --> 00:13:31,238
+hiding in any manner the IP
+header of the endpoints.
+
+159
+00:13:31,238 --> 00:13:35,645
+We're just encrypting and
+authenticating or
+
+160
+00:13:35,645 --> 00:13:41,570
+doing integrity checks of all
+the data in this IP packet.
+
+161
+00:13:41,570 --> 00:13:46,744
+Tunnel mode, here would be
+the actual IP address source and
+
+162
+00:13:46,744 --> 00:13:49,802
+destination of the end machines.
+
+163
+00:13:49,802 --> 00:13:55,370
+But we're tunneling it between kind of
+those two machines that are doing for
+
+164
+00:13:55,370 --> 00:13:56,712
+the whole site.
+
+165
+00:13:56,712 --> 00:14:00,150
+So we put on this new IP header.
+
+166
+00:14:00,150 --> 00:14:04,220
+So this would be the IP
+header of the source and
+
+167
+00:14:04,220 --> 00:14:09,554
+destination of those kind of
+the edge point of the sites.
+
+168
+00:14:09,554 --> 00:14:15,932
+And then we can encrypt the rest of all
+of the packet, including the IP header.
+
+169
+00:14:18,364 --> 00:14:23,664
+Now there's a lot of software
+that's available for IPsec.
+
+170
+00:14:23,664 --> 00:14:29,094
+All of the major network vendors
+have routers or firewalls.
+
+171
+00:14:29,094 --> 00:14:33,010
+So Juniper, Cisco, Palo Alto and so forth.
+
+172
+00:14:33,010 --> 00:14:37,650
+The cloud providers like AWS, Azure, GCP.
+
+173
+00:14:37,650 --> 00:14:41,610
+They have VPN services
+which are just IPsec.
+
+174
+00:14:41,610 --> 00:14:45,310
+And then there's open source software,
+a popular one and
+
+175
+00:14:45,310 --> 00:14:47,890
+a common one to use would be Strong Swan.
+
+176
+00:14:49,590 --> 00:14:52,138
+So just to summarize with IPsec,
+
+177
+00:14:52,138 --> 00:14:57,599
+it leveraged many of the techniques
+we discussed in the basics lesson.
+
+178
+00:14:57,599 --> 00:15:01,657
+It talked about message
+integrity through HMAC.
+
+179
+00:15:01,657 --> 00:15:04,286
+It uses confidentiality or
+
+180
+00:15:04,286 --> 00:15:09,669
+provides confidentiality
+using a shared private key.
+
+181
+00:15:09,669 --> 00:15:14,701
+Exchanged shared keys
+using Diffie Hellman, and
+
+182
+00:15:14,701 --> 00:15:19,733
+then provided authentication
+with public keys or
+
+183
+00:15:19,733 --> 00:15:22,617
+pre-shared private keys.
+
+184
+00:15:22,617 --> 00:15:25,046
+So that covers IPsec.
+
+185
+00:15:25,046 --> 00:15:30,510
+And next,
+we're going to talk now about RPKI.
+
+186
+00:15:30,510 --> 00:15:31,021
+All right, thanks.

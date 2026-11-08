@@ -1,0 +1,167 @@
+All right, let's go ahead and get started. So today we're going to talk
+about software driven WAN. So this is our kind of step
+into the academic world. And specifically see how does Microsoft
+build their wide area network and what challenges did they face
+as they were building out Azure? So, recall this picture, now imagine we had these two cases,
+VPC to VPC, VPC to end user. We talked about a construct,
+an abstraction, the VPC peering. But what we didn't talk about is,
+all right, so when traffic leaves this network and
+let's say this is in one region and goes to another region, how is that
+traffic actually being handled? We'll talk about this part
+in a different lesson. So we're focusing on
+the left hand side for now. All right, so one thing to note is
+cloud providers have many data centers. So we've seen that. And there's many layers to their networks. So this is a picture from Google and it shows their data center interconnected. Then they have some kind of
+edge of their networks and how it interfaces to the Internet. And then they got the users. And of course you have the data
+center networks themselves. This is a picture of
+Microsoft's backbone network. Think of when we're
+placing selecting regions. It would correspond to one
+of these little pins, right? Now let's say in Google speak created two VPCs, VPC one and VPC two. In our pictures, they look like
+they just have a line between them. But what's actually between
+them is this kind of complex backbone network, all right? A key question is,
+can we just use standard routers and protocols and traffic engineering? But as you saw with data center networks,
+there's certainly room for improvement. And that's what this paper is about. So this is SWAN. It's achieving high utilization
+with software driven WAN published at SIGCOMM 2013. And if you are interested in seeing
+the Google equivalent of this paper and how they build their wide area network,
+their system is called B4 and it was also published at SIGCOMM in 2013. All right, so both of these papers will
+provide them in Coursera's resources. But now let's just talk
+about the Microsoft one. All right, so
+let me switch over to their slides. And kind of the motivation is inter data
+center wide area network is critical. It's expensive resource. Microsoft had to either buy or
+lease some fiber. And especially going
+between continents with sub-sea cables definitely
+has great expense. On top of that, you have to put
+network equipment on either side. Of course, we've talked about
+economics of the cloud before. Economics is definitely important, but the problem is it's highly
+inefficient if you were to use it using kind of
+standard technology. So one of the causes is a lack
+of coordination, right? So let's say we have background
+traffic and non background traffic. So by non background traffic,
+think of me interacting with a website that's
+not background traffic. That needs to happen right now and
+be responsive. Background traffic might be,
+maybe I need to backup some database to
+another data center. And if I just happen to choose
+it at a particular time, well what they're showing
+is that when you don't have any coordination,
+well the peak can become 2.17. So this is showing kind of the peak,
+their traffic, the difference between their peak and
+their average is 2.17. When they break it down into
+background and non background, you could see there's this
+steady stream of background. Now what they're
+suggesting is let's say if we could schedule this background traffic,
+right? Do I need to perform my
+backup this minute or can I wait an hour or
+could I have done it an hour before? If I can control and schedule it, well then I could just put it inside
+of kind of keep this max flat. All the non background
+traffic gets allocated and then I can fill in the gaps with
+the background traffic as available. So that's lack of coordination. Another cost of inefficiency is local
+greedy resource allocation, right? Consider that routers,
+let's say we're just using standard routers,
+have them distributed. And I get this blue flow of traffic and
+I kind of allocate, it goes and it starts using these resources and
+it shows this path A,B,C,D,E. So the, let's say the green traffic or
+the red traffic starts, let's say the red traffic. And well, all those links are now full. So it got allocated this path and then the green one came in and
+got allocated that path. Now imagine if we actually knew all
+of these three flows of traffic. We could say actually if blue,
+it's an equal path down here. If you chose that one,
+the traffic from C to D and C to G would actually be much better. And this makes much better
+utilization of the overall network. So their goals with SWAN
+is a highly efficient WAN, support flexible sharing policies, different classes and so forth. And their key design elements were one,
+coordinate the sending rate of services and then two,
+centralized resource allocation. So now a little backup, a little
+primer on software defined networking. We've already gone through
+a whole lesson on SDN. But as a reminder, the current or
+the legacy way to do networking is you get these big beefy routers,
+you interconnect them, you have this control plane
+running on each of them. And then you can configure
+the routing protocols, which then do things to then
+configure the data plane or the forwarding tables. And so this is what it means
+by indirect configuration, where if I want my traffic
+to go this path, well, I have to kind of see how the routing
+protocols would behave and then kind of configure them accordingly. I can't just tell traffic to go this path. SDN, on the other hand,
+has much more streamlined switches. So we kind of showed that picture
+with the merchant silicon standard interface into them. And so it stripped out the software layer,
+just gave direct control over it. The data plane is direct configuration,
+and the control plane is centralized and
+off board. All right, so they leverage this and
+you can kind of fill in the gap and try to figure out, all right, you could probably
+see where they're going with this. So where SWAN is is they
+have all these hosts, and to understand what all
+those demands are so that they can better schedule this,
+they can send the traffic demand. They can kind of say what class
+of traffic it is and so forth. And then their controller can tell
+the individual hosts, and remember, they control the packet
+forwarding on each host. This was their excel network
+where they can do rate limiting to ensure that each of
+the hosts are behaving according to what they want to allocate
+the bandwidth according to. All right, so that's one piece. The other piece is they have all
+these data centers with interconnects between them. And now they get the topology,
+they get to traffic information, and they could do network configuration. And so think of something like open
+flow where they're programming individual flows of traffic to be
+able to kind of directly control how traffic is being forwarded
+within their wide area network. All right, but
+this raises some key design challenges. One is the scalability,
+being able to scalably computing the bandwidth allocations and
+the network configuration. Second is avoiding congestion
+during network updates. And third,
+working with limited switch memory. All right, so
+scalably computing the allocation, they have a lot more in the paper. I'll just kind of introduce what they're,
+they need to do is, really there's something
+called a multi commodity flow. And this is, and you can think of it as,
+I think it's normally talked about as like trying to get flow
+through this kind of network. And so, there's there's algorithms you can do to solve that problem to say,
+all right, we get the optimal use of this network,
+right? And so, they want it fair within a class. So different classes might be,
+we saw the background and non background. And so they do this at
+the granularity of data centers. All right, so I don't want to go over
+what is multi commodity flow and how is it solved. And I think you would kind of
+need that to understand more. So read the paper and look at the background resources
+if you're more interested in that. The next is about congestion
+during network updates, all right? So, each of this is a separate
+distributed system. You can't instantaneously
+change the configuration of all of the wide area network switches. So each one of these is a switch or
+a router in their data center, right? So let's say we want to change from flow A
+going this way and flow B going this path. We want to change it to
+flow B going this way and then flow A going to different path,
+right? So this is what we want to achieve. Now, depending on the timing,
+let's say we happen to be able to change router
+two first to be able to send instead of flow B going this path,
+it starts going this way. If that's the first one to happen, you could see there's going to be this
+congestion that occurs on that link. Likewise, if we changed router one first,
+it would have interfered with this link. What they did was they explored like, hey, what if we did it in
+a particular order and we kind of gradually
+migrated some traffic over? So let's split the traffic 50-50, for flow A, then step two will change flow B. And maybe there was enough headroom
+in this link to be able to accommodate that, and
+then we can move the rest of flow A over. All right, so
+they explore that a lot more, but that's what congestion
+free network updates is. And then the last is working
+with limited switch memory. So we saw this before. Think to yourself,
+where did you see this before? And time's up. We saw this with the Google Andromeda, where they had the virtual
+switch on each host. And they saw, well, in their case, it was the update time to
+set those big entries, and how they handled it was kind of
+offloading to their hoverboards, right? So in this case, they're saying, well, we don't need necessarily rules for
+every single flow. We just kind of need to create
+these tunnels of all the different paths that might be taken. And then we can assign different
+things to the tunnels, and only install
+the working set of tunnels. So much like in with Google is
+like they had a default that went to the hoverboards here. If it's not in this kind of working set,
+it would be controlled or handled in a kind of exception
+handling type manner. All right,
+then they go through their evaluation. So, all right, is this really beneficial? They claimed that doing standard
+routing was inefficient. So what they showed was the throughput
+they were able to achieve is near optimal and it's certainly
+better than standard routing. They went into the congestion controlled
+update, so they wanted to check how much is a given link being oversubscribed
+with different update mechanisms. So this orange line would be the standard,
+they call it one shot. I'll just try to do everything at once. And you could see that for
+a good bit of the traffic it does lead to oversubscription or
+overloaded traffic. These are showing similar things, but with SWAN it's very limited amount of oversubscription or overloaded traffic. In summary, SWAN yields a highly
+efficient and flexible wide area network, coordinates transmission into services,
+allocates resources centrally and manages transitions by using
+scratch link in memory capacity. It's highly efficient. High efficiency is key to cost
+effective cloud services, right? And because they control
+the infrastructure, there's this opportunity
+to be clean slate. That means we don't have to conform to
+any legacy protocols or things like that. We'll see that next time when we talk about Google and their edge network and interfacing to peering to ISPs. You'll see you have to work within
+the standard protocols at that point, but we'll see how they handle
+that in a scalable manner. With that, we'll stop here. All right, thanks.

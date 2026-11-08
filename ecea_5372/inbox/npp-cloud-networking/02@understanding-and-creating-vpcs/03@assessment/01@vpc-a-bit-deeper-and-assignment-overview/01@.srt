@@ -1,0 +1,1126 @@
+1
+00:00:09,186 --> 00:00:11,239
+All right, let's go ahead and get started.
+
+2
+00:00:11,239 --> 00:00:14,569
+This time we're going to
+just go through VPC again.
+
+3
+00:00:14,569 --> 00:00:18,084
+I'm going to do a little
+more complex example, and
+
+4
+00:00:18,084 --> 00:00:22,382
+then that's going to lead into
+the programming assignment.
+
+5
+00:00:22,382 --> 00:00:24,649
+So what we're going to build is,
+
+6
+00:00:24,649 --> 00:00:28,410
+we're going to walk through
+this in the GCP console.
+
+7
+00:00:28,410 --> 00:00:32,804
+And then you're going to have to do this
+in Terraform as part of the programming
+
+8
+00:00:32,804 --> 00:00:33,636
+assignment.
+
+9
+00:00:33,636 --> 00:00:38,573
+So were going to create, this is
+the demo we did the first time where
+
+10
+00:00:38,573 --> 00:00:43,526
+we created a single VPC with
+a single subnet, with a single VPN.
+
+11
+00:00:43,526 --> 00:00:48,849
+We're going to now create a second
+VPC that has two subnets,
+
+12
+00:00:48,849 --> 00:00:53,203
+and VMs in the different
+resources as follows.
+
+13
+00:00:53,203 --> 00:00:58,503
+And when you do this, what you're
+going to kind of think about is,
+
+14
+00:00:58,503 --> 00:01:03,804
+all right, which of these should
+be able to talk to each other.
+
+15
+00:01:03,804 --> 00:01:08,616
+And kind of ping each other
+using their public IP addresses,
+
+16
+00:01:08,616 --> 00:01:11,319
+and their private IP addresses.
+
+17
+00:01:11,319 --> 00:01:16,356
+Only ones that are going to have public
+IP addresses are going to be VM1 and VM2.
+
+18
+00:01:16,356 --> 00:01:23,009
+So I'll note that you're not going to have
+Internet access on VM3 or VM4, right?
+
+19
+00:01:23,009 --> 00:01:27,681
+And so even though they don't have public
+IP addresses, we'll still be able to SSH
+
+20
+00:01:27,681 --> 00:01:30,707
+into them, because we're
+going to use the gcloud utility.
+
+21
+00:01:30,707 --> 00:01:35,221
+All right, so this is what we're building,
+so let me go through and
+
+22
+00:01:35,221 --> 00:01:38,247
+try to do this as quick
+as I can in the console.
+
+23
+00:01:38,247 --> 00:01:39,237
+All right, so
+
+24
+00:01:39,237 --> 00:01:44,374
+the first thing we're going to do is
+create these VPC networks, all right?
+
+25
+00:01:44,374 --> 00:01:48,102
+Create a VPC network,
+I'm going to call it vpc1.
+
+26
+00:01:50,499 --> 00:01:55,586
+And I'm going to create the first subnet,
+sub1.
+
+27
+00:01:55,586 --> 00:02:00,812
+And I'm going to put it in us-central1,
+and
+
+28
+00:02:00,812 --> 00:02:09,018
+give it an IP address range
+of 10.0.1.0/24, all right?
+
+29
+00:02:09,018 --> 00:02:15,386
+We'll come back to the firewall rules and
+create those separately.
+
+30
+00:02:15,386 --> 00:02:18,634
+So let me create vpc1.
+
+31
+00:02:21,930 --> 00:02:27,681
+And we'll just have to kind of
+wait a little bit for that.
+
+32
+00:02:27,681 --> 00:02:32,568
+One of the things I can do
+is in a different tab, so
+
+33
+00:02:32,568 --> 00:02:38,783
+we can actually,
+create vpc2 while vpc1 is being created.
+
+34
+00:02:38,783 --> 00:02:43,009
+All right, so I'll say vpc2,
+
+35
+00:02:43,009 --> 00:02:47,548
+I'm going to create 2 new subnets,
+
+36
+00:02:47,548 --> 00:02:51,000
+sub 2, us-central1.
+
+37
+00:02:51,000 --> 00:02:55,652
+And I'm going to give it
+IP range 10.0.2.0/24.
+
+38
+00:02:58,169 --> 00:03:01,842
+And we'll come back to the firewall rules.
+
+39
+00:03:01,842 --> 00:03:03,165
+I will create that.
+
+40
+00:03:06,276 --> 00:03:06,971
+There we go.
+
+41
+00:03:06,971 --> 00:03:11,966
+So, vpc1, you see, is created,
+let me add the, and
+
+42
+00:03:11,966 --> 00:03:16,215
+we can see that it has one subnet,
+excellent.
+
+43
+00:03:16,215 --> 00:03:24,172
+And let me create firewall rules for it.
+
+44
+00:03:24,172 --> 00:03:31,842
+All right,
+I'm going to call this firewall fwvpc1,
+
+45
+00:03:31,842 --> 00:03:35,861
+apply it to VPC network 1.
+
+46
+00:03:35,861 --> 00:03:41,208
+All instances in the network,
+
+47
+00:03:41,208 --> 00:03:45,937
+all incoming traffic, and
+
+48
+00:03:45,937 --> 00:03:51,282
+I'm going to allow ports 22 and
+
+49
+00:03:51,282 --> 00:03:53,955
+1234, and
+
+50
+00:03:53,955 --> 00:04:00,342
+then protocols ICMP, create that.
+
+51
+00:04:00,342 --> 00:04:05,374
+Now, let me come back and
+I see vpc2 is created.
+
+52
+00:04:05,374 --> 00:04:09,969
+Looks like I forgot to create subnet 3,
+
+53
+00:04:09,969 --> 00:04:14,572
+so let me add this second subnet in this.
+
+54
+00:04:14,572 --> 00:04:20,808
+So I'll call it sub 3, and
+also be in us-central1.
+
+55
+00:04:23,149 --> 00:04:24,120
+Right.
+
+56
+00:04:26,615 --> 00:04:32,865
+And IP address range will be 10.0.3.0/24.
+
+57
+00:04:34,733 --> 00:04:39,630
+All right, so
+added a new subnet there, vpc1,
+
+58
+00:04:39,630 --> 00:04:44,414
+we created these firewall rules,
+excellent.
+
+59
+00:04:44,414 --> 00:04:48,909
+Vpc2, while that's getting created,
+
+60
+00:04:48,909 --> 00:04:53,283
+let me create the firewall rules for it.
+
+61
+00:04:55,876 --> 00:05:01,407
+All right, firewall vpc2.
+
+62
+00:05:04,111 --> 00:05:09,606
+And I will apply it to all instances
+
+63
+00:05:09,606 --> 00:05:16,057
+in the network, source is everything.
+
+64
+00:05:16,057 --> 00:05:20,951
+And then I'll do specific ports,
+
+65
+00:05:20,951 --> 00:05:23,818
+and other ICMP, and
+
+66
+00:05:23,818 --> 00:05:28,895
+specific ports 22 and 1234.
+
+67
+00:05:28,895 --> 00:05:36,345
+All right, so now vpc1 should be set up,
+vpc2 should be set up,
+
+68
+00:05:38,739 --> 00:05:44,234
+With their firewall rules,
+there we go, and subnets.
+
+69
+00:05:44,234 --> 00:05:47,735
+So let's make sure we got
+2 subnets in there, yep.
+
+70
+00:05:47,735 --> 00:05:50,929
+All right, so
+now we can go start creating the VMs.
+
+71
+00:05:55,467 --> 00:06:01,227
+All right, so let me create an instance,
+I'm going to put vm1.
+
+72
+00:06:03,034 --> 00:06:07,748
+I'm going to make it an e2-micro.
+
+73
+00:06:09,636 --> 00:06:16,524
+And the main thing I'm going to
+change is the networking.
+
+74
+00:06:18,378 --> 00:06:23,329
+And I'm going to make it, so
+
+75
+00:06:23,329 --> 00:06:28,063
+that it's using vpc1.
+
+76
+00:06:28,063 --> 00:06:31,123
+All right, and then there's only
+one subnet, so I'm good there.
+
+77
+00:06:31,123 --> 00:06:36,568
+This one will get
+an external IPV4 address.
+
+78
+00:06:36,568 --> 00:06:38,548
+So we're good there.
+
+79
+00:06:38,548 --> 00:06:42,175
+While it's creating,
+we'll come into a different tab,
+
+80
+00:06:42,175 --> 00:06:44,996
+create these at the same time, create VM2.
+
+81
+00:06:48,769 --> 00:06:50,475
+All right, create instance.
+
+82
+00:06:52,878 --> 00:06:57,788
+And part of why doing this,
+you can now start
+
+83
+00:06:57,788 --> 00:07:02,188
+appreciating Terraform a lot better.
+
+84
+00:07:04,108 --> 00:07:08,508
+Especially when you get
+into the more complex or
+
+85
+00:07:08,508 --> 00:07:16,104
+powerful capabilities like the looping,
+and variables, and things like that.
+
+86
+00:07:16,104 --> 00:07:19,725
+All right, let me go in and
+do the networking.
+
+87
+00:07:27,531 --> 00:07:30,848
+Network interface is vpc2,
+
+88
+00:07:30,848 --> 00:07:35,761
+I'll put this one in subnet 2, all right?
+
+89
+00:07:35,761 --> 00:07:37,895
+This one also gets an external IP address.
+
+90
+00:07:37,895 --> 00:07:42,144
+I think this would be a good time
+to show this equivalent code, yeah,
+
+91
+00:07:42,144 --> 00:07:44,868
+you can see one of
+the options is Terraform.
+
+92
+00:07:44,868 --> 00:07:52,670
+And so this is code that has
+all these things filled in.
+
+93
+00:07:52,670 --> 00:07:56,404
+Now, you don't need all these,
+a lot of these are kind of defaults, and
+
+94
+00:07:56,404 --> 00:08:00,458
+that's why you'll see the ones I'm
+showing are much smaller, but, But
+
+95
+00:08:00,458 --> 00:08:05,155
+if you want to see how
+something actually works,
+
+96
+00:08:05,155 --> 00:08:08,679
+well, just you create it in here and
+
+97
+00:08:08,679 --> 00:08:13,502
+then look at how it was
+set inside of the console.
+
+98
+00:08:13,502 --> 00:08:18,855
+All right, so created vm1 is there,
+2 is creating.
+
+99
+00:08:18,855 --> 00:08:21,601
+Let me create vm3.
+
+100
+00:08:21,601 --> 00:08:28,298
+And if we go back to our diagram,
+we can see it's in subnet 2, all right?
+
+101
+00:08:30,571 --> 00:08:34,520
+So this particular one, vm3 and
+
+102
+00:08:34,520 --> 00:08:39,607
+vm4 will not have external IP addresses.
+
+103
+00:08:39,607 --> 00:08:45,013
+So when I come down to the networking
+
+104
+00:08:45,013 --> 00:08:49,163
+options, I can say thing.
+
+105
+00:08:49,163 --> 00:08:50,201
+I'll show you.
+
+106
+00:08:50,201 --> 00:08:55,344
+Whoops, it's not those vpc2 and
+
+107
+00:08:55,344 --> 00:09:01,202
+it's in subnet 2, that's correct.
+
+108
+00:09:01,202 --> 00:09:05,697
+And I don't want an external IP address.
+
+109
+00:09:05,697 --> 00:09:08,520
+Create that.
+
+110
+00:09:08,520 --> 00:09:13,562
+And then over here I'm
+going to create vm4.
+
+111
+00:09:17,511 --> 00:09:21,163
+Medium, that's going to be a micro.
+
+112
+00:09:21,163 --> 00:09:25,058
+Let me go into the best
+options of networking.
+
+113
+00:09:30,256 --> 00:09:35,513
+Put it in vpc2, subnet3,
+
+114
+00:09:35,513 --> 00:09:43,842
+and it will also not get
+an external address.
+
+115
+00:09:43,842 --> 00:09:45,083
+And I will create that.
+
+116
+00:09:45,083 --> 00:09:47,838
+All right, so now we just have to wait.
+
+117
+00:09:51,030 --> 00:09:55,711
+And since vm1 and vm2 were already
+created, let me SSH into them.
+
+118
+00:09:55,711 --> 00:09:58,960
+All right, so let me,
+
+119
+00:09:58,960 --> 00:10:04,953
+I'll pull this open in a separate place.
+
+120
+00:10:04,953 --> 00:10:07,639
+There we go.
+
+121
+00:10:07,639 --> 00:10:11,576
+Let me open a new tab.
+
+122
+00:10:11,576 --> 00:10:15,519
+So this should be SSH into vm1.
+
+123
+00:10:19,783 --> 00:10:23,158
+It's being super slow.
+
+124
+00:10:23,158 --> 00:10:29,526
+So let me cancel that and let me actually
+go through the Google interface.
+
+125
+00:10:29,526 --> 00:10:33,414
+I don't know what's going on,
+but we'll just go through.
+
+126
+00:10:36,039 --> 00:10:37,628
+The console.
+
+127
+00:10:40,517 --> 00:10:49,257
+All right, so I can SSH into each
+of these and then just wait.
+
+128
+00:10:49,257 --> 00:10:50,175
+Authorize that.
+
+129
+00:11:00,838 --> 00:11:01,622
+Authorize that.
+
+130
+00:11:05,302 --> 00:11:05,950
+All right.
+
+131
+00:11:14,998 --> 00:11:18,224
+Don't know why it's taking so long.
+
+132
+00:11:18,224 --> 00:11:24,859
+Well, in the meantime,
+I can do things like look at my address.
+
+133
+00:11:24,859 --> 00:11:25,366
+Great.
+
+134
+00:11:25,366 --> 00:11:27,799
+10.0.2.2.
+
+135
+00:11:27,799 --> 00:11:32,695
+That's what I expect within this subnet,
+
+136
+00:11:32,695 --> 00:11:37,732
+you can see these two
+are in the same subnet.
+
+137
+00:11:37,732 --> 00:11:40,747
+So let me ping that guy from vm3.
+
+138
+00:11:43,971 --> 00:11:49,394
+So from vm2, I'm going to ping vm3.
+
+139
+00:11:49,394 --> 00:11:51,243
+Great, it worked.
+
+140
+00:11:51,243 --> 00:11:56,103
+From vm2, I'm going to try to ping vm4.
+
+141
+00:11:56,103 --> 00:11:58,536
+So it's in a different subnet.
+
+142
+00:11:58,536 --> 00:12:00,133
+Let's see if that works.
+
+143
+00:12:03,032 --> 00:12:06,900
+All right, look like that works.
+
+144
+00:12:06,900 --> 00:12:12,048
+And what I want to do is try to ping vm1,
+but
+
+145
+00:12:12,048 --> 00:12:17,911
+if it's not even being
+able to SSH into concerned
+
+146
+00:12:17,911 --> 00:12:25,503
+it's something wrong with the vm
+starting in the first place.
+
+147
+00:12:25,503 --> 00:12:26,404
+But we could try it.
+
+148
+00:12:26,404 --> 00:12:30,349
+Let's get its internal IP address.
+
+149
+00:12:30,349 --> 00:12:36,046
+So we're again looking at this picture.
+
+150
+00:12:36,046 --> 00:12:42,463
+So can I just address 10.0.1., whatever.
+
+151
+00:12:42,463 --> 00:12:44,911
+Well, we will see.
+
+152
+00:12:44,911 --> 00:12:52,144
+So let me ping that and
+we can see it's not letting it through.
+
+153
+00:12:52,144 --> 00:12:55,495
+Well, that's because
+they're in different vpcs.
+
+154
+00:12:55,495 --> 00:12:57,701
+So now let me.
+
+155
+00:12:57,701 --> 00:13:02,668
+Looks like this is making progress.
+
+156
+00:13:02,668 --> 00:13:06,169
+Go back to the console and
+
+157
+00:13:06,169 --> 00:13:10,838
+get its external IP address, and
+
+158
+00:13:10,838 --> 00:13:16,022
+then go back into vm2 and ping vm1.
+
+159
+00:13:16,022 --> 00:13:19,771
+All right, looks like vm1 is
+completely just non-responsive.
+
+160
+00:13:22,518 --> 00:13:24,246
+So good fun.
+
+161
+00:13:24,246 --> 00:13:29,432
+So one thing I could do is I can reset it,
+
+162
+00:13:29,432 --> 00:13:33,214
+see if that helps anything.
+
+163
+00:13:37,012 --> 00:13:41,361
+Never had this happen before.
+
+164
+00:13:43,074 --> 00:13:46,143
+But makes sense.
+
+165
+00:13:46,143 --> 00:13:50,965
+Infrastructure is not perfect,
+so how do you cope with it?
+
+166
+00:13:50,965 --> 00:13:56,489
+Is you carry on, you debug,
+you delete things, you create them.
+
+167
+00:13:56,489 --> 00:14:00,362
+Whatever you can do.
+
+168
+00:14:07,061 --> 00:14:12,669
+Start the pinging, and
+maybe it'll show when it comes up.
+
+169
+00:14:15,845 --> 00:14:20,477
+And if not, let me.
+
+170
+00:14:24,102 --> 00:14:25,720
+Delete vm1.
+
+171
+00:14:31,782 --> 00:14:33,975
+And in the meantime,
+I will create a new one.
+
+172
+00:14:33,975 --> 00:14:35,464
+I'll call it vm5.
+
+173
+00:14:40,723 --> 00:14:43,906
+I will put it in the same region.
+
+174
+00:14:43,906 --> 00:14:46,815
+It's going to be a micro.
+
+175
+00:14:46,815 --> 00:14:52,331
+I'm going to have
+everything else the same.
+
+176
+00:14:52,331 --> 00:14:54,036
+Go back to the networking.
+
+177
+00:14:56,783 --> 00:15:01,702
+going to put it in to vpc1, sub1,
+
+178
+00:15:01,702 --> 00:15:06,622
+give it an external address, and
+
+179
+00:15:06,622 --> 00:15:11,204
+we're good to go, all right?
+
+180
+00:15:11,204 --> 00:15:16,676
+So we're creating vm5, which is basically
+
+181
+00:15:16,676 --> 00:15:22,300
+just going to be vm1, but
+I need to recreate it.
+
+182
+00:15:24,699 --> 00:15:27,690
+All right, so vm1 has been deleted.
+
+183
+00:15:27,690 --> 00:15:31,139
+vm5 looks like it's up now.
+
+184
+00:15:31,139 --> 00:15:34,555
+Let me ping.
+
+185
+00:15:34,555 --> 00:15:37,843
+Oops, not from that one from here.
+
+186
+00:15:42,489 --> 00:15:43,242
+Ping.
+
+187
+00:15:47,512 --> 00:15:51,362
+And is not going through.
+
+188
+00:15:51,362 --> 00:15:59,982
+All right, so one potential thing
+that this could be is it could be.
+
+189
+00:15:59,982 --> 00:16:04,561
+Firewall issue,
+that is not letting SSH through, or
+
+190
+00:16:04,561 --> 00:16:07,933
+ping through, or anything like that.
+
+191
+00:16:07,933 --> 00:16:12,452
+So, what I could do is
+I can go to my VPCs,
+
+192
+00:16:17,573 --> 00:16:22,208
+Look at VPC1, look at my firewall rules,
+
+193
+00:16:22,208 --> 00:16:26,214
+and see if there's anything wrong.
+
+194
+00:16:26,214 --> 00:16:33,056
+All right, So that's it.
+
+195
+00:16:33,056 --> 00:16:35,610
+So it's filtering incorrectly.
+
+196
+00:16:35,610 --> 00:16:39,955
+I said, so this should be,
+
+197
+00:16:42,337 --> 00:16:46,132
+0.0.0.0/0.
+
+198
+00:16:46,132 --> 00:16:53,562
+So I'm allowing all traffic,
+not, 0.0.0/24.
+
+199
+00:16:55,480 --> 00:17:03,156
+All right, sorry you had to see
+me kind of struggle through this.
+
+200
+00:17:03,156 --> 00:17:07,476
+But now we can ping and
+gray to start going through.
+
+201
+00:17:07,476 --> 00:17:10,478
+So you can go and
+test your connectivity, but
+
+202
+00:17:10,478 --> 00:17:14,513
+the firewall is somewhere you're
+going to be wanting to look.
+
+203
+00:17:14,513 --> 00:17:20,484
+All right, with all those created, what we
+did was we built this infrastructure and
+
+204
+00:17:20,484 --> 00:17:23,966
+we tested some of the connectivity.
+
+205
+00:17:23,966 --> 00:17:29,206
+Now, let me double check from VM2 to VM1.
+
+206
+00:17:29,206 --> 00:17:37,326
+And see that again because
+the firewall was blocking everything.
+
+207
+00:17:37,326 --> 00:17:41,342
+But let me try that
+internal address again.
+
+208
+00:17:41,342 --> 00:17:46,906
+So there is 10.0.1.3.
+
+209
+00:17:49,106 --> 00:17:53,494
+So ping, and as expected,
+it shouldn't work
+
+210
+00:17:53,494 --> 00:17:58,210
+because they're in two
+completely different VPCs.
+
+211
+00:17:58,210 --> 00:18:06,646
+So the private IP addresses
+aren't beyond those VPCs.
+
+212
+00:18:08,146 --> 00:18:13,790
+All right, so now getting into
+the programming assignment is basically
+
+213
+00:18:13,790 --> 00:18:20,526
+creating that infrastructure, this exact
+diagram, but doing it in terraform.
+
+214
+00:18:20,526 --> 00:18:23,990
+And I'll note that we make
+dimension to call this,
+
+215
+00:18:23,990 --> 00:18:26,774
+this is just the shortened name VPC1.
+
+216
+00:18:26,774 --> 00:18:29,862
+What we used in that console,
+do something more descriptive.
+
+217
+00:18:29,862 --> 00:18:34,633
+I think we specify exactly
+what it should be,
+
+218
+00:18:34,633 --> 00:18:41,929
+TF-mod2,-lab1-VPC1, put a prefix
+in front of it, I think.
+
+219
+00:18:41,929 --> 00:18:47,893
+I would highly recommend using the demo
+code that we provide as the starter,
+
+220
+00:18:47,893 --> 00:18:49,672
+and then expand it.
+
+221
+00:18:49,672 --> 00:18:54,595
+So how we'll assess is you'll
+create your terraform code and
+
+222
+00:18:54,595 --> 00:18:59,243
+when you believe it's correct,
+run terraform, apply.
+
+223
+00:18:59,243 --> 00:19:01,717
+And there's going to be two things.
+
+224
+00:19:01,717 --> 00:19:06,339
+We're going to have you capture
+all the IP addresses and
+
+225
+00:19:06,339 --> 00:19:08,915
+you know how to get those now.
+
+226
+00:19:08,915 --> 00:19:12,675
+You're going to also run a command,
+
+227
+00:19:12,675 --> 00:19:17,221
+terraform show --json, output json.
+
+228
+00:19:17,221 --> 00:19:20,555
+To make it look nice, multiple lines,
+
+229
+00:19:20,555 --> 00:19:26,226
+run it through this utility, jq and
+output that to a file, right?
+
+230
+00:19:27,926 --> 00:19:33,621
+You're going to then perform some manual
+connectivity tests much as we did.
+
+231
+00:19:33,621 --> 00:19:38,036
+We describe each of these in the write up,
+
+232
+00:19:38,036 --> 00:19:42,841
+you're going to perform
+specific jq queries.
+
+233
+00:19:42,841 --> 00:19:50,197
+Also jq is just a command line utility
+that you can run and pipe in the json.
+
+234
+00:19:50,197 --> 00:19:52,876
+And so we show you exactly how to do that.
+
+235
+00:19:52,876 --> 00:19:58,294
+And then you want to note when that output
+of all these connectivity tests and
+
+236
+00:19:58,294 --> 00:20:01,049
+the jq queries that we tell you to run.
+
+237
+00:20:01,049 --> 00:20:04,004
+And then answer some questions
+on the Coursera site.
+
+238
+00:20:04,004 --> 00:20:07,366
+So it's like a quiz that you would do.
+
+239
+00:20:07,366 --> 00:20:13,046
+Don't forget to run terraform,
+destroy once you're all done.
+
+240
+00:20:13,046 --> 00:20:18,926
+There's an in development kind of
+utility that we're creating.
+
+241
+00:20:18,926 --> 00:20:25,125
+You're welcome to try it out, but
+it's not really robust just yet.
+
+242
+00:20:25,125 --> 00:20:30,798
+But how you would run it is,
+Python3, run, there's cloud_extract.
+
+243
+00:20:30,798 --> 00:20:35,456
+Specify that you want this for
+module 2, and
+
+244
+00:20:35,456 --> 00:20:40,490
+provide it your terraform show output,
+right?
+
+245
+00:20:40,490 --> 00:20:44,967
+And what it'll do is it'll check
+the structure, and say, all right, yeah.
+
+246
+00:20:44,967 --> 00:20:49,686
+You created the correct VMs in
+the correct subnets and the correct VPCs.
+
+247
+00:20:49,686 --> 00:20:53,900
+It'll also SSH into various VMs, and
+
+248
+00:20:53,900 --> 00:20:58,252
+perform a connectivity test for them.
+
+249
+00:20:58,252 --> 00:21:04,886
+Still in development, but
+something you can try if you want.
+
+250
+00:21:04,886 --> 00:21:08,238
+So with that, we're going to end here.
+
+251
+00:21:08,238 --> 00:21:14,426
+And again, don't forget to shut down
+all your resources, terraform destroy.
+
+252
+00:21:15,486 --> 00:21:18,118
+And with that,
+we'll see you next time, thanks.

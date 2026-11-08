@@ -1,0 +1,614 @@
+1
+00:00:07,560 --> 00:00:09,262
+All right, let's go ahead and get started.
+
+2
+00:00:09,262 --> 00:00:14,136
+So this time we're going to
+again go into an academic paper,
+
+3
+00:00:14,136 --> 00:00:17,758
+this time looking at Akamai's network.
+
+4
+00:00:17,758 --> 00:00:23,290
+So Akamai was an early
+pioneer in the CDN space,
+
+5
+00:00:23,290 --> 00:00:29,376
+and it's really useful to
+look back historically,
+
+6
+00:00:29,376 --> 00:00:32,868
+on their work describing it.
+
+7
+00:00:32,868 --> 00:00:36,951
+So obviously I'm sure it's
+changed a lot since then, but
+
+8
+00:00:36,951 --> 00:00:42,204
+this is definitely really,
+really worthwhile paper to read.
+
+9
+00:00:42,204 --> 00:00:46,394
+All right, so this was published back in
+
+10
+00:00:46,394 --> 00:00:51,004
+2010 after they've grown quite a bit.
+
+11
+00:00:51,004 --> 00:00:56,264
+I think they were founded at
+least a decade before that.
+
+12
+00:00:57,684 --> 00:01:02,864
+All right, so again,
+I'll provide this on the Coursera site.
+
+13
+00:01:04,884 --> 00:01:11,944
+So they kind of talk about
+why the CDNs are needed.
+
+14
+00:01:13,124 --> 00:01:17,592
+They kind of put in the context
+of Internet applications, and
+
+15
+00:01:17,592 --> 00:01:22,497
+they said its performance is directly
+tied to key business metrics
+
+16
+00:01:22,497 --> 00:01:27,364
+such as an application's adoption and
+site conversion rates.
+
+17
+00:01:27,364 --> 00:01:32,944
+So they ran an experiment where
+site visitors were partitioned.
+
+18
+00:01:35,084 --> 00:01:37,444
+This was an e-commerce site.
+
+19
+00:01:37,444 --> 00:01:42,374
+Half of them were directed to the site
+through Akamai's CDN network and
+
+20
+00:01:42,374 --> 00:01:47,484
+the other half were sent directly
+to the site's origin servers.
+
+21
+00:01:47,484 --> 00:01:52,016
+And their finding was that
+through Akamai the users were
+
+22
+00:01:52,016 --> 00:01:55,682
+15% more likely to complete a purchase and
+
+23
+00:01:55,682 --> 00:02:00,984
+9% less likely to abandon
+the site after just one page.
+
+24
+00:02:00,984 --> 00:02:05,856
+So there's a direct business
+benefit to use in this.
+
+25
+00:02:05,856 --> 00:02:11,022
+Another study, across all their customers,
+they saw that annual revenue
+
+26
+00:02:11,022 --> 00:02:16,680
+increases of 200,000 to over three
+million that these companies directly
+
+27
+00:02:16,680 --> 00:02:22,344
+attributed to the improved performance and
+reliability of their applications.
+
+28
+00:02:24,484 --> 00:02:28,869
+They also go through in the paper
+with their view of the problem with
+
+29
+00:02:28,869 --> 00:02:30,052
+the Internet.
+
+30
+00:02:30,052 --> 00:02:34,231
+And a lot of these are going to be
+exactly what we talked about in
+
+31
+00:02:34,231 --> 00:02:39,044
+the last lesson when we just
+introduced the concept of a CDN.
+
+32
+00:02:39,044 --> 00:02:42,180
+The reach of any single
+network is limited.
+
+33
+00:02:42,180 --> 00:02:46,916
+Pairing point congestion,
+inefficient routing protocols,
+
+34
+00:02:46,916 --> 00:02:51,830
+unreliable networks,
+inefficient communication protocols,
+
+35
+00:02:51,830 --> 00:02:56,408
+scalability of the backend and
+application limitations.
+
+36
+00:02:56,408 --> 00:03:00,664
+So like supporting different
+browsers if they can help with that.
+
+37
+00:03:00,664 --> 00:03:03,653
+So most of these are the top ones,
+are all about the Internet,
+
+38
+00:03:03,653 --> 00:03:05,744
+this is a little different.
+
+39
+00:03:05,744 --> 00:03:10,003
+But they had one table just
+to really quantify this, so
+
+40
+00:03:10,003 --> 00:03:13,615
+the distance between the server and
+the user,
+
+41
+00:03:13,615 --> 00:03:17,873
+they broke it down into local
+regional cross content or
+
+42
+00:03:17,873 --> 00:03:24,884
+multi content with network roundtrip time
+increasing, which makes a lot of sense.
+
+43
+00:03:24,884 --> 00:03:28,220
+And then they measured the packet loss and
+
+44
+00:03:28,220 --> 00:03:32,796
+then the impact on the throughput
+that's obtainable and
+
+45
+00:03:32,796 --> 00:03:38,184
+then how long it would take to
+download four gigs of data.
+
+46
+00:03:38,184 --> 00:03:43,524
+All right, so, certainly local
+gets much better performance.
+
+47
+00:03:45,584 --> 00:03:51,020
+So their network, you know,
+at the time was 61,000 servers
+
+48
+00:03:51,020 --> 00:03:56,564
+located across 1,000 networks
+in 70 countries worldwide.
+
+49
+00:03:59,064 --> 00:04:02,914
+And their architecture looks like this,
+
+50
+00:04:02,914 --> 00:04:07,974
+where this is to be expected
+if you saw the last lesson,
+
+51
+00:04:07,974 --> 00:04:11,494
+they have a bunch of edge servers, but
+
+52
+00:04:11,494 --> 00:04:17,364
+then they also have basically
+created a hierarchy of servers.
+
+53
+00:04:17,364 --> 00:04:22,564
+So it wasn't the edge servers would go
+directly to the origin and cache it there.
+
+54
+00:04:22,564 --> 00:04:25,641
+Theirs is a lot more complicated or
+
+55
+00:04:25,641 --> 00:04:31,688
+intelligent where they have this
+kind of hierarchy of servers, and
+
+56
+00:04:31,688 --> 00:04:37,510
+then they have this kind of monitoring and
+management system.
+
+57
+00:04:37,510 --> 00:04:43,166
+And so, as we said, it's more than just
+obtain or fetch content and then cache it.
+
+58
+00:04:43,166 --> 00:04:49,434
+There could be sharing of content
+across the various servers.
+
+59
+00:04:51,254 --> 00:04:54,750
+All right, so
+they went through some use cases.
+
+60
+00:04:54,750 --> 00:05:01,274
+So one was content delivery
+during a cable cut.
+
+61
+00:05:01,274 --> 00:05:05,949
+So the origin server was
+experiencing a lot of
+
+62
+00:05:05,949 --> 00:05:10,754
+packet loss for a several day period.
+
+63
+00:05:10,754 --> 00:05:16,686
+And obtaining that
+content through Akamai's
+
+64
+00:05:16,686 --> 00:05:21,254
+network basically showed no loss.
+
+65
+00:05:22,394 --> 00:05:27,027
+That's quite powerful that they could
+protect against these physical failures
+
+66
+00:05:27,027 --> 00:05:27,714
+like that.
+
+67
+00:05:28,894 --> 00:05:32,814
+Another use case they talk
+about is live video streaming.
+
+68
+00:05:32,814 --> 00:05:37,569
+So it's not just about content
+distribution in terms of caching
+
+69
+00:05:37,569 --> 00:05:42,499
+near the edge, but it's also they
+have this distribution network
+
+70
+00:05:42,499 --> 00:05:47,254
+that let's say a live video is
+being streamed from down here.
+
+71
+00:05:47,254 --> 00:05:48,946
+It can go to this parent,
+
+72
+00:05:48,946 --> 00:05:53,582
+the parent can send it to each of
+the edge servers simultaneously.
+
+73
+00:05:53,582 --> 00:05:58,124
+And then those edge servers can
+send it to the end users, so
+
+74
+00:05:58,124 --> 00:06:04,214
+it can have this multicasting
+capability within their network.
+
+75
+00:06:04,214 --> 00:06:07,382
+Third use case they talk about
+is application delivery.
+
+76
+00:06:07,382 --> 00:06:13,357
+So even when content is not cacheable,
+it still has benefits they go through,
+
+77
+00:06:13,357 --> 00:06:16,796
+and they did things
+like path optimization,
+
+78
+00:06:16,796 --> 00:06:21,794
+like leveraging something called
+resilient overlay networks.
+
+79
+00:06:23,224 --> 00:06:28,191
+I'm going to put a link to a paper called
+resilient overlay networks that was from
+
+80
+00:06:28,191 --> 00:06:29,704
+SOSP in 2001.
+
+81
+00:06:29,704 --> 00:06:34,966
+And it's basically if you can put
+an overlay on top of the Internet,
+
+82
+00:06:34,966 --> 00:06:37,181
+let's see if this picture,
+
+83
+00:06:37,181 --> 00:06:42,651
+let's say there's a network problem
+somewhere right here, right?
+
+84
+00:06:42,651 --> 00:06:46,478
+So in between this edge server and
+this parent,
+
+85
+00:06:46,478 --> 00:06:50,394
+the direct path in the Internet is broken.
+
+86
+00:06:50,394 --> 00:06:54,157
+So what resilient overlay
+networks does is, well,
+
+87
+00:06:54,157 --> 00:06:59,034
+this edge server could have a path
+to this parent server down here.
+
+88
+00:06:59,034 --> 00:07:04,417
+This parent server could have a connection
+to this parent, and now they've
+
+89
+00:07:04,417 --> 00:07:09,514
+been able to bypass this network
+issue that they have no control over.
+
+90
+00:07:09,514 --> 00:07:11,954
+It's just the Internet.
+
+91
+00:07:11,954 --> 00:07:14,562
+And so that's the concept of
+resilient overlay networking.
+
+92
+00:07:14,562 --> 00:07:21,744
+That's what they could take
+advantage of with their network.
+
+93
+00:07:21,744 --> 00:07:26,672
+They can also deal with packet
+loss reduction or improve or
+
+94
+00:07:26,672 --> 00:07:32,520
+reduce packet loss by using things
+like forward error correction.
+
+95
+00:07:32,520 --> 00:07:40,456
+So putting extra information into
+each packet which is not standard.
+
+96
+00:07:40,456 --> 00:07:44,992
+The applications wouldn't understand it,
+but if they could,
+
+97
+00:07:44,992 --> 00:07:50,368
+as it's traversing the Internet,
+put forward error correction onto it and
+
+98
+00:07:50,368 --> 00:07:55,324
+then only locally strip that off,
+that can improve the loss.
+
+99
+00:07:55,324 --> 00:07:59,525
+They can optimize the transport
+protocols like TCP,
+
+100
+00:07:59,525 --> 00:08:02,700
+like pooling persistent connections,
+
+101
+00:08:02,700 --> 00:08:07,340
+doing retransmissions based
+on network observations.
+
+102
+00:08:07,340 --> 00:08:09,764
+So you can really optimize TCP.
+
+103
+00:08:09,764 --> 00:08:15,074
+Actually that would be a pretty cool
+thing to kind of look into a little bit.
+
+104
+00:08:15,074 --> 00:08:20,989
+Just try on your own kind of improvements
+that you can get from like just pooling
+
+105
+00:08:20,989 --> 00:08:28,394
+connections where you don't have to do the
+TCP connection and tear down every time.
+
+106
+00:08:28,394 --> 00:08:33,000
+They could do things like
+application optimization,
+
+107
+00:08:33,000 --> 00:08:37,214
+parse and prefetch content and
+things like that.
+
+108
+00:08:38,383 --> 00:08:42,020
+So like even if the application
+is not cacheable,
+
+109
+00:08:42,020 --> 00:08:45,668
+it may be referencing some
+content that would be.
+
+110
+00:08:45,668 --> 00:08:48,243
+And so they can go and prefetch it.
+
+111
+00:08:50,503 --> 00:08:57,775
+Last thing to note is we've previously
+talked about anycast based load balancing.
+
+112
+00:08:57,775 --> 00:09:02,563
+In this paper they talk about that
+they use DNS based load balancing.
+
+113
+00:09:03,884 --> 00:09:12,564
+So typically an end user wants to go to
+some content provider like cnn.com, right?
+
+114
+00:09:12,564 --> 00:09:18,524
+So how it needs to do that is
+it needs to go do a DNS lookup.
+
+115
+00:09:18,524 --> 00:09:23,072
+It go to the root server,
+which Akamai would be
+
+116
+00:09:23,072 --> 00:09:27,867
+the server that maintains that domain,
+right?
+
+117
+00:09:27,867 --> 00:09:31,506
+We would go to the Akamai servers and
+
+118
+00:09:31,506 --> 00:09:36,304
+the Akamai servers would
+be able to direct.
+
+119
+00:09:36,304 --> 00:09:43,657
+So like this global server can
+know where the end user is and
+
+120
+00:09:43,657 --> 00:09:51,064
+direct them to this regional and
+nearby Akamai customer.
+
+121
+00:09:51,064 --> 00:09:56,660
+So all of these will look up the IP
+address of the requester and
+
+122
+00:09:56,660 --> 00:10:01,944
+say which DNS server is closest to you and
+get you to that.
+
+123
+00:10:04,604 --> 00:10:08,916
+All right, there's a lot more in
+the paper, like how do they do analysis,
+
+124
+00:10:08,916 --> 00:10:10,748
+how do they handle failure?
+
+125
+00:10:10,748 --> 00:10:13,264
+Lots of data on end user benefits.
+
+126
+00:10:14,284 --> 00:10:18,228
+But with that I'll leave
+you to reading the paper.
+
+127
+00:10:18,228 --> 00:10:20,264
+Definitely worth reading.
+
+128
+00:10:20,264 --> 00:10:22,304
+And with that we'll stop here.
+
+129
+00:10:22,304 --> 00:10:23,051
+All right, thanks.

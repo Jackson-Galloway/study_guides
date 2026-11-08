@@ -1,0 +1,46 @@
+All right, we're really making our
+way through the network systems and understanding all of these different
+layers and the functionality of each. So now, we're going to start
+a new module on network security. So we're going to go back and
+revisit some of these layers, and see some of the problems
+that we didn't address yet. And we're going to talk about
+some of the solutions for them. So, network security is addressing the
+fact that communication is between parties that are across a medium that may or
+may not be under their control. So malicious parties can attack
+the communication in various locations. And we'll get into some examples of that,
+but in thinking about all of kind
+of how they might do that and how we might need to solve it, think about some of the core
+properties that we're shooting for. And so, shown here is this framework. For information security,
+typically the three pillars, sometimes shown as five pillars
+of information security. So we have confidentiality, which is saying that the information
+is only visible to those intended. Integrity, that is the data
+has not been modified or corrupted, and then, availability, that the information can be accessed. So an example 1 of where
+these properties might be not upheld is let's look at
+the network layer data plane. So let's say company two, or a company
+has 2 sites and they have employees at these different sites, and they want to
+share information with each other. If an attacker can see this traffic, they'll get access to that
+company's secret data. So the solution we're going to talk
+about is something called IPsec. A second example happens in
+the network control plane. Now, BGP, if you recall, communicates the paths
+to reach IP prefixes. So now, if an attacker can inject
+fake packet or fake paths, it can get traffic directed to it,
+denying service, changing messages, inspecting traffic. And so, the solution we're going to discuss
+is going to be something called RPKI. And so, you can see that this
+situation in this example down below, where continuing our use of YouTube as our
+example service that we want to access. We know through BGP that
+it has some prefix, it gets announced through some networks. But now, if this attacker down
+at the bottom can also say, hey, I also host YouTube's IP addresses. This network on the left,
+that's going to be a shorter path, and it's going to like that. And so, it might choose that
+as its ultimate path and direct traffic to this
+attacker instead of YouTube. And then the third example is at
+the application and transport layer. So, TCP provides in order reliable
+stream between two processes. And then we layered HTTP
+on top of that to provide this application protocol to get and
+put web objects. Now, if the attacker could pretend to be,
+say, the bank or inspect and
+modify the traffic, and they could do this in various ways,
+then that's not great. If we're not actually visiting Chase and
+I'm given all my passwords, and expecting to interact with the bank,
+that's not great. So solution to this is TLS and HTTPS. And so, that's what we'll discuss. All right, so next time we're going to
+first start with some basics, and then we'll get into
+each of these solutions. All right, until then.

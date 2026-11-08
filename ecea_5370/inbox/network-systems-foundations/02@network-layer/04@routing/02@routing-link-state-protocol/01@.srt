@@ -1,0 +1,870 @@
+1
+00:00:08,582 --> 00:00:15,732
+All right, let's jump into our first
+overview of a routing protocol.
+
+2
+00:00:15,732 --> 00:00:20,160
+We're going to focus in on
+link state protocols today, or
+
+3
+00:00:20,160 --> 00:00:23,000
+one specific link state protocol.
+
+4
+00:00:24,380 --> 00:00:29,876
+So as a reminder, we talked about
+a decentralized control plane.
+
+5
+00:00:29,876 --> 00:00:35,164
+And so this is what you would traditional
+generally know as a routing protocol.
+
+6
+00:00:35,164 --> 00:00:40,779
+And this is where each router runs
+some control plane software and
+
+7
+00:00:40,779 --> 00:00:45,985
+then communicates with its neighbors and
+then performs some
+
+8
+00:00:45,985 --> 00:00:52,266
+local calculations to figure out
+what the forwarding table should be.
+
+9
+00:00:52,266 --> 00:00:57,112
+And we went over kind of three
+key properties that distinguish
+
+10
+00:00:57,112 --> 00:00:59,748
+different routing protocols.
+
+11
+00:00:59,748 --> 00:01:04,501
+And so keep these in mind as
+we go through this today,
+
+12
+00:01:04,501 --> 00:01:11,091
+what info each router knows,
+what information each router exchanges,
+
+13
+00:01:11,091 --> 00:01:15,496
+and then what calculation
+is being performed.
+
+14
+00:01:15,496 --> 00:01:21,360
+So think about those questions as we go
+through kind of the rest of this video.
+
+15
+00:01:21,360 --> 00:01:26,332
+So what we're going to talk
+about is a protocol called OSPF.
+
+16
+00:01:26,332 --> 00:01:29,655
+This is an example of
+a link state protocol and
+
+17
+00:01:29,655 --> 00:01:32,956
+it's widely used in local area networks.
+
+18
+00:01:32,956 --> 00:01:41,584
+So you can find the full specification
+of OSPF in these two links.
+
+19
+00:01:41,584 --> 00:01:45,872
+So these are something called RFCs.
+
+20
+00:01:45,872 --> 00:01:50,117
+And so
+this is where a lot of the information or
+
+21
+00:01:50,117 --> 00:01:57,163
+the kind of specifications for internet
+related technology gets placed and
+
+22
+00:01:57,163 --> 00:02:03,200
+then it has an ability for
+a community to suggest comments.
+
+23
+00:02:03,200 --> 00:02:06,904
+So you can see it's beefy.
+
+24
+00:02:06,904 --> 00:02:12,598
+244 pages is not an easy read.
+
+25
+00:02:12,598 --> 00:02:17,862
+That said, we're going to overview,
+give a little highlight of it.
+
+26
+00:02:17,862 --> 00:02:22,873
+We're not going to give you enough
+detail where cover all of that and
+
+27
+00:02:22,873 --> 00:02:27,794
+all the different kind of corner cases and
+things that it covers,
+
+28
+00:02:27,794 --> 00:02:32,621
+but you'll at least have a good
+sense of how OSPF is designed and
+
+29
+00:02:32,621 --> 00:02:37,480
+then be able to answer those
+three questions at the beginning.
+
+30
+00:02:38,620 --> 00:02:43,331
+So the process in OSPF,
+if we were to simplify it,
+
+31
+00:02:43,331 --> 00:02:48,496
+each router establishes
+peering with its neighbors,
+
+32
+00:02:48,496 --> 00:02:54,514
+then link states and
+we'll discuss what that exactly means.
+
+33
+00:02:54,514 --> 00:02:59,609
+So link states are flooded
+to the entire network and
+
+34
+00:02:59,609 --> 00:03:04,480
+then each router calculates
+the shortest path.
+
+35
+00:03:05,700 --> 00:03:08,742
+All right, so what is a link state?
+
+36
+00:03:08,742 --> 00:03:13,960
+So a link state is basically
+the state of a link.
+
+37
+00:03:13,960 --> 00:03:16,624
+So each of the interfaces for
+
+38
+00:03:16,624 --> 00:03:21,978
+any given network device has
+some information about it.
+
+39
+00:03:21,978 --> 00:03:27,445
+So if it's connected to another
+router well, the link state,
+
+40
+00:03:27,445 --> 00:03:32,574
+the information about that
+link is who that neighbor is.
+
+41
+00:03:32,574 --> 00:03:37,603
+And if it's connected to
+a network with end hosts
+
+42
+00:03:37,603 --> 00:03:43,752
+that link state tells about
+what prefixes are reachable.
+
+43
+00:03:43,752 --> 00:03:48,314
+So you can look at kind of
+router A as an example,
+
+44
+00:03:48,314 --> 00:03:54,131
+it has connection on the left
+to these different prefixes and
+
+45
+00:03:54,131 --> 00:04:00,080
+then it has connection to the right
+to connection to a router.
+
+46
+00:04:01,460 --> 00:04:07,354
+So showing this, the link states for
+two different routers, A and C.
+
+47
+00:04:07,354 --> 00:04:12,805
+So if we put some interface
+numbers behind these routers,
+
+48
+00:04:12,805 --> 00:04:17,477
+so interface A we already
+kind of talked about, but
+
+49
+00:04:17,477 --> 00:04:24,542
+interface0 is connected to Prefix-1,
+interface1 is connected to B.
+
+50
+00:04:24,542 --> 00:04:27,852
+So that would be the link state for
+
+51
+00:04:27,852 --> 00:04:32,829
+router A,
+the different link states that it has.
+
+52
+00:04:32,829 --> 00:04:37,470
+C would be 1 that interface0,
+says C is connected to B and
+
+53
+00:04:37,470 --> 00:04:41,661
+interface1, the link state
+is C is connected to D.
+
+54
+00:04:44,020 --> 00:04:48,758
+So then the next part of OSPF
+is exchanging information
+
+55
+00:04:48,758 --> 00:04:50,748
+with your neighbors.
+
+56
+00:04:50,748 --> 00:04:54,800
+And so what they do is they
+exchange link state updates.
+
+57
+00:04:54,800 --> 00:04:59,646
+And this is basically just tell
+the neighbors all of the link states that
+
+58
+00:04:59,646 --> 00:05:01,480
+you know about.
+
+59
+00:05:01,480 --> 00:05:09,580
+So starting off, A will tell B
+that A is connected to Prefix-1.
+
+60
+00:05:09,580 --> 00:05:14,251
+Because that was one of the link
+states that A was storing.
+
+61
+00:05:14,251 --> 00:05:19,437
+C will tell B that C is connected to D and
+
+62
+00:05:19,437 --> 00:05:27,600
+then D will tell B that D is
+connected to C and Prefix-2.
+
+63
+00:05:27,600 --> 00:05:33,449
+So this was kind of one step of the link
+state update process of in the kind
+
+64
+00:05:33,449 --> 00:05:39,704
+of viewpoint of if I'm router B,
+here's what my neighbors are telling me.
+
+65
+00:05:41,940 --> 00:05:46,804
+B then now has more information
+about all of the networks,
+
+66
+00:05:46,804 --> 00:05:50,178
+all these link states that it receives,
+
+67
+00:05:50,178 --> 00:05:54,720
+it stores this all in
+a little database internally.
+
+68
+00:05:54,720 --> 00:05:58,620
+And so this database consists
+of the link states for
+
+69
+00:05:58,620 --> 00:06:03,970
+its interfaces as well as all of
+the link states that it has learned from
+
+70
+00:06:03,970 --> 00:06:09,614
+the messages from A, C and D,
+whatever that information that it sent.
+
+71
+00:06:09,614 --> 00:06:15,192
+And now B can now send a link
+state update to its neighbors.
+
+72
+00:06:15,192 --> 00:06:20,554
+So B would tell A for example,
+I know about the link state
+
+73
+00:06:20,554 --> 00:06:25,606
+that C is connected to D and
+that C is connected to B.
+
+74
+00:06:25,606 --> 00:06:29,185
+Those are some information
+that it can send and
+
+75
+00:06:29,185 --> 00:06:33,314
+then it would also the information
+it learned from D,
+
+76
+00:06:33,314 --> 00:06:40,520
+the link state of D is that D is connected
+to C and that D is connected to Prefix-2.
+
+77
+00:06:40,520 --> 00:06:45,952
+So all of this happens,
+all of these routers just keep exchanging
+
+78
+00:06:45,952 --> 00:06:53,236
+this link state information until the
+network reaches what's called convergence.
+
+79
+00:06:53,236 --> 00:06:58,191
+And that's where basically
+everybody has agreed upon this is
+
+80
+00:06:58,191 --> 00:07:01,680
+all of the information in the network.
+
+81
+00:07:01,680 --> 00:07:07,288
+They all have basically the same database,
+the link state database at each router.
+
+82
+00:07:12,560 --> 00:07:14,294
+This is what we just said.
+
+83
+00:07:14,294 --> 00:07:18,665
+B will send this link state update to
+its neighbors with new information,
+
+84
+00:07:18,665 --> 00:07:21,804
+process continues until
+it reaches convergence.
+
+85
+00:07:21,804 --> 00:07:26,712
+So the process just keeps going and
+going until you reach convergence.
+
+86
+00:07:26,712 --> 00:07:30,704
+Now at the converged state of the network.
+
+87
+00:07:30,704 --> 00:07:34,640
+So after that process is completed,
+at the end,
+
+88
+00:07:34,640 --> 00:07:40,356
+if we were to again focus in on B,
+it has learned the entire topology.
+
+89
+00:07:40,356 --> 00:07:43,719
+And so you can kind of see in
+this little representation,
+
+90
+00:07:43,719 --> 00:07:49,020
+it knows the entire topology because it
+was told all of these various link states.
+
+91
+00:07:49,020 --> 00:07:52,182
+And if we were to zoom in
+on any of the routers,
+
+92
+00:07:52,182 --> 00:07:55,378
+we would see that exact same information.
+
+93
+00:07:55,378 --> 00:07:58,487
+They all agree on that this
+is the state of the network.
+
+94
+00:08:01,200 --> 00:08:07,580
+All right, so now that we have that,
+how does this help us forward traffic?
+
+95
+00:08:07,580 --> 00:08:09,431
+Really what we want is for
+
+96
+00:08:09,431 --> 00:08:15,350
+the source on the left to be able to send
+traffic to the destination on the right.
+
+97
+00:08:16,360 --> 00:08:19,722
+So this is where the calculation that.
+
+98
+00:08:19,722 --> 00:08:24,040
+Each router is performing, how are they
+determining the forwarding table?
+
+99
+00:08:24,040 --> 00:08:29,722
+In OSPF, each router performs
+a shortest path calculation and
+
+100
+00:08:29,722 --> 00:08:33,900
+this is just Dijkstra's algorithm.
+
+101
+00:08:33,900 --> 00:08:38,486
+So recall we mentioned before
+that a network is just
+
+102
+00:08:38,486 --> 00:08:41,320
+a representation of a graph.
+
+103
+00:08:41,320 --> 00:08:46,146
+And so shown here, each of these kind of
+
+104
+00:08:46,146 --> 00:08:51,265
+blue dots can look at them as routers, and
+
+105
+00:08:51,265 --> 00:08:58,620
+then the edges between the nodes or
+vertices are weights.
+
+106
+00:08:58,620 --> 00:09:05,605
+And weights could come into play in
+a network graph of the link bandwidth or
+
+107
+00:09:05,605 --> 00:09:13,080
+latency on the link or any number of
+factors that you want to factor in.
+
+108
+00:09:13,080 --> 00:09:20,140
+All right, so let's look at
+Dijkstra's algorithm in action.
+
+109
+00:09:20,140 --> 00:09:26,694
+So what we're trying to
+calculate here is the shortest
+
+110
+00:09:26,694 --> 00:09:32,962
+path from node U to each of
+the other destinations w,
+
+111
+00:09:32,962 --> 00:09:38,373
+v, x, y, s, t, z because that's what will
+
+112
+00:09:38,373 --> 00:09:43,230
+help us build the forwarding table in u.
+
+113
+00:09:44,420 --> 00:09:51,460
+So it starts by saying, all right what are
+the immediate next potential next hops?
+
+114
+00:09:51,460 --> 00:09:55,450
+And it picks the kind of lowest cost one.
+
+115
+00:09:55,450 --> 00:09:58,760
+So now the lowest cost one would be w.
+
+116
+00:09:58,760 --> 00:10:03,194
+So now the Dijkstra's algorithm, and
+
+117
+00:10:03,194 --> 00:10:08,700
+you can look up on the internet for
+a more specific
+
+118
+00:10:08,700 --> 00:10:15,572
+kind of look at what Dijkstra's
+algorithm is more concrete.
+
+119
+00:10:15,572 --> 00:10:19,364
+This is Dijkstra's algorithm
+through example, but
+
+120
+00:10:19,364 --> 00:10:24,504
+you can look up what the actual algorithm
+is widely available to look at,
+
+121
+00:10:24,504 --> 00:10:29,602
+and there's a lot of resources out
+there explaining it pretty well.
+
+122
+00:10:29,602 --> 00:10:33,471
+So in step 1,
+we started at u the next hop or
+
+123
+00:10:33,471 --> 00:10:38,630
+the next node to look at was
+whatever was the lowest cost so
+
+124
+00:10:38,630 --> 00:10:44,406
+then that's where w, we chose w,
+and now we're looking at w.
+
+125
+00:10:44,406 --> 00:10:48,422
+So we add to the possible nodes
+that we could select from.
+
+126
+00:10:48,422 --> 00:10:53,050
+So now we have v, x and s because we just
+
+127
+00:10:53,050 --> 00:10:57,681
+added w's neighbors, which are x and
+
+128
+00:10:57,681 --> 00:11:02,860
+s, to the set that we can select from.
+
+129
+00:11:02,860 --> 00:11:10,610
+And then we go ahead and choose what
+is the kind of lowest cost one.
+
+130
+00:11:10,610 --> 00:11:15,415
+So you can see the cost to get to v was 3,
+
+131
+00:11:15,415 --> 00:11:19,638
+the cost to get to x was also 3, and
+
+132
+00:11:19,638 --> 00:11:25,078
+then the cost to get to s was 6, 2 plus 4.
+
+133
+00:11:25,078 --> 00:11:29,092
+All right, so
+now you have a choice between x or v,
+
+134
+00:11:29,092 --> 00:11:32,500
+either one, they're equal cost.
+
+135
+00:11:32,500 --> 00:11:37,403
+So in this illustration,
+we chose v as the next node to add
+
+136
+00:11:37,403 --> 00:11:42,280
+to the graph or
+to the set of nodes that we can look at.
+
+137
+00:11:42,280 --> 00:11:48,324
+So we looked at v and
+then add to the set its neighbors.
+
+138
+00:11:48,324 --> 00:11:52,645
+So when we look at one
+of the neighbors is x,
+
+139
+00:11:52,645 --> 00:11:57,808
+we see that it's already in the set so
+we don't need
+
+140
+00:11:57,808 --> 00:12:03,932
+to add it because going u, v,
+x would be a longer path than u,
+
+141
+00:12:03,932 --> 00:12:08,680
+w, x,
+which we already have kind of covered.
+
+142
+00:12:08,680 --> 00:12:13,482
+So the only node that would get
+kind of added to the set that we
+
+143
+00:12:13,482 --> 00:12:18,187
+are looking at or able to look
+at in the next round is y and so
+
+144
+00:12:18,187 --> 00:12:22,118
+then we'll add that
+the cost to get to y is 2.
+
+145
+00:12:22,118 --> 00:12:26,474
+So now we can choose between y, x and s.
+
+146
+00:12:26,474 --> 00:12:31,002
+So it cost 6, cost 3, and cost 5.
+
+147
+00:12:31,002 --> 00:12:37,240
+So you could probably guess which
+node we look at next, which is x.
+
+148
+00:12:37,240 --> 00:12:41,276
+It adds its neighbors z and t updates,
+
+149
+00:12:41,276 --> 00:12:45,186
+kind of the cost to get each of those and
+
+150
+00:12:45,186 --> 00:12:50,160
+then kind of keep
+building this whole tree.
+
+151
+00:12:50,160 --> 00:12:55,912
+All right, so we would kind of finish
+out that whole set of calculation.
+
+152
+00:12:55,912 --> 00:13:00,954
+We've now built a tree rooted at u that
+
+153
+00:13:00,954 --> 00:13:07,740
+includes the shortest path
+to every single node.
+
+154
+00:13:07,740 --> 00:13:14,252
+So any node that you want to look at,
+u, w, x, t would be the shortest path.
+
+155
+00:13:14,252 --> 00:13:18,231
+So now, based on that calculation at u,
+
+156
+00:13:18,231 --> 00:13:24,435
+the forwarding table,
+now it knows exactly which direction,
+
+157
+00:13:24,435 --> 00:13:30,718
+which port it should, for
+any given destination, send out.
+
+158
+00:13:30,718 --> 00:13:34,222
+So if it was looking at,
+say destination z,
+
+159
+00:13:34,222 --> 00:13:38,765
+we would be able to look up in
+the table and say it's u, v,
+
+160
+00:13:38,765 --> 00:13:43,848
+which matches the kind of
+calculation that we just performed.
+
+161
+00:13:43,848 --> 00:13:47,160
+So we perform this calculation
+to fill this table.
+
+162
+00:13:47,160 --> 00:13:51,531
+And now when packets come into you say,
+destined for Z,
+
+163
+00:13:51,531 --> 00:13:57,297
+which would have an IP address, we would
+be able to look up that address z,
+
+164
+00:13:57,297 --> 00:14:00,000
+and then say, that's u, v.
+
+165
+00:14:01,460 --> 00:14:07,488
+So that's the essence of OSPF and
+Dijkstra's algorithm.
+
+166
+00:14:07,488 --> 00:14:11,376
+Now, of course,
+now there can be dynamics in the network.
+
+167
+00:14:11,376 --> 00:14:13,856
+There can be changes that occur.
+
+168
+00:14:13,856 --> 00:14:16,048
+So we might plug in a new router.
+
+169
+00:14:16,048 --> 00:14:21,006
+So there may be new neighbors that
+occur that we need to account for.
+
+170
+00:14:21,006 --> 00:14:27,100
+There may be a failure of a link or
+a node, we might add a prefix.
+
+171
+00:14:27,100 --> 00:14:30,720
+So all of these are changes
+in the link state.
+
+172
+00:14:30,720 --> 00:14:35,462
+So from the perspective of this top
+router, let's say this link went down
+
+173
+00:14:35,462 --> 00:14:39,192
+well now its link state that
+it knows about just changed.
+
+174
+00:14:39,192 --> 00:14:46,100
+It knows now top router is no longer
+connected to bottom right router.
+
+175
+00:14:46,100 --> 00:14:51,160
+And so it would send an update
+to this bottom left router
+
+176
+00:14:51,160 --> 00:14:58,016
+to say here's the link states that I
+know of and so it does these updates.
+
+177
+00:14:58,016 --> 00:15:02,544
+And again, we go through that
+process until convergence.
+
+178
+00:15:02,544 --> 00:15:07,519
+We calculate the shortest paths and
+then update the forwarding table.
+
+179
+00:15:10,060 --> 00:15:14,313
+So that's it with OSPF,
+it's pretty straightforward if you
+
+180
+00:15:14,313 --> 00:15:17,669
+understand how Dijkstra's
+algorithm works and
+
+181
+00:15:17,669 --> 00:15:21,820
+then understand what exactly
+we mean by link state.
+
+182
+00:15:21,820 --> 00:15:26,866
+All right, so next time we're going to
+talk about a path vector protocol
+
+183
+00:15:26,866 --> 00:15:32,610
+called BGP and it's really what runs
+the internet, so should be interesting.

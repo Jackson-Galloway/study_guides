@@ -1,0 +1,1168 @@
+1
+00:00:00,000 --> 00:00:05,532
+Welcome
+
+2
+00:00:05,532 --> 00:00:10,392
+back.
+
+3
+00:00:10,392 --> 00:00:14,455
+So to wrap up our module
+on virtual networking,
+
+4
+00:00:14,455 --> 00:00:17,604
+we're going to take what we learned and
+
+5
+00:00:17,604 --> 00:00:22,900
+we're going to try to understand
+how Docker networking works.
+
+6
+00:00:24,390 --> 00:00:28,750
+So as a quick recap,
+we talked about containers.
+
+7
+00:00:28,750 --> 00:00:34,338
+This is where you can create or
+where it inside of the operating system,
+
+8
+00:00:34,338 --> 00:00:36,773
+it has support for isolation.
+
+9
+00:00:36,773 --> 00:00:42,285
+And we talked about cgroups,
+which are the control groups for
+
+10
+00:00:42,285 --> 00:00:45,682
+the resources such as CPU and memory.
+
+11
+00:00:45,682 --> 00:00:51,522
+And then, namespaces for
+all the namespaces of the networking and
+
+12
+00:00:51,522 --> 00:00:56,640
+file system and the process ids and
+all that kind of stuff.
+
+13
+00:00:58,290 --> 00:01:04,586
+And then, Docker is a system
+that leverages containers,
+
+14
+00:01:04,586 --> 00:01:08,494
+or enables creating containers.
+
+15
+00:01:08,494 --> 00:01:12,892
+And they created a whole
+system that does leverage
+
+16
+00:01:12,892 --> 00:01:17,250
+the underlying capabilities
+inside of Linux.
+
+17
+00:01:17,250 --> 00:01:21,737
+But as a recap of its architecture,
+you have a command line tool
+
+18
+00:01:21,737 --> 00:01:26,140
+that's called Docker,
+where you can run commands like run,
+
+19
+00:01:26,140 --> 00:01:30,592
+that will communicate with
+a daemon that Docker is running.
+
+20
+00:01:30,592 --> 00:01:34,889
+Oftentimes, it's on the same machine,
+doesn't have to be.
+
+21
+00:01:34,889 --> 00:01:42,438
+And it specifies an image as the starting
+point to create a container.
+
+22
+00:01:42,438 --> 00:01:46,890
+So here is showing a bunch of
+running containers that used
+
+23
+00:01:46,890 --> 00:01:49,777
+a given image as the starting point.
+
+24
+00:01:49,777 --> 00:01:54,767
+And if the image isn't local, it will go
+off to a registry and pull it locally.
+
+25
+00:01:54,767 --> 00:01:59,322
+So the command, we might see,
+[COUGH] excuse me,
+
+26
+00:01:59,322 --> 00:02:02,442
+something like this docker run.
+
+27
+00:02:02,442 --> 00:02:06,486
+Those are extra flags just to say,
+remove it,
+
+28
+00:02:06,486 --> 00:02:12,293
+create an interactive terminal,
+remove it when it's finished,
+
+29
+00:02:12,293 --> 00:02:17,184
+the image name,
+which is Ubuntu with a label 2204.
+
+30
+00:02:17,184 --> 00:02:21,290
+And then start it with
+the command bin/bash.
+
+31
+00:02:23,230 --> 00:02:28,261
+So, as a recap of what a container is,
+it's a temporary
+
+32
+00:02:28,261 --> 00:02:34,850
+file system that's layered over
+an image like Ubuntu 2204.
+
+33
+00:02:34,850 --> 00:02:39,940
+It's fully writable and
+it disappears when it's end of life.
+
+34
+00:02:41,750 --> 00:02:46,920
+It provides a network stack and
+it consists of a process group,
+
+35
+00:02:46,920 --> 00:02:52,146
+where you have one main process
+with possible subprocesses.
+
+36
+00:02:52,146 --> 00:02:58,310
+And so, when it exits, the main process
+exits and all the subprocesses exit.
+
+37
+00:03:00,250 --> 00:03:05,950
+All right, so,
+we care about what networking is set up.
+
+38
+00:03:05,950 --> 00:03:10,936
+So let's go and create a container.
+
+39
+00:03:10,936 --> 00:03:17,721
+All right, so in this case, again running,
+we only need to use a single node.
+
+40
+00:03:17,721 --> 00:03:24,640
+So if I wanted to [COUGH] run vagrant
+up node one, I could do that.
+
+41
+00:03:24,640 --> 00:03:27,626
+And I'm in the GitHub repo, but
+we're not going to use this,
+
+42
+00:03:27,626 --> 00:03:30,026
+I'll show you what files
+are there in a minute.
+
+43
+00:03:30,026 --> 00:03:32,610
+So let's create a Docker container.
+
+44
+00:03:32,610 --> 00:03:36,324
+So first, let me see if anything's
+running, nothing's running.
+
+45
+00:03:36,324 --> 00:03:41,154
+So, docker run, I'll say, -d --rm --name
+
+46
+00:03:41,154 --> 00:03:46,444
+mynginx nginx, so
+what I want to do is create something
+
+47
+00:03:46,444 --> 00:03:51,056
+that's basically running
+in the background.
+
+48
+00:03:51,056 --> 00:03:52,237
+It's always running.
+
+49
+00:03:52,237 --> 00:03:56,962
+I wanted to remove it, when I kill it, and
+
+50
+00:03:56,962 --> 00:04:00,744
+I want to give it the name mynginx.
+
+51
+00:04:00,744 --> 00:04:03,193
+And the image is going to be nginx.
+
+52
+00:04:03,193 --> 00:04:07,446
+So nginx is just, could be a web proxy.
+
+53
+00:04:07,446 --> 00:04:11,402
+It also serves up web pages as a default.
+
+54
+00:04:11,402 --> 00:04:16,398
+So we're not going to actually interact
+with it, but I want something running,
+
+55
+00:04:16,398 --> 00:04:19,510
+so that I could see what exactly is there.
+
+56
+00:04:19,510 --> 00:04:24,114
+But let's inspect before
+I run that command,
+
+57
+00:04:24,114 --> 00:04:28,836
+I want to run,
+see if there's any namespaces and
+
+58
+00:04:28,836 --> 00:04:34,752
+if there's any links,
+vet devices or any of that created.
+
+59
+00:04:34,752 --> 00:04:38,168
+So let me save this command, so
+I don't have to type it again.
+
+60
+00:04:38,168 --> 00:04:45,907
+Well, and let me run ip netns list.
+
+61
+00:04:45,907 --> 00:04:47,590
+I don't see any namespaces.
+
+62
+00:04:47,590 --> 00:04:53,494
+I could say ip link, and
+we could see the physical devices.
+
+63
+00:04:53,494 --> 00:04:56,930
+And then I see this thing called docker0.
+
+64
+00:04:56,930 --> 00:05:01,314
+All right, but
+I don't see any vet devices set up and
+
+65
+00:05:01,314 --> 00:05:04,510
+we'll come back to what docker0 is.
+
+66
+00:05:04,510 --> 00:05:09,854
+All right, oops, so
+let me run this command.
+
+67
+00:05:11,451 --> 00:05:17,300
+All right, and then see that it's running.
+
+68
+00:05:17,300 --> 00:05:20,180
+All right, so it's running.
+
+69
+00:05:20,180 --> 00:05:26,429
+And now, we want to see,
+did a namespace show up?
+
+70
+00:05:26,429 --> 00:05:28,992
+I want to see the vet device.
+
+71
+00:05:28,992 --> 00:05:30,870
+So let me run ip link.
+
+72
+00:05:32,360 --> 00:05:36,410
+All right,
+there is a vet device that showed up.
+
+73
+00:05:37,740 --> 00:05:44,318
+And then, let me say ip netns list,
+that's interesting.
+
+74
+00:05:44,318 --> 00:05:47,017
+There's nothing listed, but
+
+75
+00:05:47,017 --> 00:05:52,940
+I would have thought that Docker
+would create a network namespace.
+
+76
+00:05:54,080 --> 00:05:58,121
+So it actually did, so
+nothing was listed, but
+
+77
+00:05:58,121 --> 00:06:02,134
+you could see that it
+probably did create it.
+
+78
+00:06:02,134 --> 00:06:06,405
+So what happened [COUGH] is this ip netns
+
+79
+00:06:06,405 --> 00:06:10,942
+command looks up the network namespaces
+
+80
+00:06:10,942 --> 00:06:16,064
+file in the /var/run/netns directory.
+
+81
+00:06:16,064 --> 00:06:21,583
+So if we clear this ls/var/run/netns,
+
+82
+00:06:21,583 --> 00:06:26,140
+there's nothing in there.
+
+83
+00:06:26,140 --> 00:06:30,976
+All right, so if we were to
+create our own network namespace,
+
+84
+00:06:30,976 --> 00:06:34,542
+something would actually show up in there.
+
+85
+00:06:34,542 --> 00:06:39,654
+Like if I were to doing
+
+86
+00:06:39,654 --> 00:06:44,198
+this on the fly sudo
+
+87
+00:06:44,198 --> 00:06:48,750
+ip netns add ns1.
+
+88
+00:06:50,740 --> 00:06:52,900
+Let me do the list again.
+
+89
+00:06:52,900 --> 00:06:56,340
+I could see that it
+exists in that directory.
+
+90
+00:06:56,340 --> 00:07:01,810
+All right, ls, so there's something there.
+
+91
+00:07:05,720 --> 00:07:09,750
+Let me delete that.
+
+92
+00:07:15,380 --> 00:07:16,980
+[COUGH] And it's gone.
+
+93
+00:07:16,980 --> 00:07:19,540
+All right, so why didn't Docker.
+
+94
+00:07:20,680 --> 00:07:26,062
+So the problem is, the docker daemon
+doesn't create a reference of the network
+
+95
+00:07:26,062 --> 00:07:31,560
+namespace file in that /var/run/netns
+directory after the creation.
+
+96
+00:07:31,560 --> 00:07:38,432
+So, the ip netns cannot resolve
+the network namespace file.
+
+97
+00:07:38,432 --> 00:07:44,168
+So this is a nice article that discusses
+this and it shows how to fix it.
+
+98
+00:07:44,168 --> 00:07:48,118
+We took the commands that they showed and
+
+99
+00:07:48,118 --> 00:07:52,075
+put them into a script run-container.
+
+100
+00:07:52,075 --> 00:07:56,232
+All right, so now,
+let's go over and do it manually.
+
+101
+00:07:56,232 --> 00:08:00,290
+So I'll show you the run-container.
+
+102
+00:08:00,290 --> 00:08:03,071
+So it's docker run.
+
+103
+00:08:03,071 --> 00:08:07,800
+And then these are going to be
+the commands that you need to run if you
+
+104
+00:08:07,800 --> 00:08:08,947
+want to do this.
+
+105
+00:08:08,947 --> 00:08:12,336
+This is just to help understand.
+
+106
+00:08:12,336 --> 00:08:17,273
+So the first part is we need
+to create something inside
+
+107
+00:08:17,273 --> 00:08:21,453
+of it that references that name,
+all right?
+
+108
+00:08:21,453 --> 00:08:29,310
+So I want to just touch /
+var / run/ netns/ myenginx.
+
+109
+00:08:31,712 --> 00:08:32,413
+All right?
+
+110
+00:08:32,413 --> 00:08:37,141
+The next thing is I'm going to
+need to mount a directory, but
+
+111
+00:08:37,141 --> 00:08:41,207
+it's going to have to refer
+to something in /proc.
+
+112
+00:08:41,207 --> 00:08:44,425
+But I need to know the process ID for
+
+113
+00:08:44,425 --> 00:08:49,427
+the top level process of this container,
+all right?
+
+114
+00:08:49,427 --> 00:08:53,104
+So we didn't discuss this, but
+
+115
+00:08:53,104 --> 00:08:58,011
+there's this command, docker inspect,
+
+116
+00:08:58,011 --> 00:09:03,327
+where I could say docker
+inspect a container,
+
+117
+00:09:03,327 --> 00:09:08,387
+name mynginx and
+let me pipe that into less.
+
+118
+00:09:08,387 --> 00:09:14,650
+And so it spits out a lot of
+information about the container.
+
+119
+00:09:14,650 --> 00:09:19,079
+The thing we care about is this
+
+120
+00:09:19,079 --> 00:09:23,518
+state 3369, all right?
+
+121
+00:09:23,518 --> 00:09:28,506
+Now what's in this run container is
+a programmatic way to pull that out.
+
+122
+00:09:28,506 --> 00:09:32,179
+So I can pull out just in that Json,
+
+123
+00:09:32,179 --> 00:09:38,025
+the State Pid field and
+then assign that to a variable.
+
+124
+00:09:38,025 --> 00:09:43,146
+But what we now want to do is mount
+
+125
+00:09:43,146 --> 00:09:48,468
+a directory that's pointing to
+
+126
+00:09:48,468 --> 00:09:54,774
+that something in proc, so I can say,
+
+127
+00:09:54,774 --> 00:10:00,501
+ls/proc/ 3369/ns/net.
+
+128
+00:10:00,501 --> 00:10:07,881
+And that's the directory that contains
+a bunch of information, all right?
+
+129
+00:10:07,881 --> 00:10:16,828
+So, That's what we care about, all right?
+
+130
+00:10:16,828 --> 00:10:20,971
+So I want to do a mount
+
+131
+00:10:20,971 --> 00:10:30,859
+-o
+bind/proc/3369/ns/net/var/run/netns/myeng-
+
+132
+00:10:30,859 --> 00:10:39,366
+inx, all right?
+
+133
+00:10:39,366 --> 00:10:44,451
+And then I can see ip netns.
+
+134
+00:10:44,451 --> 00:10:47,721
+I can now see it exists.
+
+135
+00:10:47,721 --> 00:10:53,053
+So now I can do stuff like
+
+136
+00:10:53,053 --> 00:10:58,120
+ip netns exec inside of
+
+137
+00:10:58,120 --> 00:11:03,996
+mynginx ip link, great.
+
+138
+00:11:03,996 --> 00:11:09,840
+And now I can see that it has
+this eth device inside of it.
+
+139
+00:11:09,840 --> 00:11:17,775
+So if you recall, we showed that
+kind of eth tool command for
+
+140
+00:11:17,775 --> 00:11:24,620
+how to see what the other
+end of a network device is.
+
+141
+00:11:24,620 --> 00:11:27,656
+So you might say, well,
+it's called eth zero.
+
+142
+00:11:27,656 --> 00:11:29,156
+So I don't know what that means.
+
+143
+00:11:29,156 --> 00:11:34,440
+And here we can show ip
+link in the root namespace.
+
+144
+00:11:34,440 --> 00:11:38,847
+We got something, the ve was called 21.
+
+145
+00:11:38,847 --> 00:11:45,526
+So if you recall,
+we could do something like ethtool-s.
+
+146
+00:11:45,526 --> 00:11:52,060
+And then whatever this name is, all right?
+
+147
+00:11:52,060 --> 00:11:56,476
+And we could see that it
+says this peer index is 20.
+
+148
+00:11:56,476 --> 00:12:02,065
+And if you recall, once we,
+when we did the ip netns exec inside
+
+149
+00:12:02,065 --> 00:12:08,200
+of the myenginx namespace link,
+ip link, it says 20 right there.
+
+150
+00:12:08,200 --> 00:12:15,508
+So we know this and
+this veth are the veth pairs.
+
+151
+00:12:17,969 --> 00:12:21,835
+Okay, so that's a little aside on that.
+
+152
+00:12:21,835 --> 00:12:27,975
+And we just showed that you can
+run ip link, you can run ethtool,
+
+153
+00:12:27,975 --> 00:12:33,234
+we can look inside of the container and
+see there it is.
+
+154
+00:12:33,234 --> 00:12:40,021
+That's where the specific
+veth device pair is.
+
+155
+00:12:40,021 --> 00:12:47,730
+So now the question is where does
+the veth traffic go in root?
+
+156
+00:12:47,730 --> 00:12:50,416
+So now let's look back at ip link.
+
+157
+00:12:50,416 --> 00:12:53,733
+So if we were to run this, all right?
+
+158
+00:12:53,733 --> 00:12:57,347
+So let me clear things
+in the root namespace.
+
+159
+00:12:57,347 --> 00:13:03,216
+I want to run ip link, and
+I'm going to look at two different things.
+
+160
+00:13:03,216 --> 00:13:05,842
+The main thing right here,
+
+161
+00:13:05,842 --> 00:13:11,328
+I'm going to say the veth is
+going to say the master docker0.
+
+162
+00:13:11,328 --> 00:13:17,858
+So if you recall, when we created a bridge
+and attached to a veth device to it,
+
+163
+00:13:17,858 --> 00:13:23,492
+we had it called mybridge, but
+this is what the output looks like.
+
+164
+00:13:23,492 --> 00:13:30,074
+So this means that docker0 is a bridge and
+
+165
+00:13:30,074 --> 00:13:34,597
+veth that is attached to it.
+
+166
+00:13:34,597 --> 00:13:38,888
+It's at docker0 as its master, all right?
+
+167
+00:13:38,888 --> 00:13:43,510
+So those are kind of the key things.
+
+168
+00:13:43,510 --> 00:13:49,510
+So that's what docker0
+is it's a bridge device.
+
+169
+00:13:49,510 --> 00:13:54,165
+That's the default network bridge
+that all containers attach to,
+
+170
+00:13:54,165 --> 00:13:56,374
+unless you otherwise specify.
+
+171
+00:13:56,374 --> 00:14:02,932
+So if I create multiple containers,
+they will all be attached to this docker0.
+
+172
+00:14:02,932 --> 00:14:07,437
+And they would have kind
+of an IP addressing scheme
+
+173
+00:14:07,437 --> 00:14:11,741
+that's kind of based off
+of what docker0 has.
+
+174
+00:14:11,741 --> 00:14:15,710
+Now, that's not all you can
+do in Docker networking.
+
+175
+00:14:15,710 --> 00:14:18,176
+So that's if you don't specify anything.
+
+176
+00:14:18,176 --> 00:14:19,272
+This is what it looks like.
+
+177
+00:14:19,272 --> 00:14:23,299
+And so if you're trying to troubleshoot,
+now we know, all right,
+
+178
+00:14:23,299 --> 00:14:26,774
+that means there's a veth
+device there inside of cont1.
+
+179
+00:14:26,774 --> 00:14:32,995
+There's a veth device right outside
+of it that's paired with it,
+
+180
+00:14:32,995 --> 00:14:39,116
+and then that is attached set
+docker0 as its master, all right?
+
+181
+00:14:39,116 --> 00:14:44,396
+So we can also just,
+this is for your own knowledge,
+
+182
+00:14:44,396 --> 00:14:48,720
+you can create custom networks in Docker.
+
+183
+00:14:48,720 --> 00:14:53,045
+So let's say I wanted this third
+container to be attached to
+
+184
+00:14:53,045 --> 00:14:56,346
+a completely different bridge, all right?
+
+185
+00:14:56,346 --> 00:15:01,494
+So I can say stuff like create my net1,
+
+186
+00:15:01,494 --> 00:15:07,734
+which would create
+the bridge docker network,
+
+187
+00:15:07,734 --> 00:15:14,910
+create subnet for that bridge and
+then say docker run.
+
+188
+00:15:14,910 --> 00:15:19,342
+When I say docker run, I can tell
+it what network I want it to be in.
+
+189
+00:15:19,342 --> 00:15:23,367
+So if I don't specify this,
+it'll be the default network docker0.
+
+190
+00:15:23,367 --> 00:15:29,851
+Otherwise, it'll attach to this particular
+network that I just created, all right?
+
+191
+00:15:29,851 --> 00:15:34,228
+And if we looked inside of that
+with if config or ip link,
+
+192
+00:15:34,228 --> 00:15:39,181
+we would see a different veth device and
+we can track that down.
+
+193
+00:15:39,181 --> 00:15:43,890
+You can also attach to multiple networks.
+
+194
+00:15:43,890 --> 00:15:48,305
+After I do the connect docker run,
+
+195
+00:15:48,305 --> 00:15:53,329
+I could then later say docker network,
+
+196
+00:15:53,329 --> 00:15:59,720
+connect, cont3, container 3 to docker0.
+
+197
+00:15:59,720 --> 00:16:01,289
+And it would create something like this.
+
+198
+00:16:01,289 --> 00:16:05,624
+So then it would show up as eth1 device.
+
+199
+00:16:05,624 --> 00:16:08,505
+All right, so
+this is all really interesting stuff.
+
+200
+00:16:08,505 --> 00:16:13,933
+You can kind of follow this if you're
+interested to dig in a little bit,
+
+201
+00:16:13,933 --> 00:16:18,631
+see what's created with each
+of these container commands.
+
+202
+00:16:18,631 --> 00:16:24,258
+Now you have all the tools to be
+able to kind of look at all that and
+
+203
+00:16:24,258 --> 00:16:28,273
+you could even do this
+all manual yourself.
+
+204
+00:16:28,273 --> 00:16:32,351
+It also supports, docker,
+also supports port forwarding.
+
+205
+00:16:32,351 --> 00:16:37,287
+So I can use this command
+when I do the docker run.
+
+206
+00:16:37,287 --> 00:16:41,520
+I could say -p 8080:80.
+
+207
+00:16:41,520 --> 00:16:44,011
+And that's doing port forwarding.
+
+208
+00:16:44,011 --> 00:16:48,731
+So we did that as our own
+example that we set up.
+
+209
+00:16:48,731 --> 00:16:51,981
+And so you can look into docker and see.
+
+210
+00:16:51,981 --> 00:16:54,831
+All right, I know that's probably
+doing something with iptables.
+
+211
+00:16:54,831 --> 00:16:59,122
+Let me look at the before and after and
+
+212
+00:16:59,122 --> 00:17:06,200
+see what rules docker created
+to make that scenario happen.
+
+213
+00:17:06,200 --> 00:17:11,284
+And last, I want to touch on
+something called docker compose.
+
+214
+00:17:11,284 --> 00:17:13,093
+All it is is a YAML.
+
+215
+00:17:13,093 --> 00:17:18,428
+So you create a YAML file and
+then run a command docker
+
+216
+00:17:18,428 --> 00:17:25,837
+compose that is basically just a wrapper
+for a bunch of docker commands.
+
+217
+00:17:25,837 --> 00:17:31,291
+The docker build,
+run all the networking commands.
+
+218
+00:17:31,291 --> 00:17:34,995
+It supports multiple containers.
+
+219
+00:17:34,995 --> 00:17:40,850
+And to install it and use it,
+there's some links here.
+
+220
+00:17:40,850 --> 00:17:41,897
+Here's an example.
+
+221
+00:17:41,897 --> 00:17:47,247
+Let's say I wanted to create three
+containers so this would all be one file.
+
+222
+00:17:47,247 --> 00:17:51,901
+This just happens to wrap
+around in the first one.
+
+223
+00:17:51,901 --> 00:17:56,688
+I specify that I'm going to
+provide a docker file with it and
+
+224
+00:17:56,688 --> 00:18:00,491
+it's going to use
+the docker's build system.
+
+225
+00:18:00,491 --> 00:18:03,463
+Once that's created,
+create this container.
+
+226
+00:18:03,463 --> 00:18:08,587
+Same thing with this one, this app,
+and then this db one says, well,
+
+227
+00:18:08,587 --> 00:18:13,548
+there's a pre created image or
+a preexisting image called postgres.
+
+228
+00:18:13,548 --> 00:18:18,392
+Just use that within that,
+that's defining the services.
+
+229
+00:18:18,392 --> 00:18:24,647
+I also can define networks, so I can
+define two networks called front end and
+
+230
+00:18:24,647 --> 00:18:29,845
+back end, and there's some
+custom configuration for those.
+
+231
+00:18:29,845 --> 00:18:37,371
+And then I can say which network I
+want a given container to attach to.
+
+232
+00:18:37,371 --> 00:18:39,542
+I want this one to be
+connected to the front end,
+
+233
+00:18:39,542 --> 00:18:42,493
+I want this one to be connected to
+both the front end and back end.
+
+234
+00:18:42,493 --> 00:18:47,987
+And I want this one to be
+just the back end, right.
+
+235
+00:18:47,987 --> 00:18:52,781
+So try that on your own and
+see what happens here.
+
+236
+00:18:52,781 --> 00:18:59,549
+We're just proposing,
+I'm proposing little practice exercise.
+
+237
+00:18:59,549 --> 00:19:03,354
+If you really want to see what's going on,
+
+238
+00:19:03,354 --> 00:19:09,563
+create a container lab topology
+configuration for the following.
+
+239
+00:19:09,563 --> 00:19:11,133
+See if this actually works.
+
+240
+00:19:11,133 --> 00:19:17,031
+If not, try something else and
+inspect the network that was created.
+
+241
+00:19:17,031 --> 00:19:21,991
+I'm pretty sure this works.
+
+242
+00:19:21,991 --> 00:19:25,731
+See if you can create it,
+inspect the network that was created,
+
+243
+00:19:25,731 --> 00:19:29,332
+attempt to recreate it manually,
+just all those things, and
+
+244
+00:19:29,332 --> 00:19:32,121
+see if all of this is really
+kind of making sense.
+
+245
+00:19:32,121 --> 00:19:37,045
+And then try kind of pinging things,
+bringing link down, whatever.
+
+246
+00:19:37,045 --> 00:19:40,557
+But this could be an interesting
+exercise to make sure.
+
+247
+00:19:40,557 --> 00:19:46,473
+All right, you really understand
+virtual networking in Linux.
+
+248
+00:19:46,473 --> 00:19:50,460
+All right, so with that, we're going to
+end here, this ends this module.
+
+249
+00:19:50,460 --> 00:19:54,980
+And what we're going to do is next time,
+in the next module,
+
+250
+00:19:54,980 --> 00:19:57,858
+we're going to look into Kubernetes.
+
+251
+00:19:57,858 --> 00:20:03,530
+Which is a container orchestration
+system that is kind of much broader and
+
+252
+00:20:03,530 --> 00:20:06,974
+has richer capabilities than just docker.
+
+253
+00:20:06,974 --> 00:20:12,573
+Which is a kind of much smaller
+subset of things to do, right?
+
+254
+00:20:12,573 --> 00:20:15,869
+So until then,
+we'll see you next time, thanks.

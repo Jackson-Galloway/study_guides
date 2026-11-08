@@ -1,0 +1,277 @@
+Well, this time we're going to give
+an overview of how to use Kubernetes. So this will serve as a foundation for
+us to then move into the architecture and the networking and different things
+like that within Kubernetes. So hopefully this is something
+you're already familiar with if so, great, maybe this will be a refresher. If not,
+I would highly recommend watch this and then play around with it a little bit. Go watch some more tutorials on
+Kubernetes and get yourself familiar. So recall when we talked about Kubernetes, we introduced it by saying great,
+we know how to run containers and we learned a lot of the stuff on
+the networking support for that. But let's say we want to
+have a larger application, a distributed application,
+where our application is multiple layers of maybe the presentation logic and
+data layers. Each with a bunch of different
+containers that running, offering different parts of the service. Imagine if that's running on
+a distributed cluster such that because maybe we can't run
+all of this in a single machine, that machine is not powerful
+enough to handle that load. So there's some challenges with this,
+is figuring out where do we run? Which of these physical nodes
+should I run a given container on? How can I make it so that all these containers can
+communicate with each other as needed? How do I go about scaling a given service? So we talked about any given
+service you might need to run it, multiple replicas of it and then load
+balance between those because of load. And then finally,
+how do we handle failure? Either failure of an individual
+application component or as part of a single physical node fails. And this is where Kubernetes comes in. So Kubernetes is an open-source
+container-orchestration system for automating application deployment,
+scaling and management. So it's basically, has a control plane, bunch of workers,
+you interact with the control plane. You tell it the desired state
+that you want something to be in. Like here's this distributed
+application I want. And Kubernetes will figure out how to do
+that and ensure it stays in that state. And we mentioned it's
+often abbreviated k8s. So if you see that throughout the notes, that's what this means,
+it just means Kubernetes. So first step is,
+how do I create a Kubernetes cluster? So one option is to launch
+virtual machines or if you have physical servers
+you can launch those. And you can install Kubernetes with something called kubeadm. So that's great,
+we'll provide a Vagrant file and it'll be part of this github link for
+[COUGH] this particular module. That we're not going to use
+that option though, but a second option is to use
+a single virtual machine. And then you use a system called
+KinD Kubernetes in Docker. So basically what it does is, each node
+whether it's a control plane node or a worker node, becomes a Docker container. So you specify what you want
+your cluster to look like and then it will make that happen. So we'll provide a Vagrant
+file which installs kind. So this is what we're actually
+going to use in this course. So we'll do everything in kind. All right, so
+let me pull over to my terminal and what we're going to show
+is a configuration file. We'll show how to create the cluster, we'll show what it looks
+like when it's running. And if you wanted to delete the cluster,
+you just say kind delete cluster. And you can go look up the documentation
+because you can run multiple clusters, give them different names and
+all that stuff. So let's flip over to a terminal,
+here's this. So this particular Vagrant file that's included right here, is a basic one that all it's doing is creating a single VM and it's part of the provisioning,
+it's installing kind. Now if you run Arm, like if you're
+running a Mac and it has Arm, there may be a slightly different setup
+because this is just downloading a binary. So my machine is AMD64, so
+that's what I'll do, all right? So all of that is set up and
+then I'll have a link to some other resources and a GitHub link, GitHub repo if you want to
+go the kubeadm path. But what else is in there is a bunch
+of these cluster configurations. So let's look at one of those real quick. So 1master2worker.yaml. It's as simple as this,
+I could say create a cluster, it specifies the apiVersion and
+then specify I want nodes. And it's a list of nodes where the role
+of the first one is control-plane, role of the second one is worker,
+role of the third one is worker. Now they could get more complicated than
+this, you can look at the configuration, but we'll stick to some real
+basic one at least for this. All right, so
+now if I want to go install it or launch a container,
+I would say kind create cluster config and then give it the configuration file. So 1master2workers.yaml. All right, I'm not going to run that because it
+takes a couple of minutes to spin up. So before I started recording,
+I actually ran it, so I did that exact [COUGH] command. It created the cluster, and
+you can see it's creating all the stuff, and now it's up and running, all right? So now what that looks like,
+if I look at docker ps, I could see there's three
+containers running, right? I could see one is called
+kind-control-plane, kind-worker, kind-worker2, all right? So these are the three docker containers
+But because it's Kubernetes in Docker, if I was to deploy a Kubernetes cluster,
+this would be a physical machine, this would be a physical machine, and this
+would be a physical machine, all right? So that's kind of what this is, but it's allowing us to do this all
+from within one virtual machine. So now, I could,
+let me look inside of one of these. So it's Docker exec -it. Let me look inside of kind-worker. And I think bin/bash. Hopefully that works. All right, so I'm inside of a Kubernetes
+node, a worker node right here. And it's just a full kind of installation. All right, so we don't need to
+really be in there just yet, but that's how we created a cluster. All right? So now, let's understand kubectl. So Kubectl is the management utility for
+controlling a cluster. So much as we saw with Docker, where it was some executable that
+interacted with the Docker daemon. Kubectl is an executable that
+interacts with the control plane. The software that's running
+on that control plane node. There's a file,
+it's in our home directory, .kube/config, will tell the utility, kubectl,
+where to send API calls. So it wants to send them
+to the control plane. It'll have all the configuration. It'll say, this is running in
+this container at this address. Well, it won't say that it's
+running in a container, but it'll say that it's at this address. And so, that's how it can reach it. So now, if we go into, not inside of
+the control plane node, but outside of it. [COUGH]
+>> So here, we're just in the kind of root namespace outside of Docker. I have Docker. Here's all the nodes running as
+kind of containers inside that. I could say kubectl get nodes. So we'll kind of continually
+work through different things that you can do with kubectl,
+and it's insanely powerful. If I just type kubectl, it's going to
+show a whole bunch of different commands. Each of those has a lot of
+things you can do with it. We're going to stick to the basics. So kubectl get nodes. And there we go. It showing the two workers and
+the control plane. And it's saying it's all ready. All right, so now,
+commands we'll use are kubectl apply, delete, get, describe, and logs. So those are, well, we'll restrict
+ourselves to those for the most part. All right, so the first construct
+to know about is called a pod. So a pod is the unit
+of work in Kubernetes. It's often a single container, but it can be multiple containers,
+if you want. Each pod receives a unique IP
+address in the Kubernetes cluster. And so, to create a pod, we're going to
+give it a YAML configuration file, and we're going to say kubectl apply-f,
+that yaml file. And then, to delete it, we're going to
+say, kubectl delete that yaml file. Now, I added this --force,
+because if you don't, it'll have this ten second delay, but we're just going to kind of
+force it to do it immediately. So in Kubernetes,
+if this is your first exposure to it, it might look overwhelming, but there's
+common patterns that you'll start seeing. So in the YAML files, all of them are going to be basically
+the same general structure. It's going to have these four
+main components, the API version, the kind, the metadata,
+and the spec, all right? So when you have a pod, it's going to look
+like one thing, and some other things that we're going to show, will have that same
+structure, but with different values. So as an aside on Yaml, which stands for
+yet another markup language, all the configuration is
+a set of key value pairs, and then the values can be
+further key value pairs. So a key is just a string. Value is a string,
+can contain numbers and things like that. So you could see it as on the same line,
+<key>:value. You could see <key> colon <value>. Or you could see if it's a list,
+where there's multiple, it's an array of values, where it's key or
+array, key colon array of values. It would have this dash, all right? And so, then,
+you could see something like <key>:value, where this might be a different key
+colon different value, all right? And so,
+there could be multiple things there. All right, so that's a decide on Yaml. Now, let's go through
+a simple example of a pod, where I'm going to launch
+an nginx container. So the top parts, the apiVersion,
+we're going to say v1. And so, you'll be able to see in
+the documentation what API version to use. Just go to the Kubernetes documentation. We're going to say the kind,
+it's going to be a Pod. Some metadata, that we're going to
+associate with it is a name. We're going to give it mynginx, and
+then the last part is that spec. So here, for a pod,
+it's going to be unique to say, here's the containers I
+want to run inside of my pod. We're only going to, and so,
+then, that'll be a list. It's going to be an array size of one for
+us, where I'm going to say, I want that container to be called
+mynginx, and I want the image to be nginx. So let's try this out. We can apply it,
+which will get it running. We can then see it running,
+we can get its logs, see more details about it, delete it,
+and all that kind of stuff. All right, so here, I'm going to say. So in this directory, we have a directory called pod-configs/. And the one we're looking at here
+is this one, simpleenginx.yaml. So that's what we just
+showed in the slide. So I'm going to say kubectl apply-f, and then simpleenginx.yaml. Great. All right, so what do I do with this? What just happened? Well, let me run kubectl get pods, and I'm going to say, output wide. That's optional, but
+there's something extra I want to see. So what this is going to do is, it's
+going to contact the control plane, and it's going to say,
+>> All right, control plane, give me a list of all
+the pods that are running. And we could see mynginx is running. It chose to run it on kind node worker2. And it assigned it an IP address,
+all right? I could see the logs of it. kube ctl get logs, mynginx or get log. Logs pod. Sorry, it's not get logs, it's just logs. But not pod, EA live videos. All right, so let me clear that and
+run it again. All right, so
+this is the log from that particular pod. So if I were to write my own
+application and I'm outputting, this would allow me to
+see from the logs there. All right, so let me do something like kubectl describe pod mynginx. So now if I want to know
+more about a given pod, let me pipe that into less,
+I can say describe it. And here has all the information
+that Kubernetes knows about it. It's going to have its IP addresses,
+its containers. Here's some container
+information about it. If we learned about
+mounting directories and various other things. And here's some event
+log [COUGH] about it. It pulled the image, it successfully
+decided where to assign the worker to. And then it's stated there. Now if there's any kind of errors with it,
+it'll probably show up right there. All right, so that's that. I can now say kubectl delete --force mynginx. pod mynginx. All right, and if I do kubectl get pods, there's no pods that are running. All right, so one last, or
+let me flip back over to the slides. Now let's talk about networking, just
+enough at this point just to test this. So when you run a pod,
+it gets an IP address. We saw that IP address. So that pod, that IP address is
+local to the cluster network. So what the cluster network is,
+is it's basically created, Kubernetes creates its own network where all the pods
+can communicate with one another. But it's outside of all the networking
+that is happening on the given workers. So it's not this publicly
+accessible IP address or, from where I'm running,
+which is a host outside of it. This 1.2.3.5 doesn't have meaning
+outside of the Kubernetes cluster. So the simple mechanism just for testing is we can do some port-forwarding. And so this is what allows us to
+port-forward from where kubectl is being run to the Kubernetes network. So I could say kubectl
+port-forward some pod/mynginx. So I can give it the resource and
+then the port mapping I want to see. All right, so let me rerun kubectl, apply -f simple-nginx, get that running again, kubectl get pods, I can see the container is creating. It's still creating. All right, it chose a different worker,
+so chances are it's pulling the image. And there, we got an IP address. All right, so now it's up and running. Now let me keep that running and then let
+me run the port-forwarding from this one. So kubectl, port-forward to pod/mynginx 8000:80. So internally it'll be port 80,
+externally it's be port 8000. All right, so this goes and it just won't return until
+you cancel out from this. So what this will allow me
+to do is now from outside of the container, outside of the cluster, I can do curl 127.0.0.1:8000. And that's going to handle
+a connection for 8000. So that went through that port-forwarding
+to get inside of the cluster and then communicated with nginx. And so
+then it print out that was the defaults, what ngInx returns, replies with. All right, so
+that's what port-forwarding does. The next to know about is controllers. So we were just creating Pod's directly. And we could say stuff like kubectl,
+apply -f somepod.yaml. But this is pretty manual and
+it's better to not do that, and instead create another resource
+which then creates and manages pods. So there's something called a deployment. And so
+a deployment is a type of controller, so there's a bunch of different types of
+controllers that exist in Kubernetes. The deployment is one specific one. So you describe a desired
+state in a Deployment, and then the Deployment Controller
+changes the actual state to the desired state at a controlled rate. So it actually controls another
+controller (ReplicaSet). Some uses are we can scale
+the number of pods up and down. We can control or
+have a controlled upgrade or downgrade. So say I have a version one of some
+application and then I want to upgrade it to version two, now I have running six
+replicas of it, well, this is a way to keep the service continuously
+running while doing the upgrade. And maybe I want to do an update
+to the pod spec itself. Alright, so here's the example, YAML. So again, apiVersion kind, we're going to say deployment metadata. We'll talk about that in a second. And then the spec. So the spec for a deployment is a little richer
+because it's a little more powerful. Here the main thing is we're
+going to say replicas. I want it to have three replicas. And then that specifies how many
+pods that are always running. The next is the selector says which
+pod to apply that condition to, right. And then the template says, whenever I need to create a new pod,
+use this template. So here's the metadata for that pod
+creation and the spec of the pod creation. So we're going to say the name is nginx. Images, nginx, right, so the selector. So when he creates the pod, I think
+I have aside on labels and selectors. So a label is an arbitrary
+key-value pair that you can attach to a resource,
+for example a pod. And then it could be used for
+label selection. So we could do this,
+put the label inside the metadata like that or via kubectl control manually. So in this picture or in this example of
+the deployment, whenever pod is created, it will create the pod with this label,
+the key value pair app nginx. And it can have multiple labels. [COUGH] And then for the deployment,
+what it uses is this selector. So it says, here's all the labels
+that need to match for me to consider it as part of
+this three replicas app nginx. Now these should match, but
+why it's slightly different is because let's say I already have,
+I've manually created some pods with these labels and
+then I come and run a deployment later. Well, it will match on
+those existing pods and kind of continually see that it's
+kind of part of this deployment. All right, so that's an aside
+on the labels and selectors. So let's go and try it. So let's flip back over here. All right, so
+let me stop the port forwarding. We don't really need that,
+kubectl get pods. I see it's still running. So I'll say delete force pod mynginx, great. So now let's look at the deployment. Simple nginx deployment. So here we're going to give it a name. So this is roughly the same stuff
+that was shown in the slide. And you could see what it looks like. And you can guess, how do we deploy this? We say kubectl apply-f
+simple nginx-deployment. And now it's going to get created,
+right, so with that I can, now look,
+kubectl get pods. So you can see I didn't create any pods. I just created this deployment. But it said to create four replicas. And so
+you can see it created four replicas. We can look where they're deployed. Two of them on worker 2,
+two of them on worker 1. All of them got IP addresses. If I want to see what deployments I have, I can say, kubectl get deployments. And there we can see mynginx
+deployment exists and it's running. As an aside, I can say get all,
+which will show everything, all the different resources that
+have been created, okay, right. So now let's look at if we change this number of replicas to two. Let's see what happens. So let me say kubectl apply -f deployment. All right, and kubectl get pods. You can see now only two are running. If I want to get it again and
+change it to four, or let's change it to three this time. And so you'll note that these two,
+it wasn't like it created two new ones. That's the exact same one
+that was already created. This one is this one that was created. And these are the two
+that were terminated. All right, so let me apply it again. I just increased it to three nodes,
+or three pods, three replicas. And you can see it's now
+creating a third one, right. So to delete,
+you can do kubectl delete deployment, whatever the deployment name is,
+which is my nginx deployment. We're going to leave it running for now because I want to go into
+the next thing real quick, right. So last concept that we're going to talk
+about this time is called a service. So a service is an abstraction which
+defines a logical set of pods and a policy by which to access them. So, meaning it load balances between them,
+right? So think of this cloud as a service. The service is an IP address. It gets an IP address. And anytime I want to communicate,
+I can say the IP address of the service. And then it will choose one of
+the pods to send that request to. It will use a selector to see
+which nodes should be in that set, both across scaling and
+across failure, right. So the YAML, let's show that again, or show that this time for a service. Again, similar API version kind. Now we're saying service,
+giving it some metadata. I just want to name the service
+because we can reference that. For port forwarding, we'll see, but
+for other things we'll see later and then the spec. So the spec here it says,
+what is the selector? That's the main,
+most important thing, the selector. I'm going to say anything
+that has app nginx. Now that should look familiar because
+that's what we used in the deployment. So this should select all of
+those pods from that deployment. And then you can specify other things
+like should we do in port translation or anything like that. So let's give this a try. [COUGH] So
+you can guess it exists in here. Simple nginx service. It's what's shown in the slide. So I can say kubectl apply
+-f simple nginx service. And it's applied. I could say kube ctl get all. If I want to see all the things. And there we go. If my service is running,
+I could say kubectl get services. There's my service that's running. And if I wanted to interact with
+it from within the cluster, I know it has its own IP address,
+which is different than the pods. I can say get pods-o wide. You can see the pods have
+a different IP address than that, but the service does know it. So how do we learn more
+information about the service? That's right,
+the describe kubectl describe. So we saw that with the pod, but this time we're going to describe mynginx service. You're going to actually have
+to specify the type or the kind. So kubectl, describe service,
+mynginx service. And so what's interesting to note is
+these things right here, the endpoints. So it found the selector
+through the selector and through the labels of these nodes,
+the IP address of each of these pods that are running, and
+it keeps it in that set, all right? So now if we were to do port forwarding, I would be able to, instead of saying mynginx, say mynginx-service, all right? And now it would forward to any of them. So now I can say curl 1270.0.0.1000, right? And what this is doing, which we don't
+have it going between the different ones, but it's actually load balancing
+between the three pods that we have. So I did curl, it used port forwarding, which then forwarded it to this
+IP address inside of the cluster. And then the first request
+went to the pod one. Second went to this pod,
+third one went to the last pod, all right? So another way you could test that. We don't have that available
+right this second, but you can write some Python
+code to create a service and just have a different response for
+each one. Okay, so
+there's to explore with Kubernetes, but this should be enough really for
+everything we're going to do. But certainly go try some of
+these on your own, all right? And with that, we'll end here. Thanks.

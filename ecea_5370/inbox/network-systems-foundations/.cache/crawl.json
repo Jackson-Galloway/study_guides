@@ -1,0 +1,1395 @@
+{
+    "type": "Course",
+    "id": "0Lijs_DiEe2_1Q54ZEzvJQ",
+    "name": "Network Systems Foundations",
+    "slug": "network-systems-foundations",
+    "modules": [
+        {
+            "type": "Module",
+            "id": "4cphT",
+            "name": "Link Layer",
+            "slug": "link-layer",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "RseL3",
+                    "name": "Welcome and Course Introduction",
+                    "slug": "welcome-and-course-introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "MO9NO",
+                            "name": "For-Credit Students: Welcome and Where to Find Help",
+                            "slug": "for-credit-students-welcome-and-where-to-find-help",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h1>Welcome, students! </h1><p>We are excited to have you with us here at the University of Colorado Boulder and we look forward to supporting you throughout your time with us!\u00a0</p><h1><strong>Course Content Support\u00a0</strong></h1><ol type=\"1\"><li><p>Attend your Course Facilitator\u2019s Office Hours</p><ol type=\"1\"><li><p>You can access these via the Live Events tab on the left-hand side of the Course home page</p></li></ol></li><li><p>Reach out to your Course Facilitator via the course support email: <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a></p><ol type=\"1\"><li><p>Please include the ECEA XXXX where XXXX is your course number in the subject line</p></li></ol></li><li><p>Ask your peers for support or suggestions in a discussion forum</p><ol type=\"1\"><li><p>Note that Course Facilitators do not monitor discussion forums</p></li></ol></li></ol><h1><strong>Technical Support\u00a0</strong></h1><ol type=\"1\"><li><p>Reach out to your Course Facilitator via the course support email: <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a></p><ol type=\"1\"><li><p>Please include the ECEA XXXX where XXXX is your course number in the subject line</p></li></ol></li><li><p><a href=\"https://www.coursera.support/s/article/learner-000001031?language=en_US\"><u>Contact Coursera's technical support team</u></a></p></li><li><p><a href=\"https://www.coursera.support/s/article/learner-000001489?language=en_US\"><u>Flag the issue</u></a> in the course (<em>non-urgent issues only</em>)</p><ol type=\"1\"><li><p>Course Facilitators check flags weekly, but an email to the course support email is preferred!\u00a0</p></li></ol></li></ol><h1><strong>Any other degree related support</strong></h1><ol type=\"1\"><li><p>Please include the reason you are reaching out in the subject line</p><ol type=\"1\"><li><p>Reach out to Program Staff via the course support email: <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a></p></li></ol></li></ol>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "zq3RV",
+                            "name": "Course Syllabus",
+                            "slug": "course-syllabus",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h1><strong>ECEA 5370 Network Systems Foundations</strong></h1><p><strong>Instructor: Eric Keller</strong></p><p></p><h2><strong>Course Description</strong></h2><p>Welcome! Throughout this course, Network Systems Foundations, you will delve into the fundamental layers of network communication. You will start with a thorough discussion of the Link Layer and its crucial role, moving on to the intricacies of Internet Protocol (IP) and router data planes, and then navigate through the complexities of the transport layer, application layer, and network security. With a practical focus, you'll write Python code to manage routing tables, analyze network traffic, simulate router functionalities, and create digital certificates for web servers. By the end of this course, you will have a well-rounded understanding of networking principles, from data transmission and routing to application protocols and security, and will be equipped with practical skills to navigate the ever-evolving landscape of network technology.</p><h2><strong>Drops, Tuition Refunds, and Withdrawals</strong></h2><p>Because the MS-ECE has flexible course start dates, all drops, tuition refunds, withdrawals, and grades are handled at the individual course level. It is the student\u2019s responsibility to monitor these deadlines. Coursera and CU Boulder are not responsible for notifying the students of these deadlines. You can drop or withdraw from a course via <a href=\"https://buffportal.colorado.edu/card/your-programs-enrollment\">Your Programs &amp; Enrollment Card</a> via BuffPortal. </p><h3><strong>Drops and Refunds</strong></h3><p>Each student has 14 days from a class start date or their enrollment date (whichever is later) to drop for 100% tuition refund. Students are only eligible to drop a course if they have not accessed the restricted content (final exam or project).\u00a0When a course is dropped under these conditions, it will not appear on the student\u2019s record.</p><p>Students who access the final exam or project are assigned a grade and ineligible for a drop, withdrawal, or refund.</p><h3><strong>Withdrawal</strong></h3><p>Students may withdraw from a course after the 14-day period only if they have not accessed restricted content (final exam or project). In such cases, the course will not be eligible for a refund. When a student withdraws or does not complete the restricted content (final exam or project), a grade of \"W\" will be recorded on their academic transcript. This \"W\" grade does not impact the student's GPA or total earned credits. </p><h2><strong>Grading </strong></h2><h3><strong>Course Grading Policy</strong></h3><table><tr><th><p>Assignment</p></th><th><p>Percentage of Grade</p></th></tr><tr><td><p>Quiz: Link Layer</p></td><td><p>8</p></td></tr><tr><td><p>Programming Assignment: Modifying Ethernet Frames</p></td><td><p>10</p></td></tr><tr><td><p>Quiz: Network Layer</p></td><td><p>8</p></td></tr><tr><td><p>Programming Assignment: Network Layer - BGP Like Sim</p></td><td><p>10</p></td></tr><tr><td><p>Quiz: Transport Layer</p></td><td><p>8</p></td></tr><tr><td><p>Programming Assignment: TCP - Find Max Bytes in Flight</p></td><td><p>10</p></td></tr><tr><td><p>Quiz: Application Layer</p></td><td><p>8</p></td></tr><tr><td><p>Programming Assignment: Application Layer - Socket Programming</p></td><td><p>10</p></td></tr><tr><td><p>Quiz: Network Security</p></td><td><p>8</p></td></tr><tr><td><p>Programming Assignment: Network Security Lab - Certificates</p></td><td><p>10</p></td></tr><tr><td><p>ECEA 5370 Network Systems Foundations Final Exam </p></td><td><p>10</p></td></tr></table><h3><strong>Uniform Letter Grade Rubric</strong></h3><p>Grade percentages convert to letter grades according to the scheme below.  </p><table><tr><th><p><strong>Letter Grade</strong></p></th><th><p><strong>Minimum Percentage</strong></p></th></tr><tr><td><p>A</p></td><td><p>93%</p></td></tr><tr><td><p>A-</p></td><td><p>90%</p></td></tr><tr><td><p>B+</p></td><td><p>86%</p></td></tr><tr><td><p>B</p></td><td><p>83%</p></td></tr><tr><td><p>B-</p></td><td><p>80%</p></td></tr><tr><td><p>C+</p></td><td><p>76%</p></td></tr><tr><td><p>C</p></td><td><p>73%</p></td></tr><tr><td><p>C-</p></td><td><p>70%</p></td></tr><tr><td><p>D+</p></td><td><p>66%</p></td></tr><tr><td><p>D</p></td><td><p>60%</p></td></tr><tr><td><p>F</p></td><td><p>0</p></td></tr></table><h2><strong>Artificial Intelligence (AI) Guidance</strong></h2><p><strong>Conditional AI Tool Usage: </strong>You may use AI tools for all assignments. You must critically evaluate and modify any AI-generated content, and disclose and document your usage per the AI Usage Documentation Best Practices below.</p><h3><strong>AI Usage Documentation Best Practices</strong></h3><p>When using AI tools in your academic work, it is essential to accurately document how and why you used them. AI tools should be considered as aids rather than primary sources. Therefore, remember to:</p><ul><li><p>Reference AI assistance<strong>.</strong> In your references or bibliography section, mention the AI tool used and the nature of its contribution. For example: \"Assistance provided by [AI Tool Name] for generating initial content ideas, response to [prompt], [month, day, year]\u201d.</p></li><li><p>Document your process. Save screenshots, dialog, prompt, queries or version history to document your process if you used AI. Include documentation in the submission if the assignment format allows. Otherwise, save it in your system in case you are asked by a program or university staff.</p></li></ul><h3><strong>Suspected Violations of this Policy</strong></h3><p>If program staff suspects you may have used AI tools to complete assignments in ways not explicitly authorized or suspect other violations of the honor code, they will contact you via email. Be sure to respond promptly to any related communication so your perspective is included in the case review. Failure to respond timely will not prevent the completion of a case review.</p><p>Turnitin and similar AI detection tools may be used in these courses for initial detection of possible honor code violations.<strong> </strong>All suspected violations will be reviewed by a human. AI tools alone will not be used to determine if an assignment is plagiarized, and results from these tools will not be used alone as evidence to penalize students.</p><h2><strong>University Policies</strong></h2><h3>Accommodation for Disabilities</h3><p>If you qualify for accommodations because of a disability, please submit your accommodation letter to your program at <a href=\"mailto:msece-accomodations@colorado.edu\">msece-accomodations@colorado.edu</a> in a timely manner so that your needs can be addressed. Disability Services determines accommodations based on documented disabilities in the academic environment. Information on requesting accommodations is located on the <a href=\"https://www.colorado.edu/disabilityservices/\">Disability Services website</a>. Contact Disability Services at 303-492-8671 or <a href=\"mailto:dsinfo@colorado.edu\">dsinfo@colorado.edu</a> for further assistance. If you have a temporary medical condition or injury, see <a href=\"https://www.colorado.edu/disabilityservices/students/temporary-medical-conditions\">Temporary Medical Conditions</a> under the Students tab on the Disability Services website.</p><h3>Classroom Behavior</h3><p>Students and faculty each have responsibility for maintaining an appropriate learning environment. Those who fail to adhere to such behavioral standards may be subject to discipline. Professional courtesy and sensitivity are especially important with respect to individuals and topics dealing with race, color, national origin, sex, pregnancy, age, disability, creed, religion, sexual orientation, gender identity, gender expression, veteran status, political affiliation or political philosophy. Class rosters are provided to the instructor with the student's legal name. We will gladly honor your request to address you by an alternate name or gender pronoun. Please advise us of this preference early in the semester so that we may make appropriate changes to my records. For more information, see the <a href=\"http://www.colorado.edu/osccr/\">Student Code of Conduct</a>.</p><h3>Honor Code</h3><p>The University of Colorado Boulder takes issues of academic dishonesty extremely seriously.\u00a0</p><p>Students in all of CU Boulder\u2019s courses, whether not-for-credit or for-credit, are expected to perform to the highest standards of academic honesty.\u00a0</p><p>Students enrolled in for-credit courses are members of the CU Boulder\u2019s community and are subject to the Honor Code Office\u2019s policies and procedures. Information on the Honor Code can be found at the <a href=\"https://www.colorado.edu/sccr/students/honor-code-and-student-code-conduct\">Honor Code Office website</a>.</p><p>Students who violate the Honor Code are subject to discipline. Violations of the policy may include: plagiarism, cheating, fabrication, lying, bribery, threats, unauthorized access to academic materials, submitting the same or similar work in more than one course without permission from all course instructors involved, and aiding academic dishonesty. Students are specifically expected to turn in original work and cite portions created by other authors. If a student has doubts regarding what collaboration is permissible in the course, the student should consult the discussion forums or the course facilitator directly.</p><p>Violations also include facilitating any act which may help a student to gain an unfair academic advantage including:</p><ol type=\"1\"><li><p>Sharing course materials, including but not limited to personal notes, in an unauthorized online bank or forum, whether for profit or for free, is strongly discouraged and may result in a referral to the Honor Code. This includes sharing course materials on Slack.</p></li><li><p>Sharing personal authentication credentials/login information to third party sites is strongly discouraged and may result in a referral to the Honor Code process</p></li></ol><h3>Sexual Misconduct, Discrimination, Harassment and/or Related Retaliation</h3><p>The University of Colorado Boulder (CU Boulder) is committed to fostering a positive and welcoming learning, working, and living environment. CU Boulder will not tolerate acts of sexual misconduct, intimate partner abuse (including dating or domestic violence), stalking, or protected-class discrimination or harassment by members of our community. Individuals who believe they have been subject to misconduct or retaliatory actions for reporting a concern should contact the Office of Institutional Equity and Compliance (OIEC) at 303-492-2127 or <a href=\"mailto:cureport@colorado.edu\">cureport@colorado.edu</a>. Information about the OIEC, university policies, <a href=\"https://cuboulder.qualtrics.com/jfe/form/SV_0PnqVK4kkIJIZnf\">anonymous reporting</a>, and the campus resources can be found on the <a href=\"http://www.colorado.edu/institutionalequity/\">OIEC website</a>.\u00a0</p><p>Please know that faculty and instructors have a responsibility to inform OIEC when made aware of incidents of sexual misconduct, discrimination, harassment and/or related retaliation, to ensure that individuals impacted receive information about options for reporting and support resources.</p><h3>Religious Holidays</h3><p>Campus policy regarding religious observances requires that faculty make every effort to deal reasonably and fairly with all students who, because of religious obligations, have conflicts with scheduled exams, assignments or required attendance. Since this is an online class, with no fixed weekly calendar schedule, we ask that you arrange your workload to accommodate your religious practice. See the <a href=\"https://www.colorado.edu/oiec/religious-accommodations\">campus policy regarding religious observances</a> for full details. </p>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "9IkK6",
+                            "name": "Assessment Expectations",
+                            "slug": "assessment-expectations",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<h2>Auto-graded Assessments</h2><p>As you complete any auto-graded assessment, please consider the following: </p><ul><li><p>Some assessments may include a set of instructions with a list of resources you are and aren't to use. While these assessments may not be proctored, please consider adhering to this list of resources as the assessment was designed with the list in mind. </p></li><li><p>Most auto-graded assessments will allow for multiple attempts. Between attempts, it is recommended you review feedback provided for correct and incorrect responses and relevant course materials before starting your next attempt. </p></li><li><p>Some programming assignments will contain hidden test cases that are graded. If you do not receive full credit for your submission, please review your assignment summary for the passed and failed tests so you can further optimize your solutions. </p></li></ul><h2>Artificial Intelligence (AI) Usage Guidance</h2><p>Artificial intelligence tools\u2014software that reproduces text, images, computer code, audio, video, and other content\u2014have become widely available. Well-known examples include ChatGPT for text and DALL\u2022E for images. This statement governs all such tools, including those released during your enrolled session.\u00a0</p><p><strong>It is your responsibility\u2014not the tool\u2019s\u2014to assure the quality, integrity, and accuracy of work you submit in all CU Boulder courses. </strong>Keep in mind that AI tools are designed to create content that seems to have been produced by a human, not to produce accurate or reliable content; therefore, relying on an AI tool may result in inaccurate content.\u00a0Be wary of unintentional plagiarism or data fabrication. Act with integrity, for the sake of both your personal character and your academic record.</p><p>Consider the impact of using AI tools on your learning goals: in most cases, using an AI-generated answer without critical review and significant input from your end is contrary to the overall goal of personal learning and development in your chosen area.\u00a0</p><p><strong>Respect copyright and privacy. </strong>You may only enter your own data into AI tools. Do not enter private, sensitive, or copyrighted data from others into AI tools without their consent. Avoid using AI for purposes that are private, sensitive, or high-risk.</p><p><strong>Consider your environmental impact. </strong>Using AI models requires large amounts of electricity, water, and rare earth minerals. When using AI, keep in mind there are environmental concerns associated with its use.</p><h2>Artificial Intelligence (AI) Usage Allowed by this Course</h2><p>The following table indicates each assessment in this course and the AI usage allowed for that assessment. </p><p><strong>Note: If you are taking this course for credit or transfer prior work into a for-credit version of this course, you will be held to this standard.</strong></p><table><tr><th><p><strong>Assessment</strong></p></th><th><p><strong>AI Usage Policy</strong></p></th></tr><tr><td><p>Quiz: Link Layer</p></td><td><p>Conditional</p></td></tr><tr><td><p>Programming Assignment: Modifying Ethernet Frames</p></td><td><p>Conditional</p></td></tr><tr><td><p>Quiz: Network Layer</p></td><td><p>Conditional</p></td></tr><tr><td><p>Programming Assignment: Network Layer - BGP Like Sim</p></td><td><p>Conditional</p></td></tr><tr><td><p>Quiz: Transport Layer</p></td><td><p>Conditional</p></td></tr><tr><td><p>Programming Assignment: TCP - Find Max Bytes in Flight</p></td><td><p>Conditional</p></td></tr><tr><td><p>Quiz: Application Layer</p></td><td><p>Conditional</p></td></tr><tr><td><p>Programming Assignment: Application Layer - Socket Programming</p></td><td><p>Conditional</p></td></tr><tr><td><p>Quiz: Network Security</p></td><td><p>Conditional</p></td></tr><tr><td><p>Programming Assignment: Network Security Lab - Certificates</p></td><td><p>Conditional</p></td></tr><tr><td><p>Network Systems Foundations Final Exam</p></td><td><p>Conditional</p></td></tr></table><p><u><strong>For assessments that allow Conditional AI Usage</strong></u></p><p>You may use AI tools on these assessments. However, you must critically evaluate and modify any AI-generated content, and disclose and document your usage per the <em>AI Usage Documentation Guidelines </em>below.</p><h4><em>You CAN use AI tools to...</em></h4><ul><li><p><strong>Supplement your understanding of course material</strong> (e.g., summarizing a PDF that you have read to ensure comprehension)</p></li><li><p><strong>Generate practice questions</strong> for assignments, quizzes, and tests</p></li><li><p><strong>Check your spelling and grammar</strong></p></li><li><p><strong>Translate </strong>course materials or your own work</p></li><li><p><strong>Act as a tutor </strong>to identify and explain weaknesses in your draft answers</p></li><li><p>Ask AI to help you debug your code.</p></li><li><p><strong>Generate project ideas</strong>, outlines, and help with brainstorming</p></li><li><p><strong>Edit answers that you have written </strong>yourself, but not create additional content or ideas</p></li></ul><h4><em>You CANNOT use AI tools to...</em></h4><ul><li><p><strong>Submit exact or similar/paraphrased assignment questions </strong>or prompts into the AI tool</p></li><li><p><strong>Edit your submission in other ways </strong>not listed in the allowable examples above</p></li><li><p><strong>Generate partial or entire answers </strong>for graded assignments in place of your own work or thinking</p></li><li><p><strong>Help with a graded assignment in any way without attaching documentation of that usage </strong>(see <em>AI Usage Documentation Guidelines </em>below)</p></li></ul><h2>AI Usage Documentation Best Practices</h2><p>When using AI tools in your academic work, it is essential to accurately document how and why you used them. AI tools should be considered as aids rather than primary sources. Therefore, remember to:</p><ul><li><p><strong>Reference AI assistance.</strong> In your references or bibliography section, mention the AI tool used and the nature of its contribution. For example: \"Assistance provided by [AI Tool Name] for generating initial content ideas, response to [prompt], [month, day, year]\u201d.</p></li><li><p><strong>Document your process.</strong> Save screenshots, dialog, prompt, queries or version history to document your process if you used AI. Include documentation in the submission if the assignment format allows. Otherwise, save it in your system in case you are asked by a program or university staff.\u00a0\u00a0</p></li></ul><h2>Assessments and Academic Honesty</h2><p>As you complete assessments, you are expected to perform to the highest standards of academic honesty. Please keep the following in mind: </p><ul><li><p>Copying the provided rubrics to use as your own work is considered plagiarism.</p></li><li><p>Copying your peers work that you have reviewed in peer review assignments is considered plagiarism.</p></li><li><p>Using generative AI services, such as ChatGPT, to write your peer review assignments or answer other graded assignment questions and submitting those as your own work is considered plagiarism. </p></li><li><p>Using question-and-answer websites, such as Stack Overflow or Chegg, to post assessment questions and solicit solutions and then submitting responses as your own work is considered plagiarism. </p></li></ul><p></p><p> </p>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "otGcA",
+                            "name": "Course Facilitation",
+                            "slug": "course-facilitation",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>Meet your course facilitator for <em>Network Systems Foundations</em>! He will be available to assist you during your learning experience by answering questions and offering weekly office hours over Zoom. Please click \"Live Events\" in the course menu on the left to participate in office hours.</p><p>To contact your course facilitator, email: <a href=\"mailto:msee-support@colorado.edu\">msece-support@colorado.edu</a>.\u00a0Please include <strong>ECEA 5370</strong> in the subject line!</p><p> </p><h1><strong>Mayuresh Pitale</strong></h1><img alt=\"CF_image.jpeg\" src=\"CF_image.jpeg\"></img><p>Hi everyone! I am Mayuresh, a Master's student studying Embedded Systems here at CU Boulder. I am really passionate about bringing hardware and software together to solve real world problems. I have had the chance to work on some incredibly fun projects recently, like building a custom handheld gaming console and developing a EEG controlled drone.  </p><p>When I am not deep into coding or circuit debugging, you can usually find me traveling and exploring new places. I am so excited to be your course facilitator this semester and look forward to chatting with you all in office hours!</p><p></p><p><strong>Office Hours:</strong></p><ul><li><p><strong>Monday</strong> 6:30 PM to 10:30 PM MT</p></li><li><p><strong>Thursday</strong> 6:30 PM to 10:30 PM MT</p></li></ul><p><strong>Best Contact Method:</strong> <a href=\"mailto:msece-support@colorado.edu\">msece-support@colorado.edu</a> | Please include ECEA 5370 in the subject line</p><p><strong>Slack:</strong> MSECE on Coursera | <a href=\"https://cubouldermsee.slack.com\">cubouldermsee.slack.com</a> | #ecea-5370</p>",
+                                    "assets": [
+                                        {
+                                            "id": "eRud3pZWTcaP4VMkzAsbUw",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/imageAssetProxy.v1/_61cc1beee3d448b8809a4817fad1b059_CF_image.jpeg?expiry=1793232059711&hmac=3YooDrBc5wWkj0fq_LKfOyM9dOx6buHGotn1rNteeDA",
+                                            "name": "CF_image.jpeg"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "qTJ2c",
+                            "name": "Course Overview and Introduction",
+                            "slug": "course-overview-and-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/ZBdYUE_BT7a7BJsGczCz5Q.processed/full/720p/index.mp4?Expires=1793318400&Signature=H-lxYEHga17mQmPr0HeoPEsHMTBGyjdxABlaSVTRBrZrmHlqqiTIcDBduyGgghOplBEQJDpr7dOnlIsLHlqE2ECQE4-U8uHYDvg2A5oMKrj0g5VGS~wtOsxM34R5kGszZxgM4xswCAyLx8rejbRCA5y0aktNXhdAbropS7r6sjs_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/5pWi2vvpS36Votr76Yt-rg?expiry=1793318400000&hmac=UX7xrnya1KZcLyicLhujdNuQxQl4B6beYgHRov2_Ruc&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/q-QoAanbRmqkKAGp29Zq2g?expiry=1793318400000&hmac=OCq-ZdzVOY2Beh7asXuxv5pt381yRmM3KZjcu4x_Yr4&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/xR2jJq_mTe6doyav5j3u2w?expiry=1793318400000&hmac=c5T_h3lE6xZhtr3RQv6_ySAgYx_Hm5CgeZHPW2Mu2kc&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/5pWi2vvpS36Votr76Yt-rg?expiry=1793318400000&hmac=HThySEMpAJjXYpTMkKrslToIBWy7pxl4ZrW4E4lfl30&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/q-QoAanbRmqkKAGp29Zq2g?expiry=1793318400000&hmac=eR_wO-NB49AFo1CJKzovKvuDz1jtuUkZZgECExZEF9U&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/xR2jJq_mTe6doyav5j3u2w?expiry=1793318400000&hmac=qDU_Cc9IppyIfCQAwkVk-KCfzkRHM_7cbjePR536jMI&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "SK8uI",
+                            "name": "How To: Reset Coursera Jupyter Notebook Labs",
+                            "slug": "how-to-reset-coursera-jupyter-notebook-labs",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>As you work with the programming labs within this course you may want to reset your lab to its original version.  This could be to start over from scratch and/or to address unintended issues as you work through the labs.</p><p>The following PDF will provide you the steps to follow to reset any Jupyter Notebook labs within this course.</p><p class=\"asset\">Coursera - HOW TO - Reset Juptyer Notebook Lab.pdf</p><p> </p>",
+                                    "assets": [
+                                        {
+                                            "id": "N4CCLMgBRvKKQkSm8F_zkw",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/_a8567b010fb6460194a70c3209d06f41_Coursera---HOW-TO---Reset-Juptyer-Notebook-Lab.pdf?Expires=1793232041&Signature=ZAxdtaeA5cyN8KMPMhynNHc8Gxpl0nHs1kDD8swgbM-GQpQIvlRzZ0HQRyIdpTohfM82FqVXHH6vdKDbLW585W8a2tDw4qepL4lU7SL8bxre0WwHfwwEB3V4TQ6eiRRLU1CznwvxFxAZXhhe5aa267T772bSTu7EBrG1fB6XW8g_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "Coursera - HOW TO - Reset Juptyer Notebook Lab.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Supplement",
+                            "id": "W6ZHM",
+                            "name": "How To: Reset Coursera VS Code Labs",
+                            "slug": "how-to-reset-coursera-vs-code-labs",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>As you work with the programming labs within this course you may want to reset your lab to its original version.  This could be to start over from scratch and/or to address unintended issues as you work through the labs.</p><p>The following PDF will provide you the steps to follow to reset any VS Code labs within this course.</p><p class=\"asset\">Coursera - HOW TO - Reset VS Code Lab.pdf</p><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "wVJ2zHanTF-SD1FNRyIJ4w",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/_fba7e6414e6545d8be654b684711bfd4_Coursera---HOW-TO---Reset-VS-Code-Lab.pdf?Expires=1793232059&Signature=VI0SzX9KoHhTOJj9xKO14JjGGZiCsuw8xjdNlY6PcrDutKsVs1VrX0w4YeCnhivsh5vJO0iifAJTkeyW4hbdHPB9j5cefrFcNagVci6NdKuTiiZ5PjthpSuJxcE006DoJbW~0NJBn0nAxYM~ZQcfsdC~-ppAK9HmK-tTfAeufPc_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "Coursera - HOW TO - Reset VS Code Lab.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "o0fXk",
+                    "name": "Link Layer Introduction",
+                    "slug": "link-layer-introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "gsCjD",
+                            "name": "Week 1 Slides",
+                            "slug": "week-1-slides",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>These slides are used for all of the lessons in Week 1.</p><p class=\"asset\">nf-01-link-slides-UPDATE-2025-07-02.pdf</p><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "Shc2OEcOQLyfJbFS4VCTdg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/_6ba3e800f9c5421f8ded63fe8e806d0b_nf-01-link-slides-UPDATE-2025-07-02.pdf?Expires=1793232058&Signature=ZIRVQ-WwvnW~cRYFqSHrjJGHzi~ZN1u9g6udUs7-h5CXimdKJZ94D~dE7XrDzxEzzi2jSRGM9BS38txb7XjatENBzvlxSLjBffFa7~lxDrKQJ12wyllKNLcZ9AVvan3Duj5JFun~xCIBGHv-AowrPigHJBY6aM0NfoEFQiyQL-s_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "nf-01-link-slides-UPDATE-2025-07-02.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "fpKPg",
+                            "name": "Link Layer Module Introduction",
+                            "slug": "link-layer-module-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/vriqDN-tRXa_htOwwb7ufg.processed/full/720p/index.mp4?Expires=1793318400&Signature=ZSEnsQiJ0wA0w1Qzr0MyruqfF1-pwjJrqWgbnktX6IBDbIp92ox6hg1p2dhXYkx8EPGzkiT0RoJGzCfaGqgNkNBUifOC2-43W3SccqyFgsSl911L9JmAqYQk3MOjpdCv3FfTD~DkxcdP1grbqRR8G2abl-OvLqzLjEjPn700aZs_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/4VHB-72TQWqRwfu9k6Fq8w?expiry=1793318400000&hmac=dKd5Ua79z-lUi4D9e0eRIaYWVIstJc9W1SpD4Ym011c&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/xSHpEaN9SeCh6RGjfengdA?expiry=1793318400000&hmac=2tvx8N05GXTHAVPz-6cqTZElIsA_FVtRuptXlv2XYHc&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ccj9XNVGS4GI_VzVRiuBTg?expiry=1793318400000&hmac=FlXOFiSBP9igUkaIS7A2OCcXZCB_nBeKH5uuzyiWifQ&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/4VHB-72TQWqRwfu9k6Fq8w?expiry=1793318400000&hmac=wpr_V9GgeeDH-Qw145igp5XuTdXl5AF89t1tMkF0-ds&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/xSHpEaN9SeCh6RGjfengdA?expiry=1793318400000&hmac=6lXjmeQ_4HA7OBcYbg8weioC0MOoRUItnLLvqrKxFx4&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/ccj9XNVGS4GI_VzVRiuBTg?expiry=1793318400000&hmac=zs64Ody2JqZ5K0LfgYcwU8q79wszonwLuDSCvbK5O3c&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "5INNR",
+                    "name": "Encoding into Frames",
+                    "slug": "encoding-into-frames",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "tiKFY",
+                            "name": "Encoding into Frames",
+                            "slug": "encoding-into-frames",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/LeYDrzftQl-XTCvWP_pKxw.processed/full/720p/index.mp4?Expires=1793318400&Signature=NbTlup9UOfHtP8G2nk55oZzPytsmUdpD9AMl28GT0C1y7o-GAFFVV80YVJQIbSbiXXsVZnTI4a7UV9jG3zIDjQKFHHQMHeibHJdsNtMODdVEbZyUeZ4V8Yhe~HpUxafaR9yvlwuPLBP6AW3ASpdVSwjOFgT7ohbj0AA~9HnmRjs_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/idb2tak3Q4-W9rWpN7OPCA?expiry=1793318400000&hmac=-faTi_FTP7t_cAo93BsxSEjL7qEUEqzG_p0VfOwdq4E&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/6Jd420dVS8OXeNtHVbvDJg?expiry=1793318400000&hmac=qsX6GE1IyNQrLSc56p2zkZ0KX0SGgLUS-O5p8hLrtQA&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/nusk3NkjQ2CrJNzZIwNgsw?expiry=1793318400000&hmac=38cxE6Y24qpIkvZKkICU-pfPJg0I_alrJeHoF5AIGpc&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/idb2tak3Q4-W9rWpN7OPCA?expiry=1793318400000&hmac=wG-b3MVb6ZCVSM0bJGLaBW7HisX1wPNqHWOgksVKgF0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/6Jd420dVS8OXeNtHVbvDJg?expiry=1793318400000&hmac=IYYeLwa-IQUO0p6Mn5sA6gKgOYiaNOmJlbh_DNB3ZUw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/nusk3NkjQ2CrJNzZIwNgsw?expiry=1793318400000&hmac=YMEttEYJPmW6gw6RAqHCX8qaDZqA79Wf-HIhHP398_0&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "UajuJ",
+                    "name": "Error Handling",
+                    "slug": "error-handling",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "L15Rs",
+                            "name": "Error Handling",
+                            "slug": "error-handling",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/JqNNuzp3TC6H7E5t2TsAIw.processed/full/720p/index.mp4?Expires=1793318400&Signature=TKFq1iKl8H0t6gMJvwG3L7zIxFb0FxUmD17mlwCig9nfo7MyHvwxEc7HEkiWcRQV-yo509sak79l~uRupEOzhp1RMBTknlfHYlK93RFc3SHnRHkvCqQ1bX32Yj9xHSBr7~NN5AM-0~dh7gkriGTsPsv-AMEe97ZZWd5wXg5ctwk_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/6U_pZIQiR56P6WSEInee_A?expiry=1793318400000&hmac=AtpVGAJ6CM_5xancL28SO3s7sVf5PXVC552qLwFtYu8&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XjHtLtkWTkix7S7ZFs5I8g?expiry=1793318400000&hmac=Ykgx3NKofB-_W0U2hAzjos2JSSIyyOLrzoMAyx2t0hM&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8GAH7tAoRPmgB-7QKIT5hg?expiry=1793318400000&hmac=tUyGvNmia-qHATSKxm4weGXVLNHWsG1vywSoj38LuBU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/6U_pZIQiR56P6WSEInee_A?expiry=1793318400000&hmac=bVXCd5Kmn51DKYKbpQg-lFNpmB7F-tjM7kugwTZlSmQ&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XjHtLtkWTkix7S7ZFs5I8g?expiry=1793318400000&hmac=EIBxMfiIbh0PHAZrD-kIW0D6QutRE2sa_4YY3lKGuJw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8GAH7tAoRPmgB-7QKIT5hg?expiry=1793318400000&hmac=zleqszNd_mVZfqUeVswado-GddXTDT3PKNRqPrCc9fI&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "AsOqR",
+                    "name": "Sharing the Link",
+                    "slug": "sharing-the-link",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "rr27b",
+                            "name": "Sharing the Link",
+                            "slug": "sharing-the-link",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/fq07lJFUSvaQ99rr9dqeRQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=aWN89UxMnDJdELrNXIWjagz7O0lqcdBMc~N3XbtpWq4J7rnnl8wkAz50BULI8lJPI0YSI64EHm4j0XxkrC2GEGfPzTfejd~TlDHs6ZzNG9nEeU1BdtGD-SQVkpm8Pdxg19vZwPfYzPdYxeDkjNwScVGQBCd2cI1zEADhAa9FI3E_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Kr4k4FzARaC-JOBcwJWg9Q?expiry=1793318400000&hmac=Fh0oUlteut2cYhmMZBbzzSFcscrd7HTE8jtWfOpXhBE&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/3Y96LtdnSRuPei7XZ9kb9Q?expiry=1793318400000&hmac=hcmiM8_jANibYUjZKVhtXuf1TS1AH4_eClDElg7J9Tk&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8JACA4tITGOQAgOLSJxjDA?expiry=1793318400000&hmac=Q5zjnnSqJ-hn8KkN-G5jY7oi0ANhfVMw_jSNxbeIifI&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Kr4k4FzARaC-JOBcwJWg9Q?expiry=1793318400000&hmac=uR_iHFpfQ4YRw5SGIgU_qtUd8gkK8_DXreexG5R6yoo&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/3Y96LtdnSRuPei7XZ9kb9Q?expiry=1793318400000&hmac=WJGau9IxDBjgGL8YFa5jcL-GAPzSUQHiRtQ19g8BFls&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/8JACA4tITGOQAgOLSJxjDA?expiry=1793318400000&hmac=nz0TBGd-VDtY9_M9Lvy2oaIThEOsRdP2VtQesnGZLcQ&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "tL6oS",
+                    "name": "Local Area Network",
+                    "slug": "local-area-network",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "yFC7l",
+                            "name": "Local Area Network",
+                            "slug": "local-area-network",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/r6idF84BTXytGWU7Y6QH8A.processed/full/720p/index.mp4?Expires=1793318400&Signature=M4Zb3a8-QC4X3kZBhxvua8bFvezQgBpbpTlq6rSVOKieSAD8JYhBs9DhF-vH0TlX~rVJyc3Ad~88b15lzLhaDHxLc7fGqd2GBmQMNh1Ys0yBAjFzV8~wZv23zxhvO6wl9VnTrXKKFSJdaiq4-imZQMZ3j~DIYv8qCOmZPAjU3LU_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/dg1GkRdsRnWNRpEXbCZ1uw?expiry=1793318400000&hmac=FPXOG9ww6_tngOu_qaEZwbih7Vh9U-3vOQU2L9aZvaA&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/wY_mYhOdQ9mP5mITnSPZWA?expiry=1793318400000&hmac=3LBGg5YD4vQqhC5pW9vCBirZIQLjI7KGsNKBAO6hB-I&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OD-B732ST9i_ge99ks_Yxg?expiry=1793318400000&hmac=g_b75Hx3Fqc9Z8euU8LguhDtLqVkH8AQyCq4Z5mp8cE&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/dg1GkRdsRnWNRpEXbCZ1uw?expiry=1793318400000&hmac=R-sBqY14nAILOQYMSuWYs9UmtRgTG9z8szCfr_M57VU&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/wY_mYhOdQ9mP5mITnSPZWA?expiry=1793318400000&hmac=zb_TeO8TpYWLIQS3ORWcIeNYinmCLLPFpiv_cj0Z2JY&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OD-B732ST9i_ge99ks_Yxg?expiry=1793318400000&hmac=dJbwumqC57MNMQluEWBiIf8QD5Wh2nQf5nIoyjrBO3Y&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "D6DPL",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "8kgB0",
+                            "name": "Link Layer",
+                            "slug": "link-layer",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of these is a valid Ethernet MAC address</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Oo8Aa\"> <div class=\"quiz-option-text\"><p>20:f1:9e:bd:3b:18</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Oo8Aa\"> <div class=\"quiz-option-text\"><p>FF:FF:FF:FF:FF:FF</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Oo8Aa\"> <div class=\"quiz-option-text\"><p>2001:db8:85a3:8d3:1319:8a2e:370:7348</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Oo8Aa\"> <div class=\"quiz-option-text\"><p>10.10.2.10</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of these is not a field in the Ethernet header</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~LxBbDx\"> <div class=\"quiz-option-text\"><p>Quality of Service (QoS)</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LxBbDx\"> <div class=\"quiz-option-text\"><p>Destination (dst)</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LxBbDx\"> <div class=\"quiz-option-text\"><p>Source (src)</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LxBbDx\"> <div class=\"quiz-option-text\"><p>Type</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>For even parity, what would be the parity bit for this data: 0101 0001</p></div></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Indicate which of the following is a characteristic of the Ethernet FCS field</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~8W9fVV\"> <div class=\"quiz-option-text\"><p>Can detect a single bit error</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~8W9fVV\"> <div class=\"quiz-option-text\"><p>Can detect burst errors</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~8W9fVV\"> <div class=\"quiz-option-text\"><p>Can be calculated as the data is arriving off of the wire</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~8W9fVV\"> <div class=\"quiz-option-text\"><p>Is used to determine vendor of the network card</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~8W9fVV\"> <div class=\"quiz-option-text\"><p>Can fix any single bit error</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which is a negative property of channel partitioning (e.g., time or frequency division multiplexing)?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~m9yMSy\"> <div class=\"quiz-option-text\"><p>The channel isn\u2019t efficiently used unless all nodes have data to send</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~m9yMSy\"> <div class=\"quiz-option-text\"><p>Collisions occur frequently</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~m9yMSy\"> <div class=\"quiz-option-text\"><p>A sender can become blocked from being able to transmit its data</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~m9yMSy\"> <div class=\"quiz-option-text\"><p>It requires complex coordination with an arbiter</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In CSMA / CD, how does a node detect whether the transmission encountered a collision or not?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~vgE3kL\"> <div class=\"quiz-option-text\"><p>The protocol ensures collisions cannot occur</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~vgE3kL\"> <div class=\"quiz-option-text\"><p>It will simultaneously read from the channel while transmitting, and compare the read and sent values \u2013 if different, a collision occurred</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~vgE3kL\"> <div class=\"quiz-option-text\"><p>The receiver will send an ACK back to the sender indicating it successfully received the message</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In CSMA / CA, how does a node detect whether the transmission encountered a collision or not?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~4BEOBv\"> <div class=\"quiz-option-text\"><p>The receiver will send an ACK back to the sender indicating it successfully received the message</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~4BEOBv\"> <div class=\"quiz-option-text\"><p>It will simultaneously read from the channel while transmitting, and compare the read and sent values \u2013 if different, a collision occurred</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~4BEOBv\"> <div class=\"quiz-option-text\"><p>The protocol ensures collisions cannot occur</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Given a switch with MAC table with (20:30:40:50:60:70 \u2013 port 0), if it receives a frame with destination FF:FF:FF:FF:FF:FF, what will it do?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~9hxPCN\"> <div class=\"quiz-option-text\"><p>Forward out port 0</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~9hxPCN\"> <div class=\"quiz-option-text\"><p>Drop</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~9hxPCN\"> <div class=\"quiz-option-text\"><p>Forward out all ports</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Given a switch with MAC table with (20:30:40:50:60:70 \u2013 port 0), if it receives a frame with destination 20:30:40:50:60:70, what will it do?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~YTskZf\"> <div class=\"quiz-option-text\"><p>Forward out all ports</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~YTskZf\"> <div class=\"quiz-option-text\"><p>Drop</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~YTskZf\"> <div class=\"quiz-option-text\"><p>Forward out port 0</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Given a switch with MAC table with (20:30:40:50:60:70 \u2013 port 0), if it receives a frame with destination 20:30:40:22:AA:22, what will it do?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~9X48tz\"> <div class=\"quiz-option-text\"><p>Forward out all ports</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~9X48tz\"> <div class=\"quiz-option-text\"><p>Drop</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~9X48tz\"> <div class=\"quiz-option-text\"><p>Forward out port 0</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "Ick98",
+                            "name": "Modifying Ethernet Frames Lab Overview",
+                            "slug": "modifying-ethernet-frames-lab-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/aK0rVbr9Rzq0ti2e1dPp9g.processed/full/720p/index.mp4?Expires=1793318400&Signature=J~OzE5dP2XKWgn~YlwTSP0ewNo5CrVstRNOlv7C6-qonKQe0KR0cKp7OuZXv8tcjfCYDveTBW1n6vgIkWFZhi4RyTtQSzyTqLfmbtDnbakcmMigqY7TkMFMWqi3k01q8Q92JPGj7sZl4qO0ZekUA7KhKPuZPeFAXRYJxFoZAtIE_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/JRYTUOMsRsWWE1DjLIbFJQ?expiry=1793318400000&hmac=9WSt-2nP0-UcQZeFmsu7ZpBPx2s2RD0OPRlSr8l3cSk&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/AHCq4-26QUawquPtupFGhQ?expiry=1793318400000&hmac=X8wAMUeDEvpUyLVEWfeJAbxUpZ53lzLLcLlBOSkUlUg&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/-gzMp7qHRsuMzKe6h0bL7g?expiry=1793318400000&hmac=QKS_M2fcPsy7KxNN3EqJxBDTqonWpK2NPQApKsN0s9I&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/JRYTUOMsRsWWE1DjLIbFJQ?expiry=1793318400000&hmac=CDlDLUlbJD7v28w4LK4UrCguHbCdP-kJ28Jy6Kr5m5Q&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/AHCq4-26QUawquPtupFGhQ?expiry=1793318400000&hmac=bn4TB8YUluybrEvSMdZid4L8m4zF3pq3QTQHH0xMRco&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/-gzMp7qHRsuMzKe6h0bL7g?expiry=1793318400000&hmac=NeGUsZ4veFEdwemcAb5OLRZ0oALFxAJom1TD9bDkc9w&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "WbMxw",
+            "name": "Network Layer",
+            "slug": "network-layer",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "VpDtA",
+                    "name": "Introduction",
+                    "slug": "introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "MxKvj",
+                            "name": "Week 2 Slides",
+                            "slug": "week-2-slides",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>These slides are used in all of the Week 2 lessons.</p><p class=\"asset\">nf-02-network-slides-UPDATE-2025-07-02.pdf</p><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "h0U-UkvrSfaAKkwKzBY-Vw",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/_4687401ca4eb4fff98a23a041f4198e9_nf-02-network-slides-UPDATE-2025-07-02.pdf?Expires=1793232057&Signature=A8RvVw5lfp82CL8mNIt8mFJ9iAufBp32Z6CbD3xOumzegyfHvznpv1zve6JlLLmom1jWTggp5wAVmqhYGxqj~KGB6eZLR2QA8yEm2szb5ZK3i9VKy8lNQwAduse-5qYBkvmegyno-ZvJjSGi8nPIcLebfmrajEC4NcTGbImOlVw_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "nf-02-network-slides-UPDATE-2025-07-02.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "0Ux0F",
+                            "name": "Network Layer Module Introduction",
+                            "slug": "network-layer-module-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/rt8ukz16QaCd0w_Y596qCA.processed/full/720p/index.mp4?Expires=1793318400&Signature=g6As0m8Q-BjuqrCXje7q5QfkI7GiZ5W3v6mPXiU0XA09TO1J8v2ng82HjtuRP0-Ve9W8~4HXR9Gmqn~gpY3INTmryS3XidZ6A4HtD6JIH45NEXGKBak2uI~OY7LPWkSLkxAw5dahRXUZ48SOoSfJYpVKdfp9MhidLvpumrCOeGA_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/3W8qdYKiSmCvKnWCoupgBQ?expiry=1793318400000&hmac=MrxEeE0JPdEMrZd-vEXtrSNouGmFJK3ZGVsYfyd-6fY&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/18WjtN2BQQaFo7TdgUEGPA?expiry=1793318400000&hmac=Fjnu_iWE0xb3_p5HenwaWNnXVhnTIVs1lxtrqdwLHx8&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/XJTeJxksTD-U3icZLJw_oA?expiry=1793318400000&hmac=jeVX6-aE04hSZcBBVK0MLjb_6gf3ku2nOtXkAiPQlTU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/3W8qdYKiSmCvKnWCoupgBQ?expiry=1793318400000&hmac=evt7DR90FeluLyXYgjsdSXsZS2Nzra4usLzUq2mwtpU&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/18WjtN2BQQaFo7TdgUEGPA?expiry=1793318400000&hmac=I2xTCCPgRqw_v38vmDia7g4xGNKyBC6if8PDB_NeeTA&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/XJTeJxksTD-U3icZLJw_oA?expiry=1793318400000&hmac=Rv8ZRIrZZrn16p5Te_akK3Q_dEVF_LGqInB-drW-Oso&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "ZN188",
+                    "name": "Internet Protocol",
+                    "slug": "internet-protocol",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "EBigY",
+                            "name": "Internet Protocol",
+                            "slug": "internet-protocol",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/-MQfW0fVTvejxk-6ZqZ54w.processed/full/720p/index.mp4?Expires=1793318400&Signature=Ja5FdYuCF1s4RwUNEzYXCXlrfsztqAK26Dt9lQeHSWgFOKu~DcYI3K~qq2LHS4sUtBGs5C5lBk4wfvUEnn52NrH0mZ9qo1luqoUQwEh4FVyzaANBrRA1FN~-p6FKEindIIFsbQqXcTOQYU6Wdi18jvCx9-THyu732YTuLy~ANS0_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/7SB7E3gnTRqgexN4Jx0aLg?expiry=1793318400000&hmac=C5I74SpUCSXhMmF4k1MwjPa22ly4MgwJR4opC3t4cE0&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/TZDISaLKT1OQyEmiyu9TPg?expiry=1793318400000&hmac=-f609WA_jbYORbbRgR5crov4cCtxIYA4bucZiBHAKWc&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/7i-eVPHlRAuvnlTx5SQLPg?expiry=1793318400000&hmac=p6WoiE8MMugg2JYCNekRPS3PlKxURCSAPUoYNo8p66s&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/7SB7E3gnTRqgexN4Jx0aLg?expiry=1793318400000&hmac=cJHQ0XzAeATL7lCV8w_D7jq9U7_gXE4sloPQ3x2LZDI&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/TZDISaLKT1OQyEmiyu9TPg?expiry=1793318400000&hmac=YKnnCqX0-wwq9f6ZAdR5wy_WhgKuQU24dn0UWuvnuIk&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/7i-eVPHlRAuvnlTx5SQLPg?expiry=1793318400000&hmac=zCrjQZZWOfBRpU3qsUThBxyoHFX_BMwtfxDgd4yLBWE&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "cqgAT",
+                    "name": "Router Data Plane",
+                    "slug": "router-data-plane",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "XSrVB",
+                            "name": "Router Data Plane",
+                            "slug": "router-data-plane",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/TqYkaeiRTKCU7CMvCn35Nw.processed/full/720p/index.mp4?Expires=1793318400&Signature=C-1af5D02JwTRypBNPQmIO9XTk68BAGvDujCajrGe83VqsdWeKsE-0hskxuMT4i795l7gW8o9FRSNy~1jlFqa3gZ-jD2U-jiNHjrCUoQdzYFYz~JmxlkDXlh5G6ssL-yps9K447Zk5vtogri8l5RNdISm9o9CPPa3cVMl7Je9rg_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/7I1gw8KIToCNYMPCiE6ATA?expiry=1793318400000&hmac=8E8-4u2xuEaV5HNaPZfTeXqQ-gOYnhsvIz-XIt-LXNI&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/MyLd0H_SRHOi3dB_0uRzIg?expiry=1793318400000&hmac=v-F7i3JYfc7nMjVZQCDKNNUEK86rwGO3Fbp2tdtN2nI&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/_RCaiFCBQ0GQmohQgcNBNQ?expiry=1793318400000&hmac=Ph7OxoZPgnhBSu6h_RSHAxVd8Cjfb1hKvB3jB-Wv33g&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/7I1gw8KIToCNYMPCiE6ATA?expiry=1793318400000&hmac=rAZMk4koGhsbLjc0__sGm0S173CzBTuoBwk0JJ_NwfU&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/MyLd0H_SRHOi3dB_0uRzIg?expiry=1793318400000&hmac=EdigMW19J7NWyVhEpk9CfubwxoQ3WhIdu02vF1QfOEc&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/_RCaiFCBQ0GQmohQgcNBNQ?expiry=1793318400000&hmac=YPlN8z9-quY3XhgyPw4J9l_NXD6-ccDHqBAyssYAJEI&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "rdceb",
+                    "name": "Routing",
+                    "slug": "routing",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "WnGLz",
+                            "name": "Routing",
+                            "slug": "routing",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/tH2ZaPZIQJKRe3Yir7orSQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=HkU3497biMQ~4HAu1ZJhoR6qD57ACixglUneXT7PTKaCiSY-Y~hrh65LNae8WdZFFykz9BFZ~LBKmnLcuyipQSkDo8Z-dJsrZJ9oufxJQ3qgZb14tibVaxABhQlyFJ5lHU8TC7QHHK27Ib3rsEttOQlaZDg~NPHHopgHLXlBOT0_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/SwVsBoEGQz-FbAaBBqM__Q?expiry=1793318400000&hmac=McKYguXf-e2TPW_juJ4vbKg8S7DzS0Ma3KaqPdQQgKg&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/VJWGysv3TiCVhsrL9y4g-w?expiry=1793318400000&hmac=Pajjb6nUnfDXDtK0dyDIrKjE4yjO3UTVEe0gOaqXTRk&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/X67FbgGoRWuuxW4BqNVrvQ?expiry=1793318400000&hmac=QHo6tChYxKvf-s-5ou3oYF7SP68A1K0RC2_EWTrn9V8&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/SwVsBoEGQz-FbAaBBqM__Q?expiry=1793318400000&hmac=iSJue_Cdqr5lTbsphUv6wLAUrO4vzdEmWvs36ImdDL8&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/VJWGysv3TiCVhsrL9y4g-w?expiry=1793318400000&hmac=EFcHYIqKKYYDj_cKxw3rRfS4wsiuFUhrXygIVSoOmGg&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/X67FbgGoRWuuxW4BqNVrvQ?expiry=1793318400000&hmac=s9ffzIUHi4CBDL0Uvd-kC_ojFoChS2gA-SpM083r8ME&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "evcyF",
+                            "name": "Routing: Link State Protocol",
+                            "slug": "routing-link-state-protocol",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/BCozb1qjS2Wo3-Vyr3kJ-A.processed/full/720p/index.mp4?Expires=1793318400&Signature=X6r~DUQnp~69hZisDWvgPSKFHYtH-HCQ2NwV9n~J232aRI5WYeX-hSb7ECRarHkS9Y2BwRW-B0c76WNJjXQatOIgTGIqJ3lsGTitbgjt5wfPOiHVuq0GQo3aos3AUb74oHDpqiBm30obVaC88lz2s26hMc5TNXJhw24kFldxOt8_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/MNrQuDMFQ6Oa0LgzBYOjBg?expiry=1793318400000&hmac=p-nkCA36vZWexL5VyXXHKRQ6Em86-zrxziKYqVw0vvo&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/z1IdI_rqQMuSHSP66qDLJQ?expiry=1793318400000&hmac=PBYC0gIf4vWITfsinhFS3GG9c2CgUhUff-GirQwXZdw&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/WzWm2LA6Sn-1ptiwOsp_0w?expiry=1793318400000&hmac=q8Kqp4eEuOsiMafofZYlnCTZFzjIK43VVxnukZ6eF5g&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/MNrQuDMFQ6Oa0LgzBYOjBg?expiry=1793318400000&hmac=Lr0P0QtoReQsBysS7v48AVdFb9rA7kztMJCJPCJ5eDg&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/z1IdI_rqQMuSHSP66qDLJQ?expiry=1793318400000&hmac=1ZRc7VCWC1maaRv6YlQ9T8awVvWbNOGf26rj4e0GCBo&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/WzWm2LA6Sn-1ptiwOsp_0w?expiry=1793318400000&hmac=GizdnVu3QGJji89fXoRGZYOrN4hT7n9CXGCvhpmWkI8&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "l76cS",
+                            "name": "Routing: Path Vector Protocol",
+                            "slug": "routing-path-vector-protocol",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/Fz5J1__4Tr2Vo__sxyx-qw.processed/full/720p/index.mp4?Expires=1793318400&Signature=akPZRw3PFNR~zTzbSLgLgvK2BGeKbXfOuej9HzMnwQqQzvLXLejFJVaNEWve~jLU4HjLhOSz1iEWUGhlrlZqOSjcq443Aaz9EXUaViMIl2T95lXe1yLnBw0uUNCrj5ocJtLOIwfIgchc1IesHjlcSnbaSWopLEVCY99bBH-1~K8_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/6g7QCDK9QjGO0AgyvcIxoA?expiry=1793318400000&hmac=0YL8zC19aha-VxmWF9O2pd5DYD7R1gL0U_MYDXe6O-Q&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/nAtT26bAS-eLU9umwGvnwg?expiry=1793318400000&hmac=W22gD7z7BlRypNs5g5tvDKu2wm6HbgU8d22IZGWg-1g&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/04EZhHdrS0eBGYR3awtHnQ?expiry=1793318400000&hmac=Q3yj1wF60q1l21HPmTnNnJKlbVDvWLrysiGIGYEqMSM&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/6g7QCDK9QjGO0AgyvcIxoA?expiry=1793318400000&hmac=cANIaD0FwOG3gSW8fsKuruLbYChZHmgspLQogZkIILQ&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/nAtT26bAS-eLU9umwGvnwg?expiry=1793318400000&hmac=hPMQgiUVf-sp1d9MX7FN7EAIVvrM7BQWmXoXoI8Zhdw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/04EZhHdrS0eBGYR3awtHnQ?expiry=1793318400000&hmac=M9XA5NVeO5LA2cL2_QhJT3rtMWStM6DWr0QCiukkHoQ&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "glFWN",
+                    "name": "Mapping IP Addresses",
+                    "slug": "mapping-ip-addresses",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "9hI4q",
+                            "name": "Mapping IP Addresses",
+                            "slug": "mapping-ip-addresses",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/B6Catwj7QhqFu_L91PF9AA.processed/full/720p/index.mp4?Expires=1793318400&Signature=dyS0Q6yfFkws-pnkDHJUm0h5l3mAux7OoiYmyirhYoKQuvFsz~c6XDuAaDY7QQzE2pdKQ2bySy54HWaEI-ZPjrgIY62e0RfPov-1vxCOSkVwXVTuO1yUoeDKqv0tW6oDzEEZPPIkvi6NYF9kD0xZvLpy8O~WnHhg2TwqHNLKwUA_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/SXaxNP7uQqO2sTT-7jKj_g?expiry=1793318400000&hmac=1gGISonD71Im58on5_jQuwQzy-wyBjdkXIc0AF6YDLo&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/JG0Vu8rLR4-tFbvKy8eP2A?expiry=1793318400000&hmac=GbGVIzVRdQbCPY_6FFZlM2jz919FYqGz1fdgnCKCad8&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/R72lB-1dSwe9pQftXVsHGA?expiry=1793318400000&hmac=SK81-lqYF5MJ7t55rSX8TXMQ8bj_PgnjMCmegsPpspA&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/SXaxNP7uQqO2sTT-7jKj_g?expiry=1793318400000&hmac=0E9D-5FEXQiBhnwH9OgTkB0kdnwFF_F0hMOsn1W-uW8&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/JG0Vu8rLR4-tFbvKy8eP2A?expiry=1793318400000&hmac=M_0moJfBYRTLubGRvLGM5OP_HxeO4OjxshVXGxc5dF0&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/R72lB-1dSwe9pQftXVsHGA?expiry=1793318400000&hmac=Jw4e7yTVUBuZ7ZhhbymC93p_LCktbV75X4zm1w5txi4&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "9FhxK",
+                    "name": "Tools for Troubleshooting",
+                    "slug": "tools-for-troubleshooting",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "ylXSb",
+                            "name": "Tools for Troubleshooting",
+                            "slug": "tools-for-troubleshooting",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/2jgFWfUARMO3zROBPPxzsA.processed/full/720p/index.mp4?Expires=1793318400&Signature=N71IFs52CKFsxyZmiFjwxGCaO3k22GbvM6Q-pbJhR2f3uUoNK61oPMkNG7C5Vk4SZbk83dBrjsWM3--363VvrFDOviOLQODVIELXTuHqNemcirO-4Ln7gfjujgAiIHC-1ZQTEK~O7sdh5JgCZFZAWCVwVKln0ZYv3uQTifl0N7U_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/ng9ZuiNwQ0WPWbojcDNFUw?expiry=1793318400000&hmac=GRsJ_hcLVWwujHCG-IsY2OWum4QFc_ePHcOs36-H7B8&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/3wEyeBrGQvaBMngaxjL28w?expiry=1793318400000&hmac=eC5eQi2_4jZ-NLNZSN4-hFQCx4X5PNIdunZlxhwjypM&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/_AkEC-z-SHaJBAvs_ph2oA?expiry=1793318400000&hmac=NlPzRVb5JKFas8WCXuxBX6cjT3GoC7VN738Dw5MgTEU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/ng9ZuiNwQ0WPWbojcDNFUw?expiry=1793318400000&hmac=2SpqMb-z622u4C_qHR1Tmio5bMe4fMOYOp_yhqdfzhA&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/3wEyeBrGQvaBMngaxjL28w?expiry=1793318400000&hmac=tXjb1W6K6utq7i3tSe8icw0zxSrFhbQSGMdm0DmaZaY&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/_AkEC-z-SHaJBAvs_ph2oA?expiry=1793318400000&hmac=nKqSF3GrnjEGF_T0GzgP89dTBw9eyEdXimHSnGG-YuI&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "aD5Wd",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "k7WdO",
+                            "name": "Network Layer Quiz",
+                            "slug": "network-layer-quiz",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>We noted that IP prefixes can be aggregated. Which of the following are equivalent</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~WE8IRJ\"> <div class=\"quiz-option-text\"><p>Neither</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~WE8IRJ\"> <div class=\"quiz-option-text\"><p>(10.0.0.0/16, 10.1.0.0/16, 10.2.0.0/16, 10.3.0.0/16) and 10.0.0.0/14</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~WE8IRJ\"> <div class=\"quiz-option-text\"><p>(10.0.0.0/16, 10.1.0.0/16, 10.2.0.0/16, 10.3.0.0/16) and 10.0.0.0/18</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is the service model offered by the Internet Protocol</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~1Y249R\"> <div class=\"quiz-option-text\"><p>Best Effort</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~1Y249R\"> <div class=\"quiz-option-text\"><p>Reliable stream of in order packets</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~1Y249R\"> <div class=\"quiz-option-text\"><p>Guaranteed delivery of packets</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following is a prefix for which 1.2.3.4 is covered by.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~JGpHBd\"> <div class=\"quiz-option-text\"><p>1.0.0.0/24</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~JGpHBd\"> <div class=\"quiz-option-text\"><p>1.2.0.0/22</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~JGpHBd\"> <div class=\"quiz-option-text\"><p>1.2.4.0/24</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~JGpHBd\"> <div class=\"quiz-option-text\"><p>1.0.0.0/16</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In the data plane, the destination IP address is looked up in what table?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~LvGOMA\"> <div class=\"quiz-option-text\"><p>Forwarding Table</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LvGOMA\"> <div class=\"quiz-option-text\"><p>MAC Learning Table</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LvGOMA\"> <div class=\"quiz-option-text\"><p>Routing Table</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~LvGOMA\"> <div class=\"quiz-option-text\"><p>ARP Table</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>With IP forwarding, the entries in the forwarding table are prefixes. If two entries overlap (e.g., 11.11.11.0/24 and 11.11.0.0/16, for which 11.11.11.11 matches both), how is it determined which entry to use?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~ReZJgf\"> <div class=\"quiz-option-text\"><p>The oldest entry is preferred</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ReZJgf\"> <div class=\"quiz-option-text\"><p>The entry with the longest prefix is preferred</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ReZJgf\"> <div class=\"quiz-option-text\"><p>The newest entry is preferred</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ReZJgf\"> <div class=\"quiz-option-text\"><p>A round robin selector is used to rotate between them</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>For a switching fabric, what is a benefit of a cross bar over a bus?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~0O4nYb\"> <div class=\"quiz-option-text\"><p>It is standardized by the IETF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~0O4nYb\"> <div class=\"quiz-option-text\"><p>It uses thicker wires</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~0O4nYb\"> <div class=\"quiz-option-text\"><p>It can support multiple packets being switched simultaneously</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>BGP (path vector) or OSPF (link state) or both? Knows entire topology. </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~RH58g2\"> <div class=\"quiz-option-text\"><p>BGP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~RH58g2\"> <div class=\"quiz-option-text\"><p>OSPF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~RH58g2\"> <div class=\"quiz-option-text\"><p>Both</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>BGP (path vector) or OSPF (link state) or both? Handles failure of devices. </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~sCcbyB\"> <div class=\"quiz-option-text\"><p>BGP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sCcbyB\"> <div class=\"quiz-option-text\"><p>OSPF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~sCcbyB\"> <div class=\"quiz-option-text\"><p>Both</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>BGP (path vector) or OSPF (link state) or both? May pick a different best route than its neighbor. </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~Fl4aLm\"> <div class=\"quiz-option-text\"><p>BGP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Fl4aLm\"> <div class=\"quiz-option-text\"><p>OSPF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Fl4aLm\"> <div class=\"quiz-option-text\"><p>Both</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>BGP (path vector) or OSPF (link state) or both? Is the main protocol used in the Internet. </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~a8n4Nc\"> <div class=\"quiz-option-text\"><p>BGP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~a8n4Nc\"> <div class=\"quiz-option-text\"><p>OSPF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~a8n4Nc\"> <div class=\"quiz-option-text\"><p>Both</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>BGP (path vector) or OSPF (link state) or both? Exchanges with neighbor all routes known. </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~fulJpp\"> <div class=\"quiz-option-text\"><p>BGP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~fulJpp\"> <div class=\"quiz-option-text\"><p>OSPF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~fulJpp\"> <div class=\"quiz-option-text\"><p>Both</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>BGP (path vector) or OSPF (link state) or both? Works in a decentralized manner. </p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~u2X6kK\"> <div class=\"quiz-option-text\"><p>BGP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~u2X6kK\"> <div class=\"quiz-option-text\"><p>OSPF</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~u2X6kK\"> <div class=\"quiz-option-text\"><p>Both</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Before an IP packet can be sent to a destination it needs to know the MAC address of the destination if on the same LAN or of the next hop router otherwise. What protocol can be used</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~XvaAo1\"> <div class=\"quiz-option-text\"><p>DNS</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XvaAo1\"> <div class=\"quiz-option-text\"><p>ARP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XvaAo1\"> <div class=\"quiz-option-text\"><p>TCP</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XvaAo1\"> <div class=\"quiz-option-text\"><p>DHCP</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which best describes how ping works</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~HNpoid\"> <div class=\"quiz-option-text\"><p>IP header specified ICMP as the protocol, and sends an ICMP request to the desired IP destination, who then responds with an ICMP reply.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~HNpoid\"> <div class=\"quiz-option-text\"><p>Ethernet header specifies ICMP as the type, and routers will forward or respond based on the ICMP header.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~HNpoid\"> <div class=\"quiz-option-text\"><p>Through a separate management channel, a link layer protocol, ICMP, is used.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~HNpoid\"> <div class=\"quiz-option-text\"><p>An IP options field has a flag in it specifying this is a ping request</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "tB1Vw",
+                            "name": "Network Layer Lab Overview",
+                            "slug": "network-layer-lab-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/aK0rVbr9Rzq0ti2e1dPp9g.processed/full/720p/index.mp4?Expires=1793318400&Signature=J~OzE5dP2XKWgn~YlwTSP0ewNo5CrVstRNOlv7C6-qonKQe0KR0cKp7OuZXv8tcjfCYDveTBW1n6vgIkWFZhi4RyTtQSzyTqLfmbtDnbakcmMigqY7TkMFMWqi3k01q8Q92JPGj7sZl4qO0ZekUA7KhKPuZPeFAXRYJxFoZAtIE_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/2sHPxnoPTO2Bz8Z6DyztbA?expiry=1793318400000&hmac=wMD5V7IZW12bAsa9vSBkdq8jWFNjmhBhQElM5AqmAn4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/jJ8yY11rQCafMmNda4AmlQ?expiry=1793318400000&hmac=xTg1-L-PRGRTMsjQDgv_IR5fY3czgvk9Bj25YfVOdGY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/YJrLOlG5S7yayzpRuTu8tA?expiry=1793318400000&hmac=CPiESzPSs5XmtWP-14XOMlrtAkS7RFqWHe8mavYpQMA&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/2sHPxnoPTO2Bz8Z6DyztbA?expiry=1793318400000&hmac=fUsDT15fJVwMJOlwFac9aGt1ho8tyFt-W-bING4C8j4&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/jJ8yY11rQCafMmNda4AmlQ?expiry=1793318400000&hmac=cyiGb0pTOW8PVWwYKaDwAai6K5gGhVYqFea2YWwiEOQ&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/YJrLOlG5S7yayzpRuTu8tA?expiry=1793318400000&hmac=mb4p03mQ1icdKEB7GkEqzJJgAI30zeWgbRNHGJwDI0w&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "4zRMM",
+            "name": "Transport Layer",
+            "slug": "transport-layer",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "QI6jc",
+                    "name": "Introduction",
+                    "slug": "introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "tG0lw",
+                            "name": "Week 3 Slides",
+                            "slug": "week-3-slides",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>These slides are used in each of the lessons in Week 3.</p><p class=\"asset\">nf-03-transport-slides.pdf</p><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "mEDQzHYMQqqCiWYECMIhlg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/mEDQzHYMQqqCiWYECMIhlg_a1804a2a705040a9aef77876b76a21f1_nf-03-transport-slides.pdf?Expires=1793232053&Signature=JKYU9JuH7JFK6WvpEfnHMlHLoUSY1Oy2oBmkeZj5x4ZO8WWikw1JfR9VPw8n0B62yKdkhLwXf4JkzJx2cgZk3CzgPvNTqF1WwxH1~fVp1izibdp80lp64pcdUmAdtlSc9TErvBogboG-P8Y-4dXgtyz~mW-G-2X-SRCp4gvMWJc_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "nf-03-transport-slides.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "JefEj",
+                            "name": "Transport Layer Introduction",
+                            "slug": "transport-layer-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/yvALJorHSbiiGlKWp8Vn6A.processed/full/720p/index.mp4?Expires=1793318400&Signature=ah-e6jgF9VZQplPPesJFv6xO23I8bONnFukSix6aP7jUh27JxSrq3ixYpKYP601ApHDv~Ti1j46la9fbPQiKWahoGik1cq9ng3sfRJEOxHN46wu8VBObCRFtg1h3pGXlrvA7~UAsOEWpHLCzvLfxsSUoa2P1CU6y82IHOQ7AP4Q_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Xc5GIcsySX-ORiHLMrl_xQ?expiry=1793318400000&hmac=IZd94MxqZS7yFcm243XE7CWoGAFY9sg89Fx8fXkvVk8&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/NQqIQBzVSHuKiEAc1Uh7aQ?expiry=1793318400000&hmac=_RKK2SZjj2l_LbEiMPhxXkq36mB1Z1eh6faFsGTWYt0&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/Q_yBvxf_S3a8gb8X_8t2fA?expiry=1793318400000&hmac=_sYA8vayY5jDu6aXRMu-zrBPOmXe2p_qgapBm6nj0Uc&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/Xc5GIcsySX-ORiHLMrl_xQ?expiry=1793318400000&hmac=1k-17_35RINcKOjxGhNLCn0vdetfZppFcbI0Yl9x4KI&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/NQqIQBzVSHuKiEAc1Uh7aQ?expiry=1793318400000&hmac=ExaGaf9xd_sVL4ZFHVD7FUQIyEIMZt76onhfM6repyQ&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/Q_yBvxf_S3a8gb8X_8t2fA?expiry=1793318400000&hmac=G4H5_7xKPRjbJGRetXpo6dXuEQjAS-i2sQURyXXZO_I&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "307Rl",
+                    "name": "Multiplexing",
+                    "slug": "multiplexing",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "mh2GD",
+                            "name": "Multiplexing",
+                            "slug": "multiplexing",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/uGPiYBf-QRS3cqVT8VfGrg.processed/full/720p/index.mp4?Expires=1793318400&Signature=cFSxRRbGmI6b-TGLATHYhegz-w9l9ExahBq83VFRJI2u2xAtdV~iq67FPyKNSpx1cvyNzeTv7FKz64yLBoMSuf3iMfxf6K0bRXVshO8UDsIZrhREqrDzceZbvMUAEwEmnk3WbJxTBQ~v5c3RhlA9UTJ0Nch4jH34E7-~VCz3HQo_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/wwOA1wadRkyDgNcGnRZMDg?expiry=1793318400000&hmac=sVDRCZmjESqQAi_-tcl7FHghgibkGhQOL3ey527jcRo&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/2a3iMVNxQ86t4jFTcdPOPg?expiry=1793318400000&hmac=ZzK4mIh5WG2R1y11egt-LPVmoRJSWYbZjscuvxb-RDg&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OpUnP7MUT0GVJz-zFP9BMA?expiry=1793318400000&hmac=vRWgMN-C9M9Q166NvKz5KNzuyhLjC8VcQtHP3wVlB-I&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/wwOA1wadRkyDgNcGnRZMDg?expiry=1793318400000&hmac=GGw6UQRlAhZJocX8LAifepKaz0w6-eNd7ZfLa-cJ4y0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/2a3iMVNxQ86t4jFTcdPOPg?expiry=1793318400000&hmac=nbRjFYPh6omecVcz_G9rIS6BdL7YwxeftOd9uDHec1A&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/OpUnP7MUT0GVJz-zFP9BMA?expiry=1793318400000&hmac=XaGsOSynNwHOhFBwRxrE5y44pT4aoisrRR9CmZgv3UY&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "OaGU2",
+                    "name": "Reliable Transfer",
+                    "slug": "reliable-transfer",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "0Vw5m",
+                            "name": "Reliable Transfer",
+                            "slug": "reliable-transfer",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/JmE1ogQcQDSCL-tweaiUyQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=a2QBwKP3iTzxt~~cBPz13IsNSm3aJyMNCR1b8el7AE06cB9iJQpMDTbkFfD38F9w5-m1rMBjj9IE61R8NS4iYqClOSJiszTND7DrDJCEA1ACpvCdj~jbFVF0q9rWbXIBZLN~rSevLT3aRwJZdUOhqIC9QPtyeEs03riYcRRWR1k_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/0Hw49LkZTNS8OPS5GVzU7Q?expiry=1793318400000&hmac=mR9LpQUSgNjuLMWgc496X2kYl1eXcehZpdomty5UR9Y&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/ArVz7mtQS0-1c-5rUKtPYQ?expiry=1793318400000&hmac=WGV4mPMe8vi_Ga6VrHhigxTaNKUG1Td2HtNiOCgJ56s&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/5feIlRrbTrW3iJUa2_61Dg?expiry=1793318400000&hmac=nIFNy-sa8GFHlb9zWycOfVX9B00vGNMms_UgIh2_J8I&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/0Hw49LkZTNS8OPS5GVzU7Q?expiry=1793318400000&hmac=1Yvcm7UkjGf4G6EYhMtM9QCpHnlR2nXoQaktC3oQBrk&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/ArVz7mtQS0-1c-5rUKtPYQ?expiry=1793318400000&hmac=05D-N77PU9w84V48HKnmlYVMJleUgyYV65IMETwgPEU&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/5feIlRrbTrW3iJUa2_61Dg?expiry=1793318400000&hmac=jXySwEhPfpQiGZaIqT-LebBRzvoTsFhplK3ZpMVMHsU&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "Skl8S",
+                    "name": "TCP Connection Establishment",
+                    "slug": "tcp-connection-establishment",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "MDdkd",
+                            "name": "TCP Connection Establishment",
+                            "slug": "tcp-connection-establishment",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/BByqat1nRsW6MYN7NWWE1A.processed/full/720p/index.mp4?Expires=1793318400&Signature=LtQyZ992swjtVEatvwmNpYzNpT-VIZsHAsTc4ODqvGR8g4qOp6eUbc1JGi3Q5S3IA3GOwknty9O10HstHpmerBemG-QE8oe8pr1K1~Obvy~7a3bX1kU5eieQMt0vXbvx5st6pd54Ccf2qZklH26ESmsmgpA0K4D45EweWNfnMEQ_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/EZFsuA-lS2yRbLgPpZtsOw?expiry=1793318400000&hmac=JkbgmL9RG6u1xGrOew1a512pVGrlAVUrliI5ToB2Owk&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/MRMVjaJHRYWTFY2iRyWFlw?expiry=1793318400000&hmac=WyosNtDzfIe5ioxUOSWn8S77Gx0sWw5Jo4hzdwiAL0A&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/XVzHCHgUQEacxwh4FJBGUg?expiry=1793318400000&hmac=MpTAZDNUrJbk4lSHRCqeM5__IKw6UmoNh7REXgels0M&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/EZFsuA-lS2yRbLgPpZtsOw?expiry=1793318400000&hmac=yNP1cpfcgJtglz8KPzk8K9_4i78HAiVacs3fW6Tyx14&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/MRMVjaJHRYWTFY2iRyWFlw?expiry=1793318400000&hmac=Xs6f5jku9L_ZwWAUu2xn39SrZTy0ri09sg_ZPDqiYhY&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/XVzHCHgUQEacxwh4FJBGUg?expiry=1793318400000&hmac=MPT4GbJKdbxf-kWgdZonuheKY81LmCOE5d0Liykqbx0&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "naG2e",
+                    "name": "Congestion Control",
+                    "slug": "congestion-control",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "5KlBt",
+                            "name": "Congestion Control",
+                            "slug": "congestion-control",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/KLA1ZlnLQR26NzCTvq0hMg.processed/full/720p/index.mp4?Expires=1793318400&Signature=DYpo0GHZvm~P8M1i9RC7AjjJfpajD-3JZ~rJXBIjIvhSL1UODito~a6xVmL5mHuUXiZMZ7wBTxLQDptnfUd36mQt05Br-5Bb132N~OHMtN2ECwazaAYVOO9N2GE-8YAQO6QeBaAj46kE3PVfezPPicCUdlo8i8znQfZhJQNKJy4_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/XFWQPVWaRwaVkD1VmscGpQ?expiry=1793318400000&hmac=UGip2vXcBXMUfrr4VU7-T0AxTJxLWN-7pjmTuiI8XFY&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/sqlNeg76RySpTXoO-mckfw?expiry=1793318400000&hmac=H41WGba5pCIAofsCu084Yrsu_9ggyvqwqyp3cICnJEY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/9ImxH8ZeQh2JsR_GXtIdRQ?expiry=1793318400000&hmac=iuXNIK0GF8-JrKt4pnRHqw1i3qirQio1YgisvGFFOxs&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/XFWQPVWaRwaVkD1VmscGpQ?expiry=1793318400000&hmac=6gY7hnEeEJ8b4EhuKCd0oTEyNVCzj12EoUngfSmrQWQ&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/sqlNeg76RySpTXoO-mckfw?expiry=1793318400000&hmac=dTiqGOXEfMUvVGD6lNHi4K_drEq7SPuoz1XQmfI1GYY&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/9ImxH8ZeQh2JsR_GXtIdRQ?expiry=1793318400000&hmac=sGiI4qfxQ4NBXs_-i2kq_WONlduvd910HjwDPaZiYJM&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "Phkkz",
+                            "name": "TCP Congestion Control",
+                            "slug": "tcp-congestion-control",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/zJjp6axwS0CvBWfbKZqgXQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=ToqggXMnBDagf1scwFsoxyEFwwdatIPmB~7I5miaARc2kzSYDJ7AikFV70SRTRlE~N9Xa3wvlVsACKPw2FVvAej3f~ixbZ7Fp0wpcrFRjiwfNwWPvxFBRr8QdorFwXBugDPgfcbpXVi78xqX3dD1rR00AR26XsDkomLmZ-SqarY_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/iVdW2N5dSquXVtjeXdqrpw?expiry=1793318400000&hmac=UKmjh5jqPhFTEyAWb5cGNQ3d5zqUMGZuPK1KZLScTO4&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/frK6xfqvTX2yusX6r019-Q?expiry=1793318400000&hmac=Y-8K9X1MlZhsuooejBw3YTcKDE9gbK4f2wb-5Hp3chk&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/AwgMBSqFRb6IDAUqhUW-XQ?expiry=1793318400000&hmac=v8uQ8YA2fnxtGm1SLS94araltP1XuTd_KMBOM49WaiE&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/iVdW2N5dSquXVtjeXdqrpw?expiry=1793318400000&hmac=ixxDwz4cmBZT8MindbC1Qy7k4qNICUcN3MktZmxOQhs&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/frK6xfqvTX2yusX6r019-Q?expiry=1793318400000&hmac=AL5bB0ZsdDnwpOohLrz9ndSCUKYhgxtSA6P75Zq_q3I&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/AwgMBSqFRb6IDAUqhUW-XQ?expiry=1793318400000&hmac=uE_L24B-L0H9z9BHdD0es3GKPXaLW8bBckCwa6nOtFY&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "kKO1V",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "8T5Aw",
+                            "name": "Transport Layer",
+                            "slug": "transport-layer",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following best characterizes the main property of the network and transport layers in general that would be true for all protocols.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~cF5MMv\"> <div class=\"quiz-option-text\"><p>Network layer provides best effort, Transport layer provides error correction</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~cF5MMv\"> <div class=\"quiz-option-text\"><p>Network layer provides addressing that is only locally unique, Transport layer provides addressing that is globally unique</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~cF5MMv\"> <div class=\"quiz-option-text\"><p>Network layer uses numbers to represent addresses, Transport layer uses meaningful strings.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~cF5MMv\"> <div class=\"quiz-option-text\"><p>Network layer provides host to host communication, Transport provides process to process.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following is true:</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~A7OLnX\"> <div class=\"quiz-option-text\"><p>Both UDP and TCP are connection oriented</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~A7OLnX\"> <div class=\"quiz-option-text\"><p>UDP is connection oriented, TCP is connectionless</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~A7OLnX\"> <div class=\"quiz-option-text\"><p>UDP is connectionless, TCP is connection oriented</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~A7OLnX\"> <div class=\"quiz-option-text\"><p>Both UDP and TCP are connectionless</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which of the following could occur in an IP network that requires TCP to provide a mechanism for reliable communication? (select all that apply)</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Vc8yxF\"> <div class=\"quiz-option-text\"><p>Error in the packet (bit flip)</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Vc8yxF\"> <div class=\"quiz-option-text\"><p>An administrator may monitor the traffic</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Vc8yxF\"> <div class=\"quiz-option-text\"><p>Congestion can occur in the switches/routers buffers</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~Vc8yxF\"> <div class=\"quiz-option-text\"><p>Different packets can take different paths (even to the same destination)</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which header fields in TCP are key to reliable communication?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~Hipy5z\"> <div class=\"quiz-option-text\"><p>RequestForRetransmit flag</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Hipy5z\"> <div class=\"quiz-option-text\"><p>BufferReservation flag, and Allocation request fields during setup</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Hipy5z\"> <div class=\"quiz-option-text\"><p>Congestion Control</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Hipy5z\"> <div class=\"quiz-option-text\"><p>Sequence number, and Acknowledgement number</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Assume data is being transferred in one direction - from host A to host B, under which condition is flow control needed?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~HGTml7\"> <div class=\"quiz-option-text\"><p>A can send at 100Gbps, B can receive at 1Gbps</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~HGTml7\"> <div class=\"quiz-option-text\"><p>A uses an Internet Service provider with only 10Mbps upload speed</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~HGTml7\"> <div class=\"quiz-option-text\"><p>B uses an Internet Service provider with only 10Mbps download speed</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~HGTml7\"> <div class=\"quiz-option-text\"><p>A can send at 1Gbps, B can receive at 100Gbps</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is congestion collapse?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~XOOtaW\"> <div class=\"quiz-option-text\"><p>Where applications fail due to packet loss from congestion in the network</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XOOtaW\"> <div class=\"quiz-option-text\"><p>Where the goodput of a network decreases when the offered load by hosts on the network increases past a certain point.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XOOtaW\"> <div class=\"quiz-option-text\"><p>Where throughput gradually decreases the closer a link gets to full capacity</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XOOtaW\"> <div class=\"quiz-option-text\"><p>The point at which network devices (routers) explicitly signal to the sending host that it is congested.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In TCP\u2019s congestion control, what are feedback signals it receives that congestion exists and it should reduce its sending rate? (select all that apply)</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~fTKTdk\"> <div class=\"quiz-option-text\"><p>Timeout waiting for an acknowledgement</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~fTKTdk\"> <div class=\"quiz-option-text\"><p>Receiving a duplicate acknowledgement</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~fTKTdk\"> <div class=\"quiz-option-text\"><p>Receiving a datagram with an in-order sequence number</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~fTKTdk\"> <div class=\"quiz-option-text\"><p>Receiving a datagram requesting to change port numbers</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What does the congestion window in TCP control?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~aAwLGi\"> <div class=\"quiz-option-text\"><p>How much data is allowed to be in flight at one time.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~aAwLGi\"> <div class=\"quiz-option-text\"><p>The amount of time the sender should wait before sending more packets to wait for the network to become uncongested.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~aAwLGi\"> <div class=\"quiz-option-text\"><p>The time of day during which the network is typically congested and should be avoided</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~aAwLGi\"> <div class=\"quiz-option-text\"><p>The rate at which the receiver delivers data to the application</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "G6X89",
+                            "name": "TCP Lab Overview",
+                            "slug": "tcp-lab-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/f8NIv55DSX2jEabRnRyXqg.processed/full/720p/index.mp4?Expires=1793318400&Signature=QaQlCdhoC-KCg~wdtKovzGzyk5CvO4a7ICCY0zwOzrxSL~EhXw0~5S~Y5VPTSI4HgWskmZox6Qp0sPIM6Xct4xEmsY1ul~aDLa8H1LGOPju7-8FjFsrxlHtvtLJUnwPF80fn6ekJs2JnrXkD33BQqahUAGp5isi6TVfzXrftdrQ_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/735Fe_tSS9e-RXv7UsvX_Q?expiry=1793318400000&hmac=ioaXgqGKHjmNje5cEo7QqWbc0a3-wK1wXRrdLPuM8YE&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/olGEu7F4SRGRhLuxeLkRnQ?expiry=1793318400000&hmac=0ZW5OyX-jA7SLsdpRFvunKSp3F817LxZGUXhYz0Dc_I&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/D800iIBEQfaNNIiARBH2Tw?expiry=1793318400000&hmac=hGh9JFHkil6D6DuZfOafK1fkzaaW1R3P6EGySN6_3Jk&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/735Fe_tSS9e-RXv7UsvX_Q?expiry=1793318400000&hmac=mw3oYT5TFXan5YAkZE30-Cg44BKiKwZv340SZR8VAX4&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/olGEu7F4SRGRhLuxeLkRnQ?expiry=1793318400000&hmac=rjDChbbYGgSY0gmzG-VVSTj6lBHG_2qTCfqsNqZQh2c&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/D800iIBEQfaNNIiARBH2Tw?expiry=1793318400000&hmac=8cDzMQOkb0eNpBQU2YD2q0xkXgippbT2w124YSqT4Rc&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "Swnkd",
+            "name": "Application Layer",
+            "slug": "application-layer",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "2yeYO",
+                    "name": "Application Layer Introduction",
+                    "slug": "application-layer-introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "sMQWl",
+                            "name": "Week 4 Slides",
+                            "slug": "week-4-slides",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>These slides are used in each of the lessons in Week 4.</p><p class=\"asset\">nf-04-application-slides.pdf</p><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "LZZMLRXRQiiAcpSAnJJVVw",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/LZZMLRXRQiiAcpSAnJJVVw_f86db2d1226447f687c979d7d4689ef1_nf-04-application-slides.pdf?Expires=1793232051&Signature=F6CFDtawyomPyecQsIJCL~Qjd3aDrTIN8CJ0W2HmEFUblBoC9ib5wrecef2cvFdkMXZ04b8yxFrTFqusTlGrROaXpWTBVUXRkONzyhL6YNNTIhlb4rr2-nDTPwHAR~6kxzeRG6sEuD400jXoQM8~QVpV-neTXFxywlWzB~QAj8Q_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "nf-04-application-slides.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "MSDA2",
+                            "name": "Application Layer Introduction",
+                            "slug": "application-layer-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/PLZE73WyT4qVF6LXNv3CsQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=YjVKGfOdTKGd3hRpzaqzXRx3wGtekrWEr9Mg2yOb0lHe7w~UWo9SbxqEgPMNum9PEtkriO5tkCZO~8v0wyGMG7nMqfwrlZh4nJZfPjoONFRyM3PvlRyBe05OMQSFxlTniSUkA~kKHldYxa04lDNVKGGOmIozmFpcApoE~hAH-1c_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/UHrFR7BUTfC6xUewVE3wiw?expiry=1793318400000&hmac=6l8qSyGg-clvLFlmOrtTMy8k_mFP7yh37QCxTDfMOmw&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/U5EPHSCWQ2KRDx0glqNibg?expiry=1793318400000&hmac=4BPKaz0CYfc2tOCVy9Dl_u2DFYkK88wxgi9gDQ6iVyI&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/FVNRVEVESLOTUVRFRLizZw?expiry=1793318400000&hmac=tYFQgsTSpiAgsQzxmEJPBXybEQ6k9P-JKbRNRoCbrbY&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/UHrFR7BUTfC6xUewVE3wiw?expiry=1793318400000&hmac=gGC6cGKja-MfOxnswJ8kahQ9F4dcdQQbJNSUgEVSX9E&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/U5EPHSCWQ2KRDx0glqNibg?expiry=1793318400000&hmac=tJC5rEXQ7UUad4U7KZE845BbzrJxhF02oN8ZrW03TWE&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/FVNRVEVESLOTUVRFRLizZw?expiry=1793318400000&hmac=DUozAv8C7D9bJoc9b78nFnFgDPYkvFh0CLzdp7-unEU&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "cxqsz",
+                    "name": "Domain Name System",
+                    "slug": "domain-name-system",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "eUadZ",
+                            "name": "Domain Name System",
+                            "slug": "domain-name-system",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/JHzTpGHXQzCUIjy_wvvnNA.processed/full/720p/index.mp4?Expires=1793318400&Signature=YyVJV7rFICuLX0y~Hkt26FOv-LI3uPXKKtEpuAQM-iZD1wZAYRzTXuVCc9OYd48XWUhtapx4ugjFayy~km4fOOJyAjQckEcPj~W1zGERKHzplWE-CZG4mm5N4wVKTyLCGPvwaHm4MmLMlqMc9cE2sM1WWydH9MwQo1xmeEl5QJ4_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/qNUGwWeHTCyVBsFnh_ws-g?expiry=1793318400000&hmac=OaVBat7BuR3aPib7cwBjI4iNNUHOrFd684FzI4Juu44&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/lTe7CL_6QNC3uwi_-hDQYA?expiry=1793318400000&hmac=ZY3y2A4Eu0KynU0BCn79rM3tdnxb8k3zTJvvywh3apc&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/4NypUAg7R9qcqVAIO1faTQ?expiry=1793318400000&hmac=rbs_ya3iTMA-ahi6P2g7jEoGALW95UXMPd3_1W2o2B0&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/qNUGwWeHTCyVBsFnh_ws-g?expiry=1793318400000&hmac=Uu6ZvKWlrn9pUIP55oBBbq8odkyoIN11kAq0UMX8seQ&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/lTe7CL_6QNC3uwi_-hDQYA?expiry=1793318400000&hmac=KAlS9iwe4n_mfVKuhkQDyHoFT2MP9jSaorzLNP8n_Vs&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/4NypUAg7R9qcqVAIO1faTQ?expiry=1793318400000&hmac=3_dS_bPgZb6pEL_Wt1_4RLCrP07elHqpmVw4AAt08Tc&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "QI0N2",
+                    "name": "Socket Programming",
+                    "slug": "socket-programming",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "JHpHk",
+                            "name": "Socket Programming",
+                            "slug": "socket-programming",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/HgavPkMARm6q37QyMGjEAA.processed/full/720p/index.mp4?Expires=1793318400&Signature=g7vxid8deRvs-9Uc~tEHujTTwk-Yn46yy8asYpHNB37mq0LNfUDNtHLhT8YXpVnGOUir53jMAvO5h7N12pzMjQx8g7dsUCLj30jw0PKzL~W04mjElYb6v1UM0VQtyqUpSQBcHu9M76h1SYlbYf9oDgFtsVFRyfz48Fhfi0XAZRg_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/WncK3WrLS9G3Ct1qy4vRbA?expiry=1793318400000&hmac=bWn-VGme2zW639zxhqozvC-0TdTi6i260Kb7eEwNcI8&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/JEWQJEMvTl-FkCRDL-5fpQ?expiry=1793318400000&hmac=PtaJoqDlg_9r2-bM_bxQnq1ZJ5NoPbKaDUBuidOGDjQ&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bouqfqpNT_KLqn6qTd_yRA?expiry=1793318400000&hmac=sIcbPXNuhjluSrTUqYtCkPWkEeUZlkn6VYq7iO5OayU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/WncK3WrLS9G3Ct1qy4vRbA?expiry=1793318400000&hmac=-5NIk-TDPwhM0HtJ_0UHXeilTxR6U3hhy-A4V0Zx6LU&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/JEWQJEMvTl-FkCRDL-5fpQ?expiry=1793318400000&hmac=YsOlvJqonULJLpTbjx4VOR31DmJ0WEOoPUiP4Q5CHeA&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bouqfqpNT_KLqn6qTd_yRA?expiry=1793318400000&hmac=DCDIQuhmmlH9423jFL4FHfVmhPOAuR4VLIMi_Pws_dA&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "TF0JA",
+                    "name": "Application Protocol: HTTP",
+                    "slug": "application-protocol-http",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "AFquV",
+                            "name": "Application Protocol: HTTP",
+                            "slug": "application-protocol-http",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/AcBd7YDUTUqI6kSIGigqMg.processed/full/720p/index.mp4?Expires=1793318400&Signature=K7PrVfMnagU9sgd4Ek2ngWKWViUD7vVmsXFCwqeN3o1qIIzdcFgebozx66ucMQa6zXor6CIn9HS0N9c~8IJPga36QU6w8rIi2MFT-Lpja4eCLmQt9imp7Kq0ojGr7cWpej9u3Eh4W3RSidznmLFQYgWXoZWve-3l~JdB0khbKeE_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/21jA83D7QteYwPNw-yLXZw?expiry=1793318400000&hmac=ZvLVQEtHFxcPjLzAvo4lJ0k-S5BaD8K_edMyjvMpF4o&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/qkZnZ-OOSfmGZ2fjjtn5Ug?expiry=1793318400000&hmac=KtcVm49h3Cwscc__odVJAF7Ha8Int1KuH6Gm6IcP66M&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bcI1XQZ9SVSCNV0GfflUqA?expiry=1793318400000&hmac=klgAMZ_oIgpP0XS9_8lORRMlIlqhdFuZ-T3jTCQdLpU&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/21jA83D7QteYwPNw-yLXZw?expiry=1793318400000&hmac=AiOOwUjmPa3vh8ganTp9SuzeguiwIM_t3sFzQh2_EQM&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/qkZnZ-OOSfmGZ2fjjtn5Ug?expiry=1793318400000&hmac=cVmcuM9lZCnWoglN7ML9JYCpvQQzI78jKKGWqF1vhHg&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bcI1XQZ9SVSCNV0GfflUqA?expiry=1793318400000&hmac=8-GI2MTRLU6ychjVz9DQW5Pmxrq0ybYe_aZcx4H28S0&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "FxKRI",
+                    "name": "Application Protocol: gRPC",
+                    "slug": "application-protocol-grpc",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "EQQU7",
+                            "name": "Application Protocol: gRPC",
+                            "slug": "application-protocol-grpc",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/jCIeUyIlQ4WW9LXnzAX-uw.processed/full/720p/index.mp4?Expires=1793318400&Signature=T7ipFEvTM3HrD8~d5~fWFI28fcOvYPl~mzhFmS7U75NAzZKRZeOTg76xmmbjrlURpDkJu-KSiOJN2fzQHDCvJvAFNfVPHdYGuBqipdCV9yqko2xKmfrepdpoYThRNuKQGQET5lLBZyG1Ms73kCy--qI7Fev8haQWrCo8Mjxst2s_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/x-t8tP9IRJWrfLT_SBSVHA?expiry=1793318400000&hmac=lZ7xGdsqfgk8PJevoG7KnVPhr4FDxv0rnazO6kvueLU&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XbaGZNOwTkO2hmTTsO5DzA?expiry=1793318400000&hmac=rXV3Ys_436Ky-6Zpfh4WcHm3m1NF3Cf83YJaRiBlD3I&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/9Uvuog_rQ6-L7qIP62OvAA?expiry=1793318400000&hmac=xI8J1Y_oBmM6pF3qfDjHvFJkhM85WctNeFh5FM-5eOI&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/x-t8tP9IRJWrfLT_SBSVHA?expiry=1793318400000&hmac=rt1aeyqfaY1jrOQIqHSByf0nTYIkw7bfRN4r-2EQQWE&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/XbaGZNOwTkO2hmTTsO5DzA?expiry=1793318400000&hmac=FyO87PfXT0z9SDKBjYM2TJNJ1rUhnHOlOlb92pbXRnk&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/9Uvuog_rQ6-L7qIP62OvAA?expiry=1793318400000&hmac=V6zUDXxNWtzGSPWUCSzM_RLxRScilSOfhGjYknqEvyE&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "4IG4L",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "tnPGE",
+                            "name": "Application Layer",
+                            "slug": "application-layer",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In DNS, how do DNS resolvers know about root servers?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~qTfYhT\"> <div class=\"quiz-option-text\"><p>The IP addresses are hard coded within the resolver\u2019s code/configuration.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qTfYhT\"> <div class=\"quiz-option-text\"><p>It uses ARP to query on its local area network.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qTfYhT\"> <div class=\"quiz-option-text\"><p>The don\u2019t \u2013 DNS resolvers don\u2019t know about root servers, which are run as a trusted and private Internet service only available to ISPs.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qTfYhT\"> <div class=\"quiz-option-text\"><p>It queries DNS with the fully qualified domain name of the root servers (a.root\u2011servers.net, b.root\u2011servers.net, etc.)</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In DNS, what happens when a DNS server does not know the IP address of the domain in the query.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~5wD17c\"> <div class=\"quiz-option-text\"><p>Responds with the name of another resolver that it knows as authoritative for part of the domain.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~5wD17c\"> <div class=\"quiz-option-text\"><p>Hangs the server.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~5wD17c\"> <div class=\"quiz-option-text\"><p>Responds with the IP address of the resolver.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~5wD17c\"> <div class=\"quiz-option-text\"><p>Silently discards the request.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>In sockets programming, which would be an appropriate sequence of functions called.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~vuEoo8\"> <div class=\"quiz-option-text\"><p>socket(), bind(), listen(), accept()</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~vuEoo8\"> <div class=\"quiz-option-text\"><p>bind(), recv(), accept(), send()</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~vuEoo8\"> <div class=\"quiz-option-text\"><p>bind(), send(), accept(), recv()</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~vuEoo8\"> <div class=\"quiz-option-text\"><p>socket(), accept(), listen(), bind()</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>True or false: socket programming is limited to being used in the C/C++ language</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~i1a931\"> <div class=\"quiz-option-text\"><p>True</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~i1a931\"> <div class=\"quiz-option-text\"><p>False</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Application protocol defines which of the following</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~qnEdSP\"> <div class=\"quiz-option-text\"><p>Amount of buffering in the Transport stack.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qnEdSP\"> <div class=\"quiz-option-text\"><p>Programming language of client and server</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qnEdSP\"> <div class=\"quiz-option-text\"><p>Message transmission time</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~qnEdSP\"> <div class=\"quiz-option-text\"><p>Message syntax and semantics</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>For HTTP messages that use JSON, which of the following can be expressed (check all that apply).</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Fb7Ih\"> <div class=\"quiz-option-text\"><p>arrays</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Fb7Ih\"> <div class=\"quiz-option-text\"><p>strings</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Fb7Ih\"> <div class=\"quiz-option-text\"><p>integers</p></div></li>\n<li><input type=\"checkbox\" name=\"autoGradableResponseId~3Fb7Ih\"> <div class=\"quiz-option-text\"><p>objects</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What role does the protobufs compiler play in the gRPC workflow.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~E0EqPY\"> <div class=\"quiz-option-text\"><p>It provides a language neutral acceleration library for client/server applications.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~E0EqPY\"> <div class=\"quiz-option-text\"><p>It performs validation of JSON messages.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~E0EqPY\"> <div class=\"quiz-option-text\"><p>It transforms JSON data formatted messages into a binary form.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~E0EqPY\"> <div class=\"quiz-option-text\"><p>It generates libraries in different languages that provides stubs for serializing and deserializing data that can be used by client and server software.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>Which is the biggest distinguishing difference between JSON and Protobufs</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~8sVoxr\"> <div class=\"quiz-option-text\"><p>JSON is an open standard, protobufs require a paid license from google to use.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~8sVoxr\"> <div class=\"quiz-option-text\"><p>JSON is textual, protobufs are binary.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~8sVoxr\"> <div class=\"quiz-option-text\"><p>JSON is popular, protobufs are not.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~8sVoxr\"> <div class=\"quiz-option-text\"><p>JSON is supported in many languages, protobufs are only supported in go and python.</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "k4DaF",
+                            "name": "Socket Programming Lab Overview",
+                            "slug": "socket-programming-lab-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/lAC3lIdATw61tEofV5FZ3A.processed/full/720p/index.mp4?Expires=1793318400&Signature=Oau0IH53KJoYnYzkBd7imUqJYNpYroviZGIBpuA~nRBVxCCh1Dhkohe4~3uIR3TT~onxBuKioqXxhXAUALWGInFk7BX-rhfRak4ZwyeJ7JaXU5eyLuBNQF-Yl3w~Ue2svHknVGsO8mNlemclLh5dZ~GM~bDiGmtLFPyXB~geDF8_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/zBlXABZFTUWZVwAWRW1Fcg?expiry=1793318400000&hmac=_c6dhQQvAo7rthWo9fGSejQYeYlnHOVPy7_FRVtXJSU&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/bph2AURJQUuYdgFESUFL1A?expiry=1793318400000&hmac=ixO2bBuYk9OV054hZx_poJiAMNpyvIjlKPRL0iPmiXM&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bkkl2Ak1TtGJJdgJNb7Rbg?expiry=1793318400000&hmac=BRFGdwuMTYWyUn3b2hCuWAW_lhtJiSrIRmI4Rw_8XIM&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/zBlXABZFTUWZVwAWRW1Fcg?expiry=1793318400000&hmac=oKRo_SsoJouegbw7ifxTQYdvjWAKe4QGwVgNISTrhKs&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/bph2AURJQUuYdgFESUFL1A?expiry=1793318400000&hmac=SV03Km_fljQ93ND8Eag1gF2_iRVKUJUqrKxaygfjEOw&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/bkkl2Ak1TtGJJdgJNb7Rbg?expiry=1793318400000&hmac=pxLMekSTisAhaOEE85Ui0WxVUeJwhvW0U6G_ijxr0-8&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "9RsjB",
+            "name": "Network Security",
+            "slug": "network-security",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "wMU46",
+                    "name": "Introduction",
+                    "slug": "introduction",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "0IOmI",
+                            "name": "Week 5 Slides",
+                            "slug": "week-5-slides",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>These slides are used in each of the lessons in Week 5.</p><p class=\"asset\">nf-05-netsec-slides.pdf</p><p></p>",
+                                    "assets": [
+                                        {
+                                            "id": "2CK6bUGtSXmYd7Qpq4NxUg",
+                                            "url": "https://d3c33hcgiwev3.cloudfront.net/2CK6bUGtSXmYd7Qpq4NxUg_362224e99d1143e58cd4701ebae9d4f1_nf-05-netsec-slides.pdf?Expires=1793232048&Signature=ALFDOsnJ8cpVP058-ku25tWLlBrl9iXgx5CmZ0QDgBd8n6rn7LFr5rpuB-Ysrq7gH1xgcrQfCi4m8LKPihLsofQMo3CX3KKdEeXKNZcl4du87Z~CeDL8fyOFqmvFHihYDvpaNR~uSJiLwkpqDRfVsjjFwR0Mnqs2L~HLJkc699s_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                            "name": "nf-05-netsec-slides.pdf"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "aVvUW",
+                            "name": "Network Security Introduction",
+                            "slug": "network-security-introduction",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/vrg5cN2QRkiiRmBu2pqHvg.processed/full/720p/index.mp4?Expires=1793318400&Signature=GB1nqMUJYmEWz4NLA7oP-NkZF59RmB8W3DgQvfQFw9o43y0rJTiadtRKnAGRQfPrTJ5YWd54VIo7psy2PQi6PZGsKOFzrtXL1GL0JJ~B~JRW5ekk1N2mX-HrK4tA6~R858lGKBJ5Fkxy4Z-6bN14bec~BnhRn0kAXTmeQAVpKr4_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/DaHzbi2CQqWh824tgjKlrw?expiry=1793318400000&hmac=m6kAUYqzDiNgWt1RdEKyxXNH64j41DAwBbpqmpkdHgU&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/vmaAY1DITTqmgGNQyC066w?expiry=1793318400000&hmac=bwgWDPrTXWQhDkVA0yohtcfnv78UPnwdF2ziRhVOfiM&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/KB9YATiKSiefWAE4ilonfg?expiry=1793318400000&hmac=0ecnAJznETwlENJL4aIXdNVZLVcnrG46Dnq7LUIDxBM&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/DaHzbi2CQqWh824tgjKlrw?expiry=1793318400000&hmac=mT7uo213_l8g8my7B10HkTVGwYde2s0GDYZsVjo0f3M&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/vmaAY1DITTqmgGNQyC066w?expiry=1793318400000&hmac=ELiZBFbzWSMk60zRqS8ACtnV5rjDahvZEWvY67BhbRg&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/KB9YATiKSiefWAE4ilonfg?expiry=1793318400000&hmac=j4LU0gonkl1_k5_Wt8JssI4pGeehTW-xTZP5F-sqjRA&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "WQWZr",
+                    "name": "Basics",
+                    "slug": "basics",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "uliXP",
+                            "name": "Basics",
+                            "slug": "basics",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/UjS2dw9kTWyUfoPxxoiQtw.processed/full/720p/index.mp4?Expires=1793318400&Signature=NjSY3yCowtkioE6kH9n2ZzcdxM21R7tk6k8As037tLyMb1x~VWhpxdacvWArHOZEFFKrdvsAZu78acxFny9kj5Ohna5e64uxZStc1IylB9oJ9xjnDlWJ0lThVirRxGyzcEUdDWROS9fud4391IkWtEsGlkZ-vtmKus1HA4C4iNs_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/lbMxXnkeT1yzMV55Ht9cQg?expiry=1793318400000&hmac=sI0zCwhZ5wInsn4p4XOZ0a1Wn3HdsvoYJS7SgqK0QFA&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/aeLfP3cdS-ui3z93HUvrmA?expiry=1793318400000&hmac=b0STkABUStAAhf5BmiJPuZzMB3pMo63_rMAPQY2v0rI&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/IqOgrjLkTQajoK4y5E0GyQ?expiry=1793318400000&hmac=bVVENfIMYXa2l4W1plpXfR0SGunXEyBq5yp9_vcQQyI&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/lbMxXnkeT1yzMV55Ht9cQg?expiry=1793318400000&hmac=bMU40NNwOHWz_GfLK3xGGe8tAR2fLfNxHywlkTghqn0&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/aeLfP3cdS-ui3z93HUvrmA?expiry=1793318400000&hmac=JUkHE4PX4deaUrfxaAFwC_zM7sT3d8xbiyx1_VZqLjY&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/IqOgrjLkTQajoK4y5E0GyQ?expiry=1793318400000&hmac=ERf8hf3apuuFmWOzJrek79V9E1NjZXs0_Rc_9ZDTrdU&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "gLuxn",
+                    "name": "IPsec (Network Data Plane)",
+                    "slug": "ipsec-network-data-plane",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "FAGLQ",
+                            "name": "IPsec (Network Data Plane)",
+                            "slug": "ipsec-network-data-plane",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/hnOlM4uNSdmGMjLQ8lx3Hw.processed/full/720p/index.mp4?Expires=1793318400&Signature=cAuOmBTXQg0Sw~x17SgRrZKFuvNpDkMKI-y~I7Fb35rVOXcpTKCFpkuq7etCNjU7Y7Ylmh0HFNyIxhQW-AwZXcXwixMJLRs6X8l2Sbc0fdZS8b~IxQBjeU9bK2RvjH9zLtl4NwjSxGFg6LZHfLwyrNSHOkO0th3SjvOO-4IpMQI_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/kzzUUT3IThW81FE9yB4VbA?expiry=1793318400000&hmac=7FT87qd5GkpUjw61JWTolpxD4rpACAfVkKmEFMORJ3I&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/VSEdf38aRm6hHX9_GoZu8Q?expiry=1793318400000&hmac=LWuzNzygiSVnie_yc-vlTYtxuoNQFkcY_o0_j0tZmBo&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/lgtElQqmQNuLRJUKpvDbbA?expiry=1793318400000&hmac=UUf8Mwrj6maG8EzyRHY1BNUvf9DzdEUKU1vQ2JqH6xs&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/kzzUUT3IThW81FE9yB4VbA?expiry=1793318400000&hmac=wZvW45U6fbSonVzg453zzgIw1HvowVsTUk0jn-m4d5A&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/VSEdf38aRm6hHX9_GoZu8Q?expiry=1793318400000&hmac=f_UDFEUYuC5hB8GzE1437mc5k3mLoZzPMo3MgGEwbUE&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/lgtElQqmQNuLRJUKpvDbbA?expiry=1793318400000&hmac=MfC2oHbOeHJLMjjLOsAC6EZL7I2LUxdPvtSqZO97xh8&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "wXCoc",
+                    "name": "RPKI (Network Control Plane)",
+                    "slug": "rpki-network-control-plane",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "OFbiS",
+                            "name": "RPKI (Network Control Plane)",
+                            "slug": "rpki-network-control-plane",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/5Bk56bLeQi-6YhUcpc-mWA.processed/full/720p/index.mp4?Expires=1793318400&Signature=HmHTDkKMRxa3qTWiGmm-3N4f69IAln8NSLAfu1ngbdxx1HG60cQ2N8A9HaDJNCmc47S2MqtfURamNlcJR9MLICgv61Ec9kP3rjwM9mtUpISt4C3wxLJ6MIl4m8IS-fiYEnHa9hCyui57gh5G1k0tL4HrttqXl8koVGItkr9IylU_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/-CD4ctdmRBCg-HLXZgQQVQ?expiry=1793318400000&hmac=KTo7anBbgk2dCt-7sfUqCk-1zJgXBMZVn64RW6HhSaM&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/NHat9PRAS5-2rfT0QDufCA?expiry=1793318400000&hmac=0l27GtOZpg09OZzRktfxOA_Bb_izhIWRpzIy5PVpxHk&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/Kef6U5P7QXCn-lOT-7FwTA?expiry=1793318400000&hmac=zojNB57CrcXOBmPnGrUqlfYyEf1No5w9Z_J7gMaat5c&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/-CD4ctdmRBCg-HLXZgQQVQ?expiry=1793318400000&hmac=SUondINh4CeRH9AWlFg4-8fU8XASunREHedieQKiJP4&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/NHat9PRAS5-2rfT0QDufCA?expiry=1793318400000&hmac=vHsj1wCecjGHPYZiLVvIjHoLzGiyiB0jB0JKiqRAU-o&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/Kef6U5P7QXCn-lOT-7FwTA?expiry=1793318400000&hmac=hm1NQJHHrH7ZenkatSCDcYcJWoBQ8OkvQaJmitkPZbI&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "QJJCb",
+                    "name": "TLS / HTTPS",
+                    "slug": "tls-https",
+                    "items": [
+                        {
+                            "type": "Lecture",
+                            "id": "r7Z50",
+                            "name": "TLS/HTTPS (Transport/Application Layer)",
+                            "slug": "tls-https-transport-application-layer",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/3DEoQFDKRQGXp6LKxJevwQ.processed/full/720p/index.mp4?Expires=1793318400&Signature=Rk9PCUlW0IV7PmnjxwYw-GBr53hsu98qQTYEJ7a77mpXDzU3CRSLAFI-NNX9eQYQiJAQdOYtUlK0mbGB57Gb4Lr40B~nhIvKVDeONbxJZQXzDY75KxrAjGBFGpSCcX9y~cgaiquVyFY~WIojPnyPGXt41DIAykOBXAyPX0~J05Q_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/FCEXC6iQQUyhFwuokGFMWQ?expiry=1793318400000&hmac=-fkoQKBsDzk2-b8RqwAyVxJrRoHI4T9iHUCs9HHfTT8&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/gePrpKwZTzaj66SsGY820w?expiry=1793318400000&hmac=INjSSebuIqUiCSmzOcB3yCZ0sz3RCnVK150OhkwqbFY&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/xrd6QyROS723ekMkThu9Bg?expiry=1793318400000&hmac=2lkq0Ao33DDUpJc1Z__LoySCKzUzWdp724KzyIXdjg8&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/FCEXC6iQQUyhFwuokGFMWQ?expiry=1793318400000&hmac=HMBWU-1b3iKxGp3BEwQFGI8_VKrIulNeItDv2mOv-a8&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/gePrpKwZTzaj66SsGY820w?expiry=1793318400000&hmac=649PHFr1j8Cvpm5cnGsfXy6qcKshy-2NWrkox5LwWCI&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/xrd6QyROS723ekMkThu9Bg?expiry=1793318400000&hmac=pnmsuN0vJjeJAQHTik2m1ICQATDZekeqWqT2NuUBNL8&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "rBXwN",
+                    "name": "Assessment",
+                    "slug": "assessment",
+                    "items": [
+                        {
+                            "type": "Quiz",
+                            "id": "RDVjV",
+                            "name": "Network Security",
+                            "slug": "network-security",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What are general negatives about symmetric and asymmetric encryption respectfully</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~XPXNaI\"> <div class=\"quiz-option-text\"><p>Symmetric encryption requires shared secret keys, asymmetric encryption is slow.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XPXNaI\"> <div class=\"quiz-option-text\"><p>Software is generally not available that can perform either symmetric or asymmetric encryption </p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XPXNaI\"> <div class=\"quiz-option-text\"><p>Symmetric encryption is vulnerable to eavesdropping, asymmetric encryption requires parts of the message to be plaintext.</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~XPXNaI\"> <div class=\"quiz-option-text\"><p>Symmetric encryption is slow, asymmetric encryption requires shared secret keys.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What mechanism of IPsec keeps the communications confidential?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~PJFcEJ\"> <div class=\"quiz-option-text\"><p>Encryption</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~PJFcEJ\"> <div class=\"quiz-option-text\"><p>Hashing</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~PJFcEJ\"> <div class=\"quiz-option-text\"><p>Message Authentication Codes</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~PJFcEJ\"> <div class=\"quiz-option-text\"><p>Digital Certificates</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is the purpose of the Diffie Helman protocol as used in IPsec</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZXQPn8\"> <div class=\"quiz-option-text\"><p>Exchange security parameters</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZXQPn8\"> <div class=\"quiz-option-text\"><p>Ensure the network is performant enough for data exchange</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZXQPn8\"> <div class=\"quiz-option-text\"><p>Distribute a public key of a server</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~ZXQPn8\"> <div class=\"quiz-option-text\"><p>Exchange a shared symmetric key</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is an attack that can be performed that RPKI protects against</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~leO9xA\"> <div class=\"quiz-option-text\"><p>Man in the middle attacks</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~leO9xA\"> <div class=\"quiz-option-text\"><p>Route hijacking</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~leO9xA\"> <div class=\"quiz-option-text\"><p>Eavesdropping</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~leO9xA\"> <div class=\"quiz-option-text\"><p>Denial of Service</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What entities serve as the main certificate authorities in RPKI</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~Xx980h\"> <div class=\"quiz-option-text\"><p>A government agency</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Xx980h\"> <div class=\"quiz-option-text\"><p>Network vendors such as Cisco, Juniper, Palo Alto</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Xx980h\"> <div class=\"quiz-option-text\"><p>Regional Internet Registries</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~Xx980h\"> <div class=\"quiz-option-text\"><p>Universities </p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What are three concerns with HTTP that HTTPS helps address</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~71QDhR\"> <div class=\"quiz-option-text\"><p>Traffic is in plaintext, data has no integrity protection, the TCP three way handshake is insecure</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~71QDhR\"> <div class=\"quiz-option-text\"><p>Data encoding, data size, and data fidelity</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~71QDhR\"> <div class=\"quiz-option-text\"><p>DNS requests are UDP, data is encoded inefficiently, APIs are openly accessible</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~71QDhR\"> <div class=\"quiz-option-text\"><p>Traffic is in plaintext, data has no integrity protection, client can\u2019t be sure server is their intended communication partner.</p></div></li>\n</ul></div>\n<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>What is a mechanism that Let\u2019s Encrypt uses to validate the identity of a request for a signed digital certificate?</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~geHNnt\"> <div class=\"quiz-option-text\"><p>Let\u2019s Encrypt accepts all requests as its only purpose is for testing https locally</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~geHNnt\"> <div class=\"quiz-option-text\"><p>The Let\u2019s Encrypt team performs a background check on the requestor</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~geHNnt\"> <div class=\"quiz-option-text\"><p>An admin from Let\u2019s Encrypt sets up a video call with the requestor</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~geHNnt\"> <div class=\"quiz-option-text\"><p>Admin places a token at a known address on their website, and if Let\u2019s Encrypt is able to fetch it, it proves ownership.</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Lecture",
+                            "id": "c5KBr",
+                            "name": "Network Security Lab Overview",
+                            "slug": "network-security-lab-overview",
+                            "videos": [
+                                {
+                                    "url_video": "https://d3c33hcgiwev3.cloudfront.net/n5PnQP0yQWGmNwj5ogKr2Q.processed/full/720p/index.mp4?Expires=1793318400&Signature=KP4wUZqNI79T4qBbjbwXcEZrAJkOf1~nY99q6ZlUBJ-WaEWrv6B53IjuO9Kh8863~XAQC06WdgS3Hgp3n3m1S-k-DrirBNYSiTV2623dHHm92bfAFQ0uAgNhOMUtiu7pB~qybpXzyBBH9SGiQiu3zf67MfZ0iBQsr3pf5Jh4jPw_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A",
+                                    "subtitles": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/uFBpQsTkQsaQaULE5DLG4w?expiry=1793318400000&hmac=-1F-WQG5jjKUDcccdFGmgxcAuqq-K_zdPJU-zBFVQbA&fileExtension=srt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/W1sMHNa1SiKbDBzWtWoiXA?expiry=1793318400000&hmac=hXdjF4zc_sA6crT38_OW1FsvM4gbWuPhTqQZEzzNhhU&fileExtension=srt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/V_DRxAU5SDWw0cQFOUg1yA?expiry=1793318400000&hmac=4LKb6wEoAEiud3iBP7kh-2Y8p9DlZcI9iPn4nqCoSbA&fileExtension=srt"
+                                    },
+                                    "subtitles_txt": {
+                                        "kk": "https://www.coursera.org/api/subtitleAssetProxy.v1/uFBpQsTkQsaQaULE5DLG4w?expiry=1793318400000&hmac=dhpeKLFLgJpVvLcsrfFik642ejLJ6c-Z-f3whqyCL2k&fileExtension=txt",
+                                        "uz": "https://www.coursera.org/api/subtitleAssetProxy.v1/W1sMHNa1SiKbDBzWtWoiXA?expiry=1793318400000&hmac=usj0LwHNPR_xbpwjQ83xTuzgzHJIDqoO2MGRYqyT-rk&fileExtension=txt",
+                                        "en": "https://www.coursera.org/api/subtitleAssetProxy.v1/V_DRxAU5SDWw0cQFOUg1yA?expiry=1793318400000&hmac=nxD2b4pfJRAbveTiBeF3tp_3mYBr5eAuslVQKK5JohY&fileExtension=txt"
+                                    }
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Module",
+            "id": "oMlLD",
+            "name": "Final Exam",
+            "slug": "final-exam",
+            "lessons": [
+                {
+                    "type": "Lesson",
+                    "id": "W5j3c",
+                    "name": "Prepare for the Final Exam",
+                    "slug": "prepare-for-the-final-exam",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "NZJWH",
+                            "name": "About the Final Exam",
+                            "slug": "about-the-final-exam",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p>The course final examination is similar in format to the other graded assignments, with the following characteristics: </p><ul><li><p>The exam is <strong>unproctored</strong>.</p></li><li><p>The exam is <strong>two hours long</strong>.</p></li><li><p>The exam is <strong>34 questions.</strong></p></li><li><p>You are allowed<strong> 1 attempt</strong>.</p><ul><li><p>An attempt is one complete try at the exam within the given time limit.  </p></li></ul></li><li><p>Each attempt allows <strong>1</strong> <strong>submission</strong>.</p><ul><li><p>A submission occurs when you click \u201cSubmit\u201d during an attempt.</p></li></ul></li><li><p>After the attempt window has ended, you will not be able to change or re-take the exam.</p></li><li><p>The exam contains multiple-choice questions and one free-response question. There are no programming questions.</p></li><li><p><strong>You are not allowed to use any notes or access external websites during the exam.</strong></p></li></ul><p>You may drop or withdraw from this course at any time before accessing the final exam. Once you begin the exam, you will be assigned a course grade based on the announced grading formula, and this grade will appear on your university transcript after the eight-week session concludes. After the final exam has ended, you may continue submitting homework assignments until the conclusion of the eight-week session.</p>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Lesson",
+                    "id": "YRqtS",
+                    "name": "Take the Final Exam",
+                    "slug": "take-the-final-exam",
+                    "items": [
+                        {
+                            "type": "Supplement",
+                            "id": "mlLbA",
+                            "name": "NOTE: Do Not Open the Honor Code Verification Until You Are Ready to Take the Final Exam",
+                            "slug": "note-do-not-open-the-honor-code-verification-until-you-are-ready-to-take-the",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<p><strong>Please do not complete the \"Honor Code Verification\", which is the next quiz item after this reading, until you are ready to complete the final exam.  Once the \"Honor Code Verification\" has been submitted, you will no longer be eligible to drop or withdraw from the course, even if you do not access or complete the final assessment.</strong></p><p>See the <em>Course Drop &amp; Refund</em> in your program handbook for details.</p>",
+                                    "assets": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Quiz",
+                            "id": "C9pAm",
+                            "name": "Honor Code Verification (Similar to a Password Quiz)",
+                            "slug": "honor-code-verification-similar-to-a-password-quiz",
+                            "items": [
+                                {
+                                    "type": "CML",
+                                    "html": "<div class=\"quiz-question\"><div class=\"quiz-prompt\"><p>By selecting \"agree\" below, I hereby affirm that I have read the CU honor code and that, on my honor, as a University of Colorado Boulder student,\u00a0I have neither given nor received unauthorized assistance.</p></div>\n<ul class=\"quiz-options\">\n<li><input type=\"radio\" name=\"autoGradableResponseId~wDMp_MFZEeqdWhJyKIJLYQ\"> <div class=\"quiz-option-text\"><p>Agree</p></div></li>\n<li><input type=\"radio\" name=\"autoGradableResponseId~wDMp_MFZEeqdWhJyKIJLYQ\"> <div class=\"quiz-option-text\"><p>Disagree</p></div></li>\n</ul></div>",
+                                    "assets": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "references": [],
+    "workspaces": []
+}

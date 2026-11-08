@@ -1,0 +1,100 @@
+All right, let's go ahead and get started. So this time we're going to
+again go into an academic paper, this time looking at Akamai's network. So Akamai was an early
+pioneer in the CDN space, and it's really useful to
+look back historically, on their work describing it. So obviously I'm sure it's
+changed a lot since then, but this is definitely really,
+really worthwhile paper to read. All right, so this was published back in 2010 after they've grown quite a bit. I think they were founded at
+least a decade before that. All right, so again,
+I'll provide this on the Coursera site. So they kind of talk about
+why the CDNs are needed. They kind of put in the context
+of Internet applications, and they said its performance is directly
+tied to key business metrics such as an application's adoption and
+site conversion rates. So they ran an experiment where
+site visitors were partitioned. This was an e-commerce site. Half of them were directed to the site
+through Akamai's CDN network and the other half were sent directly
+to the site's origin servers. And their finding was that
+through Akamai the users were 15% more likely to complete a purchase and 9% less likely to abandon
+the site after just one page. So there's a direct business
+benefit to use in this. Another study, across all their customers,
+they saw that annual revenue increases of 200,000 to over three
+million that these companies directly attributed to the improved performance and
+reliability of their applications. They also go through in the paper
+with their view of the problem with the Internet. And a lot of these are going to be
+exactly what we talked about in the last lesson when we just
+introduced the concept of a CDN. The reach of any single
+network is limited. Pairing point congestion,
+inefficient routing protocols, unreliable networks,
+inefficient communication protocols, scalability of the backend and
+application limitations. So like supporting different
+browsers if they can help with that. So most of these are the top ones,
+are all about the Internet, this is a little different. But they had one table just
+to really quantify this, so the distance between the server and
+the user, they broke it down into local
+regional cross content or multi content with network roundtrip time
+increasing, which makes a lot of sense. And then they measured the packet loss and then the impact on the throughput
+that's obtainable and then how long it would take to
+download four gigs of data. All right, so, certainly local
+gets much better performance. So their network, you know,
+at the time was 61,000 servers located across 1,000 networks
+in 70 countries worldwide. And their architecture looks like this, where this is to be expected
+if you saw the last lesson, they have a bunch of edge servers, but then they also have basically
+created a hierarchy of servers. So it wasn't the edge servers would go
+directly to the origin and cache it there. Theirs is a lot more complicated or intelligent where they have this
+kind of hierarchy of servers, and then they have this kind of monitoring and
+management system. And so, as we said, it's more than just
+obtain or fetch content and then cache it. There could be sharing of content
+across the various servers. All right, so
+they went through some use cases. So one was content delivery
+during a cable cut. So the origin server was
+experiencing a lot of packet loss for a several day period. And obtaining that
+content through Akamai's network basically showed no loss. That's quite powerful that they could
+protect against these physical failures like that. Another use case they talk
+about is live video streaming. So it's not just about content
+distribution in terms of caching near the edge, but it's also they
+have this distribution network that let's say a live video is
+being streamed from down here. It can go to this parent, the parent can send it to each of
+the edge servers simultaneously. And then those edge servers can
+send it to the end users, so it can have this multicasting
+capability within their network. Third use case they talk about
+is application delivery. So even when content is not cacheable,
+it still has benefits they go through, and they did things
+like path optimization, like leveraging something called
+resilient overlay networks. I'm going to put a link to a paper called
+resilient overlay networks that was from SOSP in 2001. And it's basically if you can put
+an overlay on top of the Internet, let's see if this picture, let's say there's a network problem
+somewhere right here, right? So in between this edge server and
+this parent, the direct path in the Internet is broken. So what resilient overlay
+networks does is, well, this edge server could have a path
+to this parent server down here. This parent server could have a connection
+to this parent, and now they've been able to bypass this network
+issue that they have no control over. It's just the Internet. And so that's the concept of
+resilient overlay networking. That's what they could take
+advantage of with their network. They can also deal with packet
+loss reduction or improve or reduce packet loss by using things
+like forward error correction. So putting extra information into
+each packet which is not standard. The applications wouldn't understand it,
+but if they could, as it's traversing the Internet,
+put forward error correction onto it and then only locally strip that off,
+that can improve the loss. They can optimize the transport
+protocols like TCP, like pooling persistent connections, doing retransmissions based
+on network observations. So you can really optimize TCP. Actually that would be a pretty cool
+thing to kind of look into a little bit. Just try on your own kind of improvements
+that you can get from like just pooling connections where you don't have to do the
+TCP connection and tear down every time. They could do things like
+application optimization, parse and prefetch content and
+things like that. So like even if the application
+is not cacheable, it may be referencing some
+content that would be. And so they can go and prefetch it. Last thing to note is we've previously
+talked about anycast based load balancing. In this paper they talk about that
+they use DNS based load balancing. So typically an end user wants to go to
+some content provider like cnn.com, right? So how it needs to do that is
+it needs to go do a DNS lookup. It go to the root server,
+which Akamai would be the server that maintains that domain,
+right? We would go to the Akamai servers and the Akamai servers would
+be able to direct. So like this global server can
+know where the end user is and direct them to this regional and
+nearby Akamai customer. So all of these will look up the IP
+address of the requester and say which DNS server is closest to you and
+get you to that. All right, there's a lot more in
+the paper, like how do they do analysis, how do they handle failure? Lots of data on end user benefits. But with that I'll leave
+you to reading the paper. Definitely worth reading. And with that we'll stop here. All right, thanks.

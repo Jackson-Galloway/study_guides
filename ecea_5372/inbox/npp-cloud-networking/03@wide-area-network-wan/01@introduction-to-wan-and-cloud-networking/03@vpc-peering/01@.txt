@@ -1,0 +1,130 @@
+Let's go ahead and get started. Today, we're going to
+talk about VPC peering. We introduced the concept to the wide area network and we
+talked about communicating, it's beyond the bounds
+of a given VPC. We talked about, the case
+on the left of two VPCs, wanted to talk directly
+to each other. Then, on the right, the VPC to end user. In this case, we're going
+to be talking about the VPC to VPC as
+shown on the left. Let's start with this setup. We have two VPCs, VPC1, VPC2 located in two
+different regions. Each of them has a
+sub-net and a VM. Then they have some
+firewall rules that allow ICMP traffic, SSH traffic, and
+a custom traffic. This was set up such that this IP or this VM only
+has an IP address, private IP address and
+no public IP address, and same with this one. Just to show that in
+the interest of time, I set this up in advance. You can see, I have
+the two VMs running. I'll just reload to show that. The two VMs running,
+us-central1, us-east1, neither of them have
+a public IP address, and then they have, in the
+subnets that we're expecting. Then I have my two VPC networks. VPC1 and VPC2. You can see it has one subnet. Let's just start with that. I've already SSH
+into each of them. If you recall how
+you can do that, is I can either click
+on this "SSH" button, and I'll bring it
+up in the browser, or I can view the
+gcloud command, and there's other ways as well. But let's pull that open. VM1, VM2. If I do ip addr, you can see, here's
+this guy's IP address, and I will copy that. IP addr. You can see that's
+that guy's IP address. But let me ping from
+here to the other one. It's not working. That's what we expected. We expect two different VPCs to be isolated from one another. Well, so that's
+what we just did. We showed the ip addr
+pinged each of them. Now, if you want to test, maybe you're hiding something. We'll create a second
+subnet inside of this one. Give it a 10.0.3, and you'll be able to
+see, and then check, can you ping from VM1 to VM3, creating in two
+different subnets. Then if that's the case, if you're able to do that, it is the bound of the VPC that did prevent,
+these two things. Even though they're both my infrastructure that
+I just graded, it kept them isolated. If you just trust me
+and that is the case, let's move on to
+this, VPC peering. You can find the
+documentation there, but what it does is
+basically sets up a private connection
+between two VPCs. You must create the peering, one peering in each direction. You have to go from
+1-2 and then, VPC2-1. What that would allow
+is then it will create this route exchange
+between the VPCs. We've seen where you can go and click on the routes and see, I'll have all the
+routes in the subnets. But this subnet would get advertised as an available
+route into this VPC. That's what the peering does. With that, you can't
+have subnets with overlapping address space
+when you do the peering. For example, if we
+had vpc1.sub1 with a 10.0.0.0/24 and vpc2.sub2 with that same prefix. These are overlapping, and then it wouldn't
+know what to do. Let's go through a quick demo. We'll create a peering from 1-2, and then create a
+peering from VPC2-1, we'll show you the
+routes in each, and you can add a subnet, if we want to see extra routes. Now, I'll note about
+hybrid infrastructure. We're going to have
+one of the modules later about hybrid
+infrastructure. By that, we mean where if I have both stuff inside of
+Amazon or Google Cloud. But then, let's say over here, I add my private infrastructure. I have something in
+a colocation space, and it's connected in. Well, there's going to be, more use of the routes and routing within that we'll
+see come up in that case. Let me flip to the console. I go over to this VPC networks, and you can see VPC
+network peering. Otherwise, I could
+have typed peering, and I would be brought to that, and I can say Create Connection. My name, peer-1-to-2. My network that we're
+peering from is VPC. The one I'm peering to is VPC2, so from 1-2, I'm just
+going to allow it, to import custom routes. We don't have any custom routes, but if we did and we wanted
+those advertised in exchange, then we would allow that. Then, if they had
+public IP addresses. We don't have any of that. But we'll check
+those boxes anyway. Well, that's creating. I will now you can
+see it's inactive. I will create the second one, what do I call it peer-2-to-1. In this case, we
+need it VPC2-VPC1. I'm going to, import
+and export everything. With that, let me come over
+to the VPC networks again. Look at VPC1. Specifically, I want
+to look at the routes. What we can see, this is the route for the
+subnet. This makes sense. What we're looking
+at is we're in VPC1, looking at the routes,
+and we can say, imagine there's a router
+here, the VPC router. We need to be able to know
+how to get to subnet 1. Here's that address. Then, and says
+where to get to it. Then, this is the general default go
+out to the Internet. Now you can see this new
+route that we added which was of the VPC2s subnet. We could go and you look at VPC2 to see if it also has those routes and fingers
+crossed that it does. There it is. That's the route. Now, within VPC2, I should be able to
+say ping 10.0.1.0. Let's try that out again. This is VM1, I want VM2. There we go. The last thing I ran was Ping, the other guy, and you
+could see now it's working. Because they
+exchanged the routes, and that made it work. Let me cancel that. Now, the last thing I said
+that we might want to do is, let's create a new
+another subnet in VPC1 we call it sub3. I'll put it in
+us-central1 again. I will give it, 10.0.3.0/24, because I know that's
+not overlapping, and I will add that. This is now adding a
+second subnet in VPC1. When it's created,
+we'll be able to see that route was created within VPC1. I didn't get created, maybe because there's
+no, there it goes. It created this, route there. Let's go see if it showed
+up in VPC 2s routing table. Let's look, and there it is. I can connect, talk
+to either subnet. I don't have a VM, so we
+can't show, ping working, but you can see it is
+pretty straightforward. Now, one thing to
+note is probably the most important thing
+is about transitivity. Let's say we had three VPCs A, B and C, and we created a
+peering between A and B, and B and C. This would, we might look at this
+picture and say, B should be a transitive VPC. I should be able to send
+traffic from A to C, and it goes through B. But GCP does not
+support transitive VPC, meaning A does not
+receive the routes of C. C would advertise
+its routes to B. B would get that whole
+list, like we just saw, B would advertise
+its routes to A of all its subnets and custom routes and
+things like that, but it won't see the subnets
+from C. We can't do this. You would need to create
+a peering between A and C if that's what
+you were intending. Now, the firewall, just a
+little note on the firewall. When we did send traffic
+from VM1 to VM2 or VM2, actually, is what we pinged VM1. It is still going
+through the VPC. It's still going and traversing the
+boundaries of the VPC, and it's still subject, to the firewall rules. Luckily, we had ICMPs allowed, and that allowed
+the ping through. That's it with VPC peering. It's powerful because it allows you to really partition your network into these VPCs, but then still allow them to
+be able to communicate with one another without traversing, the public IP addresses. Now getting into terraform. This is something that
+we've seen before. We create a VPC network. It's called Google Compute
+Network as the resource type. I will call it vpc1. Then I will create
+a subnet for it, and then tell it, what network to belong to, and so it's referencing
+google_compute_network.vpc1, the value inside of that
+which gets created. That's ID. That's how
+you can identify it. Now, the VPC peering is
+pretty straightforward. I create two resource blocks of type google_compute_network_
+peering, give it its name, and
+then I say what network? This is the From. Note, I can just reference it
+like this, vpc1.self_ link, and then peer network,
+the vpcs2.self_ link. That's similar to how
+we were saying vpc1.id. It's just another value
+that you can obtain. Just look up, the
+Google Compute network, documentation, and you'll
+see that as one of those attributes
+that gets assigned. Then I just create one
+and the reverse from 2-1. With that, that's about
+it for VPC Peering. Next time, we'll talk
+about Cloudnet. Thanks.

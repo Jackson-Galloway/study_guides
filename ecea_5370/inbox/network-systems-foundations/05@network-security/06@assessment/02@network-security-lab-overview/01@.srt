@@ -1,0 +1,68 @@
+1
+00:00:08,800 --> 00:00:11,420
+In this lab, you're going to
+
+2
+00:00:11,420 --> 00:00:14,430
+create certificates
+for a web server.
+
+3
+00:00:14,430 --> 00:00:16,525
+We're going to show
+you go walkthrough
+
+4
+00:00:16,525 --> 00:00:20,520
+the whole process of
+creating all of these keys,
+
+5
+00:00:20,520 --> 00:00:24,280
+the requests, and ultimately
+the certificates.
+
+6
+00:00:24,280 --> 00:00:27,740
+Now we're going to mock up
+the certificate authority.
+
+7
+00:00:27,740 --> 00:00:28,960
+We're going to
+pretend to be that
+
+8
+00:00:28,960 --> 00:00:31,000
+ourselves and go through
+
+9
+00:00:31,000 --> 00:00:35,400
+the manual steps just
+manually ourselves.
+
+10
+00:00:35,400 --> 00:00:39,820
+But in doing this
+
+11
+00:00:39,820 --> 00:00:40,960
+you should be able to see what
+
+12
+00:00:40,960 --> 00:00:43,220
+the whole process looks and
+
+13
+00:00:43,220 --> 00:00:48,840
+then create a web server
+that is serving up
+
+14
+00:00:48,840 --> 00:00:51,800
+HTTPS such that you can use
+
+15
+00:00:51,800 --> 00:00:56,620
+that in web requests
+like using curl.

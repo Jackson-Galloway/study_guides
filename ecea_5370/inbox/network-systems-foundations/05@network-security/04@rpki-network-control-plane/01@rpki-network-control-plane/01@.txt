@@ -1,0 +1,130 @@
+Let's go over our
+RPKI this time. Now we're jumping into the
+network control plane. As the example here, we know about PGP, and it's responsible for communicating paths
+to reach IP prefixes. If an attacker can
+inject fake paths, it can get traffic directed to it and it can deny service, it can change messages, and it can inspect
+traffic, do whatever. Let's give it a
+concrete example. We have some destination on the right hand side, 1.1.1.0/24, so that's the prefix, and it's contained
+or managed by AS3. AS3 would announce
+to its neighbors, in this case is only one, the prefix, and then say
+that the path is AS3. That neighbor, in this case AS2, would see that
+round announcement, put it inside of its
+routing table or rib, and append itself to the path and announce
+it to its neighbors. Here's the prefix
+and then the path now becomes AS2, AS3. Then that reaches AS1. That's the legitimate path. Now let's say there's
+another AS where through some means an
+attacker was able to make an announcement for
+the exact same prefix and say its path is AS4. Now when you're AS1, it's going to have
+a routing table or a rib that's going
+to have two entries. One for the route that
+it learned through AS4, where the next top is this 4.4.4.1 or the
+other route is AS2, AS3 as the path
+where the next top, 2.2.2.1, that's the IP
+address of the router in AS2. Based on a shorter
+path it chose to go through this first route. Now the traffic would be going through being redirected to AS4. As mentioned, there's a lot of things this attacker
+can now do with it. It can use this traffic
+to deny service. It could just drop everything. In our examples, we've
+always been using YouTube, but let's say this prefix 1.1.1.0/24 belongs
+to YouTube or is the IP addresses for YouTube. Well, it just blocked YouTube and so it did
+harm to a business, and so that might be
+one of its objectives. It could also now pretend
+to be somebody else. We saw in the initial examples. If this was a bank that
+I'm trying to visit as website and I was saying, I know the IP address
+of that bank. I learned that through DNS, but then the network
+control plane actually picked a path that
+ended up not at my bank, but I think it is, and so they can present a
+web page that looks like it and I can enter my passwords
+and all that information. That's not good. Then another thing that
+this attacker could do, is it can actually now
+forward on the traffic to the real destination
+and setting up itself as, it's called a man in the middle. In this case, it's now able
+to eavesdrop on traffic. But the client over here actually is able to
+get the services it needs, and so it doesn't know that
+it's being eavesdropped on. That's a concrete example
+of how this might occur. Now, if we were to imagine
+an idealized solution, we can have it so that
+the prefix owner, whoever owns 1.1.1.0/24, can tell all the other ASs, all the other
+network providers in the world what AS it's in. It can say in this example
+just focusing on AS1, it can say ''I own
+1.1.1.0/24 and in AS3.'' Now the path to get
+to that destination. We can leave that up to BGP. But at least I'm
+telling AS1 that hey, this is where it
+ultimately needs to go. Now if we go through all those route announcements
+as we did last time, we end up with this rib. Now we can look at this one route that
+has this path AS4, and it doesn't end with AS3. This is AS1, the routers at that can throw
+that out, can say, hey, I was previously told that
+at least has to end in AS3 so I'm going to
+throw that route out. Now it only had one choice and it's going to choose
+the legitimate one. This is an idealized solution to specifically solve this scenario
+that we discussed here. Now let's put this
+into practice. Let's step back and recall
+digital certificates. This is something that binds
+a public key to an identity. In the basics lesson, we talked about Alice, the organization AliceCo, and then Bob could validate that this is
+Alice's public key. Then we said, all right, there's an integrity
+problem here that an attacker could
+insert their own public key but modify the certificate to have the rest of the
+information the same. Then this isn't really an
+improvement in the situation. But then we introduced the concept of a
+certificate authority, which is some trusted
+authority that can verify Alice's identity
+and use the CA's private key to sign
+Alice's certificate. Now, we can trust that the certificate
+hasn't been modified. Bob can trust that
+this certificate hasn't been modified as long as it has and trusts
+the CA's public key. Now, with that little
+quick refresh, how does this apply
+to Internet routing is what is basically
+what's used as RPKI. RPKI stands for Resource
+Public Key Infrastructure. Here there's the regional
+Internet registries or RIRs, are established as the
+certificate authorities. They're the ones that
+are already allocating, if you recall, the
+IP address space, they have this
+business relationship so they can verify the identity. They are well known
+group of them and then we can trust them and
+things like that. Here, the identity, the digital
+certificate part contains the IP prefix the AS origin and it ties it to
+the owner's public key. The whole architecture looks something like this and we'll
+go through piece by piece. Starting, the first part is the IP owners create their
+public private key pair, then they create a digital
+certificate request, and send that to the
+regional Internet registry. Again, they already
+have a business relationship and you go to the RARs website and
+shown here is an example. Just fill out some form, and that takes you
+to the next step. That's making that request with your public key and the identity and all
+that information. The regional Internet registry, validates that identity
+and the ownership and stores a resource
+ownership authorization, or ROA, in a database. Then some software called a
+validator that runs in an AS. Deploying RPKI, downloads
+all of the ROAs or ROAs, and verifies the signatures. At this point when
+we say the AS, so all of the networks, ideally, but whichever one
+chooses to say, hey, I want to protect the network, I want to upgrade
+to include RPKI. What I have to do is I have to install this software
+in a server, is not necessarily on
+the router and there's some open source versions out there like Routinator
+is an example, or open source or just
+widely available. Then so we can download
+this database, verify all the signatures. Now, locally it has a list
+of all of the prefixes, and can trust and what origin
+AS that's associated with. Then using that
+the validator can install a cache of
+verified prefixes or route origins or prefixes/route
+origins into the routers. The routers, they don't have to do any cryptographic signatures, it just has through
+policies and configuration. Here's a list of prefixes and route origins to accept from. Then the router upon receiving a BGP update checks
+the prefix state. Now, it could be
+in a valid state, meaning that as part of this it's found the prefix
+in this database, and it checks out as
+the origin is correct. It could be invalid
+where again, it's, the prefix is in the database, but the origin AS is incorrect. Meaning that the
+router just received, doesn't match what's in the
+database, so it's invalid. Then it could also be unknown, which is if this prefix
+isn't in the database. This is to keep with,
+backwards compatibility, because the Internet
+is not going to upgrade all of its
+routers at the same time. It's going to take a process of years and years and years. It's already been over a decade, and we still don't have all the routers
+implementing this. What that provides is
+now some degree of improvement that we
+can at least validate the origin AS for
+route announcements. That ends going to this
+video and so next time we're going to get into talk about
+TLS and HC TPS. Thanks.

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transport Layer</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following best characterizes the main property of the network and transport layers in general that would be true for all protocols.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~cF5MMv" type="radio"/> <div class="quiz-option-text"><p>Network layer provides best effort, Transport layer provides error correction</p></div></li>
+<li><input name="autoGradableResponseId~cF5MMv" type="radio"/> <div class="quiz-option-text"><p>Network layer provides addressing that is only locally unique, Transport layer provides addressing that is globally unique</p></div></li>
+<li><input name="autoGradableResponseId~cF5MMv" type="radio"/> <div class="quiz-option-text"><p>Network layer uses numbers to represent addresses, Transport layer uses meaningful strings.</p></div></li>
+<li><input name="autoGradableResponseId~cF5MMv" type="radio"/> <div class="quiz-option-text"><p>Network layer provides host to host communication, Transport provides process to process.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is true:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~A7OLnX" type="radio"/> <div class="quiz-option-text"><p>Both UDP and TCP are connection oriented</p></div></li>
+<li><input name="autoGradableResponseId~A7OLnX" type="radio"/> <div class="quiz-option-text"><p>UDP is connection oriented, TCP is connectionless</p></div></li>
+<li><input name="autoGradableResponseId~A7OLnX" type="radio"/> <div class="quiz-option-text"><p>UDP is connectionless, TCP is connection oriented</p></div></li>
+<li><input name="autoGradableResponseId~A7OLnX" type="radio"/> <div class="quiz-option-text"><p>Both UDP and TCP are connectionless</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following could occur in an IP network that requires TCP to provide a mechanism for reliable communication? (select all that apply)</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Vc8yxF" type="checkbox"/> <div class="quiz-option-text"><p>Error in the packet (bit flip)</p></div></li>
+<li><input name="autoGradableResponseId~Vc8yxF" type="checkbox"/> <div class="quiz-option-text"><p>An administrator may monitor the traffic</p></div></li>
+<li><input name="autoGradableResponseId~Vc8yxF" type="checkbox"/> <div class="quiz-option-text"><p>Congestion can occur in the switches/routers buffers</p></div></li>
+<li><input name="autoGradableResponseId~Vc8yxF" type="checkbox"/> <div class="quiz-option-text"><p>Different packets can take different paths (even to the same destination)</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which header fields in TCP are key to reliable communication?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Hipy5z" type="radio"/> <div class="quiz-option-text"><p>RequestForRetransmit flag</p></div></li>
+<li><input name="autoGradableResponseId~Hipy5z" type="radio"/> <div class="quiz-option-text"><p>BufferReservation flag, and Allocation request fields during setup</p></div></li>
+<li><input name="autoGradableResponseId~Hipy5z" type="radio"/> <div class="quiz-option-text"><p>Congestion Control</p></div></li>
+<li><input name="autoGradableResponseId~Hipy5z" type="radio"/> <div class="quiz-option-text"><p>Sequence number, and Acknowledgement number</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Assume data is being transferred in one direction - from host A to host B, under which condition is flow control needed?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~HGTml7" type="radio"/> <div class="quiz-option-text"><p>A can send at 100Gbps, B can receive at 1Gbps</p></div></li>
+<li><input name="autoGradableResponseId~HGTml7" type="radio"/> <div class="quiz-option-text"><p>A uses an Internet Service provider with only 10Mbps upload speed</p></div></li>
+<li><input name="autoGradableResponseId~HGTml7" type="radio"/> <div class="quiz-option-text"><p>B uses an Internet Service provider with only 10Mbps download speed</p></div></li>
+<li><input name="autoGradableResponseId~HGTml7" type="radio"/> <div class="quiz-option-text"><p>A can send at 1Gbps, B can receive at 100Gbps</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is congestion collapse?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XOOtaW" type="radio"/> <div class="quiz-option-text"><p>Where applications fail due to packet loss from congestion in the network</p></div></li>
+<li><input name="autoGradableResponseId~XOOtaW" type="radio"/> <div class="quiz-option-text"><p>Where the goodput of a network decreases when the offered load by hosts on the network increases past a certain point.</p></div></li>
+<li><input name="autoGradableResponseId~XOOtaW" type="radio"/> <div class="quiz-option-text"><p>Where throughput gradually decreases the closer a link gets to full capacity</p></div></li>
+<li><input name="autoGradableResponseId~XOOtaW" type="radio"/> <div class="quiz-option-text"><p>The point at which network devices (routers) explicitly signal to the sending host that it is congested.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In TCP’s congestion control, what are feedback signals it receives that congestion exists and it should reduce its sending rate? (select all that apply)</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~fTKTdk" type="checkbox"/> <div class="quiz-option-text"><p>Timeout waiting for an acknowledgement</p></div></li>
+<li><input name="autoGradableResponseId~fTKTdk" type="checkbox"/> <div class="quiz-option-text"><p>Receiving a duplicate acknowledgement</p></div></li>
+<li><input name="autoGradableResponseId~fTKTdk" type="checkbox"/> <div class="quiz-option-text"><p>Receiving a datagram with an in-order sequence number</p></div></li>
+<li><input name="autoGradableResponseId~fTKTdk" type="checkbox"/> <div class="quiz-option-text"><p>Receiving a datagram requesting to change port numbers</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What does the congestion window in TCP control?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~aAwLGi" type="radio"/> <div class="quiz-option-text"><p>How much data is allowed to be in flight at one time.</p></div></li>
+<li><input name="autoGradableResponseId~aAwLGi" type="radio"/> <div class="quiz-option-text"><p>The amount of time the sender should wait before sending more packets to wait for the network to become uncongested.</p></div></li>
+<li><input name="autoGradableResponseId~aAwLGi" type="radio"/> <div class="quiz-option-text"><p>The time of day during which the network is typically congested and should be avoided</p></div></li>
+<li><input name="autoGradableResponseId~aAwLGi" type="radio"/> <div class="quiz-option-text"><p>The rate at which the receiver delivers data to the application</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

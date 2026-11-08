@@ -1,0 +1,268 @@
+1
+00:00:06,710 --> 00:00:10,000
+Let's go ahead and get
+started. This time,
+
+2
+00:00:10,000 --> 00:00:12,480
+I just want to take
+a minute or so
+
+3
+00:00:12,480 --> 00:00:16,890
+to give a suggested lab.
+
+4
+00:00:16,890 --> 00:00:20,720
+I think when we really
+got into this content,
+
+5
+00:00:20,720 --> 00:00:23,165
+we're building a lot more
+complex infrastructure,
+
+6
+00:00:23,165 --> 00:00:27,790
+and auto-grading it
+poses a challenge,
+
+7
+00:00:27,790 --> 00:00:30,780
+but what I would
+suggest is you can
+
+8
+00:00:30,780 --> 00:00:35,775
+really validate it working
+or not on your own.
+
+9
+00:00:35,775 --> 00:00:39,290
+I'd recommend really focusing
+
+10
+00:00:39,290 --> 00:00:42,070
+on that load balancing
+and try to create
+
+11
+00:00:42,070 --> 00:00:44,730
+a full on web service and
+
+12
+00:00:44,730 --> 00:00:48,090
+focus more on the infrastructure
+than the actual content,
+
+13
+00:00:48,090 --> 00:00:49,675
+and then add in the content,
+
+14
+00:00:49,675 --> 00:00:52,810
+the actual service part of it.
+
+15
+00:00:52,810 --> 00:00:56,470
+Let's focus on the
+backend servers.
+
+16
+00:00:56,470 --> 00:00:58,970
+Maybe those could
+be simple flash gap
+
+17
+00:00:58,970 --> 00:01:02,180
+like we used that
+returns the host name.
+
+18
+00:01:02,180 --> 00:01:06,420
+That would be your
+actual content servers.
+
+19
+00:01:06,420 --> 00:01:08,810
+I would recommend trying to use
+
+20
+00:01:08,810 --> 00:01:12,515
+a internal network
+load balancer here.
+
+21
+00:01:12,515 --> 00:01:14,970
+We're going to have
+some frontend servers,
+
+22
+00:01:14,970 --> 00:01:17,230
+and then we're going to leverage
+
+23
+00:01:17,230 --> 00:01:20,925
+this internal ability to
+do network load balancing.
+
+24
+00:01:20,925 --> 00:01:24,045
+That should use Andromeda.
+
+25
+00:01:24,045 --> 00:01:26,880
+Also, we'll have these
+frontend servers,
+
+26
+00:01:26,880 --> 00:01:30,660
+and this can also
+be flask that just
+
+27
+00:01:30,660 --> 00:01:35,920
+calls the backend and
+returns the host end,
+
+28
+00:01:38,870 --> 00:01:41,130
+so the host name of
+
+29
+00:01:41,130 --> 00:01:45,000
+this guy plus the
+backend returned value,
+
+30
+00:01:45,000 --> 00:01:46,790
+which would be the
+host name of that.
+
+31
+00:01:46,790 --> 00:01:49,025
+It might be like
+returning two host names,
+
+32
+00:01:49,025 --> 00:01:51,395
+which frontend and
+then which backend
+
+33
+00:01:51,395 --> 00:01:54,715
+server that it went through.
+
+34
+00:01:54,715 --> 00:01:57,440
+Then I would, for this,
+
+35
+00:01:57,440 --> 00:02:01,190
+have an external
+application load balancer.
+
+36
+00:02:01,190 --> 00:02:04,510
+That's what we demonstrated.
+
+37
+00:02:04,510 --> 00:02:08,190
+I would start with an
+unmanaged instance group
+
+38
+00:02:08,190 --> 00:02:10,185
+, start at regional.
+
+39
+00:02:10,185 --> 00:02:13,470
+I would expand to auto-scaled,
+
+40
+00:02:13,470 --> 00:02:17,880
+maybe just focus on the
+frontend part of that,
+
+41
+00:02:17,880 --> 00:02:20,960
+expand to a global
+load balancing,
+
+42
+00:02:20,960 --> 00:02:25,800
+and try to generate as
+much request as you can.
+
+43
+00:02:25,800 --> 00:02:28,280
+There's a benchmarking software
+
+44
+00:02:28,280 --> 00:02:30,280
+out there that you could
+use where you could
+
+45
+00:02:30,280 --> 00:02:32,930
+just write your own and try
+
+46
+00:02:32,930 --> 00:02:36,745
+to send as many HTTP
+requests as you can.
+
+47
+00:02:36,745 --> 00:02:40,600
+Then expand to a
+global load balancing
+
+48
+00:02:40,600 --> 00:02:41,740
+across two regions,
+
+49
+00:02:41,740 --> 00:02:45,775
+so split the frontend
+across different regions.
+
+50
+00:02:45,775 --> 00:02:52,960
+Follow that, and you'll see
+all the nuanced differences.
+
+51
+00:02:53,000 --> 00:02:55,800
+With that, that's going to be
+
+52
+00:02:55,800 --> 00:03:00,220
+the suggested programming
+assignment. It'll be graded.
+
+53
+00:03:01,400 --> 00:03:04,940
+I think it is technically
+graded and it'll just
+
+54
+00:03:04,940 --> 00:03:08,320
+have a reflective question,
+
+55
+00:03:08,320 --> 00:03:12,135
+but either way go for it.
+
+56
+00:03:12,135 --> 00:03:14,660
+Actually, no, it's not graded.
+
+57
+00:03:14,660 --> 00:03:18,210
+Well, either way,
+it doesn't matter.
+
+58
+00:03:18,500 --> 00:03:22,630
+With that, we will
+end here. Thanks.

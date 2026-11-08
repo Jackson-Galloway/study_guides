@@ -1,0 +1,160 @@
+Let's get started. Today we're going to talk about
+troubleshooting tools. This is going to cover three
+specific utilities that we can use that are going to be helpful in our journey of
+learning about Linux network. You might be
+familiar with these, but if not, here we go. So as a reminder from last time we talked
+about our lab set up, we went through a demo where we showed the
+configuration file for a container lab
+setup where we can describe a topology
+as shown down here. Then we could see once we ran pseudo container lab deploy that created docker containers, one docker container for
+each of these nodes, and then it created the wiring. Then we can use commands
+like docker exec to execute commands inside of
+any of the given containers. It's as if we have five
+nodes that we are all connected and we can run commands on each of them,
+but they're all isolated. What I didn't mention
+last time was how do you tear down the experiment
+once you're done? It's the command pseudo container lab destroy
+and then I'll just delete the containers
+and all of that. What we're going to do,
+let's get this lab set up again in advance of
+this I ran vagrant up. You can see I ran it from a suspended state and so
+it just booted it up. The next is now pull
+up the MobaXterm. If you recall, we
+configured this with those SSH configurations. I'm actually pull open
+two different sessions. In each of them I'll CD into the git-repo directory
+that we have right here. That's where what
+we saw last time. Coursera, MPP. There we go. From this, let's go
+back to the slides. First utility that we're
+going to talk about is ping. You've probably
+used it many times, but it's really useful as a quick check if a server is up. Also includes the
+round trip time so you can identify latency issues. Let's go back to our lab set up. Let me actually split these terminals with
+a horizontal split. Now we're going to have
+these two nodes showing up. We're going to go into demo2. I'm going to open up
+the read me file. We can see that we have a container lab
+file configuration. It's going to be
+the exact same one. We have host 1, host 2, host 3, host 4, switch, and then the same links. I'll run pseudo
+container lab deploy. We'll know in advance
+I created each of the directories so it
+shouldn't fail this time. Now we have five
+containers running. If I ran Docker PS, I would see those five
+containers running. What are we saying we
+should do to ping? Well, ping works
+on IP addresses. We haven't really talked about how to set up IP addresses. We will in the future, but you could just
+run this command. If you recall. It's docker exec. This is the prefix of all docker containers that
+container lab creates. This comes from our yaml file. If we look at that all
+the way at the top, this is the top of the file. We had this name lab1-part1,
+that's that next part. Then the host one is the
+particular node name. In host 1, I'm going to
+assign an IP address of 192.168-1.2/24 to device eth0
+or eth1. Let me run that. Docker exec. There we go. It was a little copy issue. I'll have to update that. Let me run the next one as well and I'll
+correct the dash. Now I'm assigning an IP
+address to the switch eth1. Now I could do ping from host 1 and they'll ping the
+interface on the switch. Then we correct that. Docker exec all that. You can see it's pinging. What we just saw is from host 1 signed an IP
+address and then we're pinging the IP address of this other host of the
+switch that interface. The next tool that's of
+use is called tshark. Tshark is a network
+protocol analyzer. It's very similar to TCP dump, but I like this one little
+better if you used Wireshark. This is just a command
+line version of that. It allows us to capture
+packets and display them. Those things you can do, you
+can write them to a file, you can do all kinds of things. We'll see some of those. The basic what we're
+going to want to do here is I'm going to run ping again in this
+host to the switch. This time let's
+capture the packets as we see them on
+this interface. I just run tshark -i eth1
+inside of the switch. Let me switch back to this. Here we're going to run tshark, this is going to be
+inside of the switch. Let me exit out of that. Run it up here. Now, I'm capturing traffic. Now let me run ping again. I'm running it from host
+1 and doing a ping, you can see these messages
+are now all showing up. That's great. That was tshark and there's a lot of different options
+and you can look at the documentation for more. But what we used
+was -i interface, we said -i eth1, you can get provided
+a capture filter. Say we only wanted rth traffic. I could say -f arp or
+port 80 if I only wanted port 80 traffic or
+if I only wanted traffic for this particular
+IP address in that port. That's what a filter can do. That's a capture filter. The capture means it'll filter it before you're
+actually capturing. Then the display will be, you capture everything, then you can filter out what
+you're actually displaying. Then the -Y would enable that and displays only packets
+that match the addition. Say we wanted to only
+see CCP port 80. I would write
+something like that. All this helps you, you're going to see a lot
+traffic and let's say I want to just narrow it down to
+do my troubleshooting. I'm going to start
+using some filters for those, that's tshark. Tshark, you can also read and write what they
+are known as pcap files. A pcap file stands
+for packet capture. It's a file format that
+basically contains a list or an array of all the packets that
+are part of that capture. You could do -o to output
+to a particular file. Or you can read in from a
+file instead of reading in from an interface
+with the -r option. Wireshark I mentioned is a
+graphical packet capture tool. You may need an extra set up to get it to run
+inside a container. Largely just run this
+outside of the container. We'll learn about the VE
+devices in the future, but you can run tshark
+to capture your packet, then use Wireshark to display. Recall that we used a bind
+to mount a directory so you can pass the outputs
+through that mechanism. Wireshark will allow
+you to see this visually and then you can drill in for each of the
+individual field. It's a pretty nice
+graphical interface. The next tool, we talked about generating real simple packets with ping, we talked about capturing
+packets with Tshark. The next tool we'll talk
+about is called Scapy. It's a Python-based packet manipulation program in library. Basically, it provides
+this API to be able to create and
+modify packets. It allows you to read
+and write pcaps, and it allows you to capture and send
+traffic on the wire. It's quite powerful all through a Python programming interface. How we'll use it
+is to be able to craft specific packets
+in the future, but it's insanely powerful. Let's look at how you can
+craft a protocol header. First approach would be to specify inside of
+the classes in it. It's basically each
+of the protocols has its own class
+defined enscape. Ethernet is defined as this. Then you can define
+the destination, the source, the type, and
+all that kind of stuff. Approach 2 is you can also access all the
+individual fields. Let's say in Python, I assign to a variable eth, instantiated this
+class as an object and then I can set the destination
+field within that, the source field within that, the type field within that. That's how you can craft
+an individual header. But you can also chain together headers with
+this / operator. I can say, give me a packet and I'm going to sign
+it as a variable. I want it to be ether header, then followed by an
+IP, followed by a TCP. Now, it'll create
+some default values if you're not
+specifying anything, but now I have a full packet. Now I can access the
+individual headers within it, like this packet and then
+inside of brackets say ether. That's the Ethernet header. Within that, I can assign
+that to its own variable. I can modify individual fields. I can say the packet I want
+the IP header within that, the source of it, and so forth. There's a lot that
+you can do with it. Some helpful
+functions that you'll find is the ls function, especially if you're
+executing it, is an interactive Python
+session as opposed to executing a whole
+Python script. You can say ls and it'll say
+here's all the different, what you would name it inside of the program and then what
+protocol it actually is. When we saw ether, it's saying that's
+an Ethernet header. If I want 802.11, well, I want to refer
+that to that enscape. I would say.11 like that. Then within those you can say ls and then give
+it the protocol. Then it'll give you all of the different headers and the
+fields that you can modify. We saw source test
+and all of that. How you can read and
+write pcap files. You can say read pcap, give it the capture file. Now I can do a lot
+of things with that. This is now an array
+of all the packet. I can say packet.summary. We'll summarize all of that. I can axis the zeroth
+packet IP field for that and the source, I can iterate over
+them for each p, packet inside of all
+this array of packets, I can check if it has
+IP layer and so forth. This probably needs
+an extra parentheses, but you can see what
+you can do with this. There's a lot of examples. What I like to do is just go inside of Google type
+what I'm trying to do. The chances are there's
+going to be some sample code that I can start
+with and then I can modify it from there. For the most part I use
+these for real simple, small things to do and we'll
+see some examples of that. Sending and receiving from
+an interface, capturing, you use sniff and
+sending packets, you can use sendp
+which will be at Layer 2 or send which
+will be at Layer 3. You can use the sr
+functions which will be send and receive, it's basically does both. All of this documentation, this is more just to give you
+a taste of what is capable of such that when
+we see it in use, it'll be somewhat familiar. With that, we'll end here and we'll join again
+next time. Thanks.

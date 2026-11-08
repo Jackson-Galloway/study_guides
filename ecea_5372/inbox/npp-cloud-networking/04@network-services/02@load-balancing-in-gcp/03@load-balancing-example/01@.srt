@@ -1,0 +1,1500 @@
+1
+00:00:07,310 --> 00:00:09,795
+Let's go ahead and get started.
+
+2
+00:00:09,795 --> 00:00:12,190
+This time, we'll walk
+
+3
+00:00:13,700 --> 00:00:19,440
+through a load-balancing
+example in GCP.
+
+4
+00:00:19,440 --> 00:00:24,340
+This picture on the right is
+something I already set up.
+
+5
+00:00:24,340 --> 00:00:27,750
+We've done this
+several times now.
+
+6
+00:00:27,750 --> 00:00:31,650
+I have a VPC, created
+a subnet within that,
+
+7
+00:00:31,650 --> 00:00:34,755
+and then I created
+two virtual machines.
+
+8
+00:00:34,755 --> 00:00:36,795
+In each of these,
+
+9
+00:00:36,795 --> 00:00:39,530
+I gave them both a
+private IP address
+
+10
+00:00:39,530 --> 00:00:41,870
+and a public IP address.
+
+11
+00:00:42,020 --> 00:00:45,700
+For the purpose of
+load balancing,
+
+12
+00:00:45,700 --> 00:00:47,660
+we wouldn't necessarily have
+
+13
+00:00:47,660 --> 00:00:50,440
+them have a public IP address.
+
+14
+00:00:50,440 --> 00:00:51,990
+But I did that so that I
+
+15
+00:00:51,990 --> 00:00:57,100
+could install some
+software on it, namely,
+
+16
+00:00:57,100 --> 00:01:01,100
+I needed to do apt
+install Python 3 Flask,
+
+17
+00:01:01,100 --> 00:01:04,870
+because we're going to run
+a simple Flask application
+
+18
+00:01:04,870 --> 00:01:06,760
+on each of these.
+
+19
+00:01:06,760 --> 00:01:13,100
+The application is
+provided to you.
+
+20
+00:01:13,100 --> 00:01:15,355
+It's in this repo right there.
+
+21
+00:01:15,355 --> 00:01:19,680
+Let me switch over and show
+what that code looks like.
+
+22
+00:01:19,680 --> 00:01:25,590
+This is inside of the repo
+and here's the application.
+
+23
+00:01:25,590 --> 00:01:28,800
+If you've never
+used Flask before,
+
+24
+00:01:28,800 --> 00:01:34,800
+it's a Python web framework.
+
+25
+00:01:34,800 --> 00:01:38,130
+Real simple. Basically,
+
+26
+00:01:38,130 --> 00:01:42,660
+I could find a Flask
+app that's right there,
+
+27
+00:01:42,660 --> 00:01:46,300
+and then I can say, run
+it on a particular host.
+
+28
+00:01:46,300 --> 00:01:47,580
+I'm going to just run on all
+
+29
+00:01:47,580 --> 00:01:50,360
+available IP addresses
+on this machine,
+
+30
+00:01:50,360 --> 00:01:52,420
+give it a port to listen on,
+
+31
+00:01:52,420 --> 00:01:54,760
+and I'm going to say port 5000,
+
+32
+00:01:54,760 --> 00:01:58,660
+and I'm going to allow
+it to print out stuff.
+
+33
+00:02:00,830 --> 00:02:03,880
+By saying @app.route,
+
+34
+00:02:04,280 --> 00:02:11,040
+I can add different
+paths within a URL.
+
+35
+00:02:11,040 --> 00:02:13,170
+If I say slash health,
+
+36
+00:02:13,170 --> 00:02:18,710
+anything that's some IP
+address or some domain name,
+
+37
+00:02:18,710 --> 00:02:22,590
+slash health will come
+into this function.
+
+38
+00:02:22,590 --> 00:02:24,830
+This gets printed locally,
+
+39
+00:02:24,830 --> 00:02:28,440
+and then this is
+what's returned.
+
+40
+00:02:28,440 --> 00:02:34,430
+Likewise, I have another
+route called hello.
+
+41
+00:02:34,740 --> 00:02:37,840
+Well, I guess it doesn't
+print anything locally,
+
+42
+00:02:37,840 --> 00:02:40,580
+but it'll return hello and then
+
+43
+00:02:40,580 --> 00:02:43,520
+it'll return whatever
+the hostname is.
+
+44
+00:02:43,520 --> 00:02:45,160
+This is going to be useful for
+
+45
+00:02:45,160 --> 00:02:48,100
+load balancing because we're
+going to run two of these,
+
+46
+00:02:48,100 --> 00:02:50,800
+and then I'm going to access it
+
+47
+00:02:50,800 --> 00:02:53,880
+through a single IP address,
+
+48
+00:02:53,880 --> 00:02:55,640
+and I'll see that it's
+
+49
+00:02:55,640 --> 00:02:58,495
+getting directed to two
+different host names.
+
+50
+00:02:58,495 --> 00:03:00,490
+Real simple.
+
+51
+00:03:00,490 --> 00:03:05,240
+Just for illustrative
+purposes, that's all we have.
+
+52
+00:03:05,420 --> 00:03:09,105
+What we're going to do, so
+it's already been created,
+
+53
+00:03:09,105 --> 00:03:11,160
+so let me get back and show.
+
+54
+00:03:11,160 --> 00:03:15,330
+I have this VPC network, VPC1.
+
+55
+00:03:15,330 --> 00:03:19,180
+It's got one subnet in 10.0.1.0.
+
+56
+00:03:20,840 --> 00:03:29,500
+The firewall rules on
+it are allow ICMP,
+
+57
+00:03:29,500 --> 00:03:33,490
+allow SSH, and allow port 5000.
+
+58
+00:03:37,640 --> 00:03:40,905
+That's my VPC networks,
+
+59
+00:03:40,905 --> 00:03:44,220
+and if I go into the VM
+instances and recall,
+
+60
+00:03:44,220 --> 00:03:46,130
+if I just start typing VM,
+
+61
+00:03:46,130 --> 00:03:50,310
+it go VM instances that
+would bring me to this page.
+
+62
+00:03:50,310 --> 00:03:52,300
+You can see I have two VMs.
+
+63
+00:03:52,300 --> 00:03:54,210
+I put it in US Central1,
+
+64
+00:03:54,210 --> 00:03:57,415
+both in the same zone in Zone B,
+
+65
+00:03:57,415 --> 00:04:01,810
+and gave them an internal
+and an external IP address.
+
+66
+00:04:01,810 --> 00:04:05,160
+That's our setup. Now,
+
+67
+00:04:05,160 --> 00:04:07,570
+what we're going to
+do is I'm going to
+
+68
+00:04:07,570 --> 00:04:10,980
+create a load balancer to load
+balance between these two.
+
+69
+00:04:10,980 --> 00:04:13,610
+Before I do that,
+
+70
+00:04:13,610 --> 00:04:16,640
+I need to create
+an instance group
+
+71
+00:04:16,640 --> 00:04:19,590
+because the load balancer
+when you configure it,
+
+72
+00:04:19,590 --> 00:04:22,310
+it asked for,
+
+73
+00:04:22,310 --> 00:04:25,945
+what is the instance group
+that it's load balancing to.
+
+74
+00:04:25,945 --> 00:04:30,835
+That's just a grouping
+of a set of VMs.
+
+75
+00:04:30,835 --> 00:04:32,110
+I'm going to create
+
+76
+00:04:32,110 --> 00:04:36,450
+an unmanaged instance
+group for these two.
+
+77
+00:04:36,450 --> 00:04:39,130
+When it says unmanaged, well,
+
+78
+00:04:39,130 --> 00:04:42,220
+let's just go look at that.
+
+79
+00:04:42,430 --> 00:04:53,310
+I guess I can go here,
+instance groups.
+
+80
+00:04:54,010 --> 00:04:56,910
+I don't have any setup,
+
+81
+00:04:56,910 --> 00:04:59,480
+so I can create an
+instance group.
+
+82
+00:04:59,480 --> 00:05:03,785
+It's going to say, let's
+call it Instance group 1.
+
+83
+00:05:03,785 --> 00:05:08,370
+There's two types that we're
+not going to get into now,
+
+84
+00:05:08,370 --> 00:05:13,320
+but what these allow
+for is autoscaling.
+
+85
+00:05:13,320 --> 00:05:17,390
+We'll have a separate lesson
+on autoscaling but for now,
+
+86
+00:05:17,390 --> 00:05:20,280
+we just want to show
+off the load balancing.
+
+87
+00:05:20,280 --> 00:05:23,010
+For load balancing,
+it's going to be
+
+88
+00:05:23,010 --> 00:05:26,470
+a static instance
+group that says,
+
+89
+00:05:26,470 --> 00:05:30,055
+let me pick the region
+that these VMs are in,
+
+90
+00:05:30,055 --> 00:05:33,730
+and the VPC that it's in,
+
+91
+00:05:33,730 --> 00:05:36,335
+and it's selecting and saying,
+
+92
+00:05:36,335 --> 00:05:38,530
+what are the VMs,
+
+93
+00:05:38,530 --> 00:05:41,070
+and I want the two VMs
+I already created,
+
+94
+00:05:41,070 --> 00:05:42,490
+and I'm going to create that as
+
+95
+00:05:42,490 --> 00:05:44,670
+part of an instance group.
+
+96
+00:05:46,250 --> 00:05:48,840
+Next thing, as part of
+
+97
+00:05:48,840 --> 00:05:50,200
+this instance group
+and what we're
+
+98
+00:05:50,200 --> 00:05:52,165
+going to do for load balancing,
+
+99
+00:05:52,165 --> 00:05:57,870
+well, let's give it an app HTTP.
+
+100
+00:05:57,870 --> 00:06:01,185
+We knew these are going
+to run on port 5000,
+
+101
+00:06:01,185 --> 00:06:05,180
+so I'm going to create a
+named port that is going to
+
+102
+00:06:05,180 --> 00:06:10,095
+be referenceable by
+the load balancer.
+
+103
+00:06:10,095 --> 00:06:13,700
+Let's do that and say create.
+
+104
+00:06:14,300 --> 00:06:19,890
+Great. It's going
+about doing that.
+
+105
+00:06:19,890 --> 00:06:23,200
+Next thing is now we're
+going to start going
+
+106
+00:06:23,200 --> 00:06:27,660
+into creating a load balancer.
+
+107
+00:06:29,690 --> 00:06:32,280
+Let that chug away.
+
+108
+00:06:32,280 --> 00:06:37,090
+Again, we could just
+type load balancing.
+
+109
+00:06:38,800 --> 00:06:42,185
+I don't have a
+load balancer yet.
+
+110
+00:06:42,185 --> 00:06:44,380
+It's still created in
+this instance group,
+
+111
+00:06:44,380 --> 00:06:48,120
+but I can hopefully start here.
+
+112
+00:06:48,120 --> 00:06:49,790
+Now if you recall,
+
+113
+00:06:49,790 --> 00:06:53,295
+we went through what these
+different things mean.
+
+114
+00:06:53,295 --> 00:06:59,650
+Since we're running a Flask
+app and in this case,
+
+115
+00:06:59,650 --> 00:07:02,060
+I want to run an
+application load balancer,
+
+116
+00:07:02,060 --> 00:07:04,790
+I could have done a
+network load balancer,
+
+117
+00:07:04,790 --> 00:07:07,650
+so I would recommend you
+do that on your own,
+
+118
+00:07:07,650 --> 00:07:10,230
+and it can load balance
+between the two.
+
+119
+00:07:10,230 --> 00:07:13,270
+But we'll run an
+application load balancer
+
+120
+00:07:13,270 --> 00:07:15,730
+where it's going to
+basically create
+
+121
+00:07:15,730 --> 00:07:18,630
+a proxy and then that proxy will
+
+122
+00:07:18,630 --> 00:07:22,900
+load balance between the
+different workloads.
+
+123
+00:07:22,910 --> 00:07:27,030
+Next is public-facing
+or just internal.
+
+124
+00:07:27,030 --> 00:07:28,720
+The external one,
+I'm going to want
+
+125
+00:07:28,720 --> 00:07:30,220
+an external client across
+
+126
+00:07:30,220 --> 00:07:32,350
+the Internet to be
+able to access this,
+
+127
+00:07:32,350 --> 00:07:34,310
+so I wanted public-facing.
+
+128
+00:07:34,310 --> 00:07:37,640
+This case, I only have
+something regionally,
+
+129
+00:07:37,640 --> 00:07:40,010
+so I'm going to choose regional.
+
+130
+00:07:40,010 --> 00:07:44,940
+But if we wanted our
+workloads across regions,
+
+131
+00:07:44,940 --> 00:07:46,860
+and we talked about how does
+
+132
+00:07:46,860 --> 00:07:49,500
+that global load balancing work,
+
+133
+00:07:49,500 --> 00:07:52,855
+both for the ingress
+and egress traffic.
+
+134
+00:07:52,855 --> 00:07:57,615
+Then let's go ahead and let's
+check that this is done.
+
+135
+00:07:57,615 --> 00:08:02,295
+Configure the load balancer.
+
+136
+00:08:02,295 --> 00:08:05,835
+We'll just give it
+a simple name, LB1,
+
+137
+00:08:05,835 --> 00:08:10,335
+and I will associate it
+with the VPC1 network.
+
+138
+00:08:10,335 --> 00:08:13,640
+The first thing you
+saw pop up was it's
+
+139
+00:08:13,640 --> 00:08:17,450
+requiring this creation
+of a proxy-only subnet.
+
+140
+00:08:17,450 --> 00:08:21,140
+They want a subnet where
+they're going to be able to
+
+141
+00:08:21,140 --> 00:08:26,055
+launch Envoy-based
+load balancers.
+
+142
+00:08:26,055 --> 00:08:27,410
+We talked about
+the two different
+
+143
+00:08:27,410 --> 00:08:29,010
+systems that Google uses
+
+144
+00:08:29,010 --> 00:08:33,010
+Envoy and Maglev for an
+application load balancer.
+
+145
+00:08:33,010 --> 00:08:36,650
+Envoy is an open-source package,
+
+146
+00:08:36,650 --> 00:08:38,690
+so they're going to
+launch instances of
+
+147
+00:08:38,690 --> 00:08:42,945
+that inside of this
+reserved subnet.
+
+148
+00:08:42,945 --> 00:08:47,290
+We'll create a reserved subnet.
+
+149
+00:08:49,190 --> 00:08:52,260
+Let me call it sub-proxy,
+
+150
+00:08:52,260 --> 00:08:55,630
+and I'll say it's 10.0.3.0.
+
+151
+00:08:55,970 --> 00:09:00,340
+It's 24, so it should be
+its own unique range.
+
+152
+00:09:01,730 --> 00:09:05,710
+Next thing is we're going
+to be able to specify
+
+153
+00:09:05,710 --> 00:09:09,970
+an IP address port
+protocol, so the front end.
+
+154
+00:09:09,970 --> 00:09:15,710
+What are we going to actually
+use to connect to this?
+
+155
+00:09:15,710 --> 00:09:18,300
+We're going to say it's HTTP.
+
+156
+00:09:18,300 --> 00:09:21,420
+I'm going to say I want
+it available on port 80,
+
+157
+00:09:21,420 --> 00:09:23,980
+and I want to use,
+
+158
+00:09:23,980 --> 00:09:25,900
+in this case, an ephemeral,
+
+159
+00:09:25,900 --> 00:09:28,840
+so Google is just going to
+assign it when I create this,
+
+160
+00:09:28,840 --> 00:09:31,045
+but I could have used
+
+161
+00:09:31,045 --> 00:09:35,360
+Google Services to create
+a static IP address.
+
+162
+00:09:38,710 --> 00:09:44,940
+If we needed
+additional interfaces,
+
+163
+00:09:44,940 --> 00:09:46,130
+I would have done that,
+
+164
+00:09:46,130 --> 00:09:49,170
+but let me delete that.
+
+165
+00:09:49,170 --> 00:09:51,060
+I don't need to give it a name,
+
+166
+00:09:51,060 --> 00:09:53,605
+so I can be done with that.
+
+167
+00:09:53,605 --> 00:09:56,555
+Now I go and configure
+the backend.
+
+168
+00:09:56,555 --> 00:09:59,330
+The front-end is
+the external world,
+
+169
+00:09:59,330 --> 00:10:02,775
+how does it connect
+to the load balancer?
+
+170
+00:10:02,775 --> 00:10:07,125
+Now, what does the load balancer
+connect to on the back?
+
+171
+00:10:07,125 --> 00:10:10,780
+Here, you're going to go
+create a backend service.
+
+172
+00:10:11,120 --> 00:10:14,670
+I could have done had
+this backend service
+
+173
+00:10:14,670 --> 00:10:17,850
+already created, and
+then just used it.
+
+174
+00:10:17,850 --> 00:10:20,970
+When launched, it would
+have been referenceable,
+
+175
+00:10:20,970 --> 00:10:25,080
+but we'll just create it here.
+
+176
+00:10:25,080 --> 00:10:28,560
+The backend type,
+say it's going to be
+
+177
+00:10:28,560 --> 00:10:31,410
+the instance group
+but I could have done
+
+178
+00:10:31,410 --> 00:10:34,245
+things in the Kubernetes service
+
+179
+00:10:34,245 --> 00:10:37,515
+or serverless, things like that.
+
+180
+00:10:37,515 --> 00:10:41,260
+But we're showing it
+as an instance group.
+
+181
+00:10:43,300 --> 00:10:46,130
+We'll come back to
+this name port.
+
+182
+00:10:46,130 --> 00:10:49,280
+That's going to be
+our own named port
+
+183
+00:10:49,280 --> 00:10:50,540
+for our instance group,
+
+184
+00:10:50,540 --> 00:10:52,500
+and it's going to
+automatically see that we
+
+185
+00:10:52,500 --> 00:10:55,740
+want to use that.
+
+186
+00:10:55,740 --> 00:11:00,660
+It says, I already has
+a port named App HTTP.
+
+187
+00:11:00,660 --> 00:11:04,240
+Do we want to use that?
+Yeah, I'm going to use that.
+
+188
+00:11:04,240 --> 00:11:07,550
+You could see that
+it came up there.
+
+189
+00:11:08,270 --> 00:11:15,975
+There's other things
+that you can configure,
+
+190
+00:11:15,975 --> 00:11:20,220
+like utilization and requests
+
+191
+00:11:20,220 --> 00:11:22,905
+per second that are the max.
+
+192
+00:11:22,905 --> 00:11:25,800
+We're doing
+everything so simple,
+
+193
+00:11:25,800 --> 00:11:29,260
+so we don't need that, so
+let me sit done there.
+
+194
+00:11:29,660 --> 00:11:33,780
+Next is this health check.
+
+195
+00:11:33,780 --> 00:11:39,705
+If you recall the second
+part of the server group,
+
+196
+00:11:39,705 --> 00:11:45,500
+you need to know which
+servers or VMs in our case,
+
+197
+00:11:45,500 --> 00:11:48,280
+that the load balancer
+can load balance between,
+
+198
+00:11:48,280 --> 00:11:51,330
+but you also have to know
+which ones are alive or not.
+
+199
+00:11:51,330 --> 00:11:53,560
+Here, we're going to tell
+
+200
+00:11:53,560 --> 00:11:56,485
+Google how to perform
+a health check.
+
+201
+00:11:56,485 --> 00:11:58,975
+We're going to create
+this health check.
+
+202
+00:11:58,975 --> 00:12:01,370
+I'm going to call it HC1,
+
+203
+00:12:01,370 --> 00:12:03,920
+and we're going to say TCP.
+
+204
+00:12:03,920 --> 00:12:06,285
+This is what it's going to do;
+
+205
+00:12:06,285 --> 00:12:07,605
+is it's going to call
+
+206
+00:12:07,605 --> 00:12:09,280
+the backend servers and
+
+207
+00:12:09,280 --> 00:12:12,440
+since we're running
+it at port 5000.
+
+208
+00:12:15,320 --> 00:12:17,820
+Actually, I don't want this TCP.
+
+209
+00:12:17,820 --> 00:12:19,830
+I want this HTTP port
+
+210
+00:12:19,830 --> 00:12:25,420
+5000 and the request
+path is health.
+
+211
+00:12:26,060 --> 00:12:29,955
+You can configure
+some health criteria
+
+212
+00:12:29,955 --> 00:12:32,400
+like how often should it check,
+
+213
+00:12:32,400 --> 00:12:34,710
+how many times does it have to
+
+214
+00:12:34,710 --> 00:12:38,530
+succeed or fail to be considered
+healthy or unhealthy.
+
+215
+00:12:38,530 --> 00:12:42,960
+I'm going to click
+"Save" there and
+
+216
+00:12:42,960 --> 00:12:47,500
+create the backend.
+I missed something.
+
+217
+00:12:47,900 --> 00:12:51,250
+The last was security.
+
+218
+00:12:54,050 --> 00:12:57,780
+I guess I must have
+did this before,
+
+219
+00:12:57,780 --> 00:13:01,245
+so I'll just give it a new name.
+
+220
+00:13:01,245 --> 00:13:03,870
+I didn't delete it last time.
+
+221
+00:13:03,870 --> 00:13:09,790
+Create that. We got the
+backend services going.
+
+222
+00:13:09,790 --> 00:13:12,365
+I can now look at
+the routing rules.
+
+223
+00:13:12,365 --> 00:13:16,270
+If you recall on an
+application load balancer,
+
+224
+00:13:18,710 --> 00:13:21,945
+if I collect advanced,
+
+225
+00:13:21,945 --> 00:13:29,370
+I can have say slash purchase
+go to one set of servers,
+
+226
+00:13:29,370 --> 00:13:34,980
+slash sign-in to go
+to a different one.
+
+227
+00:13:34,980 --> 00:13:39,490
+We're just going to use
+it as a real simple.
+
+228
+00:13:40,190 --> 00:13:44,550
+Then with that, I'm
+going to review it.
+
+229
+00:13:44,550 --> 00:13:47,450
+I can look through
+all my configuration,
+
+230
+00:13:47,450 --> 00:13:49,545
+and hopefully, it's all correct.
+
+231
+00:13:49,545 --> 00:13:55,935
+But before I do that, I want
+to flip over to the two VMs.
+
+232
+00:13:55,935 --> 00:13:59,475
+I've SSHed into both of them.
+
+233
+00:13:59,475 --> 00:14:01,270
+I have nothing running,
+
+234
+00:14:01,270 --> 00:14:06,750
+but I do have this test
+app already created here.
+
+235
+00:14:06,750 --> 00:14:08,775
+This is that code,
+
+236
+00:14:08,775 --> 00:14:12,635
+should look familiar, and
+that exists on both of these.
+
+237
+00:14:12,635 --> 00:14:14,950
+We're not going to
+run it just yet.
+
+238
+00:14:14,950 --> 00:14:19,750
+First thing I'm going to do
+is create this load balancer.
+
+239
+00:14:21,740 --> 00:14:25,695
+This is going to take
+about 30 seconds,
+
+240
+00:14:25,695 --> 00:14:29,130
+last time I ran it.
+
+241
+00:14:29,130 --> 00:14:33,630
+But why I'm not running
+the application
+
+242
+00:14:33,630 --> 00:14:36,590
+yet is because I want to
+
+243
+00:14:36,590 --> 00:14:40,150
+be able to show it
+showing up as unhealthy.
+
+244
+00:14:40,150 --> 00:14:42,245
+Actually, I can run it on, one,
+
+245
+00:14:42,245 --> 00:14:46,525
+Python 3 test app.
+
+246
+00:14:46,525 --> 00:14:49,150
+This one is up and running,
+
+247
+00:14:49,150 --> 00:14:56,695
+and it's waiting for
+me to connect to it,
+
+248
+00:14:56,695 --> 00:15:00,110
+this one is not.
+
+249
+00:15:01,880 --> 00:15:06,240
+You can see it's getting
+these health check requests.
+
+250
+00:15:06,240 --> 00:15:08,250
+I must mean our load balance
+
+251
+00:15:08,250 --> 00:15:13,365
+is up and running because
+Google is starting to do stuff.
+
+252
+00:15:13,365 --> 00:15:16,665
+I guess it's needing
+to finalize it,
+
+253
+00:15:16,665 --> 00:15:21,370
+so let's give it
+another few seconds.
+
+254
+00:15:31,250 --> 00:15:35,080
+I bet if we ran TCP
+dump on this one,
+
+255
+00:15:35,080 --> 00:15:38,490
+it's trying to request but,
+
+256
+00:15:38,490 --> 00:15:42,795
+well, we'll just
+let it go for now.
+
+257
+00:15:42,795 --> 00:15:45,870
+Maybe this is why it
+takes 30 seconds;
+
+258
+00:15:45,870 --> 00:15:51,660
+is because it says one
+backend service is unhealthy.
+
+259
+00:15:51,660 --> 00:15:53,950
+If I click on this,
+
+260
+00:15:58,880 --> 00:16:02,265
+healthy one of two.
+
+261
+00:16:02,265 --> 00:16:04,740
+You could see that it was doing
+
+262
+00:16:04,740 --> 00:16:08,595
+the health check requests.
+
+263
+00:16:08,595 --> 00:16:15,090
+Now, let me do Python
+3 test app here,
+
+264
+00:16:15,090 --> 00:16:19,290
+and now it's seen
+that that's healthy,
+
+265
+00:16:19,290 --> 00:16:23,320
+and then this should refresh.
+
+266
+00:16:23,420 --> 00:16:28,890
+I don't know how frequent
+it refreshes. There we go.
+
+267
+00:16:28,890 --> 00:16:30,730
+One regional backend service
+
+268
+00:16:30,730 --> 00:16:32,000
+and it's got the green check,
+
+269
+00:16:32,000 --> 00:16:34,680
+so it's saying it's all healthy.
+
+270
+00:16:34,680 --> 00:16:36,900
+Now I can come over here.
+
+271
+00:16:36,900 --> 00:16:39,080
+Well, next thing I need
+to do is understand
+
+272
+00:16:39,080 --> 00:16:41,655
+what the IP address is.
+
+273
+00:16:41,655 --> 00:16:44,045
+I could look there.
+
+274
+00:16:44,045 --> 00:16:45,960
+I can look under
+the load balancer,
+
+275
+00:16:45,960 --> 00:16:48,110
+but that's the IP address.
+
+276
+00:16:48,110 --> 00:16:52,615
+That's how I can now
+contact the load balancer.
+
+277
+00:16:52,615 --> 00:16:58,130
+Let's actually try to pull
+open these three windows
+
+278
+00:16:58,530 --> 00:17:06,430
+and give it a little
+space on each of those.
+
+279
+00:17:06,430 --> 00:17:08,645
+Well, I'm not going
+to be fast enough.
+
+280
+00:17:08,645 --> 00:17:14,850
+Then I could say curl that,
+
+281
+00:17:14,850 --> 00:17:17,235
+and then I would say hello.
+
+282
+00:17:17,235 --> 00:17:22,550
+Let's just make it extra
+clear that we're doing HTTP.
+
+283
+00:17:23,260 --> 00:17:27,545
+You can see which
+one of these is VM2.
+
+284
+00:17:27,545 --> 00:17:30,920
+There was this request right
+
+285
+00:17:30,920 --> 00:17:36,855
+there and if I keep
+doing this is VM2,
+
+286
+00:17:36,855 --> 00:17:38,580
+that one is VM1.
+
+287
+00:17:38,580 --> 00:17:40,770
+If we make that a little bigger,
+
+288
+00:17:40,770 --> 00:17:43,535
+you can see it keep curling,
+
+289
+00:17:43,535 --> 00:17:49,935
+and it's going
+between VM1 and VM2.
+
+290
+00:17:49,935 --> 00:17:52,905
+It's saying hello, I'm VM1,
+
+291
+00:17:52,905 --> 00:17:59,080
+hello VM2, and so it's load
+balancing between those.
+
+292
+00:18:01,700 --> 00:18:07,395
+That's about what we did.
+
+293
+00:18:07,395 --> 00:18:09,210
+We went through,
+created that front-end,
+
+294
+00:18:09,210 --> 00:18:12,225
+created that backend, we
+created that health check.
+
+295
+00:18:12,225 --> 00:18:16,515
+All of that was after
+this instance group,
+
+296
+00:18:16,515 --> 00:18:21,940
+and then we showed that
+we can curl hello.
+
+297
+00:18:22,490 --> 00:18:26,460
+Make sure you have port 5000
+
+298
+00:18:26,460 --> 00:18:31,430
+open to be able to access
+the internal services.
+
+299
+00:18:31,430 --> 00:18:34,525
+You can restrict it, don't
+
+300
+00:18:34,525 --> 00:18:37,225
+give this a private
+or public IP address.
+
+301
+00:18:37,225 --> 00:18:39,190
+That would be something,
+
+302
+00:18:39,190 --> 00:18:40,770
+but that's not necessary to have
+
+303
+00:18:40,770 --> 00:18:43,955
+it be connected to
+a load balancer.
+
+304
+00:18:43,955 --> 00:18:46,115
+The load balancer
+would be running in
+
+305
+00:18:46,115 --> 00:18:48,300
+a separate subnet with
+
+306
+00:18:48,300 --> 00:18:51,850
+the Envoy proxies
+running in those,
+
+307
+00:18:51,850 --> 00:18:55,020
+and probably only has one with
+the load we're giving it,
+
+308
+00:18:55,020 --> 00:18:59,140
+and then those
+would contact VM1.
+
+309
+00:19:00,170 --> 00:19:03,670
+We created the instance group,
+
+310
+00:19:03,670 --> 00:19:05,820
+showed proxy subnet, front-end,
+
+311
+00:19:05,820 --> 00:19:07,695
+backend service, health check,
+
+312
+00:19:07,695 --> 00:19:12,250
+and created a nice
+load-balanced service.
+
+313
+00:19:12,920 --> 00:19:15,750
+Now, for the Terraform,
+
+314
+00:19:15,750 --> 00:19:16,970
+you could see there were
+
+315
+00:19:16,970 --> 00:19:18,750
+several components
+we needed to create,
+
+316
+00:19:18,750 --> 00:19:21,510
+it wasn't just one or two.
+
+317
+00:19:21,510 --> 00:19:25,430
+The best thing to look at is
+
+318
+00:19:25,430 --> 00:19:31,830
+just examples and see what
+were closest for you.
+
+319
+00:19:31,830 --> 00:19:35,090
+I'm not going to go
+through a full example.
+
+320
+00:19:35,090 --> 00:19:38,320
+We've done plenty of
+Terraform so by now,
+
+321
+00:19:38,320 --> 00:19:41,240
+you should have been
+able to create VMs,
+
+322
+00:19:41,240 --> 00:19:44,120
+create VPCs,
+configure firewalls,
+
+323
+00:19:44,120 --> 00:19:46,800
+create subnets, all
+of those things.
+
+324
+00:19:46,800 --> 00:19:48,540
+Now you just need to add all of
+
+325
+00:19:48,540 --> 00:19:52,525
+those extra things that we
+created like the backend,
+
+326
+00:19:52,525 --> 00:19:55,425
+the front-end, the
+load balancer,
+
+327
+00:19:55,425 --> 00:19:58,970
+the instance group,
+and all of that stuff.
+
+328
+00:19:59,120 --> 00:20:03,910
+With that, we're going
+to stop here. Thanks.

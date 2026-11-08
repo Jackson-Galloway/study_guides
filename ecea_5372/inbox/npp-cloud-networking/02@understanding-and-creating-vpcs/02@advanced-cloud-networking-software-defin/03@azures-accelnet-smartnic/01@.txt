@@ -1,0 +1,130 @@
+All right, let's go ahead and get started. So this time we're going to switch over
+and actually look at Azure's network and it's something they call AccelNet,
+which is focusing on a SmartNIC. All right, so
+this is effectively really complementary to what we just saw looking
+at Google's Andromeda. So, have that in mind
+when we go through this. They have similar needs,
+need to create the abstraction of a VPC, need to create policies for
+VMs to be able to talk to each other, and all of the same problem setup. This is extra interesting
+because it describes how they went one step further
+to improve performance. All right, so this was a paper
+that was published in NSDI. Again, I'll provide link to it and
+highly encourage you to go read it. So what I was just saying was Google or Microsoft runs Azure,
+which is their cloud platform, equally allows you to
+create virtual machines and basically provide this VPC abstraction. This is a really nice picture, saying it's their virtual switch for
+Azure. It provides the core software
+defined networking functionality for networking services. And this is, kind of goes interestingly
+a little deeper in terms of describing the types of things
+that they're processing. So they're doing address
+virtualization for the VNET, the virtual IP to the, I forget what D stands for,
+the IP translation. They're doing for
+basically the external IP addresses, converting them to internal IP addresses, and mapping that to physical machines. And then access control lists,
+metering, security, all those different things are what
+they do inside of their switch. Much like Google,
+they use programmable rule or flow tables to perform
+the per packet actions. Also programmed by Azure's
+centralized SDN controllers, supports all the data plan policy
+at line rate with offloads. All right, so what does that mean? What does it look like? Again, coming back to
+the match action table. So this is, even say inspired by OpenFlow. But they designed it their own kind
+of proprietary version of this for their own specific needs. So running in a particular node will
+be the fast path of where their, kind of virtual switch where
+takes packets off the NIC goes through a sequence of
+these match action tables. So you can see the encapsulation
+like if you're sending to another VPC maybe,
+they do some encapsulation sending to another different
+subnet within the same one, maybe it's encapsulated to that host,
+whatever it is. I don't know exactly what all these are
+doing, but there's encapsulations right when they need to put it out
+onto their data center fabric. Think back to the VL2
+paper that we read and that really described
+their data center fabric. Now, think of, kind of things that you
+would have to do in conjunction with that. So here's some netting to
+convert between the public and private IP addresses, I imagine,
+and then kind of the filtering, the block and allow, all those policies. Looks familiar so far. One of the optimizations
+they did was kind of unified the flow tables in
+a particular interesting way. So they noted that going through this
+sequence of table lookups was expensive, but you only need to do that really once, the first packet in a given flow. And when we say flow, typically
+that's referring to a TCP connection. All of the packets related to that TCP
+connection should all get processed in the same way. So once you determine that based on
+that first packet, you can then, what they do is, they put this
+into this transposition engine, which then kind of makes
+it just one lookup. It's basically a hash of the packet
+that's really cheap to do. And then all of the actions to perform
+all the modifications to the packet, whether it's encapsulating or modifying
+the IP addresses, rewriting those, metering it, whatever it is, they can
+do all of that in basically one lookup. All right, problem is that the network
+speeds in azure were scaling really fast. So they mapped out from 2009 through 2017. And at the time of this paper, I think it
+was 2018 is when this paper was published, they said, soon we'll be reaching 100Gb,
+and 400 is not far out, far beyond that. All right, so they noted they got a 50x
+improvement in network throughput, but the CPU power did not increase
+by 50x in this eight year period. So they began exploring how could they
+actually keep up with those speeds. And they kind of noted, right,
+ASICs do provide a mechanism to be able to achieve native performance,
+meaning the 100 gig or 50 gig throughput that
+the network can support and the network interface can support. And getting that directly
+into the virtual machines, so there's something called SR-IOV,
+or single root, IO virtualization, which is down here
+in this green is this network card. Inside of the network card is
+some hardware where you can create rules to say, this traffic should
+go directly to this virtual machine. And it's as if it's splitting
+the PCI express space up and in some manner, but it gets it
+directly to the virtual machines. So that's something, but
+there's no SDN policy. There's no ability to do all of
+the processing that they need. So, then they began exploring,
+all right, what are the alternatives? And this is just showing a spectrum from CPUs which are very general purpose, CPUs, GPUs, which are highly parallel and still fairly general purpose to
+FPGAs which are programmable, but much more closer to hardware. And then a full ASIC, they said option
+five, they could do other stuff, but the spectrum goes from highly
+flexible to highly efficient. So what they kind of settled on is
+kind of contrasting CPUs and FPGAs, so they're going to settle on FPGAs. And so understand this, a CPU is
+basically, you take all the data and then you perform a series
+of instructions on it. FPGAs, you can have this,
+they call it spatial and temporal compute, where you can have all of those
+instructions operating in parallel. They're just different
+components on the hardware. So it's a much more parallel capability. So what is an FPGA? So shown here is kind of picture of it. So it's really these logic blocks
+connected by these little routing and wire elements. With this, you can design in
+a hardware description language, compile it, and then load in what
+is specific circuit that you want. It has a large quantity of programmable
+gates that are highly parallel, and you can program these specialized
+circuits that communicate directly. Now, there's two kinds of parallelism,
+there's thread level parallelism and then pipeline parallelism. So thread level, well, pipeline parallel
+we saw, which is, take the data, let's say it's one packet,
+it does the first stage of processing, and then that gets passed over
+to the next stage of processing. Meanwhile, the first stage of
+processing can handle the next packet. So, two stages are happening in
+parallel and you do them sequentially, one after the other,
+but it's in a pipeline. And then thread level is,
+you can stamp out multiple of these, whatever the hardware can support. And so you would kind of
+redirect different flows of traffic to each pipeline. And they're large enough, the FPGAs have embedded
+processors in them, so you can run control
+plane software on them. All right, so what's their
+solution is the Azure SmartNIC, they needed hardware for scale,
+the performance, and the cost. Performance, once it
+got really high speeds, they could have rolled their own ASIC. Microsoft has a lot of money, but
+it's really too slow to develop that. They also have that kind of
+software mindset that Google has, where they want to roll out
+new capabilities rapidly, and so they need agility. And so, they want an FPGA on the SmartNIC. And so what it looks like is, they still had all this
+complex processing and capability in their software. So they still are doing that. But then, instead of transposing
+into a table where the second packet gets processed in software, now they can
+mirror that table down into the FPGA. So if the FPGA can support
+the different types of actions, well, then now we can perform the packet
+processing at really high rates for that. And then they can leverage the SR-IOV
+to bypass any processing in the operating system or the hypervisor and
+go directly to the guests VM. All right, so
+in an academic paper you then kind of compare against what's the alternatives. And so they show Azure
+compared to Google and AWS, and they show Azure can get
+higher VM to VM throughput, lower latency, comparatively, and
+then a lot lower tail latency. And so tail latency,
+if you haven't heard that term, so on average,
+this would be the 50th percentile. If you looked at how long every single
+packet takes, you sorted them, and you got the 50th right in the middle,
+that's the average or median, I guess. And that's what normally you can expect. There's some packets that are outliers. And so, a lot of times you don't want
+that latency to be really high for those outliers because then the difference
+between some of the packets, the median, this now causes huge disruptions
+in how your application behaves. So everything is kind of even as you can. All right, so that's AccelNet,
+they kind of kind of posit this question or
+pose this question of software or hardware, and came to the conclusion
+that each has its place. And presented this really
+interesting system of how they leverage the benefits of software,
+which is that complexity, ability to process things and
+the hardware, which is able to perform things
+really fast in parallel. And with that, we're going to stop here. All right, thanks.

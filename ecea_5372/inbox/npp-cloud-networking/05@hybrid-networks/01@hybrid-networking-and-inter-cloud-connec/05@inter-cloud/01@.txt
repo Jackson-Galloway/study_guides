@@ -1,0 +1,68 @@
+Let's go ahead and get started. This time, we're
+going to talk about inter-cloud as part of this
+hybrid infrastructure. This is specifically
+addressing the case where I, as a company, want to
+use multiple clouds. I have some
+infrastructure in Google, and maybe I see OpenAI and Microsoft having
+this great partnership, and I want to use that and
+it's running in Azure, and so I want to be
+able to use that. But I don't want to use VPNs because they're slow
+and costly, maybe. But I want the high
+bandwidth connection. Like I said, you
+could use a VPN, but it's lower bandwidth,
+higher latency. Depends on the Internet, so there's no service
+level agreements that you can get from that.
+But you could do that. I could set up a VPN
+gateway on each side, set up the routers on each side, and have my VPCs
+talking to one another. But we're going to go the
+route of a private connection. Recall from last time
+where we talked about the cloud direct
+connect providers, where I have a cage over here, I can connect to
+an equipment of, say, a company like Megaport. Then their fabric, whether it's the same data
+center or a different one, can get me to connection to
+Google Switch and so forth. I could have directly
+connected to Google itself, but let's say we going
+through one of the providers. Then recall what that
+on the cloud side, that meant I needed
+a cloud router with the VLAN attachment, which then connected on
+the on-premise side. All going between two clouds requires is a router in between. I have this router connected to this through the
+physical infrastructure to this cloud router. Now imagine on the other side is another physical
+connection to a different provider and a cloud router in that
+environment, in that cloud. That's all it really is. It just needs this kind
+of router in between. There's something called a
+cross-cloud interconnect where it's effectively a direct connect to each cloud plus
+a virtual router. The provider, whether that's
+a partner like Megaport, or Console Connect, or Google, actually offers this
+service themselves. So they run and operate
+the virtual router. They operate this
+part right here. In addition to enabling
+both connection to Google and connection
+to AWS in this picture. In some cases, it can also work between different regions, if you're going over the
+provider's network fabric. How you can get to this is, again, in the
+interconnect button. But instead of the top ones where the direct
+connect, this last one, is cross-cloud
+interconnect connection. This is that Google provided between two different Google to the other cloud
+service providers. If you wanted to do
+it through a partner, you would have selected this
+one, and it could have, inside of the partner network, you would have
+configured to go to AWS as the other end
+of the cloud router. But you could do it all within the Google's interface if you want if you're using
+Google's service. But you would still need to, in either case, go over
+onto the Amazon side, set up the equivalent of
+a cloud router there, the equivalent of the VLAN
+attachment, and all that. That's what it is. Again, a little more
+challenging to set up. This one, all these providers
+are straightforward, but they're not cheap. If you have a few
+hundred bucks that you want to spend to test this out, you can certainly
+get a connection between your Google
+infrastructure and, say, your Amazon infrastructure
+and see how it works. We're not going to walk
+through that in this, but you can try on your own. Similar exact setup,
+VLAN attachments, PGP configurations,
+and so forth. Then results would
+look like this. You got your VPC network. You got a cloud router there. It would go through
+Google routers. They have connections to, let's say, it's Amazon, a router run by Amazon, and then inside of
+the remote cloud, so that's Amazon, they
+would have a router there. You can read all about
+it in that link. With that, we will
+end here. Thank you.

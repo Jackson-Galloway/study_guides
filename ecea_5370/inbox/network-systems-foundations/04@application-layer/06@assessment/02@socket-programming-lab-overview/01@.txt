@@ -1,0 +1,8 @@
+In this programming assignment, we're going to dive into sockets programming and
+put your knowledge, your learning of
+that into practice. The task is going to be a simple RPC system and you're going to need
+to take into account how to pack the data
+and things like that such that the exchange of messages between the client
+and the server match. Some code is provided that
+will show you how the code, the interaction should happen. Then a bunch of test
+cases are also provided.

@@ -1,0 +1,1273 @@
+1
+00:00:09,919 --> 00:00:15,639
+All right, let's get into error
+handling at the link layer.
+
+2
+00:00:15,639 --> 00:00:20,944
+So, as a reminder, the problem we're
+trying to solve here is the fact that
+
+3
+00:00:20,944 --> 00:00:26,520
+we're transmitting signals over some
+physical medium, wired, wireless.
+
+4
+00:00:26,520 --> 00:00:30,573
+And the assumption is they're not perfect,
+
+5
+00:00:30,573 --> 00:00:34,632
+that there can be some
+of errors that happen.
+
+6
+00:00:34,632 --> 00:00:40,487
+And in the digital world, what this means
+is that some bits might get flipped,
+
+7
+00:00:40,487 --> 00:00:43,956
+might get flipped from a 0 to a 1 or
+a 1 to a 0.
+
+8
+00:00:43,956 --> 00:00:46,966
+And so what we need, at the very least,
+
+9
+00:00:46,966 --> 00:00:50,811
+is to be able to detect
+that an error has occurred.
+
+10
+00:00:50,811 --> 00:00:55,636
+Better yet, if we can correct it,
+that's great.
+
+11
+00:00:55,636 --> 00:01:02,530
+So one common approach to being able
+to detect errors is through parity.
+
+12
+00:01:02,530 --> 00:01:07,056
+So shown here are just
+examples of two values.
+
+13
+00:01:07,056 --> 00:01:11,269
+Well, it's the same value
+being transmitted, but
+
+14
+00:01:11,269 --> 00:01:16,366
+in one case, one of the bits got
+flipped and it caused an error.
+
+15
+00:01:16,366 --> 00:01:21,041
+And in the other case, it was correct.
+
+16
+00:01:21,041 --> 00:01:23,787
+All right, so let me pull up a pen.
+
+17
+00:01:23,787 --> 00:01:29,681
+So our goal is to detect if there
+was an error in the transmission.
+
+18
+00:01:29,681 --> 00:01:35,714
+But how do we know if we just
+received these bits right here?
+
+19
+00:01:35,714 --> 00:01:40,616
+I don't know if the 1 was
+actually intended or not.
+
+20
+00:01:40,616 --> 00:01:45,237
+So what parity does is it
+forces every transmission
+
+21
+00:01:45,237 --> 00:01:49,751
+to have an even number of
+1s by adding an extra 1 or
+
+22
+00:01:49,751 --> 00:01:56,105
+an extra bit set to either 0 or
+1 based on the number of 1s in the data.
+
+23
+00:01:56,105 --> 00:01:59,478
+So this would be called even parity.
+
+24
+00:01:59,478 --> 00:02:04,123
+We can also, as indicated in
+the parentheses, have odd parity,
+
+25
+00:02:04,123 --> 00:02:08,943
+where the goal is to make the transmission
+have an odd number of 1s.
+
+26
+00:02:08,943 --> 00:02:12,144
+And so if a single bit gets flipped,
+
+27
+00:02:12,144 --> 00:02:18,015
+we would be able to detect whether
+the transmission had an error or
+
+28
+00:02:18,015 --> 00:02:21,460
+not by looking how many 1s are there.
+
+29
+00:02:21,460 --> 00:02:26,806
+And if it's odd, in the case of even
+parity, we would say, all right,
+
+30
+00:02:26,806 --> 00:02:31,286
+that's not what we were expecting,
+so there was an error.
+
+31
+00:02:31,286 --> 00:02:37,379
+So, as an aside, let's look at the
+function of or the functionality of xor.
+
+32
+00:02:37,379 --> 00:02:39,044
+This is a truth table shown right here.
+
+33
+00:02:39,044 --> 00:02:44,785
+And so XOR is a logic operation.
+
+34
+00:02:44,785 --> 00:02:49,047
+And so how to read this if
+you've never seen a truth
+
+35
+00:02:49,047 --> 00:02:52,307
+table before is on the top right here.
+
+36
+00:02:52,307 --> 00:02:57,102
+We have one of the inputs, and
+it has two different possible values.
+
+37
+00:02:57,102 --> 00:03:00,801
+And then on the left,
+we have the second input, and
+
+38
+00:03:00,801 --> 00:03:04,001
+it also has two different possible values.
+
+39
+00:03:04,001 --> 00:03:10,416
+So in this case, you would say
+if the first input is a 0 and
+
+40
+00:03:10,416 --> 00:03:16,847
+the second input is a 0, so
+0 xor 0, the result is a 0.
+
+41
+00:03:16,847 --> 00:03:22,498
+Likewise, if the first input is a 1 and
+
+42
+00:03:22,498 --> 00:03:27,646
+the second is a 0, 1 xor 0 is a 1.
+
+43
+00:03:27,646 --> 00:03:30,607
+And so this tells the whole truth table.
+
+44
+00:03:30,607 --> 00:03:35,156
+And if you're trying to
+do it kind of bit wise,
+
+45
+00:03:35,156 --> 00:03:39,356
+you would just line the bits up and
+with 1,
+
+46
+00:03:39,356 --> 00:03:44,268
+we know that's a 0, 0,
+XOR, 1 with 1 is a 1.
+
+47
+00:03:44,268 --> 00:03:46,611
+1 xor with 0 is a 1.
+
+48
+00:03:46,611 --> 00:03:49,359
+0 xor with 0 is a 0.
+
+49
+00:03:49,359 --> 00:03:51,202
+All right, so why am I telling you this?
+
+50
+00:03:51,202 --> 00:03:56,370
+Well, it's the function or
+the logic that we can
+
+51
+00:03:56,370 --> 00:04:02,311
+use to easily count the number
+of 1s in an array of bits.
+
+52
+00:04:02,311 --> 00:04:06,870
+So shown here is an example of four bits,
+1010.
+
+53
+00:04:06,870 --> 00:04:11,569
+Visually, we can look at it and
+see that there's two 1s, and so
+
+54
+00:04:11,569 --> 00:04:13,587
+we know that that's even.
+
+55
+00:04:13,587 --> 00:04:17,649
+But if we were to either use code or
+logic,
+
+56
+00:04:17,649 --> 00:04:22,421
+we can use this XOR
+functionality to check this.
+
+57
+00:04:22,421 --> 00:04:28,142
+So we would do 1 XOR with 0, which is 1,
+
+58
+00:04:28,142 --> 00:04:33,044
+and then 1 xor with 1 is now 0, and
+
+59
+00:04:33,044 --> 00:04:37,631
+then now 0 XOR with 0 equals 0.
+
+60
+00:04:37,631 --> 00:04:42,306
+All right, so that indicates to
+us that there was an even number
+
+61
+00:04:42,306 --> 00:04:44,964
+of 1s in this bit string ring here.
+
+62
+00:04:44,964 --> 00:04:49,351
+Now, if we look at another example that
+we can see has three, should be odd.
+
+63
+00:04:49,351 --> 00:04:51,991
+Let's double check that using XOR.
+
+64
+00:04:51,991 --> 00:04:58,840
+So one XOR with 1, we look at the table,
+we can see that that's a 0.
+
+65
+00:04:58,840 --> 00:05:02,378
+Then we say 0 XOR with 0.
+
+66
+00:05:02,378 --> 00:05:08,210
+Now that's 1, and
+then one XOR with 0 is now 1.
+
+67
+00:05:08,210 --> 00:05:10,156
+And that's odd, all right?
+
+68
+00:05:10,156 --> 00:05:15,124
+So now we know how to be able to
+calculate whether there's an even or
+
+69
+00:05:15,124 --> 00:05:18,248
+an odd number of bits in some bit pattern.
+
+70
+00:05:18,248 --> 00:05:21,379
+So let's go through a concrete example.
+
+71
+00:05:21,379 --> 00:05:25,575
+And here we're going to use
+specifically even parity.
+
+72
+00:05:25,575 --> 00:05:30,264
+That means that our
+transmission has to have
+
+73
+00:05:30,264 --> 00:05:35,089
+an equal number or
+an even number of 1s in it.
+
+74
+00:05:35,089 --> 00:05:38,029
+All right, so let's look at this.
+
+75
+00:05:38,029 --> 00:05:44,152
+input data, that's the data that
+we want to be able to transmit.
+
+76
+00:05:44,152 --> 00:05:49,440
+We would go through and
+determine by xorring each of these
+
+77
+00:05:49,440 --> 00:05:55,292
+bits to see how many is it currently
+even or is it currently odd?
+
+78
+00:05:55,292 --> 00:06:00,558
+And we can see that the data that
+we want to transmit ends up with
+
+79
+00:06:00,558 --> 00:06:05,434
+0 when we XOR all of them,
+meaning it's already even.
+
+80
+00:06:05,434 --> 00:06:09,698
+So what we're going to do is we're
+going to add a 0 to the transmission.
+
+81
+00:06:09,698 --> 00:06:16,316
+So now with that one extra bit,
+which is shown here at the end,
+
+82
+00:06:16,316 --> 00:06:23,081
+we can see that the transmitted
+number of bits is going to be even.
+
+83
+00:06:23,081 --> 00:06:29,764
+All right, so as another example,
+here's the data we want to transmit.
+
+84
+00:06:29,764 --> 00:06:36,631
+So to calculate whether this has an even
+or odd number of 1s, we would XOR them.
+
+85
+00:06:36,631 --> 00:06:41,311
+So we would 0, XOR, 1,
+XOR with 0 and so forth.
+
+86
+00:06:41,311 --> 00:06:46,342
+And we can see that the end result is 1,
+meaning this value
+
+87
+00:06:46,342 --> 00:06:51,801
+right here that we want to transmit
+has an odd number of 1s in it.
+
+88
+00:06:51,801 --> 00:06:54,237
+So it's odd, so to make it even,
+
+89
+00:06:54,237 --> 00:06:59,197
+what we're going to do is we're going to
+add a one to this transmission.
+
+90
+00:06:59,197 --> 00:07:06,808
+So we take the original value and
+then we append on the value 1 onto it,
+
+91
+00:07:06,808 --> 00:07:13,388
+making it this whole value,
+have an even number of 1s in it.
+
+92
+00:07:13,388 --> 00:07:16,435
+So how do we use that
+on the receiving side?
+
+93
+00:07:16,435 --> 00:07:20,563
+So let's say now we've
+received this value, and
+
+94
+00:07:20,563 --> 00:07:25,685
+we want to be able to say,
+is this what was actually sent or not?
+
+95
+00:07:25,685 --> 00:07:27,462
+So we would do the same operation.
+
+96
+00:07:27,462 --> 00:07:31,115
+We would double-check,
+we would go through and
+
+97
+00:07:31,115 --> 00:07:34,421
+XOR every single bit, including this bit.
+
+98
+00:07:34,421 --> 00:07:38,578
+And if the end result is 0,
+we know it was correct,
+
+99
+00:07:38,578 --> 00:07:43,709
+because that indicates this
+transmission had an even number,
+
+100
+00:07:43,709 --> 00:07:48,256
+which both sides agreed to,
+that we're going to make sure
+
+101
+00:07:48,256 --> 00:07:53,131
+that that's the case, and so
+this ended up being correct.
+
+102
+00:07:53,131 --> 00:07:57,205
+Looking at the second example
+we had on the previous slide,
+
+103
+00:07:57,205 --> 00:08:00,148
+we can go through the exact same exercise.
+
+104
+00:08:00,148 --> 00:08:01,241
+We can XOR.
+
+105
+00:08:02,260 --> 00:08:07,928
+All of these bits, including this extra
+parity bit and we would see the end
+
+106
+00:08:07,928 --> 00:08:13,358
+result is zero, meaning that there's
+an even number of ones in here.
+
+107
+00:08:13,358 --> 00:08:15,812
+So we can do this kind of manually.
+
+108
+00:08:15,812 --> 00:08:20,446
+One, two, three, four, five,
+six, six is an even number.
+
+109
+00:08:20,446 --> 00:08:23,054
+So our math is working.
+
+110
+00:08:23,054 --> 00:08:27,302
+So that means this value was correctly
+transmitted and received it.
+
+111
+00:08:27,302 --> 00:08:29,220
+There's no errors.
+
+112
+00:08:29,220 --> 00:08:31,366
+Now let's look at this value.
+
+113
+00:08:31,366 --> 00:08:34,095
+But let's say one of the bits flipped,
+
+114
+00:08:34,095 --> 00:08:37,660
+but we don't know that
+this is actually flipped.
+
+115
+00:08:37,660 --> 00:08:40,790
+We wouldn't receive a red zero or
+anything like that.
+
+116
+00:08:40,790 --> 00:08:44,870
+So we would go through and
+we would XOR each of these bits,
+
+117
+00:08:44,870 --> 00:08:48,010
+including that bit that flipped was zero.
+
+118
+00:08:48,010 --> 00:08:51,642
+So what would be the end result is a one.
+
+119
+00:08:51,642 --> 00:08:57,020
+There's now an odd number of ones,
+one, two, three, four, five.
+
+120
+00:08:57,020 --> 00:09:02,644
+And so what that means is I was expecting
+it to be even, but it's actually odd.
+
+121
+00:09:02,644 --> 00:09:04,860
+So I know it's an error.
+
+122
+00:09:06,080 --> 00:09:10,875
+All right, so parity is great,
+
+123
+00:09:10,875 --> 00:09:14,480
+but it's limited.
+
+124
+00:09:14,480 --> 00:09:18,628
+So for example,
+if there's two errors that occur,
+
+125
+00:09:18,628 --> 00:09:24,380
+you wouldn't be able to detect that
+because it's flipping two values,
+
+126
+00:09:24,380 --> 00:09:29,018
+meaning it goes the first flip
+changes it from even to odd.
+
+127
+00:09:29,018 --> 00:09:34,500
+And then the second flip would
+then change it back to even.
+
+128
+00:09:34,500 --> 00:09:38,285
+All right, so a CRC or a cyclic redundancy
+
+129
+00:09:38,285 --> 00:09:43,180
+check is a more powerful
+form of error detection.
+
+130
+00:09:43,180 --> 00:09:48,932
+So cyclic codes are particularly
+suited to detect burst errors.
+
+131
+00:09:48,932 --> 00:09:53,960
+And it's been adopted for
+the FCS field in Ethernet.
+
+132
+00:09:55,020 --> 00:09:58,780
+So let's go through how to calculate this,
+and
+
+133
+00:09:58,780 --> 00:10:03,826
+you might need to kind of look at
+this extra material on the web.
+
+134
+00:10:03,826 --> 00:10:09,382
+I provide a link at the end of a really
+good website that overviews this.
+
+135
+00:10:09,382 --> 00:10:13,158
+But we'll go through an example here.
+
+136
+00:10:13,158 --> 00:10:17,260
+All right, so
+just kind of this shows the setup.
+
+137
+00:10:17,260 --> 00:10:22,063
+All right, so
+D is the data to be transmitted and
+
+138
+00:10:22,063 --> 00:10:27,520
+then G is going to be called
+a generator polynomial.
+
+139
+00:10:27,520 --> 00:10:31,900
+And this is some value defined
+by the Ethernet standard.
+
+140
+00:10:31,900 --> 00:10:37,133
+Then our job as part of
+calculating the CRC is to find
+
+141
+00:10:37,133 --> 00:10:44,286
+these extra bits that we're going
+to add to it, which we'll call R.
+
+142
+00:10:44,286 --> 00:10:50,696
+So that we're going to calculate R,
+where DR is what will be transmitted.
+
+143
+00:10:50,696 --> 00:10:57,428
+And our goal is to make it
+find the value such that DR,
+
+144
+00:10:57,428 --> 00:11:04,180
+which viewed as all as one,
+is divisible by G.
+
+145
+00:11:04,180 --> 00:11:11,642
+All right, so the check would be then
+we've received this whole value.
+
+146
+00:11:11,642 --> 00:11:15,455
+We also divide it by G, and
+if the remainder is zero,
+
+147
+00:11:15,455 --> 00:11:19,460
+that there is no error,
+otherwise there was an error.
+
+148
+00:11:20,520 --> 00:11:22,782
+All right, so let's go through an example.
+
+149
+00:11:22,782 --> 00:11:26,164
+We're going to use R equals three for
+three bits.
+
+150
+00:11:26,164 --> 00:11:30,380
+So not capital r but r bits.
+
+151
+00:11:30,380 --> 00:11:34,826
+We're going to use the polynomial 1010 and
+
+152
+00:11:34,826 --> 00:11:39,950
+we're going to use
+the data value 11101011.
+
+153
+00:11:41,120 --> 00:11:45,710
+And our goal is to find R.
+
+154
+00:11:47,940 --> 00:11:49,964
+Actually, this is incorrect.
+
+155
+00:11:49,964 --> 00:11:51,170
+This is a zero.
+
+156
+00:11:53,140 --> 00:11:55,334
+So ignore this last bit.
+
+157
+00:11:55,334 --> 00:11:58,102
+But let's go through this example.
+
+158
+00:11:58,102 --> 00:12:03,800
+So how we do this is here's
+the data to be transmitted and
+
+159
+00:12:03,800 --> 00:12:09,080
+then we're going to start with R as zeros.
+
+160
+00:12:09,080 --> 00:12:13,806
+And so this is going to allow
+us to determine what we need to
+
+161
+00:12:13,806 --> 00:12:17,850
+transmit to make DR to be
+exactly divisible by G.
+
+162
+00:12:18,940 --> 00:12:25,280
+So once we've done that,
+we can now start going doing division.
+
+163
+00:12:25,280 --> 00:12:29,090
+And this looks like it
+would be hard to implement,
+
+164
+00:12:29,090 --> 00:12:33,680
+but actually it's just
+involving an XOR operation.
+
+165
+00:12:33,680 --> 00:12:40,534
+So it actually turns out to be a pretty
+straightforward algorithm to calculate,
+
+166
+00:12:40,534 --> 00:12:46,188
+but to illustrate it,
+we show it as kind of doing long division.
+
+167
+00:12:46,188 --> 00:12:49,478
+All right, so here's our data.
+
+168
+00:12:49,478 --> 00:12:51,220
+Here's these R bits.
+
+169
+00:12:53,080 --> 00:12:54,870
+Now here's G.
+
+170
+00:12:56,120 --> 00:13:00,147
+All right, so DRG, and
+we're trying to find R,
+
+171
+00:13:00,147 --> 00:13:06,148
+said initially to be all zeros and
+we're going to find the remainder.
+
+172
+00:13:06,148 --> 00:13:11,407
+All right, so how we can do this division
+
+173
+00:13:11,407 --> 00:13:15,892
+is if the value G can fit into this,
+
+174
+00:13:15,892 --> 00:13:21,461
+whatever the bits that we're looking at,
+
+175
+00:13:21,461 --> 00:13:26,800
+then the quotient is going to be a one.
+
+176
+00:13:26,800 --> 00:13:31,061
+And if it can't fit into it,
+basically, meaning this needs to be
+
+177
+00:13:31,061 --> 00:13:34,867
+four bits starting with a one,
+because this Is four bits.
+
+178
+00:13:34,867 --> 00:13:38,299
+And we'll go through and
+we'll see examples of that,
+
+179
+00:13:38,299 --> 00:13:41,000
+otherwise the value will be zero.
+
+180
+00:13:41,000 --> 00:13:47,226
+And so modulo two division simply
+involves the XOR operation, all right?
+
+181
+00:13:47,226 --> 00:13:52,306
+So first bit that would fit is
+once we get to here, and so
+
+182
+00:13:52,306 --> 00:13:57,392
+that means this is our first bit,
+that's an zero one.
+
+183
+00:13:57,392 --> 00:14:00,982
+Doing the kind of division operation,
+
+184
+00:14:00,982 --> 00:14:06,408
+we put the 1010 here and
+then we XOR these two values.
+
+185
+00:14:06,408 --> 00:14:10,909
+So zero XOR zero is zero,
+one XOR one is zero,
+
+186
+00:14:10,909 --> 00:14:16,306
+one XOR zero is one and
+one XOR one is zero, all right?
+
+187
+00:14:16,306 --> 00:14:24,500
+So then we carry the next or pull the next
+bit down, and so now we have 1001.
+
+188
+00:14:24,500 --> 00:14:28,690
+And do we say this can fit into that?
+
+189
+00:14:29,800 --> 00:14:31,194
+Yes, it can.
+
+190
+00:14:31,194 --> 00:14:35,944
+So then that bits of one, we multiply
+
+191
+00:14:35,944 --> 00:14:40,912
+that down 1010 XOR these values.
+
+192
+00:14:40,912 --> 00:14:45,841
+So one XOR zero is zero,
+zero XOR one is one,
+
+193
+00:14:45,841 --> 00:14:51,500
+zero XOR zero is zero,
+and one XOR one is zero.
+
+194
+00:14:51,500 --> 00:14:59,467
+All right, so then this would be a case
+where even if we pull down the zero,
+
+195
+00:14:59,467 --> 00:15:05,390
+this can't fit into, so
+G cannot fit into this value.
+
+196
+00:15:06,480 --> 00:15:10,413
+All right, this is only three bits with
+that leading one, this is four bits, so
+
+197
+00:15:10,413 --> 00:15:11,382
+it can't fit.
+
+198
+00:15:11,382 --> 00:15:16,022
+So at this point,
+this quotient bit is a zero, all right?
+
+199
+00:15:16,022 --> 00:15:19,700
+So then we would pull down the next bit,
+
+200
+00:15:19,700 --> 00:15:25,226
+we would pull the next bit down
+to make it a one, all right?
+
+201
+00:15:25,226 --> 00:15:30,042
+So let's look at where we left off
+instead of going through all of this.
+
+202
+00:15:30,042 --> 00:15:34,174
+So we had this one right
+there that we pulled down.
+
+203
+00:15:34,174 --> 00:15:37,820
+So this is where we left
+off is right there.
+
+204
+00:15:37,820 --> 00:15:40,542
+So we now pull down a one.
+
+205
+00:15:40,542 --> 00:15:47,420
+Now it fits do the modulo two division.
+
+206
+00:15:47,420 --> 00:15:55,340
+So one XOR zero,
+one zero XOR one one and so forth.
+
+207
+00:15:55,340 --> 00:15:58,716
+Now, if we keep going,
+going through all of this,
+
+208
+00:15:58,716 --> 00:16:02,675
+we're going to end up
+with a value down here.
+
+209
+00:16:02,675 --> 00:16:05,214
+That's the remainder, all right?
+
+210
+00:16:05,214 --> 00:16:09,714
+And so, this then becomes,
+
+211
+00:16:09,714 --> 00:16:14,408
+this 110 is the value of R.
+
+212
+00:16:14,408 --> 00:16:18,138
+And so, that's what we would
+add on to the transmission.
+
+213
+00:16:18,138 --> 00:16:24,308
+So, we'd take our original value of D,
+which is actually a zero,
+
+214
+00:16:24,308 --> 00:16:29,727
+pend it on R, and
+then that's what we're transmitting.
+
+215
+00:16:29,727 --> 00:16:35,011
+And much as with parity, so
+that's what we're transmit.
+
+216
+00:16:35,011 --> 00:16:42,423
+Now, much with parity on the check side,
+we basically do the exact same operation.
+
+217
+00:16:42,423 --> 00:16:46,813
+So this is corrected,
+we do the exact same operation.
+
+218
+00:16:46,813 --> 00:16:54,063
+We take this value,
+all of it, divide it by G.
+
+219
+00:16:54,063 --> 00:16:56,935
+And once we get down to the bottom,
+
+220
+00:16:56,935 --> 00:17:01,491
+if the remainder that we
+would calculate is all zeros,
+
+221
+00:17:01,491 --> 00:17:07,157
+then we knew it was correct,
+because it was exactly divisible by G.
+
+222
+00:17:07,157 --> 00:17:13,228
+Otherwise, there's an error
+in our transmission.
+
+223
+00:17:13,228 --> 00:17:19,689
+So what are some properties
+of CRCs in Ethernet?
+
+224
+00:17:19,689 --> 00:17:24,460
+So it detects any 1 bit error,
+
+225
+00:17:24,460 --> 00:17:32,543
+it also detects any two
+adjacent single bit errors.
+
+226
+00:17:32,543 --> 00:17:37,320
+It detects any odd number
+of single bit errors, and
+
+227
+00:17:37,320 --> 00:17:42,111
+any burst ff errors with
+the length of 32 or less.
+
+228
+00:17:42,111 --> 00:17:48,016
+So that's pretty powerful,
+that's much better than parity.
+
+229
+00:17:48,016 --> 00:17:53,452
+And it's also important, because it can be
+calculated as bytes arrive off the wire.
+
+230
+00:17:53,452 --> 00:17:57,019
+So this is something that can
+have a simple hardware or
+
+231
+00:17:57,019 --> 00:18:00,203
+firmware implementation
+on the network card.
+
+232
+00:18:00,203 --> 00:18:05,467
+And it really only evolves to xor
+operation, and can be done in line.
+
+233
+00:18:05,467 --> 00:18:08,703
+So those are really great
+properties of this.
+
+234
+00:18:08,703 --> 00:18:13,709
+And as mentioned,
+I'll point you to kind of more resources,
+
+235
+00:18:13,709 --> 00:18:17,733
+but if you were to look
+at the Ethernet standard,
+
+236
+00:18:17,733 --> 00:18:21,386
+you're going to see it
+described in this way.
+
+237
+00:18:21,386 --> 00:18:26,011
+So I just wanted to point out
+kind of what all this text means in
+
+238
+00:18:26,011 --> 00:18:29,074
+relation to what we just actually saw.
+
+239
+00:18:29,074 --> 00:18:32,415
+So you'll see this part, G(x).
+
+240
+00:18:32,415 --> 00:18:36,952
+And so, as we talked about G
+is this generator polynomial
+
+241
+00:18:36,952 --> 00:18:40,647
+that's pre-chosen as part of the standard.
+
+242
+00:18:40,647 --> 00:18:44,922
+And if you were to use
+something other than Ethernet,
+
+243
+00:18:44,922 --> 00:18:49,301
+it can be used with a different
+generator polynomial.
+
+244
+00:18:49,301 --> 00:18:53,762
+And so, in our case,
+it's this bit pattern.
+
+245
+00:18:53,762 --> 00:18:59,587
+And so, you can just see that x is zero,
+so the zeroth bit is 1.
+
+246
+00:18:59,587 --> 00:19:07,132
+The first bit is 1, 1, and then since x
+to the three is not shown, that's a zero.
+
+247
+00:19:07,132 --> 00:19:12,019
+So 0,1, 1, 1 is 7.
+
+248
+00:19:12,019 --> 00:19:16,149
+Then if you go through, four is 1,
+
+249
+00:19:16,149 --> 00:19:21,262
+x to the five is 1,
+x to the six is not shown.
+
+250
+00:19:21,262 --> 00:19:23,764
+So that's a zero, and
+then x to the seven is 1.
+
+251
+00:19:23,764 --> 00:19:32,514
+So 1011 is the value x character B,
+and so forth.
+
+252
+00:19:32,514 --> 00:19:36,092
+So that's how you can kind
+of read this polynomial.
+
+253
+00:19:36,092 --> 00:19:41,273
+And then,
+the rest of the kind of description
+
+254
+00:19:41,273 --> 00:19:47,023
+comes with dealing with
+cases of leading zeros.
+
+255
+00:19:47,023 --> 00:19:52,846
+So it's a little more complicated than we
+showed, but we didn't show the case where
+
+256
+00:19:52,846 --> 00:19:58,768
+if the transmission actually started with
+some zeros, which causes some problems.
+
+257
+00:19:58,768 --> 00:20:03,766
+Then, it also goes through and
+
+258
+00:20:03,766 --> 00:20:10,309
+talks about D, which is the frame data.
+
+259
+00:20:10,309 --> 00:20:17,682
+This M that it references,
+this D,R that we've talked about.
+
+260
+00:20:17,682 --> 00:20:20,598
+And we talked about G,
+and we talked about R.
+
+261
+00:20:20,598 --> 00:20:22,808
+So it has all the components there.
+
+262
+00:20:22,808 --> 00:20:27,960
+It's the exact same with what we showed,
+but with a little bit of extra.
+
+263
+00:20:27,960 --> 00:20:32,357
+Where you complement
+the bits to start with, and
+
+264
+00:20:32,357 --> 00:20:36,871
+to end with,
+to deal with a case of leading zeros.
+
+265
+00:20:36,871 --> 00:20:41,533
+All right, so
+if you want to kind of learn more, and
+
+266
+00:20:41,533 --> 00:20:46,763
+get another description of this,
+I found this article
+
+267
+00:20:46,763 --> 00:20:52,007
+to be incredibly well written and
+easy to understand.
+
+268
+00:20:52,007 --> 00:20:58,609
+So I highly recommend, and
+I'll put this as a reading document,
+
+269
+00:20:58,609 --> 00:21:03,180
+a link kind of outside
+of these slides as well.
+
+270
+00:21:03,180 --> 00:21:06,619
+So with that, we'll end here.
+
+271
+00:21:06,619 --> 00:21:09,084
+And next time, in the next video,
+
+272
+00:21:09,084 --> 00:21:13,343
+we're going to talk about how
+to handle the sharing the link.

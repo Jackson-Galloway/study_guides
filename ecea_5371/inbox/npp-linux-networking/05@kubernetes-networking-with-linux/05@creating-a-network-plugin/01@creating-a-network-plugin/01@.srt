@@ -1,0 +1,2377 @@
+1
+00:00:09,380 --> 00:00:11,820
+Now that we have a
+good understanding
+
+2
+00:00:11,820 --> 00:00:15,580
+of networking in Kubernetes,
+
+3
+00:00:15,580 --> 00:00:17,260
+let's go ahead and apply
+
+4
+00:00:17,260 --> 00:00:19,260
+some of what we've
+learned in the past
+
+5
+00:00:19,260 --> 00:00:24,610
+to create our own
+network plugin.
+
+6
+00:00:24,680 --> 00:00:29,710
+If you recall that
+
+7
+00:00:29,710 --> 00:00:34,420
+the Kubelet is something
+that runs on each node.
+
+8
+00:00:34,420 --> 00:00:39,160
+It's watching, it's getting
+updates from the API server.
+
+9
+00:00:39,160 --> 00:00:42,860
+Whenever it needs to create
+a Pod on the local node,
+
+10
+00:00:42,860 --> 00:00:45,200
+it will call the
+container run time.
+
+11
+00:00:45,200 --> 00:00:50,310
+Then the container run time
+will create the Pod and
+
+12
+00:00:50,310 --> 00:00:52,400
+call a network plugin to
+
+13
+00:00:52,400 --> 00:00:55,510
+set up the networking
+for that Pod.
+
+14
+00:00:55,510 --> 00:01:01,610
+The network plugin has to
+implement the CNI spec.
+
+15
+00:01:01,610 --> 00:01:05,720
+You can find the spec at
+this link right there.
+
+16
+00:01:05,720 --> 00:01:08,060
+But basically we're
+going to have to have
+
+17
+00:01:08,060 --> 00:01:11,920
+a specific type of
+configuration and do things,
+
+18
+00:01:11,920 --> 00:01:14,460
+implement functions
+like add, delete,
+
+19
+00:01:14,460 --> 00:01:18,165
+check inside of this
+network plugin.
+
+20
+00:01:18,165 --> 00:01:22,940
+How it works is the container
+run time will check
+
+21
+00:01:22,940 --> 00:01:24,780
+a specific directory
+
+22
+00:01:24,780 --> 00:01:30,255
+/etc/cni/net.d for
+configuration files.
+
+23
+00:01:30,255 --> 00:01:33,300
+The one with the
+lowest prefix number
+
+24
+00:01:33,300 --> 00:01:35,810
+will be the one that's used.
+
+25
+00:01:35,960 --> 00:01:39,135
+When we created a cluster,
+
+26
+00:01:39,135 --> 00:01:44,085
+it actually installs
+a network plugin.
+
+27
+00:01:44,085 --> 00:01:47,410
+Let's actually look at that.
+
+28
+00:01:47,420 --> 00:01:55,605
+With this, we'll note that
+as part of this GitHub repo,
+
+29
+00:01:55,605 --> 00:02:01,480
+we are providing a bunch
+of cluster configurations.
+
+30
+00:02:01,480 --> 00:02:06,720
+The one we've used previously
+was on one master,
+
+31
+00:02:06,720 --> 00:02:08,800
+two workers and I'm going
+
+32
+00:02:08,800 --> 00:02:12,160
+to use a different
+one this time.
+
+33
+00:02:12,160 --> 00:02:14,320
+That's going to add
+some extra things
+
+34
+00:02:14,320 --> 00:02:15,980
+where it's going to
+mount a directory.
+
+35
+00:02:15,980 --> 00:02:19,860
+I'm going to mount in
+the local directory,
+
+36
+00:02:19,860 --> 00:02:23,820
+so outside of the
+docker containers
+
+37
+00:02:23,820 --> 00:02:26,990
+it'll be temp/cp for
+control plane one,
+
+38
+00:02:26,990 --> 00:02:28,685
+w1 for worker 1,
+
+39
+00:02:28,685 --> 00:02:30,665
+w2 for worker 2.
+
+40
+00:02:30,665 --> 00:02:32,280
+Then inside of each of
+
+41
+00:02:32,280 --> 00:02:34,650
+the containers which would
+
+42
+00:02:34,650 --> 00:02:37,110
+be each node in a
+Kubernetes cluster,
+
+43
+00:02:37,110 --> 00:02:41,455
+we'll see it in the
+/npp-temp directory.
+
+44
+00:02:41,455 --> 00:02:47,400
+In advance, I already created
+the directories ls tmp,
+
+45
+00:02:47,400 --> 00:02:50,850
+that they already
+exist and there's
+
+46
+00:02:50,850 --> 00:02:53,000
+a little script if you want
+
+47
+00:02:53,000 --> 00:02:56,945
+to save yourself a couple
+seconds of typing.
+
+48
+00:02:56,945 --> 00:03:01,325
+Then I'll note I already
+ran the cluster,
+
+49
+00:03:01,325 --> 00:03:03,710
+created the cluster kind create
+
+50
+00:03:03,710 --> 00:03:09,355
+cluster
+config/1master2workerMount.yaml.
+
+51
+00:03:09,355 --> 00:03:13,530
+Note I'm running it inside
+of that root directory of
+
+52
+00:03:13,530 --> 00:03:15,990
+the GitHub repo because this
+
+53
+00:03:15,990 --> 00:03:20,470
+references the temp directory
+which is under this.
+
+54
+00:03:21,170 --> 00:03:24,000
+That's our cluster
+now we can say
+
+55
+00:03:24,000 --> 00:03:27,690
+docker ps to see what
+nodes there are,
+
+56
+00:03:27,690 --> 00:03:30,260
+and I want to look inside
+of the worker nodes,
+
+57
+00:03:30,260 --> 00:03:33,805
+so I can say docker exec -it,
+
+58
+00:03:33,805 --> 00:03:35,910
+go inside the worker,
+
+59
+00:03:35,910 --> 00:03:43,150
+kind-worker and
+execute bin/bash.
+
+60
+00:03:44,630 --> 00:03:49,535
+So now I'm inside
+of the worker node.
+
+61
+00:03:49,535 --> 00:03:56,630
+Now I can do cd /etc/cni/net-d.
+That was the directory,
+
+62
+00:03:56,630 --> 00:03:59,750
+we said where these
+configurations exist and I said
+
+63
+00:03:59,750 --> 00:04:04,050
+there's one that installed
+
+64
+00:04:04,050 --> 00:04:06,590
+a network plugin that
+installed for us.
+
+65
+00:04:06,590 --> 00:04:13,570
+I can look at this
+configuration. Let me do.
+
+66
+00:04:19,070 --> 00:04:23,030
+Here's a bunch of stuff that is
+
+67
+00:04:23,030 --> 00:04:24,790
+written as part of
+
+68
+00:04:24,790 --> 00:04:26,090
+this configuration
+and all of this
+
+69
+00:04:26,090 --> 00:04:28,680
+is part of the CNI spec.
+
+70
+00:04:30,490 --> 00:04:34,450
+We don't have to
+understand all of it,
+
+71
+00:04:34,450 --> 00:04:36,790
+but let me flip
+back to the slides.
+
+72
+00:04:36,790 --> 00:04:44,350
+The next thing to note is
+inside of this configuration,
+
+73
+00:04:44,350 --> 00:04:47,375
+it's going to have
+this array of plugins,
+
+74
+00:04:47,375 --> 00:04:49,370
+but it really is only one,
+
+75
+00:04:49,370 --> 00:04:53,300
+and it's going to say type PTP.
+
+76
+00:04:53,300 --> 00:04:59,185
+If we flip back, we could
+see that exists right there.
+
+77
+00:04:59,185 --> 00:05:05,005
+You can look up what the
+rest of these fields do,
+
+78
+00:05:05,005 --> 00:05:08,490
+but that's doesn't
+matter for right now.
+
+79
+00:05:08,490 --> 00:05:12,740
+But what that's referring
+to is an executable.
+
+80
+00:05:12,740 --> 00:05:15,705
+If we get out of this,
+
+81
+00:05:15,705 --> 00:05:19,540
+the next directory
+is /opt/cni/bin.
+
+82
+00:05:26,390 --> 00:05:30,540
+You could see there is ptp.
+
+83
+00:05:30,540 --> 00:05:33,720
+That's an executable
+that the plug
+
+84
+00:05:33,720 --> 00:05:36,255
+in the container run time
+
+85
+00:05:36,255 --> 00:05:39,060
+read the configuration
+and as part of it,
+
+86
+00:05:39,060 --> 00:05:43,035
+it saw that it had
+this type ptp.
+
+87
+00:05:43,035 --> 00:05:46,050
+This ptp is what is
+an executable that
+
+88
+00:05:46,050 --> 00:05:50,020
+will implement those
+different functions.
+
+89
+00:05:52,460 --> 00:05:57,450
+Now finally, if you
+look on each node,
+
+90
+00:05:57,450 --> 00:06:01,635
+both the config and
+executable will be there,
+
+91
+00:06:01,635 --> 00:06:04,425
+but the config may be different.
+
+92
+00:06:04,425 --> 00:06:08,415
+One of these fields inside
+this configuration,
+
+93
+00:06:08,415 --> 00:06:15,150
+if we go back to this,
+
+94
+00:06:15,150 --> 00:06:21,635
+and more, it's going to have
+this subnet right there.
+
+95
+00:06:21,635 --> 00:06:25,325
+If I were to go into
+a different node,
+
+96
+00:06:25,325 --> 00:06:31,260
+Worker 2, it's going to have
+a different number there.
+
+97
+00:06:31,300 --> 00:06:36,690
+It will because that's how
+this particular plug in works.
+
+98
+00:06:37,790 --> 00:06:42,390
+It would see on Worker 1,
+
+99
+00:06:42,390 --> 00:06:44,400
+it would see 1.0,
+
+100
+00:06:44,400 --> 00:06:47,710
+and on the control
+plan it'll see 0.0.
+
+101
+00:06:47,870 --> 00:06:52,875
+Let's go ahead and
+create our own plug in.
+
+102
+00:06:52,875 --> 00:06:55,440
+Let's start with the skeleton.
+
+103
+00:06:55,440 --> 00:06:57,480
+There's two files that are
+
+104
+00:06:57,480 --> 00:07:04,995
+provided, 09-nppnet.conflist
+
+105
+00:07:04,995 --> 00:07:08,190
+and npp-exact.
+
+106
+00:07:08,190 --> 00:07:12,430
+Actually, I think jammy.
+
+107
+00:07:14,150 --> 00:07:18,735
+Go here going to the cni,
+
+108
+00:07:18,735 --> 00:07:20,340
+what do we provide?
+
+109
+00:07:20,340 --> 00:07:22,920
+Actually, it should
+say the skeleton.
+
+110
+00:07:22,920 --> 00:07:25,800
+There are the skeleton
+we're going to use,
+
+111
+00:07:25,800 --> 00:07:28,140
+and this is the executable
+of the skeleton.
+
+112
+00:07:28,140 --> 00:07:29,850
+This is the configuration,
+
+113
+00:07:29,850 --> 00:07:31,785
+and this is the executable.
+
+114
+00:07:31,785 --> 00:07:34,065
+Then once we do a Fuller 1,
+
+115
+00:07:34,065 --> 00:07:35,835
+we'll use these two right there.
+
+116
+00:07:35,835 --> 00:07:38,830
+Let's look at the
+configuration first.
+
+117
+00:07:42,110 --> 00:07:45,255
+Simpler one right here.
+
+118
+00:07:45,255 --> 00:07:48,270
+We're going to say cniVersion,
+
+119
+00:07:48,270 --> 00:07:50,670
+and the name of
+the plug in it is
+
+120
+00:07:50,670 --> 00:07:52,845
+going to be nppnet-skel.
+
+121
+00:07:52,845 --> 00:07:55,950
+That means that container
+run time should look
+
+122
+00:07:55,950 --> 00:08:00,370
+for an executable name net.
+
+123
+00:08:00,680 --> 00:08:02,850
+That's what this is
+called, and then
+
+124
+00:08:02,850 --> 00:08:04,665
+it'll look for under this type,
+
+125
+00:08:04,665 --> 00:08:07,035
+it'll look for that.
+
+126
+00:08:07,035 --> 00:08:14,520
+Passing in this just because
+but we'll try this out.
+
+127
+00:08:14,520 --> 00:08:18,570
+Now what npp-skel is,
+
+128
+00:08:18,570 --> 00:08:20,980
+is actually a bash script.
+
+129
+00:08:21,050 --> 00:08:23,700
+It doesn't have to be
+
+130
+00:08:23,700 --> 00:08:25,650
+some go code or anything
+
+131
+00:08:25,650 --> 00:08:27,330
+like that you could
+just use bash.
+
+132
+00:08:27,330 --> 00:08:29,190
+We're going to use this,
+
+133
+00:08:29,190 --> 00:08:31,425
+there's this nice article
+
+134
+00:08:31,425 --> 00:08:33,540
+that I highly
+recommend you go read.
+
+135
+00:08:33,540 --> 00:08:40,680
+It provided its own fully
+implemented based cni plug in.
+
+136
+00:08:40,680 --> 00:08:43,350
+We're going to use that as
+
+137
+00:08:43,350 --> 00:08:46,630
+a basis but modify
+it up a little bit.
+
+138
+00:08:46,670 --> 00:08:50,700
+The key here is any time
+
+139
+00:08:50,700 --> 00:08:55,200
+any command it needs
+to get executed,
+
+140
+00:08:55,200 --> 00:08:56,430
+it'll run this script.
+
+141
+00:08:56,430 --> 00:08:58,185
+It's running the executable,
+
+142
+00:08:58,185 --> 00:09:01,440
+and what it's going to pass
+
+143
+00:09:01,440 --> 00:09:04,860
+in as one of its parameters
+is the cni command.
+
+144
+00:09:04,860 --> 00:09:06,480
+You can look in the spec for
+
+145
+00:09:06,480 --> 00:09:09,600
+the various parameters
+that it passes in,
+
+146
+00:09:09,600 --> 00:09:11,190
+but you can see what we're going
+
+147
+00:09:11,190 --> 00:09:12,510
+to do is we're just going to
+
+148
+00:09:12,510 --> 00:09:18,105
+have a switch statement to say,
+
+149
+00:09:18,105 --> 00:09:20,685
+is it an ad, is it a delete,
+
+150
+00:09:20,685 --> 00:09:22,930
+or is it a version.
+
+151
+00:09:23,630 --> 00:09:27,840
+For anything else, we're
+going to not support it.
+
+152
+00:09:27,840 --> 00:09:29,175
+These are the ones for the
+
+153
+00:09:29,175 --> 00:09:32,325
+particular version
+that we're supporting.
+
+154
+00:09:32,325 --> 00:09:35,175
+We're going to just
+print out nothing to do,
+
+155
+00:09:35,175 --> 00:09:38,040
+so this is just a skeleton.
+
+156
+00:09:38,040 --> 00:09:39,930
+All of the output,
+
+157
+00:09:39,930 --> 00:09:43,840
+we're going to make it go into
+this particular log file.
+
+158
+00:09:45,050 --> 00:09:49,410
+That's those two files,
+
+159
+00:09:49,410 --> 00:09:54,040
+and we'll provide
+an install script.
+
+160
+00:09:54,080 --> 00:09:59,610
+What the install script will
+do is we already did this,
+
+161
+00:09:59,610 --> 00:10:02,010
+make directories,
+create the cluster.
+
+162
+00:10:02,010 --> 00:10:05,805
+What we need to do
+to install this is
+
+163
+00:10:05,805 --> 00:10:13,360
+copy that configuration
+file onto worker node 1.
+
+164
+00:10:13,870 --> 00:10:18,770
+Copy the executable
+onto worker node one.
+
+165
+00:10:18,770 --> 00:10:22,355
+Remember, this is
+the mount directory.
+
+166
+00:10:22,355 --> 00:10:30,710
+If I go back and copy
+
+167
+00:10:30,710 --> 00:10:39,630
+cni npp-skel into tmp/worker1,
+
+168
+00:10:39,700 --> 00:10:44,510
+ls tmp/worker1, it's there.
+
+169
+00:10:44,510 --> 00:10:47,780
+Let me go back to,
+if you recall,
+
+170
+00:10:47,780 --> 00:10:52,410
+this is where we did a docker
+exec into that container.
+
+171
+00:10:52,450 --> 00:10:56,885
+So if I go to /npp-temp
+where it's mounted,
+
+172
+00:10:56,885 --> 00:11:00,200
+I see that file showed up.
+
+173
+00:11:00,200 --> 00:11:05,225
+So that's one piece I'm going
+to need to copy the other,
+
+174
+00:11:05,225 --> 00:11:13,775
+the configuration and
+cni/09 into temp/ worker1.
+
+175
+00:11:13,775 --> 00:11:17,280
+We're only going to do
+this on worker1 for now.
+
+176
+00:11:17,800 --> 00:11:22,680
+You can see over here
+that it showed up.
+
+177
+00:11:23,320 --> 00:11:26,520
+What else do we need to do?
+
+178
+00:11:27,040 --> 00:11:29,285
+Inside the worker,
+
+179
+00:11:29,285 --> 00:11:32,555
+I need to copy that file
+
+180
+00:11:32,555 --> 00:11:36,350
+into those directories
+which it cares about,
+
+181
+00:11:36,350 --> 00:11:40,050
+that's the cni/ net.d
+and opt/cni/bin.
+
+182
+00:11:42,010 --> 00:11:44,990
+Inside of worker 1,
+
+183
+00:11:44,990 --> 00:11:53,730
+I want to copy the executable
+into /opt/cni/bin,
+
+184
+00:11:55,240 --> 00:12:02,870
+opt ls, so there it is.
+
+185
+00:12:02,870 --> 00:12:08,640
+And then I want to copy
+that into /etc/cni/net.d.
+
+186
+00:12:15,730 --> 00:12:18,710
+Then I want to list it,
+
+187
+00:12:18,710 --> 00:12:26,450
+cni/net.d, there it is, great.
+
+188
+00:12:26,450 --> 00:12:30,190
+With that, that is
+now setting it as
+
+189
+00:12:30,190 --> 00:12:35,905
+the default network
+plug in to use.
+
+190
+00:12:35,905 --> 00:12:38,350
+Now it's not going to
+get called and we can
+
+191
+00:12:38,350 --> 00:12:47,020
+look in, var/log/nppnet
+ls/var/log.
+
+192
+00:12:48,310 --> 00:12:51,530
+It doesn't even
+exist yet because
+
+193
+00:12:51,530 --> 00:12:54,590
+the executable npp net-scale
+
+194
+00:12:54,590 --> 00:12:56,105
+wasn't even called yet
+
+195
+00:12:56,105 --> 00:12:58,280
+because we didn't even
+try to create a pod.
+
+196
+00:12:58,280 --> 00:13:00,785
+Let's try to create a pod now,
+
+197
+00:13:00,785 --> 00:13:03,245
+such that it'll create that.
+
+198
+00:13:03,245 --> 00:13:05,825
+The first, I want
+to restrict the pod
+
+199
+00:13:05,825 --> 00:13:09,830
+to only go on a particular node.
+
+200
+00:13:09,830 --> 00:13:13,200
+So I'm going to say kube
+control label nodes.
+
+201
+00:13:14,830 --> 00:13:22,475
+Let me do it in this
+direct kubectl node.
+
+202
+00:13:22,475 --> 00:13:25,170
+I'm going to label it,
+
+203
+00:13:26,710 --> 00:13:30,005
+the specific node
+that I want to label,
+
+204
+00:13:30,005 --> 00:13:31,640
+I want to do it kind worker.
+
+205
+00:13:31,640 --> 00:13:34,070
+I want to say node = node1.
+
+206
+00:13:34,070 --> 00:13:39,450
+Kind worker, node=node1.
+
+207
+00:13:40,900 --> 00:13:44,135
+That's just created a label.
+
+208
+00:13:44,135 --> 00:13:46,730
+Now we can launch a pod and
+
+209
+00:13:46,730 --> 00:13:48,800
+we're going to launch a pod that
+
+210
+00:13:48,800 --> 00:13:54,395
+has been created or specifies,
+let me look at that one.
+
+211
+00:13:54,395 --> 00:13:58,770
+Simple genetics node1,
+
+212
+00:13:58,840 --> 00:14:01,580
+we added this little bit to it,
+
+213
+00:14:01,580 --> 00:14:03,590
+the node selector node:
+
+214
+00:14:03,590 --> 00:14:07,910
+node1 to say I only
+want this pod to run
+
+215
+00:14:07,910 --> 00:14:11,105
+on any node that has been
+
+216
+00:14:11,105 --> 00:14:15,050
+labeled with the key
+value pair node: node1.
+
+217
+00:14:15,050 --> 00:14:16,955
+That's what we just did.
+
+218
+00:14:16,955 --> 00:14:23,165
+Let me do kubectl
+apply-f pod config,
+
+219
+00:14:23,165 --> 00:14:29,000
+simple-nginx-node1 great.
+
+220
+00:14:29,000 --> 00:14:30,290
+It just got created,
+
+221
+00:14:30,290 --> 00:14:36,830
+kubectl get pods-o wide.
+
+222
+00:14:36,830 --> 00:14:38,510
+It's going to be in
+this container creating
+
+223
+00:14:38,510 --> 00:14:43,140
+state because it'll never
+get to the running state.
+
+224
+00:14:43,360 --> 00:14:49,715
+From here, we're going
+to do things to say.
+
+225
+00:14:49,715 --> 00:14:55,230
+Describe that node
+and describe the pod.
+
+226
+00:14:55,360 --> 00:15:03,090
+Kubectl node kind-worker.
+
+227
+00:15:03,270 --> 00:15:05,815
+Everything looks good there.
+
+228
+00:15:05,815 --> 00:15:13,430
+I'm going to describe mynginx.
+
+229
+00:15:13,750 --> 00:15:17,780
+You can see there's
+some error messages.
+
+230
+00:15:17,780 --> 00:15:22,280
+Failed to create pod
+sandbox, blah, blah, blah.
+
+231
+00:15:22,280 --> 00:15:26,210
+Plug in type network,
+npp-skel, failed.
+
+232
+00:15:26,210 --> 00:15:31,640
+Failed with no error
+message. This is the same.
+
+233
+00:15:31,640 --> 00:15:34,280
+Permission denied. Well,
+
+234
+00:15:34,280 --> 00:15:38,690
+that means we didn't change,
+it's not executable.
+
+235
+00:15:38,690 --> 00:15:45,560
+If I do go into opt cni
+/bin, it's not executable.
+
+236
+00:15:45,560 --> 00:15:50,070
+Change mode plus X nppnet-skel.
+
+237
+00:15:50,590 --> 00:15:57,410
+Let me delete this
+Kubectl delete
+
+238
+00:15:57,410 --> 00:16:06,120
+-- force pod mynginx.
+
+239
+00:16:06,220 --> 00:16:10,800
+Then let me apply it again.
+
+240
+00:16:13,130 --> 00:16:18,100
+Let me describe it again.
+
+241
+00:16:18,470 --> 00:16:22,095
+Now it failed for a
+different reason.
+
+242
+00:16:22,095 --> 00:16:24,795
+It didn't say permission
+
+243
+00:16:24,795 --> 00:16:26,940
+denied because it's
+not executable.
+
+244
+00:16:26,940 --> 00:16:28,650
+It actually executed it,
+
+245
+00:16:28,650 --> 00:16:32,475
+but it's now just saying
+it's failed to do something.
+
+246
+00:16:32,475 --> 00:16:36,340
+Here we can look
+in the log files.
+
+247
+00:16:36,920 --> 00:16:40,750
+We said var log,
+
+248
+00:16:40,850 --> 00:16:45,060
+well, there it is,
+nppnet-skel log.
+
+249
+00:16:45,060 --> 00:16:48,900
+Let me move of that.
+
+250
+00:16:51,280 --> 00:16:53,120
+If you want to see what
+
+251
+00:16:53,120 --> 00:16:54,605
+all those different
+parameters are,
+
+252
+00:16:54,605 --> 00:16:58,490
+we print as part
+of that plug in,
+
+253
+00:16:58,490 --> 00:17:01,105
+it's printing those out.
+
+254
+00:17:01,105 --> 00:17:08,115
+You can see it's here trying
+to execute the command add,
+
+255
+00:17:08,115 --> 00:17:13,545
+and it's saying
+nothing to do-add.
+
+256
+00:17:13,545 --> 00:17:17,740
+All of this is just stuff
+we were printing out.
+
+257
+00:17:17,740 --> 00:17:20,890
+If I come over here,
+
+258
+00:17:20,890 --> 00:17:23,725
+it could be scale,
+
+259
+00:17:23,725 --> 00:17:27,750
+you could see it
+printed that out,
+
+260
+00:17:28,700 --> 00:17:32,820
+all the parameters, just
+because that makes it easier.
+
+261
+00:17:32,820 --> 00:17:36,325
+Then I print out
+nothing to do-add.
+
+262
+00:17:36,325 --> 00:17:38,950
+That's what we just saw.
+
+263
+00:17:38,950 --> 00:17:40,620
+Nothing to do-delete.
+
+264
+00:17:40,620 --> 00:17:42,510
+Nothing to do-add.
+
+265
+00:17:42,510 --> 00:17:45,210
+The container
+run-time basically,
+
+266
+00:17:45,210 --> 00:17:51,370
+keep trying to add
+and delete this pod.
+
+267
+00:17:52,820 --> 00:17:56,340
+Obviously, the pod didn't
+
+268
+00:17:56,340 --> 00:18:02,130
+work or the network
+plug in didn't work.
+
+269
+00:18:02,130 --> 00:18:06,420
+That's because, well, we
+didn't have it do anything.
+
+270
+00:18:06,420 --> 00:18:09,705
+Other debug things we can do.
+
+271
+00:18:09,705 --> 00:18:11,940
+We looked at the
+log, but you might
+
+272
+00:18:11,940 --> 00:18:14,475
+also look at blitz log.
+
+273
+00:18:14,475 --> 00:18:16,140
+I could say journal control,
+
+274
+00:18:16,140 --> 00:18:18,195
+-u kubelet and they will
+
+275
+00:18:18,195 --> 00:18:20,790
+have its output
+and then look for
+
+276
+00:18:20,790 --> 00:18:27,220
+any related or CNI or
+network plug in related.
+
+277
+00:18:27,710 --> 00:18:30,870
+Well, before I move into
+creating a full plug in,
+
+278
+00:18:30,870 --> 00:18:35,890
+what I'm actually
+providing here,
+
+279
+00:18:36,110 --> 00:18:40,300
+there's this nppnet install.
+
+280
+00:18:41,060 --> 00:18:46,545
+This is a script that will go
+and do all of those steps.
+
+281
+00:18:46,545 --> 00:18:48,150
+And it is doing it
+for the real plug
+
+282
+00:18:48,150 --> 00:18:50,170
+in, not the skeleton.
+
+283
+00:18:50,270 --> 00:18:54,480
+It will go and do all
+of those steps for
+
+284
+00:18:54,480 --> 00:18:58,185
+you if you want or you
+can do it all manually.
+
+285
+00:18:58,185 --> 00:19:04,120
+Now let's go into the next one
+which is the full plug in.
+
+286
+00:19:04,730 --> 00:19:07,305
+What do we need?
+
+287
+00:19:07,305 --> 00:19:09,120
+We're going to create a plug in
+
+288
+00:19:09,120 --> 00:19:11,475
+that looks like
+something like this.
+
+289
+00:19:11,475 --> 00:19:14,140
+We're going to create,
+
+290
+00:19:14,510 --> 00:19:17,430
+here's the root name space,
+
+291
+00:19:17,430 --> 00:19:20,055
+the name spaces
+that get created.
+
+292
+00:19:20,055 --> 00:19:22,935
+We need to create
+the veth pairs,
+
+293
+00:19:22,935 --> 00:19:25,290
+sign it to a network,
+
+294
+00:19:25,290 --> 00:19:31,575
+create a bridge, and then
+enable internode communication.
+
+295
+00:19:31,575 --> 00:19:34,455
+How it's going to have
+internode communication
+
+296
+00:19:34,455 --> 00:19:36,450
+is we're not going to
+
+297
+00:19:36,450 --> 00:19:38,715
+use tunneling or
+anything like that,
+
+298
+00:19:38,715 --> 00:19:44,595
+we're just going to use
+IP addresses 10.244.1.2.
+
+299
+00:19:44,595 --> 00:19:48,525
+Then this is going
+to be the.2.2.
+
+300
+00:19:48,525 --> 00:19:50,235
+Everything on nod,
+
+301
+00:19:50,235 --> 00:19:54,750
+worker 2 is going to
+have its own /24.
+
+302
+00:19:54,750 --> 00:19:59,805
+Everything worker 1 is
+going to have its /24.
+
+303
+00:19:59,805 --> 00:20:02,160
+Then we're going
+to have a route in
+
+304
+00:20:02,160 --> 00:20:07,350
+the host that's going
+to say 10.244.1.,
+
+305
+00:20:07,350 --> 00:20:11,580
+or in this case 2.
+anything forward
+
+306
+00:20:11,580 --> 00:20:17,820
+it via this address,
+this other node.
+
+307
+00:20:17,820 --> 00:20:20,130
+We got to figure out
+what those addresses
+
+308
+00:20:20,130 --> 00:20:22,600
+are and all that stuff.
+
+309
+00:20:23,570 --> 00:20:25,740
+Now let's think about what
+
+310
+00:20:25,740 --> 00:20:27,390
+our network plug in needs to do.
+
+311
+00:20:27,390 --> 00:20:30,255
+It needs to allocate
+IP addresses,
+
+312
+00:20:30,255 --> 00:20:34,710
+it needs to create that
+entry in var/run/netns we
+
+313
+00:20:34,710 --> 00:20:39,420
+talked about for
+IP netns to work.
+
+314
+00:20:39,420 --> 00:20:42,325
+Create the veth pair,
+
+315
+00:20:42,325 --> 00:20:45,410
+put the veth into
+the name space,
+
+316
+00:20:45,410 --> 00:20:48,560
+and then set up networking
+within the name space.
+
+317
+00:20:48,560 --> 00:20:50,795
+The networking outside
+of the names-pace,
+
+318
+00:20:50,795 --> 00:20:54,935
+we're going to have
+a static in advance
+
+319
+00:20:54,935 --> 00:20:56,450
+before any pods are going to be
+
+320
+00:20:56,450 --> 00:20:59,850
+created as part of the
+plug in installation.
+
+321
+00:20:59,850 --> 00:21:01,605
+We're going to say
+create this bridge
+
+322
+00:21:01,605 --> 00:21:03,730
+and set up this routing.
+
+323
+00:21:06,100 --> 00:21:09,020
+All of this is described here.
+
+324
+00:21:09,020 --> 00:21:10,430
+If you didn't do this already,
+
+325
+00:21:10,430 --> 00:21:12,860
+create a cluster and
+
+326
+00:21:12,860 --> 00:21:15,500
+the installation is
+following these steps.
+
+327
+00:21:15,500 --> 00:21:17,330
+Let's actually walk through
+
+328
+00:21:17,330 --> 00:21:20,580
+the installation script first.
+
+329
+00:21:20,680 --> 00:21:24,150
+nppnet install.
+
+330
+00:21:24,280 --> 00:21:29,555
+Just to mention this kind
+
+331
+00:21:29,555 --> 00:21:33,080
+does not necessarily
+deterministically set up
+
+332
+00:21:33,080 --> 00:21:37,490
+the IP addresses
+because it depends
+
+333
+00:21:37,490 --> 00:21:40,115
+on which docker container
+
+334
+00:21:40,115 --> 00:21:42,245
+gets created first or something.
+
+335
+00:21:42,245 --> 00:21:45,800
+But you can figure out
+this describes how to
+
+336
+00:21:45,800 --> 00:21:47,510
+find what the IP address of
+
+337
+00:21:47,510 --> 00:21:50,105
+each is and just configure that,
+
+338
+00:21:50,105 --> 00:21:53,300
+and then figure out
+
+339
+00:21:53,300 --> 00:21:56,720
+the subnet and this
+describes which prefix,
+
+340
+00:21:56,720 --> 00:22:01,410
+so if it's 110.244.0.0.
+
+341
+00:22:03,730 --> 00:22:06,050
+We're trying to find
+
+342
+00:22:06,050 --> 00:22:09,710
+this number inside of
+
+343
+00:22:09,710 --> 00:22:10,790
+this prefix and so this
+
+344
+00:22:10,790 --> 00:22:12,935
+describes how to find
+that so set those.
+
+345
+00:22:12,935 --> 00:22:14,975
+Once you edit those,
+
+346
+00:22:14,975 --> 00:22:17,135
+you'll be able to run the script
+
+347
+00:22:17,135 --> 00:22:19,235
+and it'll do the
+full installation.
+
+348
+00:22:19,235 --> 00:22:21,230
+You could see it's copying
+
+349
+00:22:21,230 --> 00:22:24,260
+the executable to
+both of the workers.
+
+350
+00:22:24,260 --> 00:22:27,035
+It's creating the
+labels for the workers.
+
+351
+00:22:27,035 --> 00:22:28,175
+This is not really part of
+
+352
+00:22:28,175 --> 00:22:30,050
+the network or the
+plug in installation.
+
+353
+00:22:30,050 --> 00:22:33,335
+That's just for us
+
+354
+00:22:33,335 --> 00:22:38,480
+to do those testing
+that we want to do.
+
+355
+00:22:38,480 --> 00:22:41,675
+We're going to create
+the network on Worker 1.
+
+356
+00:22:41,675 --> 00:22:43,955
+As I said, this is statically
+
+357
+00:22:43,955 --> 00:22:47,165
+set up at installation time.
+
+358
+00:22:47,165 --> 00:22:49,370
+If you've installed flannel
+
+359
+00:22:49,370 --> 00:22:51,590
+before and you did something
+like cube control,
+
+360
+00:22:51,590 --> 00:22:54,560
+apply some flamel,
+
+361
+00:22:54,560 --> 00:22:59,420
+it's doing similar things
+as we're describing here.
+
+362
+00:22:59,420 --> 00:23:02,420
+But I didn't create
+a YAML file to
+
+363
+00:23:02,420 --> 00:23:05,825
+actually deploy a plug in.
+
+364
+00:23:05,825 --> 00:23:07,460
+We're going to bring that bridge
+
+365
+00:23:07,460 --> 00:23:08,990
+up and then we're going to
+
+366
+00:23:08,990 --> 00:23:12,560
+assign an IP address
+for that bridge.
+
+367
+00:23:12,560 --> 00:23:17,460
+This bridge is going to have
+a unique one in the cluster.
+
+368
+00:23:17,470 --> 00:23:20,690
+Then we're going to create
+the configuration file
+
+369
+00:23:20,690 --> 00:23:22,775
+for Worker 1.
+
+370
+00:23:22,775 --> 00:23:25,130
+Why we're not providing it
+
+371
+00:23:25,130 --> 00:23:28,760
+as a separate thing
+and copying it.
+
+372
+00:23:28,760 --> 00:23:31,175
+Instead, just creating is well,
+
+373
+00:23:31,175 --> 00:23:34,970
+because we want to edit
+that field right there.
+
+374
+00:23:34,970 --> 00:23:38,150
+We're going to look at
+this subnet node inside of
+
+375
+00:23:38,150 --> 00:23:40,295
+the configuration because that's
+
+376
+00:23:40,295 --> 00:23:42,935
+how it's going to know what
+to assign IP addresses.
+
+377
+00:23:42,935 --> 00:23:45,425
+There's different approaches.
+
+378
+00:23:45,425 --> 00:23:48,920
+There's IPAM, the IP
+address management.
+
+379
+00:23:48,920 --> 00:23:50,960
+There's various ways that
+
+380
+00:23:50,960 --> 00:23:52,280
+different network
+plug ins are going to
+
+381
+00:23:52,280 --> 00:23:53,810
+do things more complex.
+
+382
+00:23:53,810 --> 00:23:55,490
+Here we're going
+to statically just
+
+383
+00:23:55,490 --> 00:23:59,015
+say choose something from
+
+384
+00:23:59,015 --> 00:24:01,730
+this space and it's
+actually going to be
+
+385
+00:24:01,730 --> 00:24:05,645
+pretty bare bone simplistic.
+
+386
+00:24:05,645 --> 00:24:08,135
+Then we're going
+to put that into
+
+387
+00:24:08,135 --> 00:24:12,470
+this local directory and
+then do use docker exec
+
+388
+00:24:12,470 --> 00:24:16,280
+to execute on this worker to
+
+389
+00:24:16,280 --> 00:24:17,600
+do the movement of
+
+390
+00:24:17,600 --> 00:24:20,135
+those files and install them
+in the correct location.
+
+391
+00:24:20,135 --> 00:24:23,730
+Then we do the exact
+same thing for Worker 2.
+
+392
+00:24:24,670 --> 00:24:31,895
+Now let's look at
+the cni/npp net.
+
+393
+00:24:31,895 --> 00:24:34,565
+This is the full
+network plug in.
+
+394
+00:24:34,565 --> 00:24:40,350
+Let's go through
+the add command.
+
+395
+00:24:42,130 --> 00:24:47,240
+Here, as part of the
+configuration that gets passed
+
+396
+00:24:47,240 --> 00:24:52,535
+in to the network plug in,
+
+397
+00:24:52,535 --> 00:24:54,830
+we're going to pull out
+that subnet network
+
+398
+00:24:54,830 --> 00:24:57,875
+which is going to be
+something like 10.244.
+
+399
+00:24:57,875 --> 00:25:00,305
+We're going to look
+at that subnet node,
+
+400
+00:25:00,305 --> 00:25:02,975
+which is going to be
+something like one.
+
+401
+00:25:02,975 --> 00:25:06,455
+This makes it so
+that gateway node,
+
+402
+00:25:06,455 --> 00:25:08,570
+which is the cni's address,
+
+403
+00:25:08,570 --> 00:25:10,730
+will be something
+like that and then
+
+404
+00:25:10,730 --> 00:25:15,005
+the pods IP will be
+something like this.
+
+405
+00:25:15,005 --> 00:25:19,175
+All pulling from the
+configuration that we generated.
+
+406
+00:25:19,175 --> 00:25:24,065
+You can see we're going to
+allocate an IP address.
+
+407
+00:25:24,065 --> 00:25:28,320
+Here we're using some
+tmp file just to create,
+
+408
+00:25:28,540 --> 00:25:31,670
+see what the next IP address is.
+
+409
+00:25:31,670 --> 00:25:33,245
+We're not recycling
+IP addresses,
+
+410
+00:25:33,245 --> 00:25:35,315
+we're just incrementing.
+
+411
+00:25:35,315 --> 00:25:37,730
+It'll start at two,
+that will get used.
+
+412
+00:25:37,730 --> 00:25:40,100
+The next pod that
+gets created will be
+
+413
+00:25:40,100 --> 00:25:43,860
+three because you can see
+we read that file in,
+
+414
+00:25:43,860 --> 00:25:47,725
+increment it, and
+then write that back.
+
+415
+00:25:47,725 --> 00:25:49,180
+When we read two,
+
+416
+00:25:49,180 --> 00:25:51,325
+we're going to use two
+locally for this pod,
+
+417
+00:25:51,325 --> 00:25:53,650
+but we're going to
+write back three.
+
+418
+00:25:53,650 --> 00:25:56,970
+Next time this gets called
+it's going to be three.
+
+419
+00:25:56,970 --> 00:26:01,800
+We have a lot of logging
+stuff going on here.
+
+420
+00:26:02,200 --> 00:26:05,120
+Here's stuff, making
+that directory that
+
+421
+00:26:05,120 --> 00:26:08,040
+we need, the var/run/netns.
+
+422
+00:26:08,110 --> 00:26:11,555
+We're going to create
+the veth pairs,
+
+423
+00:26:11,555 --> 00:26:17,135
+so here we're just using a
+random number generator.
+
+424
+00:26:17,135 --> 00:26:22,375
+We're going to add
+addresses to those,
+
+425
+00:26:22,375 --> 00:26:25,510
+attach it to the bridge,
+
+426
+00:26:25,510 --> 00:26:29,780
+put the veth into
+the name space,
+
+427
+00:26:30,310 --> 00:26:35,520
+and then set up networking
+within the name space.
+
+428
+00:26:38,580 --> 00:26:42,985
+That's about it. A lot of this
+
+429
+00:26:42,985 --> 00:26:48,670
+was inspired by this network
+
+430
+00:26:48,670 --> 00:26:51,235
+plugin that somebody
+else created.
+
+431
+00:26:51,235 --> 00:26:53,260
+Definitely go check that out.
+
+432
+00:26:53,260 --> 00:26:57,640
+But to suit our purposes
+and our specific set up,
+
+433
+00:26:57,640 --> 00:27:01,220
+I modified it in this way.
+
+434
+00:27:01,260 --> 00:27:03,580
+We're not going to run this.
+
+435
+00:27:03,580 --> 00:27:06,880
+What I'd like you to do is
+to run this on your own,
+
+436
+00:27:06,880 --> 00:27:08,905
+install it, test it out,
+
+437
+00:27:08,905 --> 00:27:15,145
+but you will be able to do
+things like create a pod.
+
+438
+00:27:15,145 --> 00:27:18,475
+What I've included,
+
+439
+00:27:18,475 --> 00:27:22,480
+is in the pod configs directory.
+
+440
+00:27:22,480 --> 00:27:26,485
+We have these different pods.
+
+441
+00:27:26,485 --> 00:27:30,710
+Let me look at one
+of them, forexec1.
+
+442
+00:27:30,870 --> 00:27:34,435
+All it's doing is saying,
+
+443
+00:27:34,435 --> 00:27:38,050
+while true, do sleep 1,000,
+
+444
+00:27:38,050 --> 00:27:40,795
+and it's running BusyBox.
+
+445
+00:27:40,795 --> 00:27:47,370
+I have that. This one
+will select node1,
+
+446
+00:27:47,370 --> 00:27:49,080
+this one will select node1,
+
+447
+00:27:49,080 --> 00:27:51,435
+and this one will select node2.
+
+448
+00:27:51,435 --> 00:27:54,170
+If I deploy all three of these,
+
+449
+00:27:54,170 --> 00:27:57,415
+then I have two pods
+running on node1,
+
+450
+00:27:57,415 --> 00:28:00,730
+and one pod running on node2.
+
+451
+00:28:00,730 --> 00:28:03,640
+Why that's useful is
+because then I can
+
+452
+00:28:03,640 --> 00:28:06,490
+go get their IP addresses,
+
+453
+00:28:06,490 --> 00:28:10,450
+and then I can exec
+into each one of them,
+
+454
+00:28:10,450 --> 00:28:13,990
+and ping the IP address
+of another one,
+
+455
+00:28:13,990 --> 00:28:15,430
+just so I can see,
+
+456
+00:28:15,430 --> 00:28:18,535
+does that communication work?
+
+457
+00:28:18,535 --> 00:28:24,460
+I can get inside
+each of the workers,
+
+458
+00:28:24,460 --> 00:28:28,180
+see the logs, and
+see all of that.
+
+459
+00:28:28,180 --> 00:28:31,450
+This will be something I'll
+let you try on your own.
+
+460
+00:28:31,450 --> 00:28:33,685
+All of the code is provided,
+
+461
+00:28:33,685 --> 00:28:37,780
+but then feel free to elaborate
+and maybe you want to
+
+462
+00:28:37,780 --> 00:28:42,790
+add some iptables rules to
+filter certain traffic.
+
+463
+00:28:42,790 --> 00:28:46,180
+A lot of there are
+more richer CNIs
+
+464
+00:28:46,180 --> 00:28:51,670
+have policies that they support,
+
+465
+00:28:51,670 --> 00:28:54,655
+and it won't be
+all through this,
+
+466
+00:28:54,655 --> 00:28:58,750
+they'll come
+deployed and they'll
+
+467
+00:28:58,750 --> 00:29:00,535
+run their own pods that
+
+468
+00:29:00,535 --> 00:29:02,395
+interacts with the
+Kubernetes system,
+
+469
+00:29:02,395 --> 00:29:04,480
+watch the things
+that are going on,
+
+470
+00:29:04,480 --> 00:29:08,125
+and interact with it
+in a richer sense.
+
+471
+00:29:08,125 --> 00:29:11,630
+But this is right
+here, the basics.
+
+472
+00:29:12,150 --> 00:29:16,630
+With that, let me
+give a quick recap of
+
+473
+00:29:16,630 --> 00:29:18,910
+this entire course so that
+
+474
+00:29:18,910 --> 00:29:21,385
+we know where we've
+actually gone.
+
+475
+00:29:21,385 --> 00:29:24,910
+It's been pretty impressive.
+
+476
+00:29:24,910 --> 00:29:27,370
+We called it Network
+Principles in
+
+477
+00:29:27,370 --> 00:29:29,170
+Practice: Linux Networking.
+
+478
+00:29:29,170 --> 00:29:31,690
+We really focused on
+Linux networking,
+
+479
+00:29:31,690 --> 00:29:34,360
+but a lot of the
+concepts that you learn
+
+480
+00:29:34,360 --> 00:29:38,035
+in network systems or
+network foundations' course,
+
+481
+00:29:38,035 --> 00:29:41,170
+we've actually applied in
+
+482
+00:29:41,170 --> 00:29:44,215
+the context of Linux networking.
+
+483
+00:29:44,215 --> 00:29:45,970
+We introduced in
+
+484
+00:29:45,970 --> 00:29:49,075
+Module 1 Linux's
+networking capabilities,
+
+485
+00:29:49,075 --> 00:29:52,045
+starting with the
+bridge and devices.
+
+486
+00:29:52,045 --> 00:29:54,490
+We then went into
+Module 2 where we
+
+487
+00:29:54,490 --> 00:29:56,890
+explored Linux's
+capabilities to create
+
+488
+00:29:56,890 --> 00:29:59,860
+a router with
+command line options
+
+489
+00:29:59,860 --> 00:30:01,870
+for setting up the
+forwarding table,
+
+490
+00:30:01,870 --> 00:30:05,125
+and software for running
+routing protocols.
+
+491
+00:30:05,125 --> 00:30:08,665
+We then went into Module
+3 where we extended to
+
+492
+00:30:08,665 --> 00:30:14,380
+Layer 4 capabilities with
+filtering with iptables,
+
+493
+00:30:14,380 --> 00:30:16,660
+with load balancing with IPVS,
+
+494
+00:30:16,660 --> 00:30:19,480
+traffic shaping with TC.
+
+495
+00:30:19,480 --> 00:30:24,100
+Then we shifted over to
+really explore some of
+
+496
+00:30:24,100 --> 00:30:27,160
+Linux's virtual
+networking capabilities
+
+497
+00:30:27,160 --> 00:30:29,020
+with network namespaces,
+
+498
+00:30:29,020 --> 00:30:32,695
+and what happens with
+Docker networking.
+
+499
+00:30:32,695 --> 00:30:35,125
+Then in Module 5,
+
+500
+00:30:35,125 --> 00:30:37,300
+we saw virtual networking
+
+501
+00:30:37,300 --> 00:30:40,150
+applied for large scale systems,
+
+502
+00:30:40,150 --> 00:30:42,700
+namely going over Kubernetes,
+
+503
+00:30:42,700 --> 00:30:45,010
+Kubernetes networking
+abstractions,
+
+504
+00:30:45,010 --> 00:30:47,455
+and how to write
+a network plugin.
+
+505
+00:30:47,455 --> 00:30:51,355
+If I were to suggest
+one next step,
+
+506
+00:30:51,355 --> 00:30:53,620
+in addition to becoming much
+
+507
+00:30:53,620 --> 00:30:55,945
+more versed in all of the
+things we just covered,
+
+508
+00:30:55,945 --> 00:30:59,050
+there's a really
+interesting capability
+
+509
+00:30:59,050 --> 00:31:03,190
+called eBPF that's supported
+inside of the Linux kernel.
+
+510
+00:31:03,190 --> 00:31:06,820
+A lot of the network plugins
+that are being created
+
+511
+00:31:06,820 --> 00:31:11,560
+now or updated are using eBPF.
+
+512
+00:31:11,560 --> 00:31:13,870
+There's a lot of powerful things
+
+513
+00:31:13,870 --> 00:31:15,580
+you can do in troubleshooting,
+
+514
+00:31:15,580 --> 00:31:17,020
+and things like that.
+
+515
+00:31:17,020 --> 00:31:20,635
+I'll include some links
+in the resources,
+
+516
+00:31:20,635 --> 00:31:24,170
+but that would be a
+suggested next step.
+
+517
+00:31:24,570 --> 00:31:27,310
+With that, I thank you
+
+518
+00:31:27,310 --> 00:31:29,770
+all for participating
+in this course,
+
+519
+00:31:29,770 --> 00:31:33,100
+and hopefully you got
+something out of it,
+
+520
+00:31:33,100 --> 00:31:37,630
+and look forward to seeing
+you at a future course.
+
+521
+00:31:37,630 --> 00:31:46,040
+Thanks.

@@ -1,0 +1,168 @@
+All right,
+let's jump into reliable transfer. So to restate what the goal here is, is that we want to be able
+to allow an application or a process that's running to be assured
+that what they send is what is received. It's the same data, same order. So if we're transferring
+some information like, say, a file, contents, or
+a message to direct them to do something, we want to make sure that that's received. And so we talked about the two
+main protocols, UDP and TCP. So UDP does not offer this, but TCP does. And so here we're going to talk
+about the mechanism TCP has to be able to ensure reliable transfer. So first, let's understand why
+we need this in the first place, where packets can get lost or reordered. So we've already seen all of this. So from the link layer, we saw
+the concept of a frame or a packet error. So we have this wire,
+this transmission medium that one node is sending to the other,
+but it's not perfect. And so bit flips and
+other errors may occur. And the Ethernet, for example,
+has a field to be able to detect errors, but it doesn't have the ability
+to correct those errors. So what it does is it just drops
+the frames that are in error. A second place where we saw potential for unreliable transmission
+occur was at the network layer when we went into the router's
+data plane architecture. So if you recall,
+a router has all these line cards, and the picture shown here on
+the right is the kind of processing. So the packet is received, it looks up the
+IP address inside of the forwarding table, does some updates, and then it queues
+the packets inside of a packet buffer. And this has a limited amount of
+memory to be able to store packets. And so if the incoming rate is
+greater than the outgoing rate, then this buffer will fill up and
+then we'll have to start dropping packets. So how might this occur? How might we have an incoming rate
+greater than an outgoing rate? Well, if you recall,
+we have a bunch of different inputs. Well, and the destination might all
+be going out the same output port. So even if there's the same
+speed on all of the ports, let's say it's ten gigabits per second,
+well, we might be receiving ten gigabits per second on one input,
+ten gigabits per second on another input. But then if all the traffic is going to
+one output, they might only be able to, or they would only be able to
+send at ten gigabits per second. And so that's how we're now
+going to have this rate higher at the incoming level rather
+than over the outgoing. And the third kind of place where we saw a problem has to do
+with packet reordering. So we saw in the network layer when
+we talked about the control plane and decentralized routing. Routing is meant to be dynamic,
+to handle things such as different changes
+in configuration, changes for policies, handling failures. And so let's say we have an initial
+state where there's a path that goes through this left router and
+then through these bottom routers, and we're receiving a stream of packets. So packet P1, P2, and P3. So P1 and
+P2 get sent along this original path. But now let's say something happened in,
+say, BGP, we got an update and we learned about a new path
+where it's actually shorter. And so packet 3 might be
+able to go that new path and get to this router on the right-hand
+side before packets 1 and 2. And so that is a case of reordering
+that would occur inside of the network, and it's just natural based
+on how routing works. So recall that TCP provides this abstraction of a reliable in order stream. So that's the service
+model that TCP provides. So if we're transferring 300
+bytes at the receiving side, we would expect to receive each of those, all 300 of those bytes,
+and receive them in order. So how do we do this? So the first mechanism
+that TCP has to allow for this to occur is the sequence number. So we can see down here at the bottom, circled is a field within the TCP
+header called Sequence number. And so what the sequence number is, is it indicates which bytes
+are contained in the datagram, right? So the actual number will
+be the sequence number, the byte within the whole sequence,
+which is, in our case, for 300 bytes, it would be,
+which byte within that sequence of 300 does this packet start with or
+this datagram start with? And so shown there in each of these,
+the length is 100. So this 0 represents bytes 0 to 99,
+byte 100 to 199, 200 to 299, and 300 to 399. And that would all occur because
+the length is the same, but they can be different lengths. All right, so that's the sequence number. So what this allows is that
+the receiver can now say which bytes in this sequence has it actually received. So that's the first mechanism. The second mechanism that TCP provides
+is the acknowledgement number. So this is now another field
+within the TCP header. And what it does is it
+specifies to the sender, so it's the receiver sending back to
+the sender what is the next byte in the stream that this
+receiver expects to receive. And so shown here is this is saying I
+expect, I as the receiver of the stream, expect the next byte that I'm
+going to get is byte 200. This is indicating or acknowledging that I've received
+everything up until that point. So I've received 0 through 199. And then the third part of this mechanism
+is the ability to do retransmissions. So the sender can resend any
+unacknowledged bytes in the stream. So this is resending that
+packet that contained bytes 200 to 299 in the sequence. And this all relates to if we go
+back a couple slides, the receiver, this packet which is the sequence
+number starting at 200, we're assuming that that was dropped. So the receiver received 0 sequence
+number, a packet with 100 as the sequence number, and then a packet
+as 300 as the sequence number. And so it acknowledged that, hey,
+I received, or I'm acknowledging, and the next byte that I expect is 200,
+I haven't seen that yet. And then the receiver or
+the sender can resend 200. So then the key question is,
+when do you retransmit? Do you just retransmit
+kind of right away or what? So there's two signals that we'll
+cover that help the sender know when to retransmit, and it's a timeout and
+those acknowledgments. But it's a little more than
+just resending immediately. Now, taking it aside a little bit,
+let's discuss what this diagram means. It's a message exchange diagram, and we'll see this when we kind of talk
+about how these protocols work. So on the left, we have A,
+and on the right, we have B. These are two parties
+that are communicating. And time is this kind of vertical line,
+and it goes down, so it increases in time
+as the line goes down. So when you have a line like this, this would indicate a message
+is sent by A and received by B. And it's shown kind of on this diagonal
+lower in the time to represent transmission time. So it takes some amount of time for the message to go through the network and
+get to B. When we see a message like
+this with an X there, that represents a packet being dropped. And it doesn't necessarily
+always have to be from B to A, we could have drawn that as one
+of the messages from A to B. But it's this kind of indication of it
+that X represents a packet being dropped. If the lines crossed, that would
+indicate a packet being reordered. So now back to, oops, when to retransmit, the first thing to look at is the timeout. So we send some frame or some datagram
+with a sequence number of 500. Let's say it's length 10. So this is expecting 500 to 509. It gets received by B. And let's say B does send
+an acknowledgment indicating that the next byte that it expects
+to receive in the stream is 510. But let's say that the packet
+get dropped along the way. So how much time should the receiver or the sender A wait before it retransmits? If you send it too soon,
+let's say you sent it almost immediately after it sent the original message,
+well, then there's going to be unnecessary messages,
+datagrams going through the network. So kind of the accepted
+practice is to wait an amount of time that is based
+on what you think and what the sender thinks
+that the round trip time, the amount of transmission
+time from A to B, and then back to A, and
+then add in some buffer. And the way you can calculate
+the estimated round trip time is through a formula like this. So each message, each datagram that
+you're sending, you'll be able to know when you sent it and then when
+you received an acknowledgment for it. And so
+this is a sample of round trip time. And then you can just take
+this kind of estimated RTT over time by kind of adding
+that to the overall factor. Now, this part, the 1 minus alpha and
+the alpha help smooth that out. So you're not basically overreacting
+to spikes in round trip time, and you're not underreacting to
+when the round trip time changes. So you balance that out by
+adding this alpha factor. The next signal of when to
+retransmit is a duplicate ack. So just receiving an ack might
+not necessarily indicate that a packet was dropped,
+it might be out of order. So let's say the sequence is as follows. B previously acknowledged
+sequence number starting at 500. So saying the next byte
+that it expects is 500. A then sends 500, sends 510, and 520. So it's sending across multiple
+packets the sequence from 500 to 530, if we're assuming all
+the packets are length 10. And let's say this first one got dropped. Now, B did receive the others, and for each of those,
+it's sending an acknowledgment, hey, I'm expecting the next
+byte that I receive to be 500. And then when it receives this 520, hey, the next byte I'm expecting
+to receive is 500. And so
+this is a signal to the sender, to A, that when it receives
+a duplicate acknowledgment, chances are the packet was dropped
+rather than it was out of order. So you can imagine if 500
+just happened to arrive after 510, B would have acknowledged and said, hey, I'm looking for 500. A might have said, I've already sent that,
+so let me resend it. But it was just out of order,
+so it was unnecessary. But the second acknowledgment is
+a stronger signal, not a guarantee, but a stronger signal that
+the packet was actually dropped. So now last place that we
+can talk about is really, what about drops at the receiver? So the sender may be able to send at
+higher rates than the receiver can accept. So the goal here is to make it so that
+the sender cannot overwhelm the receiver. This is where a concept
+called flow control comes in. So how this is handled is
+the receiver advertises the amount of free buffer space in a field
+called the receive window in the TCP header, and
+we'll see that in the next slide. And then the sender just limits
+the amount of unacknowledged or in-flight data that's being sent to
+whatever this receive window is. So this picture kind of illustrates
+the buffer that at the receiver side, it has a certain amount of
+data that's been received, it's acknowledged, it's waiting to deliver
+it to the application, to the process. And so it has this amount of space left. And so it tells the sender, hey, here's how much space I
+have in the receive window. So this field, you might see it
+called just Window Size, but it's this field in the TCP header,
+and it indicates how many bytes the host is currently willing and
+able to receive. So to summarize the kind of
+different approaches, or all of the kind of aspects of TCP
+that lead to the reliable transfer, we talked about the sequence number. So that's a field inside
+of the TCP header that indicates where in this
+stream of bytes which byte number is this datagram actually covering. So the sequence number tells
+what the first byte is. Acknowledgment number tells, these are the bytes that I've received,
+and this is the next one. You set the acknowledgment number
+to be the next byte that I'm expecting to receive. And then retransmission, so this is
+the mechanism to be able to make sure that the receiver is receiving all of
+the data that is part of that stream. And then the last thing that
+we covered was flow control, which is just a receiver telling
+the sender, my window size is this. In this picture, it says 500. And so then, this tells the sender, don't ever have more than 500 bytes
+in-flight that are unacknowledged. All right, so next time we'll
+talk a little more about TCP. All right, thanks.

@@ -1,0 +1,153 @@
+This time, we're going
+to talk about Espresso. This is a system from Google and how it appears
+with external networks. We saw this picture before. With Swan, we talked about how two different VPCs in
+different regions, how it's traffic is traversing Microsoft's
+backbone network. It was not just for that, but that was in the
+context of this picture. This one is now looking at
+the other side and saying, say we do need to go out to the public Internet how
+should that be handled? And same case, could we
+use just standard routers? Sure. BGP at the edge, but that's what Google
+is going to talk about is for their context, what challenges they saw. This paper we're
+going to read it is called taking the edge
+off with Espresso, scale reliability and
+programmability for global Internet
+peering SIGCOMM 2017. I think there's also
+a really good paper out of a team from AT&T at a conference called
+SOSR 2015 called Edge Plex. They used a lot of
+similar techniques. If you're interested in more, that would be a good
+one to read as well. Let me switch over
+to their slides. The problem here is it's Google, they have a lot of
+traffic that they have to send out
+to the Internet. One, they want to be able to optimize the traffic per
+customer per application? If it's video, have
+optimal video quality or differentiated services
+for different Cloud users. Problem is, if you're
+just using straight BGP, the shortest path and lack of application
+awareness constrained, your ability to do this. Here's Google's infrastructure,
+here's the end user. BGP would pick one path, but what if there's a
+better path available. The second, and this is a
+common theme with Google. We saw this with Andromeda. They want to be able to
+deliver new features quickly. The problem, if
+let's say Google, they do probably have a good
+bit of sway with vendors. Let's say they wanted
+some new capability. They can request
+that to the vendor, the vendor would commit to the feature, they
+would implement it. The vendor would do its testing, then that would get integrated into Google's infrastructure
+and tested there, and then finally,
+Google could deploy it. They're pointing out that
+this is a long cycle. They came up with this
+work B or Espresso, and they're pointing out they're going to leverage
+software defined networking. This follows on the heels of B4, which we saw last time
+we saw with Swan, and B4 is Google's equivalent of that for the
+wide area network. I believe Jupiter is their
+Data Center networks. You can go read all of that. They want to enable flexible
+traffic engineering, increase feature velocity. At the time, we're
+really starting to get a little down on
+software defined networking, but Google is there
+champion it and peering edge requires down on it because it's just
+for a single domain. We saw the centralized
+controller and all of that. Well peering, with others, like the network providers, requires interoperability with a bunch of different peers. Putting this in context
+they have the Jupiter, which is their Data
+Center infrastructure, B4 is their wide area network. Then you got this bunch of metro area points of presence
+scattered throughout, and, ultimately, the end users which are
+accessible across the Internet. Espresso is the design of these peering edge of if it needs to leave Google's network into the Internet,
+how they can do that. Google has a lot of fiber, a lot of points of presence
+that interconnect them. This is just an illustration
+of their network. The design principles are one, a hierarchical control plane. Take global optimization while local control plane
+provides fast reaction. Globally would be more optimal, but it's slow to coordinate
+across the entire globe. Use some local control for
+fast reaction. Fail static. Local control plane
+continues to function without global
+control or failure. Software programmability. Externalize features
+into software to exploit commodity
+servers for scale, and then testability
+and manageability. We'll see all of that well, hopefully all of
+that comes through. The key here is, well, what do you have to do? Let's say we're doing this
+with traditional routers. Here's some external peer. This is some external
+Internet service provider that they want to connect to. They would get some router. It would have a big forwarding table access control
+list, and so forth. Then a BGP border gateway
+protocol peering between it. All the hosts in the metro area would be able
+to send traffic through it. What they want is to, and this is all those challenges that they were pointing out. What they want to
+do is make this a more software oriented process. What they're doing is now dividing this up
+into BGP speakers, then creating this
+label switched fabric and then have
+an external peer. Here you would need,
+separate connection. I don't think you would
+need a separate router, but certainly different
+configurations on each. Here, they're able to have this speaker and connect
+to different peers. The label switching
+will be able to direct it to which of the
+particular BGP speakers, as well as direct it
+internally if needed. We'll see that in
+a second. All of these are just running
+on commodity servers. They can have a bunch
+of BGP speakers, just running on standard
+software host in software. Externalizing the
+packet processing. They use packet processors in software and the host
+based packet processors to allow for flexible
+packet processing. This might be for
+access control list, handling a denial of
+service and so forth. This is one of the uses of
+this label switch fabric is as traffic comes in they can
+process it on a host, do whatever
+processing is needed. If it needs to go
+out, then, great, if it would have
+been a BGP packet, that label switching
+would have come directly to the BGP speaker. This is ingress into Google's network all goes
+through this array of hosts and all the
+egress traffic from Google's Cloud goes
+through this as well. Showing out the
+hierarchical control, they have a global controller. We saw that also with
+Swan, where, great, if we can make global decisions,
+that's pretty optimal. They'll have a local control to be able to do things locally. But that all interconnects
+with the peering fabric, control the rules on the
+host and things like that. It's again, heavily leveraging software
+defined networking. What you can see is the only thing that
+really matters in terms of the legacy protocols because
+you have to speak to some external peer
+is that it needs to be using the BGP protocol. Every decision
+internally, can be done outside and completely
+software based approach. You can add custom packet
+processing if needed and only have that connection to the external world
+through that BGP speaker. The fail static is
+keep those isolated. Again, Application
+Aware Routing. This is where Google knows
+what traffic is happening. We saw that with Swan. They had these different
+classes of traffic. If Google can see
+that and say, great, this is video, that's
+going across the Internet. Well, then they can
+send those signals to this global controller
+and do things with it. What things they
+can do with it is, so it's here in a
+Google Data Center connects to it, the nearest pop. With BGP, it would
+send it that way. What Google could do
+and say, is actually, I have some fiber
+to a different pop, and let me send it out
+that location instead. This would be, more optimal. By doing this, they've
+measured that they can serve 13% more traffic than
+BGPs best path approach. Also helps the capacity
+constrained ISPs by overflowing demand to
+alternate paths within local metros and also
+by remote metros. Maybe this path is
+through one ISP. If you know that IP is getting constrained
+for whatever reason, Google has the
+ability to send it along an alternate path
+through a different ISP. All of that could be coordinated through their centralized
+SDN approach. They just as part of
+their evaluation. Note different improvements
+and end user experience. Again, this is what
+we're referring to here is going out over the
+Internet to the end users. Change in meantime between
+rebuffers longer is better. Goodput higher is better. It's basically much better
+end user experience. Release velocity is
+important to Google. Between the local controller, BGP speaker, fabric controller, they're able to do it
+in 1-2 week range. That's 50x more frequent than going with
+traditional vendors. They have a specific example. Espresso, demonstrates that traditional
+peering architecture can evolve to exploit soft defined networking
+and SDNs value is in the flexibility
+and feature velocity. What they were able to show is this global view,
+application signals, based optimization, rapid
+deploy and in rate, and it was a lot cheaper. This just touches the surface with Google's peering
+infrastructure. Definitely go read the paper. It'll provide all
+much more depth than what we covered here. With that, we'll
+stop here. Thanks.

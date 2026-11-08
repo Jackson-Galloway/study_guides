@@ -1,0 +1,113 @@
+All right, let's go ahead and get started. So this time,
+we're going to talk about autoscaling. So in the last lesson,
+we went through a load-balancing example, and we used an unmanaged instance group. We showed that there's this other case
+where you can create this managed instance group. So the unmanaged one, we statically added, a couple virtual machines that we had
+created ourselves manually to it. So here we're going to look
+at what is autoscaling. So autoscaling is some,
+it's a service that Google provides, or in general, whoever you're looking
+at that will monitor the usage, and it creates or
+kills instances as needed. So you can see autoscaling
+in containerized workloads. In this case, it's going to
+be virtual machine instances. We had this load balancer,
+then we had this instance group. We previously had this as a static thing,
+but now if we want to make it managed or
+with autoscaling that an extra component, a manager would be monitoring these
+instances and what their load is. There's different kind of
+approaches that you can use. So one might be threshold based. It can say if my VM instances
+get above 50% CPU utilization, I want to create a new virtual machine. Or it could say once it drops below 25%,
+kill one of the virtual machine. And then it automatically updates the load
+balancer to know what is the current set. In this case it's three,
+but if we added one, it would have four servers
+to load balance between. All right, so that's threshold based,
+the other is predictive. So another thing the manager could
+do is could monitor the load and use machine learning to predict the next load in the next some amount of time. So we can say, all right, for the past five minutes you've
+been at some amount of load and based on the past three days,
+whenever it got to that I can see, or at this time of day I can notice the next
+five minutes it'll probably go higher. So I'm going to add a fourth VM. Google wrote a paper called Autopilot,
+published in EuroSys 2020. I'll provide it in the Coursera links and that talks about their system for this. All the examples I think we're in,
+it's containerized workloads, but same concepts. If you're looking for more depth on how
+that would work, let's go through this. I'm not going to walk
+through all of the steps, but just pull them open to give you
+a little flavor of what each is. First thing is I've already
+created a virtual machine. I've already installed some
+software on it, namely, I'm just going to use what we used
+last time, which I installed the flask package for Python 3, right,
+so that's already installed. But now, when I'm going to autoscale, it needs to know what is the image that I
+should be using when I create a new VM. You don't want it to have to create it and then say Eric, you need to go log in and
+install flask. It should already be, ideally, it should be provisioned already
+with all the software you need. So it's ready to run right away. We're going to walk through how
+to create an image real simple. And then we're going to show how to use
+that instance or that image in an instance template when we're going through
+this managed instance group. All right, so
+let's flip over to the console. All right, so first thing to know,
+I'll show the VMs. I only have one running,
+it's that same VM. If we SSH into it,
+it's got the flask, installed. All right, so the main thing I want to
+do is I already have it pulled open, but let me kind of start over,
+create or image. So I want to go through the images, and this will kind of list out all
+the images I have access to. Some are kind of publicly,
+available that are available to me. Some are ones that I've created, like here
+I've created this one called blog image, I could use that. But let's show how simple
+it is to create an image. All I have to do is click
+that create image button, name it image with flask. And then, the source is
+going to be coming from a disk. What disk do I want to use? I want to use whatever
+is on VM 1 right now. All right,
+the disk is attached to running instance. So to create the image you need to stop at
+first or select keep the instance running. All right, so we can go over here and
+I can stop it. All right, so it's going to keep
+basically everything except for it's not going to use any CPU resources. Let's wait for that to stop, and then we can go back to the Create Image tab in a second, Right, still stopping it. All right, so I wish I had
+a little list of jokes I could tell in the meantime while
+we're waiting for things, But I didn't think far enough in advance,
+but this will be done soon. There we go, VM instances now stopped. So I can go and
+create an image based off of that. I guess let's start over, Image with flask, choose VM1, And the location is where do I
+want to actually copy this to? So if we're using global load
+balancing and things like that, obviously you have it everywhere. We're only doing a regional, and
+I'm guessing the pricing comes into play. I haven't actually looked that up. But anyway, then we can click create, and you will be charged for
+storage of this image. But right now it's there, it's making the snapshot of the disk. And you could see in those different
+parameters there's different ways, and you can kind of look
+up the documentation for each to see what makes sense for
+you, right? So once that's created,
+we can now search for, I want to create an instance group, right? So I search for instance,
+came to instance group and that brought me to this site or
+this page right here. And let me wait second for
+this to be created. Or I can create an instance group. I don't need to use that particular one,
+but here it would say which
+template this means. What am I spinning up,
+when I spin it up, right? So I can say kind of create
+in this particular region. I want all my machines to be micros. Maybe that's not what I actually want. And the boot disk, this likely would
+be kind of the disk I created. But we're just going to go with
+something that they've already provided. So let's say I didn't need to
+run any custom software and I can provide extra configuration
+all the same thing. So it's as if I'm creating a VM all
+the different parameters for that. But I'm saying don't actually do that. Don't actually create it, just create this as a template for me to use later, right? So now if we go through and what we're doing is new managed
+instance group, all right? And then I can say autoscaling,
+it's going to auto scale on, you can configure these different ways,
+I can have it only scale out. So I don't want it to ever reduce. I can set the minimum and
+maximum number of instances that I want. So to make sure I'm not paying,
+get a cloud bill of 1000s and 1000s of dollars, maybe I say,
+all right, like 10. And if it goes above,
+my load goes above that. Well, the users will just
+experience it slower, all right? We talked about the threshold basis, CPU utilization, all right? You can look at other metrics, or you could use this kind of
+predictive autoscaling, all right? One of the things is how long does it
+take for your application to boot up. You would measure that kind of advance. Let's say it normally takes 30 seconds, especially if they're using predictive, they want to know how long it should,
+they normally would take scale in controls and
+various other things. And we saw a lot of this,
+like the health check, the port mapping, and
+things like that, all right? So that's really all there is to it. The key thing there was
+this instance template. Then you got some of these
+parameters on how to autoscale. So with that, I do want to give
+a little aside on the metadata server. When a cloud starts or when a VM starts,
+we want to provide configuration information like the startup script and
+things like that. And this is done by a metadata service. So this is an IP address that's reserved
+from the IPv4 Link Local Address space. But it's never,
+it's local to the current network only. So Google runs a metadata service at this address and it provides stuff like DNS, NTP for network time protocol, and the metadata service as a web interface, you can get any of these attributes. For example,
+if you curl a particular metadata like this will be,
+it's set up as key-value pairs. So you could say,
+get the key cloud script, and then it'll send back whatever
+you put through, all right? So there's stuff out there
+that you can look this up. But if you see a reference of metadata, just wanted a little kind of
+flavor of that what it is. All right, because that's also useful for
+when you're kind of auto-provisioning services and
+then want them to start right away. And maybe get its own custom configuration
+based on which server it is and things like that. And so that's where you can
+put some metadata in for that. All right, so with that, we'll stop here. All right, thanks.

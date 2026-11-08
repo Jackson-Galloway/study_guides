@@ -1,0 +1,1061 @@
+1
+00:00:09,350 --> 00:00:14,240
+Let's jump in to talk about
+the Internet protocol.
+
+2
+00:00:14,360 --> 00:00:19,340
+I'm assuming everybody
+knows what the Internet is.
+
+3
+00:00:19,340 --> 00:00:21,260
+You've been able to
+reach these videos,
+
+4
+00:00:21,260 --> 00:00:24,840
+but do you really know
+all the details about it?
+
+5
+00:00:24,840 --> 00:00:28,550
+Here we'll provide at
+least the foundations
+
+6
+00:00:28,550 --> 00:00:30,795
+to make sure we're
+all on the same page,
+
+7
+00:00:30,795 --> 00:00:34,250
+and set up the rest
+of the module.
+
+8
+00:00:34,750 --> 00:00:40,650
+Internetworking. The real origin
+
+9
+00:00:40,650 --> 00:00:44,145
+of why do we need
+"The Internet",
+
+10
+00:00:44,145 --> 00:00:47,130
+is being able to enable
+
+11
+00:00:47,130 --> 00:00:52,070
+communication between multiple
+heterogeneous networks.
+
+12
+00:00:52,070 --> 00:00:57,090
+We talked about the case where
+we might have somebody on
+
+13
+00:00:57,090 --> 00:00:59,830
+a 5G network needing
+to be able to talk to
+
+14
+00:00:59,830 --> 00:01:03,550
+somebody on an Ethernet network.
+
+15
+00:01:03,550 --> 00:01:06,950
+There was a wide collection of
+
+16
+00:01:06,950 --> 00:01:13,185
+different local area network
+types or link types,
+
+17
+00:01:13,185 --> 00:01:15,750
+but these different
+disparate networks
+
+18
+00:01:15,750 --> 00:01:18,510
+need to be able to
+communicate with one another.
+
+19
+00:01:18,510 --> 00:01:23,570
+In a key paper from 1974
+from the Surf and Con,
+
+20
+00:01:23,570 --> 00:01:25,880
+called A protocol
+for Packet Network
+
+21
+00:01:25,880 --> 00:01:27,230
+In Our Communication,
+
+22
+00:01:27,230 --> 00:01:29,430
+they introduced this concept of
+
+23
+00:01:29,430 --> 00:01:32,845
+a router at the edge
+of each network.
+
+24
+00:01:32,845 --> 00:01:40,860
+The Internet Protocol
+effectively came out of that.
+
+25
+00:01:40,860 --> 00:01:47,930
+It was called a gateway in
+that paper to start with.
+
+26
+00:01:47,930 --> 00:01:50,770
+One of the things to know about
+
+27
+00:01:50,770 --> 00:01:56,050
+the Internet protocol
+is the service model.
+
+28
+00:01:56,050 --> 00:01:59,495
+In particular it's best effort.
+
+29
+00:01:59,495 --> 00:02:05,470
+This means that the delivery
+packets may get dropped.
+
+30
+00:02:05,470 --> 00:02:07,830
+The timing, there's
+no guarantee on
+
+31
+00:02:07,830 --> 00:02:10,690
+how long it takes to
+deliver a packet.
+
+32
+00:02:10,690 --> 00:02:15,390
+The order packets may get
+reordered in the network.
+
+33
+00:02:15,390 --> 00:02:18,110
+The reasoning behind
+all of this, is that,
+
+34
+00:02:18,110 --> 00:02:21,620
+interconnecting
+different link layers
+
+35
+00:02:21,620 --> 00:02:24,070
+needs to be really at
+
+36
+00:02:24,070 --> 00:02:27,150
+the lowest common denominator if
+
+37
+00:02:27,150 --> 00:02:30,670
+one at the link layer
+
+38
+00:02:30,670 --> 00:02:33,850
+can support reliable delivery
+but the other can't.
+
+39
+00:02:33,850 --> 00:02:37,520
+Well, the thing that
+interconnects them isn't going to
+
+40
+00:02:37,520 --> 00:02:41,800
+be able to guarantee
+reliable delivery.
+
+41
+00:02:41,800 --> 00:02:44,760
+This is this lowest
+common denominator of
+
+42
+00:02:44,760 --> 00:02:48,200
+the things it wants to
+be able to interconnect.
+
+43
+00:02:48,200 --> 00:02:53,560
+Here, I've been using the term
+packet in the link layer.
+
+44
+00:02:53,560 --> 00:02:56,460
+We use the term frame for
+
+45
+00:02:56,460 --> 00:03:00,120
+the message that
+it's going to be
+
+46
+00:03:00,120 --> 00:03:03,660
+sending at the Internet
+or at the network layer,
+
+47
+00:03:03,660 --> 00:03:11,250
+we call it a packet looking
+at addressing an IP.
+
+48
+00:03:11,250 --> 00:03:14,690
+Each interface in a network
+
+49
+00:03:14,690 --> 00:03:18,910
+or on a device will
+get an IP address.
+
+50
+00:03:18,910 --> 00:03:21,275
+Shown on the right is
+
+51
+00:03:21,275 --> 00:03:25,030
+an example where you
+have two laptops.
+
+52
+00:03:25,030 --> 00:03:27,610
+They each have their
+own IP address
+
+53
+00:03:27,610 --> 00:03:29,470
+and then there's
+some network devices
+
+54
+00:03:29,470 --> 00:03:32,810
+with different ports on
+
+55
+00:03:32,810 --> 00:03:35,605
+it and they each have
+their own IP addresses.
+
+56
+00:03:35,605 --> 00:03:39,630
+All right. The IPv4 version
+
+57
+00:03:39,630 --> 00:03:43,710
+four which is the
+longest standing,
+
+58
+00:03:43,710 --> 00:03:49,800
+most common used
+for IP addresses.
+
+59
+00:03:49,800 --> 00:03:54,175
+The addresses are 32 bits long,
+
+60
+00:03:54,175 --> 00:03:58,530
+and you typically see them
+in dotted decimal form.
+
+61
+00:03:58,530 --> 00:04:00,145
+You would see an address like
+
+62
+00:04:00,145 --> 00:04:08,690
+192.168.0.1 This is the
+groupings of eight bits.
+
+63
+00:04:08,690 --> 00:04:12,170
+Each of the eight
+bits in that 32 bits,
+
+64
+00:04:12,170 --> 00:04:15,470
+gets one of these
+decimal numbers.
+
+65
+00:04:15,470 --> 00:04:20,440
+Then each one of
+them can be 0-255.
+
+66
+00:04:20,440 --> 00:04:26,830
+IPv6, or version 6
+is also now growing
+
+67
+00:04:26,830 --> 00:04:28,910
+in popularity because of
+
+68
+00:04:28,910 --> 00:04:33,300
+the limited address
+space in IPv4,
+
+69
+00:04:33,300 --> 00:04:38,050
+but also the sprawling
+number of addresses we need.
+
+70
+00:04:38,330 --> 00:04:44,670
+Here the addresses are
+expanded to be 128 bits.
+
+71
+00:04:44,670 --> 00:04:49,590
+Here we need to have what
+you would commonly see is
+
+72
+00:04:49,590 --> 00:04:54,265
+groupings of 16 bits
+separated by a colon.
+
+73
+00:04:54,265 --> 00:04:57,330
+I won't read out each of these,
+
+74
+00:04:57,330 --> 00:05:00,435
+but shown here are
+a few examples.
+
+75
+00:05:00,435 --> 00:05:02,565
+There's different
+ways that you can
+
+76
+00:05:02,565 --> 00:05:05,280
+collapse some of these.
+
+77
+00:05:05,280 --> 00:05:07,740
+If there's leading zeros, well,
+
+78
+00:05:07,740 --> 00:05:10,710
+you can drop those leading zeros
+
+79
+00:05:10,710 --> 00:05:13,500
+as shown in the highlighted
+portion in the red,
+
+80
+00:05:13,500 --> 00:05:15,720
+and if there's several of
+
+81
+00:05:15,720 --> 00:05:19,050
+these hextets that
+are all zeros,
+
+82
+00:05:19,050 --> 00:05:24,570
+you can replace those
+consecutive zeros with colons,
+
+83
+00:05:24,570 --> 00:05:27,990
+and so if you see any
+addresses in this form,
+
+84
+00:05:27,990 --> 00:05:32,770
+you should be able to
+understand what they mean.
+
+85
+00:05:33,470 --> 00:05:37,365
+Now one of the important things
+
+86
+00:05:37,365 --> 00:05:41,595
+is that structure
+add scalability,
+
+87
+00:05:41,595 --> 00:05:43,140
+and here we're referring to
+
+88
+00:05:43,140 --> 00:05:45,240
+not structure of the
+messages necessarily,
+
+89
+00:05:45,240 --> 00:05:48,345
+but structure of the addressing.
+
+90
+00:05:48,345 --> 00:05:51,945
+In the Ethernet we
+saw this concept of
+
+91
+00:05:51,945 --> 00:05:56,385
+the vendors would get
+the upper addresses.
+
+92
+00:05:56,385 --> 00:05:59,145
+Upper bits of the address
+would be assigned to a vendor,
+
+93
+00:05:59,145 --> 00:06:01,290
+and then they would assign
+
+94
+00:06:01,290 --> 00:06:03,660
+to each device that
+they manufactured,
+
+95
+00:06:03,660 --> 00:06:06,930
+the next, the lower bits
+in those addresses.
+
+96
+00:06:06,930 --> 00:06:11,295
+Then they would ship
+their devices worldwide.
+
+97
+00:06:11,295 --> 00:06:14,010
+With this, you can
+think of this as
+
+98
+00:06:14,010 --> 00:06:16,590
+a flat address that
+it really doesn't
+
+99
+00:06:16,590 --> 00:06:22,680
+have any meaning in terms of
+how it's used in a network.
+
+100
+00:06:22,680 --> 00:06:25,710
+For that we saw in Ethernet,
+
+101
+00:06:25,710 --> 00:06:30,300
+where the Mac address
+tables had one entry per
+
+102
+00:06:30,300 --> 00:06:32,505
+destination and
+that's how it knew
+
+103
+00:06:32,505 --> 00:06:35,190
+how to get to the destination,
+
+104
+00:06:35,190 --> 00:06:40,095
+and that doesn't scale to
+billions of devices worldwide.
+
+105
+00:06:40,095 --> 00:06:43,140
+The solution is to
+
+106
+00:06:43,140 --> 00:06:45,495
+really add structure
+to the addresses,
+
+107
+00:06:45,495 --> 00:06:48,490
+so the devices can be grouped.
+
+108
+00:06:48,740 --> 00:06:52,155
+Grouping is called a subnet,
+
+109
+00:06:52,155 --> 00:06:56,595
+which is a set of
+consecutive IP addresses.
+
+110
+00:06:56,595 --> 00:07:00,555
+The high-order bits in a
+subnet are all the same.
+
+111
+00:07:00,555 --> 00:07:03,420
+If we were to give,
+we're showing an example
+
+112
+00:07:03,420 --> 00:07:06,600
+here of these three laptops of
+
+113
+00:07:06,600 --> 00:07:12,825
+addresses 2.1.1.0,
+2.1.1.2 and 2.1.1.3.
+
+114
+00:07:12,825 --> 00:07:18,015
+They all share those
+upper bits, the 2.1.1.
+
+115
+00:07:18,015 --> 00:07:21,165
+They all share those
+parts of the address.
+
+116
+00:07:21,165 --> 00:07:25,575
+Then the low-order bits
+can uniquely identify
+
+117
+00:07:25,575 --> 00:07:30,780
+the particular node
+within that network,
+
+118
+00:07:30,780 --> 00:07:34,710
+so the.1, the.2, the.3.
+
+119
+00:07:34,710 --> 00:07:38,340
+Now, if somebody
+needed to create
+
+120
+00:07:38,340 --> 00:07:41,640
+a table entry on
+
+121
+00:07:41,640 --> 00:07:45,735
+how to forward this traffic
+to the destination,
+
+122
+00:07:45,735 --> 00:07:50,850
+it might just need
+those upper order bits,
+
+123
+00:07:50,850 --> 00:07:54,600
+so anything in this
+example that's going to
+
+124
+00:07:54,600 --> 00:07:58,800
+2.1.1 dot anything for
+
+125
+00:07:58,800 --> 00:08:00,810
+this particular
+router, it can say,
+
+126
+00:08:00,810 --> 00:08:03,075
+I'm just going to
+send it to the right,
+
+127
+00:08:03,075 --> 00:08:08,955
+out that particular port
+and then a router closer to
+
+128
+00:08:08,955 --> 00:08:12,570
+those end devices
+would be able to
+
+129
+00:08:12,570 --> 00:08:17,500
+know where within this
+network should go.
+
+130
+00:08:17,870 --> 00:08:23,445
+As mentioned, this node
+is drew out all 32 bits,
+
+131
+00:08:23,445 --> 00:08:24,750
+and so if you recall
+
+132
+00:08:24,750 --> 00:08:29,400
+the addresses IPv4
+addresses, or 32 bits.
+
+133
+00:08:29,400 --> 00:08:33,280
+Here's the upper eight bits.
+
+134
+00:08:33,830 --> 00:08:39,780
+We can represent the
+decimal too as 00000010.
+
+135
+00:08:39,780 --> 00:08:43,030
+You separate it out like that.
+
+136
+00:08:44,000 --> 00:08:48,330
+Here these 24 bits or
+
+137
+00:08:48,330 --> 00:08:54,345
+the up three decimal
+places are all the same.
+
+138
+00:08:54,345 --> 00:08:57,060
+Which then gets us to
+
+139
+00:08:57,060 --> 00:09:01,020
+the CIDR or cider is
+how it's pronounced.
+
+140
+00:09:01,020 --> 00:09:05,415
+The classless
+interdomain routing.
+
+141
+00:09:05,415 --> 00:09:11,625
+Here you would see the
+format of a.b.c.d/x.
+
+142
+00:09:11,625 --> 00:09:16,050
+A Lot of times these
+are called a prefix,
+
+143
+00:09:16,050 --> 00:09:20,625
+so x here represents the
+length of the prefix,
+
+144
+00:09:20,625 --> 00:09:22,200
+and so this is the number of
+
+145
+00:09:22,200 --> 00:09:25,260
+high-order bits that
+are all the same,
+
+146
+00:09:25,260 --> 00:09:27,030
+and then the a, b,
+
+147
+00:09:27,030 --> 00:09:30,525
+c and d are the values
+which are the same.
+
+148
+00:09:30,525 --> 00:09:34,365
+An example from the
+previous slide,
+
+149
+00:09:34,365 --> 00:09:40,470
+the 2.1.1.0/24 would
+be that prefix.
+
+150
+00:09:40,470 --> 00:09:44,190
+It says the 24 uppermost bits,
+
+151
+00:09:44,190 --> 00:09:46,935
+which are represented by 2.1.1,
+
+152
+00:09:46,935 --> 00:09:48,980
+are all going to be the same.
+
+153
+00:09:48,980 --> 00:09:54,100
+Then the zero, the lower order
+end bits, we don't care.
+
+154
+00:09:54,100 --> 00:09:58,660
+That's we're grouping
+those all together.
+
+155
+00:09:58,660 --> 00:10:02,260
+We use a zero just
+to represent that in
+
+156
+00:10:02,260 --> 00:10:05,020
+these listings that those
+
+157
+00:10:05,020 --> 00:10:08,810
+are all going to be
+grouped together.
+
+158
+00:10:10,530 --> 00:10:13,870
+Another aspect of this
+
+159
+00:10:13,870 --> 00:10:17,260
+is we have these
+Cer addresses that
+
+160
+00:10:17,260 --> 00:10:23,590
+can group hosts and into
+prefixes, and these subnets.
+
+161
+00:10:23,590 --> 00:10:27,670
+What's interesting is that
+subnets can be combined.
+
+162
+00:10:27,670 --> 00:10:31,135
+Let's say on the left
+we have two networks
+
+163
+00:10:31,135 --> 00:10:35,920
+and they have two
+different subnets,
+
+164
+00:10:35,920 --> 00:10:45,070
+1.00 and slash 24.11 1024.
+
+165
+00:10:45,070 --> 00:10:50,180
+This represents these 24
+bits highlighted in red.
+
+166
+00:10:50,460 --> 00:10:53,950
+In each of the cases
+are what all of
+
+167
+00:10:53,950 --> 00:10:57,235
+the addresses within each
+of those subnets will be.
+
+168
+00:10:57,235 --> 00:11:00,535
+Now if we had something
+
+169
+00:11:00,535 --> 00:11:03,640
+a little closer to whoever
+is going to be sending it,
+
+170
+00:11:03,640 --> 00:11:05,245
+on the right hand side, we have
+
+171
+00:11:05,245 --> 00:11:07,465
+somebody that wants
+to send something.
+
+172
+00:11:07,465 --> 00:11:09,340
+What are the table
+entries going to
+
+173
+00:11:09,340 --> 00:11:10,960
+need to look like there?
+
+174
+00:11:10,960 --> 00:11:14,260
+Well, do they need an entry
+for each of the subnets?
+
+175
+00:11:14,260 --> 00:11:17,545
+Well, in any case,
+
+176
+00:11:17,545 --> 00:11:18,745
+it's going to be, for
+
+177
+00:11:18,745 --> 00:11:22,135
+either case it's going
+to go to the left.
+
+178
+00:11:22,135 --> 00:11:24,370
+If I send something to either of
+
+179
+00:11:24,370 --> 00:11:26,770
+those subnets, it's
+going to go left.
+
+180
+00:11:26,770 --> 00:11:29,905
+What I can do is I can
+actually group these.
+
+181
+00:11:29,905 --> 00:11:31,750
+I can note that, well,
+
+182
+00:11:31,750 --> 00:11:34,825
+it doesn't matter
+which zero or one
+
+183
+00:11:34,825 --> 00:11:40,000
+what that lower
+order of the 24 bits
+
+184
+00:11:40,000 --> 00:11:44,695
+is and so I can actually
+create a prefix and
+
+185
+00:11:44,695 --> 00:11:49,495
+aggregate those
+together to 1.100/23.
+
+186
+00:11:49,495 --> 00:11:54,160
+Now it's only the 23
+uppermost bits that
+
+187
+00:11:54,160 --> 00:12:00,010
+are anything that matches
+those that represents,
+
+188
+00:12:00,010 --> 00:12:05,150
+basically, we're creating
+this bigger grouping.
+
+189
+00:12:07,170 --> 00:12:11,710
+This allows for hierarchy and is
+
+190
+00:12:11,710 --> 00:12:13,720
+really one of the
+key properties that
+
+191
+00:12:13,720 --> 00:12:17,120
+allows for scalability
+worldwide.
+
+192
+00:12:17,610 --> 00:12:22,270
+Now just diving into
+the full header of
+
+193
+00:12:22,270 --> 00:12:26,590
+IPV4 on the left and IPV6.
+
+194
+00:12:26,590 --> 00:12:31,540
+You can see the source address,
+
+195
+00:12:31,540 --> 00:12:35,440
+you can see the destination
+address of both of those,
+
+196
+00:12:35,440 --> 00:12:38,095
+and they're going to
+be different sizes.
+
+197
+00:12:38,095 --> 00:12:41,815
+We'll note something called TTL,
+
+198
+00:12:41,815 --> 00:12:47,620
+which is the time to live
+or in IPV6, hop limit.
+
+199
+00:12:47,620 --> 00:12:51,160
+If you recall the
+problem of loops
+
+200
+00:12:51,160 --> 00:12:55,015
+and forwarding or
+forwarding loops,
+
+201
+00:12:55,015 --> 00:12:58,310
+then what happens is
+
+202
+00:12:58,860 --> 00:13:03,445
+we need to some mechanism
+to be able to detect that.
+
+203
+00:13:03,445 --> 00:13:05,560
+In Ethernet,
+
+204
+00:13:05,560 --> 00:13:09,520
+we saw something like
+spanning tree protocol.
+
+205
+00:13:09,520 --> 00:13:11,830
+We didn't get into the details,
+
+206
+00:13:11,830 --> 00:13:13,960
+but that was one example
+
+207
+00:13:13,960 --> 00:13:16,300
+of how we might be
+able to handle it.
+
+208
+00:13:16,300 --> 00:13:19,435
+In the Internet Protocol,
+
+209
+00:13:19,435 --> 00:13:22,840
+the way it's handled is use
+the time to live field.
+
+210
+00:13:22,840 --> 00:13:25,585
+Each hop is given packet,
+
+211
+00:13:25,585 --> 00:13:27,130
+it decrements the time to
+
+212
+00:13:27,130 --> 00:13:29,980
+live and if it ever
+gets down to zero,
+
+213
+00:13:29,980 --> 00:13:32,690
+the packet just gets dropped.
+
+214
+00:13:33,630 --> 00:13:39,235
+Then note the protocol
+and next header field.
+
+215
+00:13:39,235 --> 00:13:42,250
+The protocol field next title.
+
+216
+00:13:42,250 --> 00:13:44,185
+Much as in Ethernet,
+
+217
+00:13:44,185 --> 00:13:47,140
+we had that type
+field that said what
+
+218
+00:13:47,140 --> 00:13:50,695
+was the thing that's
+inside, what's the payload?
+
+219
+00:13:50,695 --> 00:13:53,005
+How should I interpret
+the payload?
+
+220
+00:13:53,005 --> 00:13:55,915
+One of the types was IPV4.
+
+221
+00:13:55,915 --> 00:14:00,190
+Well, here we have a
+protocol field which says,
+
+222
+00:14:00,190 --> 00:14:04,520
+now inside of the payload
+of an IPV4 packet,
+
+223
+00:14:05,670 --> 00:14:09,085
+how should I
+interpret that data?
+
+224
+00:14:09,085 --> 00:14:11,905
+Then it also has a check sum,
+
+225
+00:14:11,905 --> 00:14:16,790
+so we could see a little
+error handling in that.
+
+226
+00:14:17,010 --> 00:14:21,670
+With that, that concludes
+the introduction to
+
+227
+00:14:21,670 --> 00:14:26,870
+the internet
+protocol, and thanks.

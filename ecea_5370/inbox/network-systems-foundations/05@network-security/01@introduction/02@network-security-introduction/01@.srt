@@ -1,0 +1,284 @@
+1
+00:00:09,638 --> 00:00:14,609
+All right, we're really making our
+way through the network systems and
+
+2
+00:00:14,609 --> 00:00:19,925
+understanding all of these different
+layers and the functionality of each.
+
+3
+00:00:19,925 --> 00:00:23,904
+So now, we're going to start
+a new module on network security.
+
+4
+00:00:23,904 --> 00:00:27,583
+So we're going to go back and
+revisit some of these layers,
+
+5
+00:00:27,583 --> 00:00:31,392
+and see some of the problems
+that we didn't address yet.
+
+6
+00:00:31,392 --> 00:00:36,100
+And we're going to talk about
+some of the solutions for them.
+
+7
+00:00:38,710 --> 00:00:45,867
+So, network security is addressing the
+fact that communication is between parties
+
+8
+00:00:45,867 --> 00:00:51,708
+that are across a medium that may or
+may not be under their control.
+
+9
+00:00:51,708 --> 00:00:56,870
+So malicious parties can attack
+the communication in various locations.
+
+10
+00:00:59,630 --> 00:01:03,832
+And we'll get into some examples of that,
+but
+
+11
+00:01:03,832 --> 00:01:08,895
+in thinking about all of kind
+of how they might do that and
+
+12
+00:01:08,895 --> 00:01:11,587
+how we might need to solve it,
+
+13
+00:01:11,587 --> 00:01:17,828
+think about some of the core
+properties that we're shooting for.
+
+14
+00:01:17,828 --> 00:01:23,670
+And so, shown here is this framework.
+
+15
+00:01:23,670 --> 00:01:28,776
+For information security,
+typically the three pillars,
+
+16
+00:01:28,776 --> 00:01:33,890
+sometimes shown as five pillars
+of information security.
+
+17
+00:01:33,890 --> 00:01:36,242
+So we have confidentiality,
+
+18
+00:01:36,242 --> 00:01:41,988
+which is saying that the information
+is only visible to those intended.
+
+19
+00:01:41,988 --> 00:01:47,105
+Integrity, that is the data
+has not been modified or
+
+20
+00:01:47,105 --> 00:01:51,060
+corrupted, and then, availability,
+
+21
+00:01:51,060 --> 00:01:54,915
+that the information can be accessed.
+
+22
+00:01:54,915 --> 00:02:00,042
+So an example 1 of where
+these properties might
+
+23
+00:02:00,042 --> 00:02:07,090
+be not upheld is let's look at
+the network layer data plane.
+
+24
+00:02:07,090 --> 00:02:12,631
+So let's say company two, or a company
+has 2 sites and they have employees at
+
+25
+00:02:12,631 --> 00:02:18,470
+these different sites, and they want to
+share information with each other.
+
+26
+00:02:18,470 --> 00:02:21,261
+If an attacker can see this traffic,
+
+27
+00:02:21,261 --> 00:02:26,170
+they'll get access to that
+company's secret data.
+
+28
+00:02:26,170 --> 00:02:30,950
+So the solution we're going to talk
+about is something called IPsec.
+
+29
+00:02:33,450 --> 00:02:37,766
+A second example happens in
+the network control plane.
+
+30
+00:02:37,766 --> 00:02:40,817
+Now, BGP, if you recall,
+
+31
+00:02:40,817 --> 00:02:46,510
+communicates the paths
+to reach IP prefixes.
+
+32
+00:02:46,510 --> 00:02:51,534
+So now, if an attacker can inject
+fake packet or fake paths,
+
+33
+00:02:51,534 --> 00:02:55,968
+it can get traffic directed to it,
+denying service,
+
+34
+00:02:55,968 --> 00:03:00,210
+changing messages, inspecting traffic.
+
+35
+00:03:00,210 --> 00:03:00,904
+And so,
+
+36
+00:03:00,904 --> 00:03:07,110
+the solution we're going to discuss
+is going to be something called RPKI.
+
+37
+00:03:07,110 --> 00:03:12,301
+And so, you can see that this
+situation in this example down below,
+
+38
+00:03:12,301 --> 00:03:18,516
+where continuing our use of YouTube as our
+example service that we want to access.
+
+39
+00:03:18,516 --> 00:03:22,512
+We know through BGP that
+it has some prefix,
+
+40
+00:03:22,512 --> 00:03:26,407
+it gets announced through some networks.
+
+41
+00:03:26,407 --> 00:03:31,162
+But now, if this attacker down
+at the bottom can also say,
+
+42
+00:03:31,162 --> 00:03:34,766
+hey, I also host YouTube's IP addresses.
+
+43
+00:03:34,766 --> 00:03:39,566
+This network on the left,
+that's going to be a shorter path,
+
+44
+00:03:39,566 --> 00:03:41,892
+and it's going to like that.
+
+45
+00:03:41,892 --> 00:03:46,606
+And so, it might choose that
+as its ultimate path and
+
+46
+00:03:46,606 --> 00:03:51,440
+direct traffic to this
+attacker instead of YouTube.
+
+47
+00:03:51,440 --> 00:03:56,954
+And then the third example is at
+the application and transport layer.
+
+48
+00:03:56,954 --> 00:04:03,390
+So, TCP provides in order reliable
+stream between two processes.
+
+49
+00:04:03,390 --> 00:04:07,377
+And then we layered HTTP
+on top of that to provide
+
+50
+00:04:07,377 --> 00:04:11,976
+this application protocol to get and
+put web objects.
+
+51
+00:04:11,976 --> 00:04:16,381
+Now, if the attacker could pretend to be,
+say,
+
+52
+00:04:16,381 --> 00:04:20,678
+the bank or inspect and
+modify the traffic, and
+
+53
+00:04:20,678 --> 00:04:26,166
+they could do this in various ways,
+then that's not great.
+
+54
+00:04:26,166 --> 00:04:31,930
+If we're not actually visiting Chase and
+I'm given all my passwords,
+
+55
+00:04:31,930 --> 00:04:36,940
+and expecting to interact with the bank,
+that's not great.
+
+56
+00:04:38,110 --> 00:04:42,264
+So solution to this is TLS and HTTPS.
+
+57
+00:04:42,264 --> 00:04:44,260
+And so, that's what we'll discuss.
+
+58
+00:04:45,670 --> 00:04:50,458
+All right, so next time we're going to
+first start with some basics,
+
+59
+00:04:50,458 --> 00:04:54,174
+and then we'll get into
+each of these solutions.
+
+60
+00:04:54,174 --> 00:04:56,430
+All right, until then.

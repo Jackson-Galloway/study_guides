@@ -1,0 +1,128 @@
+Let's jump into TCP's
+Congestion Control. As a reminder, congestion in the network will occur and this leads to packets
+being dropped. Our goal with congestion
+control to say what if senders could detect this congestion
+and back off as needed, and then we quickly introduced
+TCP's approach to this, which is detect and adjust. Here senders can increase their sending rate until they detect that
+congestion occurs, then it goes about and
+decreases the sending rate. With TCP, the
+feedback is implicit, and how they adjust is through something called
+a window based approach, and we'll get into
+each of these. Feedback. How do we know there's congestion
+in the network? From a host standpoint, we don't really know the network is where the
+congestion is happening, but we do have some signals that indicate that there
+might be congestion. One of the main signals
+is packet loss. Whenever we've seen
+a timeout occurred, we've previously said we are going to assume the
+packet was dropped, and we have to retransmit it, and we've also seen
+that with a duplicate ACK is also indicating
+packet loss. If you can make the assumption that one of the main reason for packet loss is congestion, well then you can
+correlate this to be a signal for congestion
+in the network. Likewise, packet
+delay, we talked about estimating the round
+trip time and we get the round trip time
+samples each time we send a packet and
+get acknowledgment. If we see that
+increasing over time, that is showing that
+there's starting to be congestion that's happening
+the speed of light, effectively the amount of time with no congestion to
+get through the network. But then if you have congestion, as we showed last time, you saw that buffer
+increasing in size, you get into this queue, you're the last in the
+queue as a packet, and it's going to take longer to actually get transmitted, and so we're seeing
+longer and longer delays. Now, those are both
+implicit signals, but there is also the possibility
+for an explicit signal. Explicit congestion
+notification is something that if a router supports
+it would be a possibility, but we'll make the assumption or most of the time we
+make the assumption, that's just implicit signals. Now, given that when
+we detect congestion, how do we know how much to send? We said this is a
+window based approach. The host, the sender limits whatever amount
+of traffic that it sends based on something called congestion
+window or sea wind. You can look at this is
+basically the last byte sent minus the last bite
+that's been acknowledged. As the sender, you have to keep that less than or equal
+to the congestion window, and we'll talk about how
+this congestion window is calculated or adjusted. If you recall, we heard the term window before when we talked
+about flow control. Flow control is
+something where we don't want to be
+overwhelming the receiver. When the sender can send more than the receiver can receive, that is a different problem. TCP includes this explicit
+mechanism, this field, the window size field inside of the TCP header for a receiver to be able to
+signal to the sender; this is the amount of
+bytes that you're allowed to have that I'm
+capable of receiving. The difference is the
+receive window is this explicit field
+in the TTP header. The congestion window
+is something that's just internal state on the host. Now, as a sender you have to be less than
+both of these windows. Adjusting the
+congestion window is effectively the approach in TCP is something called
+additive increase, multiple multiplicative
+decrease, or AIMD. The general concept here is, you basically keep increasing
+the amount you send, you detect that
+there's congestion, and then you decrease it. This particular approach to it, and it has been
+shown to optimize congested flow
+rates network wide, and it has this desirable
+property of stability. The additive increase
+means you're increasing the sending rate by one
+maximum segment size, every round trip time
+until loss is detected, a maximum segment size. Think of that as
+the maximum packet, the length of the
+packet that you can actually send into the network. The multiplicative
+decrease is where you decrease the sending rate by
+some multiplicative factor, so for example,
+you're decreasing it in half whenever
+loss is detected. It's not just
+decrease it by one, but you're decreasing
+it by a larger factor, some factor of descent
+rate, for example, a half. Illustrating the additive
+increase shown here is our message diagram. The sender initially sets the
+congestion window to one, so it can send one
+packet into the network. When it successfully gets
+a received acknowledgment, it now says, the network is
+not as congested right now. It can increase, it
+can try a little more. It increases the
+congestion window to 2, sends two packets. When it gets the acknowledgment
+for each of those, it now increases the
+congestion window and can send three packets. It gets those acknowledgments, and increases it to the four. This is a pretty discrete units, where you're sending these maximum size
+packets every time. But really you're going
+to be sending packets of different sizes and there's a different way that
+you can calculate it based on the maximum
+segment size and all that. It's not exactly one is
+what you're increasing. That's additive increase. Multiplicative
+decrease is whenever you detect the congestion, you decrease the send rate. What this does is over time, what you'll see is
+this sawtooth pattern. You'll see the
+multiplicative increase. You're sending, increase in ascend rate linearly
+by one every time, where you're proving that
+AI additive increase, and where you're proving for bandwidth started to hit
+congestion and you drop it, so dropped it in half. Then you start probing
+for bandwidth again. Maybe this time you get a
+little further higher up. But then when you
+hit congestion, you drop again and drop in half. It leads to this
+saw tooth patterns. As we said, it's
+important to reiterate, it's been shown to be this necessary
+condition for stability. Now that makes
+sense how it works, but why it works conceptually. If you recall this diagram
+of this blue line, what we said was the efficient line and this
+green line was the fair line. Anytime you get above this blue line is when you
+start hitting congestion. No matter where we're starting in terms of Host 1 and Host 2 sending, they'll
+both increase. That increase is linear. They're all going to be
+increasing at the same rate. Now when you do that decrease, when you start in
+this congestion. Both Host 2 and Host
+1 will see that, and the amount you're going
+to adjust is going to be proportional to
+their send rate. If Host 2 in this case is sending more over
+here than Host 1, Host 2 is going to drop further. Half of its amount is going to be higher than half
+of Host 1 's amount. That's why you see
+this line like this. What will happen is you're
+getting closer and closer, converging towards
+this fair line. Now, TCP additive
+increase that linear, it's pretty conservative, the amount you're probing
+the network for bandwidth. It's slow to get
+into congestion. What has been introduced is
+something called slow start, it's a weird name, but increases the
+congestion window every acknowledgment instead
+of every round trip time. What this does is create this exponential increase
+in up to some point. There is a threshold above which when you want to start getting a little more conservative, and start increasing
+linearly again. When you hear TCP slow start,
+this is what it means. With that, we conclude
+the transport layer. Next time we'll get into the
+application layer. Thanks.

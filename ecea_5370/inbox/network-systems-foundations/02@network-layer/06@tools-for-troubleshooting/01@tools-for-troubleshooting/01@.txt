@@ -1,0 +1,67 @@
+All right, for the last video in this
+module that we're going to talk about for the network layer are really
+about tools for troubleshooting. So troubleshooting is one of
+the most kind of important and sometimes the most challenging
+parts of network administration. And so there's some common
+tools that are the go-tos for at least kind of the first level checks. And so we'll cover what those are and
+roughly how they work. So the first one is ping. So this is really helpful
+to do a quick check if a server is up and if it's reachable. It also includes information
+such as round trip time so you can identify if there's
+some latency issues. And so shown here is an example of
+performing a ping to colorado.edu and you can see that you're
+getting responses and you can get how long
+the round trip time took. So how ping works is it's
+actually just a kind of specific type of packet that's
+within the payload of an IP packet. So it uses a protocol called ICMP and it performs the type of echo. And so shown here is basically your
+1.1.1.1, you want to perform ping. What actually is happening is
+it forms a message of this form, an Ethernet, IP and
+ICMP headers, sends the ICMP request destined to the IP
+address 2.2.2.2 and then that will respond with an ICMP reply. And you could see in the IPV4 header,
+we saw this before, the protocol field. So that would be protocol = 1 for ICMP. And then within the ICMP header which
+would be the payload of the IP packet, it would just say type which would
+be 0 for a request, 1 for a reply. So that's ping and ICMP. The next tool that's kind of
+useful is called traceroute and this gives you a path to a destination. So this is helpful if you think,
+all right, there's either latency issues going through the network or
+reachability issues. And you want to say, right,
+let me run a traceroute, there is reachability or latency issues. I want to see the path of routers
+that it's going through and maybe there's something unexpected. So for example, I see in a message go,
+I'm in Colorado and I'm just connecting to
+a server locally but my messages are going all the way
+to Europe or something like that. And so that's some sort of indication
+of a problem and I can identify that by looking at the routers, this trace
+of routers that it's going through. So how this is implemented is if you recall the TTL field, the time to live. So what you do is, let's say we have this
+kind of topology in between the client. This is my machine that I
+want to do a traceroute from and then in between that to the server
+that I want to do a traceroute to, and then there's the sequence
+of routers in between. So how do I discover each? Is I first send a message with
+the destination to 2.2.2.2 and I set the time to live field = 1. So when I send that out, when it gets
+to the first router, it's going to decrement the time to live field and
+then it's going to drop the packet. But many routers will actually say,
+not just drop the packet silently but they'll actually respond with an ICMP
+message that says the type, time exceeded. So it actually indicates
+there's a problem here and this is a good troubleshooting,
+that's the reason why they do it. But to support traceroute
+also it can be used for that. So it'll set its source address, send it back to whoever was
+the original source and set the ICMP as type 11. So when that gets back,
+now this traceroute utility knew, all right,
+at one hop I have 5.5.5.5 is the router. Then I'll send another packet
+as destined to 2.2.2.2, set the time to live field now 2,
+I want to go two hops. And so it goes to the second hop and
+it gets the time exceeded. Now, some of the kind of responses,
+not all routers support this and so that's where you might see just kind of
+blank lines or the starred lines in that. All right, so that's traceroute. Now, the last one is called iperf or
+iperf3 for the third version of it. Now, iperf allows you to determine the max
+throughput between a client and a server. And so this is useful when you start
+seeing some performance issues and you want to start narrowing
+it down to what's going on. Is it something with the application? Is it something inside of the network? And so you can run an iperf test
+by running a client version, that's what the dash C stands for
+and then a server version. So what this will do is it'll open up,
+it'll listen for connections, and then the iperf program will start sending
+traffic to the destination to 2.2.2.2. And it'll keep increasing and
+it'll try to find, what is the maximum amount
+of traffic that it can send? And then it'll start reporting
+at each interval and then it'll kind of stabilize
+once it's found that. And you can see in this case it's saying
+the rate that it's able to send at is 94 megabits per second. All right, so those are just
+some tools that are useful for troubleshooting at the network layer. And with that, we kind of wrap up
+the videos for the network layer module. Thanks.

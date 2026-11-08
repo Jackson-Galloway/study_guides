@@ -1,0 +1,203 @@
+Let's get started.
+Welcome. This time, we're going to talk about
+a data center fabric, and we're going to
+focus on one from Microsoft Azure called VL2. To really understand cloud
+networking and we understood, virtualization and how
+virtual machines get created, now we makes sense to
+move on to how all of those machines are interconnected with
+its network fabric. This will be our first academic paper that
+we're going to look at. This was a paper published in a conference called
+Sigcomm in 2019, and here's the title, and this paper is linked
+in the resources. It came out of a lot of
+researchers at Microsoft. Provided in the context,
+we've seen this before. We've seen the talk about the hyperscale provides
+us these cost benefits. There's this cost
+of electricity, of network, all these
+economies of scale. We saw in the Berkeley paper, they had this nice table. It was from a while
+ago, but it really highlights the efficiencies that you can get from
+economies of scale. This paper talked about
+the other side of cost. From the VL2 paper, they say the cost is
+huge, it's upwards. This was in 2009, so quite a while ago. It costs upwards of $12
+million per month for 100,000 server data center. More recently, AWS is spending 12 billion on
+five new data centers, according to this article. There's a lot of cost to
+actually run these data centers. This paper was really talking
+about how to maximize the efficiency to make it a reasonable business model to actually operate these things. Some of the tenants of
+Cloud scale data centers. First is the agility, the ability to assign any
+servers to any services. This allows you to
+boost utilization. If I'm not constrained, I'm aware I'm actually placing the various compute loads or the virtual machines
+that are coming in. The second is being
+able to scale out. Being able to use large pools
+of commodity resources, which allows us to
+achieve reliability, performance, and low cost. The economies comes from the statistical multiplexing
+of being able to use. You got these pools of
+resources and being able to apply a bunch of customers VMs, just launch them on a variety of servers and anywhere
+in the data center. You get that multiplexing of when the workloads
+will be higher, when customers might launch different virtual
+machines and so forth. Then on top of that, you get this economies of
+scale that we've talked about. The status quo at the time is
+shown in this picture here. This is the conventional
+data center network. The reference was this
+Cisco reference design that they published called load balancing
+datacenter services. We see the datacenter has this layer 2 design where they have a bunch of switches
+and then racks of servers. Those are interconnected
+through access routers. This creates this
+layer 3 domain, so IP is the layer 3 and
+then Ethernet layer 2. Then you have different blocks. These blue box would be replicated connecting to
+different access routers. Then those are all connected
+through quo routers. Some of the problems
+with this is one, this is dependent on high
+cost proprietary routers, the Cisco routers
+that especially as they get further up
+here, they quite costly. Second problem with
+this is there's this really limited server
+to server capacity. You have different over subscription amounts
+depending on how far up in the
+hierarchy you're going. Crossing the entire
+data center across these limited links it does have this limited
+server to server capacity. Then also there's this resource
+fragmentation problem. As mentioned these have
+this layer 2 domain, and it's how these
+are partitioned at the IP layer or Layer 3
+is through sub netting. If you have this Cloud resource, I'm a customer in this case, Microsoft, I'm starting to launch a bunch of
+my application. Then if Microsoft
+had to put some of my application in a completely
+different IP subnet, well, then that causes some challenge, not just beyond
+the link capacity, but it's really
+fragmenting the resources. I could either try
+to enable that or limit the scale that any given service and keep them restricted
+to a particular domain. This is just showing that
+you have to do this layer 2, layer 3 reconfiguration
+to be able to support this picture. In short if you do
+restrict things there's revenue lost opportunities and then there's the expenses of
+running all these servers, and you're wasting that by
+not being able to utilize it. This brings us to their work beyond just educating us on the problems
+in a data center. But some of the challenges
+to understand it, they instrumented a large
+cluster for data mining, and they identified
+distinctive traffic patterns. They really wanted to
+understand what does Cloud traffic look like
+in these data centers. What they noted were the traffic patterns
+are highly volatile, where a large number of distinctive patterns exist
+even in a given day. These traffic patterns
+are unpredictable. There's really no correlations. There's a very weak
+correlation between the patterns and time of
+day and things like that. If we're to use standard traffic
+engineering capabilities, or approaches, these
+optimizations should really be done
+frequently and rapidly. What they came to
+was really just we need a huge layer 2 switch
+or an abstraction of one. As mentioned one of the tenets of the Cloud
+scale data center is being able to just put any virtual machine
+in this case, for a customer in any
+one of the servers. What they want is to
+create this illusion of a huge layer 2 switch
+where it provides these layer 2 semantics as if all these blue ones are on
+the same local area network, and provide uniform, high
+capacity among all of them, and then performance
+isolation such that just because orange A
+has to talk to this orange A, shouldn't interfere with
+these blue servers. How they do this, this is a summary of the entire
+paper and one slide. Their objective is the
+layer 2 semantics. Their approach to that is
+employing fast addressing. They introduce this name, location separation through
+a resolution service. We'll see that in a second. Next is this high uniform high
+capacity between servers, and they want to guarantee
+the bandwidth across all of the different servers to be able to talk to
+their own servers, like all those oranges
+and all the blues, to be able to talk
+together effectively. They introduced this flow based random traffic and direction
+or valiant load balancing. Then they want the
+performance isolation, and they want to use only
+existing mechanisms, and effectively, they
+can do that with TCP. One of the key
+interesting pieces of this paper was how they handle
+addressing and routing. You know about RP and if you
+had to have a layer 2 domain across an entire data center
+of 100,000 plus servers, that's just not going
+to be scalable with all that broadcast traffic and trying to find
+where things are. They created this
+separation between the names of the servers and the location
+where they're at. This allows to use flat
+address in and across that. What this allows you to really be able
+to put any service, any virtual machine
+on any server. It can maintain a
+single flat name. It's not like IP subnetting, where where you place it
+says here's your identity. Your IP address has to
+be within that subnet. This is what that's showing. Then, within the network itself, the location is really just they have this
+link state routing protocols to maintain the
+switch level topology. All the switches,
+like the top of REC, that's what TOR stands for. All of them know how to
+find where they are. But now how does
+each of the servers? So we have say a VM named x. How do we know it wants
+to contact something z? These are layer 2 addresses, so these are flat,
+Ethernet addresses. How does that actually happen? What they created was a directory service in
+place of something like RP. Instead of RP going out
+over and being broadcast, they would look up
+like, where is z? It would go to this
+directory service, and then it would say, oh, z is at the top of REC 3. Then they can tag, put a little extra header on their packets to say
+the real destination, or destination is top of REC 3, and then top of the REC 3
+can decapsulate that part, and then it will get
+to in this case, y, or z, wherever
+it's looking to go. If these are moved, like z was here, and it moves to top of REC 4, z doesn't need to
+get a new identity. It just updates in the
+directory service, saying, I'm going to move
+from top of REC 3, and then this would get
+updated to say top of REC 4. This allows them to use the low cost switches in
+the core of the network, and it protects the
+network and the host from any churn on the host, and it obviates the host
+and switch reconfiguration. The next key innovation
+they had was to really investigate
+different topologies. They really came across and identified the Clos network as a network that can offer
+huge aggregated capacity and multiple paths at a modest cost. The properties of these
+types of networks. If you have D,
+which is the number of ports on a given switch, so when we say topology, that's how each server is connected or each switch is interconnected
+with other switches. This is a particular pattern. There's other patterns
+like we saw earlier, which was, I believe, a fat tree where the links get fatter as you go
+up the hierarchy. This is a different topology. You could see it can
+really scale to a lot of servers with a modest number of ports making these
+cost effective. But then another thing
+that they noticed was these traffic patterns
+or TM traffic matrices. All traffic matrix is
+saying so here's like T1, T2, T3, T4, T5 and T6. Those become your rows
+and your columns, and then each entry is how much traffic would go from T1 to T2, how much from T1 to T3, T1 to T4, and so forth, and that
+becomes a matrix. If these traffic matrices
+are changing frequently, you either have to optimize your network to be
+able to handle that, or what they're saying is, well, can we just arbitrarily
+or be able to handle these arbitrary
+traffic matrices? The way they do that is
+through random indirection. They talk about this theory of valiant load balancing
+in the paper, and it's basically if you can, T1 wants to talk to T6, randomly bounce it
+off of any one of these three switches
+that are shown up here. Your path goes up to 1 and
+then it's arbitrary path. What this does is it really
+just randomizes everything and causes really good traffic
+engineering properties. They can also with that
+leverage just ECMP, which is equal cost multipath, that's standard technology
+that exists today. All this allows them to harness the huge bisection
+bandwidth available, obviate the esoteric traffic
+engineering or optimization, ensures robustness and failures, and it works with switch
+mechanisms available today. The paper has a lot more
+really goes in depth. But just to give you a highlight of the
+innovation that was needed and how
+these Cloud systems have to be redesigned
+and rethought, it achieves VL2, achieves agility at scale
+by the L2 semantics allowing any VM to be
+located on any server. This uniform high
+capacity between servers to be able to support all those different
+traffic patterns, and then performance
+isolation between services. I don't want these
+environments are multi-tenant. There's going to be a bunch of different companies using
+the same infrastructure so you can't have
+them interfering. Randomization contain
+the volatility. They added functionality
+where they had to control, which is in that hypervisor
+layer in between the virtual machine and
+where the network started, so they can intercept those
+and redirect that traffic to a directory server where
+they could look up where you go and encapsulate any
+traffic as needed. There's no need to wait.
+All this technology is ready available like
+commodity switches and things like that. With that, definitely
+go read the paper, and think about all the
+design that they did. With that, we will see
+you next time. Thanks.

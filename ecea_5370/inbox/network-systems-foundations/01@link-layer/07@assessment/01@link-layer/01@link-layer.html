@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Link Layer</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of these is a valid Ethernet MAC address</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~3Oo8Aa" type="checkbox"/> <div class="quiz-option-text"><p>20:f1:9e:bd:3b:18</p></div></li>
+<li><input name="autoGradableResponseId~3Oo8Aa" type="checkbox"/> <div class="quiz-option-text"><p>FF:FF:FF:FF:FF:FF</p></div></li>
+<li><input name="autoGradableResponseId~3Oo8Aa" type="checkbox"/> <div class="quiz-option-text"><p>2001:db8:85a3:8d3:1319:8a2e:370:7348</p></div></li>
+<li><input name="autoGradableResponseId~3Oo8Aa" type="checkbox"/> <div class="quiz-option-text"><p>10.10.2.10</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of these is not a field in the Ethernet header</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~LxBbDx" type="radio"/> <div class="quiz-option-text"><p>Quality of Service (QoS)</p></div></li>
+<li><input name="autoGradableResponseId~LxBbDx" type="radio"/> <div class="quiz-option-text"><p>Destination (dst)</p></div></li>
+<li><input name="autoGradableResponseId~LxBbDx" type="radio"/> <div class="quiz-option-text"><p>Source (src)</p></div></li>
+<li><input name="autoGradableResponseId~LxBbDx" type="radio"/> <div class="quiz-option-text"><p>Type</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>For even parity, what would be the parity bit for this data: 0101 0001</p></div></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Indicate which of the following is a characteristic of the Ethernet FCS field</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~8W9fVV" type="checkbox"/> <div class="quiz-option-text"><p>Can detect a single bit error</p></div></li>
+<li><input name="autoGradableResponseId~8W9fVV" type="checkbox"/> <div class="quiz-option-text"><p>Can detect burst errors</p></div></li>
+<li><input name="autoGradableResponseId~8W9fVV" type="checkbox"/> <div class="quiz-option-text"><p>Can be calculated as the data is arriving off of the wire</p></div></li>
+<li><input name="autoGradableResponseId~8W9fVV" type="checkbox"/> <div class="quiz-option-text"><p>Is used to determine vendor of the network card</p></div></li>
+<li><input name="autoGradableResponseId~8W9fVV" type="checkbox"/> <div class="quiz-option-text"><p>Can fix any single bit error</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which is a negative property of channel partitioning (e.g., time or frequency division multiplexing)?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~m9yMSy" type="radio"/> <div class="quiz-option-text"><p>The channel isn’t efficiently used unless all nodes have data to send</p></div></li>
+<li><input name="autoGradableResponseId~m9yMSy" type="radio"/> <div class="quiz-option-text"><p>Collisions occur frequently</p></div></li>
+<li><input name="autoGradableResponseId~m9yMSy" type="radio"/> <div class="quiz-option-text"><p>A sender can become blocked from being able to transmit its data</p></div></li>
+<li><input name="autoGradableResponseId~m9yMSy" type="radio"/> <div class="quiz-option-text"><p>It requires complex coordination with an arbiter</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In CSMA / CD, how does a node detect whether the transmission encountered a collision or not?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~vgE3kL" type="radio"/> <div class="quiz-option-text"><p>The protocol ensures collisions cannot occur</p></div></li>
+<li><input name="autoGradableResponseId~vgE3kL" type="radio"/> <div class="quiz-option-text"><p>It will simultaneously read from the channel while transmitting, and compare the read and sent values – if different, a collision occurred</p></div></li>
+<li><input name="autoGradableResponseId~vgE3kL" type="radio"/> <div class="quiz-option-text"><p>The receiver will send an ACK back to the sender indicating it successfully received the message</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In CSMA / CA, how does a node detect whether the transmission encountered a collision or not?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~4BEOBv" type="radio"/> <div class="quiz-option-text"><p>The receiver will send an ACK back to the sender indicating it successfully received the message</p></div></li>
+<li><input name="autoGradableResponseId~4BEOBv" type="radio"/> <div class="quiz-option-text"><p>It will simultaneously read from the channel while transmitting, and compare the read and sent values – if different, a collision occurred</p></div></li>
+<li><input name="autoGradableResponseId~4BEOBv" type="radio"/> <div class="quiz-option-text"><p>The protocol ensures collisions cannot occur</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given a switch with MAC table with (20:30:40:50:60:70 – port 0), if it receives a frame with destination FF:FF:FF:FF:FF:FF, what will it do?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~9hxPCN" type="radio"/> <div class="quiz-option-text"><p>Forward out port 0</p></div></li>
+<li><input name="autoGradableResponseId~9hxPCN" type="radio"/> <div class="quiz-option-text"><p>Drop</p></div></li>
+<li><input name="autoGradableResponseId~9hxPCN" type="radio"/> <div class="quiz-option-text"><p>Forward out all ports</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given a switch with MAC table with (20:30:40:50:60:70 – port 0), if it receives a frame with destination 20:30:40:50:60:70, what will it do?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~YTskZf" type="radio"/> <div class="quiz-option-text"><p>Forward out all ports</p></div></li>
+<li><input name="autoGradableResponseId~YTskZf" type="radio"/> <div class="quiz-option-text"><p>Drop</p></div></li>
+<li><input name="autoGradableResponseId~YTskZf" type="radio"/> <div class="quiz-option-text"><p>Forward out port 0</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Given a switch with MAC table with (20:30:40:50:60:70 – port 0), if it receives a frame with destination 20:30:40:22:AA:22, what will it do?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~9X48tz" type="radio"/> <div class="quiz-option-text"><p>Forward out all ports</p></div></li>
+<li><input name="autoGradableResponseId~9X48tz" type="radio"/> <div class="quiz-option-text"><p>Drop</p></div></li>
+<li><input name="autoGradableResponseId~9X48tz" type="radio"/> <div class="quiz-option-text"><p>Forward out port 0</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

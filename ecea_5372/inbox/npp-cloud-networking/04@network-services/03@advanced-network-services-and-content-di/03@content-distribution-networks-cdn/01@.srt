@@ -1,0 +1,526 @@
+1
+00:00:07,040 --> 00:00:09,480
+Let's go ahead and get started.
+
+2
+00:00:09,480 --> 00:00:10,960
+This time, we're
+going to talk about
+
+3
+00:00:10,960 --> 00:00:14,765
+content distribution
+networks or CDNs.
+
+4
+00:00:14,765 --> 00:00:18,705
+This whole module is
+about network services,
+
+5
+00:00:18,705 --> 00:00:21,885
+and the first network service
+
+6
+00:00:21,885 --> 00:00:24,400
+we went through is a
+really important one.
+
+7
+00:00:24,400 --> 00:00:26,100
+That's load balancing.
+
+8
+00:00:26,100 --> 00:00:28,320
+Here is another network service
+
+9
+00:00:28,320 --> 00:00:32,430
+Google provides, and that's CDN.
+
+10
+00:00:33,950 --> 00:00:37,400
+Let's take a review of HTTP.
+
+11
+00:00:37,400 --> 00:00:39,240
+We showed this before when
+
+12
+00:00:39,240 --> 00:00:41,260
+we went through load balancing.
+
+13
+00:00:41,260 --> 00:00:42,965
+It's worth showing again.
+
+14
+00:00:42,965 --> 00:00:48,320
+HTTP is the web's
+application layer protocol,
+
+15
+00:00:48,320 --> 00:00:52,640
+and client and server
+exchange web objects,
+
+16
+00:00:52,640 --> 00:00:57,105
+like HTML files,
+JPEGs, and so forth.
+
+17
+00:00:57,105 --> 00:01:01,950
+A PC running a browser
+
+18
+00:01:01,950 --> 00:01:05,700
+sends a request to the server
+and it gets a response,
+
+19
+00:01:05,700 --> 00:01:07,725
+and that file is sent to it.
+
+20
+00:01:07,725 --> 00:01:12,050
+A different device
+would do request,
+
+21
+00:01:12,050 --> 00:01:13,610
+perhaps for the same file,
+
+22
+00:01:13,610 --> 00:01:15,450
+and then get the response.
+
+23
+00:01:15,450 --> 00:01:18,460
+Maybe it's looking for blah.gif.
+
+24
+00:01:18,710 --> 00:01:21,840
+How this looks
+across the Internet?
+
+25
+00:01:21,840 --> 00:01:23,490
+If you recall, the Internet is
+
+26
+00:01:23,490 --> 00:01:25,500
+a bunch of autonomous systems.
+
+27
+00:01:25,500 --> 00:01:27,480
+A client, these
+
+28
+00:01:27,480 --> 00:01:29,910
+are our two clients and
+let's say our server,
+
+29
+00:01:29,910 --> 00:01:31,690
+well, they're going to make
+
+30
+00:01:31,690 --> 00:01:34,630
+their requests across
+this Internet.
+
+31
+00:01:34,630 --> 00:01:37,650
+It's going to traverse
+many of these networks.
+
+32
+00:01:37,700 --> 00:01:42,070
+This leads to potentially
+some poor performance,
+
+33
+00:01:42,070 --> 00:01:45,420
+reliability, scalability issues.
+
+34
+00:01:45,420 --> 00:01:49,370
+There's a single point
+of failure back here,
+
+35
+00:01:49,370 --> 00:01:53,430
+easy to be overloaded,
+to overload the server.
+
+36
+00:01:53,430 --> 00:01:56,630
+There's a long latency
+of the request.
+
+37
+00:01:56,630 --> 00:02:01,570
+There's a lot of peering
+traffic that's happening.
+
+38
+00:02:01,970 --> 00:02:05,535
+It's not a great situation.
+
+39
+00:02:05,535 --> 00:02:06,980
+Now, we can alleviate
+some of those,
+
+40
+00:02:06,980 --> 00:02:10,830
+adding extra servers
+and load balancing,
+
+41
+00:02:10,830 --> 00:02:13,080
+but you still don't have
+
+42
+00:02:13,080 --> 00:02:15,690
+all that challenge or
+
+43
+00:02:15,690 --> 00:02:18,560
+those problems going
+across the Internet.
+
+44
+00:02:18,560 --> 00:02:22,240
+What a CDN is looks like this.
+
+45
+00:02:22,240 --> 00:02:29,590
+It's this virtual network
+where the CDN provider
+
+46
+00:02:29,590 --> 00:02:32,850
+creates a network
+with servers at
+
+47
+00:02:32,850 --> 00:02:35,370
+the edge and a lot of
+
+48
+00:02:35,370 --> 00:02:38,930
+peering agreements with
+network providers.
+
+49
+00:02:38,930 --> 00:02:41,630
+Then content providers,
+
+50
+00:02:41,630 --> 00:02:44,590
+namely the one that's
+running the server,
+
+51
+00:02:44,590 --> 00:02:47,610
+signs up with the
+CDN provider and
+
+52
+00:02:47,610 --> 00:02:51,150
+specifies here's
+my origin server.
+
+53
+00:02:51,150 --> 00:02:56,100
+Client requests then
+go to the CDN servers.
+
+54
+00:02:56,100 --> 00:02:58,410
+Completely, they don't ever
+
+55
+00:02:58,410 --> 00:03:00,835
+interact directly with
+the origin server.
+
+56
+00:03:00,835 --> 00:03:07,530
+The client would go to its
+nearest CDNs edge server.
+
+57
+00:03:07,530 --> 00:03:10,790
+That edge server would
+say, do I have it?
+
+58
+00:03:10,790 --> 00:03:14,055
+No. It will contact
+the origin server,
+
+59
+00:03:14,055 --> 00:03:17,520
+and then it will
+cache the content.
+
+60
+00:03:17,520 --> 00:03:25,590
+It may exchange it with other
+servers in its network,
+
+61
+00:03:25,590 --> 00:03:27,030
+but let's assume it's real
+
+62
+00:03:27,030 --> 00:03:31,170
+simplistic and it
+just caches it here.
+
+63
+00:03:31,170 --> 00:03:33,170
+Let's say this other client then
+
+64
+00:03:33,170 --> 00:03:35,550
+accesses the same content.
+
+65
+00:03:35,550 --> 00:03:40,605
+It will hit it directly at
+this server and return.
+
+66
+00:03:40,605 --> 00:03:43,635
+Because the content is cached,
+
+67
+00:03:43,635 --> 00:03:46,880
+it was basically very
+minimal network traffic
+
+68
+00:03:46,880 --> 00:03:49,480
+across this full path
+
+69
+00:03:49,480 --> 00:03:52,760
+and very minimal load
+on the origin server.
+
+70
+00:03:52,760 --> 00:03:54,705
+Just enough for this guy,
+
+71
+00:03:54,705 --> 00:03:57,165
+this CDN server,
+
+72
+00:03:57,165 --> 00:03:59,680
+to get the content.
+
+73
+00:04:00,830 --> 00:04:06,970
+Google provides
+basically this service.
+
+74
+00:04:08,570 --> 00:04:10,820
+Well, the three main things
+
+75
+00:04:10,820 --> 00:04:12,200
+is you're going to
+create the origin,
+
+76
+00:04:12,200 --> 00:04:14,520
+you specify what
+that origin server
+
+77
+00:04:14,520 --> 00:04:17,025
+is or origin of the content,
+
+78
+00:04:17,025 --> 00:04:22,035
+point it to some
+backend service,
+
+79
+00:04:22,035 --> 00:04:28,875
+and configure how it
+should cache the content.
+
+80
+00:04:28,875 --> 00:04:32,070
+Let's go over to our console.
+
+81
+00:04:32,070 --> 00:04:38,115
+I can type in CDN and
+upward Cloud CDN.
+
+82
+00:04:38,115 --> 00:04:40,160
+In this, if you
+wanted to find it,
+
+83
+00:04:40,160 --> 00:04:45,840
+it would be under network
+services, those main things.
+
+84
+00:04:45,840 --> 00:04:47,775
+Now, the different
+backends you can have,
+
+85
+00:04:47,775 --> 00:04:49,305
+a backend bucket,
+
+86
+00:04:49,305 --> 00:04:51,300
+so using Google storage.
+
+87
+00:04:51,300 --> 00:04:54,225
+We could specify
+a backend service
+
+88
+00:04:54,225 --> 00:04:58,060
+like that flask gap that we ran,
+
+89
+00:04:58,060 --> 00:05:01,610
+put some load balancers
+in front of it,
+
+90
+00:05:01,610 --> 00:05:04,020
+and we can say that
+backend service.
+
+91
+00:05:04,020 --> 00:05:06,140
+I don't have that
+running anymore.
+
+92
+00:05:06,140 --> 00:05:09,630
+Another thing you can do
+is this custom origin.
+
+93
+00:05:09,630 --> 00:05:12,700
+Maybe I have a server.
+
+94
+00:05:12,700 --> 00:05:15,260
+Let's say it's
+running at my house.
+
+95
+00:05:15,260 --> 00:05:17,280
+I have an IP address.
+
+96
+00:05:17,280 --> 00:05:21,615
+I'm just going to make up
+a fake one for right now,
+
+97
+00:05:21,615 --> 00:05:26,410
+and it's port 8888 let's say.
+
+98
+00:05:26,750 --> 00:05:32,290
+We're going to call
+this Eric's origin.
+
+99
+00:05:33,530 --> 00:05:36,555
+I could just point Google
+
+100
+00:05:36,555 --> 00:05:40,720
+to my backend server
+that I'm running.
+
+101
+00:05:41,930 --> 00:05:45,795
+Then I would attach it to
+
+102
+00:05:45,795 --> 00:05:48,645
+an existing load balancer
+
+103
+00:05:48,645 --> 00:05:53,100
+or I can create a
+new load balancer,
+
+104
+00:05:53,100 --> 00:05:57,250
+and they'll do it for me.
+
+105
+00:05:58,880 --> 00:06:03,435
+Then I can configure the cache.
+
+106
+00:06:03,435 --> 00:06:09,670
+A bunch of different settings,
+
+107
+00:06:09,670 --> 00:06:14,390
+and this is going to depend
+on what makes sense for
+
+108
+00:06:14,390 --> 00:06:17,280
+your particular web server that
+
+109
+00:06:17,280 --> 00:06:20,820
+you're running and all of that.
+
+110
+00:06:20,820 --> 00:06:22,990
+It's pretty
+straightforward, and then
+
+111
+00:06:22,990 --> 00:06:27,410
+Google's global network
+basically takes over from there.
+
+112
+00:06:27,410 --> 00:06:30,605
+I'm not going to click "Create".
+
+113
+00:06:30,605 --> 00:06:33,410
+It takes a bit to spin up.
+
+114
+00:06:33,410 --> 00:06:37,920
+You can get the drift just
+from looking at this.
+
+115
+00:06:38,990 --> 00:06:43,840
+We went through those
+really straightforward.
+
+116
+00:06:44,600 --> 00:06:50,500
+With that, we'll
+stop here. Thanks.

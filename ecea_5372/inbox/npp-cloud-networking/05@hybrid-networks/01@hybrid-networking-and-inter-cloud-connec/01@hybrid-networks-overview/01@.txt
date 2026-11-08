@@ -1,0 +1,25 @@
+Let's go ahead and get started. This marks a new module
+about hybrid networks. Let's get into this. We've focused on Google Cloud, where all your
+infrastructure is in GCP. We learn different network
+services to use and how to interconnect virtual machines and all the nuances of that. But sometimes
+companies will have some of their IVT
+infrastructure in their corporate offices that need to interface to the infrastructure
+deployed in the Cloud. For example, data
+is stored in GCP, but the employees that
+are working need to be able to access it and make queries on it from the office. Sometimes the infrastructure is hosted in co-location
+facilities. Maybe companies built their infrastructure
+around co-location, and they want to
+expand into the Cloud, but want to have the
+two infrastructures, to be able to work together. Then there are cases, maybe a company wants
+to use multiple Clouds, maybe they're built in GCP, but they see a lot of partnerships between
+Azure and OpenAI, and they want to leverage some of that
+infrastructure in Azure. All of these cases, there needs to be
+network connectivity. All of them need networking. There's different ways you
+can go about doing this, so you can trade off
+different properties, the security, the reliability, and the performance, the
+cost, the development effort. All of those could lead
+to different choices. We're going to go through three different network services or approaches to being able to interconnect those
+different things, namely VPN, from branch
+offices, really anywhere, but just fitting into the
+theme of these slides, direct connect from co-location, and the intercloud connections. With that, we'll
+end here. Thanks.

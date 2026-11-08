@@ -1,0 +1,164 @@
+All right, welcome. So on this one we're
+going to talk about some Linux utilities for
+IP networking in Linux. So just stepping back, make sure we're all
+on this same page, same understanding, let's just kind of give
+a little background. So internetworking is one
+of the key parts of IP, it's the Internet protocol. So this is really about
+enabling communication between multiple heterogeneous networks. So if you recall at the link
+layer like Ethernet or Wi-Fi or any of those, well,
+we're going to have local area networks that are on various
+different technologies. So IP is the protocol that really
+binds all of these together and enables the communication across them. So the key here is this
+view from a paper in 1974 where they introduced
+the concept of a gateway. And this is put a router at the edge of
+each network that, [COUGH], can translate effectively between the boundaries of
+the two different networks, all right? And it was called a gateway in that paper. So addressing here in IP is as follows. So each interface gets an IP address. So shown here we have a diagram
+of couple end hosts and then a couple network elements in between. And so each of the interfaces would
+get an IP address, all right? IPv4 is kind of what's been
+most commonly used for the past 1020 whatever years. And it's 32 bits in dotted decimal. So you'll see an address like this,
+192.168.0.1. So all of that is 32 bits. Now IPv6 is certainly
+gaining a lot of momentum and becoming pretty ubiquitous by now. And so
+this is just a lot bigger addresses. So 128 bits, all right? And then because they're bigger, they have its own way of kind
+of displaying the addresses. So the first Linux utility to know about is called ip addr or IP address. You can write out the full
+name if you want. So here, each device,
+if it's participating in IP networking will have at least one address to
+use the corresponding protocol. And it's possible to have several
+different addresses attached to one device. And when we say device, these are the things that you can
+set up with the IP link utility. So an ethernet device,
+a bridge, GRE tunnel, all of those different things
+are what we call in a device. So here's the demand page,
+you can go look at all the options it has, but the main way you'll be using it is you
+specify ip addr and then some command. So a command would be add as shown here. But there's also commands to remove,
+show, change, all of those. Then you specify the device,
+so dev eth1 that you want to apply this address to and
+then the address, right? It's pretty simple. And so that's a command. Now, the address eth1 has the address or the device eth1 has the address 10.0.1.2. If I did ip addr show,
+I would be able to see that. All right, so with that, now let's move on
+to really what is the role of a router? So routing is what computes paths
+by coordinating with neighbors. And then forwarding is the thing that
+directs traffic to a destination. So shown here is a bunch of
+networks all connected together. These are routers that are running. And, [COUGH], the routing protocol would
+communicate between each other to say, here's the path,
+here's paths I know about, and they'll all determine what's
+the best path that they should take. And it's all dependent on what
+routing protocol is being run. Then when a host wants to actually
+send traffic, it would send it, and then the forwarding or the data plane
+of the router would take what was pre-computed as those paths and say,
+I know how to get to the destination. So for this particular destination,
+I'm going to go through this sequence of routers and each one only really
+has to know what its next hop is, and then the next one will figure out
+how it's forwarding the traffic. All right, so
+we talked about the address and how to add it in Linux. And really there's
+a concept called a prefix. So an IP prefix is of the form a.b.c.d/z. So we might see something like 2.1.1.0/24. So that z, or in this case 24,
+indicates how many of the upper order bits uniquely
+specifies that group. So this represents several IP addresses in the range 2.1.1.0, 2.1.1.1, 2.1.1.2, and so forth, right? Because it's the upper 24 bits. If we drew this out, so
+each of these numbers in the dotted decimal
+format is eight bits. So that's why it's 8,
+16, 24 represents, and that's why those first three numbers
+in this case is what I was pointing to. So why this is important in the Internet
+is because it adds scalability. So now instead of having to know all
+the addresses on the Internet and how to get to them, this router
+right here just has to know for anything that's 2.1.1.0/24. So anything that the first
+24 bits has those values, I'm going to send it out port1. I didn't have to know about
+all of the addresses, I just need to know, send it out port1. When it gets closer to the destination, it may split that out, or probably it
+will split it out such that it knows how to get to each individual
+elements at once within that network. But I didn't need to know that
+in the rest of the Internet. And that's what makes this scalable. All right, and then with that, what that means is we have to do
+longest prefix matching or LPM. And this is in each of the routers, it's finding the most specific
+prefix that matches the destination. So if you recall from a previous
+course inside of the router, we'll have a table,
+the forwarding table, and it will have a bunch of different entries,
+right? So here we have two different entries
+where the first 16 bits are the same, 11.11, but the 24 is a longer prefix. So this is more specific. So if we see traffic
+destined to 11.11.11.11, it'll actually choose this second
+entry and then send it out port2. If it was just say 11.11.12.12, well,
+it would only match this first entry, this first 16 bits and so
+it would send it out port1. So that's longest prefix matching. [COUGH], all right, so
+final kind of preview or review slide is talking about
+the generic router architecture. And so this is showing IP forwarding. So in general,
+a packet comes in with a header which includes some
+destination IP address. Inside of the router will
+be a forwarding table. And so this is like what we were
+showing on the previous slide. And so the IP address for that,
+that is part of in the header, the destination will be looked up
+using longest prefix matching in the forwarding table,
+which will tell what the next hop is. Then the header will be updated. We'll queue the packet up when
+storing in some packet buffers and send it out the specific network
+interface as determined by the lookup. So Linux has all that,
+we've talked about that. Linux has that and a utility that exists. The next one we're going to
+talk about is called IP route. And so this is the utility for Linux
+forwarding table management, all right? So you can find the demand page but
+you can say much like the rest of the commands that we're seeing as part
+of this IP route two utility package, it's going to say, IP route or IP and
+then some command like route and then whatever the command is
+that we're using the utility. All right, so here's kind of
+snippet from the man page and if you haven't kind of seen things
+like this before, how to read it. So IP route, that's the command. It'll be one of these. So this is an or and
+then you specify the route. So you come down here and
+what does a route mean? A route consists of a node spec and optionally an info spec, all right? So the node spec, then you come down here
+and say what does the node spec look like? Well, it'll have all of these, so
+key, it'll have a prefix, all right? And then you can specify other things like
+a table and things like that, all right? So all of that is the node spec. And then if we look at the info spec,
+here, we're seeing similar things. Here's a next top or an NH. Come down to NH, it's going to be things
+like via some address or dev, some string. All right, so let's put this all together. This shown here is a common
+one that you'll be seeing, and we're going to use IP route add. So the command is add. So we're adding an entry
+to the routing table. We're going to give it the prefix,
+all right? So that's as part of the node spec. Here's this prefix, but we're not specifying any other
+options as part of this. And then as part of that infosec and the NH we're going to say
+the dev string or dev eth3. And so that's that kind of next top field. So this is adding an entry
+that's saying IP route add this prefix with
+the next top going out eth3. So we saw there's an option to have a via. So if you see here,
+we could have said dev or we could have said via some address. They can include both. But what does the via do? So we might have a command like
+IP route add all of that via some address device eth3 or
+ip route add device eth3. So what the via does is
+it indicates that there's a hop in between at the IP layer, right? So it indicates that the next hop
+is not going to be the destination. And why this is important is
+because of what is happening between each of these routers
+is there's a layer two here. So in Ethernet we have MAC addresses. So when this guy on the left
+hand side receives a packet and is destined to some destination, let's say 11.11.11.1.1, well, if it has the via keyword
+in it to create this entry, that means it knows when
+it does the next hop, it should actually not just send
+the packet out and look for the address 11.11.1.1 in the ARP table or
+the MAC address table. Instead, it should look for 192.168.2.1. And that's what it can set. It'll set the destination
+MAC address of whatever the next router is with this 192.168.2.1. So it won't include that IP
+address as part of it, but it will be in the MAC address. Now in this one because it is directly
+connected, then the end host, that's the destination here
+you would not need the via or not use the via because
+when it wants to send it, it wants to send it to
+the MAC address of 11.11.1.1. All right, so that's the difference
+between with via and without via. So we just kind of overviewed this,
+mapping the IP to a MAC. So here X wants to talk to Y on a LAN. X more likely knows the IP address of Y. Maybe it's the name of the server and we've previously covered
+DNS in a different course. But this allows for consistent
+communication in a larger network. But, the link layer communication
+is done with MAC addresses. And so
+this is where the ARP protocol comes in. So as I was saying,
+when you have the address to look for what the next hop is,
+you're still sending it out device eth3. But what are you ARPing for? You're saying I'm looking for
+some IP address, what's its MAC address, all right? So it would either be the 192 address and then get a response for
+that so that it can send the Ethernet frame or
+it would ARP at the IP, the 11.11.1.1, all right? So that's ARP. And what's stored is an ARP table or
+neighbor table or a MAC address table. There's different names you can use for
+it, but what it's storing is what the neighbor is and
+what its MAC address would be, all right? And so ARP happens when you
+do a lookup in this table, you don't find the IP address
+you're looking for and you do ARP. All right, so the utility in Linux that
+helps with this is ip neigh or neighbor. And this is the arp table
+management utility for Linux. And here's the link to the man page. And here's a little snip of some commands. So there's different parts. So for the most part you probably
+don't even need to worry about this. Like ARP just happens under the table. But it's useful to know these
+because in case there's any sort of troubleshooting you want to do or
+you want to be able to avoid ARP, maybe you want consistent performance and not have to do ARP at the beginning
+of any kind of traffic stream. So you can statically add
+entries like pseudo IP, neigh, add whatever the IP address is and then the link layer address,
+the MAC address, and you can associate it with a device,
+all right? You can show the ARP table or the neighbor
+table with the ip neigh show and it'll show all of those and
+you can flush it. If you want to say ip neigh flush all. And that basically just
+deletes all the entries. If say something same IP address,
+got reassigned to a new machine then it
+would get a new MAC address. Well, maybe that's a reason
+to do the flush so that it kind of forces this to happen,
+those entries to get removed. And you can remove individual entries. So this is again mostly for
+kind of troubleshooting or special cases but
+it's definitely useful to know about. All right, so
+with that we're going to end here. Next time we'll actually pull up a demo. We'll walk through some commands,
+we'll see them working in action. All right, until then,
+I'll talk to you then. Bye.

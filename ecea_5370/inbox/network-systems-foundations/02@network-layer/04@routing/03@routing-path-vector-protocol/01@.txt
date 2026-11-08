@@ -1,0 +1,179 @@
+All right, this time, we're going to
+talk about path vector protocol. Continue on our little exploration
+of routing protocols and we're going to talk about one specific and very important one called BGP. All right, so as a reminder when
+we talked about decentralized control plane,
+what you would know as a routing protocol. There's three key questions
+to keep in mind that really distinguish these
+different protocols. And so going through these again. What information each router knows? What information each router exchanges and
+then what calculation is performed? So we'll again,
+structure the discussion of a path vector protocol kind of where
+you should by the end of this know what the answer is to
+each of these questions. So we're going to specifically talk
+about BGP, the border gateway protocol. And here's where you can find the RFC, which describes all the ins and
+outs of BGP. So the context of where this
+is used is the internet. So what is the internet? It's really just an interconnected or
+a collection. It's many interconnected networks
+called autonomous systems. And so all an autonomous system is
+some company that runs a network. So AT&T has an autonomous system. Comcast is an autonomous system. Certain kind of larger
+enterprises like the University of Colorado could be an autonomous system. And so BGP is the protocol used
+to coordinate between them. Since you only have a view of whatever
+is inside of your own network, you need a protocol to be
+able to communicate and exchange information with other
+autonomous systems out there. So the process for
+BGP in a very simplified manner is each router would
+peer with its neighbors. And then for
+any route update that you receive or a failure event or configuration change, you would update the routing table
+which is the list of known routes. Perform the locally best route
+calculation for that prefix. And if there's any change to it,
+send an update to your neighbors. So a route here,
+when we say the word route, this is just in the context of BGP,
+a path to a prefix and then a path is a sequence
+of autonomous systems and we'll see an example of this right now. All right, so in this example, we have some prefix D that's shown on the right-hand side and
+we're calling it D. But it's some IP address,
+1.2.3.0/24, let's say. And so the AS4 would be the network that either contains D or either owns D, or is kind of advertising it based on its behalf. All right, so what AS4 would do
+is it would tell its neighbors. Something called an announcement. It would announce to its
+neighbors which are AS2 and AS3 that it can reach destination or
+prefix D with a path AS4. So it says. if you want to get to D,
+you can go via AS4, the path. All right, so right here,
+we're basically making the assumption that each AS,
+each network is a single router. We'll talk about this to relax
+this in a little bit, but make that assumption that it's
+a router that represents all of AS4. It's sending to the router
+that represents all of AS2. This announcement that it can reach D,
+the prefix D via AS4. All right, so at this point, AS2 and AS3 which just received these routes. AS3, for example is going to insert
+it into its routing table like, hey, now I know how do you get to D and
+you get to it via AS4. And then it's going to exchange this
+information with its neighbors. So AS3, for example is going to now
+going to tell AS2 as well as AS1. Hey, you can get to D via the path,
+AS3, AS4. So if you want to get to D,
+you can go through me, AS3, then I'll send it to AS4 which told
+me that it can reach the prefix. All right and so
+AS2 would have done the same thing, because it previously received
+the route directly from AS4. It would send an update to AS3 that, hey, you can reach D via the path AS2, AS4 and it would also toil AS1. You can get to D via AS2,
+AS4 via this path. So if we zoom in on
+the router in the AS2 and look at its routing table
+from this particular prefix, it has known the destination. So these are the prefix and
+it has two routes that it can choose from. It has route AS2, AS4 and
+it has a route AS4. All right and it would have a next
+top kind of field as part of this, but we'll simplify the table. So since it knows about these two routes,
+it has to make a choice. And for now we're going to just say, it's going to choose this bottom one,
+the AS4 as the path and we'll come back to why it
+chose that in a little bit. At the end of all this exchange,
+here's kind of all the information. The routing table for each of these routers that each
+representing the autonomous system. All right, so now we can figure out,
+all right, D or AS2 chose this one. It's a shorter path, same with AS3. It's going to choose the direct one. AS4 has a direct connection to the prefix. Now AS1 has two choices. It can either go via AS2 or
+it can go via AS3. Both ones will get it there and
+have the same length path. So which do you think it will choose? Before answering that question, there's a little nit more information
+we need to know about BGP. All right, so one of the pieces of
+information doesn't necessarily relate to how it would choose, but
+definitely needed to understand how BGP works is what happens if
+there's some dynamics in the network. So for example, AS4, the link between AS3 and
+AS4 say it goes down. So here, AS3 which previously
+had these two entries in its routing table would detect that failure. Delete this entry, the second entry
+that says that it can reach via AS4. So it updates its routing table. And now, it's going to have to
+tell its neighbors that I'm going to withdraw that path that
+I previously told you about. I told you that you can reach D via AS3,
+AS4. That's no longer the case. All right, so
+that's the first part of this. Now the second part is because
+it has another path available, it chooses that and
+it can announce that to its neighbors. So it sends an update message. So for example,
+it sends in this picture to AS1 but it would send it to all
+of its neighbors that you can reach prefix D via AS3,
+then AS2 and then AS4. And in this case, it didn't send it to AS2 because that's
+where it learned this route from. So you wouldn't send back to AS2 like,
+hey, you can get to the prefix
+via yourself through me. So that just doesn't make sense. So this is part of the route exchange that
+you would send withdrawals, whenever. Something changed and you want to basically unannounce
+what you previously announced. And then if you've chosen a new path,
+a new route, well, you would want to tell
+people that as an update. All right, so
+now getting back to the selection process of which one would AS1 choose. Another kind of component
+of this is we saw this abstraction or
+we're making the assumption that each autonomous system
+was a single router. But in reality, these are big networks. They're going to be many, many routers. And so shown here,
+AS2 simply has two routers. So one question or
+the question shown here is when this router on the right inside
+of AS2 received that update? Well, how did the router on
+the left find out about it like now we have this new path and
+update the routing table? And so what actually happens internally,
+BGP is also run. And so when it's internal which
+is basically just exchanging between all of these routers,
+all of the information that they learned externally between
+each other, that's called i for internal, iBGP and
+then the external part of it is eBGP. Another thing,
+another aspect to learn about for BGP is well,
+how did AS4 learn about this prefix? We see it in the diagram, but
+how did it actually learn about it? So it could have learned it about it
+through a local protocol say, OSPF. So maybe there's a router here
+in AS4 that's participating in BGP with neighbors in
+other autonomous systems, but it's also participating
+in OSPF locally. And so that's how all of these prefixes,
+these link states that it learned about,
+it can now announce to its neighbors. Another option is potentially, you just configured the router
+with some static routes. You added prefix D to be something that
+AS4, the router in it should announce. All right, so that's how do
+you learn about the prefixes. Another aspect of BGP which
+makes it highly valuable and useful in the internet is
+the Internet is really a collection of companies,
+trying to make money. It's a business. And so businesses need policies. There's different business
+arrangements that occur. And so there's kind of three
+main business arrangements that two autonomous systems would have. So one, you would have a provider. This is companies that are paid
+money to transit traffic. You have the customer that
+pays money to a provider to have his traffic carried and
+then you have a peer. And this is a financially neutral
+arrangement where two **** connect to each other and
+will send traffic through each other. And it's typically,
+they're about the same size, same amount of traffic and it's kind of
+making it, so that neither has to pay. And of course, any given autonomous
+system can have both relationships. So not shown, but say AS1 needs to use a bigger provider to get to some areas. And so
+it would have AS300 as its customer, but then let's say AS400 not shown, but imagine it kind of above
+AS100 as its own provider. And so what we need is policies to be
+able to control what's being announced. If I'm paying some other company, so AS3 is 300 is paying AS100
+money to carry traffic, AS100 shouldn't be able
+to send traffic through AS300 to get it to say something in AS200. Because then, that's not making
+sense financially for AS300. So in this case, we need some policies and BGP has this ability to set policies. And to understand that,
+you can look at what the actual processing of
+BGP messages look like and it's a processing pipeline. So these are the connections to peers and
+these are just TCP sessions which we'll learn
+about in the next module, but it's a session that you're getting
+messages, these route announcements. You're putting it in a table of things
+that you learned from that peer. You have an interface where you
+can specify some policies and these are filters saying, I don't want to receive these types
+of messages from these peers. So it filters those before,
+it goes into a selection process. Then that selection process
+puts all this information into the local routing information base. So this is just a database of all
+the routes that you've learned and down into the forwarding table, which are the ones specifically
+that were chosen as best. All right, now for the Egress side,
+what you're announcing. So you've chosen something
+as a best route. Well, now it goes through
+your output policies. These are kind of Egress filters
+that then get propagated. So maybe it's in the case of the consumer,
+well, it doesn't want to announce things to AS100 anything
+that it learned from AS200, so that AS100 wouldn't
+send traffic through it. So it sets an output policy, a filter to
+make it, so that that's not possible. So now with all that context,
+this is how we calculate a best path. This is how BGP, a given router chooses
+which route to choose as is best and it's basically this kind of prioritized
+list that it just goes down. So looks at a thing
+called local preference. So a network administrator could come
+in and put a little tag on something. It says, I actually prefer this route. So it's kind of that manual fudging, but
+that would take the highest preference. And so it's a numerical value that's
+assigned by some routing policy. The next would be the AS path length. And so we saw this the AS3 and
+AS2 were choosing the length one path over
+the length two paths. All right, so that would be
+the next kind of decision point. After that, if the paths are equal, the next thing to look at
+is a field called MED. We didn't really get into this. It's called the multiple
+exit discriminator and this is the case where if you have
+kind of two exit points, a neighboring AS can tell you this is the one I would
+prefer you to send traffic through. And so
+that's another component of this decision. The next is it would
+choose eBGP over iBGP. So stuff that you've
+learned directly router, it would choose that over things that it's
+learning through the iBGP process and then the next would be
+the shortest IGP path. So IGP is just referring to
+the internal kind of routing protocols. So OSPF, if there was a shortest
+path learned through OSPF, it's going to kind of choose that. And then finally, have an arbitrary
+tiebreaker of some arbitrary router ID. All right, so now we know kind of these path calculations and
+how that BGP all works. And we only scratch the surface of BNGP,
+but have a good sense of how this works and some of the kind of aspects
+of how the internet works.

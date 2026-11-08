@@ -1,0 +1,33 @@
+Hello. I'm Eric Keller. I'm going to bring
+this course to you. I'm a professor at the
+University of Colorado, and I do research in networking. The last class that I
+created on Coursera was called Network Principles and
+Practice Linux Networking. I was very excited
+about that one because just how pervasive Linux
+is and how powerful it is. Really as I said in
+that intro video, it was the class that I wish I had when I first started
+my journey in networking. Just because of just
+really understanding how Linux networking works is really important and really
+useful in a lot of areas. This class, I'm excited
+for a different reason. So a little context, I
+started my PhD in 2006. You can look it up and
+see that [inaudible] was also started in
+that 2006 time frame. This whole area of
+cloud computing really led to a lot of
+innovation in networking. Because what the Cloud was
+trying to do and still is with the automation and the
+scale that's working at just required a ton of
+innovation in networking. So it was a really
+exciting time. Then now, it's really grown to be the central platform
+to develop on. So just knowing how cloud networking works
+is an important skill. In this class, we're
+going to cover, it's going to be a mix of the hands on practical
+aspects of it, but then also understanding the technology that
+runs the Cloud. This is what's
+unique about this. You won't get this
+in other classes. It's not just about how to
+use a start cloud platform. But really, how does
+it actually work? We'll cover the abstractions, and how to build it in, the console, the websites. We'll learn about automation. We'll also introduce some
+academic papers that were the underpinnings of a lot of these cloud technologies. With that, I'm looking forward
+to working through this, and I really hope you enjoy
+it. All right. Thanks.

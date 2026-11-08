@@ -1,0 +1,137 @@
+Hello. All right, this time we're going to
+talk about sharing the link in the link layer protocol. So as a reminder here, so
+what problem is being solved now is that the transmission
+mediums that we're going to be targeting can be shared
+across multiple network devices. And so what we need is to be
+able to coordinate between them to regulate the access
+to this underlying medium. So what can happen if we don't
+do this is interference, right? So here we have both a wired
+network on the left and a wireless network on the right. So the wired network, this is actually
+how Ethernet was originally created and imagined that you can create to
+a single basically big cable. And then any computer that you wanted
+to attach to it, you would clamp into that cable, and now they would
+be on that effectively the same wire. And so you could see here that we
+might have two different nodes, the green and the blue,
+both trying to transmit at the same time. Likewise, in the wireless, we see blue and
+green also trying to transmit. So once the kind of signals
+propagate far enough, whether it's on the same wire or
+through the air, they start colliding with each other and
+interference happens. And at this point,
+no data is usefully transmitted. So this is where multiple access protocols come in as part of
+the link layer protocols. So the key question is how do we share
+the link fairly and efficiently? So there's different approaches here. So one possible approach is to
+just partition up the channel. So divide the link into smaller pieces and assign each piece to different nodes. So that's one approach, and
+we'll show examples of that. And then another approach is
+to do it kind of randomly. So nodes transmit in
+an uncoordinated manner and then just have to deal with
+collisions when they happen. So let's look at the channel
+partitioning first. So one example of this is partitioning
+the channel in terms of time. So this is called time division,
+multiple access. So here we can divide into
+equal sized time slots. So 0 to, let's say it's 1 second,
+but that's very long. But 0 to 1 second might be one and
+then 1 second to 2 and then 2 seconds to three and so forth. So you then can take those and
+assign those slots to nodes. So during the 0 to 1 slot,
+that's when node one could transmit. Then during the 1 to 2 slot, that's when 2
+can transmit and then 3 could transmit and then 4 could transmit and then cycle
+back through each of them again. And so nodes in this case can
+only send during their slots. And so let's say slots are big enough
+time to be able to transmit 100 bytes. And if one, node 1 only has 10 bytes
+to send, maybe 2 has 0 bytes to send, 3 has 200 bytes to send and
+4 has 150 bytes to send. This is what the transmission would
+look like during one's time slot. It would transmit the 100 bytes that it
+has or 10 bytes that it has to send and then waste the rest of the time,
+the time slot for node 2, since it doesn't have anything to transmit,
+the channel at that point would be idle. Node 3 would send its 100, but
+because its time slot is up, even though it has more to send,
+it would have to yield to 4. Then they would both then
+wait while node 1 and node 2 don't transmit
+anything to get back to 3. So you can see that this is certainly
+fair, it's dividing it equally, but it's not really an efficient
+channel or an efficient protocol. We could also partition
+the channel in terms of frequency. It's called frequency
+division multiple access. So here we could divide
+the frequency spectrum and sign each node its own frequency. And so this is showing
+a cable which can support or has different frequency
+waves coming through different bands, and
+we can assign to each of them. This, of course, kind of reduces
+the efficiency of the channel as well because you're not kind of
+maximizing the ability to send. All right, so
+now switching over to random multi-access protocols, there's kind
+of three key questions that kind of have to be
+addressed in those protocols. And we'll look at a couple of examples,
+but just to look at these questions,
+the first is when to send. Should you just send as a node anytime, or should you at least make
+an attempt to not interfere? Then the second question
+is how do you know if your transmission was
+actually successful? Can I detect this as the node
+that was sending it? Does the receiver have to
+acknowledge it and so forth? And then what do I do if
+the transmission actually failed? Should we resend it immediately? Should we wait some amount of time? And these are questions that the protocol
+specifies and everybody agrees to. So let's look at the when to send. So we're going to look at
+Carrier Sense Multiple Access or CSMA. So it's used in both Ethernet and Wi-Fi. So in this case, the when to send
+is actually that the node will read from the channel just to see
+if another node is sending and only transmit if it sensed
+that the channel is idle. So in these pictures below,
+say A wants to send, it would sense the channel, but
+it would see B is actually sending. It would see that there is some activity
+on that wire, and so A would not send. In the picture on the right,
+when D wants to go ahead and send, it would kind of read from
+the channel and then see nothing. There's no activities and
+it would be able to send. So now the next part of that is knowing if
+the transmission was actually successful, and so here's where Ethernet and
+Wi-Fi diverge a little bit. So with the Ethernet we have
+something called CSMA/CD, where the CD is for collision detection. So a property of the Ethernet, NICs or
+network interface cards is that they can actually read at the same
+time that they're transmitting. And so what they can do is if what
+they read in is different than what they're sending,
+that means that there's a collision. So in this case,
+let's look at this picture. So it's sending the node A is
+sending into the channel, whatever this green line represents. What it reads is the red,
+which is all the kind of collided data. So if what it reads is different than
+what it's sending, that's a collision. Now, after it detects the collision,
+it'll jam the signal so transmit some fixed bit pattern to ensure
+that everyone detects the collision. So as a question that might be having is
+well in the previous slide we just said, well they detect, they read from the
+channel to see if anybody's transmitting, but now we're saying that
+they could actually collide. Well, that's because signals
+take time to transmit. So you may read and
+at that point it looks clear, and then you start talking,
+the node starts transmitting, and it sees and
+then a collision actually happens. So with Ethernet it does this
+collision detection technique and then basically jams
+the transmission medium. On the wireless side or Wi-Fi,
+it does collision avoidance. So the challenge with wireless
+is that the NICs cannot read while transmitting,
+that's one problem. And then another problem is they actually
+may be out of range of some nodes. So maybe we have a set-up
+like this where we have X and Z, maybe those are laptops and
+then Y is the access point. Well, X is in range of Y, Z is in range of Y, but X and Z can't act, they're not actually in
+range of each other. So even if they may be transmitting,
+they both might be transmitting to Y. They wouldn't be able
+to actually hear that. So in this case, the collision
+avoidance part is that it actually depends on an explicit
+acknowledgment from the receiver. So if it doesn't receive an acknowledgment
+in a certain period of time, that's when it can assume
+that there was a collision. And so we can see right around
+why there can be a collision. Now, there is this option to where the
+transmitter may submit a request to send, and then the receiver
+says you're clear to send because your Y in this case
+is in the range of both, and they can say at Y it's actually clear. So that's Wi-Fi, and that's how we
+know if a transmission was successful. Now the final piece is what do
+we do when a transmission fails? So here we're going to want to
+retransmit the frame some time period, after some time period, and
+this is called the back off period. And so why we want to do this is, well, we want to make sure that the receiver
+actually gets the data, and we want to back off because we
+want to allow the channel to clear up. And in both cases, the CSMA/CA and CD specifies that this back
+off time will be random. And why it's random is if they both
+were synchronized in the amount of time that they backed off,
+they're just going to collide again. And so if they both choose something
+random, whoever chose the lower number is the one that actually would
+kind of be able to kind of transmit. And then the other one would detect
+the channel has activity on it, and we'll wait till that
+transmission is complete. But in the case where there
+is continued collision, this back off time
+exponentially increases. So you wait longer and longer each time. All right, so with that,
+we covered how to share the channel, and so next time, we're going to talk
+about expanding into a local area network.

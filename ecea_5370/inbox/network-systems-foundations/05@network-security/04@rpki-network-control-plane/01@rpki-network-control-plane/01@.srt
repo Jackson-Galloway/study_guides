@@ -1,0 +1,972 @@
+1
+00:00:09,890 --> 00:00:14,040
+Let's go over our
+RPKI this time.
+
+2
+00:00:14,040 --> 00:00:18,600
+Now we're jumping into the
+network control plane.
+
+3
+00:00:19,540 --> 00:00:22,325
+As the example here,
+
+4
+00:00:22,325 --> 00:00:25,350
+we know about PGP,
+
+5
+00:00:25,350 --> 00:00:30,315
+and it's responsible for
+
+6
+00:00:30,315 --> 00:00:35,415
+communicating paths
+to reach IP prefixes.
+
+7
+00:00:35,415 --> 00:00:40,220
+If an attacker can
+inject fake paths,
+
+8
+00:00:40,220 --> 00:00:42,260
+it can get traffic directed to
+
+9
+00:00:42,260 --> 00:00:44,560
+it and it can deny service,
+
+10
+00:00:44,560 --> 00:00:45,910
+it can change messages,
+
+11
+00:00:45,910 --> 00:00:48,610
+and it can inspect
+traffic, do whatever.
+
+12
+00:00:48,610 --> 00:00:51,240
+Let's give it a
+concrete example.
+
+13
+00:00:51,240 --> 00:00:53,060
+We have some destination on
+
+14
+00:00:53,060 --> 00:00:58,470
+the right hand side, 1.1.1.0/24,
+
+15
+00:00:58,470 --> 00:01:00,030
+so that's the prefix,
+
+16
+00:01:00,030 --> 00:01:09,435
+and it's contained
+or managed by AS3.
+
+17
+00:01:09,435 --> 00:01:12,640
+AS3 would announce
+to its neighbors,
+
+18
+00:01:12,640 --> 00:01:14,580
+in this case is only one,
+
+19
+00:01:14,580 --> 00:01:19,540
+the prefix, and then say
+that the path is AS3.
+
+20
+00:01:19,640 --> 00:01:23,235
+That neighbor, in this case AS2,
+
+21
+00:01:23,235 --> 00:01:27,045
+would see that
+round announcement,
+
+22
+00:01:27,045 --> 00:01:30,360
+put it inside of its
+routing table or rib,
+
+23
+00:01:30,360 --> 00:01:34,760
+and append itself to
+
+24
+00:01:34,760 --> 00:01:38,235
+the path and announce
+it to its neighbors.
+
+25
+00:01:38,235 --> 00:01:41,340
+Here's the prefix
+and then the path
+
+26
+00:01:41,340 --> 00:01:44,905
+now becomes AS2, AS3.
+
+27
+00:01:44,905 --> 00:01:48,580
+Then that reaches AS1.
+
+28
+00:01:49,040 --> 00:01:52,580
+That's the legitimate path.
+
+29
+00:01:52,580 --> 00:01:56,640
+Now let's say there's
+another AS where
+
+30
+00:01:56,640 --> 00:02:01,060
+through some means an
+attacker was able to make
+
+31
+00:02:01,060 --> 00:02:05,810
+an announcement for
+the exact same prefix
+
+32
+00:02:07,340 --> 00:02:12,090
+and say its path is AS4.
+
+33
+00:02:12,090 --> 00:02:14,690
+Now when you're AS1,
+
+34
+00:02:14,690 --> 00:02:16,710
+it's going to have
+a routing table or
+
+35
+00:02:16,710 --> 00:02:19,450
+a rib that's going
+to have two entries.
+
+36
+00:02:19,450 --> 00:02:24,260
+One for the route that
+it learned through AS4,
+
+37
+00:02:24,260 --> 00:02:27,300
+where the next top is this
+
+38
+00:02:27,300 --> 00:02:34,245
+4.4.4.1 or the
+other route is AS2,
+
+39
+00:02:34,245 --> 00:02:37,845
+AS3 as the path
+where the next top,
+
+40
+00:02:37,845 --> 00:02:45,730
+2.2.2.1, that's the IP
+address of the router in AS2.
+
+41
+00:02:45,980 --> 00:02:50,310
+Based on a shorter
+path it chose to
+
+42
+00:02:50,310 --> 00:02:54,940
+go through this first route.
+
+43
+00:02:57,590 --> 00:03:01,320
+Now the traffic would be going
+
+44
+00:03:01,320 --> 00:03:05,265
+through being redirected to AS4.
+
+45
+00:03:05,265 --> 00:03:06,970
+As mentioned, there's a lot of
+
+46
+00:03:06,970 --> 00:03:10,170
+things this attacker
+can now do with it.
+
+47
+00:03:10,170 --> 00:03:13,500
+It can use this traffic
+to deny service.
+
+48
+00:03:13,500 --> 00:03:16,120
+It could just drop everything.
+
+49
+00:03:16,190 --> 00:03:19,930
+In our examples, we've
+always been using YouTube,
+
+50
+00:03:19,930 --> 00:03:22,995
+but let's say this prefix
+
+51
+00:03:22,995 --> 00:03:26,190
+1.1.1.0/24 belongs
+to YouTube or is
+
+52
+00:03:26,190 --> 00:03:28,965
+the IP addresses for YouTube.
+
+53
+00:03:28,965 --> 00:03:30,420
+Well, it just blocked
+
+54
+00:03:30,420 --> 00:03:33,190
+YouTube and so it did
+harm to a business,
+
+55
+00:03:33,190 --> 00:03:35,850
+and so that might be
+one of its objectives.
+
+56
+00:03:35,850 --> 00:03:41,030
+It could also now pretend
+to be somebody else.
+
+57
+00:03:41,030 --> 00:03:45,270
+We saw in the initial examples.
+
+58
+00:03:45,270 --> 00:03:48,140
+If this was a bank that
+I'm trying to visit as
+
+59
+00:03:48,140 --> 00:03:51,770
+website and I was saying,
+
+60
+00:03:51,770 --> 00:03:53,770
+I know the IP address
+of that bank.
+
+61
+00:03:53,770 --> 00:03:55,810
+I learned that through DNS,
+
+62
+00:03:55,810 --> 00:03:59,030
+but then the network
+control plane
+
+63
+00:03:59,030 --> 00:04:03,730
+actually picked a path that
+ended up not at my bank,
+
+64
+00:04:03,730 --> 00:04:05,520
+but I think it is,
+
+65
+00:04:05,520 --> 00:04:08,630
+and so they can present a
+web page that looks like it
+
+66
+00:04:08,630 --> 00:04:12,405
+and I can enter my passwords
+and all that information.
+
+67
+00:04:12,405 --> 00:04:14,345
+That's not good.
+
+68
+00:04:14,345 --> 00:04:19,230
+Then another thing that
+this attacker could do,
+
+69
+00:04:19,230 --> 00:04:23,670
+is it can actually now
+forward on the traffic
+
+70
+00:04:23,670 --> 00:04:28,875
+to the real destination
+and setting up itself as,
+
+71
+00:04:28,875 --> 00:04:31,555
+it's called a man in the middle.
+
+72
+00:04:31,555 --> 00:04:35,585
+In this case, it's now able
+to eavesdrop on traffic.
+
+73
+00:04:35,585 --> 00:04:39,980
+But the client over
+
+74
+00:04:39,980 --> 00:04:44,045
+here actually is able to
+get the services it needs,
+
+75
+00:04:44,045 --> 00:04:47,870
+and so it doesn't know that
+it's being eavesdropped on.
+
+76
+00:04:47,870 --> 00:04:52,115
+That's a concrete example
+of how this might occur.
+
+77
+00:04:52,115 --> 00:04:58,175
+Now, if we were to imagine
+an idealized solution,
+
+78
+00:04:58,175 --> 00:05:01,685
+we can have it so that
+the prefix owner,
+
+79
+00:05:01,685 --> 00:05:05,820
+whoever owns 1.1.1.0/24,
+
+80
+00:05:05,820 --> 00:05:08,125
+can tell all the other ASs,
+
+81
+00:05:08,125 --> 00:05:10,210
+all the other
+network providers in
+
+82
+00:05:10,210 --> 00:05:13,915
+the world what AS it's in.
+
+83
+00:05:13,915 --> 00:05:19,125
+It can say in this example
+just focusing on AS1,
+
+84
+00:05:19,125 --> 00:05:27,240
+it can say ''I own
+1.1.1.0/24 and in AS3.''
+
+85
+00:05:27,240 --> 00:05:31,835
+Now the path to get
+to that destination.
+
+86
+00:05:31,835 --> 00:05:34,265
+We can leave that up to BGP.
+
+87
+00:05:34,265 --> 00:05:37,580
+But at least I'm
+telling AS1 that hey,
+
+88
+00:05:37,580 --> 00:05:40,895
+this is where it
+ultimately needs to go.
+
+89
+00:05:40,895 --> 00:05:43,130
+Now if we go through
+
+90
+00:05:43,130 --> 00:05:45,875
+all those route announcements
+as we did last time,
+
+91
+00:05:45,875 --> 00:05:48,800
+we end up with this rib.
+
+92
+00:05:48,800 --> 00:05:50,900
+Now we can look at
+
+93
+00:05:50,900 --> 00:05:54,995
+this one route that
+has this path AS4,
+
+94
+00:05:54,995 --> 00:06:00,480
+and it doesn't end with AS3.
+
+95
+00:06:02,140 --> 00:06:04,670
+This is AS1,
+
+96
+00:06:04,670 --> 00:06:08,870
+the routers at that can throw
+that out, can say, hey,
+
+97
+00:06:08,870 --> 00:06:12,560
+I was previously told that
+at least has to end in
+
+98
+00:06:12,560 --> 00:06:17,105
+AS3 so I'm going to
+throw that route out.
+
+99
+00:06:17,105 --> 00:06:18,905
+Now it only had one choice
+
+100
+00:06:18,905 --> 00:06:21,035
+and it's going to choose
+the legitimate one.
+
+101
+00:06:21,035 --> 00:06:25,325
+This is an idealized solution to
+
+102
+00:06:25,325 --> 00:06:30,990
+specifically solve this scenario
+that we discussed here.
+
+103
+00:06:32,320 --> 00:06:36,350
+Now let's put this
+into practice.
+
+104
+00:06:36,350 --> 00:06:40,805
+Let's step back and recall
+digital certificates.
+
+105
+00:06:40,805 --> 00:06:47,400
+This is something that binds
+a public key to an identity.
+
+106
+00:06:47,680 --> 00:06:49,970
+In the basics lesson,
+
+107
+00:06:49,970 --> 00:06:51,605
+we talked about Alice,
+
+108
+00:06:51,605 --> 00:06:54,485
+the organization AliceCo,
+
+109
+00:06:54,485 --> 00:06:58,070
+and then Bob could
+
+110
+00:06:58,070 --> 00:07:02,700
+validate that this is
+Alice's public key.
+
+111
+00:07:02,700 --> 00:07:05,080
+Then we said, all right,
+
+112
+00:07:05,080 --> 00:07:07,075
+there's an integrity
+problem here
+
+113
+00:07:07,075 --> 00:07:10,780
+that an attacker could
+insert their own public key
+
+114
+00:07:10,780 --> 00:07:14,680
+but modify the certificate
+
+115
+00:07:14,680 --> 00:07:18,035
+to have the rest of the
+information the same.
+
+116
+00:07:18,035 --> 00:07:21,725
+Then this isn't really an
+improvement in the situation.
+
+117
+00:07:21,725 --> 00:07:23,855
+But then we introduced
+
+118
+00:07:23,855 --> 00:07:26,765
+the concept of a
+certificate authority,
+
+119
+00:07:26,765 --> 00:07:30,365
+which is some trusted
+authority that can verify
+
+120
+00:07:30,365 --> 00:07:34,070
+Alice's identity
+and use the CA's
+
+121
+00:07:34,070 --> 00:07:38,180
+private key to sign
+Alice's certificate.
+
+122
+00:07:38,180 --> 00:07:39,590
+Now, we can trust that
+
+123
+00:07:39,590 --> 00:07:41,930
+the certificate
+hasn't been modified.
+
+124
+00:07:41,930 --> 00:07:43,640
+Bob can trust that
+this certificate
+
+125
+00:07:43,640 --> 00:07:45,260
+hasn't been modified as
+
+126
+00:07:45,260 --> 00:07:49,920
+long as it has and trusts
+the CA's public key.
+
+127
+00:07:49,960 --> 00:07:53,720
+Now, with that little
+quick refresh,
+
+128
+00:07:53,720 --> 00:07:57,740
+how does this apply
+to Internet routing
+
+129
+00:07:57,740 --> 00:08:04,715
+is what is basically
+what's used as RPKI.
+
+130
+00:08:04,715 --> 00:08:10,055
+RPKI stands for Resource
+Public Key Infrastructure.
+
+131
+00:08:10,055 --> 00:08:16,415
+Here there's the regional
+Internet registries or RIRs,
+
+132
+00:08:16,415 --> 00:08:20,795
+are established as the
+certificate authorities.
+
+133
+00:08:20,795 --> 00:08:23,540
+They're the ones that
+are already allocating,
+
+134
+00:08:23,540 --> 00:08:26,015
+if you recall, the
+IP address space,
+
+135
+00:08:26,015 --> 00:08:29,015
+they have this
+business relationship
+
+136
+00:08:29,015 --> 00:08:32,555
+so they can verify the identity.
+
+137
+00:08:32,555 --> 00:08:37,205
+They are well known
+group of them and then
+
+138
+00:08:37,205 --> 00:08:41,885
+we can trust them and
+things like that.
+
+139
+00:08:41,885 --> 00:08:49,355
+Here, the identity, the digital
+certificate part contains
+
+140
+00:08:49,355 --> 00:08:52,160
+the IP prefix the AS
+
+141
+00:08:52,160 --> 00:08:57,990
+origin and it ties it to
+the owner's public key.
+
+142
+00:08:58,840 --> 00:09:01,715
+The whole architecture looks
+
+143
+00:09:01,715 --> 00:09:05,310
+something like this and we'll
+go through piece by piece.
+
+144
+00:09:05,370 --> 00:09:08,965
+Starting, the first part is
+
+145
+00:09:08,965 --> 00:09:15,265
+the IP owners create their
+public private key pair,
+
+146
+00:09:15,265 --> 00:09:19,390
+then they create a digital
+certificate request,
+
+147
+00:09:19,390 --> 00:09:23,290
+and send that to the
+regional Internet registry.
+
+148
+00:09:23,290 --> 00:09:24,880
+Again, they already
+have a business
+
+149
+00:09:24,880 --> 00:09:26,950
+relationship and you go to
+
+150
+00:09:26,950 --> 00:09:31,735
+the RARs website and
+shown here is an example.
+
+151
+00:09:31,735 --> 00:09:34,495
+Just fill out some form,
+
+152
+00:09:34,495 --> 00:09:38,140
+and that takes you
+to the next step.
+
+153
+00:09:38,140 --> 00:09:41,425
+That's making that request with
+
+154
+00:09:41,425 --> 00:09:43,105
+your public key and
+
+155
+00:09:43,105 --> 00:09:46,100
+the identity and all
+that information.
+
+156
+00:09:46,400 --> 00:09:50,445
+The regional Internet registry,
+
+157
+00:09:50,445 --> 00:09:53,915
+validates that identity
+and the ownership
+
+158
+00:09:53,915 --> 00:09:57,970
+and stores a resource
+ownership authorization,
+
+159
+00:09:57,970 --> 00:10:02,030
+or ROA, in a database.
+
+160
+00:10:02,520 --> 00:10:11,090
+Then some software called a
+validator that runs in an AS.
+
+161
+00:10:11,090 --> 00:10:17,880
+Deploying RPKI, downloads
+all of the ROAs or ROAs,
+
+162
+00:10:17,880 --> 00:10:20,930
+and verifies the signatures.
+
+163
+00:10:20,930 --> 00:10:24,220
+At this point when
+we say the AS,
+
+164
+00:10:24,220 --> 00:10:27,370
+so all of the networks, ideally,
+
+165
+00:10:27,370 --> 00:10:29,860
+but whichever one
+chooses to say, hey,
+
+166
+00:10:29,860 --> 00:10:32,890
+I want to protect the network,
+
+167
+00:10:32,890 --> 00:10:37,400
+I want to upgrade
+to include RPKI.
+
+168
+00:10:37,590 --> 00:10:40,030
+What I have to do is I have to
+
+169
+00:10:40,030 --> 00:10:42,595
+install this software
+in a server,
+
+170
+00:10:42,595 --> 00:10:45,970
+is not necessarily on
+the router and there's
+
+171
+00:10:45,970 --> 00:10:47,650
+some open source versions
+
+172
+00:10:47,650 --> 00:10:51,115
+out there like Routinator
+is an example,
+
+173
+00:10:51,115 --> 00:10:56,920
+or open source or just
+widely available.
+
+174
+00:10:56,920 --> 00:11:00,910
+Then so we can download
+this database,
+
+175
+00:11:00,910 --> 00:11:02,500
+verify all the signatures.
+
+176
+00:11:02,500 --> 00:11:09,745
+Now, locally it has a list
+of all of the prefixes,
+
+177
+00:11:09,745 --> 00:11:16,640
+and can trust and what origin
+AS that's associated with.
+
+178
+00:11:17,580 --> 00:11:21,430
+Then using that
+the validator can
+
+179
+00:11:21,430 --> 00:11:24,985
+install a cache of
+verified prefixes or
+
+180
+00:11:24,985 --> 00:11:31,855
+route origins or prefixes/route
+origins into the routers.
+
+181
+00:11:31,855 --> 00:11:33,670
+The routers, they don't have to
+
+182
+00:11:33,670 --> 00:11:36,460
+do any cryptographic signatures,
+
+183
+00:11:36,460 --> 00:11:39,680
+it just has through
+policies and configuration.
+
+184
+00:11:39,680 --> 00:11:41,700
+Here's a list of prefixes and
+
+185
+00:11:41,700 --> 00:11:44,880
+route origins to accept from.
+
+186
+00:11:44,880 --> 00:11:47,670
+Then the router upon receiving
+
+187
+00:11:47,670 --> 00:11:50,835
+a BGP update checks
+the prefix state.
+
+188
+00:11:50,835 --> 00:11:54,185
+Now, it could be
+in a valid state,
+
+189
+00:11:54,185 --> 00:11:56,260
+meaning that as part of this
+
+190
+00:11:56,260 --> 00:11:59,710
+it's found the prefix
+in this database,
+
+191
+00:11:59,710 --> 00:12:04,330
+and it checks out as
+the origin is correct.
+
+192
+00:12:04,330 --> 00:12:08,065
+It could be invalid
+where again, it's,
+
+193
+00:12:08,065 --> 00:12:10,360
+the prefix is in the database,
+
+194
+00:12:10,360 --> 00:12:13,915
+but the origin AS is incorrect.
+
+195
+00:12:13,915 --> 00:12:17,380
+Meaning that the
+router just received,
+
+196
+00:12:17,380 --> 00:12:22,135
+doesn't match what's in the
+database, so it's invalid.
+
+197
+00:12:22,135 --> 00:12:24,385
+Then it could also be unknown,
+
+198
+00:12:24,385 --> 00:12:28,105
+which is if this prefix
+isn't in the database.
+
+199
+00:12:28,105 --> 00:12:31,390
+This is to keep with,
+backwards compatibility,
+
+200
+00:12:31,390 --> 00:12:33,250
+because the Internet
+is not going to
+
+201
+00:12:33,250 --> 00:12:36,505
+upgrade all of its
+routers at the same time.
+
+202
+00:12:36,505 --> 00:12:37,960
+It's going to take a process
+
+203
+00:12:37,960 --> 00:12:40,675
+of years and years and years.
+
+204
+00:12:40,675 --> 00:12:44,080
+It's already been over a decade,
+
+205
+00:12:44,080 --> 00:12:46,135
+and we still don't have
+
+206
+00:12:46,135 --> 00:12:50,360
+all the routers
+implementing this.
+
+207
+00:12:50,520 --> 00:12:57,550
+What that provides is
+now some degree of
+
+208
+00:12:57,550 --> 00:13:00,115
+improvement that we
+can at least validate
+
+209
+00:13:00,115 --> 00:13:05,660
+the origin AS for
+route announcements.
+
+210
+00:13:07,140 --> 00:13:12,730
+That ends going to this
+video and so next time we're
+
+211
+00:13:12,730 --> 00:13:18,440
+going to get into talk about
+TLS and HC TPS. Thanks.

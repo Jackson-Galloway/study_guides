@@ -1,0 +1,104 @@
+Welcome. This course is called Networking Principles and Practice Linux Networking. What we're going to do is in this first module we're
+going to provide a overview, an introduction to
+Linux networking. Then we'll get much deeper throughout the
+rest of the course. In this particular lesson, we're just going to
+motivate the problem and the overview why we're
+looking at Linux. Shown here is a bunch
+of network appliances. You can see that they
+come in a variety of forms from really
+small devices that you might see in an office to
+big core Internet routers. Two virtualized versions
+of these appliances. These appliances come from
+a variety of vendors. These are well known names
+from Cisco and Palo Alto, and Juniper and Arista. These network appliances are
+used for a variety of uses. They're used in data
+center networks. They're used in core
+Internet routers, wireless gateways,
+perimeter firewalls, Cloud routers, and so forth. Why look at Linux? Well, to understand that, let's first step
+back and understand the different planes of network appliances
+or network devices. You probably learned
+all of this in a network systems or
+network foundations course, but let's go through
+those as a reminder, at the bottom we
+have the data plane. This is the part of the networking that does the
+processing of the packets. This needs to be fast. Some example functions here are netting
+forwarding filtering. Then right above that we
+have the control plane. Control plane is what
+runs protocols to determine how the data plane
+should process traffic. Example functions here
+are BGP, OSPF, DHCP. Hopefully you know
+some of these. If you don't, we'll learn
+them throughout this course. Then finally, we have
+the management plane. This is the means for how a user or automation
+software configures and monitors their appliance. Examples here, a lot of times you just use a
+command line interface. More and more we're seeing
+infrastructure as code with tools like Terraform
+gaining great popularity. Then there's other standards
+and interfaces like SNMP for collecting data. This brings us all to
+our first motivation. Linux covers the whole
+stack, the data plane, you have the Linux
+kernel that provides a really powerful and highly
+configurable data plane, packet processing functionality. It's a rich capabilities. Above that, there's
+this whole ecosystem of software that we can
+use the control plane. Then there's a lot of utilities. We'll learn many of
+these throughout this course that form this ability to do
+the management plane. Linux is an open
+source ecosystem. It's readily available, there's a lot of
+experts out there. It's an open community. If you really want to
+understand the guts of how networks are actually
+built and managed and run, understanding how Linux works
+really can help with that. The second motivation
+in the legacy world, there's really this tight coupling between the data plane, control plane, and
+management plane. The vendor provides everything as a vertically
+integrated solution. You buy a box from Cisco
+and it has all of that. Which is great in
+that it makes it easy to build the networks. But there is this trend towards desegregating or desegregation, and that's breaking apart
+the different pieces. Breaking apart the underlying
+physical hardware, having an operating system
+above that that's open. Having applications,
+and then open APIs. What this really works out to the physical boxes become
+these white box switches. Meaning they're not really
+these name brand versions, but it's the hardware that doesn't have
+the functionality, has largely the data
+plane functionality. But you get to choose what's
+running on top of it, then what runs on top of it is in network operating system. When you hear that term, that's largely grouping an actual operating
+system and then a bunch of networking related processes that run on top of
+the operating system. The benefits of this is you get more choice and
+more extensibility. So you can take a
+white box switch from one hardware vendor and then install your own choice
+of network operating system. Then a lot of these
+network operating systems are open, they're
+very extensible. Let's walk through, there's
+three popular ones that I want to at least mention. What you'll see is that
+Linux is really at the core of each of these network operating
+systems. This is the future. Linux is at the core of it. Really understanding Linux is going to be really important. The first example
+is called Sonic. Down at the bottom
+you see the hardware, then you see the kernel space
+and then the user space. The kernel space is Linux, and then there's a Linux
+processes that run on top of it. Sonic is a project that I
+believe came out of Microsoft. They really championed it, but it's got a lot of
+industry support around it. The second is cumulus. They were really an innovator in this white box and
+desegregation space. They've been acquired, or
+I think it was Mellanox. Mellanox was acquired by Nvidia. Either way, this is
+now part of Nvidia. Here you can see in the picture, much more explicitly,
+it says Linux kernel. We pretty much all of these different
+things inside a bit, we'll learn about the interface. Then there's a lot of
+utilities that Linux provides that Cumulus
+has packaged together, provided a nice
+interface onto it, and call it Cumulus Linux. Then the third one that we'll point out is called Dent OS. I believe Dent OS
+is really being championed by Amazon and used
+in their infrastructure. Here you can again see the Linux Kernel serves
+as a centerpiece of this as well as many of the utilities that
+Linux comes with. We'll learn how to use these and what their
+functionality provides. Upcoming, We're going
+to really just start introducing this whole space of Linux networking
+before diving deeper. We're going to start off with overview of the
+Linux data plane. We're not going to get into kernel hacking or
+anything like that, but it's certainly useful to understand what Linux
+data plane is all about. Then we're going to talk about the lab environment
+that we'll use throughout most of this course. Then we'll put that
+into practice. Really dive it into some utilities for
+troubleshooting and then start getting into the Linux
+command line and how you can configure Linux to
+do device management. With that, I will see
+you next time. Thanks.

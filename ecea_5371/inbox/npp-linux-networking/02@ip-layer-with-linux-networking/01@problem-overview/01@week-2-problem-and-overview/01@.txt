@@ -1,0 +1,41 @@
+All right, welcome. So we're going to start a new module and this one is called IP layer
+with Linux networking. So question is,
+where does IP layer come in? All right, so pretty much everywhere
+is going to be the end answer. So let's say we have Linux as an end host. It's either a client or server. It needs an IP address. It needs to be able to know
+where to send traffic. All of that is the IP layer or IP networking which would
+be at the network layer. Let's say we have an end host and
+we're going to use a VPN for virtual private network. Now we saw how to create tunnel
+interfaces with IP link. And so similar to,
+in those cases we need to be able to know which IP traffic to
+send through the tunnel. Maybe we're sending all traffic for
+work through this tunnel and then maybe it's which traffic
+to send without tunneling. Maybe that's the general Internet. We could set up Linux as a firewall or
+a load balancer which here the node would sit at the edge of the network where maybe
+one network interface card or NIC is for the external facing the Internet and
+one nick is for internal. Now on this we certainly
+need IP addresses on each of the interfaces and
+we need to know where to send traffic. And then the last example that I have
+here is Linux as a virtual router. So we talked in the last module
+about a network operating system and this trend towards disaggregation. Well, there's an equal trend of
+being able to put all of that software inside of a virtual machine. And if you're running stuff
+inside of the public cloud it's not uncommon to have an actual
+virtual router appliance like maybe one from Cisco and have that
+running inside of one of the VMs. And so to be able to
+understand how that works and set it up needs the network layer or
+IP networking. And as we've said before,
+Linux covers the whole stack. So in the IP layer the data plane is
+what does all the forwarding of traffic. At the control plane we got routing
+software like running BGP processes and things like that. And then at the management plane we're
+going to talk about Linux utilities to be able to configure all of this. So the upcoming lessons for this module will first talk about
+Linux utilities for the IP layer. So we'll go through each of
+those kind of main utilities so that you know how they all work. Then we'll go through some
+example walkthroughs, go through the code that's provided and
+see how that all works. Then we're going to move up
+into the control plane and we're going to talk about how
+you could do routing in Linux. We'll then go into talk
+about how you can run larger routing experiments
+all within Linux, and then routing,
+go through routing walkthrough with one of the tools called
+the bird routing daemon. So we'll go through that, and
+by the end of all of this you should be pretty familiar with how to do IP or
+network layer stuff within Linux. All right, with that we'll end here. All right, thanks.

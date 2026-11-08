@@ -1,0 +1,105 @@
+Now, let's talk about filtering and
+address translation. So filtering, with filtering,
+we want to block or allow traffic according to some policy. So maybe, we're running a web server and we want to block all traffic,
+not for port 80. So port 80 would be what you would
+commonly have open for HTTP requests. So maybe, let's just protect
+that web server to not allow any other traffic to come in. Maybe we're running a home gateway,
+where we want to block all traffic except for
+connections initiated from internal. So this is a nice security
+mechanism from the home where no external requests
+can come through. Unless I went to some website,
+initiated that connection, I will let that website respond, right? And so,
+this can be at the edge of some network, but it could also be on
+the end hosts themselves. The mechanisms are going to be the same,
+but where you apply it may differ. So the core of all of this
+is match action tables. So the match, which sometimes you
+can also hear called classification, it compares the input packets to a rule
+set in a table to see if there's a match. So for example, we're going to
+match against the destination IP address of 1.2.3.0/24 and
+destination port equals 80. And in this table it says, we're
+going to drop that particular traffic. So if you recall,
+the general kind of packet processing pipeline is receive a packet,
+look up in some tables, and do some manipulation of
+the packets based on that. This is going to be very similar. So the matches look up or
+kind of rules in a table, and then, the actions tell us what
+we want to do with the packet, maybe we want to drop it,
+maybe we want to allow it. So a good practice to follow
+would be a default drop. So you set the default action to drop,
+so if there's no matches, then you're going to drop the traffic. And then, you add rules to have
+an action other than drop. So this might be commonly called
+something like whitelisting. So you have the rules for what you're
+going to allow into your network rather than what you want to disallow. So that's filtering,
+it's a pretty easy concept, and we're going to learn about
+iptables and how to apply it. On the complementary side
+is address translation. So, actions can also
+manipulate the addresses or different fields in the packets. So here we're talking about source and
+destination IP addresses and source and destination ports,
+so like TCP port numbers. So an example of this is,
+maybe I want to use private addressing on the local area network or LAN with
+a single shared public IP address. So packets destined to the public IP
+address are translated to a private one. All right, so let's go through a few
+use cases of this address translation. So the first use case is,
+maybe I have [COUGH] performing a static mapping from
+internal to external. Right, so each server in my network
+will get both a public IP address and a private IP address. So when it's communicating internally, it's used in this private IP address,
+but when it goes externally, this gets translated to some
+public IP address, all right? And there's different reasons
+you might want to do this. Maybe you have some kind of internal
+legacy management system set up. Or maybe this is how you set up
+your LAN to be able to handle this, but you wanted to then
+grant them external access. So here, let's start with kind of how
+to read these diagrams that I drew up. Well, so this is showing
+the packet as it's traversing from the internal to the external,
+and we have source IP address, destination IP address,
+source port, destination port. And so, that's coming from this host and it's going to some public IP address,
+some destination. At the gateway, it's going to translate,
+do it have a static translation? Recall, we have a mapping,
+and so, it's going to say, if I see in ingress or
+in the egress direction 10.0.0.1, translate the source to this address. And in the ingress direction, translate
+the destination from this to this. So you can see it was
+translated externally. So now, when that server responds,
+it'll have its source, but then the destination will
+be that public address. And then, we're going to do a static mapping to
+the destination internal IP address. So that's one example,
+might not be commonly used, but so, this one use case 2, you certainly would
+commonly experience this or see this. So this might be a dynamic mapping
+of a single external IP address, and then you dynamically select
+from available TCP ports. Internally, we have a bunch
+of different hosts. They all get private IP addresses and we have assigned, as the gateway, a single public IP address for
+this entire network. So to be able to distinguish
+the different hosts, it's going to use the port
+numbers as part of this process. So here again, we're going to
+have a request going externally. So the source would be 10.0.1.1,
+destination, the same kind of public IP address
+that we're sending a request to, and our source and destination ports. So once it gets to the gateway, it's going to look up in its table and
+see if it has a mapping. In this case, it does have a mapping. It's saying, 10.0.1.1/5000 will map to port 1000 externally, all right? And it'll include also
+the destination IP address, as well as part of that, but for
+space first purposes left that off. All right, and so, now, you can see, both the source end IP and
+TCP port and address got translated. So now, when this guy responds to
+the destination of that single IP address, that all hosts in this network will share. Again, it'll look up in a table,
+and it will see, it should translate it to this internal
+IP address port number mapping. And it will do that, and so,
+that it can get to the destination. All right, now, if it was the first
+request, let's say another host comes in and has a similar request,
+it would look up, there's no mapping. Well, it would just pick
+one of the available TCP ports to have as part of that mapping. All right, so that's a second use case. And so, why I say this is common is, a lot
+of home networks have this exact setup. A third case might be port forwarding. So let's say, I want to run a publicly
+available server on a private IP address. So say I am into Minecraft in my home and I want to run a server in a server or
+on a computer in my home. Well, I'm going to get
+a private IP address, but I also have a bunch of other family
+members that are going to have other kind of computers that
+are using the same network. So we all get private IP addresses, and
+then, we get this single IP address for the whole network, but
+I want to make this available. So this is where port forwarding comes in. So requests come in, so now,
+we're looking from left to right as the first request to
+the destination of this gateway. But then, the gateway knows,
+all right, if I see port 25565, I'm going to forward it to
+the internal server 10.0., whoops, this should say 1.1, which would be
+where I'm running my Minecraft server. And then,
+it will do the address translation, likewise on the reverse direction,
+when the Minecraft server responds, it knows that there's
+going to be this translation. So that's what port forwarding does. And you can see,
+each of these are kind of distinguished by what fields are getting translated and
+all of that. All right, so that's the basics for what
+filtering and address translation are. Next, we're going to dive into
+the iptables and how to use that. All right, till then.

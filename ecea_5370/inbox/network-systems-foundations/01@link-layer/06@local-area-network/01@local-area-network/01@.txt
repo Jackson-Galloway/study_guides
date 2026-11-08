@@ -1,0 +1,121 @@
+All right, so
+the final topic we're going to cover in the link layer module
+is local area networks. So as a reminder,
+what this is about is being able to extend beyond the physical limits
+of the transmission medium. So here we're going to talk
+about ethernet and wireless. So in Ethernet, we're going to
+introduce the concept of switching. And in wireless, we're going to introduce
+the concept of an access point. And these are the kind of main
+devices that we'll talk about that allow you to basically build
+these local area networks. So why do we need Ethernet switching? So on the left is the picture
+we've shown before showing Ethernet can be this
+shared medium of a bunch of different nodes attaching
+into some shared cable. So that has scalability challenges. The more nodes you put on that,
+the more chances of collision, the length it is going to be a challenge,
+and all those kinds of things. So instead what we have more in
+practice are the picture on the right. This is where we introduce special
+nodes called switches that can direct traffic to the destination. Then in this case,
+rather than this kind of shared mediums, the cables, each of the nodes
+get this kind of point to point links to connect them to the switch. So addressing, we've already
+covered addressing in Ethernet. So as a reminder, recall that each
+network interface card has a MAC address. And so that's what's shown with the AA, BB:BB, and so forth. And we also showed that each frame,
+which is how Ethernet provides structure, contains both the source and
+destination MAC addresses. So shown here is an example where A, the node on the left wants to talk to
+the node on the right, which we'll call C. And their MAC addresses match their
+node names just for illustration. And so here the frame would
+say the destination is C, all C's, the source is all A's, and that is what node A sends to the switch. And then the switch's job is
+to direct it over to node C. So how it does this is that each switch
+has what's known as a MAC address table. So this is a table in the switch that maps
+destination addresses to output ports. So when the switch receives a frame, it looks up the destination and
+then it will send the frame. So it sees the destination is all C's,
+it looks in this table and says that's output port 2 and
+then sends it on its way. And this is how the communication happens. So now a key question that
+you might be asking is, well, how does this table actually get filled so
+that the table starts empty, right? So now A, same scenario,
+sends the pack or same to the frame to C. Well, that same lookup that we just
+showed will result in no table entry. So this is where something called MAC
+learning or MAC table learning comes in. So showing this scenario,
+when A on the left-hand side sends it, and
+then the switch has no entry for destination MAC address C, all C's. What it does is it floods
+the frame to all ports, but the actual destination will ignore it. So the middle node, node B, will receive
+it, but it's just going to ignore it. All right, so
+how did that help us with learning? Well, the first part is, well, it at least helped us get the traffic
+to where it's meant to go. But what did we actually
+learn as part of this part of the transmission where when
+A sent something to the switch, so the switch actually saw, well, out port 0 is wherever MAC address A is. So I can put that into
+the MAC address table or the MAC table, all A's maps to port 0. Likewise, when node C actually
+replies to that message, we're going to learn that case again. We're going to learn that all C's, the MAC address for
+all C's is out port 2, right? So this is how we can go about
+starting to fill the MAC tables. Now, we're not limited to a single switch
+to connect all of the nodes you want, so the switches are going to
+be limited in number of ports. So smaller switches might have 4 ports and larger switches might have 48 ports, so physical places where you can
+connect a wire into or a cable into. And so because of this, you typically would need to
+build some topology of switches. So just shown here is an example
+of a tree of switches that were built and
+then each of them has its own MAC table. So here maybe we've done all
+completely learned the entire network, and in this case, it's going to say A,
+B, and C are out nodes or out port 0 and
+then D is out port 1, right? So whenever it receives a frame for
+D, it would send it out 1. And anytime it receives a frame for
+A, B, or C, it sends it out port 0. A challenge with once you
+start creating topologies is something called loops, right? So recall that there
+are broadcast MAC addresses. This is when the destination
+was set at all F's. And recall, we just saw that
+we used flooding for learning. So let's look at what happens now. Let's say the MAC address
+tables are all empty. This node on the left wanted
+to send a frame to some destination that's not known. So this switch here on the left-hand side, the bottom left switch says I looked
+it up, I don't see an entry for the destination,
+I'm going to flood it to my neighbors. So it's going to send it to this top node,
+top switch, and the rightmost switch. Then when each of those switches get it,
+they look up in their MAC address tables and see I don't have an entry
+either, and then they're going to flood. So here this top node flooded
+down to the bottom right node. This bottom right node said
+I also don't have the entry, I'm flooding it to the bottom left node. And then what happens at that point? Well, this bottom left node, if we follow
+the same logic, we'll look up in its table, see that it doesn't have an entry
+for it, and we'll again flood it out. So it'll send it back to the top node,
+it will send it back to the right node, but that's obviously not the behavior, or maybe it won't send out to the right,
+but it'll send it down to the left. But that's not the behavior we
+want because now we're going to amplify this traffic that
+we have in our network, just trying to learn where
+the destinations are. So we need to deal with loops. All right, so a solution to loops is we
+could keep track of the messages seen so that bottom left switch could say,
+hey, I saw this message before, or this frame before,
+I'm going to drop it now. That requires it to keep a lot of state, which we obviously don't or
+we might not want to do. We could limit the number of
+hops a given message takes. So let it loop, but maybe after five,
+we assume that the maximum number of hops that a given
+frame would take is say five. And then after five,
+we'll just drop the packet. And so we don't need to store state,
+but it gets stored in the frame itself. We could also turn off loop
+links that create the loop. So there's protocols out there called
+spanning tree protocols that make it so that you can communicate everywhere, but transforms a network into one that has
+no loops in it by shutting off links. So this keeps you from using
+the full kind of bandwidth available in the network,
+but it prevents loops. And then a last technique that
+you might take is we can actually architect the network such
+that looping won't occur, whether this is create
+the topology in a specific way or make it so
+that we avoid broadcasts and flooding. So maybe it's that we pre-populate
+the MAC address tables, so that you don't have
+to perform learning. So in Ethernet, spanning tree
+protocol is pretty popular as is architected the network
+such that looping won't occur. And that largely occurs in data
+centers that you might see. All right, so
+that was Ethernet and the wired. In wireless there's a lot of similarities,
+but really in this case, the special
+nodes are called access points. So access points are commonly
+connected to a wired network, and then so they use that wired
+network of Ethernet switches, for example, to be able to
+communicate beyond its own range. And then for all the nodes, all
+the traffic goes via the access points. So even though A and B,
+for example, are in range, if A wants to talk to B,
+A will always go via the access point AP1. Now the key challenge here that
+we're not going to get into is the nodes themselves associating
+with an access point. So you can kind of read more
+on your own separately, but wanted to kind of this
+is the parallel device or the similar device to an Ethernet switch. So with that,
+we've wrap up the link layer. So next,
+we're going to get into the network layer. But first,
+there's interesting assignment that you're going to be able to kind of play
+with the network traffic and be able to manipulate it with a tool or
+a Python library called Scapy. Thanks.

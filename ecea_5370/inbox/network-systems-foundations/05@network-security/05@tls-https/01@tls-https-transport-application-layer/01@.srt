@@ -1,0 +1,1007 @@
+1
+00:00:09,620 --> 00:00:14,890
+Let's jump into TLS
+and HTTPS this time.
+
+2
+00:00:16,490 --> 00:00:19,630
+What are we addressing here?
+
+3
+00:00:19,630 --> 00:00:22,830
+This is at the application
+and transport layer.
+
+4
+00:00:22,830 --> 00:00:27,255
+Without these, the
+problem is TCP it
+
+5
+00:00:27,255 --> 00:00:29,690
+provides in order
+reliable stream
+
+6
+00:00:29,690 --> 00:00:32,495
+between two processes,
+so we learned that,
+
+7
+00:00:32,495 --> 00:00:35,510
+and then HTTP provides
+
+8
+00:00:35,510 --> 00:00:38,850
+an application
+protocol to get and
+
+9
+00:00:38,850 --> 00:00:43,270
+put web objects with the server.
+
+10
+00:00:43,270 --> 00:00:46,710
+An attacker could pretend
+
+11
+00:00:46,710 --> 00:00:49,580
+to be the bank in this example;
+
+12
+00:00:49,580 --> 00:00:52,975
+it could inspect
+or modify traffic;
+
+13
+00:00:52,975 --> 00:00:57,855
+it could snoop on Wi-Fi in
+public space and so forth.
+
+14
+00:00:57,855 --> 00:01:00,115
+Is this threat really real,
+
+15
+00:01:00,115 --> 00:01:03,590
+though pretending to
+be somebody else,
+
+16
+00:01:03,590 --> 00:01:08,890
+a different website,
+or modifying messages?
+
+17
+00:01:08,890 --> 00:01:10,490
+Well, we saw part of that,
+
+18
+00:01:10,490 --> 00:01:12,790
+but to show it again,
+
+19
+00:01:12,790 --> 00:01:15,650
+what happens when,
+
+20
+00:01:15,650 --> 00:01:19,035
+in my browser, I
+go to chase.com?
+
+21
+00:01:19,035 --> 00:01:24,375
+Well, a DNS query is performed
+to look up chase.com,
+
+22
+00:01:24,375 --> 00:01:27,135
+and that returns
+on my IP address,
+
+23
+00:01:27,135 --> 00:01:29,750
+and then I send messages to and
+
+24
+00:01:29,750 --> 00:01:33,800
+from that IP address that
+was returned from DNS.
+
+25
+00:01:36,050 --> 00:01:39,490
+We've seen cases or how we might
+
+26
+00:01:39,490 --> 00:01:43,050
+be able to modify
+packets directly,
+
+27
+00:01:43,050 --> 00:01:47,185
+or perhaps the DNS system
+
+28
+00:01:47,185 --> 00:01:50,950
+responds with the
+wrong IP address;
+
+29
+00:01:50,950 --> 00:01:56,995
+it's also the case that BGP
+routes could be hijacked,
+
+30
+00:01:56,995 --> 00:02:01,190
+and so even if you're sending
+to the correct IP address,
+
+31
+00:02:01,190 --> 00:02:04,170
+it ends up at a
+different destination.
+
+32
+00:02:05,560 --> 00:02:12,690
+TLS is introduced as a layer
+that provides security.
+
+33
+00:02:12,690 --> 00:02:14,690
+It provides confidentiality,
+
+34
+00:02:14,690 --> 00:02:18,760
+integrity, and authentication.
+
+35
+00:02:18,760 --> 00:02:23,040
+It's shown here in the middle
+when combined with HTTP;
+
+36
+00:02:23,040 --> 00:02:27,190
+that is what HTTPS is.
+
+37
+00:02:27,350 --> 00:02:30,030
+Now, on the right-hand side,
+
+38
+00:02:30,030 --> 00:02:34,230
+looking forward, we
+didn't go over quick,
+
+39
+00:02:34,230 --> 00:02:36,290
+so I won't discuss that here,
+
+40
+00:02:36,290 --> 00:02:40,110
+but that incorporates a
+lot of the capabilities
+
+41
+00:02:40,110 --> 00:02:46,420
+of TLS into that in
+this next generation.
+
+42
+00:02:46,640 --> 00:02:51,150
+Just to summarize the
+problems of HTTP and
+
+43
+00:02:51,150 --> 00:02:53,450
+TCP when used as
+
+44
+00:02:53,450 --> 00:02:56,380
+the mechanism to
+communicate with servers,
+
+45
+00:02:56,380 --> 00:03:00,195
+the messages are
+sent in plain text,
+
+46
+00:03:00,195 --> 00:03:03,620
+the message integrity
+is not insured,
+
+47
+00:03:03,620 --> 00:03:07,810
+and we're not guaranteed
+to be communicating with
+
+48
+00:03:07,810 --> 00:03:12,900
+the server that we expect to be.
+
+49
+00:03:12,900 --> 00:03:16,185
+We've seen solutions
+to all of these,
+
+50
+00:03:16,185 --> 00:03:20,655
+so we can use
+symmetric encryption;
+
+51
+00:03:20,655 --> 00:03:24,515
+we can use message
+authentication codes
+
+52
+00:03:24,515 --> 00:03:27,855
+using a shared secret key,
+
+53
+00:03:27,855 --> 00:03:32,790
+and these provide
+confidentiality and integrity.
+
+54
+00:03:32,870 --> 00:03:36,150
+But as we've pointed out before,
+
+55
+00:03:36,150 --> 00:03:39,610
+how do we share a private key?
+
+56
+00:03:40,630 --> 00:03:42,920
+There, we can use
+
+57
+00:03:42,920 --> 00:03:45,980
+asymmetric encryption
+to exchange the key.
+
+58
+00:03:45,980 --> 00:03:50,040
+We can encrypt this shared
+key, the session key,
+
+59
+00:03:50,040 --> 00:03:52,185
+with the public key of a server,
+
+60
+00:03:52,185 --> 00:03:55,600
+and the server decrypts
+with their private key.
+
+61
+00:03:55,600 --> 00:03:58,550
+We could use Diffie-Hellman,
+
+62
+00:03:58,550 --> 00:04:01,935
+all those different things.
+
+63
+00:04:01,935 --> 00:04:04,580
+But in this case, how do we
+
+64
+00:04:04,580 --> 00:04:07,375
+trust the public
+key of the server,
+
+65
+00:04:07,375 --> 00:04:10,580
+and in fact, how do we know
+it's the actual server?
+
+66
+00:04:10,580 --> 00:04:13,820
+This is where
+digital certificates
+
+67
+00:04:13,820 --> 00:04:16,690
+and certificate
+authorities come in.
+
+68
+00:04:16,690 --> 00:04:18,720
+This binds the identity,
+
+69
+00:04:18,720 --> 00:04:22,380
+for example, the ownership
+of a domain name,
+
+70
+00:04:22,380 --> 00:04:25,380
+to some public key,
+
+71
+00:04:25,380 --> 00:04:29,875
+and then that could be
+signed by a trusted source.
+
+72
+00:04:29,875 --> 00:04:35,850
+This provides the ability to
+have authentication as well.
+
+73
+00:04:36,170 --> 00:04:40,470
+One certificate authority that's
+
+74
+00:04:40,470 --> 00:04:44,650
+highly used is called,
+Let's Encrypt.
+
+75
+00:04:44,650 --> 00:04:51,805
+This is an open system for
+providing these certificates.
+
+76
+00:04:51,805 --> 00:04:55,140
+How does it go about
+verifying identity?
+
+77
+00:04:55,140 --> 00:04:57,780
+We saw in the case of RPKI,
+
+78
+00:04:57,780 --> 00:05:01,725
+there was this pre established
+business relationship,
+
+79
+00:05:01,725 --> 00:05:05,370
+the RARs, which served as
+
+80
+00:05:05,370 --> 00:05:10,155
+the certificate
+authorities in RPKI.
+
+81
+00:05:10,155 --> 00:05:15,360
+In this case, there's not
+that business relationship.
+
+82
+00:05:15,360 --> 00:05:20,880
+It's got a system where
+it verifies the identity,
+
+83
+00:05:20,880 --> 00:05:27,330
+namely the ownership of a
+domain through a challenge.
+
+84
+00:05:27,330 --> 00:05:32,610
+This could be whether it's
+you provision a DNS record
+
+85
+00:05:32,610 --> 00:05:36,150
+under say example.com if
+
+86
+00:05:36,150 --> 00:05:37,890
+that's the domain that you're
+
+87
+00:05:37,890 --> 00:05:40,065
+trying to issue a
+certificate for,
+
+88
+00:05:40,065 --> 00:05:46,710
+or provision in HTTP resource
+under a well known URI.
+
+89
+00:05:46,710 --> 00:05:51,360
+All right here you're
+going to go request
+
+90
+00:05:51,360 --> 00:05:57,705
+a certificate and then the
+Let's Encrypt system will say,
+
+91
+00:05:57,705 --> 00:05:59,445
+great, why don't you put
+
+92
+00:05:59,445 --> 00:06:04,005
+this value at this location
+
+93
+00:06:04,005 --> 00:06:06,405
+for your website, this domain.
+
+94
+00:06:06,405 --> 00:06:10,470
+Then their own servers
+can then basically do
+
+95
+00:06:10,470 --> 00:06:17,340
+a HTTP request to that
+domain at that location.
+
+96
+00:06:17,340 --> 00:06:21,585
+If that resource value
+was provision there,
+
+97
+00:06:21,585 --> 00:06:24,225
+then they've made
+the assumption that
+
+98
+00:06:24,225 --> 00:06:27,435
+you've proven that
+you have ownership,
+
+99
+00:06:27,435 --> 00:06:30,510
+you've proven
+identity and so now
+
+100
+00:06:30,510 --> 00:06:33,600
+we'll accept that this
+is your public key
+
+101
+00:06:33,600 --> 00:06:36,570
+for that domain and we're going
+
+102
+00:06:36,570 --> 00:06:40,630
+to sign and create a
+certificate for it.
+
+103
+00:06:41,990 --> 00:06:46,410
+With that, now those
+certificates are in place,
+
+104
+00:06:46,410 --> 00:06:51,720
+we're going to have a web
+server would go and do that.
+
+105
+00:06:51,720 --> 00:06:55,170
+Now they have this
+public key that
+
+106
+00:06:55,170 --> 00:06:56,640
+they'll be able to share
+
+107
+00:06:56,640 --> 00:06:59,890
+with anybody visiting
+their website.
+
+108
+00:07:00,350 --> 00:07:03,225
+The client would be able to say,
+
+109
+00:07:03,225 --> 00:07:05,430
+oh, let's encrypt sign this.
+
+110
+00:07:05,430 --> 00:07:07,065
+I know it's valid,
+
+111
+00:07:07,065 --> 00:07:09,090
+it's tied to this identity.
+
+112
+00:07:09,090 --> 00:07:11,925
+I know that's the
+identity I'm looking for
+
+113
+00:07:11,925 --> 00:07:16,600
+so it can trust that
+communication now.
+
+114
+00:07:16,600 --> 00:07:20,880
+There much like when
+we talked about IP,
+
+115
+00:07:20,880 --> 00:07:24,570
+there's this handshake
+that needs to happen.
+
+116
+00:07:24,570 --> 00:07:29,265
+This is the core of TLS.
+
+117
+00:07:29,265 --> 00:07:33,450
+This happens after you
+do the TCP connection.
+
+118
+00:07:33,450 --> 00:07:36,420
+After you do that
+three way handshake,
+
+119
+00:07:36,420 --> 00:07:39,765
+it sets up the agreement
+on the parameters,
+
+120
+00:07:39,765 --> 00:07:45,090
+it authenticates the server
+and it sets up a private key,
+
+121
+00:07:45,090 --> 00:07:48,450
+then encrypted traffic
+can exchange and you can
+
+122
+00:07:48,450 --> 00:07:54,610
+do exchange of web
+objects with the server.
+
+123
+00:07:54,680 --> 00:07:59,400
+We're specifically
+focusing on TLS 1.2,
+
+124
+00:07:59,400 --> 00:08:03,060
+1.3 that is more concise.
+
+125
+00:08:03,060 --> 00:08:05,535
+It reduces some of the messages,
+
+126
+00:08:05,535 --> 00:08:11,520
+but this I feel
+helps understand it,
+
+127
+00:08:11,520 --> 00:08:13,815
+it keeps it a little more clear.
+
+128
+00:08:13,815 --> 00:08:17,775
+We're going to use
+1.2 as our example.
+
+129
+00:08:17,775 --> 00:08:21,885
+The first message is from
+the client to the server.
+
+130
+00:08:21,885 --> 00:08:22,950
+It's a client.
+
+131
+00:08:22,950 --> 00:08:25,950
+Hello. This tells the server of
+
+132
+00:08:25,950 --> 00:08:29,220
+what the client can support
+and what it prefers.
+
+133
+00:08:29,220 --> 00:08:35,070
+The algorithms for encryption
+that it supports, like DES,
+
+134
+00:08:35,070 --> 00:08:40,455
+AES, its data integrity
+algorithms like SHA,
+
+135
+00:08:40,455 --> 00:08:43,800
+SHA1, MD5, and so forth.
+
+136
+00:08:43,800 --> 00:08:46,900
+This is the parameters.
+
+137
+00:08:47,240 --> 00:08:49,530
+The server picks with
+
+138
+00:08:49,530 --> 00:08:58,260
+parameters and then tells
+the client what it chose.
+
+139
+00:08:58,260 --> 00:09:01,660
+It sends a server hello message.
+
+140
+00:09:02,500 --> 00:09:04,910
+The server then sends
+
+141
+00:09:04,910 --> 00:09:07,940
+its digital certificate
+that was signed by
+
+142
+00:09:07,940 --> 00:09:11,750
+a certificate authority
+and this is what
+
+143
+00:09:11,750 --> 00:09:16,565
+binds that domain name to the
+public key of the server.
+
+144
+00:09:16,565 --> 00:09:19,270
+That's what the
+certificate does.
+
+145
+00:09:19,270 --> 00:09:24,880
+The client will have a root
+certificate installed,
+
+146
+00:09:24,880 --> 00:09:27,715
+or a bunch of root
+certificates installed,
+
+147
+00:09:27,715 --> 00:09:31,780
+and can verify the
+server's certificate
+
+148
+00:09:31,780 --> 00:09:33,445
+as long as it was signed
+
+149
+00:09:33,445 --> 00:09:36,175
+by one of these
+certificate authorities
+
+150
+00:09:36,175 --> 00:09:39,490
+that was installed in,
+
+151
+00:09:39,490 --> 00:09:44,065
+in this case, the
+browser of the client.
+
+152
+00:09:44,065 --> 00:09:51,110
+With this, it knows the
+website it's expecting.
+
+153
+00:09:51,690 --> 00:09:54,970
+The server then indicates it's
+
+154
+00:09:54,970 --> 00:09:59,180
+done with its
+handshake negotiation.
+
+155
+00:09:59,940 --> 00:10:07,270
+At this point, the
+client and the server,
+
+156
+00:10:07,270 --> 00:10:12,085
+have the ability to
+exchange a session key.
+
+157
+00:10:12,085 --> 00:10:16,750
+We have the public key
+of the server and so
+
+158
+00:10:16,750 --> 00:10:22,180
+the client can initiate this.
+
+159
+00:10:22,180 --> 00:10:25,345
+The client can pick
+a session key,
+
+160
+00:10:25,345 --> 00:10:29,315
+encrypt it with the
+public key of the server,
+
+161
+00:10:29,315 --> 00:10:32,800
+and send it over.
+
+162
+00:10:33,510 --> 00:10:38,545
+Now that's part of the
+client key exchange.
+
+163
+00:10:38,545 --> 00:10:41,230
+Now the client can indicate that
+
+164
+00:10:41,230 --> 00:10:43,810
+it now believes the
+parameters are agreed
+
+165
+00:10:43,810 --> 00:10:50,090
+upon and that the next
+message will be encrypted.
+
+166
+00:10:51,780 --> 00:10:54,310
+As part of that,
+
+167
+00:10:54,310 --> 00:10:58,975
+it then sends the summary of
+all messages to this point,
+
+168
+00:10:58,975 --> 00:11:01,930
+ensuring the integrity of all of
+
+169
+00:11:01,930 --> 00:11:05,930
+them and that none of them
+have been tampered with.
+
+170
+00:11:06,840 --> 00:11:10,675
+The server then also sends
+
+171
+00:11:10,675 --> 00:11:13,360
+a similar message indicating
+
+172
+00:11:13,360 --> 00:11:15,685
+that it has everything
+that it needs,
+
+173
+00:11:15,685 --> 00:11:18,010
+it agrees to all the parameters,
+
+174
+00:11:18,010 --> 00:11:22,030
+has the key, and a summary of
+
+175
+00:11:22,030 --> 00:11:26,035
+all of the messages it
+understands to this point,
+
+176
+00:11:26,035 --> 00:11:30,415
+again, ensuring integrity.
+
+177
+00:11:30,415 --> 00:11:35,140
+At this point, communication
+is now secured.
+
+178
+00:11:35,140 --> 00:11:37,900
+We can now know that we're
+
+179
+00:11:37,900 --> 00:11:41,755
+visiting the domain
+that we're expecting.
+
+180
+00:11:41,755 --> 00:11:44,560
+We're encrypting the traffic
+
+181
+00:11:44,560 --> 00:11:49,400
+and all of that is
+integrity checked.
+
+182
+00:11:49,980 --> 00:11:57,340
+Now another thing
+to know about TLS,
+
+183
+00:11:57,340 --> 00:11:58,480
+so what we've just
+
+184
+00:11:58,480 --> 00:12:00,880
+demonstrated is in
+the most common case,
+
+185
+00:12:00,880 --> 00:12:04,150
+it's going to be a
+client needs to validate
+
+186
+00:12:04,150 --> 00:12:08,590
+the authenticity of the
+server that it's visiting.
+
+187
+00:12:08,590 --> 00:12:10,690
+The server doesn't necessarily
+
+188
+00:12:10,690 --> 00:12:13,780
+need to verify that I'm who I
+
+189
+00:12:13,780 --> 00:12:18,850
+say I am because it doesn't
+really know or care.
+
+190
+00:12:18,850 --> 00:12:23,455
+But there are cases
+where it does.
+
+191
+00:12:23,455 --> 00:12:28,510
+This is where Mutual
+TLS or MTLS comes in.
+
+192
+00:12:28,510 --> 00:12:30,820
+As described, the
+client verifying
+
+193
+00:12:30,820 --> 00:12:32,740
+the identity of the
+server is enough,
+
+194
+00:12:32,740 --> 00:12:34,600
+that this domain of
+
+195
+00:12:34,600 --> 00:12:35,920
+the public key matches
+
+196
+00:12:35,920 --> 00:12:39,580
+the website that I'm
+visiting as a client.
+
+197
+00:12:39,580 --> 00:12:42,130
+Now if the server wants to
+
+198
+00:12:42,130 --> 00:12:44,410
+verify the identity
+of his clients,
+
+199
+00:12:44,410 --> 00:12:46,105
+this could happen maybe it's for
+
+200
+00:12:46,105 --> 00:12:49,240
+access control for
+API endpoints,
+
+201
+00:12:49,240 --> 00:12:53,020
+so I'm running some
+service and I only want to
+
+202
+00:12:53,020 --> 00:12:58,045
+let those that are my customers,
+
+203
+00:12:58,045 --> 00:13:02,155
+that I've explicitly
+allowed to use the APIs,
+
+204
+00:13:02,155 --> 00:13:05,515
+and so I want to validate that.
+
+205
+00:13:05,515 --> 00:13:09,940
+I want to validate they
+are who they say they are.
+
+206
+00:13:09,940 --> 00:13:14,440
+The browsers in the client
+would look at the domain in
+
+207
+00:13:14,440 --> 00:13:17,080
+the certificate and
+match to what's
+
+208
+00:13:17,080 --> 00:13:19,885
+being accessed, so
+that's implicit,
+
+209
+00:13:19,885 --> 00:13:24,145
+except all servers
+would likely have
+
+210
+00:13:24,145 --> 00:13:27,010
+an explicit access control list
+
+211
+00:13:27,010 --> 00:13:31,040
+for what certificates
+it's accepting.
+
+212
+00:13:37,350 --> 00:13:42,655
+With that, we've
+now covered TLS.
+
+213
+00:13:42,655 --> 00:13:46,125
+That wraps up this module on
+
+214
+00:13:46,125 --> 00:13:50,220
+network security where
+we covered the basics,
+
+215
+00:13:50,220 --> 00:13:52,500
+really try to tie
+it into things we
+
+216
+00:13:52,500 --> 00:13:56,055
+learned in other modules,
+
+217
+00:13:56,055 --> 00:13:58,140
+and show how these
+things all come
+
+218
+00:13:58,140 --> 00:14:02,070
+together. With that, thanks.

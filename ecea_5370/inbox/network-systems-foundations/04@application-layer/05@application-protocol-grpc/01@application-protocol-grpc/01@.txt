@@ -1,0 +1,158 @@
+All right, this time we're
+going to talk about another application protocol called gRPC. So to kind of set this up again,
+the last problem that we identified was, what is this application level or
+application layer protocol? And while the transport layer provides for the ability for
+processes to be able to communicate, now the applications need to be
+able to communicate the meaning behind the data that they sent,
+the messages that they send. The structuring of the data and
+all that kind of stuff. So for example,
+with YouTube, whether it's, I want to watch a video or
+whether I want to upload a video. And then what's the format of all of that? So last time we looked at Http, and
+we looked at a little bit of the taxonomy. So here we're going to look at
+a different example of gRPC. So what gRPC is, is let's step back and see what's RPC, remote procedure call. So this is technology that was
+created a long time ago, 1981. So here's the paper that was created by Bruce J Nelson. And what it really did was it extended
+the idea of a local procedure call. So a local procedure call, I would have something like z = add(11,22). And then I would have some function or
+procedure that would return the result. And we're used to writing code like that. Now what if I could do that where
+the implementation of add that function or procedure was on a remote machine. And so what this work did was
+it defined a framework for data encoding and
+the communication protocol. So what it did was it created this, what's shown here as a stub code and
+so on the local client, you would still be able to
+call a function like Add. And then this stub code would take that
+and say, well, that's going to be remote, here's how I'm going to package up
+the data, the parameters 11 and 12. I'm going to encode those, send them over
+to some stub code running on the server. It will actually call the function,
+get the result, encode the result and send it back. And then the stub code on
+the client would return it. So this is really useful
+functionality in modern web services. So shown here is a picture of
+basically that the idea that services are partitioned into smaller services,
+each with some form of API. So the picture on the right shows
+a rideshare service where you have different functionalities
+such as driver management and trip management and payments and
+billing and notifications. And so these can all be broken
+into their own smaller service, but to provide the functionality
+to say the end user, these functionalities get
+effectively chained together. The one-piece service can call
+another service that for example, when you create a ride, it's going to
+need to do both trip management and then it's going to call billing
+to say how much it costs. So this could be through Rest APIs, through Http, as we saw last time. But it could also be done
+with gRPC as the protocol. So what is gRPC? It's just a modern implementation of RPCs. And so it's based on something
+called protobuffs that we'll see a couple examples of. And all protobuffs are is
+really this ability to specify kind of the structure
+of a message and then it creates a binary
+format to be able to serialize that data such that you can
+transmit it over the network. GRPC leverages Http version two, which had the persistent and
+pipelined messages. So shown on the left
+hand side is some JSON. We saw that. And because you need to include
+the extra information of the keys or the names, because it's names and values, the same isn't true with protobuffs
+where you can specify all the types, but then what actually gets
+transmitted is a lot more condensed. And so this is a binary format,
+it's a lot more compressed. And so here's a simple example
+of the same functionality would be defined in JSON,
+it would be 55 bytes. And if you did that in
+protobuffs it would be 20 bytes. So the workflow for
+how to use gRPC is the main thing that revolves around is this proto file and which specifies the structure of
+the data and defines the functions. And we'll go into that in a little more
+depth, we'll show some actual code. And so
+then a compiler shown here as protoc, generates libraries of these stubs. And as we mentioned for the RPC,
+that's the functionality that serializes and deserializes the data. And gRPC supports a wide
+number of different languages. Then once I have these libraries,
+I can create the server which is going to import these libraries and
+it will define the implementation of those functions that
+are specified in the proto file. And then I can call or
+create the client which also using these libraries, and
+then I'm able to make calls to those functions that were
+specified in the proto file. All right, so
+we're going to walk through an example. So what was created and we're going to
+create right now is simple.proto. And then I've pre created the client and
+the server Python files. I'm going to run this command,
+which is the protocol compiler or protobuff compiler for Python. And it's going to generate two files,
+basically the stubs. I've set up all of this as a practice lab,
+so all of this code and
+the instructions are available there, but let's walk through it here. All right, so for this,
+I'm going to switch over to VS Code. So here I got a blank file that we're
+going to work, it's our simple.proto. And if you notice,
+it's only got that simple.proto and then the simple client and
+simple server, those are the only files. I have another example that
+we'll briefly show and that's also included as
+part of that practice lab. All right, so the first thing or one of the things that you need to do
+is to define what are those services, what are those functions that
+you're going to be calling? So in our RPC example,
+it was the function add, which might be part of a larger service,
+say math or something like that. So we're going to create a simple program
+that's going to just be an echo server, so whatever the server receives,
+it's just going to send back immediately. So I'll create the service and
+I'll call it Echo. Now within this I have
+to define the function, so the syntax is call it RPC, and
+now I can define the function. And part of that is specifying the
+parameters as well as the return value. All right, so
+I'm going to put the parameters here and the return value there. But before I do that,
+we need to define what is these kind of object types that we're
+going to be transmitting. And so
+to do that we would create a message, and I'm going to just call it Message for
+lack of creativity. And now I would define
+what are the values, the different things that
+I can store within this. So here I'm just going to say
+the first data piece inside of this Message is going to be a string
+and I'll also call it Message. And then I'll say =1, and what that equals one means is if I have multiple of these, this is the first one
+in the order of this. So it's as simple as that. And now this is the type. And so for the parameters, I'm going to
+say it takes one parameter, and it's going to be a message. And then I'm going to return a message. And so with that we have complete
+implementation of a protopuff specification or schema,
+well, specification. All right, so
+now I can go into my terminal. So if you haven't used VS Code,
+we can click Terminal, New Terminal, I already did that because I just
+wanted this command already typed in. So this is the Python, the gRPC protoc, I specify this simple.proto. I say I want the output
+files to be generated in this directory and yeah,
+that's what I want. So when I click this so now keep a watch, here's the files that I have. When I ran that said expected semicolon. All right, so
+let me put a semicolon there. And then I mistyped that returns. All right, again, great. Now we actually have the generated Python. And making mistakes is fine,
+you get the nice error reports, but here we get two generated files. All right, so we don't need to look
+into those but now how do we use those? So the first thing that we'll
+look at is this simple server. So for
+the simple server I need to kind of import those libraries that were just
+generated and import gRPC. All right? And so for each service that I created, I need to create this service, all right? So I need to create something
+called Echo service, because I defined a service called Echo. Within that, and it's going to extend, one of the things generated
+in that library called Echo servicer, and so
+it's inheriting from that. So you do the initialization but
+this is the kind of main thing. For each of the functions that I defined,
+I have to specify that function and then have this as the signature
+of that function. So this request will have the message,
+which is the parameter. So it had a message inside of it. Oops, that's the client,
+here's the server, and that's what contains that string. All I'm going to do is return that, so this request is that
+request type of message, and it had that string value
+of message inside of it. Now, when I want to go return, I'm going to create a new
+kind of object of type message. I'm going to set its string value message
+inside of it to whatever we received and then return it. So that's really all I have to do,
+that's the main function of the server. And then there's some
+standard code to set up, much as to set up a socket,
+we set up the server, pass in, you'll say that this is the Echo
+service such that we create that for the server to know about the library and
+then we start it. All right? So that's the main thing for
+the server part, for the client part here. It's just as simple. So here we're going to have a channel. So this is all kind of
+like that standard kind of template of how you
+would write a gRPC code. I can then now create this stub, right? So this is by calling it,
+what was generated as part of the library was something
+called Echo stub. Now I can now use the library
+to generate a message. In the server I created it separately,
+like set the string value of message, but
+here I can pass that in to initializer. So I'm going to say, hello. Print that out, and
+then now I'm calling the Echo function with that parameter to this stub,
+all right? So that's all that's involved
+in creating the client. So now if I wanted to run this, I could run something like Python, simple server.py. Now the server is running, and now let's say I want to just debug,
+I can set the breakpoint. Debug the client, step through this, created that stub,
+printed out the hello just locally, because that's what I want to call,
+but I didn't need that. I just called the server,
+got the response, and I could print out what I got the response,
+which as expected was hello. All right, so that's the general workflow. If we want to peek into the other example, you can see things like,
+I can have multiple services, I can have multiple functions,
+I don't necessarily need the return value to be the same
+type as the input parameter. I can define multiple message types and I can have the showing the one and
+the two as the ordering. And this is go through the same tooling. I would generate these two library
+files through a similar call, create a client, create a server,
+and have all of that. So again, that's posted as a practice lab, and this is what we saw. So now what we used was a really simple
+kind of API mode which called Unary, and it's basically just the client
+sends over to the server, then the server sends
+something back to the client. There's other modes where this
+kind of dotted line-looking thing is where you can have
+various streaming interfaces. If it's more than a single message but it's a stream of messages,
+you can do that. And then this just includes moderate.proto example how you would run it. All of it is annotated and
+you can look at that for more insights. All right, so with that,
+that covers gRPC and it wraps up the application layer module. All right, thanks.

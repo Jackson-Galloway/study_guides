@@ -1,0 +1,1367 @@
+1
+00:00:09,447 --> 00:00:15,302
+All right, let's jump into some basics for
+network security.
+
+2
+00:00:15,302 --> 00:00:20,706
+And so this is going to be the different
+techniques that we'll see come up
+
+3
+00:00:20,706 --> 00:00:25,744
+in those various solutions that we
+discussed in the last video and
+
+4
+00:00:25,744 --> 00:00:30,342
+that we'll go through in detail
+in the subsequent videos.
+
+5
+00:00:30,342 --> 00:00:33,497
+All right, so
+starting with confidentiality.
+
+6
+00:00:33,497 --> 00:00:41,276
+So a reminder what this means is what we
+want is to be able to send a message and
+
+7
+00:00:41,276 --> 00:00:46,847
+keep it secret from anyone
+other than the recipient.
+
+8
+00:00:46,847 --> 00:00:49,877
+Now, to understand this,
+
+9
+00:00:49,877 --> 00:00:55,822
+let's first talk about
+a little bit of terminology.
+
+10
+00:00:55,822 --> 00:01:01,931
+So when we say there's two
+parties that are communicating,
+
+11
+00:01:01,931 --> 00:01:06,501
+we commonly give them names,
+Alice and Bob.
+
+12
+00:01:06,501 --> 00:01:11,313
+So you'll see that a lot in
+kind of network security.
+
+13
+00:01:11,313 --> 00:01:17,175
+Then any attacker we'll see
+will also be given a name.
+
+14
+00:01:17,175 --> 00:01:21,684
+And so here we're concerned
+about eavesdropping, so
+
+15
+00:01:21,684 --> 00:01:23,847
+we name the attacker Eve.
+
+16
+00:01:23,847 --> 00:01:28,286
+And so some other names you
+might see might be Eve or
+
+17
+00:01:28,286 --> 00:01:32,840
+Mallory or Trudy and
+it all depends on the context.
+
+18
+00:01:32,840 --> 00:01:37,832
+But in general,
+there's some third party that's not
+
+19
+00:01:37,832 --> 00:01:42,834
+part of that communication and
+shown as the attacker.
+
+20
+00:01:42,834 --> 00:01:47,297
+We then want to be able
+to transmit the data.
+
+21
+00:01:47,297 --> 00:01:51,374
+And so in this, the unencrypted traffic,
+
+22
+00:01:51,374 --> 00:01:58,296
+the one that is what Alice is sending
+directly is what we call plain text.
+
+23
+00:01:58,296 --> 00:02:04,472
+So that is what we don't want Eve
+in this example to be able to see.
+
+24
+00:02:04,472 --> 00:02:11,351
+So we then use an encryption algorithm to
+change that into what we call ciphertext,
+
+25
+00:02:11,351 --> 00:02:17,757
+which is, we don't mind if Eve can see
+that because it has to them no meaning.
+
+26
+00:02:17,757 --> 00:02:22,234
+But then through a decryption algorithm,
+
+27
+00:02:22,234 --> 00:02:27,341
+it can be converted back
+into plain text for Bob.
+
+28
+00:02:27,341 --> 00:02:32,224
+And then the last kind of
+bit is some information that
+
+29
+00:02:32,224 --> 00:02:35,887
+is needed as part of this encryption and
+
+30
+00:02:35,887 --> 00:02:40,551
+decryption process
+are something known as keys.
+
+31
+00:02:40,551 --> 00:02:45,002
+So here it's showing that Alice
+has an encryption key and
+
+32
+00:02:45,002 --> 00:02:50,584
+Bob has a decryption key and those
+are used as part of those algorithms.
+
+33
+00:02:50,584 --> 00:02:54,231
+So we'll go over a little
+more what those keys
+
+34
+00:02:54,231 --> 00:02:58,369
+are because there's a couple
+of different types.
+
+35
+00:02:58,369 --> 00:03:03,845
+And then you might see in
+the bottom left this kind
+
+36
+00:03:03,845 --> 00:03:11,994
+of terminology where we might use M to
+indicate the plain text message and
+
+37
+00:03:11,994 --> 00:03:16,284
+then K subscript A of M parentheses M.
+
+38
+00:03:16,284 --> 00:03:22,928
+And that's indicating some ciphertext
+that's been encrypted with key KA.
+
+39
+00:03:22,928 --> 00:03:29,940
+And then to decrypt it, you can take
+that message, this ciphertext message,
+
+40
+00:03:29,940 --> 00:03:35,376
+the KA of M, wrap that, and
+now we see KB being applied to it.
+
+41
+00:03:35,376 --> 00:03:40,175
+So that's applying key B or key B, and
+
+42
+00:03:40,175 --> 00:03:44,227
+then we can get back to message.
+
+43
+00:03:44,227 --> 00:03:47,310
+All right, so
+now in terms of what these keys are.
+
+44
+00:03:47,310 --> 00:03:53,276
+So the first type of encryption
+is symmetric encryption.
+
+45
+00:03:53,276 --> 00:03:56,870
+And this is where there's a shared key.
+
+46
+00:03:56,870 --> 00:04:01,381
+So all a key is some bit pattern that was
+
+47
+00:04:01,381 --> 00:04:05,754
+generated through some mechanism.
+
+48
+00:04:05,754 --> 00:04:10,644
+And in this case, Alice and
+Bob share this key and
+
+49
+00:04:10,644 --> 00:04:15,667
+that's used in both encryption and
+decryption.
+
+50
+00:04:15,667 --> 00:04:20,696
+So the properties of this,
+when we have symmetric
+
+51
+00:04:20,696 --> 00:04:26,326
+encryption is that it's fast
+to encrypt and decrypt but
+
+52
+00:04:26,326 --> 00:04:33,185
+the challenge here is that you need
+a way to be able to share this key.
+
+53
+00:04:33,185 --> 00:04:38,840
+So as a trivial example, we're
+going to use XOR as our encryption and
+
+54
+00:04:38,840 --> 00:04:40,969
+decryption algorithm.
+
+55
+00:04:40,969 --> 00:04:47,334
+So we're going to have a shared key
+with this bit pattern as above.
+
+56
+00:04:47,334 --> 00:04:54,090
+And let's say we want to transmit
+the word Eric in ASCII characters,
+
+57
+00:04:54,090 --> 00:04:58,012
+and then we want to be able to receive it.
+
+58
+00:04:58,012 --> 00:05:00,551
+All right, so
+let's look at just the first character.
+
+59
+00:05:00,551 --> 00:05:05,335
+If we do it block by block,
+where each block is eight bits and
+
+60
+00:05:05,335 --> 00:05:09,664
+the key is also eight bits,
+and the algorithm is XOR.
+
+61
+00:05:09,664 --> 00:05:15,943
+So in hex, the character e
+in ASCII would be in hex 45,
+
+62
+00:05:15,943 --> 00:05:20,753
+or if we've wrote it out in binary 0100
+
+63
+00:05:20,753 --> 00:05:25,181
+0101 and so that's the capital E.
+
+64
+00:05:25,181 --> 00:05:31,790
+And then we can XOR it
+with the key as down here.
+
+65
+00:05:31,790 --> 00:05:37,759
+And if you recall, XOR one,
+XOR with one is a zero.
+
+66
+00:05:37,759 --> 00:05:42,281
+Zero XOR with one is one,
+one XOR with one is zero,
+
+67
+00:05:42,281 --> 00:05:47,154
+zero XOR with zero, zero,
+and so forth, all right?
+
+68
+00:05:47,154 --> 00:05:53,611
+And so what we end up with
+is the hex value 92 or 9,2.
+
+69
+00:05:53,611 --> 00:06:00,508
+And if you convert that to ASCII,
+that would be that apostrophe, all right?
+
+70
+00:06:00,508 --> 00:06:02,267
+So that's on the encrypt side.
+
+71
+00:06:02,267 --> 00:06:06,586
+So if we continued all the characters
+these would be the symbols,
+
+72
+00:06:06,586 --> 00:06:09,656
+the ASCII symbols that
+would be transmitted.
+
+73
+00:06:09,656 --> 00:06:11,615
+And then we can apply XOR.
+
+74
+00:06:11,615 --> 00:06:16,044
+So now we take that 92 or
+the apostrophe and
+
+75
+00:06:16,044 --> 00:06:19,399
+run it through this decryption,
+
+76
+00:06:19,399 --> 00:06:23,854
+which is in this case
+xoring it with the key.
+
+77
+00:06:23,854 --> 00:06:29,294
+And we can see that it ends up with 4,5 or
+
+78
+00:06:29,294 --> 00:06:33,504
+ASCII character E, all right?
+
+79
+00:06:33,504 --> 00:06:38,256
+So you can see this is a simple example.
+
+80
+00:06:38,256 --> 00:06:43,803
+This wouldn't be too secure,
+but a better example
+
+81
+00:06:43,803 --> 00:06:49,103
+is a protocol called or
+an algorithm called AES.
+
+82
+00:06:49,103 --> 00:06:54,245
+This has been a standard
+from NIST since 2001.
+
+83
+00:06:54,245 --> 00:07:00,062
+And you can use 128, 192, 256 bit keys.
+
+84
+00:07:00,062 --> 00:07:04,777
+And if you go through
+the details which we won't,
+
+85
+00:07:04,777 --> 00:07:08,817
+it's similar in spirit to kind of XOR, but
+
+86
+00:07:08,817 --> 00:07:15,109
+a lot more complex operations
+where we're substituting bytes and
+
+87
+00:07:15,109 --> 00:07:20,612
+shifting different rows and
+mixing up the bytes of data and
+
+88
+00:07:20,612 --> 00:07:25,693
+using different parts of
+the key in different areas.
+
+89
+00:07:25,693 --> 00:07:29,370
+But it's basically you
+take the plain text,
+
+90
+00:07:29,370 --> 00:07:34,692
+run it through this algorithm
+with the key, you get ciphertext,
+
+91
+00:07:34,692 --> 00:07:39,561
+and then you run it in reverse and
+you can get the plain text.
+
+92
+00:07:39,561 --> 00:07:46,110
+All right, so the other kind of encryption
+is called asymmetric encryption.
+
+93
+00:07:46,110 --> 00:07:49,595
+And so this is where one of the parties,
+
+94
+00:07:49,595 --> 00:07:54,041
+in this case it's Bob,
+will generate a key pair.
+
+95
+00:07:54,041 --> 00:08:00,211
+One, Bob will keep private, and
+then the other one, Bob can share.
+
+96
+00:08:02,074 --> 00:08:06,872
+With anybody, it doesn't matter who
+has it, so it's Bob's Public key.
+
+97
+00:08:06,872 --> 00:08:12,884
+And what this can do is the way
+these algorithms are constructed
+
+98
+00:08:12,884 --> 00:08:20,540
+is you can use Bob's public key to do
+the encryption to create the ciphertext.
+
+99
+00:08:20,540 --> 00:08:27,374
+Now, the only person that could decrypt
+it is Bob, who has the private key.
+
+100
+00:08:27,374 --> 00:08:30,708
+So you need that private
+key to do the decryption.
+
+101
+00:08:30,708 --> 00:08:35,833
+Now, this is slow and
+we'll see it can only really handles
+
+102
+00:08:35,833 --> 00:08:40,786
+shorter messages, but
+it's simple to share the key.
+
+103
+00:08:40,786 --> 00:08:47,120
+You can share this public key with
+anybody, doesn't matter who has it.
+
+104
+00:08:48,254 --> 00:08:54,200
+So the common algorithm, or a popular
+algorithm here is something called RSA for
+
+105
+00:08:54,200 --> 00:08:56,659
+the encryption and decryption.
+
+106
+00:08:56,659 --> 00:08:59,840
+So given a public key and
+
+107
+00:08:59,840 --> 00:09:04,300
+a private key, n and e and n and d.
+
+108
+00:09:04,300 --> 00:09:07,521
+So e for encryption, d for decryption.
+
+109
+00:09:07,521 --> 00:09:12,651
+In that case,
+message m is just a bit pattern
+
+110
+00:09:12,651 --> 00:09:17,428
+that can be interpreted as an integer.
+
+111
+00:09:17,428 --> 00:09:20,193
+So to encrypt the message,
+
+112
+00:09:20,193 --> 00:09:25,483
+you can take the message,
+which is just an integer,
+
+113
+00:09:25,483 --> 00:09:30,410
+raise it to the power of
+whatever that key is, e,
+
+114
+00:09:30,410 --> 00:09:35,640
+and then do mod n and
+that becomes the ciphertext.
+
+115
+00:09:35,640 --> 00:09:38,904
+And then you do a similar process,
+
+116
+00:09:38,904 --> 00:09:44,662
+you take that ciphertext,
+raise it to d, and then do mod n.
+
+117
+00:09:44,662 --> 00:09:52,300
+And this works because of the properties
+of mod and how n, e, and d are chosen.
+
+118
+00:09:52,300 --> 00:09:56,180
+And this is briefly
+illustrated on the next slide.
+
+119
+00:09:57,240 --> 00:09:59,450
+So here is an example.
+
+120
+00:09:59,450 --> 00:10:04,824
+So let's say, as part of this
+generating what e and d are,
+
+121
+00:10:04,824 --> 00:10:11,514
+you choose some values, p and q, and
+that ends up kind of resulting in n,
+
+122
+00:10:11,514 --> 00:10:16,622
+which is 35,
+which is the multiplication of those.
+
+123
+00:10:16,622 --> 00:10:22,272
+And then another factor that you use is z,
+which is p-1 and
+
+124
+00:10:22,272 --> 00:10:26,909
+q-1 multiply those together and
+you get 24.
+
+125
+00:10:26,909 --> 00:10:29,592
+So the end result,
+
+126
+00:10:29,592 --> 00:10:34,959
+if you were to go through the process,
+
+127
+00:10:34,959 --> 00:10:40,659
+you get an encryption key or
+the e is 5 and
+
+128
+00:10:40,659 --> 00:10:44,537
+then d is 29, all right?
+
+129
+00:10:44,537 --> 00:10:49,535
+So with those, let's say we're
+encrypting an 8 bit message.
+
+130
+00:10:49,535 --> 00:10:52,769
+We have this bit pattern right there.
+
+131
+00:10:52,769 --> 00:10:58,007
+If we convert that to a number,
+an integer, it's 12.
+
+132
+00:10:58,007 --> 00:11:02,587
+So then we do 12 raised to the power of 5.
+
+133
+00:11:02,587 --> 00:11:07,129
+And this is what we would get,
+
+134
+00:11:07,129 --> 00:11:12,047
+24,832, and then mod n.
+
+135
+00:11:12,047 --> 00:11:17,234
+So since n was 35,
+we mod it and we get 17.
+
+136
+00:11:18,387 --> 00:11:23,562
+So now we can take in the decrypt side,
+take 17,
+
+137
+00:11:23,562 --> 00:11:28,491
+raise it to d, and
+you get a really long number,
+
+138
+00:11:28,491 --> 00:11:32,942
+and then mod that by n and
+then you get 12.
+
+139
+00:11:32,942 --> 00:11:37,144
+And you can see that these two
+values are the same, and so
+
+140
+00:11:37,144 --> 00:11:42,081
+this is just an example of going
+through the math and how it works.
+
+141
+00:11:42,081 --> 00:11:45,681
+And I know we glossed
+over kind of how e and d.
+
+142
+00:11:45,681 --> 00:11:50,365
+So there's certainly
+documentation out there
+
+143
+00:11:50,365 --> 00:11:55,174
+that you can look at to
+get the concrete details.
+
+144
+00:11:55,174 --> 00:12:01,250
+But this gives you an overview
+of kind of why it's slow,
+
+145
+00:12:01,250 --> 00:12:06,034
+why it only works for
+smaller bit patterns,
+
+146
+00:12:06,034 --> 00:12:09,152
+because you have to do this.
+
+147
+00:12:09,152 --> 00:12:12,353
+All right, so
+now we saw these two properties.
+
+148
+00:12:12,353 --> 00:12:18,749
+We have this shared key, which is faster,
+can handle longer messages.
+
+149
+00:12:18,749 --> 00:12:23,379
+We have the public,
+the asymmetric encryption which can
+
+150
+00:12:23,379 --> 00:12:28,432
+handle shorter messages, but
+it's easier to distribute.
+
+151
+00:12:28,432 --> 00:12:34,057
+So a lot of times you
+can use the asymmetric
+
+152
+00:12:34,057 --> 00:12:40,622
+encryption to be able to
+exchange a shared key.
+
+153
+00:12:40,622 --> 00:12:46,538
+And here it's being called the session
+key, because it's just created just for
+
+154
+00:12:46,538 --> 00:12:50,818
+the communication between Alice and
+Bob for right now.
+
+155
+00:12:50,818 --> 00:12:54,398
+So the part one of this is that Bob or
+
+156
+00:12:54,398 --> 00:12:58,472
+that Alice picks some session key, and
+
+157
+00:12:58,472 --> 00:13:04,556
+then uses Bob's public key to
+encrypt it and send to Bob.
+
+158
+00:13:04,556 --> 00:13:09,933
+And then Bob is the only one That
+can decrypt it with its private key.
+
+159
+00:13:09,933 --> 00:13:13,821
+So that the wording here, there's a typo,
+that should say public key,
+
+160
+00:13:13,821 --> 00:13:15,628
+but you can see it in the picture.
+
+161
+00:13:15,628 --> 00:13:19,566
+It's using the Bob's public key,
+
+162
+00:13:19,566 --> 00:13:24,429
+encrypted session key and
+now Bob has that.
+
+163
+00:13:24,429 --> 00:13:30,477
+And so now, since they're the only
+two that know the session key,
+
+164
+00:13:30,477 --> 00:13:35,769
+because Alice picked it, and
+then Bob was the only one that
+
+165
+00:13:35,769 --> 00:13:42,681
+could decrypt the message that included
+it, now they can use a shared key and
+
+166
+00:13:42,681 --> 00:13:48,518
+use symmetric encryption in
+the actual longer communication.
+
+167
+00:13:50,420 --> 00:13:54,660
+All right, so
+the next property is message integrity.
+
+168
+00:13:54,660 --> 00:13:59,088
+So here, we don't want this attacker,
+
+169
+00:13:59,088 --> 00:14:05,120
+we don't want the messages
+to be able to be modified.
+
+170
+00:14:05,120 --> 00:14:09,397
+So in this case, Alice sends something,
+sends a message, but
+
+171
+00:14:09,397 --> 00:14:13,722
+then what Bob is actually
+receiving is a different message.
+
+172
+00:14:13,722 --> 00:14:19,082
+And so we need a know to be able
+to ensure that at a minimum,
+
+173
+00:14:19,082 --> 00:14:23,124
+Bob knows that it's a different message.
+
+174
+00:14:23,124 --> 00:14:28,240
+So now, starting off,
+we're going to use hashing.
+
+175
+00:14:28,240 --> 00:14:33,450
+So a hash function is something
+where you can calculate
+
+176
+00:14:33,450 --> 00:14:39,440
+a fixed length digest from
+a variable length message.
+
+177
+00:14:39,440 --> 00:14:44,597
+And a desired property here is that,
+it's computationally
+
+178
+00:14:44,597 --> 00:14:51,620
+infeasible to find another message
+that would result in the same digest.
+
+179
+00:14:51,620 --> 00:14:56,975
+Now, it assumes that the message
+
+180
+00:14:56,975 --> 00:15:00,806
+digest is unmodified.
+
+181
+00:15:00,806 --> 00:15:06,549
+And because of this, this is something
+that's useful in integrity checking,
+
+182
+00:15:06,549 --> 00:15:08,596
+like software downloads.
+
+183
+00:15:08,596 --> 00:15:15,223
+So you go to a website, you're downloading
+some software on that website,
+
+184
+00:15:15,223 --> 00:15:20,220
+they'll list out some
+hash number that digest.
+
+185
+00:15:20,220 --> 00:15:23,296
+And so that you can, when you download it,
+
+186
+00:15:23,296 --> 00:15:26,641
+you run the same hash
+algorithm to then check.
+
+187
+00:15:26,641 --> 00:15:33,809
+So here's your downloaded software,
+you run that same hash on it,
+
+188
+00:15:33,809 --> 00:15:40,221
+compare it to what that digest is,
+and if they're the same,
+
+189
+00:15:40,221 --> 00:15:45,281
+then there wasn't any
+corruption in the data.
+
+190
+00:15:45,281 --> 00:15:53,724
+All right, but this transfer
+the message digest is a problem.
+
+191
+00:15:53,724 --> 00:15:59,990
+And so here,
+this message authentication code.
+
+192
+00:16:01,815 --> 00:16:07,901
+Particularly hash-keyed
+one removes the assumption
+
+193
+00:16:07,901 --> 00:16:12,402
+that the digest is known or unmodified.
+
+194
+00:16:12,402 --> 00:16:18,134
+And so here the sender and
+receiver share a secret key,
+
+195
+00:16:18,134 --> 00:16:26,491
+and that secret key is used as part of
+what's being used in the hashing, right?
+
+196
+00:16:26,491 --> 00:16:32,239
+So here we can append well, so
+this is how you would calculate it.
+
+197
+00:16:32,239 --> 00:16:35,152
+So you would take a hash of the key,
+
+198
+00:16:35,152 --> 00:16:40,176
+concatenated with the message,
+and then you hash the key,
+
+199
+00:16:40,176 --> 00:16:45,422
+concatenated with that hash,
+and that's what you can send.
+
+200
+00:16:45,422 --> 00:16:48,772
+Now, it would be challenging for
+
+201
+00:16:48,772 --> 00:16:53,679
+anybody to message or
+modify both the message and
+
+202
+00:16:53,679 --> 00:16:58,946
+this Mac code,
+this message authentication code,
+
+203
+00:16:58,946 --> 00:17:06,726
+in the same way such that now when you
+perform this calculation of hashing it,
+
+204
+00:17:06,726 --> 00:17:13,688
+comparing it to what you received and
+saying that they're the same.
+
+205
+00:17:13,688 --> 00:17:18,985
+All right, so this allows you this
+provides that kind of protection
+
+206
+00:17:18,985 --> 00:17:24,565
+where it would have been previously
+easy to modify both the message and
+
+207
+00:17:24,565 --> 00:17:29,312
+the digest if you're in
+the middle of that communication.
+
+208
+00:17:32,175 --> 00:17:39,405
+All right, so
+the next thing is a Digital Signature.
+
+209
+00:17:39,405 --> 00:17:44,391
+So this is where you
+can use asymmetric keys
+
+210
+00:17:44,391 --> 00:17:49,516
+to enable checking that the message hasn't
+
+211
+00:17:49,516 --> 00:17:53,821
+changed and that it came from Alice.
+
+212
+00:17:53,821 --> 00:17:59,527
+So here Alice would use
+her private key to "sign",
+
+213
+00:17:59,527 --> 00:18:02,510
+encrypt effectively, and
+
+214
+00:18:02,510 --> 00:18:07,568
+then Bob uses Alice's
+public key to verify and
+
+215
+00:18:07,568 --> 00:18:12,627
+it looks like this,
+that, you're using this
+
+216
+00:18:12,627 --> 00:18:17,964
+message comes down here,
+it gets transmitted.
+
+217
+00:18:17,964 --> 00:18:21,241
+Now, to ensure that it comes from Alice,
+
+218
+00:18:21,241 --> 00:18:25,747
+Alice would use her private
+key to encrypt that message.
+
+219
+00:18:25,747 --> 00:18:32,628
+That creates the combination of the hash
+and encrypt will create this signature.
+
+220
+00:18:32,628 --> 00:18:38,170
+And since the public key widely available,
+
+221
+00:18:38,170 --> 00:18:44,309
+can be used to decrypt that and
+perform the hash,
+
+222
+00:18:44,309 --> 00:18:49,552
+only Alice's private key would have been
+
+223
+00:18:49,552 --> 00:18:56,911
+able to be one that could
+generated the actual signature.
+
+224
+00:18:56,911 --> 00:19:00,066
+because if it was anything else,
+
+225
+00:19:00,066 --> 00:19:05,586
+when you went to use the public
+key to decrypt it and
+
+226
+00:19:05,586 --> 00:19:10,581
+then compare it with
+the hash of the message,
+
+227
+00:19:10,581 --> 00:19:13,877
+it would be kind of different.
+
+228
+00:19:13,877 --> 00:19:16,030
+It would be different.
+
+229
+00:19:16,030 --> 00:19:21,386
+So that's a digital signature
+it's basically using the property
+
+230
+00:19:21,386 --> 00:19:26,551
+of asymmetric encryption, but
+doing it a little differently,
+
+231
+00:19:26,551 --> 00:19:31,444
+where you're using the private
+key on the encryption side.
+
+232
+00:19:31,444 --> 00:19:34,770
+But this allows you to say,
+
+233
+00:19:34,770 --> 00:19:39,401
+this only could have come from Alice.
+
+234
+00:19:39,401 --> 00:19:43,314
+All right, so
+the next thing is Authentication.
+
+235
+00:19:43,314 --> 00:19:48,123
+So we want to ensure that
+you're only communicating
+
+236
+00:19:48,123 --> 00:19:52,398
+with who you expect to
+be communicating with.
+
+237
+00:19:52,398 --> 00:19:57,056
+And so, as an illustration,
+say we have Not Alice, and
+
+238
+00:19:57,056 --> 00:20:02,525
+Not Alice is distributing a public key,
+pretending to be Alice.
+
+239
+00:20:02,525 --> 00:20:06,444
+And Bob gets that and says,
+this is Alice's public key.
+
+240
+00:20:06,444 --> 00:20:10,833
+Well, now it doesn't matter what
+we saw in the previous slide,
+
+241
+00:20:10,833 --> 00:20:13,692
+because Not Alice could
+use that private key.
+
+242
+00:20:13,692 --> 00:20:18,119
+And then Bob would think,
+yeah, this is Alice.
+
+243
+00:20:18,119 --> 00:20:23,236
+All right, so
+this is where authentication comes in.
+
+244
+00:20:23,236 --> 00:20:29,419
+So to do this, we use something
+called a Digital Certificate.
+
+245
+00:20:29,419 --> 00:20:35,204
+And this is something that combined
+a public key and an identity.
+
+246
+00:20:35,204 --> 00:20:39,261
+And the definition of identity
+depends on the context.
+
+247
+00:20:39,261 --> 00:20:45,476
+But shown here is something where
+you have your name it's Alice,
+
+248
+00:20:45,476 --> 00:20:50,452
+the Organization, whatever,
+AliceCo in the USA.
+
+249
+00:20:50,452 --> 00:20:56,221
+The combination of these get
+bound together of the extra
+
+250
+00:20:56,221 --> 00:21:02,616
+identity information and
+the public key get bound together.
+
+251
+00:21:02,616 --> 00:21:08,442
+And then Bob could validate when
+I'm using a public key well,
+
+252
+00:21:08,442 --> 00:21:12,936
+this extra information
+says that it's Alice.
+
+253
+00:21:12,936 --> 00:21:18,803
+All right, so one problem with that
+is the integrity of the certificate.
+
+254
+00:21:18,803 --> 00:21:22,630
+So an attacker could
+modify this certificate.
+
+255
+00:21:22,630 --> 00:21:26,055
+So put in Not Alice's public key, but
+
+256
+00:21:26,055 --> 00:21:31,736
+keep the rest of the information and
+still pretend to be Alice.
+
+257
+00:21:31,736 --> 00:21:37,619
+So to solve that,
+we use a Certificate Authority.
+
+258
+00:21:37,619 --> 00:21:42,032
+And this is some trusted
+authority that can verify
+
+259
+00:21:42,032 --> 00:21:46,760
+Alice's identity and
+use its own private key there,
+
+260
+00:21:46,760 --> 00:21:52,239
+that is the private key of
+the certificate authority to sign.
+
+261
+00:21:52,239 --> 00:21:55,683
+And if you recall,
+what does it mean to sign something?
+
+262
+00:21:55,683 --> 00:22:00,813
+That means that it only could
+have come from that if you
+
+263
+00:22:00,813 --> 00:22:05,830
+have the public key of that entity,
+the certificate
+
+264
+00:22:05,830 --> 00:22:10,848
+authority, well,
+then when it signed something,
+
+265
+00:22:10,848 --> 00:22:16,917
+it could have only been signed
+by that certificate authority.
+
+266
+00:22:16,917 --> 00:22:22,780
+Now, because it uses that public
+key of the certificate authority,
+
+267
+00:22:22,780 --> 00:22:27,028
+anybody can verify
+the digital certificate using
+
+268
+00:22:27,028 --> 00:22:32,401
+the certificate authority's public key or
+CA's public key.
+
+269
+00:22:32,401 --> 00:22:33,751
+Now, of course,
+
+270
+00:22:33,751 --> 00:22:39,691
+this means that the CA that they have to
+have their public key has to be trusted.
+
+271
+00:22:39,691 --> 00:22:43,361
+And how this is commonly handled
+is these are things that
+
+272
+00:22:43,361 --> 00:22:45,950
+are like pre-installed in a browser.
+
+273
+00:22:45,950 --> 00:22:51,136
+So there's some commonly
+accepted certificate authorities,
+
+274
+00:22:51,136 --> 00:22:56,907
+when you install software, you do that
+kind of in a more manual process.
+
+275
+00:22:56,907 --> 00:23:00,346
+But now what the power of that is,
+is Alice, so
+
+276
+00:23:00,346 --> 00:23:05,035
+I don't have to pre-install Alice or
+manually do something.
+
+277
+00:23:05,035 --> 00:23:08,814
+If Alice went to
+the certificate authority,
+
+278
+00:23:08,814 --> 00:23:12,195
+was able to prove her identity to the CA,
+
+279
+00:23:12,195 --> 00:23:16,876
+and how that happens is going to
+be in different contexts.
+
+280
+00:23:16,876 --> 00:23:23,372
+And we'll show a couple examples
+later in subsequent videos.
+
+281
+00:23:23,372 --> 00:23:28,214
+And then that CA says, yep,
+that happened, and now it signs it and
+
+282
+00:23:28,214 --> 00:23:30,648
+now it's available to anybody.
+
+283
+00:23:30,648 --> 00:23:34,617
+And now this is bound together and
+
+284
+00:23:34,617 --> 00:23:38,314
+signed and verified by the CA.
+
+285
+00:23:38,314 --> 00:23:42,078
+All right, so that ends kind of
+the overview of the basics.
+
+286
+00:23:42,078 --> 00:23:47,208
+We'll see these in practice for
+various approaches to handling
+
+287
+00:23:47,208 --> 00:23:52,058
+the security problems that we
+identified in the last video.
+
+288
+00:23:52,058 --> 00:23:53,335
+All right, thanks.

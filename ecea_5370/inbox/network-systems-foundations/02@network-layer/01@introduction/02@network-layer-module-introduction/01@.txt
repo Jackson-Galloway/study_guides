@@ -1,0 +1,67 @@
+This video marks the start of a new module on
+the network layer. In it, we're going to
+overview what the problem is, why the network layer is needed, what capabilities it has in it, and provide a little roadmap for where we're going
+to go in this module. As an introduction, let's take a little recap of what we
+looked at in the link layer. We saw in the link
+layer it talked about, we introduced the concept
+of structuring data. Structuring these series of ones and zeros that can be
+transmitted across a wire. In the link layer, we
+call this a frame. We had some information such as source and destination
+addresses and so forth. We also then went into how
+does it handle errors. We looked at parity
+and we looked at how CRCs are calculated. We then went into say, this is actually potentially a shared transmission medium, whether it's a cable with
+multiple computers or nodes, network devices hanging off
+of it, or through wireless. We discussed how do you provide share to
+access to that medium. We talked about
+the carrier sense multiple access and then
+the collision detection and collision avoidance. Then we wrapped up
+and noted that, well, that single cable or the
+range of the wireless, really it provides the
+single link but a lot of times we have a need to scale
+beyond that single link whether it's an entire
+campus network or inside of the building there's limits on how big the physical
+aspect can be. We talked about
+Ethernet switching and wireless access points. Some of the challenges like what if the nodes that
+one could be able to communicate are on different links or
+different link types? On the left is a node that's
+communicating over 5G, and on the right
+communicating over Ethernet. Here, the data is going to
+be structured differently. We saw an example of that
+and error handling is different so we need
+something there. What if the nodes have
+different admins? For example, Company
+1 and Company 2 are two different companies
+but does Company 1 really want broadcast traffic
+from Company 2? We saw that was something that was happening
+on the link layer. Then also do they
+agree on how and when to access this network? We talked about the shared
+transmission medium, but if we have different admins do they actually agree on that? What if the nodes are
+in different locations? Shown here are something
+on the East Coast in California or on the
+West Coast in California, the East Coast in New York, something in South America, and something in Europe or you
+don't need to communicate. We talked about Mac tables, those lookups and the
+learning process and the flooding and the broadcast
+is that really going to scale to the billions of devices that need to be able
+to potentially communicate, and the distances that
+they need to communicate and will that work
+at a global scale? This is where the
+network layer comes in. The assumptions at the link
+layer do not work here. We introduced a new layer, the network layer, that
+addresses these needs. We can see there's
+this communication, it's going to be
+happening between different hosts and
+they'll go through, for example, IP, the
+Internet protocol. That's something we'll talk about in the next
+video but then you can have one node on
+the left using 802.11, and then a node on the right using Ethernet and they're still able to talk to each
+other because of this network layer between. To overview, what
+we're going to discuss over the next several videos is, one, how do we address node scalability across
+different networks? Two, given the
+destination address, how do we actually forward
+it and do so scalably? Three, how do the different
+networks coordinate? Each can reach destinations
+beyond their boundaries. Four, how are
+addresses assigned and mapped to the link
+layer addresses? Finally, what tools
+can an admin use to troubleshoot beyond its
+network boundaries?

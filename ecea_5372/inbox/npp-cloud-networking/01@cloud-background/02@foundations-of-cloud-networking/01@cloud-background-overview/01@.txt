@@ -1,0 +1,160 @@
+Let's get started. This module is providing a background
+on cloud computing. This particular lesson is going to give an overview of
+what the module is about. Just to start off, cloud computing is something when it was first being created, you got a lot of old timers that said this has been
+around for decades. In a sense, they were right. This concept of
+utility computing, earliest I've seen
+referenced is from 1966, and it really talked about
+this concept of being able to rent computing
+resources by the hour, minute, or second. That then led into really the
+modern day version of that, which is cloud computing. I think all would
+agree is AWS or Amazon Web Services were really the creators of this
+cloud computing, and they're still a big
+leader in the space. Amazon was founded in 1994, originally just as a online
+marketplace for books. As they grew, more popular, they became a broader
+e-commerce site. Around 2000, they wanted
+to launch merchant.com, and this was to help third-party merchants build
+an online shopping sites, build their online presence. The late 1990s was really a boom for online
+applications or services, and e-commerce was
+a big part of that. A lot of these old
+brick-and-mortar stores like Target really wanted
+a good presence. For Amazon, it was
+challenging to separate out the various services to make a development platform that would be useful
+for third parties. They set out to untangle
+that mess into a set of well documented APIs. Part of this was
+the executive teams expected a given project to
+take about three months, but it was taking three
+months just to build the database to compute
+or the storage component. It was definitely
+a lot slower pace. The internal teams at Amazon then required really a set of common infrastructure
+services that everyone can access without reinventing
+the wheel each time. With these common services, then you can cut out that
+database, compute storage. It's like, all right,
+that's going to be common across all of these, so let's just make that
+as internal service. They then realized that they had become quite good at running infrastructure
+services like these and highly skilled
+at running reliable, scalable, cost-effective
+data centers out of their need to support
+their e-commerce site, support these various
+different applications, build up these services, common services, and
+this led to them creating AWS that they saw an opportunity to offer
+this out to other parties. What is cloud computing? You'll see a lot of definitions
+in a lot of places, but I like this
+paper from Berkeley. It was from 2009, so in the early days. They really put together
+a nice overview, and I linked to it here, provide it in the
+resources for this module. But the first point is, it has an elimination
+of upfront commitment. Previously, when you wanted
+to launch a service, you had to acquire somewhere
+to put some compute. A lot of times it was in
+colocation facilities, which they provide space,
+power, and networking. You then purchase some
+equipment like servers, and routers, and firewalls. You rack and stack
+those equipment, then you configure
+the infrastructure. This had a lot of
+capital expenditures, and it took time and
+money to build out. With cloud, you don't have
+that upfront commitment. Second key capability or way to think about
+cloud computing is you pay for use on
+a short-term basis. The alternative is to have this fixed capacity where
+I'm buying the equipment. The results will be inevitably be either
+underprovisioned or overprovisioned. Elasticity allows
+for provisioning what's needed in the moment. Here are two pictures from
+this tech report from Berkeley that can show the actual demand for service is going to go through some
+peaks and valleys. If you provision
+exactly for the peak, well, you're still wasting resources during those troughs. Likewise, if you
+try to be a little more economical, well, then you're going to
+be underprovisioned for when those peaks do come. You're going to save
+a little money, but you're going to
+be underprovision. If you can pay for what exactly you need at that given time, that's going to be useful. The third is going
+to be this illusion of infinite computing resources. Predicting the future is hard. You launch something, and
+will my service grow rapidly? Will it grow slowly? You don't, excuse me, don't really want to
+hurt growth if you didn't plan for growth. Hiring is hard, provisioning
+takes time, and so forth. These cloud systems have this illusion of
+infinite resources. My service is not
+going to at least, day 1 or even with rapid growth, go to have as much
+infrastructure as Google or Amazon has
+right out of the box. Then the question is,
+why does it work? That's useful, but why does it make a practical
+sense as a business? One of the key aspects
+of that is around costs. The costs of electricity
+and networks, there's this economy of
+scale that's at work here. When one of these
+cloud providers builds these huge data centers, they get economy of scale
+that we don't get access to. One of the tables in
+this paper from Berkeley showed the cost of a medium-sized data center for the network
+storage and admin. In a very large data center, you could see the costs are
+much lower, 5-7 times lower. That's what you get for a
+very large data center, and that's what the Microsoft, Google, Amazon can provide and then they pass on some of
+those savings to its users. It also works because
+of expertise. Recall the origin story
+of Amazon or AWS. They're quite good at running
+infrastructure services, and they're highly skilled
+at running reliable, scalable, cost-effective
+data centers. They have expertise
+that a lot of us don't. If we want to go and build
+our own infrastructure, we don't have that expertise, and so we can leverage
+theirs for that. Now, there's different
+kinds of cloud, and there's been
+this terminology that's really been
+consistent over the years. The first is infrastructure as a service or IaaS,
+you might see it. This delivers on-demand
+infrastructure resources to organizations via
+the cloud such as compute, storage,
+network virtualization. Customers don't have
+to manage, maintain, or update their own data
+center infrastructure, but they are responsible
+for the operating system, the middleware, the
+virtual machines, and any applications or data. I'm getting this from
+this link right here. Google had a nice description
+contrasting them. One level up from that is something called
+platform as a service, and this delivers and manages all the hardware and
+software resources to develop applications
+through the cloud. Developers and IT
+operation teams can use PaaS or platform as
+a service to develop, run, and manage applications
+without having to build and maintain the infrastructure
+and platform on their own. Think of databases
+and things like that. It's not getting a server. It's getting scaled out
+database application. These could be available
+from cloud providers or from third parties, and this really creates this
+nice rich ecosystem where the services I'm using
+or platforms I'm building on top of are there. Oops. The next level is
+a software as a service, and these are ones that provide the entire
+application stack. They're delivering an entire
+cloud-based application that customers can
+access and use, and could be available from cloud providers or
+from third parties. Think of something
+like Salesforce, like a customer
+relational manager. There's been different pictures that companies have put out to try to illustrate these different
+definitions of cloud. You get infrastructure as a service with the
+platform as a service built on top of it
+and software as a service could be
+built on top of that, provide some ecosystems and then some management systems
+to go along with it. This one's from IBM. This one came from NIST. You can see, again,
+those layers that we talked about running
+on top of the hardware and the facility and again the management
+services associated with it. Summarizing the benefits, you trade capital expenses
+for variable expenses. We can benefit from massive
+economies of scale. You can stop guessing
+about capacity. You can increase the
+speed and agility of development applications and really focus on what matters. That's your business not
+running infrastructure. In fact, you can go
+global in minutes. I can have a presence
+in Europe, and Asia, North America much easier
+than I could previously. What are we going to talk
+about in this module with that background of cloud computing and
+why it's important? We're going to go into some of the base level things in cloud. One is virtualization. We're going to talk about
+what that is, how it emerged. We're going to go into
+the data center fabric. This is the network that makes these
+cloud platforms work, and we're going to focus on
+one particular one called VL2 that underpins
+Microsoft Azure. We're again then going into
+the Google Cloud Platform, and that'll be how
+we're going to use. All of our example and development and labs are
+going to be on Google. Then we'll do an
+overview of Terraform, which is an infrastructure
+as code framework. It's really powerful, and
+we're going to use it to really automate a lot
+of our provisioning. Then we're going to
+show how you can use it inside of GCP or
+Google Cloud Platform. With that, we'll stop here and
+see you next time. Thanks.

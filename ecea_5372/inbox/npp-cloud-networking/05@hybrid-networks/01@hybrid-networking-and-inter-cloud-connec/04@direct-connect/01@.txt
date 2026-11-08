@@ -1,0 +1,70 @@
+All right, let's go ahead and get started. So this time we're going to
+talk about direct connect. And this is the next thing
+in this hybrid networks. So specifically, we're talking
+about the situation where say sometimes the infrastructure is
+hosted in colocation facilities. So maybe the company really had some
+legacy infrastructure they built out, built their infrastructure
+around colocation before they really got into the Cloud but
+they want to expand into the Cloud. And so now they want to have
+this hybrid infrastructure where it's hybrid Cloud and on premise. What's special about these
+colocation facilities is that they have great network connectivity, and
+so you can get a direct connection. It's not going over necessarily
+the public Internet, or it's not going over the public Internet,
+you can get a direct connection to Google. So let's see how that kind of works. So first, a little bit about colocation. If you're not familiar with it,
+these are a provider where they own and operate a physical building. Commonly these would be popular areas or highly populated areas like cities and
+things like that. And these customers can place their
+physical equipment in the building. So it's multi tenant. So, company one can put their
+physical equipment in there. Company two can also put
+their equipment in there. And so these companies such as,
+you know, Equinix, Digital Realty, CoreSite, they provide the space,
+the power, network connectivity and physical security, like guards to
+not let people into the building, video cameras, all that kind of stuff. So the first thing to
+know about is the cage. So each company gets its own secured cage. So when I go lease from
+a colocation facility, I would get one of these cages and
+my own secure access to that. So I can come in and out of the building,
+they would check my ID and all that and my access privileges, and then I'm
+the only one allowed into this cage. That's how my equipment
+is protected from others, you know somebody else has
+a cage right next door to mine. The next thing to know
+about is the meet me room. And this is where network
+provider equipment is placed in kind of a centralized kind of part
+of the building, and cross connects. So the, the colocation providers all
+offer the ability to get across connect. So it'll cost you money,
+but it's effectively think of it as a cable that goes
+from my cage to some network provider such that I can
+get connectivity from them. A lot of the colocation providers are
+moving towards a virtual cross connect or network fabric where my cage is
+just connected to that fabric. That fabric has the connectivity
+to the network providers and then it's a simple software
+defined networking. If they use that configuration
+to be able to say, make a connection between my cage and
+a particular network provider. All right, and then in some facilities,
+Cloud providers have network equipment. So customers of this colocation
+provider can get a port on for example, Google's physical switch, which connects
+them directly to Google's Cloud. This is what's known as direct connects. Each provider has their own term for it. So not always did you get a connection
+on Google's physical switch, it might be to another provider that
+has access to that physical switch. So there's some providers like Megaport,
+console Connect, Equinix itself,
+that have a global fabric, and you can get connections to them,
+and then they have the connections directly into
+Google's infrastructure. On the Google side,
+it looks all the same, but it's how do you actually get
+connected to Google's network. With all that, what does it look like? After ordering the cross connect and
+the direct connect, that's ordering a port on Google's switch, whether that's through
+a third party provider or Google itself or Amazon or
+whoever in the Cloud side. So this is the colocation side I need. Here's my cage. Got a firewall, got a router, I got a physical connection to
+something on the Cloud side, I need to instantiate a cloud router and
+then add a VLAN attachment to it. So let's assume to set up a Cloud router, we've done it in the context of, I think, Cloud NAT and other VPN. You can create a cloud router on its own. Just search for Cloud router and
+you can go through that. The way to add the VLAN attachment
+is we're looking for interconnect. And here you would say
+either dedicated Internet connection or partner interconnection. If you're going directly to Google's
+infrastructure, it would be dedicated. If you're going through third party
+provider, it would be the partner. All right, so then,
+effectively it just brings up another wizard, and
+you go through kind of each of the steps very similar
+to how we set up VPN's. But in this case, you're just going to
+select, you know, your VLANs. And with that, that's a little harder
+to kind of try out on your own because you need that co-location space. But if you work for a company that has
+that, and you want to give it a try, that would be certainly interesting
+to try to get it to work. All right.
+With that, we'll end here, thanks.

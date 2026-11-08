@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IP Layer with Linux Networking Summary</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>What does the Internet Protocol (IP) provide?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XDaVdd" type="radio"/> <div class="quiz-option-text"><p>It helps ensure reliable transmission of data.</p></div></li>
+<li><input name="autoGradableResponseId~XDaVdd" type="radio"/> <div class="quiz-option-text"><p>It enables communication between locally connected devices</p></div></li>
+<li><input name="autoGradableResponseId~XDaVdd" type="radio"/> <div class="quiz-option-text"><p>It enables communication between multiple, heterogeneous networks</p></div></li>
+<li><input name="autoGradableResponseId~XDaVdd" type="radio"/> <div class="quiz-option-text"><p>It helps structure the format of data being exchanged.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In IPv4 addressing, what does the 16 signify in the following 10.11.0.0/16</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~LY9xup" type="radio"/> <div class="quiz-option-text"><p>It identifies how many bits addresses are in IPv4</p></div></li>
+<li><input name="autoGradableResponseId~LY9xup" type="radio"/> <div class="quiz-option-text"><p>It indicates that 16 devices with the given IP address should be created</p></div></li>
+<li><input name="autoGradableResponseId~LY9xup" type="radio"/> <div class="quiz-option-text"><p>It is the number of upper order bits that uniquely specify the group of IP addresses in that subnet.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What does via do in 'ip route add'?  e.g., ip route add 11.11.0.0/16 via 192.168.2.1 dev eth3 vs ip route add 11.11.0.0/16 dev eth3.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~N2AYGy" type="radio"/> <div class="quiz-option-text"><p>Linux will ARP for the destination in the packet (without via), or ARP for the next hop (with via).</p></div></li>
+<li><input name="autoGradableResponseId~N2AYGy" type="radio"/> <div class="quiz-option-text"><p>Linux will send the traffic through a network monitor in addition to sending it to its destination (with via), as opposed to just to the destination (without via)</p></div></li>
+<li><input name="autoGradableResponseId~N2AYGy" type="radio"/> <div class="quiz-option-text"><p>Linux will send traffic through a GRE tunnel (with via) or directly to the destination (without via)</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following are needed for configuration in the Bird routing daemon to configure a BGP peering session? Select all that apply</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XGRy5U" type="checkbox"/> <div class="quiz-option-text"><p>Autonomous System (AS) number of neighbor</p></div></li>
+<li><input name="autoGradableResponseId~XGRy5U" type="checkbox"/> <div class="quiz-option-text"><p>IP address of neighbor</p></div></li>
+<li><input name="autoGradableResponseId~XGRy5U" type="checkbox"/> <div class="quiz-option-text"><p>contact information for admin</p></div></li>
+<li><input name="autoGradableResponseId~XGRy5U" type="checkbox"/> <div class="quiz-option-text"><p>The AS path to root DNS servers</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of these organization provides a collection of real routing tables that individuals can download.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~gbV4WN" type="radio"/> <div class="quiz-option-text"><p>RIPE</p></div></li>
+<li><input name="autoGradableResponseId~gbV4WN" type="radio"/> <div class="quiz-option-text"><p>NSDI</p></div></li>
+<li><input name="autoGradableResponseId~gbV4WN" type="radio"/> <div class="quiz-option-text"><p>Router Table Lab</p></div></li>
+<li><input name="autoGradableResponseId~gbV4WN" type="radio"/> <div class="quiz-option-text"><p>Amazon</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which command would output the current routing table in the Bird routing daemon?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~nI9bXD" type="radio"/> <div class="quiz-option-text"><p>ip route -n bird</p></div></li>
+<li><input name="autoGradableResponseId~nI9bXD" type="radio"/> <div class="quiz-option-text"><p>birdc show protocols</p></div></li>
+<li><input name="autoGradableResponseId~nI9bXD" type="radio"/> <div class="quiz-option-text"><p>birdc show route all</p></div></li>
+<li><input name="autoGradableResponseId~nI9bXD" type="radio"/> <div class="quiz-option-text"><p>ip route</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following is a reason why a tool like ExaBGP is useful?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~FfQ4q3" type="radio"/> <div class="quiz-option-text"><p>It supports scripting the deployment of router configurations to very large scale networks</p></div></li>
+<li><input name="autoGradableResponseId~FfQ4q3" type="radio"/> <div class="quiz-option-text"><p>It provides a means to emulate a large set of network nodes as a single process.  (or, So we don't have to build out a full Internet topology to be able to experiment with real Internet routes)</p></div></li>
+<li><input name="autoGradableResponseId~FfQ4q3" type="radio"/> <div class="quiz-option-text"><p>It increases the memory for routing tables in routers which are increasingly growing in scale.</p></div></li>
+<li><input name="autoGradableResponseId~FfQ4q3" type="radio"/> <div class="quiz-option-text"><p>It allows testing multiple routing software in a containerized environment</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+Let's get started. What we're going
+to do this time is go over the lab or
+programming assignment. It's a little, I don't
+want to say tricky, but there's little
+things to know, so I want to talk through
+that to help you along. This is what we're
+going to build. We're going to build two VPCs that have a VM in each
+inside of a subnet. This is one of those
+reserved private addresses, the 172.16 address space. We're going to use
+that and put these in two different
+prefixes within that. First, we're going to
+use VPC peering to allow vpc1 and 2 to talk over
+private addresses. We're then going to have vpc2
+instantiate Cloud NAT and Cloud router to be able to
+allow external communication. Neither of these
+are going to have public IP addresses or
+external IP addresses, they're only going to have
+the private internal ones. What we're going to
+then do is set up traffic from vm1
+can go through vm2, and then through the NAT
+out to the Internet. We'll do all of this
+setup manually. You could do it as a script
+as part of the startup, but you're welcome to
+just do it manually. Now, I'll note there's
+probably better ways to do this within GCP, and this is a bit of
+a contrived example, but it does show a lot
+of times you do want to create your own proxies, you want to centralize some
+traffic handling or really just get these weird
+configurations with networking. This is making it so great. You get experience doing
+something a little more complex, and it touches on each of the elements that we
+hit in this module. The first thing to
+know is you can't just forward via
+vm2. Here's vm1. This should say 172.16.0.3, but whatever, ignore that part, that mistake, that typo. We can't just say add
+a routing table entry, IP route add to this IP address, and then go via 172.0.1.3. That would work if they were
+directly connected or on the same local area
+network Layer 2 network. That would work because
+then I could say via this, and then when I go to
+wget to this address, which is in the routing table, it's going to actually
+ARP for 172.0.1.3. But because the VPC effectively has a Google router as the gateway, it's
+going to hit that. You'll get no response and
+the traffic won't reach it. This is IP address for a
+site called neverssl.com. It'll just use straight HTTP, which is sometimes useful. You can make sure that this is still the IP address
+for that service. Go on vm2, which has that Cloud NAT or do it
+from your local machine, but basically just ping
+it and see what happens, see what the IP address is ping. You can't just forward via vm2. Instead, what you need to
+do is, as I mentioned, they need to be Layer 2 adjacent
+for that to be possible. Here, I corrected the
+type of the IP addresses. This should be more accurate
+to what we're doing. What we're going to do
+is we're going to create a VXLAN tunnel between this. VXLAN is widely used
+in data centers, but it basically encapsulates
+inside of IP header, a Layer 2 frame. Here's the Linux command
+that you would use, sudo ip link add vxlan0. It's adding a type VXLAN
+device named vxlan0. Given it an ID. Then we're saying the
+local IP address of it is this,172.16.0.2, and the remote one is this. We're going to say, it's
+going to go out to device ens4 and dstport 50,000. It's all sent over UDP. On the other end, vm2, basically do that
+exact same command, but flip the local and remote. Remote is 172.16.0.2 and
+local is 172.16.1.2. I had established
+the VXLAN tunnel, now I'm going to give
+each side an IP address. They're going to be
+in the same subnet. This will be 192.168.100.2, and this will be
+100.3 on this side. That'll be the IP address
+associated with this device. Then I'm going to bring up
+the VXLAN device in each. We'll note that by adding
+the address in this way with the prefix or the /24, it's going to add a routing
+table entry in each of these. It still won't work. You sudo ip route add that
+same thing and instead, this time go via 192.168.100.3. Since there's a
+routing table entry that says when I
+want to go to that, that means I'm going
+to go through vxlan0. That's what gets added
+right there and wget on it. If you ran tcpdump over here, -i means device, -n is actually show IP
+addresses and things like that, don't try to show a DNS name. Then port, I want to
+say everything not SSH, because there is SSH
+traffic coming over that same interface when I'm doing this, so
+I don't want that. You'll actually see traffic. If I ran sudo tcpdump, looking at the VXLAN device, I would also see traffic. I'll see it before decapsulation
+and after decapsulation. Then the last thing that
+you need is on vm2, add some NAT capability. The first thing we
+need to do is set up vm2 to be able
+to forward traffic, meaning packet can come
+in and then go out. We just need to
+uncomment this line in the syscontrol.conf file and then reload it or apply it. Then we would use IP tables to change from 192.168, which would be the
+address, come in here, translate that, and then allow it to go out over the Internet. This will be the different
+components you'll need, and with this, you should
+be able to get it to work. Last thing, just to make sure, you do need that rounding
+table entry to go to nssl, and it'll be a this address
+over here, via this device. You might need to
+delete it if you previously set it as we
+had on a few slides ago. But if not, then just
+add that and then wget and hopefully it all
+works. That's the lab. For the assessment, you'll run Terraform to create
+the infrastructure, update the VMs with
+any configuration, do some connectivity tests, we'll have some JQ
+queries and whatever, and then answer some
+questions on Coursera. That'll be the
+assessment. With that, we're going to end the
+module right now. Thanks.

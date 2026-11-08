@@ -1,0 +1,195 @@
+All right, welcome back. So last time we looked at
+routing in general, and introduced that there's
+a variety of routing software, GoBGP, FRR, BIRD, Quaga, and we went through the configuration of BIRD. This time we're going to
+actually run BIRD, and so with that we're going to
+again use containerlab and we're going to use
+a topology as shown here. So these two down here are going to
+be our host where we're going to be able to ping from
+land one to land two, and each of these nodes will be a router
+that we're going to run our BIRD on. Okay, so the configuration and
+operation for this would be for each container,
+the router container, we're going to mount a file that
+contains configuration files for each of the individual routers. So this would mount to /etc/bird. So if you recall,
+that's kind of the default location for configuration files and
+there's a default bird, but you can also specify your own. So we're going to actually mount
+it to some alternative to that so that we can specify our own, all right? And we'll go through the BGP
+configuration of this. We're going to add in some
+static routes to those. And then to run it, we just say BIRD and
+then pass in the configuration file. We'll do that for
+each of these four routers, and then we're going to interact with
+BIRD to be able to show the protocol. So we'll be able to see the peerings and then show all the routes and
+all that kind of stuff, right? So with that, let's switch over. So what's shown here is again
+this GitHub repo that we'll have a link to in Coursera. The first set of demos where we are doing
+everything on command line was demo one, we're going to look at demo two right now,
+right? So everything is very clearly
+described in the readMe, but let's open up this configuration file, diamond-mod2 for the containerlab, okay? And we're going to call
+the topology mod2-bgp. And here,
+we're going to have our four nodes lan1, router A, router B, router C,
+router D, and lan2. And then for each of the routers,
+we're going to mount inside of the container will be
+the directory etc/bird-alt, and then our local bird configurations
+that we're going to show in a bit. And then I have the links set up and
+if you want to take this offline and draw them out, it'll look like what's
+in that picture we showed, right? But it's that kind of diamond
+looking topology, all right. So what else is in here? We'll see some IP addresses that we need to set up and a script to start BIRD. So before I do all that,
+let me start containelab deploy. So it's deploying all those routers,
+Great. And now, let me look into
+some of these things, right? So what's the first thing
+we want to look at? Let's look at the IP addresses. All right, so again,
+all this is doing is in the lan. It's going to say I want to just
+add some static routes addresses. So add some addresses, 1.1.1.1 or 3.3.3.3 as part of eth1. So that's if I go over to the picture
+that's going to be with eth1 for lan1 and then on eth1 of lan2, I'm going to
+do some other static addresses or another set of addresses 2.2.2.2 and 4.4.4.4 so that's on lan2. And then I'm going to put
+some route table entries or forwarding table entries on lan1 to
+be able to know how to get to lan2. So this is 1.1.1.1 and
+then you'll see on lan2, here's an route table entry, and they're going to go through
+via their first hop router. So this 10.10.0.1, That's going to be this device for
+router A, right. And we can come down and
+we can see that, All right, and we're going to give each of
+the interfaces for router A an address. We're going to give each of
+the interfaces in router B an address, and each of the interfaces
+in router C an address. All right, so what's actually interesting,
+we didn't talk about this before, but I'll just note it here. When I say ip addr add and
+then before we were just that part here, we're adding this /30. And so
+this actually creates a route entry. It's as if you're calling ip route add for this prefix for this device. So it's a little kind of shortcut. All right, so that's the IP addresses and
+again, if you want to go draw this out, it's basically just putting IP
+addresses for each of these interfaces. Okay, so let me run that set up. Forgot to create, okay? So now all the routers would have
+IP addresses so I could say router. Well, first I should
+source my make aliases. Now I can say router A, IP route or IP adder show. And you can see the three interfaces
+with the IP addresses right there, I could say IP route and
+we could see those. And this is needed because I need the
+routers to be able to talk to one another. So before I even put
+some routing software up, I need those routers when it creates
+a connection to its neighbor, there need to be something that says,
+how do I even talk to my neighbor, okay? All right, so that's the first
+is assigning some IP addresses. So the next is,
+let's look at the BIRD configuration. So all of these, are going to be in
+this directory mod2 And you can see for convenience I just put all
+of them in one directory. And if we look inside
+of each etc/bird.alt, we're going to see those exact same files,
+right? because we mounted this particular
+directory to this directory inside of that container, right? And that was because of, Diamond, this mount command right there, the bird, okay? All right, so let's go back into this,
+let me clear this and list. All right, so
+I included the default bird configuration, it kind of includes a lot
+of commented out stuff. And so it's basically like
+you can go through this and say, this is how I create a table,
+let me uncomment that. I always need these kind of default ones,
+that device kernel, here if I wanted to create some static
+routes, here's how it would do. And here's the input or filter, different protocols like OSPF, there's probably one for BGP in here. And so
+these are all kind of the defaults and so what I did was basically crafted one for
+each of these. All right, so
+let's look at one particular one. Let's look at router A but
+let me flash back to the picture. This is router A,
+it's going to need a peering to router B, it's going to need peering to router C and
+then it doesn't need this, but I added it. It's going to have some static routes for those 1.1.1.1 and all of those. And what that's going to do is make it so
+that router A is announcing those static routes
+to these other kind of nodes so that they all know how
+to reach these lans. All right, so let's open up router A,
+let's start up at the top. We're going to log everything and
+then if we wanted to look at it, the logs, they would be in this
+file inside of the container. [COUGH] Specify the IP address
+as the ID of this router. And then these are all the same,
+here's the static routes that I added and
+then the main thing is right here. So the peering session. So this is from router A to router B, I just named it A to B to
+help me understand it. And I'm going to specify
+the neighbor 10.10.1.2, so that's router B and
+router B's as number is 65001. And then router A to C, its neighbor is that address of C and this is the as number of C, all right? [COUGH] So that's great. Now I can look at,
+[COUGH] Excuse me, router B. It's going to have an equal peering,
+[COUGH] Like this. And the reason why I
+commented these out was just to show an alternative that
+you can use if you wanted. All right, so it's creating the B to A,
+peering B to D peering, and all that. All right, [COUGH] So now the question is,
+how do we start bird? So I provided a script, and all of this is stuff that you
+can run manually, individually. I like to script things, so
+what this is going to do? So this is the command to start bird,
+it's just the executable called bird. And if I didn't specify anything,
+it'll say it'll use /etc/bird/bird.com as
+the configuration file. But by specifying .c, I can specify
+the specific configuration file. And so you can see with router A,
+we're going to use the A's, configuration B,
+we're going to use B's configuration C. And this is really only practical
+in this particular setup, this container lab setup
+where I have this mounted. Normally these would be on kind
+of different physical nodes and you'd have to do this differently,
+but for our purposes, this works. And again,
+using these kind of aliases internally. All right, great, so now to start, I could start bird. So it just went and executed bird, and now I can start
+interacting with bird itself. So if I open up the readme, so
+this is at the very top, scroll down, it's basically all the stuff
+that we just went through. All right, now this section
+right here is kind of the main thing of there's a command, bird C, that allows you to interact
+with the running bird process. So I could say stuff like bird show
+protocols or bird or bird C show route all to show the routing table, and
+you can look up bird's documentation. There's much more that you can do, these are the main ones we'll look at,
+that's really all we need to do. All right, so
+let me execute each of these, right? So if I say router A, so again,
+that's the alias that I already set up, it's executing this command
+inside of the router A container. And you could see here's the different
+protocols it has running and we could see two of these
+are the peering sessions we set up. I could see this in B,
+I could see this in C, and I could see this in D. All right, luckily, they're all
+established, meaning the peering, all of the things that needed to happen happened,
+and so we're in a good shape there. So now let's look at if they've
+actually exchanged some routes. So again,
+if I wanted to refer back to this, I would see that the command
+is bird show route all that I want to run,
+okay, so let me run that. And now we could see this routing table. All right, so here are the static
+routes that I set up and let's look at something a little
+more interesting, router B, right? So what we're looking at is router B. Router A set up a couple of static routes, then it should advertise
+those to router B. And we do see those showing right here,
+all right? And we could see the as path is great. Could see these various things. So this would be,
+I think that's for router D. And this is router A. And we could see where
+it got this information. Right, because it came
+from this pairing session. So that's the routing table. And those were BGP messages that router a sent to router B for these. And then, like this one, that was
+router D sent this to router A, right? And then if we look at router A, right? It would also have this 2.2. So let's look at this one,
+and let's look at this path. So this path says it's 6001,
+I think that's router B, and 65003, that's router D. So D had a static route,
+it announced it to B. B announced it to A, and
+now we can see it in the table. All right, there's also another, under the same prefix,
+there's another entry for it. All right, so that's because D announced
+it to C, which announced it to A. And so now A has the choice between
+these two routes, all right? And the star kind of
+indicates not kind of. It does indicate which one it chose,
+I believe. And so with that, we can now should be able to ping. All right, with ping. Let me pull up the readme again. Note that we got to use
+that 1.1.1 the dash I, to specify what the source address is, because those are what
+the static routes we added. So let me add this or run this command, and we can see that it's working. All right, now I could go if we wanted to look at source, make alias. If I wanted to see
+the traffic going through, I would do stuff like, what is it, router B, tshark-I eth1. And I should be seeing
+the traffic go through. So that's knowing it's
+going through router B. If I looked at router C,
+I won't see any traffic. All right, so we can see that
+it picked this path, right? Now let's use another
+utility called trace route. So let me pull open the readme again. So what trace route does it's
+different syntax or different flag -s. I again want to provide it
+with the source address, but I'm saying do a trace route
+to destination 4.4.4.4. So what this does is. Well, let's just see it in action. You can see it actually is telling
+you the entire path along the way. So this is router A, router B,
+router D, those are the IP addresses. So how it works is we're running
+it from here, running trace route. It'll send a ping to destination, but it'll set, the first time it sends ping, it'll set the time to
+live field of IP to 1. So it'll get one hop and then this
+router will say, the time to live ended. So let me respond with like an error
+message, an ICMP error message. So now land,
+one knows what the first hop is, then it'll send it again with two,
+the time to live to two. So it'll get to here router,
+the next hop, the second hop, it'll fail there,
+the time to live will go down to zero, it'll respond and
+now it knows that router B, rigt? And it'll do it with the three and get that response until it
+reaches the destination. And so that's how we got this
+full path between those. Okay, so that's the basics of routing. There's a lot of different
+things you can do. What we're going to do for
+the lab now known that what we've set up is a lab
+that you'll programming assignment that you'll do
+as part of this module. So the first step that you're going to
+have to do is go through an ad appearing. So we're going to start with
+that same diamond topology. So start with this kind
+of demo two topology and just add one additional peering. So that means you need to modify
+router B's configuration, router C's configuration to add
+this one other extra peering. Okay, then you should play with that. Look at the routes,
+see which ones it's choosing because you'll see extra long paths. All right, then the second step is
+we're going to now fail some links. So we're going to fail the links
+between A and B and between C and D. And then we're going to see that BGP
+without any kind of intervention on our part is going to figure that out and
+then say, well, I still have a path. It's through A, C, B, D and it'll start sending traffic through that. Okay, so that's going to be what
+the lab that you're going to do and hopefully seeing how we ran burn and all that will make that
+pretty straightforward. So with that, we're going to end here. And next time, which I just flashed up, we're going to talk about if you want
+to run some even larger experiments? What might that look like? If you want to use some real routing
+tables, what might that look like? And what resources do
+we have as a community? All right, until then, thanks, bye.

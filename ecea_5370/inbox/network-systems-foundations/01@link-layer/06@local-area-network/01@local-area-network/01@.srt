@@ -1,0 +1,735 @@
+1
+00:00:08,922 --> 00:00:14,389
+All right, so
+the final topic we're going to cover
+
+2
+00:00:14,389 --> 00:00:19,861
+in the link layer module
+is local area networks.
+
+3
+00:00:19,861 --> 00:00:25,051
+So as a reminder,
+what this is about is being able to
+
+4
+00:00:25,051 --> 00:00:31,586
+extend beyond the physical limits
+of the transmission medium.
+
+5
+00:00:31,586 --> 00:00:37,249
+So here we're going to talk
+about ethernet and wireless.
+
+6
+00:00:37,249 --> 00:00:42,630
+So in Ethernet, we're going to
+introduce the concept of switching.
+
+7
+00:00:42,630 --> 00:00:46,433
+And in wireless, we're going to introduce
+the concept of an access point.
+
+8
+00:00:46,433 --> 00:00:51,094
+And these are the kind of main
+devices that we'll talk about that
+
+9
+00:00:51,094 --> 00:00:55,250
+allow you to basically build
+these local area networks.
+
+10
+00:00:55,250 --> 00:01:00,053
+So why do we need Ethernet switching?
+
+11
+00:01:00,053 --> 00:01:04,679
+So on the left is the picture
+we've shown before
+
+12
+00:01:04,679 --> 00:01:09,768
+showing Ethernet can be this
+shared medium of a bunch
+
+13
+00:01:09,768 --> 00:01:15,105
+of different nodes attaching
+into some shared cable.
+
+14
+00:01:15,105 --> 00:01:18,164
+So that has scalability challenges.
+
+15
+00:01:18,164 --> 00:01:22,791
+The more nodes you put on that,
+the more chances of collision,
+
+16
+00:01:22,791 --> 00:01:27,875
+the length it is going to be a challenge,
+and all those kinds of things.
+
+17
+00:01:27,875 --> 00:01:35,939
+So instead what we have more in
+practice are the picture on the right.
+
+18
+00:01:35,939 --> 00:01:40,853
+This is where we introduce special
+nodes called switches that can
+
+19
+00:01:40,853 --> 00:01:43,632
+direct traffic to the destination.
+
+20
+00:01:43,632 --> 00:01:49,066
+Then in this case,
+rather than this kind of shared mediums,
+
+21
+00:01:49,066 --> 00:01:53,862
+the cables, each of the nodes
+get this kind of point to
+
+22
+00:01:53,862 --> 00:01:57,717
+point links to connect them to the switch.
+
+23
+00:02:00,803 --> 00:02:07,633
+So addressing, we've already
+covered addressing in Ethernet.
+
+24
+00:02:07,633 --> 00:02:14,879
+So as a reminder, recall that each
+network interface card has a MAC address.
+
+25
+00:02:14,879 --> 00:02:20,242
+And so that's what's shown with the AA,
+
+26
+00:02:20,242 --> 00:02:23,315
+BB:BB, and so forth.
+
+27
+00:02:23,315 --> 00:02:30,850
+And we also showed that each frame,
+which is how Ethernet provides structure,
+
+28
+00:02:30,850 --> 00:02:36,369
+contains both the source and
+destination MAC addresses.
+
+29
+00:02:36,369 --> 00:02:38,534
+So shown here is an example where A,
+
+30
+00:02:38,534 --> 00:02:43,311
+the node on the left wants to talk to
+the node on the right, which we'll call C.
+
+31
+00:02:43,311 --> 00:02:48,836
+And their MAC addresses match their
+node names just for illustration.
+
+32
+00:02:48,836 --> 00:02:54,103
+And so here the frame would
+say the destination is C,
+
+33
+00:02:54,103 --> 00:02:57,933
+all C's, the source is all A's, and
+
+34
+00:02:57,933 --> 00:03:01,902
+that is what node A sends to the switch.
+
+35
+00:03:01,902 --> 00:03:08,132
+And then the switch's job is
+to direct it over to node C.
+
+36
+00:03:08,132 --> 00:03:15,961
+So how it does this is that each switch
+has what's known as a MAC address table.
+
+37
+00:03:15,961 --> 00:03:23,177
+So this is a table in the switch that maps
+destination addresses to output ports.
+
+38
+00:03:23,177 --> 00:03:26,421
+So when the switch receives a frame,
+
+39
+00:03:26,421 --> 00:03:31,662
+it looks up the destination and
+then it will send the frame.
+
+40
+00:03:31,662 --> 00:03:36,750
+So it sees the destination is all C's,
+it looks in this table and
+
+41
+00:03:36,750 --> 00:03:41,196
+says that's output port 2 and
+then sends it on its way.
+
+42
+00:03:41,196 --> 00:03:45,277
+And this is how the communication happens.
+
+43
+00:03:45,277 --> 00:03:49,952
+So now a key question that
+you might be asking is, well,
+
+44
+00:03:49,952 --> 00:03:56,634
+how does this table actually get filled so
+that the table starts empty, right?
+
+45
+00:03:56,634 --> 00:04:04,131
+So now A, same scenario,
+sends the pack or same to the frame to C.
+
+46
+00:04:04,131 --> 00:04:11,409
+Well, that same lookup that we just
+showed will result in no table entry.
+
+47
+00:04:11,409 --> 00:04:17,508
+So this is where something called MAC
+learning or MAC table learning comes in.
+
+48
+00:04:17,508 --> 00:04:22,820
+So showing this scenario,
+when A on the left-hand
+
+49
+00:04:22,820 --> 00:04:28,006
+side sends it, and
+then the switch has no entry for
+
+50
+00:04:28,006 --> 00:04:32,096
+destination MAC address C, all C's.
+
+51
+00:04:32,096 --> 00:04:37,576
+What it does is it floods
+the frame to all ports,
+
+52
+00:04:37,576 --> 00:04:42,653
+but the actual destination will ignore it.
+
+53
+00:04:42,653 --> 00:04:48,841
+So the middle node, node B, will receive
+it, but it's just going to ignore it.
+
+54
+00:04:48,841 --> 00:04:50,763
+All right, so
+how did that help us with learning?
+
+55
+00:04:50,763 --> 00:04:53,212
+Well, the first part is, well,
+
+56
+00:04:53,212 --> 00:04:57,853
+it at least helped us get the traffic
+to where it's meant to go.
+
+57
+00:04:57,853 --> 00:05:02,886
+But what did we actually
+learn as part of this part of
+
+58
+00:05:02,886 --> 00:05:08,858
+the transmission where when
+A sent something to the switch,
+
+59
+00:05:08,858 --> 00:05:12,838
+so the switch actually saw, well,
+
+60
+00:05:12,838 --> 00:05:16,841
+out port 0 is wherever MAC address A is.
+
+61
+00:05:16,841 --> 00:05:21,471
+So I can put that into
+the MAC address table or
+
+62
+00:05:21,471 --> 00:05:25,737
+the MAC table, all A's maps to port 0.
+
+63
+00:05:25,737 --> 00:05:30,174
+Likewise, when node C actually
+replies to that message,
+
+64
+00:05:30,174 --> 00:05:32,994
+we're going to learn that case again.
+
+65
+00:05:32,994 --> 00:05:36,264
+We're going to learn that all C's,
+
+66
+00:05:36,264 --> 00:05:41,124
+the MAC address for
+all C's is out port 2, right?
+
+67
+00:05:41,124 --> 00:05:48,940
+So this is how we can go about
+starting to fill the MAC tables.
+
+68
+00:05:50,847 --> 00:05:55,948
+Now, we're not limited to a single switch
+to connect all of the nodes you want,
+
+69
+00:05:55,948 --> 00:05:59,545
+so the switches are going to
+be limited in number of ports.
+
+70
+00:05:59,545 --> 00:06:03,929
+So smaller switches might have 4 ports and
+
+71
+00:06:03,929 --> 00:06:08,313
+larger switches might have 48 ports, so
+
+72
+00:06:08,313 --> 00:06:15,035
+physical places where you can
+connect a wire into or a cable into.
+
+73
+00:06:15,035 --> 00:06:16,669
+And so because of this,
+
+74
+00:06:16,669 --> 00:06:20,934
+you typically would need to
+build some topology of switches.
+
+75
+00:06:20,934 --> 00:06:26,082
+So just shown here is an example
+of a tree of switches that
+
+76
+00:06:26,082 --> 00:06:31,023
+were built and
+then each of them has its own MAC table.
+
+77
+00:06:31,023 --> 00:06:37,843
+So here maybe we've done all
+completely learned the entire network,
+
+78
+00:06:37,843 --> 00:06:43,736
+and in this case, it's going to say A,
+B, and C are out nodes or
+
+79
+00:06:43,736 --> 00:06:48,026
+out port 0 and
+then D is out port 1, right?
+
+80
+00:06:48,026 --> 00:06:53,177
+So whenever it receives a frame for
+D, it would send it out 1.
+
+81
+00:06:53,177 --> 00:07:00,333
+And anytime it receives a frame for
+A, B, or C, it sends it out port 0.
+
+82
+00:07:00,333 --> 00:07:05,283
+A challenge with once you
+start creating topologies is
+
+83
+00:07:05,283 --> 00:07:08,413
+something called loops, right?
+
+84
+00:07:08,413 --> 00:07:13,345
+So recall that there
+are broadcast MAC addresses.
+
+85
+00:07:13,345 --> 00:07:19,246
+This is when the destination
+was set at all F's.
+
+86
+00:07:19,246 --> 00:07:24,187
+And recall, we just saw that
+we used flooding for learning.
+
+87
+00:07:24,187 --> 00:07:26,685
+So let's look at what happens now.
+
+88
+00:07:26,685 --> 00:07:31,799
+Let's say the MAC address
+tables are all empty.
+
+89
+00:07:31,799 --> 00:07:36,501
+This node on the left wanted
+to send a frame to some
+
+90
+00:07:36,501 --> 00:07:39,721
+destination that's not known.
+
+91
+00:07:39,721 --> 00:07:42,515
+So this switch here on the left-hand side,
+
+92
+00:07:42,515 --> 00:07:46,741
+the bottom left switch says I looked
+it up, I don't see an entry for
+
+93
+00:07:46,741 --> 00:07:50,311
+the destination,
+I'm going to flood it to my neighbors.
+
+94
+00:07:50,311 --> 00:07:57,746
+So it's going to send it to this top node,
+top switch, and the rightmost switch.
+
+95
+00:07:57,746 --> 00:08:02,880
+Then when each of those switches get it,
+they look up in their MAC address
+
+96
+00:08:02,880 --> 00:08:08,364
+tables and see I don't have an entry
+either, and then they're going to flood.
+
+97
+00:08:08,364 --> 00:08:14,774
+So here this top node flooded
+down to the bottom right node.
+
+98
+00:08:14,774 --> 00:08:19,146
+This bottom right node said
+I also don't have the entry,
+
+99
+00:08:19,146 --> 00:08:22,346
+I'm flooding it to the bottom left node.
+
+100
+00:08:22,346 --> 00:08:26,382
+And then what happens at that point?
+
+101
+00:08:26,382 --> 00:08:31,043
+Well, this bottom left node, if we follow
+the same logic, we'll look up in its
+
+102
+00:08:31,043 --> 00:08:35,794
+table, see that it doesn't have an entry
+for it, and we'll again flood it out.
+
+103
+00:08:35,794 --> 00:08:40,607
+So it'll send it back to the top node,
+it will send it back to the right node,
+
+104
+00:08:40,607 --> 00:08:43,392
+but that's obviously not the behavior, or
+
+105
+00:08:43,392 --> 00:08:48,079
+maybe it won't send out to the right,
+but it'll send it down to the left.
+
+106
+00:08:48,079 --> 00:08:52,838
+But that's not the behavior we
+want because now we're going to
+
+107
+00:08:52,838 --> 00:08:56,754
+amplify this traffic that
+we have in our network,
+
+108
+00:08:56,754 --> 00:09:00,691
+just trying to learn where
+the destinations are.
+
+109
+00:09:00,691 --> 00:09:04,527
+So we need to deal with loops.
+
+110
+00:09:04,527 --> 00:09:10,964
+All right, so a solution to loops is we
+could keep track of the messages seen so
+
+111
+00:09:10,964 --> 00:09:16,707
+that bottom left switch could say,
+hey, I saw this message before,
+
+112
+00:09:16,707 --> 00:09:20,590
+or this frame before,
+I'm going to drop it now.
+
+113
+00:09:20,590 --> 00:09:23,971
+That requires it to keep a lot of state,
+
+114
+00:09:23,971 --> 00:09:28,384
+which we obviously don't or
+we might not want to do.
+
+115
+00:09:28,384 --> 00:09:31,517
+We could limit the number of
+hops a given message takes.
+
+116
+00:09:31,517 --> 00:09:37,272
+So let it loop, but maybe after five,
+we assume that the maximum
+
+117
+00:09:37,272 --> 00:09:42,295
+number of hops that a given
+frame would take is say five.
+
+118
+00:09:42,295 --> 00:09:46,251
+And then after five,
+we'll just drop the packet.
+
+119
+00:09:46,251 --> 00:09:52,796
+And so we don't need to store state,
+but it gets stored in the frame itself.
+
+120
+00:09:52,796 --> 00:09:57,118
+We could also turn off loop
+links that create the loop.
+
+121
+00:09:57,118 --> 00:10:05,051
+So there's protocols out there called
+spanning tree protocols that make it so
+
+122
+00:10:05,051 --> 00:10:09,377
+that you can communicate everywhere, but
+
+123
+00:10:09,377 --> 00:10:16,967
+transforms a network into one that has
+no loops in it by shutting off links.
+
+124
+00:10:16,967 --> 00:10:21,625
+So this keeps you from using
+the full kind of bandwidth
+
+125
+00:10:21,625 --> 00:10:26,089
+available in the network,
+but it prevents loops.
+
+126
+00:10:26,089 --> 00:10:30,747
+And then a last technique that
+you might take is we can actually
+
+127
+00:10:30,747 --> 00:10:34,960
+architect the network such
+that looping won't occur,
+
+128
+00:10:34,960 --> 00:10:39,082
+whether this is create
+the topology in a specific way or
+
+129
+00:10:39,082 --> 00:10:42,868
+make it so
+that we avoid broadcasts and flooding.
+
+130
+00:10:42,868 --> 00:10:49,457
+So maybe it's that we pre-populate
+the MAC address tables,
+
+131
+00:10:49,457 --> 00:10:54,282
+so that you don't have
+to perform learning.
+
+132
+00:10:54,282 --> 00:10:59,443
+So in Ethernet, spanning tree
+protocol is pretty popular as
+
+133
+00:10:59,443 --> 00:11:04,617
+is architected the network
+such that looping won't occur.
+
+134
+00:11:04,617 --> 00:11:11,447
+And that largely occurs in data
+centers that you might see.
+
+135
+00:11:11,447 --> 00:11:15,458
+All right, so
+that was Ethernet and the wired.
+
+136
+00:11:15,458 --> 00:11:20,028
+In wireless there's a lot of similarities,
+but
+
+137
+00:11:20,028 --> 00:11:26,279
+really in this case, the special
+nodes are called access points.
+
+138
+00:11:26,279 --> 00:11:31,549
+So access points are commonly
+connected to a wired network,
+
+139
+00:11:31,549 --> 00:11:36,921
+and then so they use that wired
+network of Ethernet switches,
+
+140
+00:11:36,921 --> 00:11:42,320
+for example, to be able to
+communicate beyond its own range.
+
+141
+00:11:42,320 --> 00:11:48,138
+And then for all the nodes, all
+the traffic goes via the access points.
+
+142
+00:11:48,138 --> 00:11:53,049
+So even though A and B,
+for example, are in range,
+
+143
+00:11:53,049 --> 00:11:59,347
+if A wants to talk to B,
+A will always go via the access point AP1.
+
+144
+00:11:59,347 --> 00:12:04,494
+Now the key challenge here that
+we're not going to get into is
+
+145
+00:12:04,494 --> 00:12:09,551
+the nodes themselves associating
+with an access point.
+
+146
+00:12:09,551 --> 00:12:14,646
+So you can kind of read more
+on your own separately,
+
+147
+00:12:14,646 --> 00:12:19,622
+but wanted to kind of this
+is the parallel device or
+
+148
+00:12:19,622 --> 00:12:23,904
+the similar device to an Ethernet switch.
+
+149
+00:12:23,904 --> 00:12:27,782
+So with that,
+we've wrap up the link layer.
+
+150
+00:12:27,782 --> 00:12:33,387
+So next,
+we're going to get into the network layer.
+
+151
+00:12:33,387 --> 00:12:38,779
+But first,
+there's interesting assignment that you're
+
+152
+00:12:38,779 --> 00:12:43,843
+going to be able to kind of play
+with the network traffic and
+
+153
+00:12:43,843 --> 00:12:50,116
+be able to manipulate it with a tool or
+a Python library called Scapy.
+
+154
+00:12:50,116 --> 00:12:50,616
+Thanks.

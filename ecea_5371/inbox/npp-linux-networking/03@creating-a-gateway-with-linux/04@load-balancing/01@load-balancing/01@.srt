@@ -1,0 +1,675 @@
+1
+00:00:08,431 --> 00:00:10,890
+Now let's get into load balancing.
+
+2
+00:00:12,030 --> 00:00:14,030
+So what is load balancing?
+
+3
+00:00:14,030 --> 00:00:19,133
+So a load balancer serves as
+the point of entry for a service, and
+
+4
+00:00:19,133 --> 00:00:24,670
+directs traffic to one of N servers
+that can handle the request.
+
+5
+00:00:24,670 --> 00:00:29,573
+It's used both for
+scaling and for resilience,
+
+6
+00:00:29,573 --> 00:00:32,950
+and it likely involves NAT.
+
+7
+00:00:32,950 --> 00:00:37,320
+So just to kind of clarify all that, so
+shown here, we're running some service.
+
+8
+00:00:37,320 --> 00:00:42,052
+So let's say we're running some
+web application that accepts
+
+9
+00:00:42,052 --> 00:00:43,906
+individual requests.
+
+10
+00:00:43,906 --> 00:00:48,055
+And for
+scaling purposes we can add multiple
+
+11
+00:00:48,055 --> 00:00:52,970
+hosts because our services
+is pretty popular.
+
+12
+00:00:52,970 --> 00:00:57,995
+And so now I want to be able for
+each given request,
+
+13
+00:00:57,995 --> 00:01:03,070
+choose a server to handle that request.
+
+14
+00:01:03,070 --> 00:01:07,510
+And maybe a different request comes in and
+goes to a different server.
+
+15
+00:01:07,510 --> 00:01:13,554
+So it's balancing the load
+across the service.
+
+16
+00:01:15,515 --> 00:01:23,137
+So, part of this is going to
+include a load balancing algorithm.
+
+17
+00:01:23,137 --> 00:01:28,470
+So the client's going to initiate
+a TCP connection to the service.
+
+18
+00:01:28,470 --> 00:01:34,370
+And some load balancer must select which
+server to forward the request to and
+
+19
+00:01:34,370 --> 00:01:40,018
+establish the connection other end and
+handle the ultimate request.
+
+20
+00:01:40,018 --> 00:01:43,676
+And this is where a load
+balancing algorithm comes in.
+
+21
+00:01:43,676 --> 00:01:49,066
+And so this is important because you have
+a lot of different choices of algorithms,
+
+22
+00:01:49,066 --> 00:01:52,540
+and you can choose them based
+on what fits your needs.
+
+23
+00:01:54,430 --> 00:01:59,284
+An important consideration
+here is the server set.
+
+24
+00:01:59,284 --> 00:02:04,324
+So that's which servers are part
+of the set to choose from.
+
+25
+00:02:04,324 --> 00:02:08,317
+So the set is typically
+assigned statically.
+
+26
+00:02:08,317 --> 00:02:15,807
+So you just add the servers, but
+it may include some liveness checks.
+
+27
+00:02:15,807 --> 00:02:19,381
+So maybe the load balancer
+itself is sending
+
+28
+00:02:19,381 --> 00:02:22,840
+out heartbeats to say are you still okay?
+
+29
+00:02:22,840 --> 00:02:23,704
+Are you okay?
+
+30
+00:02:23,704 --> 00:02:24,796
+Are you okay?
+
+31
+00:02:24,796 --> 00:02:29,383
+And then keeping track
+of that in some table,
+
+32
+00:02:29,383 --> 00:02:34,693
+which is the set of servers
+that it can choose among,
+
+33
+00:02:34,693 --> 00:02:40,382
+and that kind of forms one of
+the inputs to the algorithm.
+
+34
+00:02:40,382 --> 00:02:45,850
+Another important consideration is
+something called flow affinity.
+
+35
+00:02:46,910 --> 00:02:52,850
+And so why this is important
+is because TCP is stateful.
+
+36
+00:02:52,850 --> 00:02:57,749
+So, we need to ensure all packets
+from the same flow from the same
+
+37
+00:02:57,749 --> 00:03:01,210
+(TCP connection) go to the same server.
+
+38
+00:03:01,210 --> 00:03:06,790
+So the first packet,
+an algorithm will select the server.
+
+39
+00:03:06,790 --> 00:03:13,170
+It'll use the IP of the server
+is called the VIP or virtual IP.
+
+40
+00:03:15,370 --> 00:03:17,561
+And so it'll pick the VIP,
+
+41
+00:03:17,561 --> 00:03:22,210
+and then subsequent packets
+all need to look in a table.
+
+42
+00:03:22,210 --> 00:03:27,251
+So the first packet will come through,
+it'll use the algorithm to
+
+43
+00:03:27,251 --> 00:03:32,471
+select the server, then it'll write
+into the table an entry that has
+
+44
+00:03:32,471 --> 00:03:37,942
+a mapping between the source IP and
+port, and the VIP, the virtual IP.
+
+45
+00:03:37,942 --> 00:03:40,270
+So which backend server it chose.
+
+46
+00:03:41,650 --> 00:03:46,488
+All right, so why that's important
+again is now we have a TCP connection.
+
+47
+00:03:46,488 --> 00:03:48,590
+So let me flip back to this picture.
+
+48
+00:03:50,130 --> 00:03:53,788
+So we have client,
+it opened a TCP session, and
+
+49
+00:03:53,788 --> 00:03:58,862
+that TCP session is going to be
+terminated on one of these servers.
+
+50
+00:03:58,862 --> 00:04:03,121
+So it's going to have all those
+sequence numbers, the packet buffers,
+
+51
+00:04:03,121 --> 00:04:07,826
+what's been acknowledged, and that's
+going to be all stored on this host.
+
+52
+00:04:07,826 --> 00:04:12,674
+So the client always must
+talk to the same server.
+
+53
+00:04:12,674 --> 00:04:15,000
+That's what flow affinity means.
+
+54
+00:04:16,750 --> 00:04:20,038
+All right, so
+now getting into the algorithm.
+
+55
+00:04:20,038 --> 00:04:22,270
+So let's go through a couple.
+
+56
+00:04:22,270 --> 00:04:25,550
+So one would be source hashing.
+
+57
+00:04:25,550 --> 00:04:29,332
+So for source hashing,
+for a source IP and port,
+
+58
+00:04:29,332 --> 00:04:34,050
+a hash function determines
+the back-end server.
+
+59
+00:04:34,050 --> 00:04:38,909
+So this balances connections among
+servers under the assumption
+
+60
+00:04:38,909 --> 00:04:43,614
+that you have a distribution of
+source IP addresses and ports.
+
+61
+00:04:43,614 --> 00:04:48,255
+So if you have a lot of clients,
+chances are they're going to have a nice
+
+62
+00:04:48,255 --> 00:04:53,560
+distribution of source IP addresses and
+port numbers that they're using.
+
+63
+00:04:53,560 --> 00:04:55,682
+It comes into the load balancer.
+
+64
+00:04:55,682 --> 00:05:00,005
+The algorithm is going to
+pull that pair out,
+
+65
+00:05:00,005 --> 00:05:06,076
+run a hash function on it, and
+then use that hash function.
+
+66
+00:05:06,076 --> 00:05:09,540
+What's not really shown here is,
+it'll select from the set and
+
+67
+00:05:09,540 --> 00:05:11,478
+that will choose which server.
+
+68
+00:05:11,478 --> 00:05:14,350
+All right, so we're just hashing on that.
+
+69
+00:05:14,350 --> 00:05:19,620
+Now this is stateless, which is one
+of the kind of main benefits of it.
+
+70
+00:05:19,620 --> 00:05:24,865
+And this means that flow affinity is
+taken care of by the hash function.
+
+71
+00:05:24,865 --> 00:05:29,137
+So whenever we have
+the exact same session,
+
+72
+00:05:29,137 --> 00:05:36,652
+we'll always have the same source IP and
+source port coming from the client.
+
+73
+00:05:36,652 --> 00:05:41,387
+So flow affinity doesn't need
+to be tracked, it just happens.
+
+74
+00:05:43,826 --> 00:05:47,234
+A next algorithm would be round robin.
+
+75
+00:05:47,234 --> 00:05:53,820
+So here a server selection iterates
+through each server in order.
+
+76
+00:05:53,820 --> 00:05:57,692
+So the first connection that comes
+through, it would choose server one.
+
+77
+00:05:57,692 --> 00:06:00,576
+Next connection that comes
+through would choose server two.
+
+78
+00:06:00,576 --> 00:06:04,644
+Next connection it would choose server
+three, and then it would go back, and
+
+79
+00:06:04,644 --> 00:06:08,110
+then the next connection would
+choose server one again.
+
+80
+00:06:08,110 --> 00:06:14,370
+And this ensures a balanced load, assuming
+each request is roughly the same load.
+
+81
+00:06:14,370 --> 00:06:21,017
+And in this case now, the load balancer
+needs to keep state for flow affinity,
+
+82
+00:06:21,017 --> 00:06:27,460
+it needs to know when there's a packet
+that came in, if it looks in a table and
+
+83
+00:06:27,460 --> 00:06:33,770
+says this particular flow was already
+chosen to go to server three.
+
+84
+00:06:33,770 --> 00:06:39,425
+So the algorithm is basically start
+at zero, select from the set zero,
+
+85
+00:06:39,425 --> 00:06:45,364
+that's the server that you're going to go,
+and then just increment next and
+
+86
+00:06:45,364 --> 00:06:49,376
+mod it by the set length
+to be able to wrap around.
+
+87
+00:06:49,376 --> 00:06:53,744
+And then each time this is called,
+it'll change,
+
+88
+00:06:53,744 --> 00:06:56,904
+it'll pick the next one in the list.
+
+89
+00:06:56,904 --> 00:06:58,438
+So that's round robin.
+
+90
+00:06:58,438 --> 00:07:02,442
+And a third one we'll mention is
+something called least connections.
+
+91
+00:07:02,442 --> 00:07:06,610
+And this adds a little bit of state so
+that's why we're mentioning it.
+
+92
+00:07:06,610 --> 00:07:11,136
+So, here it'll select a server
+based on which server has
+
+93
+00:07:11,136 --> 00:07:14,870
+the least number of active connections.
+
+94
+00:07:14,870 --> 00:07:19,726
+So the load balancer here will
+track how many open connections.
+
+95
+00:07:19,726 --> 00:07:25,018
+So, it's keeping a table for
+the flow affinity,
+
+96
+00:07:25,018 --> 00:07:29,433
+and so it needs to keep that state anyway.
+
+97
+00:07:29,433 --> 00:07:33,660
+So, it can count how many
+active connections there are.
+
+98
+00:07:33,660 --> 00:07:39,155
+So this takes into account that some
+requests may be longer in duration,
+
+99
+00:07:39,155 --> 00:07:44,134
+but assumes each connection imposes
+a similar load on a server.
+
+100
+00:07:44,134 --> 00:07:48,469
+So maybe a client opens up one connection,
+TCP connection,
+
+101
+00:07:48,469 --> 00:07:53,970
+but then is able to send multiple
+requests over that connection.
+
+102
+00:07:53,970 --> 00:07:59,369
+And so if we end up with a lot of
+connections on the same server because
+
+103
+00:07:59,369 --> 00:08:04,127
+of round robin,
+that would overload a particular server.
+
+104
+00:08:04,127 --> 00:08:06,568
+So that kind of takes this into account.
+
+105
+00:08:06,568 --> 00:08:11,714
+And so here we would look up which has
+the minimum active connections and
+
+106
+00:08:11,714 --> 00:08:15,143
+then use that to choose the server,
+all right,
+
+107
+00:08:15,143 --> 00:08:19,720
+and then kind of keep track of
+the number of connections in each.
+
+108
+00:08:21,290 --> 00:08:24,972
+All right, so now let's step back.
+
+109
+00:08:24,972 --> 00:08:30,510
+And then what we've been talking
+about is a layer 4 load balancer.
+
+110
+00:08:30,510 --> 00:08:32,975
+Well, we really haven't distinguished, but
+
+111
+00:08:32,975 --> 00:08:35,936
+we're going to imply that
+we're talking about layer 4.
+
+112
+00:08:35,936 --> 00:08:41,490
+So,let's talk about the difference between
+a layer 4 and a layer 7 load balancer.
+
+113
+00:08:41,490 --> 00:08:47,330
+So layer 4 only considers the network and
+transport layer headers.
+
+114
+00:08:47,330 --> 00:08:51,270
+This is also called
+a network load balancer.
+
+115
+00:08:51,270 --> 00:08:56,913
+Layer 7 load balancer also
+considers the application,
+
+116
+00:08:56,913 --> 00:09:00,222
+for example HTTP, its header.
+
+117
+00:09:00,222 --> 00:09:03,246
+So this is also called a web proxy.
+
+118
+00:09:03,246 --> 00:09:08,218
+So for example,
+we might have some website and
+
+119
+00:09:08,218 --> 00:09:13,571
+maybe for the page sign up
+we want to go to server 1,
+
+120
+00:09:13,571 --> 00:09:19,392
+but for the page purchase
+we can go to server 2 or 3.
+
+121
+00:09:19,392 --> 00:09:24,858
+So the layer 7 load balancer
+can allow you to route
+
+122
+00:09:24,858 --> 00:09:31,900
+different kind of requests to
+different servers based on that.
+
+123
+00:09:35,250 --> 00:09:41,332
+It's not either or,
+a lot of the times both are used together.
+
+124
+00:09:41,332 --> 00:09:46,795
+So there was a nice presentation by
+Facebook about some of their internal
+
+125
+00:09:46,795 --> 00:09:51,730
+architecture and they were talking
+about load balancing there.
+
+126
+00:09:52,950 --> 00:09:57,602
+And interestingly enough,
+they're using IPVS, and
+
+127
+00:09:57,602 --> 00:10:02,570
+that's exactly what we'll
+talk about next time.
+
+128
+00:10:02,570 --> 00:10:05,628
+So they have different layers
+of load balancing here.
+
+129
+00:10:05,628 --> 00:10:11,506
+So they talk about DNS, so
+they can load balance requests and
+
+130
+00:10:11,506 --> 00:10:17,744
+direct them to the given data center
+that they want them to go to.
+
+131
+00:10:17,744 --> 00:10:22,702
+Once they get to the data center,
+now they're using a network load balancer
+
+132
+00:10:22,702 --> 00:10:25,636
+to load balance, and
+this is kind of quick.
+
+133
+00:10:25,636 --> 00:10:30,610
+It's a lot simpler to load
+balance between a layer 7 proxy,
+
+134
+00:10:30,610 --> 00:10:35,584
+which then they want this kind of
+scale out architecture for,
+
+135
+00:10:35,584 --> 00:10:41,590
+which then will load balance between
+their kind of actual service.
+
+136
+00:10:41,590 --> 00:10:46,452
+So I thought that was an interesting feel
+free to check out this presentation.
+
+137
+00:10:46,452 --> 00:10:50,328
+They have both the paper as
+well as the presentation there.
+
+138
+00:10:50,328 --> 00:10:53,090
+And this is a screen grab
+from that presentation.
+
+139
+00:10:54,390 --> 00:11:00,810
+And with that we'll end here, and
+next time we're going to go into IPVS,
+
+140
+00:11:00,810 --> 00:11:05,318
+which is the Linux framework for
+load balancing.
+
+141
+00:11:05,318 --> 00:11:08,202
+All right, until then.

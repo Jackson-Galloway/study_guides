@@ -1,0 +1,596 @@
+1
+00:00:09,290 --> 00:00:12,480
+Let's jump into multiplexing.
+
+2
+00:00:12,480 --> 00:00:17,420
+This is probably the
+core requirement
+
+3
+00:00:17,420 --> 00:00:21,460
+for the transport layer
+to be able to handle.
+
+4
+00:00:21,790 --> 00:00:26,595
+We can be revisiting this
+again, Ethernet addressing,
+
+5
+00:00:26,595 --> 00:00:29,325
+each network card
+has a Mac address
+
+6
+00:00:29,325 --> 00:00:32,910
+and when you send a frame
+through the network,
+
+7
+00:00:32,910 --> 00:00:34,850
+the frame contains the source
+
+8
+00:00:34,850 --> 00:00:37,115
+and destination Mac addresses.
+
+9
+00:00:37,115 --> 00:00:41,150
+This is used by the
+receiver to say yes,
+
+10
+00:00:41,150 --> 00:00:42,610
+it's destined for me,
+
+11
+00:00:42,610 --> 00:00:45,190
+and used by network devices
+
+12
+00:00:45,190 --> 00:00:48,815
+to be able to forward it
+to the particular host.
+
+13
+00:00:48,815 --> 00:00:54,670
+We saw then that that
+really doesn't scale well.
+
+14
+00:00:54,670 --> 00:00:57,370
+This is where we introduced IP
+
+15
+00:00:57,370 --> 00:01:01,030
+addressing or for the
+Internet Protocol which added
+
+16
+00:01:01,030 --> 00:01:03,160
+structure to addresses so that
+
+17
+00:01:03,160 --> 00:01:06,490
+devices could be
+grouped and you can
+
+18
+00:01:06,490 --> 00:01:09,270
+make it so that you
+can reach beyond
+
+19
+00:01:09,270 --> 00:01:13,495
+a local network but
+to a global network.
+
+20
+00:01:13,495 --> 00:01:17,090
+Then we saw in
+
+21
+00:01:17,090 --> 00:01:20,110
+the introduction that
+the first problem is,
+
+22
+00:01:20,110 --> 00:01:23,150
+well, both of those
+
+23
+00:01:23,150 --> 00:01:26,150
+addressing schemes
+can get me to a host,
+
+24
+00:01:26,150 --> 00:01:30,300
+but will likely have multiple
+applications running.
+
+25
+00:01:30,300 --> 00:01:33,890
+Which application
+is the packet for?
+
+26
+00:01:34,650 --> 00:01:39,090
+This is where the
+transport layer comes in,
+
+27
+00:01:39,090 --> 00:01:42,275
+the networking layer,
+and the thonic layer
+
+28
+00:01:42,275 --> 00:01:45,890
+is for communication
+between hosts.
+
+29
+00:01:45,890 --> 00:01:49,830
+The transport layer is really
+about communication between
+
+30
+00:01:49,830 --> 00:01:55,980
+processes or applications
+running on a host.
+
+31
+00:01:57,250 --> 00:02:00,350
+How is this solved?
+You guessed it.
+
+32
+00:02:00,350 --> 00:02:06,830
+Another header shown
+down in the bottom left.
+
+33
+00:02:06,830 --> 00:02:10,330
+We can see we put a
+Ethernet header on it.
+
+34
+00:02:10,330 --> 00:02:12,590
+We put the IP header on it.
+
+35
+00:02:12,590 --> 00:02:14,590
+Well, we're going to
+introduce a new header
+
+36
+00:02:14,590 --> 00:02:16,770
+for the transport layer,
+
+37
+00:02:17,050 --> 00:02:19,590
+Much as each of those had
+
+38
+00:02:19,590 --> 00:02:21,905
+a source and
+destination address.
+
+39
+00:02:21,905 --> 00:02:25,250
+These are going to
+the transport layer
+
+40
+00:02:25,250 --> 00:02:29,415
+also effectively a source
+and destination address.
+
+41
+00:02:29,415 --> 00:02:31,910
+The addresses here are called
+
+42
+00:02:31,910 --> 00:02:38,030
+ports inside of your computer,
+
+43
+00:02:38,030 --> 00:02:40,950
+inside the host the
+operating system.
+
+44
+00:02:40,950 --> 00:02:44,230
+As a notion of ports for
+
+45
+00:02:44,230 --> 00:02:48,410
+different communication paths,
+different applications,
+
+46
+00:02:48,410 --> 00:02:53,930
+we would commonly run a
+web server on port 80,
+
+47
+00:02:53,930 --> 00:02:58,410
+an SSH server would
+be run on port 22.
+
+48
+00:02:58,410 --> 00:03:02,070
+Those ports are what's
+relating to the fields,
+
+49
+00:03:02,070 --> 00:03:05,745
+the source and
+destination port numbers
+
+50
+00:03:05,745 --> 00:03:08,500
+in the transport header.
+
+51
+00:03:08,780 --> 00:03:13,790
+Now, there's two main protocols
+
+52
+00:03:13,790 --> 00:03:19,600
+that are commonly
+used, UDP and TCP.
+
+53
+00:03:19,600 --> 00:03:23,280
+Let's go over those briefly.
+
+54
+00:03:23,540 --> 00:03:27,625
+Now, taking a step aside,
+
+55
+00:03:27,625 --> 00:03:30,710
+let's talk about message naming.
+
+56
+00:03:30,710 --> 00:03:34,630
+We've used a lot of
+different names.
+
+57
+00:03:35,430 --> 00:03:38,615
+There are a lot of
+different names for
+
+58
+00:03:38,615 --> 00:03:43,930
+the contents of what
+is a message called.
+
+59
+00:03:43,930 --> 00:03:47,310
+At the link layer,
+we call it a frame.
+
+60
+00:03:47,310 --> 00:03:49,175
+At the network layer,
+
+61
+00:03:49,175 --> 00:03:50,815
+we call it a packet.
+
+62
+00:03:50,815 --> 00:03:52,875
+At the transport layer,
+
+63
+00:03:52,875 --> 00:03:54,470
+we call it a datagram.
+
+64
+00:03:54,470 --> 00:03:57,280
+That's where we're going to
+be calling it this time.
+
+65
+00:03:57,280 --> 00:03:59,520
+Then at the application layer,
+
+66
+00:03:59,520 --> 00:04:01,960
+which we'll talk about
+in the next module,
+
+67
+00:04:01,960 --> 00:04:03,960
+we'll call it a message.
+
+68
+00:04:03,960 --> 00:04:06,100
+Now, a lot of times you can
+
+69
+00:04:06,100 --> 00:04:09,680
+use these casually
+interchangeably,
+
+70
+00:04:09,680 --> 00:04:12,780
+but if you want to be accurate,
+
+71
+00:04:12,780 --> 00:04:17,750
+these are the commonly
+accepted namings for these.
+
+72
+00:04:20,550 --> 00:04:26,360
+A distinction that you'll
+see in transport protocols
+
+73
+00:04:26,360 --> 00:04:29,240
+is the distinction
+between whether it's
+
+74
+00:04:29,240 --> 00:04:32,760
+connection less or
+connection-oriented.
+
+75
+00:04:32,760 --> 00:04:36,330
+If it's connection
+less, the host,
+
+76
+00:04:36,330 --> 00:04:38,590
+the operating system
+within the host
+
+77
+00:04:38,590 --> 00:04:41,590
+uses just the destination
+IP address and
+
+78
+00:04:41,590 --> 00:04:43,570
+the destination port to
+
+79
+00:04:43,570 --> 00:04:47,010
+demultiplex it to the
+specific process.
+
+80
+00:04:47,010 --> 00:04:51,100
+This doesn't require
+any pre-establishment
+
+81
+00:04:51,100 --> 00:04:53,865
+or establishment process.
+
+82
+00:04:53,865 --> 00:04:56,430
+There's no state that's
+
+83
+00:04:56,430 --> 00:04:59,170
+really needed on
+the host other than
+
+84
+00:04:59,170 --> 00:05:06,110
+this tuple of IP port
+to process mapping.
+
+85
+00:05:06,110 --> 00:05:10,650
+That's connection less
+connection-oriented,
+
+86
+00:05:10,650 --> 00:05:13,545
+does have state,
+
+87
+00:05:13,545 --> 00:05:18,275
+so a four tuple of the
+source IP destination,
+
+88
+00:05:18,275 --> 00:05:21,710
+IP addresses and the
+source and destination
+
+89
+00:05:21,710 --> 00:05:26,110
+ports identifies a
+unique connection.
+
+90
+00:05:26,110 --> 00:05:29,470
+You can have
+multiple connections
+
+91
+00:05:29,470 --> 00:05:33,790
+to being handled by
+a single process.
+
+92
+00:05:33,790 --> 00:05:37,050
+That's where all this
+extra information
+
+93
+00:05:37,050 --> 00:05:40,540
+is needed because
+that represents that.
+
+94
+00:05:40,540 --> 00:05:42,580
+Now, this requires
+
+95
+00:05:42,580 --> 00:05:48,180
+establishment before the
+actual data transfer.
+
+96
+00:05:48,180 --> 00:05:50,250
+The host, as we'll see,
+
+97
+00:05:50,250 --> 00:05:54,270
+keeps a lot more state
+about the connection.
+
+98
+00:05:55,270 --> 00:05:59,610
+UDP, the first main
+
+99
+00:05:59,610 --> 00:06:03,370
+protocol in the transport
+layer is connection less.
+
+100
+00:06:03,370 --> 00:06:05,085
+This is real simple.
+
+101
+00:06:05,085 --> 00:06:07,590
+The main thing it provides is
+
+102
+00:06:07,590 --> 00:06:10,250
+the multiplexing
+and demultiplexing,
+
+103
+00:06:10,250 --> 00:06:14,690
+then it just inherits
+IP's service model.
+
+104
+00:06:14,690 --> 00:06:18,250
+The best effort delivery
+of each datagram.
+
+105
+00:06:18,250 --> 00:06:22,270
+You could see the header
+for UDP is quite simple.
+
+106
+00:06:22,270 --> 00:06:24,530
+It has the source
+and destination
+
+107
+00:06:24,530 --> 00:06:27,650
+ports and then a length field to
+
+108
+00:06:27,650 --> 00:06:30,030
+be able to say know
+
+109
+00:06:30,030 --> 00:06:34,830
+how much data is
+inside of the payload.
+
+110
+00:06:35,510 --> 00:06:41,830
+TCP, on the other hand,
+is connection-oriented.
+
+111
+00:06:42,320 --> 00:06:44,770
+As I mentioned, a single process
+
+112
+00:06:44,770 --> 00:06:47,390
+can have multiple connections.
+
+113
+00:06:47,390 --> 00:06:49,930
+This four tuple of
+
+114
+00:06:49,930 --> 00:06:52,250
+the source destination
+IP addresses and
+
+115
+00:06:52,250 --> 00:06:54,910
+the source destination
+port numbers
+
+116
+00:06:54,910 --> 00:06:57,690
+identifies that connection.
+
+117
+00:06:58,000 --> 00:07:02,950
+A lot of times you'll hear
+this called a five tuple,
+
+118
+00:07:02,950 --> 00:07:06,910
+which includes the
+protocol type as well,
+
+119
+00:07:06,910 --> 00:07:09,710
+whether it's TCP or UDP.
+
+120
+00:07:09,710 --> 00:07:12,230
+In this case, it would
+be the five tuple
+
+121
+00:07:12,230 --> 00:07:14,220
+of TCP as the protocol.
+
+122
+00:07:14,220 --> 00:07:17,780
+Then those four addresses.
+
+123
+00:07:17,780 --> 00:07:21,470
+The service model
+for TCP is that it
+
+124
+00:07:21,470 --> 00:07:25,290
+provides an in order
+reliable stream.
+
+125
+00:07:25,290 --> 00:07:28,290
+We'll get into the details of
+
+126
+00:07:28,290 --> 00:07:31,530
+how TCP provides this
+reliable stream,
+
+127
+00:07:31,530 --> 00:07:33,830
+but all we needed
+
+128
+00:07:33,830 --> 00:07:36,590
+to introduce in this
+video was the concept
+
+129
+00:07:36,590 --> 00:07:42,830
+of multiplexing.
+Until next time.

@@ -1,0 +1,39 @@
+Welcome back. At this point, we're going to shift
+gears a little bit and move from talking about some Linux utilities and
+mechanisms to process packets, to do things like forwarding and network address translation. We're going to
+shift to the topic of virtual networking in Linux. This is a very exciting
+topic, highly relevant today. By the end of it, you should definitely be much more
+versed in this space. You probably, in fact, you have certainly touched
+this in your own work, meaning that the previous
+modules leveraged all of this. Here, we're going
+to understand a little better what was
+actually happening. What do we mean by
+virtualization? Virtualization in general is just technology for abstracting the underlying
+hardware and software. The benefits are that it makes more efficient
+use of resources, and it provides for simplified deployments by isolating different
+configurations. There's a lot of other benefits, but these are the two key ones that I feel like highlighting. Some examples of
+where virtualization shows up is certainly
+in Cloud computing. If you've used a
+public Cloud service like Amazon AWS, well, they are using virtualization
+to allow you to run your own applications on
+top of their infrastructure. There's a whole field called network function
+virtualization, and this is a direction that
+is basically taking all of the appliances that
+we have in networks, putting them inside
+of virtual machines, in such that they can run in a much more efficient
+manner on servers in a providers network like
+inside of AT&T's servers. Then finally, the virtualization of the
+network stack in Linux. We've been running containers, and we've hinted that there's something underlying
+this that enabled that. What we're going to really
+focus on is that part of it. As a little outline of where
+we're going in this module, we'll first dive a
+little deeper into the concept of network namespaces and
+namespaces in general. The key mechanism inside of Linux that provides this
+virtualization capability. We'll then go to the
+utility ip-netns, which is what can help set
+up network namespaces. Then we'll put that
+into practice, and show how we can do the networking
+between name spaces. Then finally, we'll relate
+it all to Docker networking, and understand what actually is happening when
+we're using Docker. With that, we'll
+end there. Thanks.

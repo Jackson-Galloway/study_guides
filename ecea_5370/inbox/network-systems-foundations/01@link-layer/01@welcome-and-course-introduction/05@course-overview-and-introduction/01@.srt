@@ -1,0 +1,254 @@
+1
+00:00:08,300 --> 00:00:10,860
+Hello and welcome.
+
+2
+00:00:10,860 --> 00:00:13,500
+I want to take a minute
+before we get into
+
+3
+00:00:13,500 --> 00:00:16,460
+all the instructional videos
+and things like that,
+
+4
+00:00:16,460 --> 00:00:19,015
+I just wanted to take a
+minute to introduce myself.
+
+5
+00:00:19,015 --> 00:00:20,980
+I'm Eric Keller,
+
+6
+00:00:20,980 --> 00:00:24,485
+Professor at the University
+of Colorado in Boulder.
+
+7
+00:00:24,485 --> 00:00:27,320
+The goal of this
+course is really to
+
+8
+00:00:27,320 --> 00:00:30,290
+cover the fundamentals
+of network systems.
+
+9
+00:00:30,290 --> 00:00:31,880
+Networking has really been
+
+10
+00:00:31,880 --> 00:00:35,680
+designed as this layered design.
+
+11
+00:00:35,680 --> 00:00:38,680
+We're going to go through
+each of those layers and
+
+12
+00:00:38,680 --> 00:00:39,940
+the instructions that they
+
+13
+00:00:39,940 --> 00:00:41,950
+provide to the
+layers above them,
+
+14
+00:00:41,950 --> 00:00:44,320
+but we'll also have a module on
+
+15
+00:00:44,320 --> 00:00:48,965
+security that really glues
+everything together.
+
+16
+00:00:48,965 --> 00:00:51,580
+I just wanted to
+express that I'm really
+
+17
+00:00:51,580 --> 00:00:54,380
+excited about this
+particular topic.
+
+18
+00:00:54,380 --> 00:00:57,910
+Networking has become
+a passion of mine.
+
+19
+00:00:57,910 --> 00:01:02,940
+It's really this
+underappreciated thing,
+
+20
+00:01:02,940 --> 00:01:05,720
+yet it's so critical,
+
+21
+00:01:05,720 --> 00:01:08,600
+like businesses stop
+when the network goes
+
+22
+00:01:08,600 --> 00:01:10,830
+down and we just
+
+23
+00:01:10,830 --> 00:01:13,760
+rely on it and it's just
+become so instrumental.
+
+24
+00:01:13,760 --> 00:01:15,800
+We just take it for
+granted a lot of times,
+
+25
+00:01:15,800 --> 00:01:19,835
+but there's so much innovation
+and the design of it.
+
+26
+00:01:19,835 --> 00:01:21,370
+To me it's fascinating and
+
+27
+00:01:21,370 --> 00:01:23,790
+so I really appreciate
+that you're
+
+28
+00:01:23,790 --> 00:01:26,515
+joining me with this and
+
+29
+00:01:26,515 --> 00:01:30,850
+coming out of my
+undergraduate studies,
+
+30
+00:01:30,850 --> 00:01:33,945
+I didn't really even know
+anything about networking.
+
+31
+00:01:33,945 --> 00:01:36,930
+I started as a software engineer
+
+32
+00:01:36,930 --> 00:01:39,265
+at a semiconductor company.
+
+33
+00:01:39,265 --> 00:01:41,190
+Just happened that one of
+
+34
+00:01:41,190 --> 00:01:45,610
+the customer segments
+for this company
+
+35
+00:01:45,610 --> 00:01:52,935
+was in networking and I
+took a little on the job,
+
+36
+00:01:52,935 --> 00:01:55,710
+learning had a crash course.
+
+37
+00:01:55,710 --> 00:02:00,120
+My manager sat me down and
+largely gave me an overview.
+
+38
+00:02:00,120 --> 00:02:04,250
+We're going to do this course.
+
+39
+00:02:05,540 --> 00:02:09,785
+Each module will include an
+introduction video where
+
+40
+00:02:09,785 --> 00:02:14,835
+we really overview what that
+particular layer is about,
+
+41
+00:02:14,835 --> 00:02:16,620
+and what the problems are
+
+42
+00:02:16,620 --> 00:02:18,850
+that it's addressing
+then we're going to
+
+43
+00:02:18,850 --> 00:02:21,590
+have the subsequent
+videos all about
+
+44
+00:02:21,590 --> 00:02:23,630
+dive into what are
+
+45
+00:02:23,630 --> 00:02:25,965
+the solutions and how
+do they all work.
+
+46
+00:02:25,965 --> 00:02:28,690
+We'll end each module
+with a graded quiz and
+
+47
+00:02:28,690 --> 00:02:30,730
+a programming assignment
+that hopefully you
+
+48
+00:02:30,730 --> 00:02:34,450
+find is pretty fun
+and interesting.
+
+49
+00:02:34,450 --> 00:02:37,750
+After this course,
+I'm sure that you
+
+50
+00:02:37,750 --> 00:02:41,250
+definitely know a lot more
+about network systems,
+
+51
+00:02:41,250 --> 00:02:45,245
+but I'm looking to improve
+
+52
+00:02:45,245 --> 00:02:47,090
+and if you have any feedback on
+
+53
+00:02:47,090 --> 00:02:50,410
+this course, please
+include that.
+
+54
+00:02:50,410 --> 00:02:53,670
+With that, I look
+forward to seeing you
+
+55
+00:02:53,670 --> 00:02:57,650
+in the next module. Thanks.

@@ -1,0 +1,869 @@
+1
+00:00:10,430 --> 00:00:15,045
+Let's get started.
+We've gone through
+
+2
+00:00:15,045 --> 00:00:20,610
+running BIRD in a topology
+using container lab.
+
+3
+00:00:20,610 --> 00:00:23,340
+Now in this lesson,
+
+4
+00:00:23,340 --> 00:00:28,270
+I just want to talk about
+some other resources that are
+
+5
+00:00:28,270 --> 00:00:31,110
+available that might
+help you create
+
+6
+00:00:31,110 --> 00:00:36,210
+larger router experiments
+and things like that.
+
+7
+00:00:36,840 --> 00:00:41,190
+A couple of the key questions
+here would be like,
+
+8
+00:00:41,190 --> 00:00:45,590
+how do we get real routing
+tables and announcements?
+
+9
+00:00:45,590 --> 00:00:47,880
+In our little walk through,
+
+10
+00:00:47,880 --> 00:00:52,970
+we used just some static
+routes that we set in BIRD,
+
+11
+00:00:52,970 --> 00:00:55,570
+we saw those get announced.
+
+12
+00:00:55,570 --> 00:01:00,020
+But how do we get some realness
+to some routing tables,
+
+13
+00:01:00,020 --> 00:01:02,350
+some announcements
+and inject those.
+
+14
+00:01:02,350 --> 00:01:04,210
+How can we use those to inject
+
+15
+00:01:04,210 --> 00:01:07,840
+those announcements in
+a programmatic manner?
+
+16
+00:01:07,840 --> 00:01:11,685
+Container Lab is nice
+but it's pretty manual.
+
+17
+00:01:11,685 --> 00:01:14,930
+Namely they'll set up
+a BIRD and all that.
+
+18
+00:01:14,930 --> 00:01:18,550
+Can we get something with
+richer capabilities?
+
+19
+00:01:18,770 --> 00:01:22,140
+There's resources
+for each of these,
+
+20
+00:01:22,140 --> 00:01:26,890
+so there's RIPE which runs
+
+21
+00:01:26,890 --> 00:01:32,030
+a routing data collector
+to get injected.
+
+22
+00:01:32,030 --> 00:01:34,735
+There's a tool called ExaBGP.
+
+23
+00:01:34,735 --> 00:01:37,230
+Then with richer capabilities
+
+24
+00:01:37,230 --> 00:01:39,355
+we have the SEED
+Internet emulator.
+
+25
+00:01:39,355 --> 00:01:41,125
+Let me walk through each.
+
+26
+00:01:41,125 --> 00:01:46,850
+RIPE is a regional Internet
+registry for Europe,
+
+27
+00:01:46,850 --> 00:01:51,725
+the Middle East, parts
+of Central Asia.
+
+28
+00:01:51,725 --> 00:01:56,175
+They run a routing data
+collection platform,
+
+29
+00:01:56,175 --> 00:01:58,695
+so that's basically
+they're running routers.
+
+30
+00:01:58,695 --> 00:02:03,390
+They have them peered to other
+routers on the Internet,
+
+31
+00:02:03,390 --> 00:02:07,110
+and they're actually
+collecting and storing all of
+
+32
+00:02:07,110 --> 00:02:09,670
+the route announcements
+that they get and
+
+33
+00:02:09,670 --> 00:02:13,630
+then taking snapshots of
+those routing tables.
+
+34
+00:02:13,820 --> 00:02:18,450
+Here's an example of
+routing table dump.
+
+35
+00:02:18,450 --> 00:02:26,520
+If you go to this
+particular date in 2023,
+
+36
+00:02:26,520 --> 00:02:32,010
+you can get a routing
+table dump from that.
+
+37
+00:02:32,010 --> 00:02:36,570
+It's stored in a
+format called MRT,
+
+38
+00:02:36,570 --> 00:02:38,685
+you can search for it.
+
+39
+00:02:38,685 --> 00:02:42,120
+It's an open standard for it,
+
+40
+00:02:42,120 --> 00:02:45,190
+and there are some
+utilities that they
+
+41
+00:02:45,190 --> 00:02:50,145
+provide that can read
+these different formats,
+
+42
+00:02:50,145 --> 00:02:54,960
+and they provide a
+container docker image
+
+43
+00:02:54,960 --> 00:02:56,910
+that has this installed,
+
+44
+00:02:56,910 --> 00:02:58,485
+and here's an example,
+
+45
+00:02:58,485 --> 00:03:03,990
+if you unzip that you can run
+
+46
+00:03:03,990 --> 00:03:07,760
+this command bgpdump
+with some of
+
+47
+00:03:07,760 --> 00:03:09,560
+these things and just provide
+
+48
+00:03:09,560 --> 00:03:12,540
+what you just downloaded
+and then unzipped.
+
+49
+00:03:12,540 --> 00:03:15,840
+It will have lines like this.
+
+50
+00:03:15,840 --> 00:03:17,980
+This is one line in
+
+51
+00:03:17,980 --> 00:03:20,555
+that it's the dump of
+the routing table.
+
+52
+00:03:20,555 --> 00:03:25,440
+Here, it'll have the
+prefix and the AS path.
+
+53
+00:03:25,440 --> 00:03:27,965
+We saw this in our routers.
+
+54
+00:03:27,965 --> 00:03:30,240
+But now we can say,
+
+55
+00:03:30,240 --> 00:03:32,240
+this is a real Internet router
+
+56
+00:03:32,240 --> 00:03:34,460
+and we can get a real
+Internet routing table,
+
+57
+00:03:34,460 --> 00:03:38,400
+and then it will be
+the correct size.
+
+58
+00:03:39,290 --> 00:03:41,980
+Then how do you use that?
+
+59
+00:03:41,980 --> 00:03:47,530
+One possible tool to
+use is called ExaBGP.
+
+60
+00:03:47,530 --> 00:03:52,540
+ExaBGP is cool in that
+it's a BGP agent,
+
+61
+00:03:52,540 --> 00:03:54,440
+but it's really just
+meant for testing.
+
+62
+00:03:54,440 --> 00:03:58,960
+It has a degree of
+programmability in it.
+
+63
+00:03:59,030 --> 00:04:03,330
+You can add these routes
+in the configuration,
+
+64
+00:04:03,330 --> 00:04:07,095
+and what's cool is you can
+add the actual AS paths.
+
+65
+00:04:07,095 --> 00:04:09,600
+Let's say we had a MRT,
+
+66
+00:04:09,600 --> 00:04:12,300
+a line from that
+routing table dump
+
+67
+00:04:12,300 --> 00:04:16,025
+that had a particular
+prefix and an AS path.
+
+68
+00:04:16,025 --> 00:04:19,900
+This is not something I can
+add to a BIRD configuration,
+
+69
+00:04:19,900 --> 00:04:25,220
+but it's something that I can
+add to an ExaBGP process.
+
+70
+00:04:25,220 --> 00:04:30,205
+What it will do is it will
+announce this to its peers.
+
+71
+00:04:30,205 --> 00:04:37,350
+It will announce that
+route with this AS path,
+
+72
+00:04:37,350 --> 00:04:39,555
+and then it'll add on its own.
+
+73
+00:04:39,555 --> 00:04:41,890
+Then it looks like
+to the neighbor,
+
+74
+00:04:41,890 --> 00:04:44,370
+oh, this is multiple hops away.
+
+75
+00:04:44,370 --> 00:04:48,570
+This allows us to
+basically take a corner of
+
+76
+00:04:48,570 --> 00:04:50,790
+the Internet and then just
+
+77
+00:04:50,790 --> 00:04:54,800
+emulate that maybe there's
+a handful of routers there,
+
+78
+00:04:54,800 --> 00:04:57,610
+and then we have the routes
+from what the rest of
+
+79
+00:04:57,610 --> 00:05:02,340
+the Internet would look like.
+
+80
+00:05:02,340 --> 00:05:06,870
+So there is a Python
+programmable, BGP agent.
+
+81
+00:05:06,870 --> 00:05:12,215
+You can programatically
+do some announcements.
+
+82
+00:05:12,215 --> 00:05:16,055
+This can be useful,
+like if I want to say,
+
+83
+00:05:16,055 --> 00:05:18,305
+announce something, withdraw it,
+
+84
+00:05:18,305 --> 00:05:21,340
+whatever I'm trying to test out.
+
+85
+00:05:21,340 --> 00:05:27,280
+I can create some Python program
+to do that using ExaBGP.
+
+86
+00:05:27,850 --> 00:05:30,930
+The last tool that I'm
+going to mention is
+
+87
+00:05:30,930 --> 00:05:34,060
+called the SEED
+Internet emulator.
+
+88
+00:05:34,060 --> 00:05:39,725
+This is a project that came
+out of Syracuse University,
+
+89
+00:05:39,725 --> 00:05:44,410
+some academics, and it's been
+around for several years,
+
+90
+00:05:44,410 --> 00:05:46,390
+but it's a really
+powerful thing.
+
+91
+00:05:46,390 --> 00:05:49,450
+I would highly encourage you
+to look at their slides,
+
+92
+00:05:49,450 --> 00:05:53,410
+look at their Github,
+is freely available.
+
+93
+00:05:53,410 --> 00:05:57,065
+These slides are from them,
+just to introduce it.
+
+94
+00:05:57,065 --> 00:06:02,045
+The design of it provides
+a bunch of primitives.
+
+95
+00:06:02,045 --> 00:06:05,420
+Instead of just a container
+and then you can run bird.
+
+96
+00:06:05,420 --> 00:06:10,730
+It provides some
+different abstractions
+
+97
+00:06:10,730 --> 00:06:15,245
+like I can run ton system
+or an Internet exchange,
+
+98
+00:06:15,245 --> 00:06:20,705
+or group these as a network
+or just run a router,
+
+99
+00:06:20,705 --> 00:06:25,415
+create a host to service all
+these different primitives.
+
+100
+00:06:25,415 --> 00:06:33,485
+You specify their topology
+in a Python program.
+
+101
+00:06:33,485 --> 00:06:36,365
+Then it will go
+and compose that.
+
+102
+00:06:36,365 --> 00:06:42,065
+It will leverage docker and
+you can also use it across,
+
+103
+00:06:42,065 --> 00:06:45,935
+it works beyond
+just a single node.
+
+104
+00:06:45,935 --> 00:06:48,920
+You can run it on
+multiple nodes.
+
+105
+00:06:48,920 --> 00:06:51,320
+Take each part of
+the topology so it
+
+106
+00:06:51,320 --> 00:06:53,765
+can get larger topologies.
+
+107
+00:06:53,765 --> 00:06:58,230
+But then it's very similar to
+container lab in that way.
+
+108
+00:06:58,240 --> 00:07:02,345
+As an example, to
+create a transit, AS.
+
+109
+00:07:02,345 --> 00:07:06,080
+Here is just to show an
+example of all the Python,
+
+110
+00:07:06,080 --> 00:07:10,475
+I would create a network
+net0, net1, net2.
+
+111
+00:07:10,475 --> 00:07:14,855
+Then I want to say
+create a router, r0.
+
+112
+00:07:14,855 --> 00:07:19,040
+I want to join to
+these two networks,
+
+113
+00:07:19,040 --> 00:07:20,510
+create a router r1,
+
+114
+00:07:20,510 --> 00:07:22,025
+join it to these two networks.
+
+115
+00:07:22,025 --> 00:07:25,550
+It's going to take care of some
+
+116
+00:07:25,550 --> 00:07:29,030
+of the default router
+configuration file.
+
+117
+00:07:29,030 --> 00:07:32,250
+I didn't have to
+specify any of that.
+
+118
+00:07:32,770 --> 00:07:36,995
+Here's an example
+of the BGP peering.
+
+119
+00:07:36,995 --> 00:07:40,010
+I can say add
+private peering and
+
+120
+00:07:40,010 --> 00:07:44,075
+just specify the various links.
+
+121
+00:07:44,075 --> 00:07:47,810
+You could specify what
+the relationship is.
+
+122
+00:07:47,810 --> 00:07:49,385
+This is a peer relationship,
+
+123
+00:07:49,385 --> 00:07:54,215
+or this is a client,
+
+124
+00:07:54,215 --> 00:07:58,265
+a provider, or a
+consumer relationship.
+
+125
+00:07:58,265 --> 00:08:00,815
+All of that helps
+
+126
+00:08:00,815 --> 00:08:05,840
+determine what the
+configuration looks like.
+
+127
+00:08:05,840 --> 00:08:09,110
+What's nice about
+this is they created
+
+128
+00:08:09,110 --> 00:08:11,840
+this really cool UI
+where you can go in,
+
+129
+00:08:11,840 --> 00:08:14,030
+you can click on a router
+
+130
+00:08:14,030 --> 00:08:17,135
+and you can see
+information about it.
+
+131
+00:08:17,135 --> 00:08:22,610
+Yes, of course we
+can type IP or bird,
+
+132
+00:08:22,610 --> 00:08:26,255
+to see what it showed out,
+
+133
+00:08:26,255 --> 00:08:29,570
+or route show all and
+get some of this.
+
+134
+00:08:29,570 --> 00:08:31,115
+Well, I could just do that from
+
+135
+00:08:31,115 --> 00:08:33,545
+inside of this user interface.
+
+136
+00:08:33,545 --> 00:08:37,170
+I think that's pretty
+powerful as well.
+
+137
+00:08:37,180 --> 00:08:42,755
+Then they have the whole
+map that you can show.
+
+138
+00:08:42,755 --> 00:08:47,240
+You can even launch
+a terminal to this.
+
+139
+00:08:47,240 --> 00:08:51,875
+You can connect and
+disconnect the various links.
+
+140
+00:08:51,875 --> 00:08:55,410
+There's a lot that you
+could do inside of the GUI.
+
+141
+00:08:55,570 --> 00:08:57,650
+Additional information.
+
+142
+00:08:57,650 --> 00:09:00,845
+You can go to their
+website and get it.
+
+143
+00:09:00,845 --> 00:09:04,940
+They have a lot
+of experiments or
+
+144
+00:09:04,940 --> 00:09:09,845
+demos on different things
+like BGP routing attacks,
+
+145
+00:09:09,845 --> 00:09:14,795
+that's focused on the
+security of the Internet,
+
+146
+00:09:14,795 --> 00:09:18,575
+but it's really
+useful beyond that,
+
+147
+00:09:18,575 --> 00:09:19,970
+they show DNS attacks,
+
+148
+00:09:19,970 --> 00:09:23,520
+block chain attacks, botnet
+attacks, and so forth.
+
+149
+00:09:24,070 --> 00:09:29,420
+Getting back to ExaBGP, we're
+not going to show this,
+
+150
+00:09:29,420 --> 00:09:31,910
+but I provide this inside of
+
+151
+00:09:31,910 --> 00:09:37,085
+the git-repo as an
+extra directory.
+
+152
+00:09:37,085 --> 00:09:39,240
+Let me see that.
+
+153
+00:09:39,550 --> 00:09:45,230
+Here's the base directory,
+this demo3-exabgp.
+
+154
+00:09:45,230 --> 00:09:47,960
+It's basically the exact same.
+
+155
+00:09:47,960 --> 00:09:53,310
+The only difference is this
+one extra configuration file.
+
+156
+00:09:54,190 --> 00:09:59,300
+It's going to have basically
+a small part of one of
+
+157
+00:09:59,300 --> 00:10:00,935
+those routing table dumps
+
+158
+00:10:00,935 --> 00:10:03,935
+and you're going to
+be able to add it.
+
+159
+00:10:03,935 --> 00:10:07,295
+Where do you do this is,
+
+160
+00:10:07,295 --> 00:10:09,200
+all of these are the exact
+
+161
+00:10:09,200 --> 00:10:13,310
+same but this Lan1
+we're going to pretend,
+
+162
+00:10:13,310 --> 00:10:17,225
+that's basically like the
+rest of the internet.
+
+163
+00:10:17,225 --> 00:10:18,950
+We're going to run ExaBGP
+
+164
+00:10:18,950 --> 00:10:22,640
+here and we're going to specify
+it to peer with router A,
+
+165
+00:10:22,640 --> 00:10:26,870
+and he will inject into
+router A all of those routes.
+
+166
+00:10:26,870 --> 00:10:31,220
+Then you should see that
+will propagate to B, and D,
+
+167
+00:10:31,220 --> 00:10:36,935
+and C and all of that.
+When you run it.
+
+168
+00:10:36,935 --> 00:10:38,960
+Everything else is the same.
+
+169
+00:10:38,960 --> 00:10:41,945
+There's a router
+A-bird configuration,
+
+170
+00:10:41,945 --> 00:10:44,750
+we just showed the exa.conf for
+
+171
+00:10:44,750 --> 00:10:48,020
+the ExaBGP to start
+bird. Same thing.
+
+172
+00:10:48,020 --> 00:10:50,550
+It's going to be
+that bird command.
+
+173
+00:10:50,710 --> 00:10:55,385
+The only change is on line 1,
+
+174
+00:10:55,385 --> 00:11:00,770
+run ExaBGP and then give it
+that configuration file.
+
+175
+00:11:00,770 --> 00:11:05,825
+Then the same things that
+you can do inside birdc.
+
+176
+00:11:05,825 --> 00:11:10,835
+This is also, you can
+look in the Linux kernel
+
+177
+00:11:10,835 --> 00:11:13,760
+or Linux command line
+
+178
+00:11:13,760 --> 00:11:15,020
+and look at what it has
+
+179
+00:11:15,020 --> 00:11:17,810
+installed in a kernel
+and all of that,
+
+180
+00:11:17,810 --> 00:11:23,645
+all of those tools
+can provide you with
+
+181
+00:11:23,645 --> 00:11:25,895
+the ability to run
+
+182
+00:11:25,895 --> 00:11:29,030
+more powerful experiments
+than we're showing.
+
+183
+00:11:29,030 --> 00:11:33,600
+If you want to go further,
+definitely check these out.
+
+184
+00:11:33,640 --> 00:11:36,920
+With that, we'll end here
+
+185
+00:11:36,920 --> 00:11:40,950
+and we'll see you
+next time. Thanks.

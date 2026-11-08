@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cloud Background Quiz</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p></p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>According to the Berkeley Above the Cloud paper, which of the following are characteristics of cloud computing?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mFj8cBuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Illusion of Infinite Computing Resources</p></div></li>
+<li><input name="autoGradableResponseId~mFj8cBuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Pay for use on a short-term basis</p></div></li>
+<li><input name="autoGradableResponseId~mFj8cBuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Removes the need for skilled developers.</p></div></li>
+<li><input name="autoGradableResponseId~mFj8cBuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Elimination of an up-front commitment</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p> Which of the following is a problem that virtualization help solve?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mMayYxuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Applications having conflicting dependencies.</p></div></li>
+<li><input name="autoGradableResponseId~mMayYxuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Applications requiring different Operating Systems</p></div></li>
+<li><input name="autoGradableResponseId~mMayYxuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Underutilization of bare metal servers.</p></div></li>
+<li><input name="autoGradableResponseId~mMayYxuKEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Overhead of the Operating System</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p> Which of the following are true about VL2?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mVWFQBuKEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Uses IP subnets to partition resources in the network.</p></div></li>
+<li><input name="autoGradableResponseId~mVWFQBuKEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Assumes a Clos topology for the network</p></div></li>
+<li><input name="autoGradableResponseId~mVWFQBuKEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Uses Valiant Load Balancing </p></div></li>
+<li><input name="autoGradableResponseId~mVWFQBuKEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Uses Infiniband technology</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What property is central to Valiant Load Balancing working in VL2?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mdIu2xuKEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Server monitoring</p><p></p></div></li>
+<li><input name="autoGradableResponseId~mdIu2xuKEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Reversability of hash functions</p></div></li>
+<li><input name="autoGradableResponseId~mdIu2xuKEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Equal size traffic flows</p></div></li>
+<li><input name="autoGradableResponseId~mdIu2xuKEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Randomness</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p> Terraform is a tool which follows what style or programming?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mjfOlxuKEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Imperative</p></div></li>
+<li><input name="autoGradableResponseId~mjfOlxuKEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Performative</p></div></li>
+<li><input name="autoGradableResponseId~mjfOlxuKEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Declarative</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p> Which of the following steps are needed to provision infrastructure on Google Cloud using Terraform?</p><p><em>Select all that apply.</em></p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~mqLsXxuKEe-j1wr_9a5Nqw" type="checkbox"/> <div class="quiz-option-text"><p>Create a service account</p></div></li>
+<li><input name="autoGradableResponseId~mqLsXxuKEe-j1wr_9a5Nqw" type="checkbox"/> <div class="quiz-option-text"><p>Delete existing resources from Google Cloud</p></div></li>
+<li><input name="autoGradableResponseId~mqLsXxuKEe-j1wr_9a5Nqw" type="checkbox"/> <div class="quiz-option-text"><p>Run ‘terraform apply’</p></div></li>
+<li><input name="autoGradableResponseId~mqLsXxuKEe-j1wr_9a5Nqw" type="checkbox"/> <div class="quiz-option-text"><p>Run ‘terraform enable-ssh’</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

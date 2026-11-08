@@ -1,0 +1,36 @@
+Hello and welcome. I want to take a minute
+before we get into all the instructional videos
+and things like that, I just wanted to take a
+minute to introduce myself. I'm Eric Keller, Professor at the University
+of Colorado in Boulder. The goal of this
+course is really to cover the fundamentals
+of network systems. Networking has really been designed as this layered design. We're going to go through
+each of those layers and the instructions that they provide to the
+layers above them, but we'll also have a module on security that really glues
+everything together. I just wanted to
+express that I'm really excited about this
+particular topic. Networking has become
+a passion of mine. It's really this
+underappreciated thing, yet it's so critical, like businesses stop
+when the network goes down and we just rely on it and it's just
+become so instrumental. We just take it for
+granted a lot of times, but there's so much innovation
+and the design of it. To me it's fascinating and so I really appreciate
+that you're joining me with this and coming out of my
+undergraduate studies, I didn't really even know
+anything about networking. I started as a software engineer at a semiconductor company. Just happened that one of the customer segments
+for this company was in networking and I
+took a little on the job, learning had a crash course. My manager sat me down and
+largely gave me an overview. We're going to do this course. Each module will include an
+introduction video where we really overview what that
+particular layer is about, and what the problems are that it's addressing
+then we're going to have the subsequent
+videos all about dive into what are the solutions and how
+do they all work. We'll end each module
+with a graded quiz and a programming assignment
+that hopefully you find is pretty fun
+and interesting. After this course,
+I'm sure that you definitely know a lot more
+about network systems, but I'm looking to improve and if you have any feedback on this course, please
+include that. With that, I look
+forward to seeing you in the next module. Thanks.

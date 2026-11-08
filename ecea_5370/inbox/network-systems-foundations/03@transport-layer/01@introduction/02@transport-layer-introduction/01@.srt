@@ -1,0 +1,326 @@
+1
+00:00:09,000 --> 00:00:12,040
+This video marks the start of
+
+2
+00:00:12,040 --> 00:00:14,675
+a new module on the
+transport layer.
+
+3
+00:00:14,675 --> 00:00:17,405
+As we've done in
+the last couple,
+
+4
+00:00:17,405 --> 00:00:19,580
+we're going to use this video to
+
+5
+00:00:19,580 --> 00:00:22,660
+basically give an overview of
+
+6
+00:00:22,660 --> 00:00:25,460
+what the problems are and what
+
+7
+00:00:25,460 --> 00:00:26,640
+are the things that
+we're going to be
+
+8
+00:00:26,640 --> 00:00:29,440
+covering in the
+rest of the module.
+
+9
+00:00:30,800 --> 00:00:35,475
+Stepping back, recall
+Ethernet addressing.
+
+10
+00:00:35,475 --> 00:00:41,130
+Each network card
+has a MAC address.
+
+11
+00:00:41,130 --> 00:00:44,520
+When you're sending traffic
+through the network,
+
+12
+00:00:44,520 --> 00:00:46,140
+each frame will contain
+
+13
+00:00:46,140 --> 00:00:48,200
+a source and destination
+MAC address.
+
+14
+00:00:48,200 --> 00:00:50,980
+That's how the
+communication occurs.
+
+15
+00:00:50,980 --> 00:00:55,635
+We then later on top of
+that, some IP addressing.
+
+16
+00:00:55,635 --> 00:00:58,230
+With Ethernet, we saw
+
+17
+00:00:58,230 --> 00:01:04,460
+each table at one
+entry per destination.
+
+18
+00:01:04,460 --> 00:01:06,480
+We noted that doesn't scale to
+
+19
+00:01:06,480 --> 00:01:09,340
+billions of devices worldwide.
+
+20
+00:01:09,340 --> 00:01:12,620
+The solution to this
+was add structure to
+
+21
+00:01:12,620 --> 00:01:16,760
+addresses so that devices
+could be grouped.
+
+22
+00:01:18,370 --> 00:01:21,490
+The first problem that
+
+23
+00:01:22,250 --> 00:01:28,245
+the transport layer tackles
+or addresses is multiplexing.
+
+24
+00:01:28,245 --> 00:01:30,580
+We talked about Ethernet
+
+25
+00:01:30,580 --> 00:01:33,320
+is associated with
+the network card,
+
+26
+00:01:33,320 --> 00:01:36,220
+the IP address is
+associated with the host,
+
+27
+00:01:36,220 --> 00:01:38,920
+but we're going to have
+multiple applications running.
+
+28
+00:01:38,920 --> 00:01:40,680
+So when we receive
+
+29
+00:01:40,680 --> 00:01:44,180
+a packet with a certain IP
+address and MAC address,
+
+30
+00:01:44,180 --> 00:01:46,900
+which application
+is that packet for?
+
+31
+00:01:46,900 --> 00:01:49,540
+We need a concept
+of multiplexing
+
+32
+00:01:49,540 --> 00:01:53,440
+and this is what the transport
+layer takes care of.
+
+33
+00:01:55,220 --> 00:02:02,145
+The next thing to address is
+when we looked at the IP,
+
+34
+00:02:02,145 --> 00:02:04,155
+the Internet protocol,
+
+35
+00:02:04,155 --> 00:02:08,055
+we saw that the service
+model was best effort,
+
+36
+00:02:08,055 --> 00:02:10,395
+that packets may get dropped,
+
+37
+00:02:10,395 --> 00:02:12,080
+there's no guarantee of how long
+
+38
+00:02:12,080 --> 00:02:13,880
+it takes to deliver a packet,
+
+39
+00:02:13,880 --> 00:02:16,750
+packets may get reordered
+in the network,
+
+40
+00:02:16,750 --> 00:02:19,500
+and this had good reasoning
+
+41
+00:02:19,500 --> 00:02:22,660
+because different link layers
+
+42
+00:02:22,660 --> 00:02:24,580
+might have different properties.
+
+43
+00:02:24,580 --> 00:02:28,930
+We needed that lowest
+common denominator.
+
+44
+00:02:29,150 --> 00:02:32,985
+But the problem is when we have
+
+45
+00:02:32,985 --> 00:02:36,240
+applications that are trying
+
+46
+00:02:36,240 --> 00:02:39,120
+to be communicating
+with one another,
+
+47
+00:02:39,120 --> 00:02:41,540
+we want them to be
+assured that what
+
+48
+00:02:41,540 --> 00:02:44,260
+they send is what is received.
+
+49
+00:02:44,260 --> 00:02:48,620
+We want it to be the same
+order and the same data.
+
+50
+00:02:48,860 --> 00:02:53,300
+The second problem that
+the transport layer can
+
+51
+00:02:53,300 --> 00:02:58,540
+address is providing
+for reliable transfer.
+
+52
+00:02:58,820 --> 00:03:04,260
+Then finally, the third
+problem is congestion control.
+
+53
+00:03:04,320 --> 00:03:07,040
+The problem is congestion.
+
+54
+00:03:07,040 --> 00:03:09,800
+The solution is
+congestion control.
+
+55
+00:03:09,800 --> 00:03:14,420
+Congestion in the network will
+occur and this is what can
+
+56
+00:03:14,420 --> 00:03:19,680
+lead to packets being dropped
+and things like that.
+
+57
+00:03:19,730 --> 00:03:25,065
+We'll go over why and
+how congestion occurs.
+
+58
+00:03:25,065 --> 00:03:27,500
+But what if senders could
+
+59
+00:03:27,500 --> 00:03:30,350
+detect this and
+back off as needed?
+
+60
+00:03:30,350 --> 00:03:34,020
+What is the implications
+if we just allow
+
+61
+00:03:34,020 --> 00:03:35,480
+this to keep happening
+
+62
+00:03:35,480 --> 00:03:38,180
+without taking any
+corrective action?
+
+63
+00:03:38,180 --> 00:03:41,960
+What we do is we introduce
+at the transport layer
+
+64
+00:03:41,960 --> 00:03:45,040
+some congestion
+control to make it so
+
+65
+00:03:45,040 --> 00:03:49,560
+that there's ability to
+actually get traffic through.
+
+66
+00:03:51,200 --> 00:03:53,720
+This is going to be our outline
+
+67
+00:03:53,720 --> 00:03:56,560
+for the rest of this module.
+
+68
+00:03:56,560 --> 00:03:58,520
+Different topics may have
+
+69
+00:03:58,520 --> 00:04:01,140
+multiple videos
+associated with it,
+
+70
+00:04:01,140 --> 00:04:03,680
+but these are the
+three core properties
+
+71
+00:04:03,680 --> 00:04:07,360
+of transport that are important.

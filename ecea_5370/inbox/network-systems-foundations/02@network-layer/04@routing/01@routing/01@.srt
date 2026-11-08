@@ -1,0 +1,440 @@
+1
+00:00:10,040 --> 00:00:14,560
+Now that we've talked about
+the router data plane,
+
+2
+00:00:14,560 --> 00:00:17,080
+let's talk about
+the control plane
+
+3
+00:00:17,080 --> 00:00:19,420
+and routing in general.
+
+4
+00:00:19,420 --> 00:00:22,520
+This video will overview
+
+5
+00:00:22,520 --> 00:00:24,580
+what routing is and
+then we'll have
+
+6
+00:00:24,580 --> 00:00:26,860
+subsequent videos that go
+
+7
+00:00:26,860 --> 00:00:32,530
+into the details of
+certain protocols.
+
+8
+00:00:33,100 --> 00:00:36,780
+As a recapping the
+role of a router,
+
+9
+00:00:36,780 --> 00:00:38,320
+we talked about how is
+
+10
+00:00:38,320 --> 00:00:42,290
+this gateway to be
+able to interface
+
+11
+00:00:42,290 --> 00:00:45,390
+to different networks
+and then it also
+
+12
+00:00:45,390 --> 00:00:50,130
+has the role of forwarding
+traffic to a destination.
+
+13
+00:00:50,290 --> 00:00:55,690
+We also talked about
+the distinction between
+
+14
+00:00:55,690 --> 00:00:59,195
+forwarding and routing and
+
+15
+00:00:59,195 --> 00:01:01,260
+the data plane and
+control plane.
+
+16
+00:01:01,260 --> 00:01:04,230
+As a reminder, forwarding,
+
+17
+00:01:04,230 --> 00:01:09,450
+which is what happens
+in the data plane,
+
+18
+00:01:09,450 --> 00:01:12,390
+is the part of a
+router which directs
+
+19
+00:01:12,390 --> 00:01:16,505
+a data packet to an
+output port or link,
+
+20
+00:01:16,505 --> 00:01:19,405
+and it uses a forwarding table.
+
+21
+00:01:19,405 --> 00:01:24,095
+The control plane which
+performs routing.
+
+22
+00:01:24,095 --> 00:01:27,910
+This is the part that
+computes paths by
+
+23
+00:01:27,910 --> 00:01:31,130
+coordinating with
+neighbors and this is
+
+24
+00:01:31,130 --> 00:01:34,970
+what's used to create
+the forwarding tables.
+
+25
+00:01:35,050 --> 00:01:37,490
+The key function of
+
+26
+00:01:37,490 --> 00:01:42,150
+the control plane is calculating
+the forwarding table.
+
+27
+00:01:43,260 --> 00:01:47,595
+You can view the
+network as a graph.
+
+28
+00:01:47,595 --> 00:01:50,710
+What routing is really
+
+29
+00:01:50,710 --> 00:01:55,265
+about this distributed
+calculation.
+
+30
+00:01:55,265 --> 00:01:59,040
+That happens to be
+
+31
+00:01:59,040 --> 00:02:02,085
+able to pick paths
+through the network.
+
+32
+00:02:02,085 --> 00:02:05,380
+There's different protocols
+that exists and they're
+
+33
+00:02:05,380 --> 00:02:09,425
+distinguished by
+three key properties.
+
+34
+00:02:09,425 --> 00:02:13,760
+One is, what information
+does each router know
+
+35
+00:02:13,760 --> 00:02:18,390
+about the other participants
+in the network?
+
+36
+00:02:18,390 --> 00:02:20,820
+Does it know the entire topology
+
+37
+00:02:20,820 --> 00:02:23,610
+or does it know
+just its neighbor?
+
+38
+00:02:23,610 --> 00:02:29,540
+Second is what information
+does each router exchange?
+
+39
+00:02:29,540 --> 00:02:33,300
+Is it exchanging all of
+the information it knows
+
+40
+00:02:33,300 --> 00:02:38,260
+about or just selective
+pieces of information?
+
+41
+00:02:38,260 --> 00:02:43,255
+Then the third would be what
+calculation is performed?
+
+42
+00:02:43,255 --> 00:02:47,120
+Is it calculating a
+shortest path calculation?
+
+43
+00:02:47,120 --> 00:02:51,600
+Is it picking what
+it best locally?
+
+44
+00:02:51,600 --> 00:02:54,180
+The answers to those types of
+
+45
+00:02:54,180 --> 00:02:56,860
+questions is what distinguishes
+
+46
+00:02:56,860 --> 00:02:59,220
+each routing protocol
+and we'll see in
+
+47
+00:02:59,220 --> 00:03:03,820
+subsequent videos two
+different examples.
+
+48
+00:03:08,180 --> 00:03:12,355
+I mentioned that you can
+view the network as a graph.
+
+49
+00:03:12,355 --> 00:03:15,280
+The calculation
+though, is really
+
+50
+00:03:15,280 --> 00:03:18,140
+this decentralized
+control plane.
+
+51
+00:03:18,140 --> 00:03:21,780
+This is what's traditionally
+known as routing protocols.
+
+52
+00:03:21,780 --> 00:03:24,700
+You have different components
+
+53
+00:03:24,700 --> 00:03:26,910
+of that decentralized
+control plan.
+
+54
+00:03:26,910 --> 00:03:31,050
+There's the aspect
+of intra domain.
+
+55
+00:03:31,050 --> 00:03:33,260
+This is within a single network,
+
+56
+00:03:33,260 --> 00:03:39,500
+typically run by a single
+administrative administrator
+
+57
+00:03:39,500 --> 00:03:42,630
+or administrative
+domain or a company.
+
+58
+00:03:42,630 --> 00:03:47,300
+Then you have the inter domain
+which is the coordination
+
+59
+00:03:47,300 --> 00:03:51,210
+between different
+business entities,
+
+60
+00:03:51,210 --> 00:03:54,675
+or departments organizations.
+
+61
+00:03:54,675 --> 00:03:58,180
+What protocol you want to
+be able to use depends
+
+62
+00:03:58,180 --> 00:04:02,360
+on which you're
+trying to target.
+
+63
+00:04:02,360 --> 00:04:05,600
+We're going to look
+at two protocols.
+
+64
+00:04:05,600 --> 00:04:10,240
+One is what's known as
+a link state protocol.
+
+65
+00:04:10,240 --> 00:04:14,000
+The protocol for that is OSPF.
+
+66
+00:04:14,000 --> 00:04:18,210
+That's typically
+used intra domain.
+
+67
+00:04:18,210 --> 00:04:23,220
+Then we're also going to look
+at a path vector protocol.
+
+68
+00:04:23,220 --> 00:04:26,380
+We're going to look
+at BGP which is
+
+69
+00:04:26,380 --> 00:04:31,540
+commonly used inter
+domain protocol.
+
+70
+00:04:31,790 --> 00:04:35,620
+There's also a concept
+
+71
+00:04:35,620 --> 00:04:38,600
+that has emerged over
+the past decade or so,
+
+72
+00:04:38,600 --> 00:04:41,475
+something called software
+defined networking.
+
+73
+00:04:41,475 --> 00:04:43,520
+This is the concept of having
+
+74
+00:04:43,520 --> 00:04:46,010
+a centralized control plane.
+
+75
+00:04:46,010 --> 00:04:50,830
+Instead of each router
+running routing software
+
+76
+00:04:50,830 --> 00:04:55,510
+itself and then exchanging
+messages with its neighbors,
+
+77
+00:04:55,510 --> 00:04:56,950
+and then come up with
+
+78
+00:04:56,950 --> 00:05:00,850
+this big decentralized
+calculation to
+
+79
+00:05:00,850 --> 00:05:05,365
+figure out how to forward
+paths collectively, instead,
+
+80
+00:05:05,365 --> 00:05:07,730
+there's a separate piece
+of software called
+
+81
+00:05:07,730 --> 00:05:11,150
+a controller that basically
+
+82
+00:05:11,150 --> 00:05:14,550
+uses an API that the routers
+
+83
+00:05:14,550 --> 00:05:19,440
+perform to be able to
+say information about,
+
+84
+00:05:20,710 --> 00:05:23,840
+what links it has and so forth.
+
+85
+00:05:23,840 --> 00:05:26,620
+The controller does
+all the calculations
+
+86
+00:05:26,620 --> 00:05:28,620
+for the entire network and
+
+87
+00:05:28,620 --> 00:05:31,640
+then installs forwarding
+table entries
+
+88
+00:05:31,640 --> 00:05:33,800
+into the individual routers.
+
+89
+00:05:33,800 --> 00:05:35,880
+Then in this case, the routers
+
+90
+00:05:35,880 --> 00:05:38,020
+become just the data plane.
+
+91
+00:05:38,020 --> 00:05:42,960
+This is something that's
+very interesting topic,
+
+92
+00:05:42,960 --> 00:05:46,100
+but next time we're
+going to focus in on
+
+93
+00:05:46,100 --> 00:05:49,470
+the routing protocols and
+
+94
+00:05:49,470 --> 00:05:53,700
+so these would be the
+decentralized control plane.

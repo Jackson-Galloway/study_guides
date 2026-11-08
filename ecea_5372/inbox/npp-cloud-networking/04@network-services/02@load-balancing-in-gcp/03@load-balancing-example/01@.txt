@@ -1,0 +1,190 @@
+Let's go ahead and get started. This time, we'll walk through a load-balancing
+example in GCP. This picture on the right is
+something I already set up. We've done this
+several times now. I have a VPC, created
+a subnet within that, and then I created
+two virtual machines. In each of these, I gave them both a
+private IP address and a public IP address. For the purpose of
+load balancing, we wouldn't necessarily have them have a public IP address. But I did that so that I could install some
+software on it, namely, I needed to do apt
+install Python 3 Flask, because we're going to run
+a simple Flask application on each of these. The application is
+provided to you. It's in this repo right there. Let me switch over and show
+what that code looks like. This is inside of the repo
+and here's the application. If you've never
+used Flask before, it's a Python web framework. Real simple. Basically, I could find a Flask
+app that's right there, and then I can say, run
+it on a particular host. I'm going to just run on all available IP addresses
+on this machine, give it a port to listen on, and I'm going to say port 5000, and I'm going to allow
+it to print out stuff. By saying @app.route, I can add different
+paths within a URL. If I say slash health, anything that's some IP
+address or some domain name, slash health will come
+into this function. This gets printed locally, and then this is
+what's returned. Likewise, I have another
+route called hello. Well, I guess it doesn't
+print anything locally, but it'll return hello and then it'll return whatever
+the hostname is. This is going to be useful for load balancing because we're
+going to run two of these, and then I'm going to access it through a single IP address, and I'll see that it's getting directed to two
+different host names. Real simple. Just for illustrative
+purposes, that's all we have. What we're going to do, so
+it's already been created, so let me get back and show. I have this VPC network, VPC1. It's got one subnet in 10.0.1.0. The firewall rules on
+it are allow ICMP, allow SSH, and allow port 5000. That's my VPC networks, and if I go into the VM
+instances and recall, if I just start typing VM, it go VM instances that
+would bring me to this page. You can see I have two VMs. I put it in US Central1, both in the same zone in Zone B, and gave them an internal
+and an external IP address. That's our setup. Now, what we're going to
+do is I'm going to create a load balancer to load
+balance between these two. Before I do that, I need to create
+an instance group because the load balancer
+when you configure it, it asked for, what is the instance group
+that it's load balancing to. That's just a grouping
+of a set of VMs. I'm going to create an unmanaged instance
+group for these two. When it says unmanaged, well, let's just go look at that. I guess I can go here,
+instance groups. I don't have any setup, so I can create an
+instance group. It's going to say, let's
+call it Instance group 1. There's two types that we're
+not going to get into now, but what these allow
+for is autoscaling. We'll have a separate lesson
+on autoscaling but for now, we just want to show
+off the load balancing. For load balancing,
+it's going to be a static instance
+group that says, let me pick the region
+that these VMs are in, and the VPC that it's in, and it's selecting and saying, what are the VMs, and I want the two VMs
+I already created, and I'm going to create that as part of an instance group. Next thing, as part of this instance group
+and what we're going to do for load balancing, well, let's give it an app HTTP. We knew these are going
+to run on port 5000, so I'm going to create a
+named port that is going to be referenceable by
+the load balancer. Let's do that and say create. Great. It's going
+about doing that. Next thing is now we're
+going to start going into creating a load balancer. Let that chug away. Again, we could just
+type load balancing. I don't have a
+load balancer yet. It's still created in
+this instance group, but I can hopefully start here. Now if you recall, we went through what these
+different things mean. Since we're running a Flask
+app and in this case, I want to run an
+application load balancer, I could have done a
+network load balancer, so I would recommend you
+do that on your own, and it can load balance
+between the two. But we'll run an
+application load balancer where it's going to
+basically create a proxy and then that proxy will load balance between the
+different workloads. Next is public-facing
+or just internal. The external one,
+I'm going to want an external client across the Internet to be
+able to access this, so I wanted public-facing. This case, I only have
+something regionally, so I'm going to choose regional. But if we wanted our
+workloads across regions, and we talked about how does that global load balancing work, both for the ingress
+and egress traffic. Then let's go ahead and let's
+check that this is done. Configure the load balancer. We'll just give it
+a simple name, LB1, and I will associate it
+with the VPC1 network. The first thing you
+saw pop up was it's requiring this creation
+of a proxy-only subnet. They want a subnet where
+they're going to be able to launch Envoy-based
+load balancers. We talked about
+the two different systems that Google uses Envoy and Maglev for an
+application load balancer. Envoy is an open-source package, so they're going to
+launch instances of that inside of this
+reserved subnet. We'll create a reserved subnet. Let me call it sub-proxy, and I'll say it's 10.0.3.0. It's 24, so it should be
+its own unique range. Next thing is we're going
+to be able to specify an IP address port
+protocol, so the front end. What are we going to actually
+use to connect to this? We're going to say it's HTTP. I'm going to say I want
+it available on port 80, and I want to use, in this case, an ephemeral, so Google is just going to
+assign it when I create this, but I could have used Google Services to create
+a static IP address. If we needed
+additional interfaces, I would have done that, but let me delete that. I don't need to give it a name, so I can be done with that. Now I go and configure
+the backend. The front-end is
+the external world, how does it connect
+to the load balancer? Now, what does the load balancer
+connect to on the back? Here, you're going to go
+create a backend service. I could have done had
+this backend service already created, and
+then just used it. When launched, it would
+have been referenceable, but we'll just create it here. The backend type,
+say it's going to be the instance group
+but I could have done things in the Kubernetes service or serverless, things like that. But we're showing it
+as an instance group. We'll come back to
+this name port. That's going to be
+our own named port for our instance group, and it's going to
+automatically see that we want to use that. It says, I already has
+a port named App HTTP. Do we want to use that?
+Yeah, I'm going to use that. You could see that
+it came up there. There's other things
+that you can configure, like utilization and requests per second that are the max. We're doing
+everything so simple, so we don't need that, so
+let me sit done there. Next is this health check. If you recall the second
+part of the server group, you need to know which
+servers or VMs in our case, that the load balancer
+can load balance between, but you also have to know
+which ones are alive or not. Here, we're going to tell Google how to perform
+a health check. We're going to create
+this health check. I'm going to call it HC1, and we're going to say TCP. This is what it's going to do; is it's going to call the backend servers and since we're running
+it at port 5000. Actually, I don't want this TCP. I want this HTTP port 5000 and the request
+path is health. You can configure
+some health criteria like how often should it check, how many times does it have to succeed or fail to be considered
+healthy or unhealthy. I'm going to click
+"Save" there and create the backend.
+I missed something. The last was security. I guess I must have
+did this before, so I'll just give it a new name. I didn't delete it last time. Create that. We got the
+backend services going. I can now look at
+the routing rules. If you recall on an
+application load balancer, if I collect advanced, I can have say slash purchase
+go to one set of servers, slash sign-in to go
+to a different one. We're just going to use
+it as a real simple. Then with that, I'm
+going to review it. I can look through
+all my configuration, and hopefully, it's all correct. But before I do that, I want
+to flip over to the two VMs. I've SSHed into both of them. I have nothing running, but I do have this test
+app already created here. This is that code, should look familiar, and
+that exists on both of these. We're not going to
+run it just yet. First thing I'm going to do
+is create this load balancer. This is going to take
+about 30 seconds, last time I ran it. But why I'm not running
+the application yet is because I want to be able to show it
+showing up as unhealthy. Actually, I can run it on, one, Python 3 test app. This one is up and running, and it's waiting for
+me to connect to it, this one is not. You can see it's getting
+these health check requests. I must mean our load balance is up and running because
+Google is starting to do stuff. I guess it's needing
+to finalize it, so let's give it
+another few seconds. I bet if we ran TCP
+dump on this one, it's trying to request but, well, we'll just
+let it go for now. Maybe this is why it
+takes 30 seconds; is because it says one
+backend service is unhealthy. If I click on this, healthy one of two. You could see that it was doing the health check requests. Now, let me do Python
+3 test app here, and now it's seen
+that that's healthy, and then this should refresh. I don't know how frequent
+it refreshes. There we go. One regional backend service and it's got the green check, so it's saying it's all healthy. Now I can come over here. Well, next thing I need
+to do is understand what the IP address is. I could look there. I can look under
+the load balancer, but that's the IP address. That's how I can now
+contact the load balancer. Let's actually try to pull
+open these three windows and give it a little
+space on each of those. Well, I'm not going
+to be fast enough. Then I could say curl that, and then I would say hello. Let's just make it extra
+clear that we're doing HTTP. You can see which
+one of these is VM2. There was this request right there and if I keep
+doing this is VM2, that one is VM1. If we make that a little bigger, you can see it keep curling, and it's going
+between VM1 and VM2. It's saying hello, I'm VM1, hello VM2, and so it's load
+balancing between those. That's about what we did. We went through,
+created that front-end, created that backend, we
+created that health check. All of that was after
+this instance group, and then we showed that
+we can curl hello. Make sure you have port 5000 open to be able to access
+the internal services. You can restrict it, don't give this a private
+or public IP address. That would be something, but that's not necessary to have it be connected to
+a load balancer. The load balancer
+would be running in a separate subnet with the Envoy proxies
+running in those, and probably only has one with
+the load we're giving it, and then those
+would contact VM1. We created the instance group, showed proxy subnet, front-end, backend service, health check, and created a nice
+load-balanced service. Now, for the Terraform, you could see there were several components
+we needed to create, it wasn't just one or two. The best thing to look at is just examples and see what
+were closest for you. I'm not going to go
+through a full example. We've done plenty of
+Terraform so by now, you should have been
+able to create VMs, create VPCs,
+configure firewalls, create subnets, all
+of those things. Now you just need to add all of those extra things that we
+created like the backend, the front-end, the
+load balancer, the instance group,
+and all of that stuff. With that, we're going
+to stop here. Thanks.

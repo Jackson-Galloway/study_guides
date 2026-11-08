@@ -1,0 +1,1074 @@
+1
+00:00:09,471 --> 00:00:12,790
+All right,
+let's jump into reliable transfer.
+
+2
+00:00:14,360 --> 00:00:17,846
+So to restate what the goal here is,
+
+3
+00:00:17,846 --> 00:00:22,609
+is that we want to be able
+to allow an application or
+
+4
+00:00:22,609 --> 00:00:30,528
+a process that's running to be assured
+that what they send is what is received.
+
+5
+00:00:30,528 --> 00:00:33,250
+It's the same data, same order.
+
+6
+00:00:33,250 --> 00:00:38,099
+So if we're transferring
+some information like, say,
+
+7
+00:00:38,099 --> 00:00:43,553
+a file, contents, or
+a message to direct them to do something,
+
+8
+00:00:43,553 --> 00:00:47,540
+we want to make sure that that's received.
+
+9
+00:00:47,540 --> 00:00:52,940
+And so we talked about the two
+main protocols, UDP and TCP.
+
+10
+00:00:52,940 --> 00:00:57,930
+So UDP does not offer this, but TCP does.
+
+11
+00:00:57,930 --> 00:01:02,596
+And so here we're going to talk
+about the mechanism TCP has to be
+
+12
+00:01:02,596 --> 00:01:06,280
+able to ensure reliable transfer.
+
+13
+00:01:06,280 --> 00:01:12,440
+So first, let's understand why
+we need this in the first place,
+
+14
+00:01:12,440 --> 00:01:16,700
+where packets can get lost or reordered.
+
+15
+00:01:16,700 --> 00:01:20,142
+So we've already seen all of this.
+
+16
+00:01:20,142 --> 00:01:27,200
+So from the link layer, we saw
+the concept of a frame or a packet error.
+
+17
+00:01:27,200 --> 00:01:32,261
+So we have this wire,
+this transmission medium
+
+18
+00:01:32,261 --> 00:01:38,849
+that one node is sending to the other,
+but it's not perfect.
+
+19
+00:01:38,849 --> 00:01:43,300
+And so bit flips and
+other errors may occur.
+
+20
+00:01:43,300 --> 00:01:49,770
+And the Ethernet, for example,
+has a field to be able to detect errors,
+
+21
+00:01:49,770 --> 00:01:55,320
+but it doesn't have the ability
+to correct those errors.
+
+22
+00:01:55,320 --> 00:02:00,360
+So what it does is it just drops
+the frames that are in error.
+
+23
+00:02:02,220 --> 00:02:06,315
+A second place where we saw potential for
+
+24
+00:02:06,315 --> 00:02:11,376
+unreliable transmission
+occur was at the network
+
+25
+00:02:11,376 --> 00:02:18,088
+layer when we went into the router's
+data plane architecture.
+
+26
+00:02:18,088 --> 00:02:23,901
+So if you recall,
+a router has all these line cards,
+
+27
+00:02:23,901 --> 00:02:31,053
+and the picture shown here on
+the right is the kind of processing.
+
+28
+00:02:31,053 --> 00:02:37,062
+So the packet is received, it looks up the
+IP address inside of the forwarding table,
+
+29
+00:02:37,062 --> 00:02:42,528
+does some updates, and then it queues
+the packets inside of a packet buffer.
+
+30
+00:02:42,528 --> 00:02:48,840
+And this has a limited amount of
+memory to be able to store packets.
+
+31
+00:02:48,840 --> 00:02:53,348
+And so if the incoming rate is
+greater than the outgoing rate,
+
+32
+00:02:53,348 --> 00:02:59,340
+then this buffer will fill up and
+then we'll have to start dropping packets.
+
+33
+00:02:59,340 --> 00:03:02,552
+So how might this occur?
+
+34
+00:03:02,552 --> 00:03:07,120
+How might we have an incoming rate
+greater than an outgoing rate?
+
+35
+00:03:07,120 --> 00:03:12,648
+Well, if you recall,
+we have a bunch of different inputs.
+
+36
+00:03:12,648 --> 00:03:18,774
+Well, and the destination might all
+be going out the same output port.
+
+37
+00:03:18,774 --> 00:03:22,495
+So even if there's the same
+speed on all of the ports,
+
+38
+00:03:22,495 --> 00:03:27,705
+let's say it's ten gigabits per second,
+well, we might be receiving ten
+
+39
+00:03:27,705 --> 00:03:33,232
+gigabits per second on one input,
+ten gigabits per second on another input.
+
+40
+00:03:33,232 --> 00:03:38,891
+But then if all the traffic is going to
+one output, they might only be able to,
+
+41
+00:03:38,891 --> 00:03:43,486
+or they would only be able to
+send at ten gigabits per second.
+
+42
+00:03:43,486 --> 00:03:47,909
+And so that's how we're now
+going to have this rate higher at
+
+43
+00:03:47,909 --> 00:03:51,800
+the incoming level rather
+than over the outgoing.
+
+44
+00:03:53,840 --> 00:03:58,711
+And the third kind of place where we saw
+
+45
+00:03:58,711 --> 00:04:04,616
+a problem has to do
+with packet reordering.
+
+46
+00:04:04,616 --> 00:04:09,637
+So we saw in the network layer when
+we talked about the control plane and
+
+47
+00:04:09,637 --> 00:04:11,520
+decentralized routing.
+
+48
+00:04:13,140 --> 00:04:18,060
+Routing is meant to be dynamic,
+to handle things
+
+49
+00:04:18,060 --> 00:04:22,740
+such as different changes
+in configuration,
+
+50
+00:04:22,740 --> 00:04:27,720
+changes for policies, handling failures.
+
+51
+00:04:27,720 --> 00:04:32,670
+And so let's say we have an initial
+state where there's a path that goes
+
+52
+00:04:32,670 --> 00:04:37,456
+through this left router and
+then through these bottom routers, and
+
+53
+00:04:37,456 --> 00:04:40,228
+we're receiving a stream of packets.
+
+54
+00:04:40,228 --> 00:04:43,074
+So packet P1, P2, and P3.
+
+55
+00:04:43,074 --> 00:04:48,504
+So P1 and
+P2 get sent along this original path.
+
+56
+00:04:48,504 --> 00:04:53,712
+But now let's say something happened in,
+say, BGP, we got an update and
+
+57
+00:04:53,712 --> 00:04:58,028
+we learned about a new path
+where it's actually shorter.
+
+58
+00:04:58,028 --> 00:05:03,325
+And so packet 3 might be
+able to go that new path and
+
+59
+00:05:03,325 --> 00:05:10,666
+get to this router on the right-hand
+side before packets 1 and 2.
+
+60
+00:05:10,666 --> 00:05:16,128
+And so that is a case of reordering
+that would occur inside of the network,
+
+61
+00:05:16,128 --> 00:05:19,930
+and it's just natural based
+on how routing works.
+
+62
+00:05:22,300 --> 00:05:26,108
+So recall that TCP provides this
+
+63
+00:05:26,108 --> 00:05:31,476
+abstraction of a reliable in order stream.
+
+64
+00:05:31,476 --> 00:05:35,288
+So that's the service
+model that TCP provides.
+
+65
+00:05:35,288 --> 00:05:40,111
+So if we're transferring 300
+bytes at the receiving side,
+
+66
+00:05:40,111 --> 00:05:43,296
+we would expect to receive each of those,
+
+67
+00:05:43,296 --> 00:05:48,180
+all 300 of those bytes,
+and receive them in order.
+
+68
+00:05:48,180 --> 00:05:50,900
+So how do we do this?
+
+69
+00:05:50,900 --> 00:05:55,800
+So the first mechanism
+that TCP has to allow for
+
+70
+00:05:55,800 --> 00:06:00,760
+this to occur is the sequence number.
+
+71
+00:06:00,760 --> 00:06:03,736
+So we can see down here at the bottom,
+
+72
+00:06:03,736 --> 00:06:09,500
+circled is a field within the TCP
+header called Sequence number.
+
+73
+00:06:09,500 --> 00:06:12,561
+And so what the sequence number is,
+
+74
+00:06:12,561 --> 00:06:18,387
+is it indicates which bytes
+are contained in the datagram, right?
+
+75
+00:06:18,387 --> 00:06:22,699
+So the actual number will
+be the sequence number,
+
+76
+00:06:22,699 --> 00:06:27,934
+the byte within the whole sequence,
+which is, in our case,
+
+77
+00:06:27,934 --> 00:06:33,682
+for 300 bytes, it would be,
+which byte within that sequence of
+
+78
+00:06:33,682 --> 00:06:39,334
+300 does this packet start with or
+this datagram start with?
+
+79
+00:06:39,334 --> 00:06:44,854
+And so shown there in each of these,
+the length is 100.
+
+80
+00:06:44,854 --> 00:06:52,446
+So this 0 represents bytes 0 to 99,
+byte 100 to 199,
+
+81
+00:06:52,446 --> 00:06:57,658
+200 to 299, and 300 to 399.
+
+82
+00:06:57,658 --> 00:07:02,421
+And that would all occur because
+the length is the same, but
+
+83
+00:07:02,421 --> 00:07:05,000
+they can be different lengths.
+
+84
+00:07:07,020 --> 00:07:08,862
+All right, so that's the sequence number.
+
+85
+00:07:08,862 --> 00:07:13,810
+So what this allows is that
+the receiver can now say which bytes
+
+86
+00:07:13,810 --> 00:07:17,680
+in this sequence has it actually received.
+
+87
+00:07:17,680 --> 00:07:20,720
+So that's the first mechanism.
+
+88
+00:07:20,720 --> 00:07:26,726
+The second mechanism that TCP provides
+is the acknowledgement number.
+
+89
+00:07:26,726 --> 00:07:31,484
+So this is now another field
+within the TCP header.
+
+90
+00:07:31,484 --> 00:07:36,264
+And what it does is it
+specifies to the sender, so
+
+91
+00:07:36,264 --> 00:07:42,676
+it's the receiver sending back to
+the sender what is the next byte
+
+92
+00:07:42,676 --> 00:07:48,760
+in the stream that this
+receiver expects to receive.
+
+93
+00:07:48,760 --> 00:07:54,997
+And so shown here is this is saying I
+expect, I as the receiver of the stream,
+
+94
+00:07:54,997 --> 00:07:59,726
+expect the next byte that I'm
+going to get is byte 200.
+
+95
+00:07:59,726 --> 00:08:01,162
+This is indicating or
+
+96
+00:08:01,162 --> 00:08:05,842
+acknowledging that I've received
+everything up until that point.
+
+97
+00:08:05,842 --> 00:08:10,525
+So I've received 0 through 199.
+
+98
+00:08:13,313 --> 00:08:21,860
+And then the third part of this mechanism
+is the ability to do retransmissions.
+
+99
+00:08:21,860 --> 00:08:27,940
+So the sender can resend any
+unacknowledged bytes in the stream.
+
+100
+00:08:29,000 --> 00:08:34,181
+So this is resending that
+packet that contained
+
+101
+00:08:34,181 --> 00:08:38,736
+bytes 200 to 299 in the sequence.
+
+102
+00:08:38,736 --> 00:08:44,611
+And this all relates to if we go
+back a couple slides, the receiver,
+
+103
+00:08:44,611 --> 00:08:49,973
+this packet which is the sequence
+number starting at 200,
+
+104
+00:08:49,973 --> 00:08:53,608
+we're assuming that that was dropped.
+
+105
+00:08:53,608 --> 00:08:58,337
+So the receiver received 0 sequence
+number, a packet with 100 as
+
+106
+00:08:58,337 --> 00:09:03,602
+the sequence number, and then a packet
+as 300 as the sequence number.
+
+107
+00:09:03,602 --> 00:09:10,081
+And so it acknowledged that, hey,
+I received, or I'm acknowledging,
+
+108
+00:09:10,081 --> 00:09:16,600
+and the next byte that I expect is 200,
+I haven't seen that yet.
+
+109
+00:09:16,600 --> 00:09:22,390
+And then the receiver or
+the sender can resend 200.
+
+110
+00:09:24,040 --> 00:09:27,648
+So then the key question is,
+when do you retransmit?
+
+111
+00:09:27,648 --> 00:09:32,446
+Do you just retransmit
+kind of right away or what?
+
+112
+00:09:32,446 --> 00:09:38,326
+So there's two signals that we'll
+cover that help the sender know when
+
+113
+00:09:38,326 --> 00:09:43,800
+to retransmit, and it's a timeout and
+those acknowledgments.
+
+114
+00:09:43,800 --> 00:09:47,260
+But it's a little more than
+just resending immediately.
+
+115
+00:09:49,440 --> 00:09:55,884
+Now, taking it aside a little bit,
+let's discuss what this diagram means.
+
+116
+00:09:55,884 --> 00:09:59,118
+It's a message exchange diagram, and
+
+117
+00:09:59,118 --> 00:10:04,774
+we'll see this when we kind of talk
+about how these protocols work.
+
+118
+00:10:04,774 --> 00:10:10,362
+So on the left, we have A,
+and on the right, we have B.
+
+119
+00:10:10,362 --> 00:10:13,880
+These are two parties
+that are communicating.
+
+120
+00:10:13,880 --> 00:10:19,342
+And time is this kind of vertical line,
+and it goes down,
+
+121
+00:10:19,342 --> 00:10:24,540
+so it increases in time
+as the line goes down.
+
+122
+00:10:24,540 --> 00:10:28,026
+So when you have a line like this,
+
+123
+00:10:28,026 --> 00:10:34,720
+this would indicate a message
+is sent by A and received by B.
+
+124
+00:10:34,720 --> 00:10:39,344
+And it's shown kind of on this diagonal
+lower in the time to represent
+
+125
+00:10:39,344 --> 00:10:40,946
+transmission time.
+
+126
+00:10:40,946 --> 00:10:43,781
+So it takes some amount of time for
+
+127
+00:10:43,781 --> 00:10:48,050
+the message to go through the network and
+get to B.
+
+128
+00:10:50,020 --> 00:10:54,453
+When we see a message like
+this with an X there,
+
+129
+00:10:54,453 --> 00:10:58,444
+that represents a packet being dropped.
+
+130
+00:10:58,444 --> 00:11:03,107
+And it doesn't necessarily
+always have to be from B to A,
+
+131
+00:11:03,107 --> 00:11:07,850
+we could have drawn that as one
+of the messages from A to B.
+
+132
+00:11:07,850 --> 00:11:13,848
+But it's this kind of indication of it
+that X represents a packet being dropped.
+
+133
+00:11:13,848 --> 00:11:19,000
+If the lines crossed, that would
+indicate a packet being reordered.
+
+134
+00:11:21,100 --> 00:11:26,650
+So now back to, oops, when to retransmit,
+
+135
+00:11:26,650 --> 00:11:32,640
+the first thing to look at is the timeout.
+
+136
+00:11:32,640 --> 00:11:40,758
+So we send some frame or some datagram
+with a sequence number of 500.
+
+137
+00:11:40,758 --> 00:11:42,900
+Let's say it's length 10.
+
+138
+00:11:42,900 --> 00:11:47,560
+So this is expecting 500 to 509.
+
+139
+00:11:47,560 --> 00:11:49,146
+It gets received by B.
+
+140
+00:11:49,146 --> 00:11:53,556
+And let's say B does send
+an acknowledgment indicating that
+
+141
+00:11:53,556 --> 00:11:58,920
+the next byte that it expects
+to receive in the stream is 510.
+
+142
+00:11:58,920 --> 00:12:03,020
+But let's say that the packet
+get dropped along the way.
+
+143
+00:12:03,020 --> 00:12:07,907
+So how much time should the receiver or
+
+144
+00:12:07,907 --> 00:12:13,840
+the sender A wait before it retransmits?
+
+145
+00:12:13,840 --> 00:12:18,956
+If you send it too soon,
+let's say you sent it almost immediately
+
+146
+00:12:18,956 --> 00:12:23,978
+after it sent the original message,
+well, then there's going to
+
+147
+00:12:23,978 --> 00:12:30,100
+be unnecessary messages,
+datagrams going through the network.
+
+148
+00:12:30,100 --> 00:12:34,932
+So kind of the accepted
+practice is to wait an amount
+
+149
+00:12:34,932 --> 00:12:38,842
+of time that is based
+on what you think and
+
+150
+00:12:38,842 --> 00:12:43,557
+what the sender thinks
+that the round trip time,
+
+151
+00:12:43,557 --> 00:12:48,158
+the amount of transmission
+time from A to B, and
+
+152
+00:12:48,158 --> 00:12:52,780
+then back to A, and
+then add in some buffer.
+
+153
+00:12:52,780 --> 00:12:57,304
+And the way you can calculate
+the estimated round trip time is through
+
+154
+00:12:57,304 --> 00:12:58,766
+a formula like this.
+
+155
+00:12:58,766 --> 00:13:03,848
+So each message, each datagram that
+you're sending, you'll be able
+
+156
+00:13:03,848 --> 00:13:09,458
+to know when you sent it and then when
+you received an acknowledgment for it.
+
+157
+00:13:09,458 --> 00:13:13,680
+And so
+this is a sample of round trip time.
+
+158
+00:13:13,680 --> 00:13:19,241
+And then you can just take
+this kind of estimated
+
+159
+00:13:19,241 --> 00:13:26,156
+RTT over time by kind of adding
+that to the overall factor.
+
+160
+00:13:26,156 --> 00:13:31,708
+Now, this part, the 1 minus alpha and
+the alpha help smooth that out.
+
+161
+00:13:31,708 --> 00:13:37,581
+So you're not basically overreacting
+to spikes in round trip time,
+
+162
+00:13:37,581 --> 00:13:43,454
+and you're not underreacting to
+when the round trip time changes.
+
+163
+00:13:43,454 --> 00:13:46,949
+So you balance that out by
+adding this alpha factor.
+
+164
+00:13:50,170 --> 00:13:56,208
+The next signal of when to
+retransmit is a duplicate ack.
+
+165
+00:13:56,208 --> 00:14:01,592
+So just receiving an ack might
+not necessarily indicate
+
+166
+00:14:01,592 --> 00:14:07,330
+that a packet was dropped,
+it might be out of order.
+
+167
+00:14:07,330 --> 00:14:11,434
+So let's say the sequence is as follows.
+
+168
+00:14:11,434 --> 00:14:18,950
+B previously acknowledged
+sequence number starting at 500.
+
+169
+00:14:18,950 --> 00:14:22,683
+So saying the next byte
+that it expects is 500.
+
+170
+00:14:22,683 --> 00:14:29,016
+A then sends 500, sends 510, and 520.
+
+171
+00:14:29,016 --> 00:14:35,374
+So it's sending across multiple
+packets the sequence from 500 to 530,
+
+172
+00:14:35,374 --> 00:14:39,624
+if we're assuming all
+the packets are length 10.
+
+173
+00:14:39,624 --> 00:14:42,950
+And let's say this first one got dropped.
+
+174
+00:14:42,950 --> 00:14:45,909
+Now, B did receive the others, and for
+
+175
+00:14:45,909 --> 00:14:49,767
+each of those,
+it's sending an acknowledgment,
+
+176
+00:14:49,767 --> 00:14:55,150
+hey, I'm expecting the next
+byte that I receive to be 500.
+
+177
+00:14:55,150 --> 00:14:58,022
+And then when it receives this 520, hey,
+
+178
+00:14:58,022 --> 00:15:02,130
+the next byte I'm expecting
+to receive is 500.
+
+179
+00:15:02,130 --> 00:15:06,178
+And so
+this is a signal to the sender, to A,
+
+180
+00:15:06,178 --> 00:15:11,129
+that when it receives
+a duplicate acknowledgment,
+
+181
+00:15:11,129 --> 00:15:17,496
+chances are the packet was dropped
+rather than it was out of order.
+
+182
+00:15:17,496 --> 00:15:22,828
+So you can imagine if 500
+just happened to arrive
+
+183
+00:15:22,828 --> 00:15:27,540
+after 510, B would have acknowledged and
+
+184
+00:15:27,540 --> 00:15:31,804
+said, hey, I'm looking for 500.
+
+185
+00:15:31,804 --> 00:15:36,830
+A might have said, I've already sent that,
+so let me resend it.
+
+186
+00:15:36,830 --> 00:15:39,686
+But it was just out of order,
+so it was unnecessary.
+
+187
+00:15:39,686 --> 00:15:44,459
+But the second acknowledgment is
+a stronger signal, not a guarantee, but
+
+188
+00:15:44,459 --> 00:15:48,110
+a stronger signal that
+the packet was actually dropped.
+
+189
+00:15:50,050 --> 00:15:54,311
+So now last place that we
+can talk about is really,
+
+190
+00:15:54,311 --> 00:15:57,434
+what about drops at the receiver?
+
+191
+00:15:57,434 --> 00:16:03,830
+So the sender may be able to send at
+higher rates than the receiver can accept.
+
+192
+00:16:03,830 --> 00:16:10,930
+So the goal here is to make it so that
+the sender cannot overwhelm the receiver.
+
+193
+00:16:12,650 --> 00:16:17,132
+This is where a concept
+called flow control comes in.
+
+194
+00:16:17,132 --> 00:16:22,890
+So how this is handled is
+the receiver advertises the amount
+
+195
+00:16:22,890 --> 00:16:28,303
+of free buffer space in a field
+called the receive window
+
+196
+00:16:28,303 --> 00:16:34,350
+in the TCP header, and
+we'll see that in the next slide.
+
+197
+00:16:34,350 --> 00:16:40,206
+And then the sender just limits
+the amount of unacknowledged or
+
+198
+00:16:40,206 --> 00:16:47,330
+in-flight data that's being sent to
+whatever this receive window is.
+
+199
+00:16:47,330 --> 00:16:53,980
+So this picture kind of illustrates
+the buffer that at the receiver side,
+
+200
+00:16:53,980 --> 00:16:58,994
+it has a certain amount of
+data that's been received,
+
+201
+00:16:58,994 --> 00:17:07,080
+it's acknowledged, it's waiting to deliver
+it to the application, to the process.
+
+202
+00:17:08,330 --> 00:17:11,180
+And so it has this amount of space left.
+
+203
+00:17:11,180 --> 00:17:13,896
+And so it tells the sender, hey,
+
+204
+00:17:13,896 --> 00:17:18,170
+here's how much space I
+have in the receive window.
+
+205
+00:17:19,230 --> 00:17:24,140
+So this field, you might see it
+called just Window Size, but
+
+206
+00:17:24,140 --> 00:17:29,051
+it's this field in the TCP header,
+and it indicates how many
+
+207
+00:17:29,051 --> 00:17:33,694
+bytes the host is currently willing and
+able to receive.
+
+208
+00:17:37,330 --> 00:17:41,831
+So to summarize the kind of
+different approaches, or
+
+209
+00:17:41,831 --> 00:17:47,559
+all of the kind of aspects of TCP
+that lead to the reliable transfer,
+
+210
+00:17:47,559 --> 00:17:51,000
+we talked about the sequence number.
+
+211
+00:17:51,000 --> 00:17:56,232
+So that's a field inside
+of the TCP header that
+
+212
+00:17:56,232 --> 00:18:01,868
+indicates where in this
+stream of bytes which byte
+
+213
+00:18:01,868 --> 00:18:07,046
+number is this datagram actually covering.
+
+214
+00:18:07,046 --> 00:18:11,248
+So the sequence number tells
+what the first byte is.
+
+215
+00:18:11,248 --> 00:18:13,521
+Acknowledgment number tells,
+
+216
+00:18:13,521 --> 00:18:18,610
+these are the bytes that I've received,
+and this is the next one.
+
+217
+00:18:18,610 --> 00:18:23,070
+You set the acknowledgment number
+to be the next byte that I'm
+
+218
+00:18:23,070 --> 00:18:24,801
+expecting to receive.
+
+219
+00:18:24,801 --> 00:18:31,283
+And then retransmission, so this is
+the mechanism to be able to make sure that
+
+220
+00:18:31,283 --> 00:18:37,278
+the receiver is receiving all of
+the data that is part of that stream.
+
+221
+00:18:37,278 --> 00:18:42,859
+And then the last thing that
+we covered was flow control,
+
+222
+00:18:42,859 --> 00:18:49,704
+which is just a receiver telling
+the sender, my window size is this.
+
+223
+00:18:49,704 --> 00:18:52,040
+In this picture, it says 500.
+
+224
+00:18:52,040 --> 00:18:54,448
+And so then, this tells the sender,
+
+225
+00:18:54,448 --> 00:18:59,588
+don't ever have more than 500 bytes
+in-flight that are unacknowledged.
+
+226
+00:19:03,060 --> 00:19:08,172
+All right, so next time we'll
+talk a little more about TCP.
+
+227
+00:19:08,172 --> 00:19:08,819
+All right, thanks.

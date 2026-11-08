@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WAN Module Lab</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p>Lab Description:</p><p class="asset">mod3-lab1-desc-v2.0.pdf</p><p></p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>There was something missing from the diagram, what was it?  Hint: it has to do with the firewall.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~BWmV7RayEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>Didn't account for VXLAN traffic</p></div></li>
+<li><input name="autoGradableResponseId~BWmV7RayEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>This is a trick question, there wasn't anything missing from the diagram.</p></div></li>
+<li><input name="autoGradableResponseId~BWmV7RayEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>The firewall needed to open port 80 for http traffic.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What was the output for: grep "Follow" &lt;file-that-was-downloaded&gt;?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~i-HedhayEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>A link to twitter, with account @neverssl</p></div></li>
+<li><input name="autoGradableResponseId~i-HedhayEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>An argument that follower's of a certain sports team are not nice people.</p></div></li>
+<li><input name="autoGradableResponseId~i-HedhayEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>A link to instructions to follow to setup a web server with https</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What was the output of this command on vm1: ping -c 1 8.8.8.8? </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Fp4SxhazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>1 packets transmitted, 1 received, 0% packet loss, time [will vary]ms</p></div></li>
+<li><input name="autoGradableResponseId~Fp4SxhazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>1 packets transmitted, 0 received, 100% packet loss, time 0ms</p></div></li>
+<li><input name="autoGradableResponseId~Fp4SxhazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>ok</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is the output of Query 1: </p><p>jq '.values.root_module.resources[] | select(.type == "google_compute_network_peering" and .name =="tf-mod3-lab1-peering1").values.state' terraform_show_out.json</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Sra2kBazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>“ACTIVE”</p></div></li>
+<li><input name="autoGradableResponseId~Sra2kBazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>"PEERED"</p></div></li>
+<li><input name="autoGradableResponseId~Sra2kBazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>There was an error in the query</p></div></li>
+<li><input name="autoGradableResponseId~Sra2kBazEe-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>null</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What was the output of Query 2:</p><p>jq '.values.root_module.resources[] | select(.type == "google_compute_network_peering" and .name =="tf-mod3-lab1-peering2").address' terraform_show_out.json</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~l80PHBazEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>"172.16.1.2"</p></div></li>
+<li><input name="autoGradableResponseId~l80PHBazEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>"google_compute_network_peering.tf-mod3-lab1-peering2"</p></div></li>
+<li><input name="autoGradableResponseId~l80PHBazEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>There was an error in the query</p></div></li>
+<li><input name="autoGradableResponseId~l80PHBazEe-qcBJGkcV_RQ" type="radio"/> <div class="quiz-option-text"><p>null</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What was the output for Query 3:</p><p>jq '.values.root_module.resources[] | select(.type == "google_compute_network_peering" and .name =="tf-mod3-lab1-peering2").values.peer_network' terraform_show_out.json</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~1nbHARazEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>tf-mod3-lab1-vpc2</p></div></li>
+<li><input name="autoGradableResponseId~1nbHARazEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>https://www.googleapis.com/compute/v1/projects/[your-project-name]/global/networks/tf-mod3-lab1-vpc2</p></div></li>
+<li><input name="autoGradableResponseId~1nbHARazEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>There was an error in the query</p></div></li>
+<li><input name="autoGradableResponseId~1nbHARazEe-LZQr_8b6_1Q" type="radio"/> <div class="quiz-option-text"><p>null</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What was the output for Query 4:</p><p>jq '.values.root_module.resources[] | select(.type == "google_compute_network_peering" and .name =="tf-mod3-lab1-peering2").values.peer' terraform_show_out.json </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~HNKOXRa0Ee-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>https://www.googleapis.com/compute/v1/projects/[your-project-name]/global/networks/tf-mod3-lab1-vpc1</p></div></li>
+<li><input name="autoGradableResponseId~HNKOXRa0Ee-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>tf-mod3-lab1-vpc1</p></div></li>
+<li><input name="autoGradableResponseId~HNKOXRa0Ee-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>There was an error in the query</p></div></li>
+<li><input name="autoGradableResponseId~HNKOXRa0Ee-T4g7NyER4-w" type="radio"/> <div class="quiz-option-text"><p>null</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

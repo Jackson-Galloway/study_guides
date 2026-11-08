@@ -1,0 +1,34 @@
+This video marks the start of the Link Layer Module in the Networking
+Fundamentals course. To overview, what
+we'll be covering in this module will highlight the main problems addressed
+at the link layer. To start, let's consider
+what a link is. In networks,
+communication happens over some physical medium. This can be wires or
+can happen wirelessly. The link layer puts some
+capabilities on top of that, to not just allow
+for transmitting signals over the wires
+or through the air, but to enable
+communication to occur. This functionality is typically implemented in the network
+interface card, or NIC. The NIC is the component
+in your computer which the wire is plugged into or has an antenna to be able
+to transmit wirelessly. Through a combination of
+hardware and firmware on the NIC and some functionality
+in the operating system, the link layer enables
+communication. The first problem that we'll
+cover is how to encode data. We know we can send signals
+over a physical medium, but how do you
+structure the series of ones and zeros to make it know who the message is destined for and what
+the data actually means? The second problem
+to address is that the physical medium isn't perfect and these signals
+could get corrupted. That is, errors can occur, bits can get flipped. The link layer can allow us
+to at least detect that there was an error and perhaps
+even correct the error. Some of the physical mediums that could be used to
+communicate are not just point-to-point links
+between two devices but may be shared among several. You could think of a
+Wi-Fi network for this. The key problem to address here is how to regulate access to the physical medium to allow all to be able to
+share it effectively. The last problem
+we'll discuss in this module is extending to a local area network that
+allows communication to extend beyond the limits of
+the transmission medium. Thank you. Next time
+we'll get into encoding the series of ones and
+zeros into frames.

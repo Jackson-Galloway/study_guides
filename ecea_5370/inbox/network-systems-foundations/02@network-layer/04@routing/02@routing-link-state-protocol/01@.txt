@@ -1,0 +1,140 @@
+All right, let's jump into our first
+overview of a routing protocol. We're going to focus in on
+link state protocols today, or one specific link state protocol. So as a reminder, we talked about
+a decentralized control plane. And so this is what you would traditional
+generally know as a routing protocol. And this is where each router runs
+some control plane software and then communicates with its neighbors and
+then performs some local calculations to figure out
+what the forwarding table should be. And we went over kind of three
+key properties that distinguish different routing protocols. And so keep these in mind as
+we go through this today, what info each router knows,
+what information each router exchanges, and then what calculation
+is being performed. So think about those questions as we go
+through kind of the rest of this video. So what we're going to talk
+about is a protocol called OSPF. This is an example of
+a link state protocol and it's widely used in local area networks. So you can find the full specification
+of OSPF in these two links. So these are something called RFCs. And so
+this is where a lot of the information or the kind of specifications for internet
+related technology gets placed and then it has an ability for
+a community to suggest comments. So you can see it's beefy. 244 pages is not an easy read. That said, we're going to overview,
+give a little highlight of it. We're not going to give you enough
+detail where cover all of that and all the different kind of corner cases and
+things that it covers, but you'll at least have a good
+sense of how OSPF is designed and then be able to answer those
+three questions at the beginning. So the process in OSPF,
+if we were to simplify it, each router establishes
+peering with its neighbors, then link states and
+we'll discuss what that exactly means. So link states are flooded
+to the entire network and then each router calculates
+the shortest path. All right, so what is a link state? So a link state is basically
+the state of a link. So each of the interfaces for any given network device has
+some information about it. So if it's connected to another
+router well, the link state, the information about that
+link is who that neighbor is. And if it's connected to
+a network with end hosts that link state tells about
+what prefixes are reachable. So you can look at kind of
+router A as an example, it has connection on the left
+to these different prefixes and then it has connection to the right
+to connection to a router. So showing this, the link states for
+two different routers, A and C. So if we put some interface
+numbers behind these routers, so interface A we already
+kind of talked about, but interface0 is connected to Prefix-1,
+interface1 is connected to B. So that would be the link state for router A,
+the different link states that it has. C would be 1 that interface0,
+says C is connected to B and interface1, the link state
+is C is connected to D. So then the next part of OSPF
+is exchanging information with your neighbors. And so what they do is they
+exchange link state updates. And this is basically just tell
+the neighbors all of the link states that you know about. So starting off, A will tell B
+that A is connected to Prefix-1. Because that was one of the link
+states that A was storing. C will tell B that C is connected to D and then D will tell B that D is
+connected to C and Prefix-2. So this was kind of one step of the link
+state update process of in the kind of viewpoint of if I'm router B,
+here's what my neighbors are telling me. B then now has more information
+about all of the networks, all these link states that it receives, it stores this all in
+a little database internally. And so this database consists
+of the link states for its interfaces as well as all of
+the link states that it has learned from the messages from A, C and D,
+whatever that information that it sent. And now B can now send a link
+state update to its neighbors. So B would tell A for example,
+I know about the link state that C is connected to D and
+that C is connected to B. Those are some information
+that it can send and then it would also the information
+it learned from D, the link state of D is that D is connected
+to C and that D is connected to Prefix-2. So all of this happens,
+all of these routers just keep exchanging this link state information until the
+network reaches what's called convergence. And that's where basically
+everybody has agreed upon this is all of the information in the network. They all have basically the same database,
+the link state database at each router. This is what we just said. B will send this link state update to
+its neighbors with new information, process continues until
+it reaches convergence. So the process just keeps going and
+going until you reach convergence. Now at the converged state of the network. So after that process is completed,
+at the end, if we were to again focus in on B,
+it has learned the entire topology. And so you can kind of see in
+this little representation, it knows the entire topology because it
+was told all of these various link states. And if we were to zoom in
+on any of the routers, we would see that exact same information. They all agree on that this
+is the state of the network. All right, so now that we have that,
+how does this help us forward traffic? Really what we want is for the source on the left to be able to send
+traffic to the destination on the right. So this is where the calculation that. Each router is performing, how are they
+determining the forwarding table? In OSPF, each router performs
+a shortest path calculation and this is just Dijkstra's algorithm. So recall we mentioned before
+that a network is just a representation of a graph. And so shown here, each of these kind of blue dots can look at them as routers, and then the edges between the nodes or
+vertices are weights. And weights could come into play in
+a network graph of the link bandwidth or latency on the link or any number of
+factors that you want to factor in. All right, so let's look at
+Dijkstra's algorithm in action. So what we're trying to
+calculate here is the shortest path from node U to each of
+the other destinations w, v, x, y, s, t, z because that's what will help us build the forwarding table in u. So it starts by saying, all right what are
+the immediate next potential next hops? And it picks the kind of lowest cost one. So now the lowest cost one would be w. So now the Dijkstra's algorithm, and you can look up on the internet for
+a more specific kind of look at what Dijkstra's
+algorithm is more concrete. This is Dijkstra's algorithm
+through example, but you can look up what the actual algorithm
+is widely available to look at, and there's a lot of resources out
+there explaining it pretty well. So in step 1,
+we started at u the next hop or the next node to look at was
+whatever was the lowest cost so then that's where w, we chose w,
+and now we're looking at w. So we add to the possible nodes
+that we could select from. So now we have v, x and s because we just added w's neighbors, which are x and s, to the set that we can select from. And then we go ahead and choose what
+is the kind of lowest cost one. So you can see the cost to get to v was 3, the cost to get to x was also 3, and then the cost to get to s was 6, 2 plus 4. All right, so
+now you have a choice between x or v, either one, they're equal cost. So in this illustration,
+we chose v as the next node to add to the graph or
+to the set of nodes that we can look at. So we looked at v and
+then add to the set its neighbors. So when we look at one
+of the neighbors is x, we see that it's already in the set so
+we don't need to add it because going u, v,
+x would be a longer path than u, w, x,
+which we already have kind of covered. So the only node that would get
+kind of added to the set that we are looking at or able to look
+at in the next round is y and so then we'll add that
+the cost to get to y is 2. So now we can choose between y, x and s. So it cost 6, cost 3, and cost 5. So you could probably guess which
+node we look at next, which is x. It adds its neighbors z and t updates, kind of the cost to get each of those and then kind of keep
+building this whole tree. All right, so we would kind of finish
+out that whole set of calculation. We've now built a tree rooted at u that includes the shortest path
+to every single node. So any node that you want to look at,
+u, w, x, t would be the shortest path. So now, based on that calculation at u, the forwarding table,
+now it knows exactly which direction, which port it should, for
+any given destination, send out. So if it was looking at,
+say destination z, we would be able to look up in
+the table and say it's u, v, which matches the kind of
+calculation that we just performed. So we perform this calculation
+to fill this table. And now when packets come into you say,
+destined for Z, which would have an IP address, we would
+be able to look up that address z, and then say, that's u, v. So that's the essence of OSPF and
+Dijkstra's algorithm. Now, of course,
+now there can be dynamics in the network. There can be changes that occur. So we might plug in a new router. So there may be new neighbors that
+occur that we need to account for. There may be a failure of a link or
+a node, we might add a prefix. So all of these are changes
+in the link state. So from the perspective of this top
+router, let's say this link went down well now its link state that
+it knows about just changed. It knows now top router is no longer
+connected to bottom right router. And so it would send an update
+to this bottom left router to say here's the link states that I
+know of and so it does these updates. And again, we go through that
+process until convergence. We calculate the shortest paths and
+then update the forwarding table. So that's it with OSPF,
+it's pretty straightforward if you understand how Dijkstra's
+algorithm works and then understand what exactly
+we mean by link state. All right, so next time we're going to
+talk about a path vector protocol called BGP and it's really what runs
+the internet, so should be interesting.

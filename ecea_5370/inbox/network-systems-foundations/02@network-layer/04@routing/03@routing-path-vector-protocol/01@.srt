@@ -1,0 +1,1161 @@
+1
+00:00:09,396 --> 00:00:14,726
+All right, this time, we're going to
+talk about path vector protocol.
+
+2
+00:00:14,726 --> 00:00:21,384
+Continue on our little exploration
+of routing protocols and
+
+3
+00:00:21,384 --> 00:00:25,822
+we're going to talk about one specific and
+
+4
+00:00:25,822 --> 00:00:29,360
+very important one called BGP.
+
+5
+00:00:29,360 --> 00:00:34,457
+All right, so as a reminder when
+we talked about decentralized
+
+6
+00:00:34,457 --> 00:00:39,276
+control plane,
+what you would know as a routing protocol.
+
+7
+00:00:39,276 --> 00:00:43,132
+There's three key questions
+to keep in mind that
+
+8
+00:00:43,132 --> 00:00:47,092
+really distinguish these
+different protocols.
+
+9
+00:00:47,092 --> 00:00:49,681
+And so going through these again.
+
+10
+00:00:49,681 --> 00:00:53,212
+What information each router knows?
+
+11
+00:00:53,212 --> 00:00:58,909
+What information each router exchanges and
+then what calculation is performed?
+
+12
+00:00:58,909 --> 00:01:03,469
+So we'll again,
+structure the discussion of a path
+
+13
+00:01:03,469 --> 00:01:08,445
+vector protocol kind of where
+you should by the end of this
+
+14
+00:01:08,445 --> 00:01:12,918
+know what the answer is to
+each of these questions.
+
+15
+00:01:12,918 --> 00:01:19,220
+So we're going to specifically talk
+about BGP, the border gateway protocol.
+
+16
+00:01:19,220 --> 00:01:23,828
+And here's where you can find the RFC,
+
+17
+00:01:23,828 --> 00:01:29,000
+which describes all the ins and
+outs of BGP.
+
+18
+00:01:29,000 --> 00:01:35,131
+So the context of where this
+is used is the internet.
+
+19
+00:01:35,131 --> 00:01:37,124
+So what is the internet?
+
+20
+00:01:37,124 --> 00:01:43,150
+It's really just an interconnected or
+a collection.
+
+21
+00:01:43,150 --> 00:01:47,842
+It's many interconnected networks
+called autonomous systems.
+
+22
+00:01:47,842 --> 00:01:53,601
+And so all an autonomous system is
+some company that runs a network.
+
+23
+00:01:53,601 --> 00:01:57,174
+So AT&T has an autonomous system.
+
+24
+00:01:57,174 --> 00:02:01,317
+Comcast is an autonomous system.
+
+25
+00:02:01,317 --> 00:02:06,273
+Certain kind of larger
+enterprises like the University
+
+26
+00:02:06,273 --> 00:02:10,265
+of Colorado could be an autonomous system.
+
+27
+00:02:10,265 --> 00:02:18,379
+And so BGP is the protocol used
+to coordinate between them.
+
+28
+00:02:18,379 --> 00:02:23,608
+Since you only have a view of whatever
+is inside of your own network,
+
+29
+00:02:23,608 --> 00:02:27,277
+you need a protocol to be
+able to communicate and
+
+30
+00:02:27,277 --> 00:02:32,344
+exchange information with other
+autonomous systems out there.
+
+31
+00:02:35,064 --> 00:02:40,249
+So the process for
+BGP in a very simplified manner
+
+32
+00:02:40,249 --> 00:02:45,191
+is each router would
+peer with its neighbors.
+
+33
+00:02:45,191 --> 00:02:49,231
+And then for
+any route update that you receive or
+
+34
+00:02:49,231 --> 00:02:52,868
+a failure event or configuration change,
+
+35
+00:02:52,868 --> 00:02:58,740
+you would update the routing table
+which is the list of known routes.
+
+36
+00:02:58,740 --> 00:03:03,683
+Perform the locally best route
+calculation for that prefix.
+
+37
+00:03:03,683 --> 00:03:09,514
+And if there's any change to it,
+send an update to your neighbors.
+
+38
+00:03:09,514 --> 00:03:13,424
+So a route here,
+when we say the word route,
+
+39
+00:03:13,424 --> 00:03:18,285
+this is just in the context of BGP,
+a path to a prefix and
+
+40
+00:03:18,285 --> 00:03:22,727
+then a path is a sequence
+of autonomous systems and
+
+41
+00:03:22,727 --> 00:03:26,357
+we'll see an example of this right now.
+
+42
+00:03:26,357 --> 00:03:30,353
+All right, so in this example,
+
+43
+00:03:30,353 --> 00:03:34,941
+we have some prefix D that's shown on
+
+44
+00:03:34,941 --> 00:03:40,715
+the right-hand side and
+we're calling it D.
+
+45
+00:03:40,715 --> 00:03:45,571
+But it's some IP address,
+1.2.3.0/24, let's say.
+
+46
+00:03:45,571 --> 00:03:51,537
+And so the AS4 would be the network
+
+47
+00:03:51,537 --> 00:03:55,858
+that either contains D or
+
+48
+00:03:55,858 --> 00:04:00,383
+either owns D, or is kind of
+
+49
+00:04:00,383 --> 00:04:06,782
+advertising it based on its behalf.
+
+50
+00:04:06,782 --> 00:04:13,119
+All right, so what AS4 would do
+is it would tell its neighbors.
+
+51
+00:04:13,119 --> 00:04:14,615
+Something called an announcement.
+
+52
+00:04:14,615 --> 00:04:20,135
+It would announce to its
+neighbors which are AS2 and
+
+53
+00:04:20,135 --> 00:04:26,797
+AS3 that it can reach destination or
+prefix D with a path AS4.
+
+54
+00:04:26,797 --> 00:04:27,773
+So it says.
+
+55
+00:04:27,773 --> 00:04:32,916
+if you want to get to D,
+you can go via AS4, the path.
+
+56
+00:04:32,916 --> 00:04:38,003
+All right, so right here,
+we're basically making
+
+57
+00:04:38,003 --> 00:04:44,140
+the assumption that each AS,
+each network is a single router.
+
+58
+00:04:44,140 --> 00:04:47,725
+We'll talk about this to relax
+this in a little bit, but
+
+59
+00:04:47,725 --> 00:04:52,244
+make that assumption that it's
+a router that represents all of AS4.
+
+60
+00:04:52,244 --> 00:04:56,413
+It's sending to the router
+that represents all of AS2.
+
+61
+00:04:56,413 --> 00:05:03,940
+This announcement that it can reach D,
+the prefix D via AS4.
+
+62
+00:05:03,940 --> 00:05:07,652
+All right, so at this point, AS2 and
+
+63
+00:05:07,652 --> 00:05:11,605
+AS3 which just received these routes.
+
+64
+00:05:11,605 --> 00:05:17,133
+AS3, for example is going to insert
+it into its routing table like,
+
+65
+00:05:17,133 --> 00:05:21,983
+hey, now I know how do you get to D and
+you get to it via AS4.
+
+66
+00:05:21,983 --> 00:05:27,223
+And then it's going to exchange this
+information with its neighbors.
+
+67
+00:05:27,223 --> 00:05:34,314
+So AS3, for example is going to now
+going to tell AS2 as well as AS1.
+
+68
+00:05:34,314 --> 00:05:40,948
+Hey, you can get to D via the path,
+AS3, AS4.
+
+69
+00:05:40,948 --> 00:05:46,088
+So if you want to get to D,
+you can go through me, AS3,
+
+70
+00:05:46,088 --> 00:05:52,622
+then I'll send it to AS4 which told
+me that it can reach the prefix.
+
+71
+00:05:52,622 --> 00:05:56,149
+All right and so
+AS2 would have done the same thing,
+
+72
+00:05:56,149 --> 00:06:00,409
+because it previously received
+the route directly from AS4.
+
+73
+00:06:00,409 --> 00:06:04,630
+It would send an update to AS3 that,
+
+74
+00:06:04,630 --> 00:06:09,121
+hey, you can reach D via the path AS2,
+
+75
+00:06:09,121 --> 00:06:12,948
+AS4 and it would also toil AS1.
+
+76
+00:06:12,948 --> 00:06:17,885
+You can get to D via AS2,
+AS4 via this path.
+
+77
+00:06:17,885 --> 00:06:21,847
+So if we zoom in on
+the router in the AS2 and
+
+78
+00:06:21,847 --> 00:06:27,173
+look at its routing table
+from this particular prefix,
+
+79
+00:06:27,173 --> 00:06:30,141
+it has known the destination.
+
+80
+00:06:30,141 --> 00:06:35,585
+So these are the prefix and
+it has two routes that it can choose from.
+
+81
+00:06:35,585 --> 00:06:41,215
+It has route AS2, AS4 and
+it has a route AS4.
+
+82
+00:06:41,215 --> 00:06:46,383
+All right and it would have a next
+top kind of field as part of this,
+
+83
+00:06:46,383 --> 00:06:48,988
+but we'll simplify the table.
+
+84
+00:06:48,988 --> 00:06:54,002
+So since it knows about these two routes,
+it has to make a choice.
+
+85
+00:06:54,002 --> 00:06:57,113
+And for now we're going to just say,
+
+86
+00:06:57,113 --> 00:07:02,476
+it's going to choose this bottom one,
+the AS4 as the path and
+
+87
+00:07:02,476 --> 00:07:07,209
+we'll come back to why it
+chose that in a little bit.
+
+88
+00:07:10,965 --> 00:07:15,700
+At the end of all this exchange,
+here's kind of all the information.
+
+89
+00:07:15,700 --> 00:07:17,526
+The routing table for
+
+90
+00:07:17,526 --> 00:07:23,523
+each of these routers that each
+representing the autonomous system.
+
+91
+00:07:23,523 --> 00:07:30,122
+All right, so now we can figure out,
+all right, D or AS2 chose this one.
+
+92
+00:07:30,122 --> 00:07:33,176
+It's a shorter path, same with AS3.
+
+93
+00:07:33,176 --> 00:07:36,340
+It's going to choose the direct one.
+
+94
+00:07:36,340 --> 00:07:40,420
+AS4 has a direct connection to the prefix.
+
+95
+00:07:40,420 --> 00:07:43,757
+Now AS1 has two choices.
+
+96
+00:07:43,757 --> 00:07:50,644
+It can either go via AS2 or
+it can go via AS3.
+
+97
+00:07:50,644 --> 00:07:56,200
+Both ones will get it there and
+have the same length path.
+
+98
+00:07:56,200 --> 00:07:59,270
+So which do you think it will choose?
+
+99
+00:08:00,280 --> 00:08:02,267
+Before answering that question,
+
+100
+00:08:02,267 --> 00:08:06,040
+there's a little nit more information
+we need to know about BGP.
+
+101
+00:08:07,420 --> 00:08:13,121
+All right, so one of the pieces of
+information doesn't necessarily
+
+102
+00:08:13,121 --> 00:08:18,722
+relate to how it would choose, but
+definitely needed to understand
+
+103
+00:08:18,722 --> 00:08:24,637
+how BGP works is what happens if
+there's some dynamics in the network.
+
+104
+00:08:24,637 --> 00:08:27,528
+So for example, AS4,
+
+105
+00:08:27,528 --> 00:08:33,317
+the link between AS3 and
+AS4 say it goes down.
+
+106
+00:08:33,317 --> 00:08:38,139
+So here, AS3 which previously
+had these two entries in its
+
+107
+00:08:38,139 --> 00:08:41,619
+routing table would detect that failure.
+
+108
+00:08:41,619 --> 00:08:49,302
+Delete this entry, the second entry
+that says that it can reach via AS4.
+
+109
+00:08:49,302 --> 00:08:52,365
+So it updates its routing table.
+
+110
+00:08:52,365 --> 00:08:57,118
+And now, it's going to have to
+tell its neighbors that I'm
+
+111
+00:08:57,118 --> 00:09:02,081
+going to withdraw that path that
+I previously told you about.
+
+112
+00:09:02,081 --> 00:09:10,365
+I told you that you can reach D via AS3,
+AS4.
+
+113
+00:09:10,365 --> 00:09:12,119
+That's no longer the case.
+
+114
+00:09:12,119 --> 00:09:14,948
+All right, so
+that's the first part of this.
+
+115
+00:09:14,948 --> 00:09:20,448
+Now the second part is because
+it has another path available,
+
+116
+00:09:20,448 --> 00:09:25,643
+it chooses that and
+it can announce that to its neighbors.
+
+117
+00:09:25,643 --> 00:09:28,418
+So it sends an update message.
+
+118
+00:09:28,418 --> 00:09:34,294
+So for example,
+it sends in this picture to AS1 but
+
+119
+00:09:34,294 --> 00:09:39,623
+it would send it to all
+of its neighbors that you
+
+120
+00:09:39,623 --> 00:09:45,786
+can reach prefix D via AS3,
+then AS2 and then AS4.
+
+121
+00:09:45,786 --> 00:09:47,084
+And in this case,
+
+122
+00:09:47,084 --> 00:09:52,639
+it didn't send it to AS2 because that's
+where it learned this route from.
+
+123
+00:09:52,639 --> 00:09:57,359
+So you wouldn't send back to AS2 like,
+hey,
+
+124
+00:09:57,359 --> 00:10:02,453
+you can get to the prefix
+via yourself through me.
+
+125
+00:10:02,453 --> 00:10:04,532
+So that just doesn't make sense.
+
+126
+00:10:04,532 --> 00:10:09,129
+So this is part of the route exchange that
+you would send withdrawals, whenever.
+
+127
+00:10:09,129 --> 00:10:10,619
+Something changed and
+
+128
+00:10:10,619 --> 00:10:14,940
+you want to basically unannounce
+what you previously announced.
+
+129
+00:10:14,940 --> 00:10:20,041
+And then if you've chosen a new path,
+a new route,
+
+130
+00:10:20,041 --> 00:10:25,393
+well, you would want to tell
+people that as an update.
+
+131
+00:10:25,393 --> 00:10:30,316
+All right, so
+now getting back to the selection
+
+132
+00:10:30,316 --> 00:10:34,510
+process of which one would AS1 choose.
+
+133
+00:10:34,510 --> 00:10:39,568
+Another kind of component
+of this is we saw this
+
+134
+00:10:39,568 --> 00:10:45,017
+abstraction or
+we're making the assumption that
+
+135
+00:10:45,017 --> 00:10:49,960
+each autonomous system
+was a single router.
+
+136
+00:10:49,960 --> 00:10:51,658
+But in reality, these are big networks.
+
+137
+00:10:51,658 --> 00:10:53,523
+They're going to be many, many routers.
+
+138
+00:10:53,523 --> 00:10:58,654
+And so shown here,
+AS2 simply has two routers.
+
+139
+00:10:58,654 --> 00:11:03,278
+So one question or
+the question shown here is when this
+
+140
+00:11:03,278 --> 00:11:08,230
+router on the right inside
+of AS2 received that update?
+
+141
+00:11:08,230 --> 00:11:13,301
+Well, how did the router on
+the left find out about it
+
+142
+00:11:13,301 --> 00:11:19,073
+like now we have this new path and
+update the routing table?
+
+143
+00:11:19,073 --> 00:11:24,791
+And so what actually happens internally,
+BGP is also run.
+
+144
+00:11:24,791 --> 00:11:30,238
+And so when it's internal which
+is basically just exchanging
+
+145
+00:11:30,238 --> 00:11:35,369
+between all of these routers,
+all of the information that
+
+146
+00:11:35,369 --> 00:11:41,233
+they learned externally between
+each other, that's called i for
+
+147
+00:11:41,233 --> 00:11:46,281
+internal, iBGP and
+then the external part of it is eBGP.
+
+148
+00:11:46,281 --> 00:11:51,346
+Another thing,
+another aspect to learn about for
+
+149
+00:11:51,346 --> 00:11:56,540
+BGP is well,
+how did AS4 learn about this prefix?
+
+150
+00:11:56,540 --> 00:12:00,026
+We see it in the diagram, but
+how did it actually learn about it?
+
+151
+00:12:00,026 --> 00:12:06,224
+So it could have learned it about it
+through a local protocol say, OSPF.
+
+152
+00:12:06,224 --> 00:12:12,412
+So maybe there's a router here
+in AS4 that's participating
+
+153
+00:12:12,412 --> 00:12:17,648
+in BGP with neighbors in
+other autonomous systems,
+
+154
+00:12:17,648 --> 00:12:22,418
+but it's also participating
+in OSPF locally.
+
+155
+00:12:22,418 --> 00:12:27,740
+And so that's how all of these prefixes,
+these link states
+
+156
+00:12:27,740 --> 00:12:33,281
+that it learned about,
+it can now announce to its neighbors.
+
+157
+00:12:33,281 --> 00:12:34,868
+Another option is potentially,
+
+158
+00:12:34,868 --> 00:12:37,593
+you just configured the router
+with some static routes.
+
+159
+00:12:37,593 --> 00:12:44,474
+You added prefix D to be something that
+AS4, the router in it should announce.
+
+160
+00:12:47,168 --> 00:12:53,559
+All right, so that's how do
+you learn about the prefixes.
+
+161
+00:12:53,559 --> 00:12:59,105
+Another aspect of BGP which
+makes it highly valuable and
+
+162
+00:12:59,105 --> 00:13:03,825
+useful in the internet is
+the Internet is really
+
+163
+00:13:03,825 --> 00:13:08,906
+a collection of companies,
+trying to make money.
+
+164
+00:13:08,906 --> 00:13:10,206
+It's a business.
+
+165
+00:13:10,206 --> 00:13:13,663
+And so businesses need policies.
+
+166
+00:13:13,663 --> 00:13:17,176
+There's different business
+arrangements that occur.
+
+167
+00:13:17,176 --> 00:13:22,403
+And so there's kind of three
+main business arrangements
+
+168
+00:13:22,403 --> 00:13:26,304
+that two autonomous systems would have.
+
+169
+00:13:26,304 --> 00:13:30,020
+So one, you would have a provider.
+
+170
+00:13:30,020 --> 00:13:35,338
+This is companies that are paid
+money to transit traffic.
+
+171
+00:13:35,338 --> 00:13:39,771
+You have the customer that
+pays money to a provider to
+
+172
+00:13:39,771 --> 00:13:44,014
+have his traffic carried and
+then you have a peer.
+
+173
+00:13:44,014 --> 00:13:48,574
+And this is a financially neutral
+arrangement where two **** connect to
+
+174
+00:13:48,574 --> 00:13:52,062
+each other and
+will send traffic through each other.
+
+175
+00:13:52,062 --> 00:13:56,592
+And it's typically,
+they're about the same size,
+
+176
+00:13:56,592 --> 00:14:03,146
+same amount of traffic and it's kind of
+making it, so that neither has to pay.
+
+177
+00:14:03,146 --> 00:14:09,018
+And of course, any given autonomous
+system can have both relationships.
+
+178
+00:14:09,018 --> 00:14:13,360
+So not shown, but say AS1 needs to use
+
+179
+00:14:13,360 --> 00:14:17,845
+a bigger provider to get to some areas.
+
+180
+00:14:17,845 --> 00:14:22,626
+And so
+it would have AS300 as its customer,
+
+181
+00:14:22,626 --> 00:14:27,163
+but then let's say AS400 not shown, but
+
+182
+00:14:27,163 --> 00:14:32,690
+imagine it kind of above
+AS100 as its own provider.
+
+183
+00:14:32,690 --> 00:14:40,092
+And so what we need is policies to be
+able to control what's being announced.
+
+184
+00:14:40,092 --> 00:14:44,043
+If I'm paying some other company, so
+
+185
+00:14:44,043 --> 00:14:50,093
+AS3 is 300 is paying AS100
+money to carry traffic,
+
+186
+00:14:50,093 --> 00:14:55,526
+AS100 shouldn't be able
+to send traffic through
+
+187
+00:14:55,526 --> 00:15:00,604
+AS300 to get it to say something in AS200.
+
+188
+00:15:00,604 --> 00:15:07,317
+Because then, that's not making
+sense financially for AS300.
+
+189
+00:15:07,317 --> 00:15:11,832
+So in this case, we need some policies and
+
+190
+00:15:11,832 --> 00:15:15,967
+BGP has this ability to set policies.
+
+191
+00:15:15,967 --> 00:15:20,782
+And to understand that,
+you can look at what
+
+192
+00:15:20,782 --> 00:15:26,379
+the actual processing of
+BGP messages look like and
+
+193
+00:15:26,379 --> 00:15:29,778
+it's a processing pipeline.
+
+194
+00:15:29,778 --> 00:15:34,482
+So these are the connections to peers and
+these are just TCP
+
+195
+00:15:34,482 --> 00:15:39,186
+sessions which we'll learn
+about in the next module, but
+
+196
+00:15:39,186 --> 00:15:45,525
+it's a session that you're getting
+messages, these route announcements.
+
+197
+00:15:45,525 --> 00:15:50,124
+You're putting it in a table of things
+that you learned from that peer.
+
+198
+00:15:50,124 --> 00:15:54,290
+You have an interface where you
+can specify some policies and
+
+199
+00:15:54,290 --> 00:15:56,168
+these are filters saying,
+
+200
+00:15:56,168 --> 00:16:00,670
+I don't want to receive these types
+of messages from these peers.
+
+201
+00:16:00,670 --> 00:16:06,125
+So it filters those before,
+it goes into a selection process.
+
+202
+00:16:06,125 --> 00:16:11,706
+Then that selection process
+puts all this information
+
+203
+00:16:11,706 --> 00:16:16,083
+into the local routing information base.
+
+204
+00:16:16,083 --> 00:16:21,525
+So this is just a database of all
+the routes that you've learned and
+
+205
+00:16:21,525 --> 00:16:24,247
+down into the forwarding table,
+
+206
+00:16:24,247 --> 00:16:29,026
+which are the ones specifically
+that were chosen as best.
+
+207
+00:16:29,026 --> 00:16:34,300
+All right, now for the Egress side,
+what you're announcing.
+
+208
+00:16:34,300 --> 00:16:38,761
+So you've chosen something
+as a best route.
+
+209
+00:16:38,761 --> 00:16:41,928
+Well, now it goes through
+your output policies.
+
+210
+00:16:41,928 --> 00:16:47,172
+These are kind of Egress filters
+that then get propagated.
+
+211
+00:16:47,172 --> 00:16:52,071
+So maybe it's in the case of the consumer,
+well, it doesn't want to
+
+212
+00:16:52,071 --> 00:16:57,057
+announce things to AS100 anything
+that it learned from AS200,
+
+213
+00:16:57,057 --> 00:17:00,877
+so that AS100 wouldn't
+send traffic through it.
+
+214
+00:17:00,877 --> 00:17:08,178
+So it sets an output policy, a filter to
+make it, so that that's not possible.
+
+215
+00:17:08,178 --> 00:17:15,716
+So now with all that context,
+this is how we calculate a best path.
+
+216
+00:17:15,716 --> 00:17:22,722
+This is how BGP, a given router chooses
+which route to choose as is best and
+
+217
+00:17:22,722 --> 00:17:29,391
+it's basically this kind of prioritized
+list that it just goes down.
+
+218
+00:17:29,391 --> 00:17:32,518
+So looks at a thing
+called local preference.
+
+219
+00:17:32,518 --> 00:17:37,892
+So a network administrator could come
+in and put a little tag on something.
+
+220
+00:17:37,892 --> 00:17:40,767
+It says, I actually prefer this route.
+
+221
+00:17:40,767 --> 00:17:46,727
+So it's kind of that manual fudging, but
+that would take the highest preference.
+
+222
+00:17:46,727 --> 00:17:52,825
+And so it's a numerical value that's
+assigned by some routing policy.
+
+223
+00:17:52,825 --> 00:17:56,139
+The next would be the AS path length.
+
+224
+00:17:56,139 --> 00:18:01,637
+And so we saw this the AS3 and
+AS2 were choosing
+
+225
+00:18:01,637 --> 00:18:07,003
+the length one path over
+the length two paths.
+
+226
+00:18:07,003 --> 00:18:12,128
+All right, so that would be
+the next kind of decision point.
+
+227
+00:18:12,128 --> 00:18:15,343
+After that, if the paths are equal,
+
+228
+00:18:15,343 --> 00:18:19,407
+the next thing to look at
+is a field called MED.
+
+229
+00:18:19,407 --> 00:18:20,576
+We didn't really get into this.
+
+230
+00:18:20,576 --> 00:18:24,470
+It's called the multiple
+exit discriminator and
+
+231
+00:18:24,470 --> 00:18:30,030
+this is the case where if you have
+kind of two exit points, a neighboring
+
+232
+00:18:30,030 --> 00:18:35,701
+AS can tell you this is the one I would
+prefer you to send traffic through.
+
+233
+00:18:35,701 --> 00:18:40,393
+And so
+that's another component of this decision.
+
+234
+00:18:40,393 --> 00:18:47,748
+The next is it would
+choose eBGP over iBGP.
+
+235
+00:18:47,748 --> 00:18:52,147
+So stuff that you've
+learned directly router,
+
+236
+00:18:52,147 --> 00:18:59,444
+it would choose that over things that it's
+learning through the iBGP process and
+
+237
+00:18:59,444 --> 00:19:03,536
+then the next would be
+the shortest IGP path.
+
+238
+00:19:03,536 --> 00:19:11,116
+So IGP is just referring to
+the internal kind of routing protocols.
+
+239
+00:19:11,116 --> 00:19:16,989
+So OSPF, if there was a shortest
+path learned through OSPF,
+
+240
+00:19:16,989 --> 00:19:20,106
+it's going to kind of choose that.
+
+241
+00:19:20,106 --> 00:19:27,213
+And then finally, have an arbitrary
+tiebreaker of some arbitrary router ID.
+
+242
+00:19:27,213 --> 00:19:31,101
+All right, so now we know kind of these
+
+243
+00:19:31,101 --> 00:19:36,003
+path calculations and
+how that BGP all works.
+
+244
+00:19:36,003 --> 00:19:40,824
+And we only scratch the surface of BNGP,
+but
+
+245
+00:19:40,824 --> 00:19:44,863
+have a good sense of how this works and
+
+246
+00:19:44,863 --> 00:19:50,744
+some of the kind of aspects
+of how the internet works.

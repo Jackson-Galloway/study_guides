@@ -1,0 +1,534 @@
+1
+00:00:09,227 --> 00:00:13,031
+All right,
+this time we're going to talk about,
+
+2
+00:00:13,031 --> 00:00:17,479
+the lack of a better word or
+title, Mapping IP Addresses.
+
+3
+00:00:17,479 --> 00:00:21,849
+We're going to learn about some of
+the more administrative aspects
+
+4
+00:00:21,849 --> 00:00:23,697
+of the kind of IP addresses.
+
+5
+00:00:23,697 --> 00:00:29,002
+That's how they're allocated,
+how they relate to the MAC addresses.
+
+6
+00:00:29,002 --> 00:00:33,230
+And how they get assigned
+when you're on a network.
+
+7
+00:00:35,170 --> 00:00:37,203
+So where this fits in,
+
+8
+00:00:37,203 --> 00:00:42,922
+this is kind of the overview of
+when we introduced this module.
+
+9
+00:00:42,922 --> 00:00:43,594
+And so we're here.
+
+10
+00:00:43,594 --> 00:00:49,446
+How are our addresses assigned and
+mapped to the link layer addresses?
+
+11
+00:00:49,446 --> 00:00:52,350
+So first, talking about allocation.
+
+12
+00:00:52,350 --> 00:00:56,874
+So part of what kind of makes IP addresses
+
+13
+00:00:56,874 --> 00:01:01,798
+useful is they have
+this property that it's
+
+14
+00:01:01,798 --> 00:01:07,256
+a effectively globally
+unique address to be able
+
+15
+00:01:07,256 --> 00:01:13,550
+to reach any device or
+any point in the internet.
+
+16
+00:01:13,550 --> 00:01:17,600
+And so there's kind of
+an organization called IANA,
+
+17
+00:01:17,600 --> 00:01:24,122
+the Internet Assigned Numbers Authority
+that performs this global coordination.
+
+18
+00:01:24,122 --> 00:01:29,541
+And then you have local registries
+called Regional Registries or
+
+19
+00:01:29,541 --> 00:01:33,978
+RIRs that manage the local
+IP address allocation.
+
+20
+00:01:33,978 --> 00:01:39,806
+So an example of one of these
+in North America would be ARIN.
+
+21
+00:01:39,806 --> 00:01:44,571
+And so you can go to their website
+shown here and make a request for
+
+22
+00:01:44,571 --> 00:01:47,450
+an IP address allocation.
+
+23
+00:01:47,450 --> 00:01:51,662
+So in that process,
+because of the scarcity,
+
+24
+00:01:51,662 --> 00:01:57,788
+especially of IPV4 addresses,
+you have to justify all of that.
+
+25
+00:01:57,788 --> 00:02:00,995
+So that's if you want
+to get them directly.
+
+26
+00:02:00,995 --> 00:02:05,067
+But then also
+the Internet Service Providers or
+
+27
+00:02:05,067 --> 00:02:12,530
+ISPs own large blocks of addresses and
+they can provide them to their customers.
+
+28
+00:02:12,530 --> 00:02:17,710
+And so that's another way
+to get some IP addresses.
+
+29
+00:02:19,570 --> 00:02:28,070
+Now the next kind of part of this is how
+do we map an IP address to a MAC address.
+
+30
+00:02:28,070 --> 00:02:31,869
+So we talked about on
+a Local Area Network.
+
+31
+00:02:31,869 --> 00:02:34,776
+So we have a laptop X and
+another one, Y and
+
+32
+00:02:34,776 --> 00:02:37,694
+some Ethernet switches in between them.
+
+33
+00:02:37,694 --> 00:02:41,676
+And we showed that when
+X wants to talk to Y,
+
+34
+00:02:41,676 --> 00:02:48,990
+it will put the destination MAC address
+as whatever Y's MAC address is.
+
+35
+00:02:48,990 --> 00:02:54,854
+But the chances are X,
+you probably know the IP address
+
+36
+00:02:54,854 --> 00:03:01,500
+of Y of some service more likely
+than knowing its MAC address.
+
+37
+00:03:01,500 --> 00:03:06,516
+And even more likely you
+know the name of the server,
+
+38
+00:03:06,516 --> 00:03:10,621
+which we'll know when we cover DNS later.
+
+39
+00:03:10,621 --> 00:03:15,410
+But what this provides is
+consistent communication
+
+40
+00:03:15,410 --> 00:03:19,978
+in a larger network if
+we're using IP addresses or
+
+41
+00:03:19,978 --> 00:03:23,692
+server names instead of MAC addresses.
+
+42
+00:03:23,692 --> 00:03:29,159
+But the actual communication at the link
+layer is done using MAC addresses.
+
+43
+00:03:29,159 --> 00:03:34,760
+So we need a way for X to be able to
+find out what is Y's MAC address.
+
+44
+00:03:36,330 --> 00:03:40,275
+And so the solution to this
+is a protocol called ARP for
+
+45
+00:03:40,275 --> 00:03:43,070
+Address Resolution Protocol.
+
+46
+00:03:43,070 --> 00:03:51,476
+And so how ARP works is when the laptop
+on the left wants to send out a packet,
+
+47
+00:03:51,476 --> 00:03:55,360
+send a message to some IP address.
+
+48
+00:03:56,530 --> 00:04:00,778
+Inside of the operating system
+is a table called an ARP table.
+
+49
+00:04:00,778 --> 00:04:03,341
+It will look up in the ARP table and say,
+
+50
+00:04:03,341 --> 00:04:07,160
+do I know the MAC address for
+this particular IP address?
+
+51
+00:04:07,160 --> 00:04:12,205
+And if so,
+it will put that inside of the frame and
+
+52
+00:04:12,205 --> 00:04:15,830
+send that into the network.
+
+53
+00:04:15,830 --> 00:04:20,146
+If it's not there,
+then it has to use the ARP protocol.
+
+54
+00:04:20,146 --> 00:04:25,246
+And so how this works is it
+broadcasts basically a message
+
+55
+00:04:25,246 --> 00:04:29,719
+that's saying I'm looking for
+some IP address.
+
+56
+00:04:29,719 --> 00:04:33,584
+And then asking the question
+what is your MAC address?
+
+57
+00:04:33,584 --> 00:04:35,382
+And so it sends that into the network.
+
+58
+00:04:35,382 --> 00:04:41,837
+And if we recall about broadcast,
+it will forward it out all of the ports.
+
+59
+00:04:41,837 --> 00:04:44,600
+And each of the destinations or
+
+60
+00:04:44,600 --> 00:04:49,600
+each of the kind of nodes on
+the network will receive it.
+
+61
+00:04:50,690 --> 00:04:55,486
+Only the one that actually
+has that IP address that's
+
+62
+00:04:55,486 --> 00:04:58,790
+being looked for will respond.
+
+63
+00:04:58,790 --> 00:05:07,279
+And so in here it's the one on the laptop
+on the right that's shown says that's me,
+
+64
+00:05:07,279 --> 00:05:12,753
+my MAC address is and
+then it fills in its MAC address.
+
+65
+00:05:12,753 --> 00:05:13,608
+All right and
+
+66
+00:05:13,608 --> 00:05:18,360
+that's a real simple protocol, but
+that's effectively how it works.
+
+67
+00:05:18,360 --> 00:05:22,934
+And we could see so
+shown here is a Wireshark capture.
+
+68
+00:05:22,934 --> 00:05:27,397
+So Wireshark is a tool that
+you can use to capture
+
+69
+00:05:27,397 --> 00:05:32,432
+traffic on a network from
+a network interface card.
+
+70
+00:05:32,432 --> 00:05:35,146
+And we can see a whole
+bunch of ARP traffic.
+
+71
+00:05:35,146 --> 00:05:39,550
+And then if you zoom in we could
+see the Ethernet frame and
+
+72
+00:05:39,550 --> 00:05:43,650
+we could see the destination
+is set to all f's.
+
+73
+00:05:43,650 --> 00:05:46,870
+That means it's a broadcast.
+
+74
+00:05:46,870 --> 00:05:52,888
+And it's this request of tell me.
+
+75
+00:05:52,888 --> 00:05:56,581
+So I'm the sender,
+here's my MAC address, but
+
+76
+00:05:56,581 --> 00:06:02,890
+the IP address that I'm looking for
+is 192.168.200.200.
+
+77
+00:06:02,890 --> 00:06:06,818
+And it's asking for the reply.
+
+78
+00:06:06,818 --> 00:06:08,896
+And then somewhere else,
+
+79
+00:06:08,896 --> 00:06:14,570
+another message would be that whoever
+has that address would respond.
+
+80
+00:06:16,750 --> 00:06:21,334
+Then the last piece is how do
+IP addresses get assigned?
+
+81
+00:06:21,334 --> 00:06:27,172
+So I have a laptop, I join a network,
+I have an IP address.
+
+82
+00:06:27,172 --> 00:06:28,740
+So how did it get there?
+
+83
+00:06:28,740 --> 00:06:33,012
+So there's kind of two main
+ways that this would happen.
+
+84
+00:06:33,012 --> 00:06:36,312
+One, would be you statically assign it.
+
+85
+00:06:36,312 --> 00:06:41,038
+So you can go into your operating
+system and shown here as a command.
+
+86
+00:06:41,038 --> 00:06:48,942
+In Linux and assign a specific IP
+address to a network interface.
+
+87
+00:06:48,942 --> 00:06:51,240
+And so this is showing for eth0.
+
+88
+00:06:51,240 --> 00:06:58,675
+The network interface eth0, it's showing
+to set the IP address of ten 10.1.1.10.
+
+89
+00:06:58,675 --> 00:07:03,334
+And why it's showing it has
+a prefix is it'll add a routing
+
+90
+00:07:03,334 --> 00:07:08,004
+table entry that kind of covers
+anything in that network.
+
+91
+00:07:08,004 --> 00:07:11,576
+It's basically saying I'm
+part of that Subnet, so
+
+92
+00:07:11,576 --> 00:07:14,510
+add an entry to the routing table locally.
+
+93
+00:07:15,890 --> 00:07:21,380
+The other main way would be dynamically
+and this is a lot more common.
+
+94
+00:07:21,380 --> 00:07:25,150
+And so there's a protocol called DHCP.
+
+95
+00:07:25,150 --> 00:07:29,110
+For Dynamic Host Configuration Protocol.
+
+96
+00:07:29,110 --> 00:07:34,538
+And this is something that as a client,
+when you connect to a network,
+
+97
+00:07:34,538 --> 00:07:37,788
+a lot of times it just
+runs as part of that.
+
+98
+00:07:37,788 --> 00:07:44,482
+But a lot of times there's a server on
+your network called the DHCP server.
+
+99
+00:07:44,482 --> 00:07:51,941
+And it's commonly the gateway router but
+the protocol goes basically DHCP discover,
+
+100
+00:07:51,941 --> 00:07:56,140
+which is you asking to be
+assigned an IP address.
+
+101
+00:07:57,150 --> 00:08:00,771
+The response would be an offer and
+
+102
+00:08:00,771 --> 00:08:05,354
+it would say great, I'm a DHCP server.
+
+103
+00:08:05,354 --> 00:08:07,572
+Here's something you could choose.
+
+104
+00:08:07,572 --> 00:08:10,164
+Now why you have this offer is,
+
+105
+00:08:10,164 --> 00:08:15,062
+well there might be multiple
+DHCP servers on the network.
+
+106
+00:08:15,062 --> 00:08:20,759
+And then you finally choose one of
+the offers and then you make the request,
+
+107
+00:08:20,759 --> 00:08:25,658
+which would get to the server and
+then the client acknowledges.
+
+108
+00:08:25,658 --> 00:08:29,288
+So this is all built into
+the operating system,
+
+109
+00:08:29,288 --> 00:08:34,840
+happens automatically, but
+this is the protocol that is actually run.
+
+110
+00:08:36,250 --> 00:08:37,404
+So with that,
+
+111
+00:08:37,404 --> 00:08:43,610
+we kind of saw some of the more
+administrative aspects of IP addresses.
+
+112
+00:08:43,610 --> 00:08:46,124
+And with that, we'll end here.
+
+113
+00:08:46,124 --> 00:08:47,450
+All right, thanks.
+
+114
+00:08:47,450 --> 00:08:47,950
+Bye.

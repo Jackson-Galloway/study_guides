@@ -1,0 +1,38 @@
+Let's go ahead and get
+started. This time, I just want to take
+a minute or so to give a suggested lab. I think when we really
+got into this content, we're building a lot more
+complex infrastructure, and auto-grading it
+poses a challenge, but what I would
+suggest is you can really validate it working
+or not on your own. I'd recommend really focusing on that load balancing
+and try to create a full on web service and focus more on the infrastructure
+than the actual content, and then add in the content, the actual service part of it. Let's focus on the
+backend servers. Maybe those could
+be simple flash gap like we used that
+returns the host name. That would be your
+actual content servers. I would recommend trying to use a internal network
+load balancer here. We're going to have
+some frontend servers, and then we're going to leverage this internal ability to
+do network load balancing. That should use Andromeda. Also, we'll have these
+frontend servers, and this can also
+be flask that just calls the backend and
+returns the host end, so the host name of this guy plus the
+backend returned value, which would be the
+host name of that. It might be like
+returning two host names, which frontend and
+then which backend server that it went through. Then I would, for this, have an external
+application load balancer. That's what we demonstrated. I would start with an
+unmanaged instance group , start at regional. I would expand to auto-scaled, maybe just focus on the
+frontend part of that, expand to a global
+load balancing, and try to generate as
+much request as you can. There's a benchmarking software out there that you could
+use where you could just write your own and try to send as many HTTP
+requests as you can. Then expand to a
+global load balancing across two regions, so split the frontend
+across different regions. Follow that, and you'll see
+all the nuanced differences. With that, that's going to be the suggested programming
+assignment. It'll be graded. I think it is technically
+graded and it'll just have a reflective question, but either way go for it. Actually, no, it's not graded. Well, either way,
+it doesn't matter. With that, we will
+end here. Thanks.

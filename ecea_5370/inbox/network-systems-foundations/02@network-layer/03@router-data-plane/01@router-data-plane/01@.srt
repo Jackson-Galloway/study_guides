@@ -1,0 +1,1669 @@
+1
+00:00:09,680 --> 00:00:12,500
+Let's go in and jump in to
+
+2
+00:00:12,500 --> 00:00:15,040
+talk about the
+router data plane.
+
+3
+00:00:15,040 --> 00:00:22,410
+This is a topic that I find
+fascinating for some reason.
+
+4
+00:00:22,410 --> 00:00:24,940
+These routers, the actual
+
+5
+00:00:24,940 --> 00:00:29,320
+devices themselves are
+taking for granted.
+
+6
+00:00:29,320 --> 00:00:32,790
+We do all networking all day,
+
+7
+00:00:32,790 --> 00:00:37,540
+and we take for granted
+the network just
+
+8
+00:00:37,540 --> 00:00:39,680
+works a lot of times
+and it's due to
+
+9
+00:00:39,680 --> 00:00:42,660
+the routers in the
+design of them.
+
+10
+00:00:42,660 --> 00:00:44,580
+It's really fascinating.
+There's a lot of
+
+11
+00:00:44,580 --> 00:00:46,520
+innovation that went into it.
+
+12
+00:00:46,520 --> 00:00:51,500
+We're going to take a quick
+peek at what's inside,
+
+13
+00:00:51,500 --> 00:00:54,340
+how these routers are designed,
+
+14
+00:00:54,340 --> 00:01:00,130
+and then go from there.
+
+15
+00:01:00,130 --> 00:01:02,895
+We're calling it a router.
+
+16
+00:01:02,895 --> 00:01:05,300
+What is the role of a router?
+
+17
+00:01:05,300 --> 00:01:08,000
+The first main role
+
+18
+00:01:08,000 --> 00:01:11,180
+is we talked about this
+gateway last time.
+
+19
+00:01:11,180 --> 00:01:14,540
+The gateway when we
+have a land which
+
+20
+00:01:14,540 --> 00:01:17,380
+has a link layer
+technology that needs
+
+21
+00:01:17,380 --> 00:01:20,500
+to connect to a
+different network
+
+22
+00:01:20,500 --> 00:01:23,440
+that has a different
+link layer technology,
+
+23
+00:01:23,440 --> 00:01:27,175
+different administrative
+domain, whatever it is.
+
+24
+00:01:27,175 --> 00:01:30,540
+The gateway is that
+border that interface
+
+25
+00:01:30,540 --> 00:01:34,980
+between one network
+and the other.
+
+26
+00:01:34,980 --> 00:01:38,140
+The second main
+role of a router,
+
+27
+00:01:38,140 --> 00:01:41,120
+and they're
+intertwined, is really
+
+28
+00:01:41,120 --> 00:01:45,200
+about forwarding traffic
+to some destination.
+
+29
+00:01:45,200 --> 00:01:49,740
+This is where the
+Internet comes in,
+
+30
+00:01:49,740 --> 00:01:51,840
+and this is the
+interconnection of a bunch
+
+31
+00:01:51,840 --> 00:01:54,460
+of networks that all work
+
+32
+00:01:54,460 --> 00:01:55,840
+together to allow for
+
+33
+00:01:55,840 --> 00:02:01,585
+this global reachability
+of any given traffic.
+
+34
+00:02:01,585 --> 00:02:04,890
+That's the main
+roles of a router.
+
+35
+00:02:04,890 --> 00:02:07,470
+A lot of times you
+
+36
+00:02:07,470 --> 00:02:10,530
+hear these two words,
+forwarding and routing,
+
+37
+00:02:10,530 --> 00:02:12,350
+and a lot of times you hear
+
+38
+00:02:12,350 --> 00:02:18,290
+them spoken as if they're
+the same word or same thing.
+
+39
+00:02:18,290 --> 00:02:20,970
+They're actually two
+different things.
+
+40
+00:02:20,970 --> 00:02:23,530
+Forwarding really refers to
+
+41
+00:02:23,530 --> 00:02:25,610
+the data plane of the network.
+
+42
+00:02:25,610 --> 00:02:28,470
+This is the thing that directs
+
+43
+00:02:28,470 --> 00:02:32,775
+a data packet to some
+output port or link,
+
+44
+00:02:32,775 --> 00:02:36,880
+and this is the thing that
+uses a forwarding table.
+
+45
+00:02:36,880 --> 00:02:41,115
+The routing, which is
+the control plane,
+
+46
+00:02:41,115 --> 00:02:45,870
+this is the coordination
+between different routers.
+
+47
+00:02:45,870 --> 00:02:49,050
+This is the thing that
+computes the paths by
+
+48
+00:02:49,050 --> 00:02:52,605
+coordinating with all
+of its neighbors,
+
+49
+00:02:52,605 --> 00:02:56,810
+and its job is to create
+the forwarding table.
+
+50
+00:02:56,810 --> 00:03:00,410
+All the routers have
+both the data plane,
+
+51
+00:03:00,410 --> 00:03:03,530
+which is the actual
+traffic handling,
+
+52
+00:03:03,530 --> 00:03:06,270
+and a control plane which is
+
+53
+00:03:06,270 --> 00:03:10,740
+the coordination
+with the neighbors.
+
+54
+00:03:11,070 --> 00:03:15,530
+We're going to look
+at packet forwarding.
+
+55
+00:03:15,530 --> 00:03:18,750
+How this all works,
+
+56
+00:03:18,750 --> 00:03:21,990
+like we said this control
+plane and showed in
+
+57
+00:03:21,990 --> 00:03:25,070
+this diagram as a
+route processor,
+
+58
+00:03:25,070 --> 00:03:27,010
+which is software running
+
+59
+00:03:27,010 --> 00:03:29,585
+on a general-purpose processor,
+
+60
+00:03:29,585 --> 00:03:32,920
+doing stuff to calculate
+the forwarding table.
+
+61
+00:03:32,920 --> 00:03:34,750
+In the data plane,
+
+62
+00:03:34,750 --> 00:03:38,170
+the life of a packet would
+typically be something
+
+63
+00:03:38,170 --> 00:03:39,970
+like the packet is
+
+64
+00:03:39,970 --> 00:03:43,320
+received at the ingress
+of a line card.
+
+65
+00:03:43,320 --> 00:03:48,070
+You could think of a line
+card as very similar to
+
+66
+00:03:48,070 --> 00:03:50,010
+a network interface card that
+
+67
+00:03:50,010 --> 00:03:52,870
+has where the cables
+are plugged into it,
+
+68
+00:03:52,870 --> 00:03:55,015
+has some functionality on it.
+
+69
+00:03:55,015 --> 00:03:57,285
+On that line card,
+
+70
+00:03:57,285 --> 00:04:01,480
+we would do look-up
+of the destination in
+
+71
+00:04:01,480 --> 00:04:03,600
+a forwarding table
+to determine where
+
+72
+00:04:03,600 --> 00:04:06,360
+the output port would be,
+
+73
+00:04:06,360 --> 00:04:08,900
+which direction to forward it,
+
+74
+00:04:08,900 --> 00:04:10,760
+send the packet over
+
+75
+00:04:10,760 --> 00:04:14,470
+some switching fabric
+to an output port,
+
+76
+00:04:14,470 --> 00:04:18,300
+and then the line card
+then transmits the packet.
+
+77
+00:04:18,300 --> 00:04:20,560
+We'll dive in a little bit what
+
+78
+00:04:20,560 --> 00:04:23,100
+that switching
+fabric looks like.
+
+79
+00:04:23,100 --> 00:04:25,940
+We're going to look
+at these two parts.
+
+80
+00:04:25,940 --> 00:04:28,760
+We're going to look at the
+processing that happens,
+
+81
+00:04:28,760 --> 00:04:33,080
+as well as what does that
+switch fabric look like.
+
+82
+00:04:34,000 --> 00:04:37,320
+The processing here
+we're referring to
+
+83
+00:04:37,320 --> 00:04:41,680
+what is happening inside
+of these line cards.
+
+84
+00:04:41,740 --> 00:04:46,540
+Shown here is a generic
+router architecture
+
+85
+00:04:46,540 --> 00:04:49,515
+for those line cards.
+
+86
+00:04:49,515 --> 00:04:52,695
+Highly simplified,
+made high-level,
+
+87
+00:04:52,695 --> 00:04:56,260
+but it shows the key
+components of it.
+
+88
+00:04:56,990 --> 00:05:00,090
+We have a packet that would
+
+89
+00:05:00,090 --> 00:05:04,690
+be received shown on
+the left hand side.
+
+90
+00:05:04,960 --> 00:05:08,630
+The main processing that
+happens is you're looking up
+
+91
+00:05:08,630 --> 00:05:13,400
+the IP address inside
+of a forwarding table,
+
+92
+00:05:13,400 --> 00:05:16,910
+and then you do some
+updates to the header.
+
+93
+00:05:16,910 --> 00:05:20,840
+For example, we talked about
+the time to leave field,
+
+94
+00:05:20,840 --> 00:05:22,100
+so that would be something like
+
+95
+00:05:22,100 --> 00:05:24,890
+decermenting the
+time to leave field.
+
+96
+00:05:24,890 --> 00:05:27,980
+Then now that we know
+where to send it,
+
+97
+00:05:27,980 --> 00:05:31,610
+we que the packet up
+inside of a buffer,
+
+98
+00:05:31,610 --> 00:05:34,175
+and then when it's
+ready to be sent,
+
+99
+00:05:34,175 --> 00:05:35,960
+it can be sent on its way.
+
+100
+00:05:35,960 --> 00:05:38,720
+The key challenge where a lot of
+
+101
+00:05:38,720 --> 00:05:41,270
+the research over the years came
+
+102
+00:05:41,270 --> 00:05:43,820
+in was on how to do a
+
+103
+00:05:43,820 --> 00:05:47,400
+look up of an IP
+address really fast.
+
+104
+00:05:49,390 --> 00:05:53,045
+This is actually a
+challenge and interesting.
+
+105
+00:05:53,045 --> 00:05:56,135
+Let's compare it
+first to Ethernet.
+
+106
+00:05:56,135 --> 00:05:58,280
+Ethernet we saw
+that you're doing
+
+107
+00:05:58,280 --> 00:06:01,670
+this match on this
+destination Mac address.
+
+108
+00:06:01,670 --> 00:06:06,740
+The addresses are structured
+around the vendors,
+
+109
+00:06:06,740 --> 00:06:11,030
+we said last time that
+it's this flat address,
+
+110
+00:06:11,030 --> 00:06:15,575
+and it really has no relation to
+
+111
+00:06:15,575 --> 00:06:18,200
+anything structure related to
+
+112
+00:06:18,200 --> 00:06:20,330
+how to forward it
+in the network.
+
+113
+00:06:20,330 --> 00:06:22,220
+Because you can have
+devices from a lot of
+
+114
+00:06:22,220 --> 00:06:25,115
+different vendors and
+things like that.
+
+115
+00:06:25,115 --> 00:06:31,680
+Lookup in the Mac Address
+tables are exact matches.
+
+116
+00:06:32,680 --> 00:06:37,790
+Now let's compare that in IP,
+
+117
+00:06:37,790 --> 00:06:41,795
+what we're actually doing is
+matching on an IP prefix.
+
+118
+00:06:41,795 --> 00:06:43,760
+We talked about how you get
+
+119
+00:06:43,760 --> 00:06:48,620
+that scalability
+in the Internet as
+
+120
+00:06:48,620 --> 00:06:52,325
+a whole is by being
+able to group
+
+121
+00:06:52,325 --> 00:06:57,440
+a bunch of addresses together
+into these prefixes.
+
+122
+00:06:57,440 --> 00:07:00,350
+The challenge here
+is that we may
+
+123
+00:07:00,350 --> 00:07:03,950
+have prefixes that overlap.
+
+124
+00:07:03,950 --> 00:07:07,640
+Shown here is an example
+where we have two subnets,
+
+125
+00:07:07,640 --> 00:07:12,560
+one is 11.11.0.0/16.
+
+126
+00:07:12,560 --> 00:07:18,035
+Remember that means the
+upper 16 bits or where
+
+127
+00:07:18,035 --> 00:07:22,985
+each decimal in the dotted
+decimal, there's four of them.
+
+128
+00:07:22,985 --> 00:07:25,850
+Each of those represents
+eight bits of
+
+129
+00:07:25,850 --> 00:07:31,700
+uppermost decimals,
+points the 11.11.
+
+130
+00:07:31,700 --> 00:07:35,150
+Anything there, it covers that.
+
+131
+00:07:35,150 --> 00:07:36,590
+But then we have down here
+
+132
+00:07:36,590 --> 00:07:40,010
+a different subnet that's
+a little more specific,
+
+133
+00:07:40,010 --> 00:07:46,140
+it's the 11.11.11.0/24.
+
+134
+00:07:46,140 --> 00:07:51,320
+We may have two
+different IP addresses
+
+135
+00:07:51,320 --> 00:07:56,135
+or table entries for
+each of those prefix.
+
+136
+00:07:56,135 --> 00:08:00,950
+Maybe there's in one
+case go to the left,
+
+137
+00:08:00,950 --> 00:08:03,665
+and in other case
+you go to the right,
+
+138
+00:08:03,665 --> 00:08:07,560
+or in this case
+port 1 and port 2.
+
+139
+00:08:08,740 --> 00:08:14,015
+Now if we get this
+destination 11.11.11.11,
+
+140
+00:08:14,015 --> 00:08:17,120
+it's actually covered by both.
+
+141
+00:08:17,120 --> 00:08:21,245
+Then the question is which
+should we send it to?
+
+142
+00:08:21,245 --> 00:08:23,900
+This is where the concept of
+
+143
+00:08:23,900 --> 00:08:27,590
+longest prefix match comes in.
+
+144
+00:08:27,590 --> 00:08:32,480
+The job of the Lookup is to find
+
+145
+00:08:32,480 --> 00:08:37,835
+the most specific prefix that
+matches the destination.
+
+146
+00:08:37,835 --> 00:08:41,570
+How a situation like this
+might have occurred is, sure,
+
+147
+00:08:41,570 --> 00:08:45,095
+there might be one
+organization that has
+
+148
+00:08:45,095 --> 00:08:49,895
+ownership over 11.11.0.0/16,
+
+149
+00:08:49,895 --> 00:08:53,810
+but then they carved
+out a portion
+
+150
+00:08:53,810 --> 00:08:57,770
+of it for one
+department or whatever,
+
+151
+00:08:57,770 --> 00:08:59,690
+and that's actually in
+a different location,
+
+152
+00:08:59,690 --> 00:09:01,235
+has its own router.
+
+153
+00:09:01,235 --> 00:09:08,840
+Now basically for anything
+this subnet should go to here,
+
+154
+00:09:08,840 --> 00:09:13,895
+and then everything else
+would go to the other router.
+
+155
+00:09:13,895 --> 00:09:16,370
+That's a common
+situation that occurs.
+
+156
+00:09:16,370 --> 00:09:20,285
+It occurs through the
+aggregation process.
+
+157
+00:09:20,285 --> 00:09:24,600
+A bunch of different
+things that can occur.
+
+158
+00:09:24,700 --> 00:09:27,365
+Here we want to find
+
+159
+00:09:27,365 --> 00:09:33,420
+the most specific prefix that
+matches the destination.
+
+160
+00:09:33,480 --> 00:09:36,970
+To visualize this, we can view
+
+161
+00:09:36,970 --> 00:09:42,950
+the entire IPV force address
+space as a line right here,
+
+162
+00:09:42,950 --> 00:09:46,955
+from 0-232 - 1.
+
+163
+00:09:46,955 --> 00:09:49,790
+We have 32 bits,
+so this would be
+
+164
+00:09:49,790 --> 00:09:51,800
+all zeros and this would
+
+165
+00:09:51,800 --> 00:09:54,350
+be all ones on the
+right hand side.
+
+166
+00:09:54,350 --> 00:09:57,680
+Now, any of our prefixes covers
+
+167
+00:09:57,680 --> 00:10:02,585
+some portion of
+this address space,
+
+168
+00:10:02,585 --> 00:10:07,610
+with longer prefixes covering
+
+169
+00:10:07,610 --> 00:10:09,890
+a smaller amount of
+the address space,
+
+170
+00:10:09,890 --> 00:10:12,095
+because they're more specific.
+
+171
+00:10:12,095 --> 00:10:17,770
+The shorter prefixes,
+like a /8 up at the top,
+
+172
+00:10:17,770 --> 00:10:22,155
+covers a much wider
+range of address spaces.
+
+173
+00:10:22,155 --> 00:10:24,830
+Then any given address
+that we're given,
+
+174
+00:10:24,830 --> 00:10:29,385
+so for example, 11.5.50.50.
+
+175
+00:10:29,385 --> 00:10:32,915
+That's a single point
+in this address space,
+
+176
+00:10:32,915 --> 00:10:36,530
+and we can view it as
+looking as this line of
+
+177
+00:10:36,530 --> 00:10:40,890
+which is the first
+prefix that it matches.
+
+178
+00:10:40,890 --> 00:10:44,930
+In this case it's 11.5.0.0/16.
+
+179
+00:10:44,930 --> 00:10:50,395
+Another example 11.5.200.50.
+
+180
+00:10:50,395 --> 00:10:51,880
+Similar exercise,
+
+181
+00:10:51,880 --> 00:10:55,825
+and it actually hit right here,
+
+182
+00:10:55,825 --> 00:10:59,030
+and this is looking
+at a slash 24.
+
+183
+00:10:59,190 --> 00:11:03,910
+That's one way to visualize it.
+
+184
+00:11:03,910 --> 00:11:08,020
+But then another way to
+think about it is how might
+
+185
+00:11:08,020 --> 00:11:09,730
+this actually be
+implemented if you were
+
+186
+00:11:09,730 --> 00:11:12,740
+to implement it in code?
+
+187
+00:11:13,410 --> 00:11:16,735
+Here's an example of
+an address lookup
+
+188
+00:11:16,735 --> 00:11:21,160
+using a try data structure.
+
+189
+00:11:21,160 --> 00:11:25,460
+A try is just a type
+of a search tree.
+
+190
+00:11:26,610 --> 00:11:29,785
+When we start filling
+out this table,
+
+191
+00:11:29,785 --> 00:11:33,970
+what we do is each node can have
+
+192
+00:11:33,970 --> 00:11:42,235
+a child node that if the next
+bit in the value is zero,
+
+193
+00:11:42,235 --> 00:11:44,005
+you would go to the left.
+
+194
+00:11:44,005 --> 00:11:45,805
+If the next bit is a one,
+
+195
+00:11:45,805 --> 00:11:47,215
+you go to the right.
+
+196
+00:11:47,215 --> 00:11:51,040
+Then if there's a table
+entry that actually
+
+197
+00:11:51,040 --> 00:11:56,125
+matches at that particular
+node in the tree,
+
+198
+00:11:56,125 --> 00:11:59,830
+you would put the
+prefix match there.
+
+199
+00:11:59,830 --> 00:12:05,455
+For example, 100 starting
+at the root of the tree,
+
+200
+00:12:05,455 --> 00:12:07,390
+we would go one,
+
+201
+00:12:07,390 --> 00:12:10,570
+go to the right child.
+
+202
+00:12:10,570 --> 00:12:14,470
+Then we're here.
+The next is zero,
+
+203
+00:12:14,470 --> 00:12:15,775
+so you go to the left child,
+
+204
+00:12:15,775 --> 00:12:19,525
+and then the next value is
+zero and go to the left child.
+
+205
+00:12:19,525 --> 00:12:22,630
+Since that's the entirety
+of the prefix length,
+
+206
+00:12:22,630 --> 00:12:25,660
+we would put that P1
+
+207
+00:12:25,660 --> 00:12:29,770
+is right there in that entry
+right there, in that node.
+
+208
+00:12:29,770 --> 00:12:34,105
+Then we would go and
+add 11 for prefix 2.
+
+209
+00:12:34,105 --> 00:12:38,275
+One gets us to the right child,
+
+210
+00:12:38,275 --> 00:12:42,970
+and then go one again
+to the right child,
+
+211
+00:12:42,970 --> 00:12:45,880
+and we put the prefix 2 there.
+
+212
+00:12:45,880 --> 00:12:48,130
+We could just build out
+this tree whenever you're
+
+213
+00:12:48,130 --> 00:12:52,075
+adding and removing prefixes.
+
+214
+00:12:52,075 --> 00:12:55,600
+Whenever the forwarding
+table is updated,
+
+215
+00:12:55,600 --> 00:13:00,835
+you could just keep
+manipulating the tree.
+
+216
+00:13:00,835 --> 00:13:03,100
+Now to perform the lookup,
+
+217
+00:13:03,100 --> 00:13:06,370
+you would basically
+just walk the tree.
+
+218
+00:13:06,370 --> 00:13:10,630
+Here's the IP address
+and it's shortened,
+
+219
+00:13:10,630 --> 00:13:15,515
+just for illustration,
+we would walk this tree.
+
+220
+00:13:15,515 --> 00:13:17,520
+We would look at
+the first bit is a
+
+221
+00:13:17,520 --> 00:13:18,975
+one. We would go right.
+
+222
+00:13:18,975 --> 00:13:21,515
+The next bit is one,
+we would go right.
+
+223
+00:13:21,515 --> 00:13:23,920
+Now we hit a prefix,
+
+224
+00:13:23,920 --> 00:13:26,140
+but there may be
+a longer prefix.
+
+225
+00:13:26,140 --> 00:13:28,855
+We would keep
+traversing the tree.
+
+226
+00:13:28,855 --> 00:13:31,870
+Then the next bit is zero.
+
+227
+00:13:31,870 --> 00:13:33,955
+Great. There actually is a child
+
+228
+00:13:33,955 --> 00:13:36,265
+that's zero so we need
+to traverse that.
+
+229
+00:13:36,265 --> 00:13:38,860
+Then the next bit is zero.
+
+230
+00:13:38,860 --> 00:13:40,345
+Since there's no child,
+
+231
+00:13:40,345 --> 00:13:43,195
+we know that we hit the end,
+
+232
+00:13:43,195 --> 00:13:46,780
+and whatever the
+last prefix node
+
+233
+00:13:46,780 --> 00:13:49,345
+that matched was
+the longest prefix,
+
+234
+00:13:49,345 --> 00:13:51,770
+and in this case, it's P2.
+
+235
+00:13:52,740 --> 00:13:58,615
+That's a quick overview of
+the design of a line card.
+
+236
+00:13:58,615 --> 00:14:01,630
+There's a lot of interesting
+aspects that you can look
+
+237
+00:14:01,630 --> 00:14:04,870
+into and around the
+queuing aspect of that.
+
+238
+00:14:04,870 --> 00:14:08,860
+But we'll save that
+for a different time.
+
+239
+00:14:08,860 --> 00:14:12,685
+The next part is to look
+at this switch fabric.
+
+240
+00:14:12,685 --> 00:14:15,200
+What does that
+actually look like?
+
+241
+00:14:15,630 --> 00:14:20,890
+Here, it's useful to think
+about how these historically
+
+242
+00:14:20,890 --> 00:14:23,290
+evolve so that you
+can appreciate
+
+243
+00:14:23,290 --> 00:14:26,215
+the innovation at
+each generation.
+
+244
+00:14:26,215 --> 00:14:28,690
+Starting off in the
+first generation,
+
+245
+00:14:28,690 --> 00:14:31,660
+it was really
+switching via memory.
+
+246
+00:14:31,660 --> 00:14:35,830
+The interface would get the
+packet off of the wire.
+
+247
+00:14:35,830 --> 00:14:39,940
+It would transfer that from
+the interface into memory.
+
+248
+00:14:39,940 --> 00:14:42,280
+The processor would determine
+
+249
+00:14:42,280 --> 00:14:44,320
+the next top it would do that,
+
+250
+00:14:44,320 --> 00:14:46,255
+look up in the forwarding table,
+
+251
+00:14:46,255 --> 00:14:48,925
+and then transfer the
+packet from memory
+
+252
+00:14:48,925 --> 00:14:52,915
+to the appropriate
+output interface.
+
+253
+00:14:52,915 --> 00:14:55,420
+Now you can guess the limitation
+
+254
+00:14:55,420 --> 00:14:58,570
+here is the CPU processing.
+
+255
+00:14:58,570 --> 00:15:02,215
+It's limited in the amount
+of parallelism it can have.
+
+256
+00:15:02,215 --> 00:15:09,080
+It's also extra transfers
+and things like that.
+
+257
+00:15:09,420 --> 00:15:14,710
+The next generation looked
+at switching via a bus.
+
+258
+00:15:14,710 --> 00:15:16,930
+The main difference between
+
+259
+00:15:16,930 --> 00:15:19,885
+these two pictures is
+the forwarding table,
+
+260
+00:15:19,885 --> 00:15:21,505
+which was up here,
+
+261
+00:15:21,505 --> 00:15:22,900
+and this would be like
+
+262
+00:15:22,900 --> 00:15:25,795
+our operating system
+and our processor,
+
+263
+00:15:25,795 --> 00:15:31,525
+we pushed it down into the
+line cards themselves.
+
+264
+00:15:31,525 --> 00:15:38,650
+Now, we can look up where
+the package is destined for,
+
+265
+00:15:38,650 --> 00:15:40,195
+which port it should go on
+
+266
+00:15:40,195 --> 00:15:43,490
+directly on the interface card.
+
+267
+00:15:44,670 --> 00:15:48,220
+For this, the packet
+would be received,
+
+268
+00:15:48,220 --> 00:15:50,125
+look up in the forwarding table,
+
+269
+00:15:50,125 --> 00:15:52,210
+and then transfer the packet
+
+270
+00:15:52,210 --> 00:15:54,010
+over the system bus but instead
+
+271
+00:15:54,010 --> 00:15:57,835
+of going to memory
+of the system,
+
+272
+00:15:57,835 --> 00:16:02,140
+it would go directly out
+to another interface card.
+
+273
+00:16:02,140 --> 00:16:04,810
+Now, the limitation of
+
+274
+00:16:04,810 --> 00:16:08,020
+this system in this
+approach is you
+
+275
+00:16:08,020 --> 00:16:10,810
+can only transfer one packet
+
+276
+00:16:10,810 --> 00:16:14,410
+at a time over this system bus.
+
+277
+00:16:14,410 --> 00:16:20,335
+That is like this other
+network or line card.
+
+278
+00:16:20,335 --> 00:16:21,850
+Even if it receives something,
+
+279
+00:16:21,850 --> 00:16:23,980
+the system bus is busy and this
+
+280
+00:16:23,980 --> 00:16:26,305
+is similar to what we
+saw with Ethernet.
+
+281
+00:16:26,305 --> 00:16:29,600
+It's a shared wire.
+
+282
+00:16:29,940 --> 00:16:33,610
+The next generation introduced
+
+283
+00:16:33,610 --> 00:16:36,160
+this concept of a
+switching fabric.
+
+284
+00:16:36,160 --> 00:16:40,975
+This introduced parallelism
+via this fabric.
+
+285
+00:16:40,975 --> 00:16:43,165
+Shown here is an example,
+
+286
+00:16:43,165 --> 00:16:45,610
+something called a crossbar,
+
+287
+00:16:45,610 --> 00:16:49,705
+but there's other topologies
+that exist as well.
+
+288
+00:16:49,705 --> 00:16:54,850
+How these work is that it
+divides transfers up into
+
+289
+00:16:54,850 --> 00:16:59,650
+little time slots for
+any given time slot,
+
+290
+00:16:59,650 --> 00:17:02,590
+each input on the left is
+
+291
+00:17:02,590 --> 00:17:07,330
+the inputs can be connected
+to 01 of the output.
+
+292
+00:17:07,330 --> 00:17:09,325
+On the bottom is
+shown the outputs,
+
+293
+00:17:09,325 --> 00:17:11,740
+and so how it does
+it is it basically
+
+294
+00:17:11,740 --> 00:17:14,965
+takes these little interconnection
+points and then says,
+
+295
+00:17:14,965 --> 00:17:18,310
+you basically
+changed directions,
+
+296
+00:17:18,310 --> 00:17:20,320
+red would get traversed across,
+
+297
+00:17:20,320 --> 00:17:23,080
+and then at this second
+
+298
+00:17:23,080 --> 00:17:25,000
+little dot would get
+transferred down,
+
+299
+00:17:25,000 --> 00:17:28,495
+that's where it crosses into B.
+
+300
+00:17:28,495 --> 00:17:32,755
+Because these are
+completely different wires
+
+301
+00:17:32,755 --> 00:17:38,725
+B can be transferring something
+to C at the same time.
+
+302
+00:17:38,725 --> 00:17:43,940
+That's how a crossbar works.
+
+303
+00:17:45,480 --> 00:17:50,020
+The limitation of this is really
+
+304
+00:17:50,020 --> 00:17:55,010
+that it requires a
+specialized hardware.
+
+305
+00:17:57,260 --> 00:18:01,530
+It can make a lot of
+transfers simultaneously,
+
+306
+00:18:01,530 --> 00:18:06,040
+as in this biz but the
+specialized hardware,
+
+307
+00:18:06,040 --> 00:18:09,850
+this crossbar, is now an
+additional thing that's
+
+308
+00:18:09,850 --> 00:18:11,590
+needed and it's not
+
+309
+00:18:11,590 --> 00:18:15,595
+necessarily something we
+want to put in every system.
+
+310
+00:18:15,595 --> 00:18:18,490
+This is something
+that's highly popular,
+
+311
+00:18:18,490 --> 00:18:20,365
+like the big Internet routers.
+
+312
+00:18:20,365 --> 00:18:21,850
+The core routers will definitely
+
+313
+00:18:21,850 --> 00:18:23,815
+have something like this,
+
+314
+00:18:23,815 --> 00:18:27,430
+but we're also now seeing
+a fourth generation,
+
+315
+00:18:27,430 --> 00:18:31,240
+which is basically getting
+back to the first generation,
+
+316
+00:18:31,240 --> 00:18:33,115
+which is the switching via
+
+317
+00:18:33,115 --> 00:18:36,145
+memory Processors
+are getting faster.
+
+318
+00:18:36,145 --> 00:18:39,460
+We're getting more and
+more cores per processor.
+
+319
+00:18:39,460 --> 00:18:44,545
+We're getting more
+sockets per motherboard,
+
+320
+00:18:44,545 --> 00:18:47,140
+they're going to
+be interconnected.
+
+321
+00:18:47,140 --> 00:18:48,925
+We're moving towards
+
+322
+00:18:48,925 --> 00:18:52,105
+a Cloud and virtualized
+environments.
+
+323
+00:18:52,105 --> 00:18:54,895
+Those are gaining a
+lot of popularity.
+
+324
+00:18:54,895 --> 00:18:56,530
+We actually can start
+
+325
+00:18:56,530 --> 00:18:59,110
+doing some of the
+switching and some of
+
+326
+00:18:59,110 --> 00:19:05,785
+the network processing in
+all software in this model.
+
+327
+00:19:05,785 --> 00:19:08,830
+This doesn't necessarily
+mean that it's replacing
+
+328
+00:19:08,830 --> 00:19:11,320
+generation three but this is
+
+329
+00:19:11,320 --> 00:19:14,590
+actually has its
+place in the world
+
+330
+00:19:14,590 --> 00:19:19,460
+in combination with what's
+shown in generation three.
+
+331
+00:19:19,830 --> 00:19:26,335
+If you're like me and you
+find this fascinating topics,
+
+332
+00:19:26,335 --> 00:19:31,075
+there's a lot of different
+directions you can look into
+
+333
+00:19:31,075 --> 00:19:35,440
+the link scheduling to
+determine what to put onto
+
+334
+00:19:35,440 --> 00:19:40,885
+the wire to be round
+robin weighted priority,
+
+335
+00:19:40,885 --> 00:19:43,990
+because we talked about
+
+336
+00:19:43,990 --> 00:19:50,260
+this when you have
+multiple things sharing,
+
+337
+00:19:50,260 --> 00:19:52,375
+well now you are having
+
+338
+00:19:52,375 --> 00:19:54,130
+say multiple things
+that want to send
+
+339
+00:19:54,130 --> 00:19:57,955
+out traffic to say port
+B in that picture,
+
+340
+00:19:57,955 --> 00:20:00,640
+well, who should it be A or C
+
+341
+00:20:00,640 --> 00:20:04,305
+that gets to send
+something out port B?
+
+342
+00:20:04,305 --> 00:20:07,140
+Then what order should it go?
+
+343
+00:20:07,140 --> 00:20:09,960
+If we start getting
+a lot of congestion,
+
+344
+00:20:09,960 --> 00:20:13,710
+what is our approach
+to dropping packets?
+
+345
+00:20:13,710 --> 00:20:16,320
+Like how should we go about
+when that packet buffer
+
+346
+00:20:16,320 --> 00:20:20,485
+inside of the router
+actually gets filled up?
+
+347
+00:20:20,485 --> 00:20:23,200
+The other things, like there's
+
+348
+00:20:23,200 --> 00:20:26,260
+some additional capabilities
+we might be interested in,
+
+349
+00:20:26,260 --> 00:20:28,600
+like traffic shaping to force
+
+350
+00:20:28,600 --> 00:20:31,645
+traffic to conform
+to some policy.
+
+351
+00:20:31,645 --> 00:20:37,075
+Maybe we said all this
+particular network connection
+
+352
+00:20:37,075 --> 00:20:40,885
+should be limited to
+one gigabit per second,
+
+353
+00:20:40,885 --> 00:20:44,140
+how do we shape that
+traffic and rate limit
+
+354
+00:20:44,140 --> 00:20:47,590
+it to be able to enforce that?
+
+355
+00:20:47,590 --> 00:20:49,240
+Those are some
+additional things that
+
+356
+00:20:49,240 --> 00:20:50,770
+we're not covering right now,
+
+357
+00:20:50,770 --> 00:20:53,870
+but definitely
+interesting to look into.
+
+358
+00:20:54,720 --> 00:20:57,400
+All right, so next
+time we're going to
+
+359
+00:20:57,400 --> 00:20:59,335
+start getting into
+the control plane
+
+360
+00:20:59,335 --> 00:21:05,300
+and how routing works but
+for now, until then, thanks.

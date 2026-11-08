@@ -1,0 +1,103 @@
+So, we just went over load
+balancing in general. Now we'll get into the specific
+utility for Linux ipvs. So, ipvs and ipvsadm. So, here's link to the man page. But just to distinguish these two, and
+I kind of use them interchangeably, but ipvs implements transport layer
+load balancing inside the Linux kernel. And Ipvasadm is used to set up,
+maintain, or inspect the virtual server
+table in the Linux kernel. So this is the actual command that we'll
+be using and this is the service inside of the kernel which handles the packet
+processing to do the load balancing. Now, you must have the ipvs
+kernel module loaded, and you can load it with modprobe ip_vs. So, when you now want to create
+Linux as a load balancer to a set of servers,
+there's two main parts. So the first is you have
+to define the service. So what IP address is it,
+what port number is it, is it TCP, all of that kind of stuff. What scheduling algorithm
+we're going to use. And the second part is
+to define the servers. So we talked about the set
+of servers is important and that's what we're going to, so these
+are the two parts that we have to define. So, let's define the service. So, shown here, ipvs, and
+then here's from the kind of structure of the command,
+from the man page. And what we're going to do is we're
+going to walk through each part individually and we're going to
+have a running example down below. So once you see it kind
+of broken down this way, it makes it real simple to kind of define
+these and look at them on your own. So, the first part is the command. So here we're going to talk about if we
+want to add, edit, or delete a service. So, recall,
+the service is the public facing or the outward facing single IP
+address that clients connect to, and then it gets load
+balance to the servers. So the service, we gotta add first. All right, so, add, edit,
+delete, so ipvsadm- A. So next up is the protocol. So for the protocol,
+it'll be either TCP or UDP. So,- t, -u, so chances are it's
+going to be the TCP service. So we'll use that as our running example. So, -t. Next up is the service address, all right? So this is the publicly facing address. So it's in the form, host:port, the port part is optional. And a host may be one of a plain IP
+address or a hostname, all right? And then a port may be either a plain port
+number or the service name of a port. Here we'll just assume we're
+just going to use numbers. So we'll say, -t for
+the TCP and then the service address is 207.175.44.110 as the IP address, and
+then port 80 as the port. And then the last bit is
+the scheduling method. So, the scheduling method here is, we would specify with -s and
+then whatever the method is. So the method could be rr for
+round robin, lc for lease connection, sh for source hashing. They have some others, but these are the
+ones we covered in the last lesson, and so showing those as an example. All right, so we would have -s rr. All right, so then the next piece
+is now we have the service defined, we now need to define the servers or
+add servers to the server set. So here we would have a similar command,
+ipvsadm command, bunch of stuff. All right, so the commands, again,
+would be add, edit, or delete. And these are just lowercase
+versions of the previous, when we were adding a service. So, ipvsadmin- A, to add a server. So next up is the protocol and
+service address parts. So, basically, just match whatever
+was specified for adding the service. So here we're adding the service,
+we said -t, in this address. So just include that again
+when you're adding the server. Then the next part we're
+going to add the server address. And this is the address
+of the backend server. So for this, we would say -r and
+then the server address. But before we add that into an example, we need to talk about
+packet-forwarding method first. So let me take a quick aside here. Actually it's going to be, well,
+so it's sort of an aside, but it's going to talk about this
+packet-forwarding method first, because that influences what you
+have to put for the server address. So, the packet-forwarding
+method can be one of g, i, or m, for gatewaying, ip and ip, encapsulation, or masquerading. So, what this really means is, what is
+the address that's seen right here? What does this kind of look like? So in gatewaying, there's going to
+be no change in the address. So this is the default,
+they also call it direct routing, but you don't have the change,
+there's no address translation here. Challenge with that is if you're
+going to have the same IP address for each of the servers,
+well then it's going to happen at the kind of Mac address level,
+that something needs to change. And so
+that adds a little extra complexity. Ip and ip encapsulation is basically
+going to tunnel to the particular server. And then masquerading will be using
+network address translation or NAT to direct to the server. So, for the most part, just assume you're
+going to be using masquerading, but feel free to kind of play around with these
+other ones and see what they're all about. As an aside, let me talk about
+direct server return or DSR. So, when a server, so
+client sends a request to the server, the server is going to respond. Now, when a server replies to the request,
+how is the traffic forwarded? So the first option is to go back
+through the load balancer, all right? Certainly seems reasonable. It has all the address translation and
+all that kind of stuff. Option 2, which is widely
+used in production services, is to directly respond to the client,
+bypassing the load balancer. So this keeps the load
+less on the load balancer. So it just needs to make the translations,
+but this requires support on the server
+side to be able to handle this as well. But this is something called DSR or
+direct server return. And I only want to mention that just so
+that if you see this, you're kind of aware what it is. All right, so now back to adding a server, the server address part at
+the address of the backend server, we would say -r real server address. And so with masquerading, the port can be different
+from the service, and with tunneling or direct routing,
+the port must be equal. In this example,
+we're just going to keep it equal. We're going to use masquerading -m, and the real server that we're
+adding is 192.168.10.1, port 80. All right, and then,
+a final extra optional note is, if you have the different servers
+have different capacities, you can add a weighting to this. And so you can specify -w
+followed by some weight, and it's just an integer that specifies
+the capacity of the server. And it'll be used in
+algorithms with a weight. So for example, weighted round robin
+would use that, round robin would not. All right, so, with all that as the base,
+now it's time for you to go practice on your own. This is all in the GitHub repo,
+provided as a vagrant file. It's the same vagrant file and the same container lab setup
+that we use for iptables. And we're going to set up this
+topology where two external nodes, a gateway node and two internal nodes. And so what I would suggest and
+what we have a readme for with a bunch of commands that you can run,
+is run a service on these internal nodes. We're going to use a tool called NC to be
+able to kind of just do this real simply. And then run ipvsadm to load
+balance between those, and do this in various configurations and
+see what happens. And we're going to use NC on the client
+side to connect to this service. All right, so go practice on your own and see how these different
+commands all work together. And with that, we'll end here. Thanks.

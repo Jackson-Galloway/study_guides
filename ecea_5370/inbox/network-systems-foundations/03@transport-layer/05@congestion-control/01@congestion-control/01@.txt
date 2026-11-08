@@ -1,0 +1,105 @@
+Let's jump into talk
+about congestion control. In this video we're
+going to talk about congestion control
+in the general. Then the next video
+we'll get more specific about TCPs mechanism
+for congestion control. As a reminder, congestion
+in the network will occur. This is what can lead to
+packets being dropped. Now the question is what if the senders could detect
+this and back off as needed? This is the general concept
+of congestion control. Congestion happens in the
+network and we're controlling it by effectively sending
+less into the network. Let's look at how
+congestion happens. We've said this before,
+but to remind you, whenever the send rate out of a link is lower than
+the receive rate. This could occur maybe
+there's different bandwidths. You have one gigabit per second port and a 10
+gigabit per second port. If you're receiving off
+of the 10 gigabit per second port and
+trying to send out the one gigabit per second, well then there's a potential for some congestion
+to happen and you not to be able to send at the full rate that
+you're receiving. Another might be if you have, as we discussed with a router, these multiple ports,
+but they're all directing towards the
+same output port. Here's a real simple
+illustration. Let's say, the network, this router on the right hand, can transmit out this link
+one packet per unit time. It can receive on each of its ports one packet
+per unit time. The first time unit, we'll see that it
+receives packets 1 and 2. The next time unit, it's going to be
+able to transmit one of those packets so
+it'll transmit Packet 1. That's between this
+line or this column. In this column it's able
+to transmit Packet 1, but then it's going to
+receive Packets 3, and 4. Then it's going to be able
+to transmit Packet 2, and it's going to
+receive five and six. Transmit Packet 3, and then receive packets
+seven, and eight. You can see this buffer is just increasing the number of packets that are queued up, ready to be transmitted
+increases over time. This is starting
+to be congestion. What happens when
+congestion occurs? One of the things could be packets get dropped
+by the router. That's when we saw that there's only a limited amount of
+memory in these packet cues or the packet buffers and so the number of packets that we have to buffer up is too high. The router will
+start dropping them. Then what happens on the host? Well, we saw with TCP, well, it's going to detect
+that something wasn't received and it's going to be
+re-transmitted by the host. When it becomes
+re-transmitted, what happens? It just goes back into
+that router that's already congested and compounds
+the problem right there. The end result of this, if we don't actually
+take care of it, is something called
+congestion collapse. When we're nearing
+this capacity, the goodput decreases rapidly. What does goodput mean? That's basically actual
+packets that make it all the way from the source to the destination
+containing unique data. The re-transmitted data
+would decrease goodput, anything getting dropped
+decreases the goodput. As we're talking about just now is the buffers
+get full but the sending keeps overloading them so more and more packets are getting dropped and
+re-transmitted. What this leads to is
+congestion collapse. When we say offered load, that's the amount being sent. As you increase the number
+of packets being sent, the Good-put is the
+number of those that are successfully making it
+to the destination. At some point, it just collapse. You keep sending more and more, but then actually less and less makes it to
+the destination. This is where we introduced the concept of
+congestion control. Can we get the network to operate just before
+it collapses? Our goal is to make it
+efficient and fair. We want to be able to put in some control knobs
+to be able to say, well, at this point, you're
+starting to hit this point. Maybe we should not be increasing the
+offered load anymore. But we got to do it in an
+efficient and fair manner. What does efficient
+and fair mean? Here we can illustrate it. For fair means that each flow receives an equal
+share of the bandwidth on a link and then efficient means the full bandwidth
+of a link is used. To illustrate this, let's say we have those
+two hosts or two flows. This is the throughput. We're saying that
+the link can handle one unit of throughput. One packet per second
+or whatever that is. What this blue line
+represents is efficient, where the actual
+link is handling one unit of traffic
+per unit time. This could be all coming from Host 2 where it's sending and Host 1 is
+not sending anything, or it could be Host 1 is sending one full unit and Host 2 is not sending anything, or anywhere in between. In this line, it's efficient. We're using the full bandwidth. Fair is the concept of where they're sending
+equal amount. It's represented by
+this green line. You could see whatever we
+increase it to both Host 1 and Host 2 are sending the
+same amount, so that's fair. Efficient and fair. We want to get it as close to that point as possible
+right where they intersect. Now, anything above
+this blue line, all these red lines
+are indicated. This is the point where
+congestion will happen. If the combination
+between Host 1 and Host 2 is above this blue line, that means they're collectively sending more than that
+link can transmit. That's where congestion occurs. There's two basic general
+approaches that you can take towards this resource
+allocation problem to be able to handle
+this congestion, because that's
+really what this is. We want to be able to say Host 1 or flow 1 to send this amount, Host 2 or flow 2, you get to send this amount. If you do, we won't
+hit congestion. We can do this either in
+a reservation method, where in the network, you can reserve the
+bandwidth on each router. The other approach is a
+feedback and adjust approach. The hosts can
+detect that there's congestion and adjust the
+send rate accordingly. When we get into TCP
+congestion control, next time we'll dive into this. But as an overview, TCP falls more under
+that second category. Here, the senders can increase the sending rate until
+congestion occurs, then it decreases the send rate. The feedback that it
+receives is implicit, and we'll talk about
+what those signals are and uses a window
+based adjustment. It's detecting that there's congestion and
+adjusting accordingly, and so that's TCP. Next time we'll dive into TCP's congestion
+control mechanisms. Thanks.

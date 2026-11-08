@@ -1,0 +1,58 @@
+1
+00:00:08,880 --> 00:00:11,260
+In this programming assignment,
+
+2
+00:00:11,260 --> 00:00:12,620
+we're going to dive into
+
+3
+00:00:12,620 --> 00:00:15,560
+sockets programming and
+put your knowledge,
+
+4
+00:00:15,560 --> 00:00:19,800
+your learning of
+that into practice.
+
+5
+00:00:19,800 --> 00:00:22,110
+The task is going to be
+
+6
+00:00:22,110 --> 00:00:25,710
+a simple RPC system
+
+7
+00:00:25,710 --> 00:00:29,820
+and you're going to need
+to take into account
+
+8
+00:00:29,820 --> 00:00:33,340
+how to pack the data
+and things like that
+
+9
+00:00:33,340 --> 00:00:36,200
+such that the exchange of
+
+10
+00:00:36,200 --> 00:00:40,920
+messages between the client
+and the server match.
+
+11
+00:00:40,920 --> 00:00:47,160
+Some code is provided that
+will show you how the code,
+
+12
+00:00:47,300 --> 00:00:49,890
+the interaction should happen.
+
+13
+00:00:49,890 --> 00:00:53,980
+Then a bunch of test
+cases are also provided.

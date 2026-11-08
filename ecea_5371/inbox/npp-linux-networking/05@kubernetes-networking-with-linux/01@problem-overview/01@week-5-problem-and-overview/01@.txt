@@ -1,0 +1,91 @@
+Welcome. This time
+we're going to start a new module on
+Kubernetes networking. If you recall, we've been
+doing a lot with containers. Last module was all about
+Linux's support for network namespaces and
+how they relate to containers and we saw
+with Docker deployments. We went from being able to
+run stuff on bare metal or we discussed being
+able to run stuff running directly on bare metal where it's directly
+on the hardware. You run an operating system and then you can run your
+applications on top of it. We've discussed before
+that you then could also run it inside of a
+virtual machine and so that is just adding a
+layer of software called the hypervisor that then can make it so that you can run virtual machines which
+to them like into the operating system
+running inside of it looks like it's running
+directly on a machine. This allows you to run
+different operating systems on the same physical hardware. In the case where
+we're saying maybe your applications all are going to use the same
+operating system, we can optimize and make it more efficient and put the
+isolation mechanisms directly inside of
+the operating system and then run what's
+known as containers. Since this whole course is
+about Linux networking, this is the area where
+we've been focusing on, which is where we can add all the support for networking in this containerized
+environment. If you recall, we have
+used Docker throughout. Shown here is an overview
+of the architecture. It comes with a command Docker where you can run
+certain commands like docker run which will then send a request to a daemon
+running on a host. Could be the same
+machine or a different. This would grab start
+a container based on some base image that
+you have stored locally and if it's not local it will go off and
+pull it from a registry. This shows an example of
+a command that starts in a container starting with the Ubuntu image and it'll
+run this bin/bash command. It's great for running
+individual containers, but what about when you have
+a distributed application? A lot of times we have an application that
+looks like this, where you have some
+presentation layer, you have the logic layer, you have a data layer, and there's going
+to be communication between all of these
+different layers. Now imagine each of these is its own container and then we want to be able
+to run this on a cluster. It doesn't necessarily
+make sense to run this all on one machine, so we want to run it on
+a cluster of machines. The challenges here are, where do we run
+individual containers? How do we have them so they
+communicate with each other, especially if they're
+running across nodes? How can we scale the service? We've talked about the
+context of load balancing. A lot of times we
+run applications, one part of the service, if it's overloaded, to be able to run multiple
+instances of it. Then also, how do
+we handle failure? Like let's say, one
+of these nodes dies. Whether it's application error or maybe one of the
+physical nodes dies. Well, we want to be able
+to handle that failure. This is where
+Kubernetes comes in. Kubernetes is an open source container
+orchestration system for automating computer
+application deployment, scaling, and management. It handles all of those challenges that
+we just discussed. What it is, it's much like
+Docker comes with some executable that you
+can run commands with that interacts with
+a control plane. That control plane has a
+lot of this intelligence in it that can then swan
+off work to workers. All this will become a lot
+more clear as we go over it. But now let's look at the
+challenges. Where to run. Where do you run a
+given container? Well, Kubernetes which k8s is often used as an abbreviation because
+it starts with a k, there's eight letters,
+and then there's an s. That's just an abbreviation
+that you'll commonly say. It includes a scheduler that when you say
+run this container, it will pick a node and then it will deploy
+it automatically, get it to run on that node. How do you communicate
+each other? Kubernetes includes networking
+constructs that enables you to ensure communication
+in face of changes. Even if one of the
+containers changes nodes, you're still going to be able
+to have them communicate. That's something we'll discuss. Scaling the service, Kubernetes has constructs
+to support scaling. Then handling failure. It can monitor and restart
+containers as needed. Where we're going to go with
+this is we're first going to provide a quick
+start on Kubernetes. Go over the use of it, assuming you don't really
+know anything about it, maybe you've heard about it but haven't played with it yourself. If you're an expert
+in it, that's great, maybe you could certainly
+skip that lesson. But for those that aren't too familiar or need a refresher,
+we'll dive into that. Then we'll get into the architecture of
+Kubernetes a little bit, dive into how Kubernetes
+handles networking, and then we will take all of the stuff that we've learned
+throughout this course and apply it into creating a network plug
+in that you can run within Kubernetes that will do a lot of the networking
+stuff for Kubernetes. With that, we'll end here and we'll see you
+next time. Thanks.

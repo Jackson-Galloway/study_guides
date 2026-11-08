@@ -1,0 +1,1152 @@
+1
+00:00:09,622 --> 00:00:14,266
+All right, let's jump into
+an application protocol, HTTP.
+
+2
+00:00:15,844 --> 00:00:20,230
+So when you're visiting YouTube or
+any other service,
+
+3
+00:00:22,436 --> 00:00:26,750
+We need an application level protocol.
+
+4
+00:00:26,750 --> 00:00:31,765
+And so the transport provides
+the ability to communicate,
+
+5
+00:00:31,765 --> 00:00:38,264
+but the application layer tells us how
+do we actually structure that data?
+
+6
+00:00:38,264 --> 00:00:40,462
+How should these processes communicate?
+
+7
+00:00:40,462 --> 00:00:44,553
+How should I be able to tell YouTube,
+I want to watch this video?
+
+8
+00:00:44,553 --> 00:00:48,890
+Or at a different time here,
+I want to upload this video?
+
+9
+00:00:48,890 --> 00:00:54,300
+And then how do these processes
+encode the data such that the two
+
+10
+00:00:54,300 --> 00:00:59,808
+parts are effectively able to
+communicate with one another?
+
+11
+00:00:59,808 --> 00:01:05,870
+And so this is the application layer or
+application level protocol.
+
+12
+00:01:05,870 --> 00:01:13,310
+And so this application layer
+protocol defines these three things.
+
+13
+00:01:13,310 --> 00:01:17,857
+It defines the message syntax,
+that is, what fields,
+
+14
+00:01:17,857 --> 00:01:22,192
+how fields are delineated,
+and things like that.
+
+15
+00:01:22,192 --> 00:01:26,382
+It talks about the types of messages,
+exchanged,
+
+16
+00:01:26,382 --> 00:01:30,664
+such as is this a request and
+response type system?
+
+17
+00:01:30,664 --> 00:01:33,350
+Is this streaming?
+
+18
+00:01:33,350 --> 00:01:35,580
+How do the message exchange work?
+
+19
+00:01:35,580 --> 00:01:38,114
+And then the message semantics.
+
+20
+00:01:38,114 --> 00:01:42,083
+That is,
+the meaning of information in the fields.
+
+21
+00:01:43,530 --> 00:01:48,912
+So looking at the message syntax,
+the requirement here is that the receiver
+
+22
+00:01:48,912 --> 00:01:54,670
+needs to be able to extract the same
+message as what the transmitter sent.
+
+23
+00:01:54,670 --> 00:01:58,517
+And there's many different
+considerations for
+
+24
+00:01:58,517 --> 00:02:03,466
+how we might actually go about
+this based on different goals.
+
+25
+00:02:03,466 --> 00:02:06,880
+We might have a goal of debuggability, or
+
+26
+00:02:06,880 --> 00:02:12,728
+maybe our main concern is bandwidth or
+how much processing it takes.
+
+27
+00:02:12,728 --> 00:02:15,807
+And so,
+as you can see in this illustration,
+
+28
+00:02:15,807 --> 00:02:21,076
+we take this application data,
+put it through some presentation encoding,
+
+29
+00:02:21,076 --> 00:02:24,190
+which puts it into a sequence of messages.
+
+30
+00:02:24,190 --> 00:02:29,850
+And at the receiver side,
+it goes through a presentation decoding.
+
+31
+00:02:29,850 --> 00:02:37,338
+So next we're going to go over a taxonomy
+of this presentation covering data types,
+
+32
+00:02:37,338 --> 00:02:41,690
+conversion strategy, and tagging approach.
+
+33
+00:02:43,470 --> 00:02:45,452
+So, data types.
+
+34
+00:02:45,452 --> 00:02:50,399
+So if you've programmed, you know
+that there's different types of data
+
+35
+00:02:50,399 --> 00:02:54,943
+that we use in our programs, but
+these are also the types of things,
+
+36
+00:02:54,943 --> 00:02:58,650
+the information that we want
+to be able to exchange.
+
+37
+00:02:58,650 --> 00:03:03,623
+So there's going to be base
+types such as integers.
+
+38
+00:03:03,623 --> 00:03:11,301
+So the concern here is how many
+bits does an integer actually use?
+
+39
+00:03:11,301 --> 00:03:14,904
+Is it 16 bits, 32, 64?
+
+40
+00:03:14,904 --> 00:03:16,853
+Define what is an integer.
+
+41
+00:03:16,853 --> 00:03:21,346
+And then it's also important
+to define the order of bytes.
+
+42
+00:03:21,346 --> 00:03:26,754
+So you may have heard of the terms
+big-endian and little-endian.
+
+43
+00:03:26,754 --> 00:03:34,128
+And this is an illustration of the same
+number represented in two different ways.
+
+44
+00:03:34,128 --> 00:03:38,603
+And that's more associated
+with computer architecture.
+
+45
+00:03:38,603 --> 00:03:42,713
+But if you have two machines
+that are communicating,
+
+46
+00:03:42,713 --> 00:03:47,498
+one may be using big-endian,
+one may be using little-endian.
+
+47
+00:03:47,498 --> 00:03:52,273
+So we need to be able to
+how do they communicate.
+
+48
+00:03:52,273 --> 00:03:57,479
+The next major data type
+are what we call flat types.
+
+49
+00:03:57,479 --> 00:04:02,656
+And these are arrays or structures.
+
+50
+00:04:02,656 --> 00:04:10,258
+So the concern here would be things
+like the padding and the length.
+
+51
+00:04:10,258 --> 00:04:12,394
+How long are these?
+
+52
+00:04:12,394 --> 00:04:15,788
+How do we know how many
+elements are in array?
+
+53
+00:04:15,788 --> 00:04:20,156
+If there's a structure that has,
+so typically,
+
+54
+00:04:20,156 --> 00:04:25,668
+if we create a structure in C,
+the compiler might put some extra
+
+55
+00:04:25,668 --> 00:04:31,596
+padding to make it align to byte
+boundaries that are more fitting for
+
+56
+00:04:31,596 --> 00:04:35,652
+the machine that it's
+going to be running on.
+
+57
+00:04:35,652 --> 00:04:40,394
+But again, if we have different machines,
+those decisions might be different,
+
+58
+00:04:40,394 --> 00:04:44,390
+so we need to have these things
+defined as part of the protocol.
+
+59
+00:04:44,390 --> 00:04:46,871
+And then lastly, complex types.
+
+60
+00:04:46,871 --> 00:04:53,651
+So think of these as things like trees or
+linked lists, maybe they have pointers.
+
+61
+00:04:53,651 --> 00:04:59,237
+And the challenge here, or
+the concern is that you must serialize or
+
+62
+00:04:59,237 --> 00:05:04,725
+flatten these representations such
+that you can transmit them and
+
+63
+00:05:04,725 --> 00:05:09,042
+share them across the medium,
+across the network.
+
+64
+00:05:10,430 --> 00:05:16,270
+So the next part of the taxonomy
+is the conversion strategy.
+
+65
+00:05:16,270 --> 00:05:21,375
+And so this is once we've determined
+on the representation and
+
+66
+00:05:21,375 --> 00:05:24,938
+all those definition of data types, well,
+
+67
+00:05:24,938 --> 00:05:30,068
+whose responsibility,
+how do we actually transmit in this?
+
+68
+00:05:30,068 --> 00:05:35,736
+Do we use, in the first case,
+a canonical intermediate form?
+
+69
+00:05:35,736 --> 00:05:41,531
+So this is where the sender
+does all its computation
+
+70
+00:05:41,531 --> 00:05:48,674
+in its own internal representation,
+then before it sends it,
+
+71
+00:05:48,674 --> 00:05:54,730
+it gets converted into
+some agreed upon format.
+
+72
+00:05:54,730 --> 00:05:59,690
+Then when it gets to the receiver,
+the receiver then converts that agreed
+
+73
+00:05:59,690 --> 00:06:03,550
+upon format into its own
+internal representation.
+
+74
+00:06:03,550 --> 00:06:07,814
+So there's this conversion that's
+happening both at the send side and
+
+75
+00:06:07,814 --> 00:06:09,890
+at the receive side.
+
+76
+00:06:09,890 --> 00:06:13,662
+And there's this agreed upon format, and
+
+77
+00:06:13,662 --> 00:06:17,550
+that's the format that gets transmitted.
+
+78
+00:06:18,930 --> 00:06:23,856
+The other way that you might do
+this as part of your conversion
+
+79
+00:06:23,856 --> 00:06:28,470
+strategy is what's called
+receiver makes right.
+
+80
+00:06:28,470 --> 00:06:35,369
+And so here the sender transmits the data
+in its internal representation and
+
+81
+00:06:35,369 --> 00:06:42,034
+then as part of that includes
+information about that representation.
+
+82
+00:06:42,034 --> 00:06:47,682
+So that's enough information, so now
+the receiver can convert from the sender's
+
+83
+00:06:47,682 --> 00:06:53,710
+representation to its own internal
+representation, if that's even needed.
+
+84
+00:06:53,710 --> 00:07:00,939
+And so this has the benefit of
+reducing the number of conversions,
+
+85
+00:07:00,939 --> 00:07:07,890
+but it also makes that conversion
+a little more complex.
+
+86
+00:07:07,890 --> 00:07:10,153
+But where this really works,
+
+87
+00:07:10,153 --> 00:07:15,830
+is it works well if the assumption
+is a homogeneous infrastructure.
+
+88
+00:07:15,830 --> 00:07:18,808
+If it's not the case that machine A and
+
+89
+00:07:18,808 --> 00:07:23,806
+B that are talking, one is big-endian,
+one is little-endian.
+
+90
+00:07:23,806 --> 00:07:29,190
+Well, why do we even need to make
+conversion to handle that case?
+
+91
+00:07:29,190 --> 00:07:34,918
+So if there's homogeneity, well,
+then let's just have the send or
+
+92
+00:07:34,918 --> 00:07:38,910
+send in its own internal representation.
+
+93
+00:07:38,910 --> 00:07:44,650
+And the assumption is the receiver
+has the same internal representation.
+
+94
+00:07:46,110 --> 00:07:52,294
+And then the final piece of this
+taxonomy is the tagging approach.
+
+95
+00:07:52,294 --> 00:07:57,343
+So we can see one approach
+is to go with untagged and
+
+96
+00:07:57,343 --> 00:08:01,950
+that's where you agree on the type.
+
+97
+00:08:01,950 --> 00:08:04,888
+Length and location of data.
+
+98
+00:08:04,888 --> 00:08:09,802
+So we've seen these in a lot
+of the kind of protocols
+
+99
+00:08:09,802 --> 00:08:15,230
+like TCP where it had this
+agreed upon header format.
+
+100
+00:08:15,230 --> 00:08:21,082
+And here it said bits 0
+through 16 are this field and
+
+101
+00:08:21,082 --> 00:08:28,192
+so forth and it's of this type and
+it's all that information.
+
+102
+00:08:28,192 --> 00:08:30,830
+So that's the untagged approach.
+
+103
+00:08:30,830 --> 00:08:35,768
+And then the tagged approach
+would be where you include
+
+104
+00:08:35,768 --> 00:08:39,416
+in the message some tags about the data,
+
+105
+00:08:39,416 --> 00:08:44,228
+like the type of the data and
+the length of the data.
+
+106
+00:08:44,228 --> 00:08:47,681
+And so we'll see this with
+some examples like JSON.
+
+107
+00:08:50,770 --> 00:08:56,006
+So now with that taxonomy of the syntax,
+
+108
+00:08:56,006 --> 00:09:02,166
+now it's about the semantics
+of the message and
+
+109
+00:09:02,166 --> 00:09:07,094
+we'll look at that through the lens of
+
+110
+00:09:07,094 --> 00:09:11,290
+an example protocol of HTTP.
+
+111
+00:09:11,290 --> 00:09:17,999
+So this is widely used, it's the web's
+application-layer protocol and
+
+112
+00:09:17,999 --> 00:09:24,422
+it's about a client in the server
+being able to exchange web objects.
+
+113
+00:09:24,422 --> 00:09:28,518
+So web objects can be a BLOB of HTML text,
+
+114
+00:09:28,518 --> 00:09:33,710
+it could be a JPEG image,
+it could be an audio file.
+
+115
+00:09:35,010 --> 00:09:40,921
+And the protocol is a request and
+response of request
+
+116
+00:09:40,921 --> 00:09:47,236
+between the client which
+are commonly like browsers and
+
+117
+00:09:47,236 --> 00:09:54,730
+getting a response from a server
+that has some information.
+
+118
+00:09:54,730 --> 00:09:57,795
+And these servers are all stateless,
+
+119
+00:09:57,795 --> 00:10:02,790
+they don't retain information
+about past client requests.
+
+120
+00:10:04,250 --> 00:10:08,964
+All right, so you've seen
+kind of URLs that look like this
+
+121
+00:10:08,964 --> 00:10:13,174
+down at the bottom and
+just breaking this apart.
+
+122
+00:10:13,174 --> 00:10:17,950
+That first part,
+the HTTP part is the protocol.
+
+123
+00:10:17,950 --> 00:10:24,190
+The next part,
+the www.example.com is the hostname and
+
+124
+00:10:24,190 --> 00:10:29,550
+the rest is some path that's
+used as part of HTTP.
+
+125
+00:10:31,830 --> 00:10:36,547
+So the message format looks like this.
+
+126
+00:10:36,547 --> 00:10:40,166
+So it's at the highest level, very simple.
+
+127
+00:10:40,166 --> 00:10:45,093
+You have some start line and
+then a carriage return line feed,
+
+128
+00:10:45,093 --> 00:10:49,639
+a message header and then a new line,
+then a blank line and
+
+129
+00:10:49,639 --> 00:10:52,636
+then the message body, all right?
+
+130
+00:10:52,636 --> 00:10:55,527
+And so on the request side,
+
+131
+00:10:55,527 --> 00:11:00,432
+that start line would
+have the request type and
+
+132
+00:11:00,432 --> 00:11:07,070
+then some extra information
+such as a path and a version.
+
+133
+00:11:07,070 --> 00:11:14,213
+And then the message header would
+then include various things
+
+134
+00:11:14,213 --> 00:11:19,576
+that are more information
+about the request.
+
+135
+00:11:19,576 --> 00:11:23,797
+So we're not going to get into
+what the message header and
+
+136
+00:11:23,797 --> 00:11:29,566
+all those different fields for HTTP,
+but this is the general structure.
+
+137
+00:11:29,566 --> 00:11:36,477
+So the response to that request,
+we'll see it's the same format.
+
+138
+00:11:36,477 --> 00:11:39,191
+It has that start line and
+
+139
+00:11:39,191 --> 00:11:44,103
+here it's the version,
+some status code and
+
+140
+00:11:44,103 --> 00:11:49,606
+then a bunch of information
+as part of the header.
+
+141
+00:11:49,606 --> 00:11:54,332
+An important part of this one
+is this last one that says
+
+142
+00:11:54,332 --> 00:11:59,796
+the Content-Type and
+it's saying that it's text/html and
+
+143
+00:11:59,796 --> 00:12:04,647
+this is how it's encoding
+the characters as 8-bit.
+
+144
+00:12:04,647 --> 00:12:05,981
+All right, and
+
+145
+00:12:05,981 --> 00:12:11,731
+then you would see the message body
+contains all of that HTML text.
+
+146
+00:12:14,230 --> 00:12:18,731
+So the HTTP message types
+that we saw in the request,
+
+147
+00:12:18,731 --> 00:12:23,592
+they can include all of these
+that are kind of shown here.
+
+148
+00:12:23,592 --> 00:12:29,090
+But the kind of key ones to
+know about are the GET and
+
+149
+00:12:29,090 --> 00:12:37,287
+this is where you're retrieving some
+web object identified in the URL.
+
+150
+00:12:37,287 --> 00:12:41,469
+Or POST where you're sending or PUT,
+
+151
+00:12:41,469 --> 00:12:46,968
+you're sending some
+information to the server.
+
+152
+00:12:46,968 --> 00:12:52,424
+So the GET is getting from and the POST or
+PUT is sending something to the server.
+
+153
+00:12:55,272 --> 00:13:00,652
+Now, diving into some of
+the data format examples,
+
+154
+00:13:00,652 --> 00:13:08,379
+we saw those tags in the message
+header like Content-Type, text/html.
+
+155
+00:13:08,379 --> 00:13:15,994
+So HTML is one example of data format,
+stands for Hypertext Markup Language.
+
+156
+00:13:15,994 --> 00:13:22,450
+It's really good for describing
+the appearance of a web page, for example.
+
+157
+00:13:22,450 --> 00:13:27,770
+And we're not going to
+really cover that but
+
+158
+00:13:27,770 --> 00:13:33,097
+you've seen probably examples of HTML.
+
+159
+00:13:33,097 --> 00:13:37,289
+On the right hand side there's
+something called JSON for
+
+160
+00:13:37,289 --> 00:13:40,090
+JavaScript Object Notation.
+
+161
+00:13:40,090 --> 00:13:45,275
+And this is something that's good for
+passing information,
+
+162
+00:13:45,275 --> 00:13:50,890
+widely used in APIs or
+Application Programming Interfaces.
+
+163
+00:13:50,890 --> 00:13:57,270
+And here you would see the Content-Type
+specified as application/json.
+
+164
+00:13:57,270 --> 00:14:00,451
+So since this might be
+a little less familiar,
+
+165
+00:14:00,451 --> 00:14:05,410
+we're going to dive into this
+a little bit to show what this is.
+
+166
+00:14:05,410 --> 00:14:12,816
+So as a quick overview in JSON, all of
+the data is in these value pairs and
+
+167
+00:14:12,816 --> 00:14:19,234
+name value pairs where you have this key,
+which is a string and
+
+168
+00:14:19,234 --> 00:14:23,801
+then the value which is any type,
+a string,
+
+169
+00:14:23,801 --> 00:14:29,250
+a number, an object,
+an array, a boolean, null.
+
+170
+00:14:31,210 --> 00:14:37,570
+Curly braces hold objects which
+are these lists of name value pairs.
+
+171
+00:14:37,570 --> 00:14:44,190
+And then square brackets hold
+arrays which are lists of values.
+
+172
+00:14:44,190 --> 00:14:51,580
+All right, so here's an example and we'll
+go through kind of line by line of this.
+
+173
+00:14:53,070 --> 00:15:00,560
+All right, so this is an example but
+we're going to use a different example.
+
+174
+00:15:01,810 --> 00:15:06,760
+We're going to use this example
+of top quarterbacks and
+
+175
+00:15:06,760 --> 00:15:10,170
+you could tell I'm an Eagles fan, so
+
+176
+00:15:10,170 --> 00:15:15,486
+I put Jalen Hurts as the first
+ranked best quarterback.
+
+177
+00:15:15,486 --> 00:15:18,157
+And then Daniel Jones of the Giants and
+
+178
+00:15:18,157 --> 00:15:22,424
+Dak Prescott of the Cowboys
+would be the second and third.
+
+179
+00:15:22,424 --> 00:15:27,930
+And then the Washington team,
+I don't even rank their quarterback.
+
+180
+00:15:27,930 --> 00:15:31,414
+So this is just me having fun,
+this is the source of this, this is Eric.
+
+181
+00:15:31,414 --> 00:15:36,498
+So if this was the information we wanted
+to send, this would be a JSON BLOB.
+
+182
+00:15:36,498 --> 00:15:39,470
+So this is why we're
+going to go line by line.
+
+183
+00:15:39,470 --> 00:15:46,544
+So the top level object name-value
+pairs are, there's two of them.
+
+184
+00:15:46,544 --> 00:15:53,040
+The first one is this TopQBs,
+that's the name or the key.
+
+185
+00:15:53,040 --> 00:15:58,508
+And then the value is this
+array shown in green.
+
+186
+00:15:58,508 --> 00:16:06,184
+The second name-value pair In this
+object is the source is the name or
+
+187
+00:16:06,184 --> 00:16:11,260
+the key and then Eric as the value and
+that's a string.
+
+188
+00:16:12,480 --> 00:16:16,637
+Now, if we go into looking
+inside this array,
+
+189
+00:16:16,637 --> 00:16:24,720
+we can see there's three elements in the
+array, so there's three array elements.
+
+190
+00:16:24,720 --> 00:16:31,880
+And this first array element is
+an object and it's highlighted.
+
+191
+00:16:31,880 --> 00:16:37,147
+And then within that object we could
+see that it's now its own object,
+
+192
+00:16:37,147 --> 00:16:40,620
+which has its own list of key value pairs.
+
+193
+00:16:40,620 --> 00:16:45,412
+So this is the first key or name rank.
+
+194
+00:16:45,412 --> 00:16:50,620
+And then the value would be the integer or
+number one.
+
+195
+00:16:50,620 --> 00:16:56,800
+And then we have another name or
+key which is player.
+
+196
+00:16:56,800 --> 00:17:00,590
+And then the value for that is an object.
+
+197
+00:17:01,920 --> 00:17:06,000
+All right, so then we have
+three of those element objects.
+
+198
+00:17:08,340 --> 00:17:13,633
+So you can go play with
+JSON once it kind of
+
+199
+00:17:13,633 --> 00:17:19,084
+makes sense, real easy to understand and
+
+200
+00:17:19,084 --> 00:17:23,460
+it conveys information in APIs.
+
+201
+00:17:24,840 --> 00:17:30,564
+Now, you might have seen that
+there's different versions of http.
+
+202
+00:17:30,564 --> 00:17:36,556
+So just to give a quick kind of
+highlight of what each version,
+
+203
+00:17:36,556 --> 00:17:42,152
+the main innovation or
+addition in each is in this table.
+
+204
+00:17:42,152 --> 00:17:46,594
+But first let's look at what
+an http request actually is.
+
+205
+00:17:46,594 --> 00:17:51,359
+So you have some client with
+a web browser, for example, and
+
+206
+00:17:51,359 --> 00:17:54,392
+it's initiating a TCP connection.
+
+207
+00:17:54,392 --> 00:17:57,628
+So it needs to do an http request.
+
+208
+00:17:57,628 --> 00:18:01,838
+But first that's running over TCP, so
+it makes the connection request, and
+
+209
+00:18:01,838 --> 00:18:04,580
+we saw the three way handshake.
+
+210
+00:18:04,580 --> 00:18:09,910
+And so that has round trip times,
+transmission times.
+
+211
+00:18:12,040 --> 00:18:18,014
+Then it's now time to make the request and
+
+212
+00:18:18,014 --> 00:18:21,260
+transmit the file.
+
+213
+00:18:21,260 --> 00:18:25,444
+And so if we add on the time to
+transmit the file, great, and
+
+214
+00:18:25,444 --> 00:18:27,980
+then we get the file received.
+
+215
+00:18:27,980 --> 00:18:32,413
+So in http 1.0, any web object that you're
+
+216
+00:18:32,413 --> 00:18:37,310
+requesting would go through
+that entire process.
+
+217
+00:18:40,080 --> 00:18:43,170
+So the first web object,
+you would do that.
+
+218
+00:18:43,170 --> 00:18:47,292
+Then a second web object, let's say
+there's two images you wanted to get from
+
+219
+00:18:47,292 --> 00:18:50,180
+the server, you would do the same thing.
+
+220
+00:18:50,180 --> 00:18:56,420
+So version 1.1, added the notion
+of persistent connections.
+
+221
+00:18:56,420 --> 00:19:01,354
+That just meant I don't
+close the TCP connection
+
+222
+00:19:01,354 --> 00:19:05,213
+once I've gotten that first object.
+
+223
+00:19:05,213 --> 00:19:09,216
+I can make a second request
+on the same TCP connection.
+
+224
+00:19:09,216 --> 00:19:16,884
+So this saves me the time for
+doing this TCP three way handshake.
+
+225
+00:19:16,884 --> 00:19:23,831
+And it also allows us to not have
+to overcome that slow start or
+
+226
+00:19:23,831 --> 00:19:29,281
+that kind of initial
+probing of the bandwidth or
+
+227
+00:19:29,281 --> 00:19:34,776
+the congestion levels
+inside of the network.
+
+228
+00:19:34,776 --> 00:19:37,441
+The more requests you put over this, well,
+
+229
+00:19:37,441 --> 00:19:40,770
+it's finding what that
+congestion window should be.
+
+230
+00:19:41,780 --> 00:19:45,740
+So that's this 1.1 and then in 2.0,
+
+231
+00:19:45,740 --> 00:19:49,760
+this allowed you to multiplex requests.
+
+232
+00:19:49,760 --> 00:19:55,104
+So you didn't have to do a request and
+then wait for a response.
+
+233
+00:19:55,104 --> 00:19:58,448
+Then do another request and
+then wait for a response.
+
+234
+00:19:58,448 --> 00:20:01,475
+You can request five, six,
+
+235
+00:20:01,475 --> 00:20:06,280
+whatever number of
+objects all in parallel.
+
+236
+00:20:07,420 --> 00:20:11,671
+And then finally the most recent 3.0,
+
+237
+00:20:11,671 --> 00:20:16,286
+it introduced this ability
+to use a different
+
+238
+00:20:16,286 --> 00:20:20,300
+protocol called QUIC instead of TCP.
+
+239
+00:20:21,520 --> 00:20:27,020
+So we didn't go over QUIC
+in the transport layer.
+
+240
+00:20:28,400 --> 00:20:33,305
+But it's certainly something
+that if you find this
+
+241
+00:20:33,305 --> 00:20:38,450
+topic interesting,
+something worth looking into.
+
+242
+00:20:38,450 --> 00:20:43,456
+All right, so that covers http and
+how it works.
+
+243
+00:20:43,456 --> 00:20:47,990
+And next time we're going to discuss QRPC.

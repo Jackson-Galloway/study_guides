@@ -1,0 +1,26 @@
+All right, let's go ahead and get started. So this is the start of a new module where
+we're going to be talking about network services. All right, so I found this, I don't know,
+marketing graphic from Google and you can,
+here's the link down at the bottom. But I thought it really captured a lot
+of things we're talking about, and we've actually seen two of these pictures. First, there's how the Cloud is organized, it captures that there's Google and
+other providers have this global infrastructure
+with data centers in a bunch of places organize the abstraction
+into these regions and into zones. We also saw that they have
+this physical infrastructure between the WAN and
+the Datacenter which we covered. And we saw this picture which came from the espresso slides from Google. This last picture that they're,
+that they showed really highlighted a lot of the network
+services that Google offers. So we already talked about three
+of them in previous modules, VPC, firewall rules and cloud Nat. And in the rest of this module we're
+going to be covering other ones, namely the load balancer, CDN and
+the premium and standard tiers. In the fifth module on hybrid
+networking we'll talk about some of the other connect
+oriented network services. As an outline of this module, we're going
+to give an introduction to load balancing. We're going to walk through
+an example of that inside of GCP. We'll have a little side discussion
+on a topic called auto scaling. We'll then get into how Google builds
+their load balancing infrastructure, namely a system called Maglev. And we'll also look at how Akamai,
+we'll introduce the concept of content distribution networks,
+see how it's done inside of Google. And then we'll get into
+some the academic work of seeing how Akamai has built
+their infrastructure. And with that we'll end here,
+all right, thanks.

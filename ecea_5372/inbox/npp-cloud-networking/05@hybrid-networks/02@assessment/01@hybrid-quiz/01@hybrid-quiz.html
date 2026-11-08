@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hybrid Quiz</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p></p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following are possible scenarios covered by technologies in GCP that were discussed in this module</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~z8jm2RudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A SaaS provider has an application deployed in both Google Cloud and AWS, and data must be kept consistent across databases deployed in each cloud. The data cannot traverse the public Internet for compliance reasons.</p></div></li>
+<li><input name="autoGradableResponseId~z8jm2RudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A company has legacy infrastructure in a co-location facility, and wants to migrate to the public cloud all of its stored data through a dedicated private connection to Google</p></div></li>
+<li><input name="autoGradableResponseId~z8jm2RudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>A company has two branch offices that need to share data, and traffic must be encrypted </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In setting up a VPN between GCP and a company’s local office, what steps are necessary:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0DnRHBudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Configure Load Balancing in GCP </p></div></li>
+<li><input name="autoGradableResponseId~0DnRHBudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Create a Cloud Router in GCP</p></div></li>
+<li><input name="autoGradableResponseId~0DnRHBudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Configure BGP in the company’s office</p></div></li>
+<li><input name="autoGradableResponseId~0DnRHBudEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Create a VPN Gateway in GCP</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Where would you expect a direct connect to Google’s infrastructure to occur:</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0LuEiBudEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>In Google’s datacenter</p></div></li>
+<li><input name="autoGradableResponseId~0LuEiBudEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>In a company’s office</p></div></li>
+<li><input name="autoGradableResponseId~0LuEiBudEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>In a co-location facility</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following are example cross cloud interconnection providers.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~0S_KHBudEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Google</p></div></li>
+<li><input name="autoGradableResponseId~0S_KHBudEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Meta</p></div></li>
+<li><input name="autoGradableResponseId~0S_KHBudEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Megaport</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

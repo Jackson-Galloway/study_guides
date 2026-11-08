@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Network Security</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-question"><div class="quiz-prompt"><p>What are general negatives about symmetric and asymmetric encryption respectfully</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~XPXNaI" type="radio"/> <div class="quiz-option-text"><p>Symmetric encryption requires shared secret keys, asymmetric encryption is slow.</p></div></li>
+<li><input name="autoGradableResponseId~XPXNaI" type="radio"/> <div class="quiz-option-text"><p>Software is generally not available that can perform either symmetric or asymmetric encryption </p></div></li>
+<li><input name="autoGradableResponseId~XPXNaI" type="radio"/> <div class="quiz-option-text"><p>Symmetric encryption is vulnerable to eavesdropping, asymmetric encryption requires parts of the message to be plaintext.</p></div></li>
+<li><input name="autoGradableResponseId~XPXNaI" type="radio"/> <div class="quiz-option-text"><p>Symmetric encryption is slow, asymmetric encryption requires shared secret keys.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What mechanism of IPsec keeps the communications confidential?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~PJFcEJ" type="radio"/> <div class="quiz-option-text"><p>Encryption</p></div></li>
+<li><input name="autoGradableResponseId~PJFcEJ" type="radio"/> <div class="quiz-option-text"><p>Hashing</p></div></li>
+<li><input name="autoGradableResponseId~PJFcEJ" type="radio"/> <div class="quiz-option-text"><p>Message Authentication Codes</p></div></li>
+<li><input name="autoGradableResponseId~PJFcEJ" type="radio"/> <div class="quiz-option-text"><p>Digital Certificates</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is the purpose of the Diffie Helman protocol as used in IPsec</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~ZXQPn8" type="radio"/> <div class="quiz-option-text"><p>Exchange security parameters</p></div></li>
+<li><input name="autoGradableResponseId~ZXQPn8" type="radio"/> <div class="quiz-option-text"><p>Ensure the network is performant enough for data exchange</p></div></li>
+<li><input name="autoGradableResponseId~ZXQPn8" type="radio"/> <div class="quiz-option-text"><p>Distribute a public key of a server</p></div></li>
+<li><input name="autoGradableResponseId~ZXQPn8" type="radio"/> <div class="quiz-option-text"><p>Exchange a shared symmetric key</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is an attack that can be performed that RPKI protects against</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~leO9xA" type="radio"/> <div class="quiz-option-text"><p>Man in the middle attacks</p></div></li>
+<li><input name="autoGradableResponseId~leO9xA" type="radio"/> <div class="quiz-option-text"><p>Route hijacking</p></div></li>
+<li><input name="autoGradableResponseId~leO9xA" type="radio"/> <div class="quiz-option-text"><p>Eavesdropping</p></div></li>
+<li><input name="autoGradableResponseId~leO9xA" type="radio"/> <div class="quiz-option-text"><p>Denial of Service</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What entities serve as the main certificate authorities in RPKI</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Xx980h" type="radio"/> <div class="quiz-option-text"><p>A government agency</p></div></li>
+<li><input name="autoGradableResponseId~Xx980h" type="radio"/> <div class="quiz-option-text"><p>Network vendors such as Cisco, Juniper, Palo Alto</p></div></li>
+<li><input name="autoGradableResponseId~Xx980h" type="radio"/> <div class="quiz-option-text"><p>Regional Internet Registries</p></div></li>
+<li><input name="autoGradableResponseId~Xx980h" type="radio"/> <div class="quiz-option-text"><p>Universities </p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What are three concerns with HTTP that HTTPS helps address</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~71QDhR" type="radio"/> <div class="quiz-option-text"><p>Traffic is in plaintext, data has no integrity protection, the TCP three way handshake is insecure</p></div></li>
+<li><input name="autoGradableResponseId~71QDhR" type="radio"/> <div class="quiz-option-text"><p>Data encoding, data size, and data fidelity</p></div></li>
+<li><input name="autoGradableResponseId~71QDhR" type="radio"/> <div class="quiz-option-text"><p>DNS requests are UDP, data is encoded inefficiently, APIs are openly accessible</p></div></li>
+<li><input name="autoGradableResponseId~71QDhR" type="radio"/> <div class="quiz-option-text"><p>Traffic is in plaintext, data has no integrity protection, client can’t be sure server is their intended communication partner.</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a mechanism that Let’s Encrypt uses to validate the identity of a request for a signed digital certificate?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~geHNnt" type="radio"/> <div class="quiz-option-text"><p>Let’s Encrypt accepts all requests as its only purpose is for testing https locally</p></div></li>
+<li><input name="autoGradableResponseId~geHNnt" type="radio"/> <div class="quiz-option-text"><p>The Let’s Encrypt team performs a background check on the requestor</p></div></li>
+<li><input name="autoGradableResponseId~geHNnt" type="radio"/> <div class="quiz-option-text"><p>An admin from Let’s Encrypt sets up a video call with the requestor</p></div></li>
+<li><input name="autoGradableResponseId~geHNnt" type="radio"/> <div class="quiz-option-text"><p>Admin places a token at a known address on their website, and if Let’s Encrypt is able to fetch it, it proves ownership.</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

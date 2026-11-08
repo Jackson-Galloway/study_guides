@@ -1,0 +1,10 @@
+In this lab, you're going to create certificates
+for a web server. We're going to show
+you go walkthrough the whole process of
+creating all of these keys, the requests, and ultimately
+the certificates. Now we're going to mock up
+the certificate authority. We're going to
+pretend to be that ourselves and go through the manual steps just
+manually ourselves. But in doing this you should be able to see what the whole process looks and then create a web server
+that is serving up HTTPS such that you can use that in web requests
+like using curl.

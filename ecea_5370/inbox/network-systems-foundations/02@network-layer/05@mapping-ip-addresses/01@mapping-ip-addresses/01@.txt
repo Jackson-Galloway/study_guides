@@ -1,0 +1,80 @@
+All right,
+this time we're going to talk about, the lack of a better word or
+title, Mapping IP Addresses. We're going to learn about some of
+the more administrative aspects of the kind of IP addresses. That's how they're allocated,
+how they relate to the MAC addresses. And how they get assigned
+when you're on a network. So where this fits in, this is kind of the overview of
+when we introduced this module. And so we're here. How are our addresses assigned and
+mapped to the link layer addresses? So first, talking about allocation. So part of what kind of makes IP addresses useful is they have
+this property that it's a effectively globally
+unique address to be able to reach any device or
+any point in the internet. And so there's kind of
+an organization called IANA, the Internet Assigned Numbers Authority
+that performs this global coordination. And then you have local registries
+called Regional Registries or RIRs that manage the local
+IP address allocation. So an example of one of these
+in North America would be ARIN. And so you can go to their website
+shown here and make a request for an IP address allocation. So in that process,
+because of the scarcity, especially of IPV4 addresses,
+you have to justify all of that. So that's if you want
+to get them directly. But then also
+the Internet Service Providers or ISPs own large blocks of addresses and
+they can provide them to their customers. And so that's another way
+to get some IP addresses. Now the next kind of part of this is how
+do we map an IP address to a MAC address. So we talked about on
+a Local Area Network. So we have a laptop X and
+another one, Y and some Ethernet switches in between them. And we showed that when
+X wants to talk to Y, it will put the destination MAC address
+as whatever Y's MAC address is. But the chances are X,
+you probably know the IP address of Y of some service more likely
+than knowing its MAC address. And even more likely you
+know the name of the server, which we'll know when we cover DNS later. But what this provides is
+consistent communication in a larger network if
+we're using IP addresses or server names instead of MAC addresses. But the actual communication at the link
+layer is done using MAC addresses. So we need a way for X to be able to
+find out what is Y's MAC address. And so the solution to this
+is a protocol called ARP for Address Resolution Protocol. And so how ARP works is when the laptop
+on the left wants to send out a packet, send a message to some IP address. Inside of the operating system
+is a table called an ARP table. It will look up in the ARP table and say, do I know the MAC address for
+this particular IP address? And if so,
+it will put that inside of the frame and send that into the network. If it's not there,
+then it has to use the ARP protocol. And so how this works is it
+broadcasts basically a message that's saying I'm looking for
+some IP address. And then asking the question
+what is your MAC address? And so it sends that into the network. And if we recall about broadcast,
+it will forward it out all of the ports. And each of the destinations or each of the kind of nodes on
+the network will receive it. Only the one that actually
+has that IP address that's being looked for will respond. And so in here it's the one on the laptop
+on the right that's shown says that's me, my MAC address is and
+then it fills in its MAC address. All right and that's a real simple protocol, but
+that's effectively how it works. And we could see so
+shown here is a Wireshark capture. So Wireshark is a tool that
+you can use to capture traffic on a network from
+a network interface card. And we can see a whole
+bunch of ARP traffic. And then if you zoom in we could
+see the Ethernet frame and we could see the destination
+is set to all f's. That means it's a broadcast. And it's this request of tell me. So I'm the sender,
+here's my MAC address, but the IP address that I'm looking for
+is 192.168.200.200. And it's asking for the reply. And then somewhere else, another message would be that whoever
+has that address would respond. Then the last piece is how do
+IP addresses get assigned? So I have a laptop, I join a network,
+I have an IP address. So how did it get there? So there's kind of two main
+ways that this would happen. One, would be you statically assign it. So you can go into your operating
+system and shown here as a command. In Linux and assign a specific IP
+address to a network interface. And so this is showing for eth0. The network interface eth0, it's showing
+to set the IP address of ten 10.1.1.10. And why it's showing it has
+a prefix is it'll add a routing table entry that kind of covers
+anything in that network. It's basically saying I'm
+part of that Subnet, so add an entry to the routing table locally. The other main way would be dynamically
+and this is a lot more common. And so there's a protocol called DHCP. For Dynamic Host Configuration Protocol. And this is something that as a client,
+when you connect to a network, a lot of times it just
+runs as part of that. But a lot of times there's a server on
+your network called the DHCP server. And it's commonly the gateway router but
+the protocol goes basically DHCP discover, which is you asking to be
+assigned an IP address. The response would be an offer and it would say great, I'm a DHCP server. Here's something you could choose. Now why you have this offer is, well there might be multiple
+DHCP servers on the network. And then you finally choose one of
+the offers and then you make the request, which would get to the server and
+then the client acknowledges. So this is all built into
+the operating system, happens automatically, but
+this is the protocol that is actually run. So with that, we kind of saw some of the more
+administrative aspects of IP addresses. And with that, we'll end here. All right, thanks. Bye.

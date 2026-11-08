@@ -1,0 +1,109 @@
+All right. Let's jump
+into Socket Programming. Stepping back, remember, the transport layer provides the ability to perform process
+to process communication. Therefore using TCP, it provides this reliable
+in order stream of data. How the transport layer
+provides this process to process communication is
+through an extra header, and the fields that
+are addressing ports. This allows the
+operating system, when it gets a datagram, it can know what application or what process this
+particular data is for. It's in this picture showing
+it directing it to port 80. The key problem that
+we're going to look at here is how to
+actually program this. The link network and transport layer protocols
+are just concepts, and it's the operating
+system network stack that is their implementation. How do we write programs to interface to this network stack? The concept here or the
+answer is Berkeley Sockets. This originated in 1983, and has been the standard since. A socket is an abstract
+representation for the local endpoint of a
+network communication path. One application can put
+data into a socket, and that would enable the other application to
+get data from the socket. Through everything
+under that interface is the operating system and all these different
+protocols that are happening to make
+that transfer occur. This is a diagram of socket
+programming in general. Each of these is
+a function call, and this is the general order that you would
+have to call them. If you haven't heard the term
+client and server before, client represents the one that's going to
+initiate a connection. A server is the one that's
+going to accept connections, and then after that they're
+able to communicate. We saw this with the TCP
+three way handshake. The one that's initiating
+the connection, we're going to call a client, and the other one we're
+going to call the server. Now we're going to go through
+this diagram piece by piece in the remaining
+part of this video. Let's start at the
+top, the TCP server. This also largely
+the same for UDP. Slightly different
+functions that you'll call because it's not the exact same, but this does refer to both. You would open up a socket, and here the OS will create a
+socket and return a handle. It's a file descriptor. If you're programming in C, it would look
+something like this, where you specify whether it's an IPV4 address or an IPV6
+address that you want. The type is going to be TCP, that's a stream or UDP, just the datagram itself. Once you've created that socket, it tells the Operating System creates some state
+representing this connection. Then you would bind it, so you call bind. This tells the Operating
+System address to use. Again, if you're
+using C here there's a field called my adder, and this is the IP
+address and port number. If you're running a web server, you would bind it to port 80. If you're running
+the SSH server, you would bind it to port 22. If you have multiple
+IP addresses, for example have multiple
+network interfaces, well, you can choose an IP address, or you can bind it
+to the local host, or all of them. The next thing that
+this server would do would be to listen
+for connections. Listen notifies the
+operating system of the willingness to accept incoming connections
+on this socket. Then would get called. This is where the server would block waiting
+for the connections. It sets the address of the
+incoming connection that This is the address
+of the client, would be effectively the return
+value of calling accept. At this point, the
+server is ready, it's willing, it's
+waiting for connections. Now a client can
+initiate the connection. It would also call socket to create the state in
+the operating system. Get a file descriptor to be
+able to refer to this socket, and then it will call connect to do the connection
+establishment. This would be something
+that's unique to TCP. Then sense that first of
+the three way handshake, the operating system
+performs that handshake and at that point the accept would then
+become unblocked and say, great, I have a new connection. Connect on the client side
+tells the operating system to initiate the connection
+to a specific address. Here you would specify the
+address of the server, the IP address and port number. Then at that point, there's now this exchange of read
+and write calls, or in this case it
+says send and receive. Each of these is
+going to match up whenever you're expecting
+to receive something. You just wait there for the data and the
+client would send it. This just goes on and on
+forever or for as long as the application
+layer protocol, which would dictate how this data is structured
+and how you would know when to send and receive. Now if the client ever finishes and calls
+the close function, which is like closing a file, it's closing the socket. This would actually send a TCP message closing
+the connection, it would say this connection is finished when the server
+is waiting to receive. That would actually respond with a special return values
+such that it would know, I should close my
+socket as well. That's the entirety of
+socket programming. Now to see it as an
+example in Python, here's an example
+that I found on digital ocean search for it, but we're also going to have
+a lab where we're creating a client and a server
+and exchanging messages. Here, let's go through this. This is the whole program, but let me call your
+attention to specific parts. The first part is it calls
+the socket function. This first part is the library
+and it just says socket. That returned this
+handle to the socket. The server then called bind and so here it's
+passing in the address, the host and the port. It's binding to. Then at that point it says to the operating
+system to listen. It says how many clients is willing to accept at
+the same time it says two. Then it blocks waiting
+for those connections, so it calls the accept function, and then based on whatever
+the application protocol is, it's now receiving
+information and responding to the requests
+through the send function. On the client side
+looks very similar. We can see the socket call. It then calls connect
+with the host, the server's address or name. It then sends a
+message to the server, and waits for the
+server to respond, and gets that message. Then it Closed the socket. That's how to do
+this programming. Like I said, we'll have
+a lab where you can practice with that
+but even before that, it's a great practice
+to just go get some example code out there
+and run it for yourself. Doing this exact example
+from Digital Ocean. Next time we'll get into a specific application
+protocol, HTTP.

@@ -1,0 +1,161 @@
+Let's go ahead and get started. This time, we're going to talk
+about Google's Andromeda. This is going to be
+an academic paper. I'll provide the link so you
+can go ahead and read it. It's definitely worth reading. This is an academic paper that was authored by
+Google Engineers, and it describes their
+motivations and all of that and how they created
+a system called Andromeda, which is how they're realizing
+the VPC abstraction. We've previously talked
+about network virtualization or what this abstraction
+of a VPC is. We walked through how in Google Cloud or how we
+could create this VPC, which is these isolated
+environments for all of them, network for particular
+application or whatever. I get inside of it and
+I can create subnets. I can create VPNs
+within those subnets, I can create policies for what's allowed in
+the communication, and I can have more
+than one subnet. These VMs can talk to other VMs, with a policy, and the VMs need to be isolated
+from other tenants, the users of the Cloud. The question is, how did
+Google actually do this? To answer this, we're
+going to look at, these are slides that
+the Google team created, and I'm just going to use
+those because they have a lot of good illustrations but this is based on this
+paper Andromeda from NSDI. Andromeda's goals were really around performance
+and isolation. They want high throughput, low latency, regardless of
+the actions of other tenants. Then they also had some
+operational concerns. They wanted velocity. They wanted to be able to quickly develop and
+deploy new features, and performance improvements
+and they wanted scalability. This is a really large
+network with many tenants, and so they really need
+rapid provisioning despite the huge scale. Now, Google has been a longtime supporter of
+software defined networking, until you'll see a
+lot of that show up. This is jumping right
+into the architecture. Shown here is the
+Andromeda architecture. Down here are the hosts. Running on each of the
+host is virtual machines. The color is indicating
+which tenant it belongs to, so there's a red tenant
+and this is its two VMs. There's a green tenant
+and here's its three VMs. Running on each of the
+host is a virtual switch. It's virtual switch
+they're leveraging the open flow protocol, they say extended
+open flow following that same pattern of
+software defined networking, where you have these
+centralized controllers or always was said
+logically centralized. This is really just
+a distributed system that shares state. You can run a data plane of a virtual switch on each host, where then the controllers
+can talk to it. when a new virtual
+machine is added, so this red one is being added, what they need to do is
+take all of these flows from other VMs to this new VM. they need to update on
+this host and this host, and they need to install rules on this host to
+each of the other hosts. Now, this is how
+each of the VMs, the three VMs can
+all talk to each other with some policy
+that's been specified. The problem that they noted
+was that to program this, it takes a long time
+for large networks. They ran a little
+experiment where VMs are placed on 10,000 hosts. They had 30 VM
+controller partitions, and they noted that
+the programming time is effectively linear with
+the size of the network. The number of hosts, times the number of virtual machines. The scaling lead to
+performing challenges. Here is how the network
+size grows and you can see, anytime we're getting
+above seconds, and this even goes
+up to minutes, it's going to take a really long time to
+program these networks. They introduced a concept
+they called it a hoverboard, but you can think of it as
+offloading low priority flows. Instead of having a
+rule for every VM to VM communication on
+every virtual switch. In this case, vmA to be
+able to talk to B, C, D, and E, having all those
+rules on this switch. What they noted was that you don't really
+need all of them. Let's only have the most
+active highest priority flows of traffic on the
+virtual switch, and then have everything else redirected to one of
+these hoverboards and so all the hoverboard is
+they called it a gateway or it's basically running
+the same software, but it's only a few instances of this and you can program all of the rules
+onto the hoverboard. For, let's say, vmX and vmZ communicate a lot, so this is a high traffic flow. Well, that's the
+one that would get a rule inserted into this table, and so that traffic could go directly between the two hosts. How they do this is basically monitor all of the traffic, and make some decisions, and then use the open
+flow controller to program those different flows
+of traffic and those rules. By default, everything
+is going to the hoverboard to be processed, and this is a slow path. Anytime they see a lot of traffic or high priority
+flows of traffic, they insert a rule into
+the local virtual switch. What this did was it took the programming time from this red line to this blue line. A lot faster, they say
+37X faster to program. That's substantial. They also measured why
+this is effective and so they showed the CDF, the cumulative
+distribution function of the communicating
+VM pairs and what their bandwidth is between them. What they were showing is 83% of VM pairs never
+really even communicate. Well, that's probably
+even below this. That's, 83, never
+even communicate and then this is showing a few that do communicate with
+very low bandwidth. Then up here 98% of the VM pairs are having a peak throughput of less
+than 20 kilobytes per second, so that's pretty low. If you could take
+all of those rules, put those on those hoverboards, now you only need to handle the upper 2% or
+they're saying even, more than that, this is saying 2% of the VM pairs put
+those into the rules, and you're handling
+99.5% of the traffic. Now, their data plane, so this gets into some of their more
+operational concerns, but still want it to be fast. It shown where this yellow is, there's a network card
+there and they created a fast path where they have
+their routes, the packets, they apply to per flow fast path actions of encapsulation
+and decapsulation, and so forth and if ever needed, they can go up to
+a slightly slower but more complex implementation of the switching called Open vSwitch and they also
+will run a VM co-processor. Per VM attributed
+threads for executing CPU intensive packet operations
+like denial of service. They used all kinds of
+techniques in the Fast Path, the OS bypass, busy
+polling dedicated CPU. These are a lot of things if
+you read into how to perform high performance
+packet processing this is the techniques
+that you would see. From the operational
+side they wanted to be able to support live migration
+and hitless upgrades. Live migration, meaning, take a virtual machine
+that's running on one host and migrate it to another host without the
+user ever actually knowing. User being either
+the developer or some customer of that developer that's using that application. Google is a software company, so they like high velocity
+creation of features. This just shows that they
+improved Andromeda over the years and what the different innovations
+were kernel datapath. They created
+optimized data plane, then bypassed the
+operating system, removed, a hop in the thread doing some
+memory copy optimization, and basically just
+continue to improve it. Google releases has a rapid
+release cycle for features, bug fixes and so forth. They say they have
+a weekly rollout in a non destructive manner. Meaning it's not like they
+have to take down the server, break everything, and
+then bring it back up. They could do it
+non destructively. Then Live migration
+is something that they say is essential to their operations
+of Google Cloud, to be able to move VMs from one host to another and
+that could be because they need to maybe swap
+out a power supply of a server if they
+see that it might be going bad or something. Whatever operations that
+they need to be able to do, they need to be able to do maintenance on host transparent to any customers that are running there because I
+wouldn't like it if I ran a VM, and then after some period
+of time, Google said, well, we're going
+to have to shut it off because we need
+to do maintenance. That's not great.
+How they handle the hitless upgrades is
+so I have this Guest VM, you have the Physical NIC, and here's their Dataplane. What they do is they launch
+their New Dataplane, transfer all the state
+from the old to the new. Then they cut off the VM, so there's no packet
+path right now, but this is allowing any
+kind of last little bit of state to transfer over because if the dataplane
+is state full, not just from
+configuration state, but from handling traffic, that needs to be copied over, and then they can connect it up. They note that the blackout
+time is 270 milliseconds, so the whole time to basically, this part where the guest can be receiving traffic then they're
+not for 270 milliseconds, and then now they are
+with the new dataplane. At that point, the
+old dataplane is terminated. That's
+really cool stuff. Go read the paper, but in conclusion this paper really talks about the Design
+and Evolution of Andromeda. We're going to see this come up again in
+the future module, so keep this work in mind. They focus on the control
+plane scalability and rapid provisioning
+really through the innovation of this
+hoverboard model, where you had that centralized
+dataplane to handle the mostly idle
+flows from VMs and they introduced a lot
+of technology and describe a lot of
+technology on how they've achieved high performance and high feature velocity being able to do
+non-disruptive upgrades. With that I highly
+encourage you to go read the Andromeda paper and
+with that we'll stop here.

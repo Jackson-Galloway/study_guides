@@ -1,0 +1,142 @@
+All right, let's jump into IPsec. So we have the basics in place. Now let's see them being applied. So, getting back to why we need this. And so the example here is, a company
+has two sites and they have employees at these different sites that want to
+share information with each other. Now, if the attacker can see the traffic,
+they'll get access to some secret data. And so we're going to talk about
+IPsec as a solution to this. So stepping back, it'd be useful to even
+talk about how would somebody eavesdrop. So we learned at the link layer,
+WiFi is a broadcast medium, so it's broadcast communication. And so if you're in a public space,
+you can see that broadcast traffic. A network provider where your traffic goes
+through could be compelled by a government agency to provide a backdoor for them,
+or maybe they have a rogue employee. Or maybe there's
+a compromised router that has a software bug in it,
+security vulnerability. So it could be at
+the network provider level. We've also talked about kind of BGP and
+OSPF and routing protocols. And a simple misconfiguration
+could actually cause problems. So it might not be intentional, but it might actually redirect
+traffic to the wrong place. Or it could have been intentional
+through route hijacking, which can redirect the traffic. It would be something that
+the attacker would intentionally do. So all of these provide this
+opportunity to eavesdrop, and there's no one solution
+that solves everything. And that's why we're talking about
+a bunch of different solutions that you might want to use in different
+scenarios or use them in combination. So IPsec, what it does is it creates
+an encrypted tunnel between two endpoints. It could be used for
+a whole site as shown in this picture, or it could be one machine
+to another machine. And this is commonly used in VPNs,
+or virtual private networks. So as an overview to set
+up the IPsec tunnel, a protocol is a camp or IKE is used to set up the parameters and the keys used. And then you can authenticate each side. And then after all that,
+the traffic can be exchanged. So we'll go through kind of
+each of these steps in order. So the first is the SA-1
+parameter exchange. So this is where the initiator, so this is the one who's initiating
+the IPsec tunnel to the other. Says what algorithms it supports
+across four main categories, what type of encryption
+it can support using, what type of hashing it
+could support using. We're going to get into
+the Diffie-Hellman group, but these groups can impact
+the level of security, but also the amount of CPU resources
+that it takes to implement. And then how authentication
+is going to be done. And so, this is based on the software or hardware that this
+initiator has implemented. And then, the responder then
+chooses among this list and says, I support AES, and that's a better,
+I prefer that one. And I support this hash,
+and I choose this. So whatever the responder it chooses and then sends back the results,
+its choices back to the initiator. They then move into the next phase,
+which is this Diffie-Hellman key exchange. And so, IPsec uses shared keys for
+encryption. So it uses symmetric encryption and
+uses that for integrity as well. And so what Diffie-Hellman is,
+is a protocol to secretly create and share private keys. So if you recall, we saw this picture
+where we can use a public key or asymmetric encryption to
+exchange a session key, or something that could be shared so
+they can use symmetric encryption. And so we saw this before, and we saw
+that in the context of the RSA algorithm. So Diffie-Hellman is in that vein, but it allows two parties that have
+no prior knowledge of each other to jointly establish a shared secret
+key over an insecure channel. So this is quite useful, and
+let's walk through how it works. So one side, we'll say it's the initiator, in this side picks two numbers,
+a prime p and some base g. It sends those in clear text
+to the other side that it's initiating a connection to,
+we'll say, the responder. Then it will pick a secret x. And with this secret x that it's not
+going to share, it will calculate g, which was this base that it
+previously shared and picked. It'll calculate g to the x mod p,
+and we'll call this h of A. All right? So it takes this h and
+sends it to the other party. The other party, in this case, party B, or the responder will
+pick its own secret y. And it's not going to share y, but it will share a calculation using
+y hB equals g to the y mod p. All right?
+And then it will send that calculated value h of B back to party A,
+or the initiator. All right, so with this, they now actually have enough
+information to have a shared key. So let's see what this is. So the shared key is actually if they
+take the value that was shared with them, raised to the secret that they picked,
+and then mod it by p. So this K equals h of B, so
+party A is over on the left hand side, it received from B, the hB. It raises that to x, which is that secret that only A knows about and does mod p. Likewise, B or
+the responder does the same calculation using the value hA,
+which is what A sent to it, raises it to y, its secret,
+and then does mod p. So why this works,
+why this is the same is, if we actually expand out what h of B is,
+it's g to the y mod p. So, A doesn't know what y is, but
+it knows what's in parentheses, but we're expanding that out,
+and then raises that to x. When you use the properties of mod, this actually just is the equivalent
+to g to the xy mod p. So let's look at that on the other side. We take the hA, which is g to the x mod p,
+we raise that to y. So even though B doesn't know what x is,
+it knows what's in this parentheses. But again, if we did the math or
+do the properties of mod, we can do when you raise something
+that's mod to some power, you kind of distribute that through. So it would be g to the xy mod p. So, they both end up with the exact
+same value, even though party A didn't know the value of y and
+party B didn't know the value of x. And now why this is secure,
+given what was exchanged p, g, hA and hB, the assumption here and others have calculated the math and
+the difficulty of this, that it's hard to actually calculate
+K with only this information. You need one of these secrets and
+that's hard to guess. All right, so with that,
+we now have a shared secret, a session key that could be used for
+symmetric encryption. So the next part of IPsec is to
+authenticate and this allows each party to verify that they're communicating
+with who they think they are. Now, one of the parameters that
+we saw in the parameter exchange, SA-1 parameter exchange, was how
+they're going to do authentication. And there's two steps here or
+two options listed here. One, is they could have had
+a shared private key in advance or they could go with a digital certificate. So if you recall, this digital certificate
+was some binding between an identity and a public key and
+it's signed by a certificate authority. So that could be kind of how they
+go through the authentication. And this step is encrypted using
+the key that was decided in this kind of first part, the Diffie-Hellman
+session keys that were calculated and used in the parameters that were
+established in SA-1 parameter exchange. Then, they go into a second
+SA-2 parameter exchange, where SA stands for
+a security association. And that's basically just saying,
+we're going to set up this encryption, we're agreeing on the parameters,
+here's everything associated with it. And so they do this just in case
+different parameters are desired for the encrypted traffic, then for
+the authentication step. And this step can also be used to set
+up what's known as traffic selectors. And this determines what traffic
+is allowed through the tunnel. So this is a five tuple of
+the IP source and destination, the protocol like TCP or UDP and the
+transport source and destination ports. And then finally,
+we can have the traffic exchange. So after all of that, we have keys
+calculated, we know how we're going to encrypt it, but there's different
+modes of how traffic can be exchanged. So there's effectively
+two different categories. The first is whether it's just
+the header in the HAH mode for authenticating header, and
+this just provides integrity, or we can have ESP for
+encapsulating security payload and this provides integrity and
+confidentiality. And then we have two other modes. So we would choose one of these, Or ESP, and then one of these,
+transport or tunnel. And transport is mostly used for
+single endpoints, whereas tunnels are mostly used for
+whole sites. And so we could see the illustration
+of tunnel versus transport. So in transport mode, so this is for
+like a single kind of endpoint. So there, we're not encrypting or hiding in any manner the IP
+header of the endpoints. We're just encrypting and
+authenticating or doing integrity checks of all
+the data in this IP packet. Tunnel mode, here would be
+the actual IP address source and destination of the end machines. But we're tunneling it between kind of
+those two machines that are doing for the whole site. So we put on this new IP header. So this would be the IP
+header of the source and destination of those kind of
+the edge point of the sites. And then we can encrypt the rest of all
+of the packet, including the IP header. Now there's a lot of software
+that's available for IPsec. All of the major network vendors
+have routers or firewalls. So Juniper, Cisco, Palo Alto and so forth. The cloud providers like AWS, Azure, GCP. They have VPN services
+which are just IPsec. And then there's open source software,
+a popular one and a common one to use would be Strong Swan. So just to summarize with IPsec, it leveraged many of the techniques
+we discussed in the basics lesson. It talked about message
+integrity through HMAC. It uses confidentiality or provides confidentiality
+using a shared private key. Exchanged shared keys
+using Diffie Hellman, and then provided authentication
+with public keys or pre-shared private keys. So that covers IPsec. And next,
+we're going to talk now about RPKI. All right, thanks.

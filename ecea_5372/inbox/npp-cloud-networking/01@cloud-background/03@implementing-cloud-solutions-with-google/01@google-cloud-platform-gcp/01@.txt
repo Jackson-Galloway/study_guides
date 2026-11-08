@@ -1,0 +1,201 @@
+Welcome. Today, we're going to actually get into
+the Google Cloud Platform. The Google Cloud Platform, what's really nice about it, and particularly for an academic setting
+like this would be is they're very generous about giving out credit to new users. At least as of now, just having a Gmail address, you can get $50
+worth of credits. You don't even need to
+give a credit card. Then if you do give
+a credit card, I think you can get
+$300 worth of credits. That's way more than what's sufficient to
+go through this class. I really like it
+for that purpose. But also, it's a really
+well-put-together system. What we're going to do is take
+a little tour of GCP today and just to show you around a little bit and start getting a
+little more familiar. This is what we're going
+to do as our demo. We're going to create
+a virtual machine. We're going to ping it. We're going to use a
+tool called G Cloud, and we're going to be
+able to SSH into the VM, all of those different things. With that, let me switch
+over to my browser. I've already logged
+in to my account, and y I went to
+console.cloud.google.com, and that brings me
+to this dashboard. The first thing to note is
+this little project pull-down. If I pull that down, here's
+various projects I have. We're going to see
+the common name. Then also, what's going
+to be important is this thing over on the
+right-hand side, this ID. We're going to see
+that pop up a lot. If you don't have any
+projects created or you want to create a new project dedicated to this course, you can just click
+on "New Project". There's really nothing to it. This doesn't cost
+anything to have an extra project or
+anything like that. The first thing
+that we're going to do is we said we're going to
+create a virtual machine. As mentioned, Google has a
+data center or a bunch of data centers all over the world with a bunch of servers
+in each one of them, and then I as a developer can request to create
+a virtual machine. There's two different ways
+that you can get to this. The first is you could just go through the
+navigation menu. This might be useful if
+you really want to get a taste of all the things
+that they have to offer. You can see there's a
+lot of different things. Definitely play around
+with all of these. But where the
+virtual machines are is under this compute engine. I could say click on the
+"Compute Engine" or I can come up here to where
+it says VM Instances. Either one would bring me
+to a screen like this. I don't have any virtual
+machines created or running, but that is one
+way to get to it. Another is this little
+search bar up at the top. I could just start typing VM, and you'd say VM
+Instances comes up. I can click on that and, well, it looks like it did
+nothing because here, I can show you
+again VM Instances. It brought me to the
+exact same screen. You're going to be able to use that pretty widely
+for a lot of things. Once you start understanding
+what you're looking for, just start typing it
+and it'll bring it up. Let's go on to Create Instance. It's a pretty intuitive
+wizard that they give you. We'll just give it a
+simple name like VM1. The next thing to
+note is the region. The region, as we have
+shown, there's these. They have a global presence, and I could choose a whole
+bunch of different locations. We're going to
+choose US Central 1. I found that, at least what I've noticed is on the cheaper side. Because if you go to
+a different region, let's say East, well, it looks like
+it's exact same costs, at least for what
+we're signed up for. But for now, let's just assume we're
+going to go in US Central 1. Then you can pick a zone. If you remember for resilience or fault tolerance
+within a data center, they can create these
+isolated zones that have basically different space and power and network so
+that if one zone goes down the other is still able to go up or
+still able to be up. Obviously, if a horrible natural disaster
+comes and wipes out the whole data center or some of the
+infrastructure around it, then the whole data center
+will go down in all the zones. But if there's a power failure, well, then they have
+redundancy in that. We'll choose US Central 1a. You could just leave it at
+any and let it choose it. Then there's these different
+machine configurations. You can go read about
+these different ones. But we're going to focus
+on the one that says low cost. That's good. Then within these are series. Then within that, there's different types
+that you can order. We're going to go with the micro because that's going
+to be the cheapest. You're going to see that
+that's going to be, so it's one cent per hour
+or seven dollars per month. That's pretty reasonable. We're only going
+to be doing things for little bits at a time,
+so definitely reasonable. We're going to get into
+a lot of the other. Well, I don't know
+what this error is. Boot disk error change to fix. Well, select one. If you see errors
+like that, then, sure, obviously going
+to correct them. But for the most part,
+these are going to be the defaults for right now are going to
+be perfectly fine. We're going to get
+into all of these, and the different options. There's under advanced options. That's where we're
+going to really see some of the
+networking stuff. But just leave it
+at the defaults right now and just
+click "Create". As it's creating
+what this is doing is it's launching inside of
+Google's infrastructure, launching a virtual machine. It'll take a minute or so for it to provision and then boot up. Now it's booted, and
+we can see great. Two things to note, in
+the default settings, it gave it an
+internal IP address and an external IP address. The internal IP address is
+this is a private address. It'll only be accessible from other VMs that you launch
+within that same network. This one is going to be a
+public Internet address. For example, I could
+pull open a terminal. Let me copy it first. Copy it to the clipboard. I can say ping that address. What that's doing
+is it's pinging the virtual machine in the
+Cloud. It's pinging VM1. The next thing we
+want to do is to be able to SSH into it. The easiest way is to go over here and all this is
+under the VM instances. There's a button to click to it and say connect to it via SSH. You can see that
+it's transferring some keys to the
+virtual machine, and then it's going
+to open up an SSH like a terminal inside
+of the browser. This is useful because
+it goes through all of Google's infrastructure
+for the authentication, and now I'm inside of
+the virtual machine. You can see that's my user name, and you can see the
+machine is VM1. If I LS, there's nothing there. Present directory. If I look at my IP address, you could see 10.128.0.13. If I get this menu, pull it over a little bit, you can see that
+that's the exact same as my internal IP address. You also note that the external IP address
+doesn't exist there. That's because that's handled inside of the Google
+infrastructure. We'll get to that
+at a later time. That's one method
+to SSH into it. You could certainly set up your own SSH keys and
+put stuff in.SSH. You could put your keys into that such that you
+can log in that way. You can do that through the provisioning
+mechanism if needed. But then there's another
+way that we can get to it, and that's through a
+utility called the G Cloud. So G Cloud is a
+command line interface that Google provides that effectively you can do all
+the stuff that you can do in the console you can do
+it from a command line. What's nice about the console
+is I'm already logged in, so everything I do is
+already authenticated, and that's why I can easily
+SSH into my machines. Well, we can do the same
+thing on a terminal. Here, there's a tool, and I'll put a link to where to install
+or download G Cloud. But it's just the
+Command G Cloud, and if you just type it'll give you all the
+different things that you can do with it. But what we're going to do is
+the first time you use it. I've already set it up, so there's going to be
+already something set up, but you'll set it up and what's going to allow
+you to do is basically authenticate such that I can now do everything on
+the command line that I could do in the portal. We're going to create
+a new configuration. The default would be what
+you set up initially, but I'm going to create
+a new configuration just to walk through this. Enter the configuration
+name, sample config. I'm going to log in. Choose the account you
+would like to perform operations for this
+configuration. I'm going to choose that one. Let me actually go backwards.
+Cancel out of that. We'll create a new
+configuration and Sample 2. I'm going to actually
+choose the new login. It's already has me logged in, but I want to show you
+the login process, so log in with a new account. What it does is it
+gives me this long URL, I copy that, and then I take
+it over into a browser, enter it in, and I go through the
+Google authentication, and then it basically
+will sign me in. It'll give me a token, and then I can go back and then enter that authorization
+code that it gives me. We don't need to
+complete that process, but that's what it's doing. Another thing, now let me do this G Cloud config
+configurations list. I have the default one and then I have these
+two other ones that I've created that I want
+to actually just delete. I want to activate
+the default one. You won't need to do this,
+but let me do it to get back, and then I want to delete Sample 2 and sample config. Now I'm just back
+to my default one. This is where you'll
+be able to do. Now I can use G Cloud
+to SSH so much like I could push in that SSH button. I could do that from the
+G Cloud command line. If I click this
+little menu button, get the View G Cloud command. Now, I don't always have
+to go through that because it'll have things that I should know when I
+created the machine. I knew what zone it was in, I knew the machine
+name that I created, and I know what project. But this is a convenience for me to be able to
+just find it if I forget what those
+different parameters are. Then I come and I do
+that. There we go. Now, I'm SSHed into
+that machine, the VM1. Now I can exit out
+and there you go. Another little
+note that I'll add is I'm running
+Windows, you can see. If you have a Linux
+machine, that's great. Linux is quite powerful. If you have a Mac,
+that's also great. What I'm using is
+something called Windows Subsystem for Linux, WSL, I think it's WSL 2, and then I installed Ubuntu. Basically, I can run
+Linux inside of Windows. Everything I'm going to do
+is going to be from Linux, and you can see that. Now let me show one last
+thing is close that. This last little button right
+up here us the Cloud Shell. If I click on that, when it does is it creates. Google will launch
+a virtual machine. They don't charge for this. It's restricted in some manner, but it's basically they
+give you a virtual machine and then I think
+it's running Linux, and it will have G Cloud
+already installed on it, so I don't have to do that. You can see I already had some different projects for a different class
+already on here, but it's just a Linux machine, the file system is persistent, and you can do things like that. I can ping 34.172.102.122.and
+there we go. If you want to make use of this, that's a great resource as well. If I click this, it actually opens up a browser for a bunch of different
+files and things like that. It's like this VS
+Code environment. With that, let me go
+to the last thing, and that's just destroy
+that or delete that VM. Let me go back to
+my VM Instances, and let me just shut it down. I can either stop
+it, in which case, it will stop it running, but it'll persist the
+disc and whatnot. In this case, I'm just going
+to delete it. There we go. That is our overview
+of Google Cloud. With that, what we showed went through all
+these different things. Next time we're going to
+talk about Terraform. Then we're going to
+start being able to automate GCP with Terraform. Thanks. I will see
+you next time. Bye.

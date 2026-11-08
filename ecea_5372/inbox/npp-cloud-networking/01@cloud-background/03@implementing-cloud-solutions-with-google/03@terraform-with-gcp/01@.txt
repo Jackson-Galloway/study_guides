@@ -1,0 +1,179 @@
+Let's go ahead and get started. Welcome. This time we're
+going to talk about Terraform and give examples of
+how to use it with GCP. Last time we saw
+that Terraform is an infrastructure as
+code framework that infrastructure as code is really powerful
+because it provides you this ability to bring software practices to the
+management of infrastructure. We can describe it
+in a textual format. We can check that
+format into GitHub. We can do code reviews
+on things like this We also saw that
+Terraform was declarative. You describe the state that I want the
+infrastructure to be in, and then Terraform
+will make it happen. If the state ever changes, it can reconcile that and get it back into the state
+that it needs. Now, of course,
+it's not perfect, but it's pretty powerful, and we'll see how to use it. With that, one of
+the things that we're going to do
+is we want to have Terraform be able to manage
+our Google infrastructure. There's not this ability for me as a user to do this
+because it's a tool. There's this concept
+of a service account. A service account is a special
+account that is typically used by an application or compute workload such as
+compute engine instance, or in our case, Terraform running on
+our local machine. It's kind of that account
+rather than it's a person. You can see an overview
+of it in that link. Here's just some pictures
+of the walk-through. You just click on
+the "IAM & Admin". There's going to
+be this spot next. Click "Create a Service
+Account" or go to Service Account
+and then you click "Create Service Account". Enter in some information. What's most important for us to know is that basically
+once it creates that, it creates this account,
+and then it gives you a key that you can download. You download it in
+this JSON format. Let me quick run through that. You can see we're both
+back at this dashboard. I can click on the
+"Navigation Menu". Go down find IAM and
+find Service Accounts. That's one approach. Likewise, I can start
+typing service accounts, and you can see there it is. Either one brings you
+to this exact thing. You can see I've
+already created one for me to run Terraform. Let me create a service account. I'll just call it Terraform 2. It gives it its account ID, I create it and continue. I select a role for it. Roles are basically
+permissions to be able to manage different
+infrastructure. The best practice would be to restrict access
+to what's needed. We're going to focus on
+compute engine a lot. I'm going to use
+this as the role. If it's not showing up because it's under currently
+used for me, you could just start
+typing in this filter, and it will show up. We can click that, click "Continue" and you
+can modify all of that after you create
+and grant users, I don't need to do
+that, and I'm done. Once I have this, here's my Terraform 2. I go to Keys, and I want to say
+Create a New Key. Create this private
+key for Terraform 2, Key Type, JSON, and click "Create" and
+now it downloaded. Keep note of that, and
+that'll be named based on your project and some random
+characters and whatnot. That key is there. You could set the
+expiration and all that, where it has an
+expiration, and so forth. What that will have is basically it's now
+an ability for me to authenticate with Google
+whenever I'm using Terraform. Let me go back to the slides, and that's what we just did. Now let's go over into
+the Terraform code. All this code is
+available on GitHub. This is the repo, the NPP Cloud. Then for this whole
+course, under it, there's a directory called TF
+Mod 1 for Terraform Mod 1, and this is the demo
+we're going through. Let's switch over. Last time I mentioned VS
+Code or Visual Studio. This is what it looks like. If you've never used
+it, it's really cool. It has some syntax highlighting, a nice file explorer over here, so you can see
+here's my directory TF Mod 1 demo under it. I have two files named TF
+for Terraform provider.tf. These other ones are temporary files that
+Terraform creates. If you're doing
+Python development, this is also useful
+because I can run things. It also makes it so that
+I can have a terminal. Where's new terminal? I can pull open
+my terminal here. You can note I'm, again, connecting it to a
+directory in this WSL, the Windows Subsystem for Linux. Move on to machine. You can see it opened
+up a terminal. I'm going to use a separate
+terminal just because it'll be a little easier to see, but you can do that. The first thing we'll see is it'll specify these
+required providers. You're going to specify Google. Once we run it, if we don't have the
+Google's provider installed, it'll get it installed. Let me walk through
+some of the code. The first is this
+provider block. Here, it's the provider. We're going to say we're
+going to use Google. The important part is
+these credentials. This is that file I created. This isn't the one
+I just created. It was for the account
+I already had, and it's that JSON file. This is what's going
+to provide Terraform the credentials needed to
+deploy stuff inside of Google. This is like any other account. If I delete that
+service account, even if this JSON
+file still exists, it won't be able to do anything. When it tries to authenticate with Google, it'll just fail. Define the project. These are the
+defaults that I want. If you note that I'm doing everything in
+this project for class. But if I go under the accounts, you can see the ID,
+and that's what I actually want to use is
+whatever's under that ID. Let me go back to VS Code. I'm going to say
+my default region that if I don't specify it, default to US Central 1. The default zone, if I don't
+specify it, US Central 1C. Now let's go into, the rest of the Terraform code, and I think I have only
+have one resource in it. The one resource is going to be this Google compute instance. I'll bring up a link to that. This is something that the
+Google provider specified. That's the resource type. Then I'm giving it a name. I'm going to say it's
+Module 1 TF VM1. I'm going to give it a name. This is saying create
+a virtual machine. I'm going to tell it the
+machine type, E2-micro. That was the same as
+what we did last time. I can specify a different zone. I can say US West 1-C. You put the region and
+the zone together like that. Then I can specify my
+network interface. I'm going to say use the
+default network parameters and use the default image
+that's specified there. Here, I'm going to say this
+extra thing is metadata. What that is is on a Google server only
+accessible internal to Google. They have this server called
+metadata server running, and your virtual machine can
+interface to that server. One of the things
+that it does is a default look at some of these, and here it creates
+these key-value pairs. We're specifying
+a startup script to basically install some stuff. You don't need that, but I
+wanted some stuff installed. That's the code. Now, what I will do is let
+me go back to the slides. I think the next slide, say, let's go into the console and
+see any virtual machines. Let me go back to
+the VM Instances, and we'll see there's
+nothing there. How you run Terraform is first you need to
+initialize the directory. That's stuff like it'll download the provider and
+things like that. Then you can run this
+command Terraform plan, which will look at
+the infrastructure and then say here's all the
+changes that I would make. I then want to run Terraform
+apply to say, yes, go ahead and make all
+of these changes, and it'll show you
+what changes are made. Let's go into the terminal. I'm in this directory
+TF Mod 1 demo. These are the files
+that I was just showing you the main.tf. You can see it's,
+describing all that. I could say Terraform in it. It's initializing the back end, getting the provider plug-ins. All of them already existed for me because I've already
+initialized this, but that's what you're going
+to want to do first time you do anything Terraform plan. This is going to look
+at my Terraform code. Then because it
+specified the provider, it'll look inside of
+the provider and say what's the current state. Actually, I look in
+these temporary files. You could see it's saying
+here's all the changes that I would make these pluses
+all this create. The next thing, and all of these extra fields
+are just taking the default or the ones that you can know after
+it's been applied. Now I can say Terraform apply. It's also going to say here's all the changes
+I'm going to make. If we scrolled up,
+it'll show all of that. Then it's going to
+say do you really want to perform these actions? Here we have to type yes just as an extra safeguard against
+modifying your infrastructure. Now it's going about and
+making these changes. The stakes we showed
+in the console. It took a little bit of time
+to create virtual machines, but now it's done. I can now go into the console, let me reload, and there we go. There's that VM that
+I just created. It has all the exact
+parameters that I wanted. We'll see how you can
+get these other fields. Actually, let me show that
+right now real quick. Another thing you could
+do is Terraform show. That'll show what all the
+different fields are. Some of these got filled in, and you can look down under
+network interface you can see in the network
+IP. There we go. Under nat IP, and that's same thing as external IP, and you
+can get those out. You can get all this
+in JSON format. If you like, I can pipe
+that into a tool like JQ, which would make
+it look prettier, but then I can also run
+queries on it to do subset. You'll need to do that in
+Module 2 as part of the lab. Now, I have
+infrastructure running, but let's say I want to just say tear down everything
+that I just created. That's where I can run
+Terraform, destroy. This makes it great
+because I don't need to go into a bunch of
+different menu items, but I get to delete all the infrastructure
+I just created. Now I get to save money because one of the
+worst things that you can do is leave all your
+infrastructure up and running and forget about it because it's charging
+you when it's running. By doing this, I'm
+turning everything off. It's the end of my day,
+great, turn everything off. I'm not using it anymore. It automated all of that
+and it's shut it down. Once this is complete, we can go back in and validate
+that it was destroyed. Let me see if there's any
+more slides. There are not. Let's just wait for
+this to have completed. Go back to this. This is good fun
+for you to watch. How about the
+weather? There we go. Now it's done. I could go back into
+here, reload this. Great. There's no VM instances. Now, you might think, it's only one VM that would
+have been easy to do. Now imagine, it's several VMs. It's different infrastructure that we're actually creating. We're only scratching the
+surface here right now. It'll become much more
+useful as we go along. With that, we'll end here and we'll see you
+next time. Thanks.

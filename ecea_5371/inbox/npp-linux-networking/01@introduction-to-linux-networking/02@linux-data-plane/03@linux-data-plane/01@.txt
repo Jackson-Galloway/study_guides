@@ -1,0 +1,154 @@
+Let's get started.
+In this lesson, we're going to talk about
+the Linux Data Plan. As mentioned in the
+previous lesson, we're not going to get into the kernel hacking and really
+explore the source code. That would be a fun
+thing to do and you're highly
+encouraged to do that, but really this is meant to
+just give an overview of what the capabilities are
+so that you could start exploring on your
+own if you wanted to. Really, it sets the stage
+for how we're going to interact with Linux and know what its
+capabilities are. Linux networking has a
+rich set of functionality. It provides abilities to
+do forwarding, netting, filtering, bridging,
+load balancing, traffic shaping,
+many other things. I basically just found
+as many icons on the Internet that I could find
+and through them up here. But really what you should understand is there's a lot
+that you could do with Linux. This is part of the reason why there's that movement
+as we mentioned, around desegregation and Linux
+is forming the foundation. How does this actually
+get implemented? All of that functionality. Stepping back, shown here is a generic router
+architecture. On the left hand
+side, you can see that that's the packet arriving. The router, we'll
+do some processing. This is largely focused
+on IP forwarding. It'll look up the IP address, it'll send that to
+a forwarding table which the value that was
+stored is the next top. Then you'll go through
+some packet processing where you'll update the header. In IP forwarding,
+you'll do things like decrementing the time to
+live field the packets, then get queued up for transmission to one of the
+particular outgoing ports. There's packet buffers that can store that, then
+it's transmitted. This really generalizes to really any functionality that
+you're going to perform. The key takeaway here is that
+there's this pipeline of functions and then there's
+tables driving the processing. Both of that is
+equally true in Linux and one of the things to think about is
+also as part of that, when you're providing
+broader functionality than just the IP forwarding
+is you're going to have to do a lot of protocol
+header parsing. Shown here are part of these protocol headers or
+examples of protocol headers, so we're showing
+Ethernet and IPv4, and in each of the cases
+there's a type field. In each case the type
+and it's protocol here, the type could be, so this is saying Ethernet
+packet and then the next type, whatever this data is
+inside of it could be IPv4, could be IPv6, it could be an ARP packet, VLAN whatever it is. Then likewise with IPv4, it has something
+that indicates what the actual data of
+that packet is. ICMP, TCP, so forth. This is valuable because
+this is really helps guide how that pipeline progresses as you're
+parsing the headers. A simplified version of
+the Linux Data Plane. Again, this doesn't correlate exactly to specific functions, but if you were to go look, you would see
+similar things that may be broken up into different functions and
+multiple functions, but it'll have a flavor of
+this inside of their kernel. You start with the
+device drivers that are able to
+communicate with the various network cards
+that would be on the device. It starts with a
+receive function so it's going to be
+doing some parsing of the headers to see what
+type the packets are. Are they ARP? Is it VLAN? Is this attached to a bridge? Is this IPv4? All that kind of processing. For local traffic, it's going
+to look if there's TCP, if it's an ICMP packet, IPsec. If it's not local, it'll
+be able to be forwarded. There's a lot of
+functionality inside the Linux kernel
+to do forwarding. It's missing a lot of details around how's bridging handled
+and things like that. Then we're going to see that it goes into queuing discipline. This is part of that packet
+buffering and picking what packets to transmit next
+and all that kind of stuff. It may need ARP on
+the egress side. In case you don't
+know next hops, MAC address, things like that. Then it gets into a
+transmit function and ultimately gets
+down to the driver. Throughout the Linux kernel, there's a lot of hook
+points. We'll see this. These are hook points
+for various net, filtering, and different
+logic like that. We'll see that in a future
+module that we'll cover. The takeaway here
+is that there is this rich set of functionality
+provided by Linux. It's very powerful if you know how to use it which is
+where this course comes in. Now some of the sample
+utilities that are quite useful and we'll go through every
+single one of these; iproute2 which is really
+a suite of utilities, iptables, tc for traffic
+control, and ipvs. You can see that it
+covers everything from load balancing, the queuing, classification and
+filtering, and bridging, forwarding and all
+that kind of stuff. Now the question is, how do these utilities
+interact with Linux? This is where a protocol
+called Netlink comes in. This is how these utilities tell the kernel how it
+should process the traffic. If you recall in the generic router
+architecture, there's a lot of, it was a table-driven
+architecture, so there was a lot
+of functionality and then there's these
+various tables. A lot of this is just
+filling in tables. Let's say we have a
+utility like iproute2. It's going to talk to
+the net link protocol to the kernel which
+is all the data plan. How it works is it's based
+off of Berkeley sockets. Berkeley sockets as a refresher from network systems course or network foundations course, sockets originated
+in the early 1980s and it's really been
+the standard since. All a socket is, is an
+abstract representation for the local endpoint of a
+network communication path. An application puts data into the socket and then the other application gets
+data from the socket. If you were to do some
+socket programming, you would write some
+code that basically has this sequence
+of function calls. On the server side, you would create the socket, create the file
+descriptor and all that. You would bind it to a well
+known port and then you would start listening for
+incoming connections. You would block on
+that after you call accept until you get some connection request
+from the client. On the client side, they would do something similar, create a socket and then call connect to do the
+connection establishment. Then once you have that, it's going to be this sequence
+of sends and receive. This is going to be dependent on the application protocol. Looking at this from the
+Netlink perspective, all that really is is
+opening sockets where each application is the client and then the servers
+run down in the kernel, and then you create the socket between the application
+and user space and the module running
+in the kernel. It supports multicast. What's shown here is
+that really a lot of that logic is going to
+be hid in by libraries. But just to go directly to
+what the socket looks like, looking at these functions,
+we have the socket call. Some of the parameters
+that you would see, and this is all showing C code. The domain, you would
+say it's AF Netlink. The type would be a raw socket, the protocol would
+be the family. If you were creating
+a TCP socket, well, you would just have
+the exact same call with different values filled in. Example. Protocol values for the families would
+be things like Netlink route,
+Netlink net filter. This is really just indicating which particular
+subsystem inside of the kernel that
+you're talking to. The structure of the socket
+is part of the bind call. You can see calls like that. Each family has a set
+of multicast groups, the RTM group link, IPV4, IFADDR, and so forth. Now when you comes to
+sending messages, again, it's taking that same generic
+or same function structure. The data just happens to be in the particular Netlink
+message protocol. It starts with a header where it will have the length
+and type and all that. Where the type would be things like what are you trying
+to do with this message? What is the payload
+going to indicate? In this case, it's, say, setting up a new link. Then the payload
+would have a bunch of other information
+that's specific to the request
+that's being made. All of that isn't really to
+make you net link experts, I'll provide references if you do want to go and
+actually try to create some Netlink messages with the kernel and explore
+that, that's great. But the main takeaway
+is, at the data plane, we have functions with tables that are
+organized in a pipeline. There's really this
+API for each function, then the function and the table, and those are exposed
+through Netlink sockets. Then we have utilities that really provide
+abstractions for users to configure
+various aspects of the Linux data plane. It uses those APIs provided by the data plane through the Netlink sockets
+to configure it, but it presents as a much
+easier interface to work with. With that, we'll end here and we will see
+you next time. Thanks.

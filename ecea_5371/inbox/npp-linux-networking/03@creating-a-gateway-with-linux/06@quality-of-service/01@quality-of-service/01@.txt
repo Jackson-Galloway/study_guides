@@ -1,0 +1,158 @@
+Hello. This time, we're going to talk about
+quality of service. Quality of service refers to the overall performance
+of a service. What my applications care
+about, things like bandwidth, making sure that they get enough bandwidth that their
+applications need. If you're streaming a movie, you want to make sure that
+you have enough bandwidth. Latency, how long a packet takes to get from
+one point to another. Jitter, this is the difference effectively
+in the latency. You want it to be a
+lot more regular, the packet arrival so you can have good call quality
+or something like that. Then the last maybe is loss. You don't want to have to
+lose a lot of packets. These are all different
+metrics and qualities that together conform
+the quality of service. Different services will have
+different QoS requirements. How do you go about creating and enforcing some QoS policy? There's three main
+building blocks. The first is classification. This is inspecting packets to identify what class of
+traffic they belong to. The next is shaping. This is about ensuring a
+given class of traffic conforms to some desired
+properties such as rates. Then the last is scheduling, so determining which
+packet to transmit next and which packets to drop.
+We'll go through each. Starting with classification. Given a packet, we want to place it into a queue representing
+some traffic class. Maybe this is a low, medium, and high priority
+traffic type classification. Low priority might be E-mail, medium priority might be web, and then high priority traffic might be video conferencing. There's various mechanisms
+that you can go about classifying this traffic. One is just based
+on packet headers. We can look at Layer 3 and 4 headers to identify
+the traffic. For example, if we
+see TCP port 80, we know that's web traffic
+so we can classify that as web traffic and put it
+into that class of traffic. Maybe we see specific customers which we've assigned
+IP addresses, maybe the 1.2.3.0/24 range, maybe they pay more
+for their service, and so we want to put them
+in a higher classification. We could also look based
+on deep packet inspection. That means inspect
+the packet payload. We can look at the payload for known headers
+or bit patterns. This might look inside to see, all right, this is particular, go into specific websites, look at the HTTP requests
+and things like that. This is computationally
+expensive, but it does help
+identify traffic that can't be identified
+at Layer 3 and 4. Then finally, we could do
+this based on fingerprinting, so protocols, applications, operating systems all have fingerprints such as the
+distribution of packet sizes, interpacket gaps, and so forth. You can perform
+statistical analysis over many packets and you can
+identify traffic that way. These are all mechanisms that we have to be able
+to classify traffic. Now, moving on to
+traffic shaping. The goal here is for traffic of a given class to
+conform to some shape. Two properties that are related to this are the traffic
+rate and the burst rate. Shown here is the traffic
+rate or the allowed rate. Maybe we want to
+say, on average we want it to conform to
+this allowed rate, don't want it to go over. But we do allow it to have little bits of time
+where it bursts traffic, especially if it
+didn't have that. The amount of traffic
+that raised to the allowed traffic
+level in the past. This is different
+properties we can assign. How we go about doing that is using or one particular method is the
+token bucket abstraction, and this is a way to
+implement rate limiting. In this, we have
+this right here, represents a bucket and we can place tokens into the bucket at a given rate R. Then a packet can only be transmitted if there's
+a token in the bucket, otherwise, it waits until
+a token gets there. You could see what this
+would do would be make it conform to this specific rate. Because we get packets
+coming in, and has to wait. As soon as that token drops, it'll get sent and then it
+waits until the next token. Since the tokens are
+being added at rate R, that's why the packets
+conform to that rate. Now, how handles burst is by
+looking at the bucket size. The bucket size, which
+is the depth here, determines the burst rate. For example, let's say there's
+no traffic for a while. During this time,
+tokens are being added at rate R and we start
+filling up the bucket. Now, actually these packets
+do come and they get there, when we do get traffic, which would be a burst
+of traffic of packets, there are tokens for
+the entire burst. The bucket would have
+enough tokens for that, it allows the burst, and then once it empties, well, then we go back to the rate. Now, if you want to
+constrain the burst size, well then that's the
+depth of the bucket. Eventually, the bucket will overflow and you just
+start discarding tokens so you can limit the burst size by
+limiting the bucket size. Now on to scheduling. There's two main
+functions in scheduling. One is given a cue that
+is starting to fill up, determine what and when to drop. Then given multiple cues, determine which packet
+to transmit next. Let's talk about
+queues real quick. We've shown the generic
+router architecture, has these packet buffers. We've seen in the past. We've talked about congestion. If you get multiple, let's say it's a
+four port router, three of the ports are receiving packets and they're
+all going to be transmitted out of
+the fourth port so the queues would start filling up because you can't
+transmit fast enough. When we have these cues
+or packet buffers, if we create really big ones, beyond the concern of how
+much memory it will take, well, then that's creating
+these really long delays. Let's say we put a packet in, it's going to have to wait
+this whole time to get through the entire queue
+before it's transmitted. This induces a lot of latency and maybe that's
+not what we want. If we do it too short, well this is going to
+lead to a lot of drops. Let's say we only add two slots for packets
+and two arrive, well, you're going to be
+dropping one of them. That's not exactly great either. This is fields of
+study on its own to figure out what the
+good buffer sizes are. Now, there's other
+things we can do algorithmically at run time to determine things
+like what to drop. The simplest one is a tail drop. When the queue fills up, just drop whatever packets can't be in drop from the tail. But the problem with tail
+drop is, let's consider TCP. It uses packet loss as an
+indication of congestion, such that it then slows
+its sending rate. Now let's imagine
+we're using tail-drop. As our inside of the network, the queue gets all congested, filled up and then
+we drop a packet. With tail-drop, packet
+loss would occur when congestion
+reached its peak. Then we need a
+round trip time or a timeout amount of time
+for when TCP would say, I think there's congestion, or detect that
+there's packet loss. In the meantime,
+there's going to be many packets that were
+sent and likely dropped. There's a lot of
+other approaches that have been introduced over the years that effectively drop packets earlier to
+signal to CCP earlier. It's doing things
+probabilistic-ally, like it's starting to fill up. Well, maybe let's
+probabilistically drop a packet, but not drop all of the packets, and so this will start
+signaling to them. I highly encourage
+you to go read about these different ones and they're much more
+widely used today. The second part is what
+queue to transmit from. Let's say we've done
+our classification. We've already done shaping,
+which is not shown here, but we put into these
+different classes of traffic. Now, which do we actually
+transmit on the wire next? We could go with
+strict priority. If the top queue has
+a packet to send, send that, otherwise
+look at the next one and send that, and so forth. Now, this has a problem
+that it could completely starve out the lower priorities. Other approaches might include something
+like round-robin. We saw that with load balancing, but this is a different context. This is cycling
+through each queue, so we transmit one packet
+from the top queue, one packet from
+the middle queue, one packet from the bottom
+queue, and so forth. This is not necessarily using the queues as
+a priority list, but putting them in for
+different properties, so probably were
+shaped differently. Then a problem with that is packet sizes aren't
+necessarily exactly the same, there's a variance on that, something called fair queuing. It tries to mimic a
+bit-per-bit multiplexing. Imagine if we could take
+one bit from this queue, one bit from this queue, one bit from the bottom queue, and then do
+round-robin that way, that will be the most fair. It's not practical because
+you can't actually do that, but it mimics that approach. It does that multiplexing by computing the theoretical
+departure date for each packet and then using that as
+part of the algorithm to determine what
+to transmit next. Let's recap on QoS. We have the classification, which is inspecting packets to identify what class of
+traffic they belong to. They then get shaped, which ensures a given
+class of traffic conforms to the desired
+properties such as rates. And then we have scheduling, which is determining which packet to transmit next
+and which packets to drop. One last note is that all of
+this is on the egress side. On the ingress side, there's something
+called policing, which is effectively
+the same as shaping, like you want to be able
+to enforce a rate limit. But the difference is it can only take one corrective action, which is dropping
+a received packet. Let's say we have a host and
+we're receiving traffic. Well, you can't really do much
+with it other than drop at that point. So that's policing. Just wanted to mention that, but we've now gone
+through all these. Next time, we're
+going to get into the Linux utility called TC and it's going to be
+able to do all of this type of Quality
+of Service mechanisms. Until then, thanks.

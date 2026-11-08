@@ -1,0 +1,778 @@
+1
+00:00:09,343 --> 00:00:11,669
+Now let's get into Kubernetes Networking.
+
+2
+00:00:11,669 --> 00:00:16,693
+So here we're not just going to see
+what the networking contracts are and
+
+3
+00:00:16,693 --> 00:00:19,926
+how we can handle them or
+how we can use them but
+
+4
+00:00:19,926 --> 00:00:24,207
+we're also going to see how
+they're actually implemented.
+
+5
+00:00:24,207 --> 00:00:28,623
+So it's this kind of combination
+which I think is quite powerful
+
+6
+00:00:28,623 --> 00:00:30,269
+to really understand.
+
+7
+00:00:30,269 --> 00:00:35,123
+And be able to troubleshoot and
+kind of know what you're doing with
+
+8
+00:00:35,123 --> 00:00:39,811
+a system like Kubernetes and
+then potentially even extend it.
+
+9
+00:00:39,811 --> 00:00:43,318
+So what types of communication
+do we actually need?
+
+10
+00:00:43,318 --> 00:00:49,422
+So we broke down in the slide some
+of the basic communications we need.
+
+11
+00:00:49,422 --> 00:00:57,027
+We need a pod to a pod, I need for
+a pod to be able to talk to a set of pods.
+
+12
+00:00:57,027 --> 00:01:01,909
+I need a pod to be able to talk
+to some external service that's
+
+13
+00:01:01,909 --> 00:01:03,932
+outside of the cluster.
+
+14
+00:01:03,932 --> 00:01:11,249
+And then I need some external service to
+be able to talk to a pod or a set of pods.
+
+15
+00:01:11,249 --> 00:01:15,839
+So we're going to go through
+one by one each of these, so
+
+16
+00:01:15,839 --> 00:01:18,900
+first let's start with pod to pod.
+
+17
+00:01:18,900 --> 00:01:26,371
+So if you recall,
+each pod gets its own IP address.
+
+18
+00:01:26,371 --> 00:01:33,132
+Shown said here is inside of some
+kind of address range in some subnet,
+
+19
+00:01:33,132 --> 00:01:38,484
+and this kind of represents
+this Kubernetes network.
+
+20
+00:01:38,484 --> 00:01:45,032
+So across networks, nodes where the nodes
+would be in a different kind of subnet.
+
+21
+00:01:45,032 --> 00:01:48,784
+So we got to figure out how to
+make things happen internally.
+
+22
+00:01:48,784 --> 00:01:55,506
+So this is where the container
+network interface, or CNI comes in.
+
+23
+00:01:55,506 --> 00:01:59,491
+So the container runtime
+creates the pod and
+
+24
+00:01:59,491 --> 00:02:05,749
+calls a network plugin to set up
+the networking for that pod, right?
+
+25
+00:02:05,749 --> 00:02:08,473
+So the configuration and
+
+26
+00:02:08,473 --> 00:02:14,186
+API of a network plugin is
+what follows the CNI spec.
+
+27
+00:02:14,186 --> 00:02:18,632
+So the CNI spec is just,
+or the CNI is just a spec
+
+28
+00:02:18,632 --> 00:02:23,538
+which says how these things
+is the interface well,
+
+29
+00:02:23,538 --> 00:02:30,403
+between the components of the container
+runtime and a network plugin.
+
+30
+00:02:30,403 --> 00:02:37,592
+Then you can go and create Kubernetes
+can use a bunch of different plugins.
+
+31
+00:02:37,592 --> 00:02:42,323
+And in fact, next lesson we're going to
+actually create our own network plugin.
+
+32
+00:02:42,323 --> 00:02:48,359
+So the spec talks about how
+to do the configuration, but
+
+33
+00:02:48,359 --> 00:02:54,791
+then also what to do when
+a container gets added or deleted.
+
+34
+00:02:54,791 --> 00:02:57,648
+Maybe there's some checks
+that need to be performed, so
+
+35
+00:02:57,648 --> 00:02:59,799
+those are kinds of
+the things that it does.
+
+36
+00:02:59,799 --> 00:03:06,299
+So one popular network plugin
+is something called Flannel and
+
+37
+00:03:06,299 --> 00:03:12,054
+so this is a picture of what
+flannel actually creates.
+
+38
+00:03:12,054 --> 00:03:16,555
+And so this should look familiar,
+all right?
+
+39
+00:03:16,555 --> 00:03:20,913
+So here it creates
+inside of a container or
+
+40
+00:03:20,913 --> 00:03:27,014
+as part of the container,
+it's going to create a vethpair,
+
+41
+00:03:27,014 --> 00:03:31,508
+attach that vethpair to a bridge, cni0.
+
+42
+00:03:31,508 --> 00:03:34,632
+There's going to set up some
+networking on a physical node.
+
+43
+00:03:34,632 --> 00:03:36,744
+So this is node0, node1, and
+
+44
+00:03:36,744 --> 00:03:40,440
+then it's going to use some
+sort of tunneling mechanism.
+
+45
+00:03:40,440 --> 00:03:43,781
+So this picture is showing
+it using VXLAN tunneling.
+
+46
+00:03:43,781 --> 00:03:47,513
+But if you recall
+the picture that we said,
+
+47
+00:03:47,513 --> 00:03:52,799
+the use case three set up on your own,
+we said GRE tunneling,
+
+48
+00:03:52,799 --> 00:03:56,646
+that would be another viable alternative.
+
+49
+00:03:56,646 --> 00:04:00,843
+But you could see great,
+all of this networking inside of Linux,
+
+50
+00:04:00,843 --> 00:04:02,837
+that's what flannel sets up.
+
+51
+00:04:02,837 --> 00:04:05,729
+And so now through what it's set up,
+
+52
+00:04:05,729 --> 00:04:10,956
+a container inside of this flannel
+network could have an address,
+
+53
+00:04:10,956 --> 00:04:16,387
+10.244.0.1, maybe this one is 10.244.1.1.
+
+54
+00:04:16,387 --> 00:04:21,323
+And they can communicate with
+each other through the veth,
+
+55
+00:04:21,323 --> 00:04:24,983
+through the bridge, through this tunnel.
+
+56
+00:04:24,983 --> 00:04:31,113
+The vxlan device through the physical
+node, go across a physical network,
+
+57
+00:04:31,113 --> 00:04:35,250
+come into here and
+then do the reverse, all right?
+
+58
+00:04:35,250 --> 00:04:41,324
+So that's flannel and
+that's what kind of a network plugin does.
+
+59
+00:04:41,324 --> 00:04:48,283
+Now the next thing is how do pod
+to multiple pods communicate?
+
+60
+00:04:48,283 --> 00:04:53,071
+So we talked about last time,
+but kind of reiterating here,
+
+61
+00:04:53,071 --> 00:04:58,454
+the contract in Kubernetes is
+called a service to represent this.
+
+62
+00:04:58,454 --> 00:05:04,117
+So a service is an abstraction which
+defines a local logical set of pods and
+
+63
+00:05:04,117 --> 00:05:06,686
+a policy by which to access them.
+
+64
+00:05:06,686 --> 00:05:09,907
+And then it load balances between them,
+
+65
+00:05:09,907 --> 00:05:14,654
+so it uses a selector to see
+which nodes should be in its set.
+
+66
+00:05:14,654 --> 00:05:18,144
+All right, so we know that we saw
+the YAML files, we deployed it,
+
+67
+00:05:18,144 --> 00:05:21,082
+it's in the GitHub repo,
+you can try it yourself.
+
+68
+00:05:21,082 --> 00:05:23,216
+So how is this implemented?
+
+69
+00:05:23,216 --> 00:05:27,320
+Is with a component called kube-proxy.
+
+70
+00:05:27,320 --> 00:05:32,428
+So Kube-proxy is a component shown
+right here, that makes sure clients
+
+71
+00:05:32,428 --> 00:05:37,296
+can connect to the services,
+you define load balanced when needed.
+
+72
+00:05:37,296 --> 00:05:39,207
+It runs on every node and
+
+73
+00:05:39,207 --> 00:05:44,472
+now it's not an actual proxy in
+that it's in the path of traffic.
+
+74
+00:05:44,472 --> 00:05:48,257
+It's actually not in the path of traffic,
+
+75
+00:05:48,257 --> 00:05:52,262
+it's just an interface to iptables or
+ipvs.
+
+76
+00:05:52,262 --> 00:05:57,241
+All right, so the API server,
+when it changes something
+
+77
+00:05:57,241 --> 00:06:01,805
+like maybe the endpoints
+that are part of a service,
+
+78
+00:06:01,805 --> 00:06:05,038
+great, kube-proxy will see that.
+
+79
+00:06:05,038 --> 00:06:09,783
+And since it's running on each node,
+it will update the iptables or
+
+80
+00:06:09,783 --> 00:06:11,875
+ipvs running in Kubernetes.
+
+81
+00:06:11,875 --> 00:06:18,356
+So when you set up your cluster, you can
+say which one you want to actually use.
+
+82
+00:06:18,356 --> 00:06:23,172
+So I believe iptables is the default,
+
+83
+00:06:23,172 --> 00:06:27,240
+but you can also say to use ipvs.
+
+84
+00:06:27,240 --> 00:06:33,912
+So now when a client talks to a pod,
+it's actually going through iptables or
+
+85
+00:06:33,912 --> 00:06:38,619
+ipvs to load balance between those pods,
+all right?
+
+86
+00:06:38,619 --> 00:06:43,923
+So we clearly saw how to do ipvs,
+it does load balancing.
+
+87
+00:06:43,923 --> 00:06:47,360
+But how do you do load
+balancing with iptables?
+
+88
+00:06:47,360 --> 00:06:52,563
+So luckily there's this nice
+site that had a really nice
+
+89
+00:06:52,563 --> 00:06:57,992
+example of how you could do
+load balancing with iptables.
+
+90
+00:06:57,992 --> 00:07:01,918
+So you can use this module
+called statistic and
+
+91
+00:07:01,918 --> 00:07:08,571
+then basically say with probability
+match this particular rule, all right?
+
+92
+00:07:08,571 --> 00:07:12,788
+So you're going to match
+all this other stuff, so
+
+93
+00:07:12,788 --> 00:07:16,383
+this is the nat table prerouting chain.
+
+94
+00:07:16,383 --> 00:07:20,144
+Match this destination IP address,
+
+95
+00:07:20,144 --> 00:07:26,828
+match this destination port, and
+with probability match this.
+
+96
+00:07:26,828 --> 00:07:32,118
+So if it matches that with 33%
+probability it'll match this and
+
+97
+00:07:32,118 --> 00:07:36,373
+then it'll choose destination 10.0.0.2.
+
+98
+00:07:36,373 --> 00:07:40,052
+And the next one with 50% probability,
+choose that and
+
+99
+00:07:40,052 --> 00:07:43,145
+then the last one is
+with 100% probability.
+
+100
+00:07:43,145 --> 00:07:48,136
+So why it's kind of 33 5100 percent
+
+101
+00:07:48,136 --> 00:07:52,685
+is because if it didn't match this,
+
+102
+00:07:52,685 --> 00:07:57,821
+now you need to select between these two,
+
+103
+00:07:57,821 --> 00:08:03,715
+so that gives each a 33%
+chance of matching.
+
+104
+00:08:03,715 --> 00:08:07,228
+[COUGH] So
+kind of walking through an example,
+
+105
+00:08:07,228 --> 00:08:11,951
+let's say we mentioned that
+the service gets an IP address.
+
+106
+00:08:11,951 --> 00:08:16,045
+No interfaces are created,
+just it's a virtual IP address and
+
+107
+00:08:16,045 --> 00:08:18,911
+then let's say we have example endpoints.
+
+108
+00:08:18,911 --> 00:08:24,383
+10.244.1.2, that's over here on node 1 and
+
+109
+00:08:24,383 --> 00:08:29,286
+2.2 on node 2, so
+that's this one right here.
+
+110
+00:08:29,286 --> 00:08:32,570
+So let's say it's zero wants
+to talk to the service.
+
+111
+00:08:32,570 --> 00:08:38,852
+It comes into the source, and destination
+is the source of this container,
+
+112
+00:08:38,852 --> 00:08:42,894
+destination is the destination
+of the service.
+
+113
+00:08:42,894 --> 00:08:47,223
+It'll come into the iptables node and
+
+114
+00:08:47,223 --> 00:08:52,092
+iptables is set to
+rewrite from the service
+
+115
+00:08:52,092 --> 00:08:56,699
+address to one of the actual endpoints.
+
+116
+00:08:56,699 --> 00:09:02,099
+And then once it's rewritten, now we have
+basically this pod to pod communication.
+
+117
+00:09:02,099 --> 00:09:07,051
+So now it can go through that CNI zero,
+it can go through that VXLAN tunnel,
+
+118
+00:09:07,051 --> 00:09:11,074
+whatever is needed to get it
+to the particular destination.
+
+119
+00:09:11,074 --> 00:09:16,904
+And so this case,
+it'll be able to make its way there.
+
+120
+00:09:16,904 --> 00:09:20,414
+All right,
+now let's look at pod to external.
+
+121
+00:09:20,414 --> 00:09:24,969
+So this is the case
+where we have a pod and
+
+122
+00:09:24,969 --> 00:09:29,802
+maybe we have some
+address of a database or
+
+123
+00:09:29,802 --> 00:09:34,097
+DNS URL of a database running in AWS.
+
+124
+00:09:34,097 --> 00:09:37,690
+So all this is,
+it's a different type of service.
+
+125
+00:09:37,690 --> 00:09:41,794
+So it's still service,
+but when you define it,
+
+126
+00:09:41,794 --> 00:09:47,246
+you're saying type external name and
+tell it where to find it.
+
+127
+00:09:47,246 --> 00:09:52,866
+So now this pod, same exact
+mechanism to talk to that service,
+
+128
+00:09:52,866 --> 00:09:55,199
+uses that IP address, but
+
+129
+00:09:55,199 --> 00:10:00,620
+then the translation translates
+it to something external.
+
+130
+00:10:02,800 --> 00:10:07,776
+All right, now [COUGH],
+excuse me, external to internal.
+
+131
+00:10:07,776 --> 00:10:12,576
+So we mentioned this in the case
+of the port forwarding and
+
+132
+00:10:12,576 --> 00:10:15,576
+Kubecontrol port forwarding, but
+
+133
+00:10:15,576 --> 00:10:20,477
+that's not really a production
+thing that you would use.
+
+134
+00:10:20,477 --> 00:10:25,328
+So instead we're going to use ingress and
+ingress controllers.
+
+135
+00:10:25,328 --> 00:10:30,742
+So the ingress is a resource
+that you would kind of define
+
+136
+00:10:30,742 --> 00:10:36,334
+per service that you want to run or
+entry point you want.
+
+137
+00:10:36,334 --> 00:10:40,566
+And then the ingress controller
+is some load balancer.
+
+138
+00:10:40,566 --> 00:10:41,456
+So let's go through that.
+
+139
+00:10:41,456 --> 00:10:47,420
+So the ingress controller is
+a load balancer such as nginx,
+
+140
+00:10:47,420 --> 00:10:50,770
+traffic, haproxy, whatever.
+
+141
+00:10:50,770 --> 00:10:54,264
+So you need to deploy
+an ingress controller first.
+
+142
+00:10:54,264 --> 00:10:58,795
+So if you want to deploy,
+I think this is for nginx, for
+
+143
+00:10:58,795 --> 00:11:04,154
+the system, this is for
+the system to use, you say all of that.
+
+144
+00:11:04,154 --> 00:11:06,668
+All right, now, no cloud providers.
+
+145
+00:11:06,668 --> 00:11:11,570
+If you're using like AWS or
+Google and their Kubernetes clusters,
+
+146
+00:11:11,570 --> 00:11:17,674
+they've already deployed an ingress
+controller, so you don't have to do that.
+
+147
+00:11:17,674 --> 00:11:21,183
+Now once that's done for the cluster,
+
+148
+00:11:21,183 --> 00:11:27,467
+now we can actually use it as a user,
+this is where an ingress comes in.
+
+149
+00:11:27,467 --> 00:11:32,042
+You create an ingress to tell the ingress
+controller how to reach a service.
+
+150
+00:11:32,042 --> 00:11:37,183
+So I can say create an ingress,
+give it some stuff,
+
+151
+00:11:37,183 --> 00:11:43,773
+basically saying it's using nginx and
+then here's some specs.
+
+152
+00:11:43,773 --> 00:11:49,527
+The main thing to look at is
+ultimately it's saying for this path,
+
+153
+00:11:49,527 --> 00:11:55,300
+which is everything in this case
+go to the service, blog service.
+
+154
+00:11:55,300 --> 00:12:00,060
+So Kubernetes, the ingress will
+
+155
+00:12:00,060 --> 00:12:04,650
+see that when it gets deployed,
+
+156
+00:12:04,650 --> 00:12:09,077
+it will then configure nginx.
+
+157
+00:12:09,077 --> 00:12:10,502
+What's the ingress controller?
+
+158
+00:12:10,502 --> 00:12:16,382
+It'll configure that to load
+balance to this particular service.
+
+159
+00:12:16,382 --> 00:12:21,101
+And it's a layer seven load balancer so
+
+160
+00:12:21,101 --> 00:12:27,544
+you can have it go into
+multiple different services.
+
+161
+00:12:27,544 --> 00:12:31,111
+All right, so we went over how the main
+
+162
+00:12:31,111 --> 00:12:35,917
+constructs of networking
+are done in Kubernetes.
+
+163
+00:12:35,917 --> 00:12:39,163
+So up next we're actually
+going to dive in and
+
+164
+00:12:39,163 --> 00:12:43,770
+see how do we create a network
+plugin ourselves, all right?
+
+165
+00:12:43,770 --> 00:12:47,611
+And with that we'll end here and thanks.

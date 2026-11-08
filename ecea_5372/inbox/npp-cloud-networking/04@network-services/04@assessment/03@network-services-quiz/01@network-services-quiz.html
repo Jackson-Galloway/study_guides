@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Network Services Quiz</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p></p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is the difference between an Application Load Balancer and a Network Load Balancer</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~6ij8uhubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>ALB is integrated into the application, NLB is realized in the network</p></div></li>
+<li><input name="autoGradableResponseId~6ij8uhubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>ALB must run in a proxy, NLB can be implemented in the virtual switch on each host</p></div></li>
+<li><input name="autoGradableResponseId~6ij8uhubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>ALB support pass through traffic, NLB must terminate a TCP connection</p></div></li>
+<li><input name="autoGradableResponseId~6ij8uhubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>ALB works at Layer 7, NLB works at Layer 4</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following are true of the Premium tier in GCP, but not true in the Standard tier.</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~6pSO9BubEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Traffic destined for Google services is prioritized</p></div></li>
+<li><input name="autoGradableResponseId~6pSO9BubEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>External IP addresses are advertised from multiple points of presence </p></div></li>
+<li><input name="autoGradableResponseId~6pSO9BubEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Traffic egresses Google’s network closest to the destination</p></div></li>
+<li><input name="autoGradableResponseId~6pSO9BubEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>Traffic egresses Google’s network closest to the source</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>When setting up an Application Load Balancer, we were requested to create a dedicated subnet – what was it for?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~6wFaiRubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>All of the above.</p></div></li>
+<li><input name="autoGradableResponseId~6wFaiRubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Running Envoy proxies.</p></div></li>
+<li><input name="autoGradableResponseId~6wFaiRubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Ensuring Google can validate the IP address space</p></div></li>
+<li><input name="autoGradableResponseId~6wFaiRubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Enabling Google to launch VMs as part of autoscaling</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What does Consistent Hashing ensure, in the context of Maglev?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~625NLBubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Ensure that in the face of failure, existing TCP connections are directed to the same server</p></div></li>
+<li><input name="autoGradableResponseId~625NLBubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Provide a unified way to perform both Application Load Balancing and Network Load Balancing</p></div></li>
+<li><input name="autoGradableResponseId~625NLBubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>Enable a consistent view of the server availability through fast monitoring</p></div></li>
+<li><input name="autoGradableResponseId~625NLBubEe-M0w73BTmoXw" type="radio"/> <div class="quiz-option-text"><p>That the load balancing algorithm consistently assigns traffic to the least loaded servers</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>How does Akamai direct traffic from a client to a nearby Akamai server?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~688LnRubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>DNS</p></div></li>
+<li><input name="autoGradableResponseId~688LnRubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>IGMP </p></div></li>
+<li><input name="autoGradableResponseId~688LnRubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>HTTP redirection</p></div></li>
+<li><input name="autoGradableResponseId~688LnRubEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>IP Anycast</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

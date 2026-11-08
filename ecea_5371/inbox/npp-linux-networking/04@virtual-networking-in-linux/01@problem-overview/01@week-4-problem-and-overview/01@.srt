@@ -1,0 +1,289 @@
+1
+00:00:08,270 --> 00:00:12,155
+Welcome back. At this point,
+
+2
+00:00:12,155 --> 00:00:13,700
+we're going to shift
+gears a little
+
+3
+00:00:13,700 --> 00:00:16,760
+bit and move from talking about
+
+4
+00:00:16,760 --> 00:00:23,560
+some Linux utilities and
+mechanisms to process packets,
+
+5
+00:00:23,560 --> 00:00:26,160
+to do things like forwarding
+
+6
+00:00:26,160 --> 00:00:28,900
+and network address translation.
+
+7
+00:00:28,900 --> 00:00:31,120
+We're going to
+shift to the topic
+
+8
+00:00:31,120 --> 00:00:33,920
+of virtual networking in Linux.
+
+9
+00:00:33,920 --> 00:00:38,960
+This is a very exciting
+topic, highly relevant today.
+
+10
+00:00:38,960 --> 00:00:41,540
+By the end of it, you should
+
+11
+00:00:41,540 --> 00:00:45,420
+definitely be much more
+versed in this space.
+
+12
+00:00:45,420 --> 00:00:47,440
+You probably, in fact,
+
+13
+00:00:47,440 --> 00:00:54,270
+you have certainly touched
+this in your own work,
+
+14
+00:00:54,270 --> 00:00:59,170
+meaning that the previous
+modules leveraged all of this.
+
+15
+00:00:59,170 --> 00:01:01,140
+Here, we're going
+to understand a
+
+16
+00:01:01,140 --> 00:01:03,980
+little better what was
+actually happening.
+
+17
+00:01:03,980 --> 00:01:06,800
+What do we mean by
+virtualization?
+
+18
+00:01:06,800 --> 00:01:08,620
+Virtualization in general is
+
+19
+00:01:08,620 --> 00:01:11,400
+just technology for abstracting
+
+20
+00:01:11,400 --> 00:01:14,365
+the underlying
+hardware and software.
+
+21
+00:01:14,365 --> 00:01:16,860
+The benefits are that it
+
+22
+00:01:16,860 --> 00:01:20,540
+makes more efficient
+use of resources,
+
+23
+00:01:20,540 --> 00:01:23,040
+and it provides for
+
+24
+00:01:23,040 --> 00:01:25,060
+simplified deployments
+
+25
+00:01:25,060 --> 00:01:28,030
+by isolating different
+configurations.
+
+26
+00:01:28,030 --> 00:01:29,780
+There's a lot of other benefits,
+
+27
+00:01:29,780 --> 00:01:31,940
+but these are the two key ones
+
+28
+00:01:31,940 --> 00:01:35,240
+that I feel like highlighting.
+
+29
+00:01:35,580 --> 00:01:39,320
+Some examples of
+where virtualization
+
+30
+00:01:39,320 --> 00:01:43,120
+shows up is certainly
+in Cloud computing.
+
+31
+00:01:43,120 --> 00:01:46,745
+If you've used a
+public Cloud service
+
+32
+00:01:46,745 --> 00:01:50,010
+like Amazon AWS, well,
+
+33
+00:01:50,010 --> 00:01:53,850
+they are using virtualization
+to allow you to
+
+34
+00:01:53,850 --> 00:01:58,710
+run your own applications on
+top of their infrastructure.
+
+35
+00:01:59,070 --> 00:02:01,690
+There's a whole field
+
+36
+00:02:01,690 --> 00:02:04,460
+called network function
+virtualization,
+
+37
+00:02:04,460 --> 00:02:09,250
+and this is a direction that
+is basically taking all
+
+38
+00:02:09,250 --> 00:02:14,410
+of the appliances that
+we have in networks,
+
+39
+00:02:14,410 --> 00:02:17,830
+putting them inside
+of virtual machines,
+
+40
+00:02:17,830 --> 00:02:20,670
+in such that they can run in
+
+41
+00:02:20,670 --> 00:02:23,450
+a much more efficient
+manner on servers
+
+42
+00:02:23,450 --> 00:02:30,260
+in a providers network like
+inside of AT&T's servers.
+
+43
+00:02:30,260 --> 00:02:32,605
+Then finally,
+
+44
+00:02:32,605 --> 00:02:36,195
+the virtualization of the
+network stack in Linux.
+
+45
+00:02:36,195 --> 00:02:38,700
+We've been running containers,
+
+46
+00:02:38,700 --> 00:02:41,930
+and we've hinted that there's
+
+47
+00:02:41,930 --> 00:02:45,970
+something underlying
+this that enabled that.
+
+48
+00:02:45,970 --> 00:02:51,000
+What we're going to really
+focus on is that part of it.
+
+49
+00:02:51,140 --> 00:02:54,765
+As a little outline of where
+we're going in this module,
+
+50
+00:02:54,765 --> 00:02:58,230
+we'll first dive a
+little deeper into
+
+51
+00:02:58,230 --> 00:03:01,270
+the concept of network
+
+52
+00:03:01,270 --> 00:03:04,125
+namespaces and
+namespaces in general.
+
+53
+00:03:04,125 --> 00:03:06,330
+The key mechanism inside of
+
+54
+00:03:06,330 --> 00:03:10,610
+Linux that provides this
+virtualization capability.
+
+55
+00:03:10,610 --> 00:03:16,500
+We'll then go to the
+utility ip-netns,
+
+56
+00:03:16,500 --> 00:03:21,285
+which is what can help set
+up network namespaces.
+
+57
+00:03:21,285 --> 00:03:24,535
+Then we'll put that
+into practice,
+
+58
+00:03:24,535 --> 00:03:27,300
+and show how we can
+
+59
+00:03:27,300 --> 00:03:31,320
+do the networking
+between name spaces.
+
+60
+00:03:31,320 --> 00:03:36,535
+Then finally, we'll relate
+it all to Docker networking,
+
+61
+00:03:36,535 --> 00:03:39,040
+and understand what actually is
+
+62
+00:03:39,040 --> 00:03:42,340
+happening when
+we're using Docker.
+
+63
+00:03:42,500 --> 00:03:46,300
+With that, we'll
+end there. Thanks.

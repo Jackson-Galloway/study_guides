@@ -1,0 +1,155 @@
+Let's jump in to talk about
+the Internet protocol. I'm assuming everybody
+knows what the Internet is. You've been able to
+reach these videos, but do you really know
+all the details about it? Here we'll provide at
+least the foundations to make sure we're
+all on the same page, and set up the rest
+of the module. Internetworking. The real origin of why do we need
+"The Internet", is being able to enable communication between multiple
+heterogeneous networks. We talked about the case where
+we might have somebody on a 5G network needing
+to be able to talk to somebody on an Ethernet network. There was a wide collection of different local area network
+types or link types, but these different
+disparate networks need to be able to
+communicate with one another. In a key paper from 1974
+from the Surf and Con, called A protocol
+for Packet Network In Our Communication, they introduced this concept of a router at the edge
+of each network. The Internet Protocol
+effectively came out of that. It was called a gateway in
+that paper to start with. One of the things to know about the Internet protocol
+is the service model. In particular it's best effort. This means that the delivery
+packets may get dropped. The timing, there's
+no guarantee on how long it takes to
+deliver a packet. The order packets may get
+reordered in the network. The reasoning behind
+all of this, is that, interconnecting
+different link layers needs to be really at the lowest common denominator if one at the link layer can support reliable delivery
+but the other can't. Well, the thing that
+interconnects them isn't going to be able to guarantee
+reliable delivery. This is this lowest
+common denominator of the things it wants to
+be able to interconnect. Here, I've been using the term
+packet in the link layer. We use the term frame for the message that
+it's going to be sending at the Internet
+or at the network layer, we call it a packet looking
+at addressing an IP. Each interface in a network or on a device will
+get an IP address. Shown on the right is an example where you
+have two laptops. They each have their
+own IP address and then there's
+some network devices with different ports on it and they each have
+their own IP addresses. All right. The IPv4 version four which is the
+longest standing, most common used
+for IP addresses. The addresses are 32 bits long, and you typically see them
+in dotted decimal form. You would see an address like 192.168.0.1 This is the
+groupings of eight bits. Each of the eight
+bits in that 32 bits, gets one of these
+decimal numbers. Then each one of
+them can be 0-255. IPv6, or version 6
+is also now growing in popularity because of the limited address
+space in IPv4, but also the sprawling
+number of addresses we need. Here the addresses are
+expanded to be 128 bits. Here we need to have what
+you would commonly see is groupings of 16 bits
+separated by a colon. I won't read out each of these, but shown here are
+a few examples. There's different
+ways that you can collapse some of these. If there's leading zeros, well, you can drop those leading zeros as shown in the highlighted
+portion in the red, and if there's several of these hextets that
+are all zeros, you can replace those
+consecutive zeros with colons, and so if you see any
+addresses in this form, you should be able to
+understand what they mean. Now one of the important things is that structure
+add scalability, and here we're referring to not structure of the
+messages necessarily, but structure of the addressing. In the Ethernet we
+saw this concept of the vendors would get
+the upper addresses. Upper bits of the address
+would be assigned to a vendor, and then they would assign to each device that
+they manufactured, the next, the lower bits
+in those addresses. Then they would ship
+their devices worldwide. With this, you can
+think of this as a flat address that
+it really doesn't have any meaning in terms of
+how it's used in a network. For that we saw in Ethernet, where the Mac address
+tables had one entry per destination and
+that's how it knew how to get to the destination, and that doesn't scale to
+billions of devices worldwide. The solution is to really add structure
+to the addresses, so the devices can be grouped. Grouping is called a subnet, which is a set of
+consecutive IP addresses. The high-order bits in a
+subnet are all the same. If we were to give,
+we're showing an example here of these three laptops of addresses 2.1.1.0,
+2.1.1.2 and 2.1.1.3. They all share those
+upper bits, the 2.1.1. They all share those
+parts of the address. Then the low-order bits
+can uniquely identify the particular node
+within that network, so the.1, the.2, the.3. Now, if somebody
+needed to create a table entry on how to forward this traffic
+to the destination, it might just need
+those upper order bits, so anything in this
+example that's going to 2.1.1 dot anything for this particular
+router, it can say, I'm just going to
+send it to the right, out that particular port
+and then a router closer to those end devices
+would be able to know where within this
+network should go. As mentioned, this node
+is drew out all 32 bits, and so if you recall the addresses IPv4
+addresses, or 32 bits. Here's the upper eight bits. We can represent the
+decimal too as 00000010. You separate it out like that. Here these 24 bits or the up three decimal
+places are all the same. Which then gets us to the CIDR or cider is
+how it's pronounced. The classless
+interdomain routing. Here you would see the
+format of a.b.c.d/x. A Lot of times these
+are called a prefix, so x here represents the
+length of the prefix, and so this is the number of high-order bits that
+are all the same, and then the a, b, c and d are the values
+which are the same. An example from the
+previous slide, the 2.1.1.0/24 would
+be that prefix. It says the 24 uppermost bits, which are represented by 2.1.1, are all going to be the same. Then the zero, the lower order
+end bits, we don't care. That's we're grouping
+those all together. We use a zero just
+to represent that in these listings that those are all going to be
+grouped together. Another aspect of this is we have these
+Cer addresses that can group hosts and into
+prefixes, and these subnets. What's interesting is that
+subnets can be combined. Let's say on the left
+we have two networks and they have two
+different subnets, 1.00 and slash 24.11 1024. This represents these 24
+bits highlighted in red. In each of the cases
+are what all of the addresses within each
+of those subnets will be. Now if we had something a little closer to whoever
+is going to be sending it, on the right hand side, we have somebody that wants
+to send something. What are the table
+entries going to need to look like there? Well, do they need an entry
+for each of the subnets? Well, in any case, it's going to be, for either case it's going
+to go to the left. If I send something to either of those subnets, it's
+going to go left. What I can do is I can
+actually group these. I can note that, well, it doesn't matter
+which zero or one what that lower
+order of the 24 bits is and so I can actually
+create a prefix and aggregate those
+together to 1.100/23. Now it's only the 23
+uppermost bits that are anything that matches
+those that represents, basically, we're creating
+this bigger grouping. This allows for hierarchy and is really one of the
+key properties that allows for scalability
+worldwide. Now just diving into
+the full header of IPV4 on the left and IPV6. You can see the source address, you can see the destination
+address of both of those, and they're going to
+be different sizes. We'll note something called TTL, which is the time to live
+or in IPV6, hop limit. If you recall the
+problem of loops and forwarding or
+forwarding loops, then what happens is we need to some mechanism
+to be able to detect that. In Ethernet, we saw something like
+spanning tree protocol. We didn't get into the details, but that was one example of how we might be
+able to handle it. In the Internet Protocol, the way it's handled is use
+the time to live field. Each hop is given packet, it decrements the time to live and if it ever
+gets down to zero, the packet just gets dropped. Then note the protocol
+and next header field. The protocol field next title. Much as in Ethernet, we had that type
+field that said what was the thing that's
+inside, what's the payload? How should I interpret
+the payload? One of the types was IPV4. Well, here we have a
+protocol field which says, now inside of the payload
+of an IPV4 packet, how should I
+interpret that data? Then it also has a check sum, so we could see a little
+error handling in that. With that, that concludes
+the introduction to the internet
+protocol, and thanks.

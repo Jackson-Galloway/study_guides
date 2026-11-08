@@ -1,0 +1,231 @@
+Let's go in and jump in to talk about the
+router data plane. This is a topic that I find
+fascinating for some reason. These routers, the actual devices themselves are
+taking for granted. We do all networking all day, and we take for granted
+the network just works a lot of times
+and it's due to the routers in the
+design of them. It's really fascinating.
+There's a lot of innovation that went into it. We're going to take a quick
+peek at what's inside, how these routers are designed, and then go from there. We're calling it a router. What is the role of a router? The first main role is we talked about this
+gateway last time. The gateway when we
+have a land which has a link layer
+technology that needs to connect to a
+different network that has a different
+link layer technology, different administrative
+domain, whatever it is. The gateway is that
+border that interface between one network
+and the other. The second main
+role of a router, and they're
+intertwined, is really about forwarding traffic
+to some destination. This is where the
+Internet comes in, and this is the
+interconnection of a bunch of networks that all work together to allow for this global reachability
+of any given traffic. That's the main
+roles of a router. A lot of times you hear these two words,
+forwarding and routing, and a lot of times you hear them spoken as if they're
+the same word or same thing. They're actually two
+different things. Forwarding really refers to the data plane of the network. This is the thing that directs a data packet to some
+output port or link, and this is the thing that
+uses a forwarding table. The routing, which is
+the control plane, this is the coordination
+between different routers. This is the thing that
+computes the paths by coordinating with all
+of its neighbors, and its job is to create
+the forwarding table. All the routers have
+both the data plane, which is the actual
+traffic handling, and a control plane which is the coordination
+with the neighbors. We're going to look
+at packet forwarding. How this all works, like we said this control
+plane and showed in this diagram as a
+route processor, which is software running on a general-purpose processor, doing stuff to calculate
+the forwarding table. In the data plane, the life of a packet would
+typically be something like the packet is received at the ingress
+of a line card. You could think of a line
+card as very similar to a network interface card that has where the cables
+are plugged into it, has some functionality on it. On that line card, we would do look-up
+of the destination in a forwarding table
+to determine where the output port would be, which direction to forward it, send the packet over some switching fabric
+to an output port, and then the line card
+then transmits the packet. We'll dive in a little bit what that switching
+fabric looks like. We're going to look
+at these two parts. We're going to look at the
+processing that happens, as well as what does that
+switch fabric look like. The processing here
+we're referring to what is happening inside
+of these line cards. Shown here is a generic
+router architecture for those line cards. Highly simplified,
+made high-level, but it shows the key
+components of it. We have a packet that would be received shown on
+the left hand side. The main processing that
+happens is you're looking up the IP address inside
+of a forwarding table, and then you do some
+updates to the header. For example, we talked about
+the time to leave field, so that would be something like decermenting the
+time to leave field. Then now that we know
+where to send it, we que the packet up
+inside of a buffer, and then when it's
+ready to be sent, it can be sent on its way. The key challenge where a lot of the research over the years came in was on how to do a look up of an IP
+address really fast. This is actually a
+challenge and interesting. Let's compare it
+first to Ethernet. Ethernet we saw
+that you're doing this match on this
+destination Mac address. The addresses are structured
+around the vendors, we said last time that
+it's this flat address, and it really has no relation to anything structure related to how to forward it
+in the network. Because you can have
+devices from a lot of different vendors and
+things like that. Lookup in the Mac Address
+tables are exact matches. Now let's compare that in IP, what we're actually doing is
+matching on an IP prefix. We talked about how you get that scalability
+in the Internet as a whole is by being
+able to group a bunch of addresses together
+into these prefixes. The challenge here
+is that we may have prefixes that overlap. Shown here is an example
+where we have two subnets, one is 11.11.0.0/16. Remember that means the
+upper 16 bits or where each decimal in the dotted
+decimal, there's four of them. Each of those represents
+eight bits of uppermost decimals,
+points the 11.11. Anything there, it covers that. But then we have down here a different subnet that's
+a little more specific, it's the 11.11.11.0/24. We may have two
+different IP addresses or table entries for
+each of those prefix. Maybe there's in one
+case go to the left, and in other case
+you go to the right, or in this case
+port 1 and port 2. Now if we get this
+destination 11.11.11.11, it's actually covered by both. Then the question is which
+should we send it to? This is where the concept of longest prefix match comes in. The job of the Lookup is to find the most specific prefix that
+matches the destination. How a situation like this
+might have occurred is, sure, there might be one
+organization that has ownership over 11.11.0.0/16, but then they carved
+out a portion of it for one
+department or whatever, and that's actually in
+a different location, has its own router. Now basically for anything
+this subnet should go to here, and then everything else
+would go to the other router. That's a common
+situation that occurs. It occurs through the
+aggregation process. A bunch of different
+things that can occur. Here we want to find the most specific prefix that
+matches the destination. To visualize this, we can view the entire IPV force address
+space as a line right here, from 0-232 - 1. We have 32 bits,
+so this would be all zeros and this would be all ones on the
+right hand side. Now, any of our prefixes covers some portion of
+this address space, with longer prefixes covering a smaller amount of
+the address space, because they're more specific. The shorter prefixes,
+like a /8 up at the top, covers a much wider
+range of address spaces. Then any given address
+that we're given, so for example, 11.5.50.50. That's a single point
+in this address space, and we can view it as
+looking as this line of which is the first
+prefix that it matches. In this case it's 11.5.0.0/16. Another example 11.5.200.50. Similar exercise, and it actually hit right here, and this is looking
+at a slash 24. That's one way to visualize it. But then another way to
+think about it is how might this actually be
+implemented if you were to implement it in code? Here's an example of
+an address lookup using a try data structure. A try is just a type
+of a search tree. When we start filling
+out this table, what we do is each node can have a child node that if the next
+bit in the value is zero, you would go to the left. If the next bit is a one, you go to the right. Then if there's a table
+entry that actually matches at that particular
+node in the tree, you would put the
+prefix match there. For example, 100 starting
+at the root of the tree, we would go one, go to the right child. Then we're here.
+The next is zero, so you go to the left child, and then the next value is
+zero and go to the left child. Since that's the entirety
+of the prefix length, we would put that P1 is right there in that entry
+right there, in that node. Then we would go and
+add 11 for prefix 2. One gets us to the right child, and then go one again
+to the right child, and we put the prefix 2 there. We could just build out
+this tree whenever you're adding and removing prefixes. Whenever the forwarding
+table is updated, you could just keep
+manipulating the tree. Now to perform the lookup, you would basically
+just walk the tree. Here's the IP address
+and it's shortened, just for illustration,
+we would walk this tree. We would look at
+the first bit is a one. We would go right. The next bit is one,
+we would go right. Now we hit a prefix, but there may be
+a longer prefix. We would keep
+traversing the tree. Then the next bit is zero. Great. There actually is a child that's zero so we need
+to traverse that. Then the next bit is zero. Since there's no child, we know that we hit the end, and whatever the
+last prefix node that matched was
+the longest prefix, and in this case, it's P2. That's a quick overview of
+the design of a line card. There's a lot of interesting
+aspects that you can look into and around the
+queuing aspect of that. But we'll save that
+for a different time. The next part is to look
+at this switch fabric. What does that
+actually look like? Here, it's useful to think
+about how these historically evolve so that you
+can appreciate the innovation at
+each generation. Starting off in the
+first generation, it was really
+switching via memory. The interface would get the
+packet off of the wire. It would transfer that from
+the interface into memory. The processor would determine the next top it would do that, look up in the forwarding table, and then transfer the
+packet from memory to the appropriate
+output interface. Now you can guess the limitation here is the CPU processing. It's limited in the amount
+of parallelism it can have. It's also extra transfers
+and things like that. The next generation looked
+at switching via a bus. The main difference between these two pictures is
+the forwarding table, which was up here, and this would be like our operating system
+and our processor, we pushed it down into the
+line cards themselves. Now, we can look up where
+the package is destined for, which port it should go on directly on the interface card. For this, the packet
+would be received, look up in the forwarding table, and then transfer the packet over the system bus but instead of going to memory
+of the system, it would go directly out
+to another interface card. Now, the limitation of this system in this
+approach is you can only transfer one packet at a time over this system bus. That is like this other
+network or line card. Even if it receives something, the system bus is busy and this is similar to what we
+saw with Ethernet. It's a shared wire. The next generation introduced this concept of a
+switching fabric. This introduced parallelism
+via this fabric. Shown here is an example, something called a crossbar, but there's other topologies
+that exist as well. How these work is that it
+divides transfers up into little time slots for
+any given time slot, each input on the left is the inputs can be connected
+to 01 of the output. On the bottom is
+shown the outputs, and so how it does
+it is it basically takes these little interconnection
+points and then says, you basically
+changed directions, red would get traversed across, and then at this second little dot would get
+transferred down, that's where it crosses into B. Because these are
+completely different wires B can be transferring something
+to C at the same time. That's how a crossbar works. The limitation of this is really that it requires a
+specialized hardware. It can make a lot of
+transfers simultaneously, as in this biz but the
+specialized hardware, this crossbar, is now an
+additional thing that's needed and it's not necessarily something we
+want to put in every system. This is something
+that's highly popular, like the big Internet routers. The core routers will definitely have something like this, but we're also now seeing
+a fourth generation, which is basically getting
+back to the first generation, which is the switching via memory Processors
+are getting faster. We're getting more and
+more cores per processor. We're getting more
+sockets per motherboard, they're going to
+be interconnected. We're moving towards a Cloud and virtualized
+environments. Those are gaining a
+lot of popularity. We actually can start doing some of the
+switching and some of the network processing in
+all software in this model. This doesn't necessarily
+mean that it's replacing generation three but this is actually has its
+place in the world in combination with what's
+shown in generation three. If you're like me and you
+find this fascinating topics, there's a lot of different
+directions you can look into the link scheduling to
+determine what to put onto the wire to be round
+robin weighted priority, because we talked about this when you have
+multiple things sharing, well now you are having say multiple things
+that want to send out traffic to say port
+B in that picture, well, who should it be A or C that gets to send
+something out port B? Then what order should it go? If we start getting
+a lot of congestion, what is our approach
+to dropping packets? Like how should we go about
+when that packet buffer inside of the router
+actually gets filled up? The other things, like there's some additional capabilities
+we might be interested in, like traffic shaping to force traffic to conform
+to some policy. Maybe we said all this
+particular network connection should be limited to
+one gigabit per second, how do we shape that
+traffic and rate limit it to be able to enforce that? Those are some
+additional things that we're not covering right now, but definitely
+interesting to look into. All right, so next
+time we're going to start getting into
+the control plane and how routing works but
+for now, until then, thanks.

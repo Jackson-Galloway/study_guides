@@ -1,0 +1,578 @@
+1
+00:00:08,660 --> 00:00:13,260
+Let's get started.
+Welcome. This is
+
+2
+00:00:13,260 --> 00:00:17,720
+a new module around the VPC.
+
+3
+00:00:17,940 --> 00:00:21,990
+To overview this, we're going to
+
+4
+00:00:21,990 --> 00:00:26,155
+really talk about how
+the Cloud is organized.
+
+5
+00:00:26,155 --> 00:00:33,090
+This is a picture I found that
+really captures that down.
+
+6
+00:00:33,090 --> 00:00:36,150
+We talked about the
+Infrastructure as a Service.
+
+7
+00:00:36,150 --> 00:00:38,220
+You could think of the compute,
+
+8
+00:00:38,220 --> 00:00:39,690
+the network, all of that.
+
+9
+00:00:39,690 --> 00:00:41,670
+On top of that,
+
+10
+00:00:41,670 --> 00:00:45,390
+platforms are built,
+applications are built,
+
+11
+00:00:45,390 --> 00:00:48,690
+and then users all get to
+
+12
+00:00:48,690 --> 00:00:53,670
+access the services that are
+running inside of the Cloud.
+
+13
+00:00:53,930 --> 00:00:57,330
+Digging deeper into that,
+
+14
+00:00:57,330 --> 00:01:04,995
+the most coarse building block
+would be the data center.
+
+15
+00:01:04,995 --> 00:01:07,590
+Here's a picture of
+a data center in
+
+16
+00:01:07,590 --> 00:01:11,690
+Netherlands that you can
+
+17
+00:01:11,690 --> 00:01:13,530
+see really is just
+
+18
+00:01:13,530 --> 00:01:19,740
+really big buildings close
+to a good energy source.
+
+19
+00:01:22,580 --> 00:01:24,945
+If you're curious,
+
+20
+00:01:24,945 --> 00:01:29,390
+Google actually has a nice
+video where they actually walk
+
+21
+00:01:29,390 --> 00:01:32,470
+through and describe
+what's going on
+
+22
+00:01:32,470 --> 00:01:35,910
+inside of a data center.
+
+23
+00:01:35,910 --> 00:01:41,500
+These data centers are
+placed all over the world.
+
+24
+00:01:42,230 --> 00:01:46,930
+In the case of Google,
+
+25
+00:01:50,270 --> 00:01:52,520
+where you want to deploy
+
+26
+00:01:52,520 --> 00:01:54,260
+your infrastructure
+is called the region,
+
+27
+00:01:54,260 --> 00:01:56,360
+and these correlate to locations
+
+28
+00:01:56,360 --> 00:01:59,135
+of where Google
+has data centers.
+
+29
+00:01:59,135 --> 00:02:01,985
+They're named based
+on their location,
+
+30
+00:02:01,985 --> 00:02:05,540
+like US-West would be
+
+31
+00:02:05,540 --> 00:02:08,480
+the West Coast of
+the United States,
+
+32
+00:02:09,230 --> 00:02:12,975
+Asia-East would be, obviously,
+
+33
+00:02:12,975 --> 00:02:16,840
+in Asia on the east side.
+
+34
+00:02:16,840 --> 00:02:20,420
+If you want to see
+a list of regions,
+
+35
+00:02:20,420 --> 00:02:24,320
+you can use G Cloud
+to list out that,
+
+36
+00:02:24,320 --> 00:02:26,300
+but here's also a picture.
+
+37
+00:02:26,300 --> 00:02:29,840
+But the list continually gets
+
+38
+00:02:29,840 --> 00:02:35,120
+updated as Google rolls
+out more and more regions.
+
+39
+00:02:35,160 --> 00:02:39,890
+Within a region, we have a zone.
+
+40
+00:02:41,470 --> 00:02:43,940
+Critical shared resources for
+
+41
+00:02:43,940 --> 00:02:47,450
+compute infrastructure
+include the power,
+
+42
+00:02:47,450 --> 00:02:50,645
+the cooling, and the networking.
+
+43
+00:02:50,645 --> 00:02:53,300
+Power, obviously, to
+power up your servers.
+
+44
+00:02:53,300 --> 00:02:56,800
+Cooling, servers run pretty hot,
+
+45
+00:02:56,800 --> 00:02:58,980
+and so you need to make
+sure they're pretty cool.
+
+46
+00:02:58,980 --> 00:03:00,770
+If you've ever been
+in a data center,
+
+47
+00:03:00,770 --> 00:03:03,890
+it gets really loud
+because of the cooling.
+
+48
+00:03:03,890 --> 00:03:07,130
+Then networking is
+pretty fundamental.
+
+49
+00:03:07,130 --> 00:03:09,800
+Those are shared
+across all tenants.
+
+50
+00:03:09,800 --> 00:03:11,870
+What zone does is it
+
+51
+00:03:11,870 --> 00:03:17,275
+provides fault isolation
+within a region.
+
+52
+00:03:17,275 --> 00:03:21,455
+These regions can be
+interconnected with fiber.
+
+53
+00:03:21,455 --> 00:03:25,310
+Here's one region that
+might have its own power,
+
+54
+00:03:25,310 --> 00:03:27,060
+cooling, and networking,
+
+55
+00:03:27,060 --> 00:03:31,450
+and whatever isolation
+mechanisms that makes sense,
+
+56
+00:03:31,450 --> 00:03:34,160
+whether it's a different room or
+
+57
+00:03:34,160 --> 00:03:38,085
+just different power
+source or whatever.
+
+58
+00:03:38,085 --> 00:03:40,575
+Then there would
+be another region.
+
+59
+00:03:40,575 --> 00:03:43,645
+Then obviously, the
+different regions are
+
+60
+00:03:43,645 --> 00:03:48,720
+interconnected with a lot of
+bandwidth and high speed.
+
+61
+00:03:49,700 --> 00:03:53,790
+Within a zone, then
+you're going to
+
+62
+00:03:53,790 --> 00:03:58,750
+create the virtual
+private Cloud, or VPC.
+
+63
+00:04:00,710 --> 00:04:03,705
+Well, technically,
+that was wrong.
+
+64
+00:04:03,705 --> 00:04:05,640
+VPC is a construct or
+
+65
+00:04:05,640 --> 00:04:07,430
+an abstraction that's not
+
+66
+00:04:07,430 --> 00:04:09,930
+necessarily tied to
+a particular region.
+
+67
+00:04:09,930 --> 00:04:12,990
+But now we're getting
+into abstractions,
+
+68
+00:04:12,990 --> 00:04:15,310
+and the VPC is
+
+69
+00:04:15,310 --> 00:04:22,785
+the core networking abstraction
+inside of the Cloud.
+
+70
+00:04:22,785 --> 00:04:26,130
+There's similar constructs
+in other Clouds,
+
+71
+00:04:26,130 --> 00:04:30,135
+like AWS, also called the VPC,
+
+72
+00:04:30,135 --> 00:04:32,925
+Azure, called a VNet.
+
+73
+00:04:32,925 --> 00:04:35,895
+If we look at this
+picture, represents,
+
+74
+00:04:35,895 --> 00:04:38,010
+if I was to build my own private
+
+75
+00:04:38,010 --> 00:04:40,770
+Cloud or private infrastructure,
+
+76
+00:04:40,770 --> 00:04:43,110
+I would have racks of servers,
+
+77
+00:04:43,110 --> 00:04:44,595
+I would have some storage,
+
+78
+00:04:44,595 --> 00:04:47,210
+I would have some routing,
+
+79
+00:04:47,210 --> 00:04:50,210
+maybe some firewall and
+
+80
+00:04:50,210 --> 00:04:52,470
+be able to interconnect
+all of those.
+
+81
+00:04:52,470 --> 00:04:56,050
+A virtual private
+Cloud is effectively
+
+82
+00:04:56,050 --> 00:04:59,120
+that abstraction of being
+
+83
+00:04:59,120 --> 00:05:01,490
+able to run my own
+private Cloud,
+
+84
+00:05:01,490 --> 00:05:03,425
+but it runs on top of
+
+85
+00:05:03,425 --> 00:05:07,330
+the providers physical
+infrastructure.
+
+86
+00:05:08,010 --> 00:05:10,930
+Within a VPC, I can
+
+87
+00:05:10,930 --> 00:05:15,830
+further subdivide my
+infrastructure into subnets.
+
+88
+00:05:15,830 --> 00:05:19,390
+This is the subdivision
+of a network through
+
+89
+00:05:19,390 --> 00:05:23,410
+partitioning the IP address
+space into subnets.
+
+90
+00:05:23,410 --> 00:05:27,050
+I can have 10.0.1.0 on
+
+91
+00:05:27,050 --> 00:05:31,725
+the left and 10.0.2.0
+on the right.
+
+92
+00:05:31,725 --> 00:05:34,950
+Any servers that are
+created inside of here or
+
+93
+00:05:34,950 --> 00:05:37,350
+virtual machines would get
+
+94
+00:05:37,350 --> 00:05:41,250
+an IP address allocated
+in that subnet range.
+
+95
+00:05:42,590 --> 00:05:47,520
+Next, we have routes or rules.
+
+96
+00:05:47,520 --> 00:05:53,460
+Within a VPC, I can control
+how traffic is handled,
+
+97
+00:05:53,460 --> 00:05:56,420
+the routing table,
+to be able to direct
+
+98
+00:05:56,420 --> 00:06:00,945
+traffic between different
+subnets and external networks.
+
+99
+00:06:00,945 --> 00:06:04,560
+Then I can also
+specify rules and
+
+100
+00:06:04,560 --> 00:06:09,120
+my firewall policy for what
+traffic to block and allow.
+
+101
+00:06:10,760 --> 00:06:16,300
+That gives you that abstraction,
+
+102
+00:06:16,910 --> 00:06:20,540
+all the terms that
+we need to know
+
+103
+00:06:20,540 --> 00:06:24,225
+about inside of Google or GCP.
+
+104
+00:06:24,225 --> 00:06:26,160
+In the rest of the module,
+
+105
+00:06:26,160 --> 00:06:31,425
+we're going to walk through
+how to create a VPC in GCP.
+
+106
+00:06:31,425 --> 00:06:33,340
+We're going to
+then get into some
+
+107
+00:06:33,340 --> 00:06:35,760
+of the background material.
+
+108
+00:06:35,760 --> 00:06:38,810
+We're going to talk about
+software defined networking,
+
+109
+00:06:38,810 --> 00:06:43,960
+which is really a key
+enabling technology
+
+110
+00:06:43,960 --> 00:06:49,140
+that grew out of academia 15,
+
+111
+00:06:49,140 --> 00:06:53,190
+20 years ago that
+
+112
+00:06:53,190 --> 00:06:58,360
+certainly influences how modern
+infrastructure is built.
+
+113
+00:06:58,670 --> 00:07:02,700
+We'll then get into
+Google's Andromeda.
+
+114
+00:07:02,700 --> 00:07:06,350
+That's how they realize
+their VPC abstraction.
+
+115
+00:07:06,350 --> 00:07:09,770
+We'll then get
+into Azure and how
+
+116
+00:07:09,770 --> 00:07:13,830
+they realize their
+VPC abstraction.
+
+117
+00:07:13,830 --> 00:07:18,135
+The key difference here
+is the use of SmartNIC.
+
+118
+00:07:18,135 --> 00:07:20,430
+We'll talk about
+the design of that.
+
+119
+00:07:20,430 --> 00:07:25,125
+Then we'll get into the
+VPC a little deeper.
+
+120
+00:07:25,125 --> 00:07:26,830
+Then as part of that,
+
+121
+00:07:26,830 --> 00:07:31,990
+we'll talk about how to do
+the programming assignment.
+
+122
+00:07:33,800 --> 00:07:38,825
+This module is focusing
+on a single VPC.
+
+123
+00:07:38,825 --> 00:07:43,590
+Next module, we'll
+talk a little wider,
+
+124
+00:07:43,590 --> 00:07:47,350
+widen the net to a
+wide area network.
+
+125
+00:07:47,350 --> 00:07:51,425
+But let's really focus and
+understand what a VPC is here.
+
+126
+00:07:51,425 --> 00:07:54,520
+Until next time. Thanks.

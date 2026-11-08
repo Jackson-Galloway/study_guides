@@ -1,0 +1,61 @@
+Welcome to Network
+Principles in Practice, Linux Networking.
+I'm Eric Keller. I'm a professor at the
+University of Colorado, and I've been working in
+networking for a long time now. I've worked around the hardware, the operating systems, large
+scale distributed systems. I've seen a great deal of innovation and I'm
+passionate about this space. Its history is fascinating
+and its future is exciting. Why the name network
+principles in practice? The idea here is that we
+learn network systems, so we understand the protocols,
+understand some concepts. But this course, putting
+that into practice, helps reinforce the
+concepts where we can see how they were built. Those principles were built
+into widely used systems, in this case, Linux. Understanding how to use that, getting hands-on
+experience architecting, putting those
+concepts into place, building complex networks and network systems, all of that. Let's put this all into practice while learning much more
+about Linux networking. Who is this course for? The answer to that is that
+it was really designed to supplement many different paths. I'll talk about
+the two main paths for the network engineer. Traditionally,
+you're taught how to configure Cisco devices
+to do something. Well, Linux is becoming
+more pervasive in networks. The underlying systems in all of these cases are
+really moving to Linux. You'll set yourself up
+to really understand those systems and even
+contribute to their future. The other main path
+is developers, or Cloud architects,
+or DevOps engineers. From networks, it's not
+really your main job. The thing is networks
+touch everything you do. I've always found that the most valuable contributions are from those that
+can both innovate, demonstrate, and troubleshoot to get really to the
+root cause of issues. Being that networks
+are so pervasive, you're really setting yourself
+up to be that person. You'll be better positioned
+to set up proof of concepts, have the understanding
+to troubleshoot, even broaden your skills to innovate in ways that
+you couldn't before. This is the course I
+wish I had years ago. From one perspective, there's a complete lack of resources
+around Linux networking. But the reality
+is there actually is an abundance of resources,
+but it's very scattered. It comes in a bunch
+of different forms, there's a lot of noise to all the resources
+that are out there. Hopefully going
+through this course, this will help you cut
+through the noise to give you the background needed to be able to learn more on your own. What's this course about we're going to go
+through five modules. The first three
+will really build up knowledge on
+Linux networking, effectively working
+our way up the layers. We'll start with
+layer 2 and devices. We'll then move to layer 3
+with forwarding and routing. How do you build a
+router with just Linux? Then we'll move up to more complex functionality
+across filtering, load balancing, and
+quality of service. Then we'll shift gears a little bit and
+dive into the world of virtual networking
+and containerization. We'll understand how Linux
+works under the hood and how some popular systems
+like Dockers and Kubernetes, leverage Linux networking
+to make those systems work. Welcome, and I hope this
+is really helpful to you. Feel free to reach out on the
+discussion forums or find my e ail on my
+University of Colorado site or interact through Github. I'd love to hear from you. Thanks.

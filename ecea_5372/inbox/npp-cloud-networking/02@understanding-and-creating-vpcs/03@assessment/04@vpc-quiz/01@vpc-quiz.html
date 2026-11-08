@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VPC Quiz</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<div class="quiz-instructions"><p></p></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What is a zone in Google Cloud Platform?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~SgLC3xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>How Google groups each user’s individual virtual machines</p></div></li>
+<li><input name="autoGradableResponseId~SgLC3xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>An area within the Google Cloud Platform portal to enter notes between team members.</p></div></li>
+<li><input name="autoGradableResponseId~SgLC3xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>How Google provides fault isolation within a region among shared resources</p></div></li>
+<li><input name="autoGradableResponseId~SgLC3xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>A physical building which hosts many servers</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What are some key components when setting up a VPC?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~SpGUlRuQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Firewall Rules</p></div></li>
+<li><input name="autoGradableResponseId~SpGUlRuQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Region</p></div></li>
+<li><input name="autoGradableResponseId~SpGUlRuQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Subnet</p></div></li>
+<li><input name="autoGradableResponseId~SpGUlRuQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Zone</p></div></li>
+<li><input name="autoGradableResponseId~SpGUlRuQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>VM image</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following are tools in Linux that can be used to test connections in GCP?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~Sv0niRuQEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>socat</p></div></li>
+<li><input name="autoGradableResponseId~Sv0niRuQEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>dd</p></div></li>
+<li><input name="autoGradableResponseId~Sv0niRuQEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>ssh</p></div></li>
+<li><input name="autoGradableResponseId~Sv0niRuQEe-M0w73BTmoXw" type="checkbox"/> <div class="quiz-option-text"><p>netcat</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which proposed principle in the 4D architecture stem from the fact that network equipment consists of routing protocols on them with a configurable control plane? </p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~S3DR0xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>OpenFlow as an open standard</p></div></li>
+<li><input name="autoGradableResponseId~S3DR0xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Need ability to directly express the desired solution in the data plane</p></div></li>
+<li><input name="autoGradableResponseId~S3DR0xuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Central control plane</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which of the following are realizable with the match-action table abstraction?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~S-Cp2huQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Switch</p></div></li>
+<li><input name="autoGradableResponseId~S-Cp2huQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Router</p></div></li>
+<li><input name="autoGradableResponseId~S-Cp2huQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>Firewall</p></div></li>
+<li><input name="autoGradableResponseId~S-Cp2huQEe-OHBI4pmBTaw" type="checkbox"/> <div class="quiz-option-text"><p>NAT</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>Which best describes what Andromeda is?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~TGjGZhuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>A software architecture to enable users to monitor VPC networks</p></div></li>
+<li><input name="autoGradableResponseId~TGjGZhuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Google’s code name for it’s to be launched edge compute platform</p></div></li>
+<li><input name="autoGradableResponseId~TGjGZhuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>A hardware architecture to perform machine learning acceleration</p></div></li>
+<li><input name="autoGradableResponseId~TGjGZhuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>Google’s architecture to implement network virtualization</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>In the AccelNet paper (Azure’s SmartNIC), where was the first packet in each flow processed?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~TN2oSRuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>In software on the SmartNIC</p></div></li>
+<li><input name="autoGradableResponseId~TN2oSRuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>In the virtual switch in software</p></div></li>
+<li><input name="autoGradableResponseId~TN2oSRuQEe-j1wr_9a5Nqw" type="radio"/> <div class="quiz-option-text"><p>On the FPGA in the SmartNIC</p></div></li>
+</ul></div>
+<div class="quiz-question"><div class="quiz-prompt"><p>What resource type in terraform is used to create a VM in GCP?</p></div>
+<ul class="quiz-options">
+<li><input name="autoGradableResponseId~TY1vfRuQEe-OHBI4pmBTaw" type="radio"/> <div class="quiz-option-text"><p>google_compute_network_instance</p></div></li>
+<li><input name="autoGradableResponseId~TY1vfRuQEe-OHBI4pmBTaw" type="radio"/> <div class="quiz-option-text"><p>google_compute_network</p></div></li>
+<li><input name="autoGradableResponseId~TY1vfRuQEe-OHBI4pmBTaw" type="radio"/> <div class="quiz-option-text"><p>google_compute_instance</p></div></li>
+<li><input name="autoGradableResponseId~TY1vfRuQEe-OHBI4pmBTaw" type="radio"/> <div class="quiz-option-text"><p>google_compute_vm</p></div></li>
+</ul></div>
+  </div>
+</body>
+</html>

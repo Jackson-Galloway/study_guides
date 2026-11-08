@@ -1,0 +1,1162 @@
+1
+00:00:09,390 --> 00:00:10,801
+All right, welcome.
+
+2
+00:00:10,801 --> 00:00:15,281
+So on this one we're
+going to talk about some
+
+3
+00:00:15,281 --> 00:00:20,153
+Linux utilities for
+IP networking in Linux.
+
+4
+00:00:20,153 --> 00:00:25,068
+So just stepping back, make sure we're all
+on this same page, same understanding,
+
+5
+00:00:25,068 --> 00:00:27,682
+let's just kind of give
+a little background.
+
+6
+00:00:27,682 --> 00:00:33,324
+So internetworking is one
+of the key parts of IP,
+
+7
+00:00:33,324 --> 00:00:36,909
+it's the Internet protocol.
+
+8
+00:00:36,909 --> 00:00:40,763
+So this is really about
+enabling communication
+
+9
+00:00:40,763 --> 00:00:44,433
+between multiple heterogeneous networks.
+
+10
+00:00:44,433 --> 00:00:49,259
+So if you recall at the link
+layer like Ethernet or Wi-Fi or
+
+11
+00:00:49,259 --> 00:00:53,397
+any of those, well,
+we're going to have local area
+
+12
+00:00:53,397 --> 00:00:58,042
+networks that are on various
+different technologies.
+
+13
+00:00:58,042 --> 00:01:04,190
+So IP is the protocol that really
+binds all of these together and
+
+14
+00:01:04,190 --> 00:01:08,253
+enables the communication across them.
+
+15
+00:01:08,253 --> 00:01:14,050
+So the key here is this
+view from a paper in 1974
+
+16
+00:01:14,050 --> 00:01:19,719
+where they introduced
+the concept of a gateway.
+
+17
+00:01:19,719 --> 00:01:25,438
+And this is put a router at the edge of
+each network that, [COUGH], can translate
+
+18
+00:01:25,438 --> 00:01:31,347
+effectively between the boundaries of
+the two different networks, all right?
+
+19
+00:01:31,347 --> 00:01:35,929
+And it was called a gateway in that paper.
+
+20
+00:01:35,929 --> 00:01:42,325
+So addressing here in IP is as follows.
+
+21
+00:01:42,325 --> 00:01:46,708
+So each interface gets an IP address.
+
+22
+00:01:46,708 --> 00:01:51,114
+So shown here we have a diagram
+of couple end hosts and
+
+23
+00:01:51,114 --> 00:01:54,829
+then a couple network elements in between.
+
+24
+00:01:54,829 --> 00:02:00,503
+And so each of the interfaces would
+get an IP address, all right?
+
+25
+00:02:00,503 --> 00:02:06,083
+IPv4 is kind of what's been
+most commonly used for
+
+26
+00:02:06,083 --> 00:02:09,985
+the past 1020 whatever years.
+
+27
+00:02:09,985 --> 00:02:14,177
+And it's 32 bits in dotted decimal.
+
+28
+00:02:14,177 --> 00:02:19,847
+So you'll see an address like this,
+192.168.0.1.
+
+29
+00:02:19,847 --> 00:02:22,455
+So all of that is 32 bits.
+
+30
+00:02:22,455 --> 00:02:27,763
+Now IPv6 is certainly
+gaining a lot of momentum and
+
+31
+00:02:27,763 --> 00:02:31,599
+becoming pretty ubiquitous by now.
+
+32
+00:02:31,599 --> 00:02:35,193
+And so
+this is just a lot bigger addresses.
+
+33
+00:02:35,193 --> 00:02:37,590
+So 128 bits, all right?
+
+34
+00:02:37,590 --> 00:02:41,859
+And then because they're bigger,
+
+35
+00:02:41,859 --> 00:02:48,840
+they have its own way of kind
+of displaying the addresses.
+
+36
+00:02:48,840 --> 00:02:53,712
+So the first Linux utility to know about
+
+37
+00:02:53,712 --> 00:02:57,705
+is called ip addr or IP address.
+
+38
+00:02:57,705 --> 00:03:01,088
+You can write out the full
+name if you want.
+
+39
+00:03:01,088 --> 00:03:07,068
+So here, each device,
+if it's participating in IP networking
+
+40
+00:03:07,068 --> 00:03:13,282
+will have at least one address to
+use the corresponding protocol.
+
+41
+00:03:13,282 --> 00:03:17,705
+And it's possible to have several
+different addresses attached to one
+
+42
+00:03:17,705 --> 00:03:18,300
+device.
+
+43
+00:03:18,300 --> 00:03:20,521
+And when we say device,
+
+44
+00:03:20,521 --> 00:03:26,532
+these are the things that you can
+set up with the IP link utility.
+
+45
+00:03:26,532 --> 00:03:31,276
+So an ethernet device,
+a bridge, GRE tunnel,
+
+46
+00:03:31,276 --> 00:03:37,098
+all of those different things
+are what we call in a device.
+
+47
+00:03:37,098 --> 00:03:43,041
+So here's the demand page,
+you can go look at all the options it has,
+
+48
+00:03:43,041 --> 00:03:49,923
+but the main way you'll be using it is you
+specify ip addr and then some command.
+
+49
+00:03:49,923 --> 00:03:53,480
+So a command would be add as shown here.
+
+50
+00:03:53,480 --> 00:03:59,248
+But there's also commands to remove,
+show, change, all of those.
+
+51
+00:03:59,248 --> 00:04:03,448
+Then you specify the device,
+so dev eth1 that you
+
+52
+00:04:03,448 --> 00:04:08,355
+want to apply this address to and
+then the address, right?
+
+53
+00:04:08,355 --> 00:04:09,985
+It's pretty simple.
+
+54
+00:04:09,985 --> 00:04:11,870
+And so that's a command.
+
+55
+00:04:11,870 --> 00:04:15,702
+Now, the address eth1 has the address or
+
+56
+00:04:15,702 --> 00:04:20,638
+the device eth1 has the address 10.0.1.2.
+
+57
+00:04:20,638 --> 00:04:27,593
+If I did ip addr show,
+I would be able to see that.
+
+58
+00:04:27,593 --> 00:04:33,552
+All right, so with that, now let's move on
+to really what is the role of a router?
+
+59
+00:04:33,552 --> 00:04:41,794
+So routing is what computes paths
+by coordinating with neighbors.
+
+60
+00:04:41,794 --> 00:04:48,216
+And then forwarding is the thing that
+directs traffic to a destination.
+
+61
+00:04:48,216 --> 00:04:53,717
+So shown here is a bunch of
+networks all connected together.
+
+62
+00:04:53,717 --> 00:04:55,913
+These are routers that are running.
+
+63
+00:04:55,913 --> 00:05:01,620
+And, [COUGH], the routing protocol would
+communicate between each other to say,
+
+64
+00:05:01,620 --> 00:05:05,176
+here's the path,
+here's paths I know about, and
+
+65
+00:05:05,176 --> 00:05:09,991
+they'll all determine what's
+the best path that they should take.
+
+66
+00:05:09,991 --> 00:05:13,760
+And it's all dependent on what
+routing protocol is being run.
+
+67
+00:05:13,760 --> 00:05:18,967
+Then when a host wants to actually
+send traffic, it would send it, and
+
+68
+00:05:18,967 --> 00:05:24,089
+then the forwarding or the data plane
+of the router would take what was
+
+69
+00:05:24,089 --> 00:05:29,762
+pre-computed as those paths and say,
+I know how to get to the destination.
+
+70
+00:05:29,762 --> 00:05:35,635
+So for this particular destination,
+I'm going to go through this sequence
+
+71
+00:05:35,635 --> 00:05:41,046
+of routers and each one only really
+has to know what its next hop is, and
+
+72
+00:05:41,046 --> 00:05:46,300
+then the next one will figure out
+how it's forwarding the traffic.
+
+73
+00:05:46,300 --> 00:05:52,080
+All right, so
+we talked about the address and
+
+74
+00:05:52,080 --> 00:05:54,976
+how to add it in Linux.
+
+75
+00:05:54,976 --> 00:05:59,778
+And really there's
+a concept called a prefix.
+
+76
+00:05:59,778 --> 00:06:08,076
+So an IP prefix is of the form a.b.c.d/z.
+
+77
+00:06:08,076 --> 00:06:12,737
+So we might see something like 2.1.1.0/24.
+
+78
+00:06:12,737 --> 00:06:17,664
+So that z, or in this case 24,
+indicates how many of
+
+79
+00:06:17,664 --> 00:06:22,601
+the upper order bits uniquely
+specifies that group.
+
+80
+00:06:22,601 --> 00:06:27,056
+So this represents several IP addresses in
+
+81
+00:06:27,056 --> 00:06:32,008
+the range 2.1.1.0, 2.1.1.1,
+
+82
+00:06:32,008 --> 00:06:36,352
+2.1.1.2, and so forth, right?
+
+83
+00:06:36,352 --> 00:06:39,652
+Because it's the upper 24 bits.
+
+84
+00:06:39,652 --> 00:06:44,516
+If we drew this out, so
+each of these numbers
+
+85
+00:06:44,516 --> 00:06:49,385
+in the dotted decimal
+format is eight bits.
+
+86
+00:06:49,385 --> 00:06:53,663
+So that's why it's 8,
+16, 24 represents, and
+
+87
+00:06:53,663 --> 00:06:59,618
+that's why those first three numbers
+in this case is what I was pointing to.
+
+88
+00:06:59,618 --> 00:07:06,689
+So why this is important in the Internet
+is because it adds scalability.
+
+89
+00:07:06,689 --> 00:07:12,873
+So now instead of having to know all
+the addresses on the Internet and
+
+90
+00:07:12,873 --> 00:07:18,405
+how to get to them, this router
+right here just has to know for
+
+91
+00:07:18,405 --> 00:07:22,444
+anything that's 2.1.1.0/24.
+
+92
+00:07:22,444 --> 00:07:27,288
+So anything that the first
+24 bits has those values,
+
+93
+00:07:27,288 --> 00:07:30,035
+I'm going to send it out port1.
+
+94
+00:07:30,035 --> 00:07:33,426
+I didn't have to know about
+all of the addresses,
+
+95
+00:07:33,426 --> 00:07:36,190
+I just need to know, send it out port1.
+
+96
+00:07:36,190 --> 00:07:38,927
+When it gets closer to the destination,
+
+97
+00:07:38,927 --> 00:07:43,754
+it may split that out, or probably it
+will split it out such that it knows
+
+98
+00:07:43,754 --> 00:07:48,358
+how to get to each individual
+elements at once within that network.
+
+99
+00:07:48,358 --> 00:07:51,346
+But I didn't need to know that
+in the rest of the Internet.
+
+100
+00:07:51,346 --> 00:07:55,124
+And that's what makes this scalable.
+
+101
+00:07:55,124 --> 00:07:57,689
+All right, and then with that,
+
+102
+00:07:57,689 --> 00:08:02,735
+what that means is we have to do
+longest prefix matching or LPM.
+
+103
+00:08:02,735 --> 00:08:05,133
+And this is in each of the routers,
+
+104
+00:08:05,133 --> 00:08:10,120
+it's finding the most specific
+prefix that matches the destination.
+
+105
+00:08:10,120 --> 00:08:16,278
+So if you recall from a previous
+course inside of the router,
+
+106
+00:08:16,278 --> 00:08:21,228
+we'll have a table,
+the forwarding table, and
+
+107
+00:08:21,228 --> 00:08:26,441
+it will have a bunch of different entries,
+right?
+
+108
+00:08:26,441 --> 00:08:33,447
+So here we have two different entries
+where the first 16 bits are the same,
+
+109
+00:08:33,447 --> 00:08:37,729
+11.11, but the 24 is a longer prefix.
+
+110
+00:08:37,729 --> 00:08:39,787
+So this is more specific.
+
+111
+00:08:39,787 --> 00:08:44,862
+So if we see traffic
+destined to 11.11.11.11,
+
+112
+00:08:44,862 --> 00:08:50,856
+it'll actually choose this second
+entry and then send it out port2.
+
+113
+00:08:50,856 --> 00:08:58,381
+If it was just say 11.11.12.12, well,
+it would only match this first entry,
+
+114
+00:08:58,381 --> 00:09:02,945
+this first 16 bits and so
+it would send it out port1.
+
+115
+00:09:02,945 --> 00:09:05,712
+So that's longest prefix matching.
+
+116
+00:09:05,712 --> 00:09:10,082
+[COUGH], all right, so
+final kind of preview or
+
+117
+00:09:10,082 --> 00:09:16,419
+review slide is talking about
+the generic router architecture.
+
+118
+00:09:16,419 --> 00:09:19,261
+And so this is showing IP forwarding.
+
+119
+00:09:19,261 --> 00:09:24,300
+So in general,
+a packet comes in with a header
+
+120
+00:09:24,300 --> 00:09:29,483
+which includes some
+destination IP address.
+
+121
+00:09:29,483 --> 00:09:32,970
+Inside of the router will
+be a forwarding table.
+
+122
+00:09:32,970 --> 00:09:36,369
+And so this is like what we were
+showing on the previous slide.
+
+123
+00:09:36,369 --> 00:09:40,704
+And so the IP address for that,
+that is part of in the header,
+
+124
+00:09:40,704 --> 00:09:45,465
+the destination will be looked up
+using longest prefix matching in
+
+125
+00:09:45,465 --> 00:09:49,815
+the forwarding table,
+which will tell what the next hop is.
+
+126
+00:09:49,815 --> 00:09:52,708
+Then the header will be updated.
+
+127
+00:09:52,708 --> 00:09:58,874
+We'll queue the packet up when
+storing in some packet buffers and
+
+128
+00:09:58,874 --> 00:10:05,725
+send it out the specific network
+interface as determined by the lookup.
+
+129
+00:10:05,725 --> 00:10:08,850
+So Linux has all that,
+we've talked about that.
+
+130
+00:10:08,850 --> 00:10:13,303
+Linux has that and a utility that exists.
+
+131
+00:10:13,303 --> 00:10:16,657
+The next one we're going to
+talk about is called IP route.
+
+132
+00:10:16,657 --> 00:10:22,775
+And so this is the utility for Linux
+forwarding table management, all right?
+
+133
+00:10:22,775 --> 00:10:28,257
+So you can find the demand page but
+you can say much like the rest
+
+134
+00:10:28,257 --> 00:10:35,323
+of the commands that we're seeing as part
+of this IP route two utility package,
+
+135
+00:10:35,323 --> 00:10:41,227
+it's going to say, IP route or IP and
+then some command like route and
+
+136
+00:10:41,227 --> 00:10:46,631
+then whatever the command is
+that we're using the utility.
+
+137
+00:10:46,631 --> 00:10:51,623
+All right, so here's kind of
+snippet from the man page and
+
+138
+00:10:51,623 --> 00:10:57,655
+if you haven't kind of seen things
+like this before, how to read it.
+
+139
+00:10:57,655 --> 00:11:00,167
+So IP route, that's the command.
+
+140
+00:11:00,167 --> 00:11:01,019
+It'll be one of these.
+
+141
+00:11:01,019 --> 00:11:07,058
+So this is an or and
+then you specify the route.
+
+142
+00:11:07,058 --> 00:11:10,313
+So you come down here and
+what does a route mean?
+
+143
+00:11:10,313 --> 00:11:14,241
+A route consists of a node spec and
+
+144
+00:11:14,241 --> 00:11:18,740
+optionally an info spec, all right?
+
+145
+00:11:18,740 --> 00:11:23,414
+So the node spec, then you come down here
+and say what does the node spec look like?
+
+146
+00:11:23,414 --> 00:11:28,913
+Well, it'll have all of these, so
+key, it'll have a prefix, all right?
+
+147
+00:11:28,913 --> 00:11:34,729
+And then you can specify other things like
+a table and things like that, all right?
+
+148
+00:11:34,729 --> 00:11:36,812
+So all of that is the node spec.
+
+149
+00:11:36,812 --> 00:11:43,815
+And then if we look at the info spec,
+here, we're seeing similar things.
+
+150
+00:11:43,815 --> 00:11:46,381
+Here's a next top or an NH.
+
+151
+00:11:46,381 --> 00:11:54,318
+Come down to NH, it's going to be things
+like via some address or dev, some string.
+
+152
+00:11:54,318 --> 00:11:56,215
+All right, so let's put this all together.
+
+153
+00:11:56,215 --> 00:12:01,144
+This shown here is a common
+one that you'll be seeing,
+
+154
+00:12:01,144 --> 00:12:04,474
+and we're going to use IP route add.
+
+155
+00:12:04,474 --> 00:12:06,252
+So the command is add.
+
+156
+00:12:06,252 --> 00:12:09,390
+So we're adding an entry
+to the routing table.
+
+157
+00:12:09,390 --> 00:12:12,805
+We're going to give it the prefix,
+all right?
+
+158
+00:12:12,805 --> 00:12:16,548
+So that's as part of the node spec.
+
+159
+00:12:16,548 --> 00:12:18,457
+Here's this prefix, but
+
+160
+00:12:18,457 --> 00:12:22,635
+we're not specifying any other
+options as part of this.
+
+161
+00:12:22,635 --> 00:12:26,013
+And then as part of that infosec and
+
+162
+00:12:26,013 --> 00:12:31,029
+the NH we're going to say
+the dev string or dev eth3.
+
+163
+00:12:31,029 --> 00:12:33,530
+And so that's that kind of next top field.
+
+164
+00:12:33,530 --> 00:12:38,368
+So this is adding an entry
+that's saying IP route
+
+165
+00:12:38,368 --> 00:12:43,326
+add this prefix with
+the next top going out eth3.
+
+166
+00:12:43,326 --> 00:12:47,745
+So we saw there's an option to have a via.
+
+167
+00:12:47,745 --> 00:12:52,533
+So if you see here,
+we could have said dev or
+
+168
+00:12:52,533 --> 00:12:56,666
+we could have said via some address.
+
+169
+00:12:56,666 --> 00:12:58,145
+They can include both.
+
+170
+00:12:58,145 --> 00:13:01,401
+But what does the via do?
+
+171
+00:13:01,401 --> 00:13:08,118
+So we might have a command like
+IP route add all of that via some
+
+172
+00:13:08,118 --> 00:13:13,806
+address device eth3 or
+ip route add device eth3.
+
+173
+00:13:13,806 --> 00:13:19,177
+So what the via does is
+it indicates that there's
+
+174
+00:13:19,177 --> 00:13:23,636
+a hop in between at the IP layer, right?
+
+175
+00:13:23,636 --> 00:13:29,406
+So it indicates that the next hop
+is not going to be the destination.
+
+176
+00:13:29,406 --> 00:13:34,800
+And why this is important is
+because of what is happening
+
+177
+00:13:34,800 --> 00:13:40,556
+between each of these routers
+is there's a layer two here.
+
+178
+00:13:40,556 --> 00:13:43,199
+So in Ethernet we have MAC addresses.
+
+179
+00:13:43,199 --> 00:13:48,815
+So when this guy on the left
+hand side receives a packet and
+
+180
+00:13:48,815 --> 00:13:52,208
+is destined to some destination,
+
+181
+00:13:52,208 --> 00:13:57,006
+let's say 11.11.11.1.1, well,
+
+182
+00:13:57,006 --> 00:14:02,037
+if it has the via keyword
+in it to create this entry,
+
+183
+00:14:02,037 --> 00:14:06,483
+that means it knows when
+it does the next hop,
+
+184
+00:14:06,483 --> 00:14:12,216
+it should actually not just send
+the packet out and look for
+
+185
+00:14:12,216 --> 00:14:19,610
+the address 11.11.1.1 in the ARP table or
+the MAC address table.
+
+186
+00:14:19,610 --> 00:14:25,348
+Instead, it should look for 192.168.2.1.
+
+187
+00:14:25,348 --> 00:14:26,906
+And that's what it can set.
+
+188
+00:14:26,906 --> 00:14:31,512
+It'll set the destination
+MAC address of whatever
+
+189
+00:14:31,512 --> 00:14:36,553
+the next router is with this 192.168.2.1.
+
+190
+00:14:36,553 --> 00:14:39,935
+So it won't include that IP
+address as part of it, but
+
+191
+00:14:39,935 --> 00:14:41,823
+it will be in the MAC address.
+
+192
+00:14:41,823 --> 00:14:47,884
+Now in this one because it is directly
+connected, then the end host,
+
+193
+00:14:47,884 --> 00:14:52,900
+that's the destination here
+you would not need the via or
+
+194
+00:14:52,900 --> 00:14:57,079
+not use the via because
+when it wants to send it,
+
+195
+00:14:57,079 --> 00:15:02,542
+it wants to send it to
+the MAC address of 11.11.1.1.
+
+196
+00:15:02,542 --> 00:15:07,056
+All right, so that's the difference
+between with via and without via.
+
+197
+00:15:07,056 --> 00:15:13,613
+So we just kind of overviewed this,
+mapping the IP to a MAC.
+
+198
+00:15:13,613 --> 00:15:18,123
+So here X wants to talk to Y on a LAN.
+
+199
+00:15:18,123 --> 00:15:23,420
+X more likely knows the IP address of Y.
+
+200
+00:15:23,420 --> 00:15:26,520
+Maybe it's the name of the server and
+
+201
+00:15:26,520 --> 00:15:31,125
+we've previously covered
+DNS in a different course.
+
+202
+00:15:31,125 --> 00:15:35,526
+But this allows for consistent
+communication in a larger network.
+
+203
+00:15:35,526 --> 00:15:39,442
+But, the link layer communication
+is done with MAC addresses.
+
+204
+00:15:39,442 --> 00:15:43,451
+And so
+this is where the ARP protocol comes in.
+
+205
+00:15:43,451 --> 00:15:48,201
+So as I was saying,
+when you have the address to look for
+
+206
+00:15:48,201 --> 00:15:53,898
+what the next hop is,
+you're still sending it out device eth3.
+
+207
+00:15:53,898 --> 00:15:57,317
+But what are you ARPing for?
+
+208
+00:15:57,317 --> 00:16:01,861
+You're saying I'm looking for
+some IP address, what's its MAC address,
+
+209
+00:16:01,861 --> 00:16:02,571
+all right?
+
+210
+00:16:02,571 --> 00:16:07,722
+So it would either be the 192 address and
+
+211
+00:16:07,722 --> 00:16:13,157
+then get a response for
+that so that it can send
+
+212
+00:16:13,157 --> 00:16:18,449
+the Ethernet frame or
+it would ARP at the IP,
+
+213
+00:16:18,449 --> 00:16:23,190
+the 11.11.1.1, all right?
+
+214
+00:16:23,190 --> 00:16:26,906
+So that's ARP.
+
+215
+00:16:26,906 --> 00:16:33,648
+And what's stored is an ARP table or
+neighbor table or a MAC address table.
+
+216
+00:16:33,648 --> 00:16:38,821
+There's different names you can use for
+it, but what it's storing
+
+217
+00:16:38,821 --> 00:16:44,099
+is what the neighbor is and
+what its MAC address would be, all right?
+
+218
+00:16:44,099 --> 00:16:48,436
+And so ARP happens when you
+do a lookup in this table,
+
+219
+00:16:48,436 --> 00:16:53,867
+you don't find the IP address
+you're looking for and you do ARP.
+
+220
+00:16:53,867 --> 00:17:02,095
+All right, so the utility in Linux that
+helps with this is ip neigh or neighbor.
+
+221
+00:17:02,095 --> 00:17:07,141
+And this is the arp table
+management utility for Linux.
+
+222
+00:17:07,141 --> 00:17:09,421
+And here's the link to the man page.
+
+223
+00:17:09,421 --> 00:17:13,680
+And here's a little snip of some commands.
+
+224
+00:17:13,680 --> 00:17:14,771
+So there's different parts.
+
+225
+00:17:14,771 --> 00:17:20,259
+So for the most part you probably
+don't even need to worry about this.
+
+226
+00:17:20,259 --> 00:17:22,338
+Like ARP just happens under the table.
+
+227
+00:17:22,338 --> 00:17:26,703
+But it's useful to know these
+because in case there's any sort of
+
+228
+00:17:26,703 --> 00:17:31,325
+troubleshooting you want to do or
+you want to be able to avoid ARP,
+
+229
+00:17:31,325 --> 00:17:34,408
+maybe you want consistent performance and
+
+230
+00:17:34,408 --> 00:17:39,053
+not have to do ARP at the beginning
+of any kind of traffic stream.
+
+231
+00:17:39,053 --> 00:17:44,261
+So you can statically add
+entries like pseudo IP,
+
+232
+00:17:44,261 --> 00:17:48,601
+neigh, add whatever the IP address is and
+
+233
+00:17:48,601 --> 00:17:53,933
+then the link layer address,
+the MAC address, and
+
+234
+00:17:53,933 --> 00:17:58,895
+you can associate it with a device,
+all right?
+
+235
+00:17:58,895 --> 00:18:05,683
+You can show the ARP table or the neighbor
+table with the ip neigh show and
+
+236
+00:18:05,683 --> 00:18:09,994
+it'll show all of those and
+you can flush it.
+
+237
+00:18:09,994 --> 00:18:13,521
+If you want to say ip neigh flush all.
+
+238
+00:18:13,521 --> 00:18:16,317
+And that basically just
+deletes all the entries.
+
+239
+00:18:16,317 --> 00:18:21,819
+If say something same IP address,
+got reassigned
+
+240
+00:18:21,819 --> 00:18:27,460
+to a new machine then it
+would get a new MAC address.
+
+241
+00:18:27,460 --> 00:18:31,778
+Well, maybe that's a reason
+to do the flush so
+
+242
+00:18:31,778 --> 00:18:38,113
+that it kind of forces this to happen,
+those entries to get removed.
+
+243
+00:18:38,113 --> 00:18:40,943
+And you can remove individual entries.
+
+244
+00:18:40,943 --> 00:18:45,516
+So this is again mostly for
+kind of troubleshooting or
+
+245
+00:18:45,516 --> 00:18:50,507
+special cases but
+it's definitely useful to know about.
+
+246
+00:18:50,507 --> 00:18:52,932
+All right, so
+with that we're going to end here.
+
+247
+00:18:52,932 --> 00:18:55,482
+Next time we'll actually pull up a demo.
+
+248
+00:18:55,482 --> 00:19:01,784
+We'll walk through some commands,
+we'll see them working in action.
+
+249
+00:19:01,784 --> 00:19:04,003
+All right, until then,
+I'll talk to you then.
+
+250
+00:19:04,003 --> 00:19:04,755
+Bye.

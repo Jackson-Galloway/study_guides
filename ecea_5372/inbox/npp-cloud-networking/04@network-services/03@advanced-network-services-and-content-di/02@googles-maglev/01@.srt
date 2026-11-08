@@ -1,0 +1,1336 @@
+1
+00:00:08,270 --> 00:00:10,905
+Let's go ahead and get started.
+
+2
+00:00:10,905 --> 00:00:14,915
+This time, we're going to
+talk about Google's Maglev.
+
+3
+00:00:14,915 --> 00:00:18,360
+As a reminder, well,
+
+4
+00:00:18,360 --> 00:00:20,280
+as an explanation
+of what Maglev is,
+
+5
+00:00:20,280 --> 00:00:21,735
+we've heard this term before.
+
+6
+00:00:21,735 --> 00:00:23,760
+Heard that it's one
+of the systems.
+
+7
+00:00:23,760 --> 00:00:27,365
+This is Google's
+network load balancer.
+
+8
+00:00:27,365 --> 00:00:31,755
+Recall that's layer
+4 load balancing,
+
+9
+00:00:31,755 --> 00:00:33,500
+is designed to be
+
+10
+00:00:33,500 --> 00:00:37,430
+fast and be able to
+pass through traffic.
+
+11
+00:00:37,430 --> 00:00:40,520
+Before we get into Maglev,
+
+12
+00:00:40,520 --> 00:00:43,920
+one of the things it relies on
+
+13
+00:00:43,920 --> 00:00:48,155
+and leverages is something
+called consistent hashing.
+
+14
+00:00:48,155 --> 00:00:50,740
+I want to give a little
+background on that before
+
+15
+00:00:50,740 --> 00:00:54,395
+we dive into the
+Maglev paper itself.
+
+16
+00:00:54,395 --> 00:01:00,420
+It was originally designed
+around content distribution.
+
+17
+00:01:00,490 --> 00:01:06,010
+The founders of
+Akamai created that.
+
+18
+00:01:06,140 --> 00:01:09,890
+Suppose we want to partition
+files or, in our case,
+
+19
+00:01:09,890 --> 00:01:11,630
+we're going to want
+to balance load
+
+20
+00:01:11,630 --> 00:01:13,650
+among a set of servers.
+
+21
+00:01:13,650 --> 00:01:16,275
+We could use the modulo,
+
+22
+00:01:16,275 --> 00:01:18,600
+so we could say which server
+
+23
+00:01:18,600 --> 00:01:23,280
+is whatever value
+of the content,
+
+24
+00:01:23,280 --> 00:01:26,610
+do modulo k. Maybe
+
+25
+00:01:26,610 --> 00:01:29,320
+this is like the name of
+the file or something,
+
+26
+00:01:29,320 --> 00:01:34,280
+modulo k. k is number of
+servers that you have,
+
+27
+00:01:34,280 --> 00:01:37,615
+and that's one way that
+you can divide it.
+
+28
+00:01:37,615 --> 00:01:42,060
+That might not be
+even distribution.
+
+29
+00:01:42,060 --> 00:01:44,560
+Depending on how the
+files are named,
+
+30
+00:01:44,560 --> 00:01:47,820
+they might all end up
+on a single server.
+
+31
+00:01:47,820 --> 00:01:51,515
+To give a little bit
+of randomness to it,
+
+32
+00:01:51,515 --> 00:01:54,420
+you could use hashing.
+
+33
+00:01:54,420 --> 00:01:56,790
+Hash, let's say,
+
+34
+00:01:56,790 --> 00:02:02,580
+the name of the file and
+do the modulo k. Now,
+
+35
+00:02:02,580 --> 00:02:05,325
+that might be better
+distribution.
+
+36
+00:02:05,325 --> 00:02:07,410
+But now the problem is,
+
+37
+00:02:07,410 --> 00:02:11,280
+and it existed
+before with modulo.
+
+38
+00:02:11,280 --> 00:02:14,280
+What if k changes?
+
+39
+00:02:14,280 --> 00:02:21,120
+Say a server fails or
+we're scaling out.
+
+40
+00:02:21,120 --> 00:02:24,880
+Then what that means
+is the mapping of x,
+
+41
+00:02:24,880 --> 00:02:27,720
+that particular
+piece of content,
+
+42
+00:02:27,720 --> 00:02:32,900
+or the flow of traffic
+to a server will change.
+
+43
+00:02:33,360 --> 00:02:39,730
+Let's say we add two
+servers, the value 3.
+
+44
+00:02:39,730 --> 00:02:44,235
+Modulo 2 is one thing.
+
+45
+00:02:44,235 --> 00:02:45,860
+Then if we had a third server,
+
+46
+00:02:45,860 --> 00:02:47,905
+that would be 3 modulo 3.
+
+47
+00:02:47,905 --> 00:02:50,960
+Those are going to be
+two different answers.
+
+48
+00:02:51,600 --> 00:02:55,180
+System hashing is a algorithm
+
+49
+00:02:55,180 --> 00:02:57,940
+to be able to handle
+that situation.
+
+50
+00:02:57,940 --> 00:03:00,580
+The construction of
+it is you assign
+
+51
+00:03:00,580 --> 00:03:04,270
+n hash buckets to random points.
+
+52
+00:03:04,270 --> 00:03:10,040
+Now we're given our
+servers names as well,
+
+53
+00:03:10,040 --> 00:03:13,040
+and then they get hashed
+
+54
+00:03:13,040 --> 00:03:18,655
+and mapped to some
+address space.
+
+55
+00:03:18,655 --> 00:03:23,135
+It's usually
+illustrated as a ring.
+
+56
+00:03:23,135 --> 00:03:27,555
+Then you're also mapping objects
+
+57
+00:03:27,555 --> 00:03:31,215
+to random positions
+on the circle.
+
+58
+00:03:31,215 --> 00:03:33,540
+You take the hash of
+the file name and
+
+59
+00:03:33,540 --> 00:03:36,980
+then that gets a
+point on a circle.
+
+60
+00:03:37,380 --> 00:03:44,830
+The hash of the object is the
+closest clockwise bucket.
+
+61
+00:03:45,800 --> 00:03:49,860
+By bucket here, we're
+talking server.
+
+62
+00:03:49,860 --> 00:03:53,520
+There's a bucket
+in that red dot.
+
+63
+00:03:53,520 --> 00:03:57,750
+All of the nodes,
+
+64
+00:03:57,750 --> 00:04:04,350
+all this space before it
+and in between it and
+
+65
+00:04:04,350 --> 00:04:12,820
+the previous bucket would map
+to this particular bucket.
+
+66
+00:04:14,840 --> 00:04:16,935
+You could see so forth.
+
+67
+00:04:16,935 --> 00:04:21,590
+All of these ones map to
+that particular bucket.
+
+68
+00:04:22,880 --> 00:04:27,295
+The desired features here
+is this is balanced,
+
+69
+00:04:27,295 --> 00:04:29,760
+so no bucket has
+disproportionate number
+
+70
+00:04:29,760 --> 00:04:32,640
+of objects and smoothness.
+
+71
+00:04:32,640 --> 00:04:35,580
+The addition and removal
+of bucket does not
+
+72
+00:04:35,580 --> 00:04:40,195
+cause movement among
+existing buckets,
+
+73
+00:04:40,195 --> 00:04:43,820
+only the immediate buckets.
+
+74
+00:04:44,200 --> 00:04:49,590
+With that mind, this works.
+
+75
+00:04:51,980 --> 00:04:56,860
+Well, let's just focus on
+failure and how it changes.
+
+76
+00:04:56,860 --> 00:04:59,235
+If a node fails,
+
+77
+00:04:59,235 --> 00:05:03,450
+its successor takes over.
+
+78
+00:05:03,790 --> 00:05:07,380
+This bucket fails.
+Now, everything
+
+79
+00:05:07,380 --> 00:05:08,860
+that was pointing to this bucket
+
+80
+00:05:08,860 --> 00:05:10,420
+is now just pointing to
+
+81
+00:05:10,420 --> 00:05:13,680
+this new bucket or
+this other bucket.
+
+82
+00:05:13,680 --> 00:05:15,285
+That's smooth.
+
+83
+00:05:15,285 --> 00:05:18,990
+It didn't affect these
+other buckets or
+
+84
+00:05:18,990 --> 00:05:23,670
+servers in our case.
+It was smooth.
+
+85
+00:05:23,670 --> 00:05:25,500
+The problem is the successor
+
+86
+00:05:25,500 --> 00:05:29,500
+owns now two buckets
+worth of content,
+
+87
+00:05:29,500 --> 00:05:31,650
+so that's not ideal.
+
+88
+00:05:31,940 --> 00:05:34,485
+The fix for that
+
+89
+00:05:34,485 --> 00:05:38,420
+is basically have virtual nodes
+
+90
+00:05:38,420 --> 00:05:41,285
+spread over this ID space.
+
+91
+00:05:41,285 --> 00:05:44,040
+You don't really need
+to know all that.
+
+92
+00:05:44,040 --> 00:05:49,140
+The key I think as
+far as Google got,
+
+93
+00:05:49,140 --> 00:05:51,420
+it was basically a successor
+
+94
+00:05:51,420 --> 00:05:53,620
+takes over a bucket, I believe.
+
+95
+00:05:53,620 --> 00:05:57,020
+Actually, I think they
+introduced their own algorithm.
+
+96
+00:05:57,020 --> 00:06:01,190
+With that, we're going to
+read the paper Maglev,
+
+97
+00:06:01,190 --> 00:06:03,190
+and we're going
+to switch over to
+
+98
+00:06:03,190 --> 00:06:08,840
+their slides. There we go.
+
+99
+00:06:09,280 --> 00:06:13,020
+This was published by Google.
+
+100
+00:06:13,670 --> 00:06:17,815
+Just as a refresher,
+what is a load balancer?
+
+101
+00:06:17,815 --> 00:06:21,675
+It is a network load balancer
+
+102
+00:06:21,675 --> 00:06:24,825
+is something that sits at
+the edge of the network,
+
+103
+00:06:24,825 --> 00:06:27,900
+and it balances the load
+
+104
+00:06:27,900 --> 00:06:31,350
+between a set of
+backend servers.
+
+105
+00:06:31,350 --> 00:06:35,815
+A lot of times on the return
+path, you can bypass.
+
+106
+00:06:35,815 --> 00:06:38,040
+You don't have to send
+traffic back through
+
+107
+00:06:38,040 --> 00:06:39,700
+the network load
+balance or you can send
+
+108
+00:06:39,700 --> 00:06:42,470
+it direct to the source.
+
+109
+00:06:42,950 --> 00:06:46,125
+What do we want from
+a load balancer?
+
+110
+00:06:46,125 --> 00:06:48,165
+Balance load evenly.
+
+111
+00:06:48,165 --> 00:06:49,770
+We want it to be reliable,
+
+112
+00:06:49,770 --> 00:06:54,495
+meaning TCP connections
+do not get reset.
+
+113
+00:06:54,495 --> 00:07:00,160
+It's flexible, where you
+can iterate quickly.
+
+114
+00:07:00,350 --> 00:07:04,395
+We hear that commonly
+from Google.
+
+115
+00:07:04,395 --> 00:07:06,570
+They like to write software and
+
+116
+00:07:06,570 --> 00:07:09,960
+update it frequently.
+It's scalable.
+
+117
+00:07:09,960 --> 00:07:12,210
+It grows with a cloud scale,
+
+118
+00:07:12,210 --> 00:07:16,080
+and it's efficient and could
+deliver high performance.
+
+119
+00:07:16,080 --> 00:07:22,160
+Why they introduced
+Maglev was because
+
+120
+00:07:22,160 --> 00:07:25,295
+the existing hardware
+appliances that existed out
+
+121
+00:07:25,295 --> 00:07:31,560
+there from companies
+such as F5 and whatnot,
+
+122
+00:07:31,560 --> 00:07:35,715
+they believed they
+had poor flexibility.
+
+123
+00:07:35,715 --> 00:07:37,740
+We saw this before where
+
+124
+00:07:37,740 --> 00:07:40,920
+the whole process from Google
+
+125
+00:07:40,920 --> 00:07:44,100
+wants some new feature to
+the vendor accepting that,
+
+126
+00:07:44,100 --> 00:07:45,520
+implementing it, testing it,
+
+127
+00:07:45,520 --> 00:07:49,460
+and then getting into
+Google's hands is too slow.
+
+128
+00:07:49,460 --> 00:07:53,820
+Second, scaling those
+appliances is too hard
+
+129
+00:07:53,820 --> 00:07:56,480
+and they're expensive and
+
+130
+00:07:56,480 --> 00:08:00,300
+the failure of a
+mechanism isn't ideal.
+
+131
+00:08:01,580 --> 00:08:07,400
+They hit a wall with their
+existing appliances.
+
+132
+00:08:07,400 --> 00:08:11,685
+Instead, another common theme,
+
+133
+00:08:11,685 --> 00:08:13,530
+let's just run everything in
+
+134
+00:08:13,530 --> 00:08:15,930
+software on commodity servers.
+
+135
+00:08:15,930 --> 00:08:19,120
+Make it then a scale out model,
+
+136
+00:08:19,120 --> 00:08:21,130
+where we can just add
+
+137
+00:08:21,130 --> 00:08:24,155
+more processing nodes
+as we need them,
+
+138
+00:08:24,155 --> 00:08:26,110
+and then coordinate all this
+
+139
+00:08:26,110 --> 00:08:28,610
+through software
+defined networking.
+
+140
+00:08:29,000 --> 00:08:31,185
+What is Maglev?
+
+141
+00:08:31,185 --> 00:08:33,630
+It effectively sits there.
+
+142
+00:08:33,630 --> 00:08:35,935
+It's the network load balancer
+
+143
+00:08:35,935 --> 00:08:39,010
+and it runs on existing server,
+
+144
+00:08:39,010 --> 00:08:40,710
+so it's no different.
+
+145
+00:08:40,710 --> 00:08:43,140
+It's just the same servers.
+
+146
+00:08:43,220 --> 00:08:46,910
+Scalability is in
+two dimensions,
+
+147
+00:08:46,910 --> 00:08:51,030
+scale out across many
+servers with ECMP
+
+148
+00:08:51,030 --> 00:08:56,435
+and that scale up to 10
+gig line rate processing.
+
+149
+00:08:56,435 --> 00:08:58,150
+They do that leveraging
+
+150
+00:08:58,150 --> 00:09:00,920
+some technique called
+kernel bypass.
+
+151
+00:09:00,920 --> 00:09:06,460
+This enables Cloud
+scale control plane,
+
+152
+00:09:08,420 --> 00:09:11,530
+which is what they needed.
+
+153
+00:09:12,310 --> 00:09:15,245
+Here's the scalability.
+
+154
+00:09:15,245 --> 00:09:21,860
+Scale out of Maglev
+instances right there,
+
+155
+00:09:21,860 --> 00:09:27,120
+and it can handle the
+scaling of the end points.
+
+156
+00:09:28,220 --> 00:09:31,530
+As we get more traffic,
+
+157
+00:09:31,530 --> 00:09:33,160
+we can add all those,
+
+158
+00:09:33,160 --> 00:09:36,265
+but then each one of
+them handles 10 gigs.
+
+159
+00:09:36,265 --> 00:09:38,445
+what's their design?
+
+160
+00:09:38,445 --> 00:09:41,160
+Their challenges is
+the reliability,
+
+161
+00:09:41,160 --> 00:09:43,290
+keeping connections alive.
+
+162
+00:09:43,290 --> 00:09:46,660
+We need a TCP connection
+
+163
+00:09:46,660 --> 00:09:49,625
+to always go to the
+same backend server.
+
+164
+00:09:49,625 --> 00:09:51,680
+But we need to be
+able to do that,
+
+165
+00:09:51,680 --> 00:09:55,360
+even when the set of Maglev's
+or low balancers changes
+
+166
+00:09:55,360 --> 00:09:58,940
+and when the set of
+backends changes.
+
+167
+00:09:59,360 --> 00:10:02,085
+They're going to use
+consistent hashing.
+
+168
+00:10:02,085 --> 00:10:05,560
+The scaling, they want to be
+able to scale out with ECMP,
+
+169
+00:10:05,560 --> 00:10:07,620
+the standard network technology,
+
+170
+00:10:07,620 --> 00:10:09,860
+and they use kernel bypass.
+
+171
+00:10:09,860 --> 00:10:13,950
+We're just going to focus
+on the reliability part.
+
+172
+00:10:15,440 --> 00:10:22,470
+We've talked about why is
+the set of Maglev changing.
+
+173
+00:10:22,470 --> 00:10:27,030
+Well, the health
+change of a Maglev,
+
+174
+00:10:27,030 --> 00:10:30,735
+so it itself could fail.
+
+175
+00:10:30,735 --> 00:10:34,840
+We could be wanting
+to add more capacity.
+
+176
+00:10:35,360 --> 00:10:41,145
+ECMP change sends most
+connections to different Maglev.
+
+177
+00:10:41,145 --> 00:10:44,195
+Where ECMP would come into play?
+
+178
+00:10:44,195 --> 00:10:45,510
+Going back to this picture.
+
+179
+00:10:45,510 --> 00:10:47,450
+This is a standard
+network device.
+
+180
+00:10:47,450 --> 00:10:49,005
+It supports ECMP.
+
+181
+00:10:49,005 --> 00:10:51,880
+They're going to use ECMP
+
+182
+00:10:52,070 --> 00:10:56,955
+to balance load between
+these Maglev devices.
+
+183
+00:10:56,955 --> 00:10:58,530
+Then they're going to use
+
+184
+00:10:58,530 --> 00:11:00,810
+a technique for
+Maglev to keep it
+
+185
+00:11:00,810 --> 00:11:06,650
+consistently all the traffic
+going to the same backend.
+
+186
+00:11:07,970 --> 00:11:12,010
+Can't share connection state.
+
+187
+00:11:13,250 --> 00:11:16,110
+Sharing state is a challenge
+
+188
+00:11:16,110 --> 00:11:18,230
+across all those
+Maglev instances.
+
+189
+00:11:18,230 --> 00:11:20,570
+I can't just do round-robin.
+
+190
+00:11:20,570 --> 00:11:26,560
+That won't work, and
+consistent hashing is obvious.
+
+191
+00:11:26,690 --> 00:11:30,285
+Here's the router.
+
+192
+00:11:30,285 --> 00:11:33,760
+If Maglev set changes,
+
+193
+00:11:36,080 --> 00:11:40,485
+ECMP is going to redirect
+
+194
+00:11:40,485 --> 00:11:47,570
+from handling it on one to
+be able to handle it on two.
+
+195
+00:11:48,300 --> 00:11:53,415
+If they just use hashing mod,
+
+196
+00:11:53,415 --> 00:11:55,470
+there's six servers here.
+
+197
+00:11:55,470 --> 00:12:00,490
+Great. It doesn't matter
+what server you end up on.
+
+198
+00:12:00,490 --> 00:12:05,040
+It'll still be able to
+redirect it to one.
+
+199
+00:12:05,810 --> 00:12:09,810
+But now, when the set
+of backend changes,
+
+200
+00:12:09,810 --> 00:12:15,685
+same reasons, the hash
+base would get remapped.
+
+201
+00:12:15,685 --> 00:12:19,670
+Ideally, you need to do
+connection tracking.
+
+202
+00:12:19,670 --> 00:12:23,855
+Here,
+
+203
+00:12:23,855 --> 00:12:28,735
+if packet comes in
+
+204
+00:12:28,735 --> 00:12:33,940
+and then there's a
+failure, the set changed.
+
+205
+00:12:35,480 --> 00:12:38,415
+It used to be mod 6,
+
+206
+00:12:38,415 --> 00:12:39,810
+now it's mod 5.
+
+207
+00:12:39,810 --> 00:12:41,880
+Now, it would map
+to a different one.
+
+208
+00:12:41,880 --> 00:12:44,490
+But for existing connections,
+
+209
+00:12:44,490 --> 00:12:47,615
+you can use connection tracking.
+
+210
+00:12:47,615 --> 00:12:53,190
+I can keep a table and say
+for existing connections,
+
+211
+00:12:53,190 --> 00:12:54,400
+look it up in a table,
+
+212
+00:12:54,400 --> 00:12:57,520
+and then that's going to one.
+
+213
+00:12:58,080 --> 00:13:02,080
+Then for everything
+else, it would map.
+
+214
+00:13:02,080 --> 00:13:04,060
+It would just do
+that hash and then
+
+215
+00:13:04,060 --> 00:13:08,790
+modulo to the set
+of backend servers.
+
+216
+00:13:08,790 --> 00:13:11,715
+Now, these both work.
+
+217
+00:13:11,715 --> 00:13:16,540
+But now, what if both
+happens at once?
+
+218
+00:13:16,610 --> 00:13:21,990
+The ECMP change ruins
+Maglev affinity.
+
+219
+00:13:21,990 --> 00:13:26,420
+Now, if Maglev is
+maintaining state,
+
+220
+00:13:26,420 --> 00:13:28,840
+then the new Maglev would not
+
+221
+00:13:28,840 --> 00:13:31,050
+have this connection
+table entry.
+
+222
+00:13:31,050 --> 00:13:34,290
+If we go back to this picture,
+
+223
+00:13:34,290 --> 00:13:39,060
+it's storing state
+right here in number 1
+
+224
+00:13:39,060 --> 00:13:45,030
+that this particular connection
+maps to backend server 1.
+
+225
+00:13:45,030 --> 00:13:48,125
+If this gets redirected
+to something else,
+
+226
+00:13:48,125 --> 00:13:50,270
+that server 2,
+
+227
+00:13:50,270 --> 00:13:53,220
+Maglev 2, wouldn't
+have that state.
+
+228
+00:13:55,970 --> 00:14:00,550
+This is them both happening
+at the same time.
+
+229
+00:14:01,000 --> 00:14:06,280
+Number 2, it would look like
+there's a new connection,
+
+230
+00:14:06,280 --> 00:14:10,240
+that it doesn't
+have in this table.
+
+231
+00:14:11,780 --> 00:14:14,170
+Their solution to this is
+
+232
+00:14:14,170 --> 00:14:17,970
+consistent hashing,
+given similar inputs,
+
+233
+00:14:17,970 --> 00:14:19,970
+will produce similar
+assignments,
+
+234
+00:14:19,970 --> 00:14:21,910
+and it does not depend
+
+235
+00:14:21,910 --> 00:14:25,410
+on storing the state in
+the backend history.
+
+236
+00:14:26,450 --> 00:14:30,090
+What this means is ECMP changes
+
+237
+00:14:30,090 --> 00:14:33,690
+will not cause the resets.
+
+238
+00:14:36,070 --> 00:14:42,360
+Steady state. Because we're
+
+239
+00:14:42,360 --> 00:14:48,105
+able to use consistent hashing,
+
+240
+00:14:48,105 --> 00:14:54,610
+it will know to map where
+one originally chose.
+
+241
+00:14:55,580 --> 00:14:57,840
+Why this is saying use
+
+242
+00:14:57,840 --> 00:15:00,660
+the existing connection tracking
+
+243
+00:15:00,660 --> 00:15:02,535
+for an existing connection?
+
+244
+00:15:02,535 --> 00:15:04,485
+That might be a faster lookup
+
+245
+00:15:04,485 --> 00:15:09,180
+than performing the algorithm
+for a consistent hash.
+
+246
+00:15:11,810 --> 00:15:15,630
+Much more details in the paper.
+
+247
+00:15:15,630 --> 00:15:19,620
+Definitely go read it.
+
+248
+00:15:19,620 --> 00:15:21,120
+They basically highlight
+
+249
+00:15:21,120 --> 00:15:24,150
+the operational winds
+of consistent hashing,
+
+250
+00:15:24,150 --> 00:15:28,630
+allows them to be able to
+upgrade the Maglev binaries.
+
+251
+00:15:28,630 --> 00:15:31,905
+They could just do
+rolling restarts.
+
+252
+00:15:31,905 --> 00:15:33,530
+They don't need to drain traffic
+
+253
+00:15:33,530 --> 00:15:35,575
+first or anything like that.
+
+254
+00:15:35,575 --> 00:15:38,290
+If backend flaps, I mean,
+
+255
+00:15:38,290 --> 00:15:41,670
+it goes up and down a
+little bit unreliably.
+
+256
+00:15:41,670 --> 00:15:45,525
+There's minimal impact to that.
+
+257
+00:15:45,525 --> 00:15:47,595
+Bringing it all together,
+
+258
+00:15:47,595 --> 00:15:51,060
+this is the
+architectural diagram
+
+259
+00:15:51,060 --> 00:15:57,750
+where off of the network
+they receive it.
+
+260
+00:15:57,750 --> 00:16:01,890
+They do lookup and say,
+
+261
+00:16:01,890 --> 00:16:05,230
+I do I have this already?
+
+262
+00:16:06,440 --> 00:16:12,010
+Well, is this in the
+set of backend servers?
+
+263
+00:16:12,170 --> 00:16:14,775
+Do a connection tracking,
+
+264
+00:16:14,775 --> 00:16:20,340
+look up if it's a hit
+or if it's a miss,
+
+265
+00:16:20,340 --> 00:16:23,500
+I guess, do the consistent
+hashing and then add it,
+
+266
+00:16:23,500 --> 00:16:24,805
+and then encapsulate it.
+
+267
+00:16:24,805 --> 00:16:28,370
+All of that is their packet
+processing pipeline.
+
+268
+00:16:29,000 --> 00:16:32,325
+These are the
+different algorithms.
+
+269
+00:16:32,325 --> 00:16:34,995
+One of the things they
+
+270
+00:16:34,995 --> 00:16:39,615
+said is the algorithms
+weren't that good.
+
+271
+00:16:39,615 --> 00:16:42,120
+They didn't say it that way, but
+
+272
+00:16:42,120 --> 00:16:45,810
+they had reasons
+created their own.
+
+273
+00:16:45,810 --> 00:16:50,650
+This M right here
+stands for Maglev,
+
+274
+00:16:50,650 --> 00:16:54,620
+and these are two
+existing other ones.
+
+275
+00:16:54,620 --> 00:16:57,225
+Then they show with this,
+
+276
+00:16:57,225 --> 00:16:59,510
+there was good reason with
+
+277
+00:16:59,510 --> 00:17:02,230
+their algorithm for
+consistent hashing.
+
+278
+00:17:02,230 --> 00:17:06,420
+They improved the evenness.
+
+279
+00:17:06,420 --> 00:17:08,950
+Then there's other evaluation
+
+280
+00:17:08,950 --> 00:17:10,310
+you can read through the paper,
+
+281
+00:17:10,310 --> 00:17:15,320
+but one of the key things
+they show is it's fast.
+
+282
+00:17:15,320 --> 00:17:17,865
+It's reliable.
+
+283
+00:17:17,865 --> 00:17:20,710
+They can leverage standard
+network technology to load
+
+284
+00:17:20,710 --> 00:17:23,550
+balance between the
+Maglevs and then
+
+285
+00:17:23,550 --> 00:17:27,300
+introduce the capability within
+
+286
+00:17:27,300 --> 00:17:29,370
+the Maglev software to balance
+
+287
+00:17:29,370 --> 00:17:33,545
+consistently between the
+set of backend servers.
+
+288
+00:17:33,545 --> 00:17:37,230
+We didn't talk about
+in this presentation,
+
+289
+00:17:37,230 --> 00:17:42,950
+but read about how they
+leverage kernel bypass.
+
+290
+00:17:42,960 --> 00:17:47,605
+It's pretty much a
+standard approach
+
+291
+00:17:47,605 --> 00:17:50,970
+to get high performance
+packet processing.
+
+292
+00:17:51,430 --> 00:17:54,900
+They're big fans of software.
+
+293
+00:17:55,700 --> 00:18:01,890
+With that, that's all
+that covers Maglev,
+
+294
+00:18:01,890 --> 00:18:05,320
+and we'll stop here. Thanks.

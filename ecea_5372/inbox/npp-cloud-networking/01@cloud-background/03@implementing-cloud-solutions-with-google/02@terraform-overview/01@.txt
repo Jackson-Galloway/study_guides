@@ -1,0 +1,126 @@
+Let's get started. This time, we're going to introduce
+something called Terraform. We're not really going to
+demonstrate it just yet. The next lesson we'll really go, actually using it to deploy
+infrastructure on GCP. But this will give a little
+overview of what it is. The first thing is
+just a few links of, last time we talked about gcloud, something that
+you're going to want. This time, we're going
+to talk about Terraform and you can install
+it with this link. Then I find Visual
+Studio Code or VS Code to be really useful,
+a powerful environment. I would also recommend you
+download and install that. Again, I also should
+have had a link here. If you're running Windows, the Window subsystem
+for Linux, WSL, would be highly recommended
+so that you can get Linux command lines and Linux interfaces
+from within Windows. Otherwise, you can create a virtual machine or
+something like that, or try to use Windows. These tools, I think can
+work on Windows as well. Well, VS Code definitely can. But I'm pretty sure you can
+do these other tools there. But I like a lot of the
+command line tools in Linux, so that's what
+we're going to be. Everything we're going to
+demonstrate is in Linux. To understand what Terraform is, we first have to understand
+infrastructure as code. This is, I wouldn't say new, but a modern approach to
+managing infrastructure where you take software practices that you can now apply
+to infrastructure. We went through the
+Google Portal last time, I clicked on some buttons, I created a VM, I showed how to SSH into it. All that's great, but that's not really how I
+do software development. In software, I'm using
+things like code reviews. I'm doing versioning. I can check things into GitHub and see any
+changes that are made. I could do code reviews on those and I pull requests
+and things like that. That's where infrastructure
+as code comes in. It makes what we were describing or what we were
+doing in that portal. I can now describe in
+effectively a language. Then there's some
+automation that can then make that such
+that it deploys it, provisions it, in the Cloud. It's not just for the Cloud, but the Cloud is what
+we're focused on, but can certainly provision on infrastructure
+on-premises as well. There's different steps that you're going to take overall. You need to provision
+infrastructure, and then once the
+infrastructure is provisioned, you need to be able to deploy
+your applications to it. Provisioning the
+infrastructure is things like launching
+virtual machines, specifying the
+network, and so forth. Then deploying the application is things like configuring
+the operating system, configuring packages,
+and things like that. There's different tools
+that are better at each. We're focusing more on the provisioning and
+infrastructure side, and that's where
+Terraform really shines. It can also do a degree of deploying the
+application, of course. But you would likely use
+a different tool like answer for that purpose instead. But we're going to
+focus on Terraform. There is different
+infrastructure as code provisioning tools. Each of the Cloud
+providers has their own. There's Cloud
+Formation from AWS, Google Deployment Manager,
+Azure Resource Manager. But then there's also
+Cloud agnostic ones, Terraform and then Pulumi. We're going to
+focus on Terraform. The Terraform architecture is, here also is DevOps or
+infrastructure engineers. We're going to use the
+Terraform tool set. Then there's some files that
+Terraform manages locally, you'll see those pop up. The core of the infrastructure the Terraform tool interfaces with what are known
+as providers. There's providers for each
+of the different Clouds and it'll manage the insulation of those pretty seamlessly for you. Then when you describe
+what you need, it will reach out to the
+Cloud and provision them. A little note about
+declarative versus imperative. Each of these are a
+different approach. Imperative is when you say
+how to get what you want. Think of a script that
+says create VM 1, create VM 2, install this software
+package on it. It's imperative approach, sequentially describing exactly
+how to get what you want. A declarative approaches where you just say what you want. You don't say how to
+actually go about doing it. But what it does, and this is where to
+Terraform comes in, is you describe
+the desired state and it will look up what
+the current state is, and Terraform runs this
+reconciliation loop where it is doing things that try to
+get you to the desired state. Then if you ever change
+the desired state, say, launch a third VM, well, it'll look and say, I only have two VMs created, let me create just
+that third one. Or if I accidentally
+deleted one, maybe I went through
+the portal to delete it and the desired
+state is still two, and they'll say, great, I'm supposed to have two, but I only have one, and
+it will launch the second. That's what declarative is. It's quite powerful when
+you get used to it. Now, there's a lot of providers
+that exist out there. You can go search this link just for about every
+infrastructure you can think of. Somebody has created a provider. Just to give a quick
+highlight on the syntax, and then next time
+we'll go through a live example for GCP. But it's pretty
+straightforward once you get a couple examples
+under your belt. First, it's just
+going to be arguments that assign values to a name. You can see some like this
+in any programming language. The next is a block, and this is a container for
+other content. It has a type. That's what you
+would specify first, in this case, it says
+resource is the type, but could have had a provider
+block and other blocks, and then zero or more labels that are determined
+by the types. In the case of resource, it needs two different types. Now, within the block, you can have these arguments, but you can also nest
+other blocks within them. The provider block,
+here's an example. Again, here's the providers, and there's a lot of them. Here's an example of
+the provider block. You specify the
+project and region, and we'll see an
+example because there's a little more to it
+that makes it useful. Resource block. We saw an example of
+that, but this is, for example, the provider
+block would be like, I'm going to use
+Google's infrastructure. Resource block
+would be in Google. I want to create a
+virtual machine, so that's under
+compute instance, and I want to give it
+a name and so forth. There's a lot of other features that are available in Terraform. Like you can use variables
+and conditions and loops. We'll see you dependencies. You can even have functions. There's a really nice video on YouTube I think
+does an excellent, incredible job about
+describing Terraform in depth. We're going to take more
+of the surface view. Great. I just introduced what it is, what it's capable of, and then we'll kind learn it by example as we go
+throughout this class. It's pretty straightforward
+to learn, but obviously, I think to take better
+advantage of more of the powerful capabilities
+that you can do with it, certainly dig deeper with
+with some external content. Summary, we're talking about infrastructure as
+code allows you to take a more
+software-oriented practice towards managing
+your infrastructure, which makes things repeatable, makes it more manageable,
+makes it reviewable. We're going to be using it to provision the infrastructure. The tool that we're going to focus on is
+called Terraform, and we're going to focus on Google Compute Platform
+as the provider. With that, we will
+dive into an example and use it for GCP
+provisioning in the next one. Until then, thanks.

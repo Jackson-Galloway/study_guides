@@ -1,0 +1,191 @@
+Now let's get into ip netns. This is the Linux utility to do manipulation or work with
+the network namespaces. Just before we start, we'll talk about a process
+relationship to namespaces. Processes in general
+inherit from a parent. Even without namespaces, you have some process and it
+can have children processes. That's normal. Then this is also the case
+when we're using namespaces. But within the namespace, the process ID has the naming that's
+associated with its parent, but then also what's
+in parentheses. That's what's
+visible internally. What's the main
+takeaway from this is I want to introduce the
+concept of a root namespace. Whenever you're outside
+of a container, outside of a namespace
+that you're executing, you're in the root namespace. Anything that you create is a child of that and then
+it would get some name. As I mentioned, ip netns is the process network namespace
+management utility. It's a pretty simple to use
+tool and we're going to need to use it in
+combination with some other things to actually
+make all of this work. You can go to the man page, but the commands we'll need are going to
+be pretty simple. When you actually
+think about it, it seems like it
+might be complicated, but it's really broken down. You break it down
+into three parts. There's only three things
+that you need to do. You need to create the
+network namespace, you then need to
+create a veth pair, and then you need to attach
+the veth to a namespace. We'll go through each of these. Then once you have that, you can execute commands that
+we're familiar with inside of the namespaces or even outside of
+the namespaces. We can use Linux networking to connect these all together. Let's start with create
+a network namespace. But before I do that, let
+me flip over to a terminal. There's a GitHub repo
+associated with this module. Here is the contents of it. What's provided is
+a new vagrant file. This vagrant file is
+an example of one that consists of two
+different nodes. I'm actually able to use this to create two virtual
+machines and run them. This is up here. Right here we're
+defining the two nodes. If I had specific provisioning just for this virtual machine, I can put it inside of this
+little piece right here. Let me delete that extra tab. We can have that, but then there's also
+a full provisioning. We install net tools and T shark and docker
+and things like that. This would apply to
+both virtual machines. I could specify, again, each of them gets one CPU, one gig of memory, and so forth. I can say vagrant up and it will launch
+both virtual machines or I could say vagrant up node 1 and it will bring up node 1. Or I could say vagrant up node 2 and it'll just
+bring up node 2. I brought up both of them and so that's
+what I'm running here. If I look at what I did, what I didn't show is this one extra line we
+didn't have before. It's saying create a private
+network and attach it to this virtual machine
+and then create a virtual private network and attach it to this
+virtual machine. You'll see that the
+IP addresses are on the same subnet and they'll be able to communicate
+with one another. We should be able to see
+this If I say IP addr. This was the standard one that even if we didn't
+specify that network, this allows me to SSH into the machine and
+things like that. This is the one that's
+newly created and you could see it has an IP
+address associated with it. 192.168.1.100. If I say paying 192.168.1.101, we'll see that
+that's able to work. What that's doing is it's pinging the other
+virtual machine. That's just before
+we get started, I wanted to point out that this vagrant file and
+what we're actually running. For this particular lesson, we're only going to use node1. But for a future one, both machines can be used, We'll be networking
+between them. Getting back to how to
+recall the three steps. Create a network namespace. Create the V eight pair, and then attach the V eight
+devices to a namespace. Here, to create a
+network namespace, all you're doing is using an IP netns command and saying ad and then
+giving it a name. As an example of this, we could say ip
+netns add nsDemo. That creates a new network namespace
+and then I can list it. Let me go over to the
+terminal ip netns add nsDemo. I need to run it as
+super user, so sudo. Great. Now let's see this. Great, I listed it and
+we could see nsDemo. Then the next step is create
+Virtual Ethernet devices. Veth is how they're abbreviated. Veth devices are always created
+in interconnected pairs. You can see it as a pair. You always create them together. Packets transmitted
+on one device in the pair immediately
+shows up on the other. It's basically just
+creating a wire with network devices
+attached to it. For us to create a veth pair, we use the IP link command, the IP link, which allows us to create a variety
+of other devices. This is going to allow us
+to create a veth pair. We say IP link ad first name, we're going to say it's type the veth and then we're going to say the peer name of it is
+whatever the second name is. As the example ip
+link add all of that, let's go type that in. Sudo ip. Well, first let's actually look at what devices there
+are. Ignore docker0. We'll discuss what that
+is in a future lesson. But these are the
+physical devices. Now let's create the veth pair, sudo ip link add the first part was
+that first name vethY. The second part what
+type it is, type veth. Then we say what the
+peer name is, vethZ. This should create two
+devices, vethY and vethZ. If I say IP link, there they are, IP Y and Z. You can note that they're
+both in the down state. What we want to
+do at some point, we could show it now
+is sudo ip link set device vethY up
+and then vethZ up. Look at that again and we could see they're now in the state up. Now we've created our veth pair, they're actually
+devices, they're just hanging out, doing nothing. There's nothing really to
+do with them just yet. The last part is going to be creating or attaching
+them to a namespace. But as a little bit of an aside, sometimes you get a little lost and you don't know
+what the peer actually is. There's a tool that you can run, veth tool where it basically allows you to
+discover the index of the peer. Let's take a quick
+look at that.If I say ethtool -s vethY, one of the things that it lists. This is a general
+debugging tool that you can see how many packets are going through this
+and things like that. You can see peer index 5. Now if I say IP link, you can see this first
+number is that index. If we look down for index 5, we can see that it's VEG. We ran ethtool, vethY, it showed peer index 5. I come down into the IP link and let me say a grep for
+the beginning of line 5, and it's going to
+list out that one. You might think, all
+right, this is simple because it's actually
+showing it right here. We'll see where that's
+not the case in a minute. But keep that in mind as a
+tool that you can you use. As I mentioned, the third step, we created the namespace. We created the veth pair. Now we want to attach the
+veth.device to a namespace. Here, we just say IP link set. Give it one of the name of
+the device, the veth device. Then we say netns and then
+the name of the namespace. In our example, we're going
+to say IP link set vethZ, netsZ, netns, nsDemo. Let me clear this. I
+want to say IP link set vethZ, netns, nsDemo. Forgot the pseudo again. There we go. Let me
+look at IP link. You'll note that index 5, which was vethZ, actually disappeared and now
+we only see vethY. What that means is it's no
+longer in the root namespace. It's inside of the
+namespace nsDemo. Great. Now, what can
+we do with this? Well, before we get into
+what we can do with it, you can also attach to
+a second namespace. We have this picture
+shown up where here in the root namespace we have
+vethY and we have vethZ. I could also create
+a second namespace and then attach vethY into
+the second namespace. What that will allow is nsDemo1 to communicate with nsDemo2. Here's the commands that
+you would run for that, create the two namespaces, create the veth pair, and then you're just
+attaching vethZ to nsDemo1 and vethY to nsDemo2. We're not going to show that, but that's definitely
+something that you can do. After we've set these up, we can now execute commands
+inside of the namespace. We might want to say, I want to see that device, that veth device inside
+of that namespace. I can run IP netns exec, give it the name
+of the namespace and then the command
+that we want to run. I might want to give
+it an IP address. I run all of that IP addr add and I assign
+it to that device. I might want to set the
+device to the upstate. All of those we can do
+inside of the namespace. Let's go over and
+try some of that. If we say, let me
+clear all of that, IP netns exec, nsDemo, that's the
+name of our namespace. I want to look inside. I want to run the command
+IP link inside of it. There we go, we could see vethZ and know it has
+that index of five. This is where, using
+that eth tool, if I need to find what
+it's connected to, this is one mechanism. I can look inside of the
+different containers to try to find that index. We can do that, then
+we can do IP add add 10.10.10.10/24 device vethZ. If I did IP addr inside of it, it now has an IP address. If I say IP route, since I specified with the /24, well, I thought it was
+going to add a route. I guess it didn't.
+But there we go. It's because I didn't
+set the device up yet. Note the device is in
+the state down sudo ip netns exec nsDemo ip link set vethZ up. Hopefully the route did
+show up. There you go. If we did ip link, it's
+now in the upstate. Great. Now our vethZ
+device inside of our container or inside of our
+name space has IP address. Let me add one to the one outside of it so I
+can say sudo ip addr add 10.10.10-10.11/24 dev vethY I'm going to forget
+this sudo again, 11 24 device Y. If I do add, I can see it was
+a sign IP route. There it is, great. Now I can do a ping
+from one to the other. Maybe I want to say ip
+netns exec nsDemo ping 10.10.10.11. I don't know how
+many times in this, I'm going to see that. But now we're going
+to see it's able to ping between them. This is the picture.
+I'm going to ran the ping command
+inside of here. It's pinging the address there. It's looking in its IP address or its writing table,
+folding table. It's in the entry for
+10.10.10/24 saying go out VETC. It's going out VETC, and the destination is vethY, which is then able to
+respond immediately. That's what we are
+demonstrating. If I had a split terminal, I could show we can run
+TShark and show that running. I can run TShark inside of the
+namespace and all of that. That's what we created. There's some other
+miscellaneous notes. One is let's say I attached vethZ inside of the namespace, but I want to move it
+outside of the namespace. I made a mistake. Here, one represents the default
+or route namespace. I can say ip netns exec. Give it the namespace
+name which is nsDemo. Then I'm wanting to run
+the IP link set command inside of it to
+set vethZ which is the veth that's
+inside the namespace. I wanted to set it to run
+in the route namespace, so I say netns 1. That's something
+that you might come across, it's
+definitely possible. We've been running commands like IP route by running
+ip netns exec, nsDemo and then ip route. There's a command or a flag
+that you can just run this directly without saying
+all the netns exec. I can say ip -n, give it the namespace and then whatever command for
+IP route I want. I could say ip -n nsDemo and
+then route add whatever. This is executing
+the same as if I did that exact command to execute the IP route inside
+of the namespace. After we do all that creating of the veth
+devices and things like that, if we do the IP link, which we did, we'll see those, the veth devices, and these are just
+Ethernet devices. We can do, Linux networking
+stuff with them. We saw we can add
+addresses to them. We saw that, which created
+a forwarding table entry, so I could have
+done IP route add, where the destination or next
+up is the veth dev vethY. This is now powerful
+because now we can use those veth devices, plus all of the things
+we learned in Linux networking to be able to
+do more powerful things. We're going to explore that
+more in the next lesson. Thanks.

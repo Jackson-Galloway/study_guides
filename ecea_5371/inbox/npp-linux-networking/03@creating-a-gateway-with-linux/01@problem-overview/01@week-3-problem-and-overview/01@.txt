@@ -1,0 +1,39 @@
+All right. Module and this one is going to be
+about creating a gateway with Linux. Now we've heard the term gateway. If you recall that was
+the term used in that 1970. I think it was 1974 paper and
+it defined this gateway in the context of the Internet protocol
+as a router that allows for the connection between
+two different networks. So we're going to kind of take that
+definition and extend it a little bit. We're going to define it as something
+that sits at the edge of the network and provides some functionality beyond
+just routing and forwarding. So we're going to go deeper
+into the depths of what Linux networking can provide. So this may be the public
+Internet might be on one side and the private network on the other side. Or the edge might be kind of
+between maybe two segments of a network under the same
+administrative domain. So what functionality are we
+going to be looking at and what constitutes things that you
+might see in a gateway of a network. So the first is filtering and
+some address translation. So this allows you to have a policy for
+what traffic is allowed in and out of your network. And possibly translating addresses,
+allowing you to keep private addresses internally with a public
+facing address separately. Next, functionality might be
+something like load balancing. So say we're running
+a replicated service where each of these hosts can perform
+the same functionality and we have it replicated so that we can
+handle more requests at the same time. So load balancing enables
+forwarding to the back end servers to choose a specific
+back end server algorithmically. And then we can balance the load
+by sending different requests to different servers. And then the last one we're going to
+cover is quality of service. And so
+this enables you to have this policy that describes the limits and
+priority on traffic. And as you could guess,
+Linux covers them all. So we have tools like iptables, ipvs, tc that covers each of
+these different areas. And so for each of them we're going to
+cover first some foundational background to explain what is
+the functionality we want. Then we're going to go into
+an overview of the Linux utility and how to make use of it. And for each we're going to provide
+practice exercises in a github repo. Now it's not just enough to have that and then execute those
+commands in that exercise. The goal would be for you to take that and
+use that as a platform to then go a little further to really explore
+the ins and outs of each of these. So with that we're going to end here and
+start this up next time. All right, thanks.

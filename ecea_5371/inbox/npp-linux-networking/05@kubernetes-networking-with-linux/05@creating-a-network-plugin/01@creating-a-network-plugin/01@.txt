@@ -1,0 +1,295 @@
+Now that we have a
+good understanding of networking in Kubernetes, let's go ahead and apply some of what we've
+learned in the past to create our own
+network plugin. If you recall that the Kubelet is something
+that runs on each node. It's watching, it's getting
+updates from the API server. Whenever it needs to create
+a Pod on the local node, it will call the
+container run time. Then the container run time
+will create the Pod and call a network plugin to set up the networking
+for that Pod. The network plugin has to
+implement the CNI spec. You can find the spec at
+this link right there. But basically we're
+going to have to have a specific type of
+configuration and do things, implement functions
+like add, delete, check inside of this
+network plugin. How it works is the container
+run time will check a specific directory /etc/cni/net.d for
+configuration files. The one with the
+lowest prefix number will be the one that's used. When we created a cluster, it actually installs
+a network plugin. Let's actually look at that. With this, we'll note that
+as part of this GitHub repo, we are providing a bunch
+of cluster configurations. The one we've used previously
+was on one master, two workers and I'm going to use a different
+one this time. That's going to add
+some extra things where it's going to
+mount a directory. I'm going to mount in
+the local directory, so outside of the
+docker containers it'll be temp/cp for
+control plane one, w1 for worker 1, w2 for worker 2. Then inside of each of the containers which would be each node in a
+Kubernetes cluster, we'll see it in the
+/npp-temp directory. In advance, I already created
+the directories ls tmp, that they already
+exist and there's a little script if you want to save yourself a couple
+seconds of typing. Then I'll note I already
+ran the cluster, created the cluster kind create cluster
+config/1master2workerMount.yaml. Note I'm running it inside
+of that root directory of the GitHub repo because this references the temp directory
+which is under this. That's our cluster
+now we can say docker ps to see what
+nodes there are, and I want to look inside
+of the worker nodes, so I can say docker exec -it, go inside the worker, kind-worker and
+execute bin/bash. So now I'm inside
+of the worker node. Now I can do cd /etc/cni/net-d.
+That was the directory, we said where these
+configurations exist and I said there's one that installed a network plugin that
+installed for us. I can look at this
+configuration. Let me do. Here's a bunch of stuff that is written as part of this configuration
+and all of this is part of the CNI spec. We don't have to
+understand all of it, but let me flip
+back to the slides. The next thing to note is
+inside of this configuration, it's going to have
+this array of plugins, but it really is only one, and it's going to say type PTP. If we flip back, we could
+see that exists right there. You can look up what the
+rest of these fields do, but that's doesn't
+matter for right now. But what that's referring
+to is an executable. If we get out of this, the next directory
+is /opt/cni/bin. You could see there is ptp. That's an executable
+that the plug in the container run time read the configuration
+and as part of it, it saw that it had
+this type ptp. This ptp is what is
+an executable that will implement those
+different functions. Now finally, if you
+look on each node, both the config and
+executable will be there, but the config may be different. One of these fields inside
+this configuration, if we go back to this, and more, it's going to have
+this subnet right there. If I were to go into
+a different node, Worker 2, it's going to have
+a different number there. It will because that's how
+this particular plug in works. It would see on Worker 1, it would see 1.0, and on the control
+plan it'll see 0.0. Let's go ahead and
+create our own plug in. Let's start with the skeleton. There's two files that are provided, 09-nppnet.conflist and npp-exact. Actually, I think jammy. Go here going to the cni, what do we provide? Actually, it should
+say the skeleton. There are the skeleton
+we're going to use, and this is the executable
+of the skeleton. This is the configuration, and this is the executable. Then once we do a Fuller 1, we'll use these two right there. Let's look at the
+configuration first. Simpler one right here. We're going to say cniVersion, and the name of
+the plug in it is going to be nppnet-skel. That means that container
+run time should look for an executable name net. That's what this is
+called, and then it'll look for under this type, it'll look for that. Passing in this just because
+but we'll try this out. Now what npp-skel is, is actually a bash script. It doesn't have to be some go code or anything like that you could
+just use bash. We're going to use this, there's this nice article that I highly
+recommend you go read. It provided its own fully
+implemented based cni plug in. We're going to use that as a basis but modify
+it up a little bit. The key here is any time any command it needs
+to get executed, it'll run this script. It's running the executable, and what it's going to pass in as one of its parameters
+is the cni command. You can look in the spec for the various parameters
+that it passes in, but you can see what we're going to do is we're just going to have a switch statement to say, is it an ad, is it a delete, or is it a version. For anything else, we're
+going to not support it. These are the ones for the particular version
+that we're supporting. We're going to just
+print out nothing to do, so this is just a skeleton. All of the output, we're going to make it go into
+this particular log file. That's those two files, and we'll provide
+an install script. What the install script will
+do is we already did this, make directories,
+create the cluster. What we need to do
+to install this is copy that configuration
+file onto worker node 1. Copy the executable
+onto worker node one. Remember, this is
+the mount directory. If I go back and copy cni npp-skel into tmp/worker1, ls tmp/worker1, it's there. Let me go back to,
+if you recall, this is where we did a docker
+exec into that container. So if I go to /npp-temp
+where it's mounted, I see that file showed up. So that's one piece I'm going
+to need to copy the other, the configuration and
+cni/09 into temp/ worker1. We're only going to do
+this on worker1 for now. You can see over here
+that it showed up. What else do we need to do? Inside the worker, I need to copy that file into those directories
+which it cares about, that's the cni/ net.d
+and opt/cni/bin. Inside of worker 1, I want to copy the executable
+into /opt/cni/bin, opt ls, so there it is. And then I want to copy
+that into /etc/cni/net.d. Then I want to list it, cni/net.d, there it is, great. With that, that is
+now setting it as the default network
+plug in to use. Now it's not going to
+get called and we can look in, var/log/nppnet
+ls/var/log. It doesn't even
+exist yet because the executable npp net-scale wasn't even called yet because we didn't even
+try to create a pod. Let's try to create a pod now, such that it'll create that. The first, I want
+to restrict the pod to only go on a particular node. So I'm going to say kube
+control label nodes. Let me do it in this
+direct kubectl node. I'm going to label it, the specific node
+that I want to label, I want to do it kind worker. I want to say node = node1. Kind worker, node=node1. That's just created a label. Now we can launch a pod and we're going to launch a pod that has been created or specifies,
+let me look at that one. Simple genetics node1, we added this little bit to it, the node selector node: node1 to say I only
+want this pod to run on any node that has been labeled with the key
+value pair node: node1. That's what we just did. Let me do kubectl
+apply-f pod config, simple-nginx-node1 great. It just got created, kubectl get pods-o wide. It's going to be in
+this container creating state because it'll never
+get to the running state. From here, we're going
+to do things to say. Describe that node
+and describe the pod. Kubectl node kind-worker. Everything looks good there. I'm going to describe mynginx. You can see there's
+some error messages. Failed to create pod
+sandbox, blah, blah, blah. Plug in type network,
+npp-skel, failed. Failed with no error
+message. This is the same. Permission denied. Well, that means we didn't change,
+it's not executable. If I do go into opt cni
+/bin, it's not executable. Change mode plus X nppnet-skel. Let me delete this
+Kubectl delete -- force pod mynginx. Then let me apply it again. Let me describe it again. Now it failed for a
+different reason. It didn't say permission denied because it's
+not executable. It actually executed it, but it's now just saying
+it's failed to do something. Here we can look
+in the log files. We said var log, well, there it is,
+nppnet-skel log. Let me move of that. If you want to see what all those different
+parameters are, we print as part
+of that plug in, it's printing those out. You can see it's here trying
+to execute the command add, and it's saying
+nothing to do-add. All of this is just stuff
+we were printing out. If I come over here, it could be scale, you could see it
+printed that out, all the parameters, just
+because that makes it easier. Then I print out
+nothing to do-add. That's what we just saw. Nothing to do-delete. Nothing to do-add. The container
+run-time basically, keep trying to add
+and delete this pod. Obviously, the pod didn't work or the network
+plug in didn't work. That's because, well, we
+didn't have it do anything. Other debug things we can do. We looked at the
+log, but you might also look at blitz log. I could say journal control, -u kubelet and they will have its output
+and then look for any related or CNI or
+network plug in related. Well, before I move into
+creating a full plug in, what I'm actually
+providing here, there's this nppnet install. This is a script that will go
+and do all of those steps. And it is doing it
+for the real plug in, not the skeleton. It will go and do all
+of those steps for you if you want or you
+can do it all manually. Now let's go into the next one
+which is the full plug in. What do we need? We're going to create a plug in that looks like
+something like this. We're going to create, here's the root name space, the name spaces
+that get created. We need to create
+the veth pairs, sign it to a network, create a bridge, and then
+enable internode communication. How it's going to have
+internode communication is we're not going to use tunneling or
+anything like that, we're just going to use
+IP addresses 10.244.1.2. Then this is going
+to be the.2.2. Everything on nod, worker 2 is going to
+have its own /24. Everything worker 1 is
+going to have its /24. Then we're going
+to have a route in the host that's going
+to say 10.244.1., or in this case 2.
+anything forward it via this address,
+this other node. We got to figure out
+what those addresses are and all that stuff. Now let's think about what our network plug in needs to do. It needs to allocate
+IP addresses, it needs to create that
+entry in var/run/netns we talked about for
+IP netns to work. Create the veth pair, put the veth into
+the name space, and then set up networking
+within the name space. The networking outside
+of the names-pace, we're going to have
+a static in advance before any pods are going to be created as part of the
+plug in installation. We're going to say
+create this bridge and set up this routing. All of this is described here. If you didn't do this already, create a cluster and the installation is
+following these steps. Let's actually walk through the installation script first. nppnet install. Just to mention this kind does not necessarily
+deterministically set up the IP addresses
+because it depends on which docker container gets created first or something. But you can figure out
+this describes how to find what the IP address of each is and just configure that, and then figure out the subnet and this
+describes which prefix, so if it's 110.244.0.0. We're trying to find this number inside of this prefix and so this describes how to find
+that so set those. Once you edit those, you'll be able to run the script and it'll do the
+full installation. You could see it's copying the executable to
+both of the workers. It's creating the
+labels for the workers. This is not really part of the network or the
+plug in installation. That's just for us to do those testing
+that we want to do. We're going to create
+the network on Worker 1. As I said, this is statically set up at installation time. If you've installed flannel before and you did something
+like cube control, apply some flamel, it's doing similar things
+as we're describing here. But I didn't create
+a YAML file to actually deploy a plug in. We're going to bring that bridge up and then we're going to assign an IP address
+for that bridge. This bridge is going to have
+a unique one in the cluster. Then we're going to create
+the configuration file for Worker 1. Why we're not providing it as a separate thing
+and copying it. Instead, just creating is well, because we want to edit
+that field right there. We're going to look at
+this subnet node inside of the configuration because that's how it's going to know what
+to assign IP addresses. There's different approaches. There's IPAM, the IP
+address management. There's various ways that different network
+plug ins are going to do things more complex. Here we're going
+to statically just say choose something from this space and it's
+actually going to be pretty bare bone simplistic. Then we're going
+to put that into this local directory and
+then do use docker exec to execute on this worker to do the movement of those files and install them
+in the correct location. Then we do the exact
+same thing for Worker 2. Now let's look at
+the cni/npp net. This is the full
+network plug in. Let's go through
+the add command. Here, as part of the
+configuration that gets passed in to the network plug in, we're going to pull out
+that subnet network which is going to be
+something like 10.244. We're going to look
+at that subnet node, which is going to be
+something like one. This makes it so
+that gateway node, which is the cni's address, will be something
+like that and then the pods IP will be
+something like this. All pulling from the
+configuration that we generated. You can see we're going to
+allocate an IP address. Here we're using some
+tmp file just to create, see what the next IP address is. We're not recycling
+IP addresses, we're just incrementing. It'll start at two,
+that will get used. The next pod that
+gets created will be three because you can see
+we read that file in, increment it, and
+then write that back. When we read two, we're going to use two
+locally for this pod, but we're going to
+write back three. Next time this gets called
+it's going to be three. We have a lot of logging
+stuff going on here. Here's stuff, making
+that directory that we need, the var/run/netns. We're going to create
+the veth pairs, so here we're just using a
+random number generator. We're going to add
+addresses to those, attach it to the bridge, put the veth into
+the name space, and then set up networking
+within the name space. That's about it. A lot of this was inspired by this network plugin that somebody
+else created. Definitely go check that out. But to suit our purposes
+and our specific set up, I modified it in this way. We're not going to run this. What I'd like you to do is
+to run this on your own, install it, test it out, but you will be able to do
+things like create a pod. What I've included, is in the pod configs directory. We have these different pods. Let me look at one
+of them, forexec1. All it's doing is saying, while true, do sleep 1,000, and it's running BusyBox. I have that. This one
+will select node1, this one will select node1, and this one will select node2. If I deploy all three of these, then I have two pods
+running on node1, and one pod running on node2. Why that's useful is
+because then I can go get their IP addresses, and then I can exec
+into each one of them, and ping the IP address
+of another one, just so I can see, does that communication work? I can get inside
+each of the workers, see the logs, and
+see all of that. This will be something I'll
+let you try on your own. All of the code is provided, but then feel free to elaborate
+and maybe you want to add some iptables rules to
+filter certain traffic. A lot of there are
+more richer CNIs have policies that they support, and it won't be
+all through this, they'll come
+deployed and they'll run their own pods that interacts with the
+Kubernetes system, watch the things
+that are going on, and interact with it
+in a richer sense. But this is right
+here, the basics. With that, let me
+give a quick recap of this entire course so that we know where we've
+actually gone. It's been pretty impressive. We called it Network
+Principles in Practice: Linux Networking. We really focused on
+Linux networking, but a lot of the
+concepts that you learn in network systems or
+network foundations' course, we've actually applied in the context of Linux networking. We introduced in Module 1 Linux's
+networking capabilities, starting with the
+bridge and devices. We then went into
+Module 2 where we explored Linux's
+capabilities to create a router with
+command line options for setting up the
+forwarding table, and software for running
+routing protocols. We then went into Module
+3 where we extended to Layer 4 capabilities with
+filtering with iptables, with load balancing with IPVS, traffic shaping with TC. Then we shifted over to
+really explore some of Linux's virtual
+networking capabilities with network namespaces, and what happens with
+Docker networking. Then in Module 5, we saw virtual networking applied for large scale systems, namely going over Kubernetes, Kubernetes networking
+abstractions, and how to write
+a network plugin. If I were to suggest
+one next step, in addition to becoming much more versed in all of the
+things we just covered, there's a really
+interesting capability called eBPF that's supported
+inside of the Linux kernel. A lot of the network plugins
+that are being created now or updated are using eBPF. There's a lot of powerful things you can do in troubleshooting, and things like that. I'll include some links
+in the resources, but that would be a
+suggested next step. With that, I thank you all for participating
+in this course, and hopefully you got
+something out of it, and look forward to seeing
+you at a future course. Thanks.

@@ -1,0 +1,137 @@
+Let's jump into TLS
+and HTTPS this time. What are we addressing here? This is at the application
+and transport layer. Without these, the
+problem is TCP it provides in order
+reliable stream between two processes,
+so we learned that, and then HTTP provides an application
+protocol to get and put web objects with the server. An attacker could pretend to be the bank in this example; it could inspect
+or modify traffic; it could snoop on Wi-Fi in
+public space and so forth. Is this threat really real, though pretending to
+be somebody else, a different website,
+or modifying messages? Well, we saw part of that, but to show it again, what happens when, in my browser, I
+go to chase.com? Well, a DNS query is performed
+to look up chase.com, and that returns
+on my IP address, and then I send messages to and from that IP address that
+was returned from DNS. We've seen cases or how we might be able to modify
+packets directly, or perhaps the DNS system responds with the
+wrong IP address; it's also the case that BGP
+routes could be hijacked, and so even if you're sending
+to the correct IP address, it ends up at a
+different destination. TLS is introduced as a layer
+that provides security. It provides confidentiality, integrity, and authentication. It's shown here in the middle
+when combined with HTTP; that is what HTTPS is. Now, on the right-hand side, looking forward, we
+didn't go over quick, so I won't discuss that here, but that incorporates a
+lot of the capabilities of TLS into that in
+this next generation. Just to summarize the
+problems of HTTP and TCP when used as the mechanism to
+communicate with servers, the messages are
+sent in plain text, the message integrity
+is not insured, and we're not guaranteed
+to be communicating with the server that we expect to be. We've seen solutions
+to all of these, so we can use
+symmetric encryption; we can use message
+authentication codes using a shared secret key, and these provide
+confidentiality and integrity. But as we've pointed out before, how do we share a private key? There, we can use asymmetric encryption
+to exchange the key. We can encrypt this shared
+key, the session key, with the public key of a server, and the server decrypts
+with their private key. We could use Diffie-Hellman, all those different things. But in this case, how do we trust the public
+key of the server, and in fact, how do we know
+it's the actual server? This is where
+digital certificates and certificate
+authorities come in. This binds the identity, for example, the ownership
+of a domain name, to some public key, and then that could be
+signed by a trusted source. This provides the ability to
+have authentication as well. One certificate authority that's highly used is called,
+Let's Encrypt. This is an open system for
+providing these certificates. How does it go about
+verifying identity? We saw in the case of RPKI, there was this pre established
+business relationship, the RARs, which served as the certificate
+authorities in RPKI. In this case, there's not
+that business relationship. It's got a system where
+it verifies the identity, namely the ownership of a
+domain through a challenge. This could be whether it's
+you provision a DNS record under say example.com if that's the domain that you're trying to issue a
+certificate for, or provision in HTTP resource
+under a well known URI. All right here you're
+going to go request a certificate and then the
+Let's Encrypt system will say, great, why don't you put this value at this location for your website, this domain. Then their own servers
+can then basically do a HTTP request to that
+domain at that location. If that resource value
+was provision there, then they've made
+the assumption that you've proven that
+you have ownership, you've proven
+identity and so now we'll accept that this
+is your public key for that domain and we're going to sign and create a
+certificate for it. With that, now those
+certificates are in place, we're going to have a web
+server would go and do that. Now they have this
+public key that they'll be able to share with anybody visiting
+their website. The client would be able to say, oh, let's encrypt sign this. I know it's valid, it's tied to this identity. I know that's the
+identity I'm looking for so it can trust that
+communication now. There much like when
+we talked about IP, there's this handshake
+that needs to happen. This is the core of TLS. This happens after you
+do the TCP connection. After you do that
+three way handshake, it sets up the agreement
+on the parameters, it authenticates the server
+and it sets up a private key, then encrypted traffic
+can exchange and you can do exchange of web
+objects with the server. We're specifically
+focusing on TLS 1.2, 1.3 that is more concise. It reduces some of the messages, but this I feel
+helps understand it, it keeps it a little more clear. We're going to use
+1.2 as our example. The first message is from
+the client to the server. It's a client. Hello. This tells the server of what the client can support
+and what it prefers. The algorithms for encryption
+that it supports, like DES, AES, its data integrity
+algorithms like SHA, SHA1, MD5, and so forth. This is the parameters. The server picks with parameters and then tells
+the client what it chose. It sends a server hello message. The server then sends its digital certificate
+that was signed by a certificate authority
+and this is what binds that domain name to the
+public key of the server. That's what the
+certificate does. The client will have a root
+certificate installed, or a bunch of root
+certificates installed, and can verify the
+server's certificate as long as it was signed by one of these
+certificate authorities that was installed in, in this case, the
+browser of the client. With this, it knows the
+website it's expecting. The server then indicates it's done with its
+handshake negotiation. At this point, the
+client and the server, have the ability to
+exchange a session key. We have the public key
+of the server and so the client can initiate this. The client can pick
+a session key, encrypt it with the
+public key of the server, and send it over. Now that's part of the
+client key exchange. Now the client can indicate that it now believes the
+parameters are agreed upon and that the next
+message will be encrypted. As part of that, it then sends the summary of
+all messages to this point, ensuring the integrity of all of them and that none of them
+have been tampered with. The server then also sends a similar message indicating that it has everything
+that it needs, it agrees to all the parameters, has the key, and a summary of all of the messages it
+understands to this point, again, ensuring integrity. At this point, communication
+is now secured. We can now know that we're visiting the domain
+that we're expecting. We're encrypting the traffic and all of that is
+integrity checked. Now another thing
+to know about TLS, so what we've just demonstrated is in
+the most common case, it's going to be a
+client needs to validate the authenticity of the
+server that it's visiting. The server doesn't necessarily need to verify that I'm who I say I am because it doesn't
+really know or care. But there are cases
+where it does. This is where Mutual
+TLS or MTLS comes in. As described, the
+client verifying the identity of the
+server is enough, that this domain of the public key matches the website that I'm
+visiting as a client. Now if the server wants to verify the identity
+of his clients, this could happen maybe it's for access control for
+API endpoints, so I'm running some
+service and I only want to let those that are my customers, that I've explicitly
+allowed to use the APIs, and so I want to validate that. I want to validate they
+are who they say they are. The browsers in the client
+would look at the domain in the certificate and
+match to what's being accessed, so
+that's implicit, except all servers
+would likely have an explicit access control list for what certificates
+it's accepting. With that, we've
+now covered TLS. That wraps up this module on network security where
+we covered the basics, really try to tie
+it into things we learned in other modules, and show how these
+things all come together. With that, thanks.

@@ -1,0 +1,215 @@
+1
+00:00:07,940 --> 00:00:10,335
+Let's go ahead and get started.
+
+2
+00:00:10,335 --> 00:00:16,725
+This marks a new module
+about hybrid networks.
+
+3
+00:00:16,725 --> 00:00:20,010
+Let's get into this.
+
+4
+00:00:20,010 --> 00:00:22,840
+We've focused on Google Cloud,
+
+5
+00:00:22,840 --> 00:00:26,515
+where all your
+infrastructure is in GCP.
+
+6
+00:00:26,515 --> 00:00:30,500
+We learn different network
+services to use and how
+
+7
+00:00:30,500 --> 00:00:34,290
+to interconnect virtual machines
+
+8
+00:00:34,290 --> 00:00:37,365
+and all the nuances of that.
+
+9
+00:00:37,365 --> 00:00:40,540
+But sometimes
+companies will have
+
+10
+00:00:40,540 --> 00:00:44,220
+some of their IVT
+infrastructure in
+
+11
+00:00:44,220 --> 00:00:46,720
+their corporate offices that
+
+12
+00:00:46,720 --> 00:00:48,700
+need to interface to
+
+13
+00:00:48,700 --> 00:00:51,290
+the infrastructure
+deployed in the Cloud.
+
+14
+00:00:51,290 --> 00:00:54,655
+For example, data
+is stored in GCP,
+
+15
+00:00:54,655 --> 00:00:58,440
+but the employees that
+are working need to
+
+16
+00:00:58,440 --> 00:00:59,980
+be able to access it and make
+
+17
+00:00:59,980 --> 00:01:03,390
+queries on it from the office.
+
+18
+00:01:03,620 --> 00:01:06,850
+Sometimes the infrastructure is
+
+19
+00:01:06,850 --> 00:01:10,410
+hosted in co-location
+facilities.
+
+20
+00:01:10,410 --> 00:01:12,390
+Maybe companies built
+
+21
+00:01:12,390 --> 00:01:14,900
+their infrastructure
+around co-location,
+
+22
+00:01:14,900 --> 00:01:17,970
+and they want to
+expand into the Cloud,
+
+23
+00:01:17,970 --> 00:01:21,170
+but want to have the
+two infrastructures,
+
+24
+00:01:21,170 --> 00:01:23,460
+to be able to work together.
+
+25
+00:01:23,460 --> 00:01:27,260
+Then there are cases,
+
+26
+00:01:27,260 --> 00:01:30,520
+maybe a company wants
+to use multiple Clouds,
+
+27
+00:01:30,520 --> 00:01:34,510
+maybe they're built in GCP,
+
+28
+00:01:34,510 --> 00:01:37,660
+but they see a lot
+
+29
+00:01:37,660 --> 00:01:40,465
+of partnerships between
+Azure and OpenAI,
+
+30
+00:01:40,465 --> 00:01:42,630
+and they want to leverage
+
+31
+00:01:42,630 --> 00:01:45,450
+some of that
+infrastructure in Azure.
+
+32
+00:01:45,890 --> 00:01:48,820
+All of these cases,
+
+33
+00:01:48,820 --> 00:01:52,280
+there needs to be
+network connectivity.
+
+34
+00:01:52,280 --> 00:01:55,950
+All of them need networking.
+
+35
+00:01:55,950 --> 00:01:59,740
+There's different ways you
+can go about doing this,
+
+36
+00:01:59,740 --> 00:02:02,020
+so you can trade off
+different properties,
+
+37
+00:02:02,020 --> 00:02:05,340
+the security, the reliability,
+
+38
+00:02:05,340 --> 00:02:09,125
+and the performance, the
+cost, the development effort.
+
+39
+00:02:09,125 --> 00:02:14,460
+All of those could lead
+to different choices.
+
+40
+00:02:14,460 --> 00:02:16,635
+We're going to go through
+
+41
+00:02:16,635 --> 00:02:21,510
+three different network services
+
+42
+00:02:21,510 --> 00:02:24,060
+or approaches to being able
+
+43
+00:02:24,060 --> 00:02:27,620
+to interconnect those
+different things,
+
+44
+00:02:27,620 --> 00:02:31,480
+namely VPN, from branch
+offices, really anywhere,
+
+45
+00:02:31,480 --> 00:02:35,520
+but just fitting into the
+theme of these slides,
+
+46
+00:02:35,520 --> 00:02:38,560
+direct connect from co-location,
+
+47
+00:02:38,560 --> 00:02:42,110
+and the intercloud connections.
+
+48
+00:02:42,440 --> 00:02:46,030
+With that, we'll
+end here. Thanks.

@@ -1,0 +1,486 @@
+1
+00:00:07,460 --> 00:00:10,230
+Let's go ahead and get started.
+
+2
+00:00:10,230 --> 00:00:12,940
+This time, we're
+going to talk about
+
+3
+00:00:12,940 --> 00:00:17,130
+inter-cloud as part of this
+hybrid infrastructure.
+
+4
+00:00:17,130 --> 00:00:24,300
+This is specifically
+addressing the case where I,
+
+5
+00:00:24,300 --> 00:00:28,235
+as a company, want to
+use multiple clouds.
+
+6
+00:00:28,235 --> 00:00:30,660
+I have some
+infrastructure in Google,
+
+7
+00:00:30,660 --> 00:00:32,885
+and maybe I see
+
+8
+00:00:32,885 --> 00:00:36,460
+OpenAI and Microsoft having
+this great partnership,
+
+9
+00:00:36,460 --> 00:00:39,870
+and I want to use that and
+it's running in Azure,
+
+10
+00:00:39,870 --> 00:00:41,530
+and so I want to be
+able to use that.
+
+11
+00:00:41,530 --> 00:00:44,150
+But I don't want to use VPNs
+
+12
+00:00:44,150 --> 00:00:48,405
+because they're slow
+and costly, maybe.
+
+13
+00:00:48,405 --> 00:00:51,660
+But I want the high
+bandwidth connection.
+
+14
+00:00:51,660 --> 00:00:54,210
+Like I said, you
+could use a VPN,
+
+15
+00:00:54,210 --> 00:00:57,390
+but it's lower bandwidth,
+higher latency.
+
+16
+00:00:57,390 --> 00:00:59,080
+Depends on the Internet,
+
+17
+00:00:59,080 --> 00:01:01,430
+so there's no service
+level agreements
+
+18
+00:01:01,430 --> 00:01:03,950
+that you can get from that.
+But you could do that.
+
+19
+00:01:03,950 --> 00:01:06,890
+I could set up a VPN
+gateway on each side,
+
+20
+00:01:06,890 --> 00:01:09,370
+set up the routers on each side,
+
+21
+00:01:09,370 --> 00:01:14,160
+and have my VPCs
+talking to one another.
+
+22
+00:01:14,160 --> 00:01:19,230
+But we're going to go the
+route of a private connection.
+
+23
+00:01:19,230 --> 00:01:21,990
+Recall from last time
+where we talked about
+
+24
+00:01:21,990 --> 00:01:25,715
+the cloud direct
+connect providers,
+
+25
+00:01:25,715 --> 00:01:28,950
+where I have a cage over here,
+
+26
+00:01:28,950 --> 00:01:33,075
+I can connect to
+an equipment of,
+
+27
+00:01:33,075 --> 00:01:35,235
+say, a company like Megaport.
+
+28
+00:01:35,235 --> 00:01:37,600
+Then their fabric,
+
+29
+00:01:37,600 --> 00:01:39,980
+whether it's the same data
+center or a different one,
+
+30
+00:01:39,980 --> 00:01:47,410
+can get me to connection to
+Google Switch and so forth.
+
+31
+00:01:47,410 --> 00:01:52,260
+I could have directly
+connected to Google itself,
+
+32
+00:01:52,260 --> 00:01:57,660
+but let's say we going
+through one of the providers.
+
+33
+00:01:57,660 --> 00:02:01,000
+Then recall what that
+on the cloud side,
+
+34
+00:02:01,000 --> 00:02:03,260
+that meant I needed
+a cloud router
+
+35
+00:02:03,260 --> 00:02:05,505
+with the VLAN attachment,
+
+36
+00:02:05,505 --> 00:02:11,370
+which then connected on
+the on-premise side.
+
+37
+00:02:11,370 --> 00:02:16,325
+All going between two clouds
+
+38
+00:02:16,325 --> 00:02:21,400
+requires is a router in between.
+
+39
+00:02:23,300 --> 00:02:26,285
+I have this router connected to
+
+40
+00:02:26,285 --> 00:02:29,910
+this through the
+physical infrastructure
+
+41
+00:02:29,910 --> 00:02:31,290
+to this cloud router.
+
+42
+00:02:31,290 --> 00:02:32,910
+Now imagine on the other side
+
+43
+00:02:32,910 --> 00:02:34,870
+is another physical
+connection to
+
+44
+00:02:34,870 --> 00:02:37,210
+a different provider and
+
+45
+00:02:37,210 --> 00:02:41,730
+a cloud router in that
+environment, in that cloud.
+
+46
+00:02:41,730 --> 00:02:44,000
+That's all it really is.
+
+47
+00:02:44,000 --> 00:02:47,390
+It just needs this kind
+of router in between.
+
+48
+00:02:50,570 --> 00:02:55,420
+There's something called a
+cross-cloud interconnect
+
+49
+00:02:55,560 --> 00:02:57,820
+where it's
+
+50
+00:02:57,820 --> 00:03:00,560
+effectively a direct connect
+
+51
+00:03:00,560 --> 00:03:05,715
+to each cloud plus
+a virtual router.
+
+52
+00:03:05,715 --> 00:03:09,900
+The provider, whether that's
+a partner like Megaport,
+
+53
+00:03:09,900 --> 00:03:12,000
+or Console Connect, or Google,
+
+54
+00:03:12,000 --> 00:03:14,760
+actually offers this
+service themselves.
+
+55
+00:03:14,760 --> 00:03:18,935
+So they run and operate
+the virtual router.
+
+56
+00:03:18,935 --> 00:03:22,370
+They operate this
+part right here.
+
+57
+00:03:22,370 --> 00:03:26,820
+In addition to enabling
+both connection to
+
+58
+00:03:26,820 --> 00:03:31,780
+Google and connection
+to AWS in this picture.
+
+59
+00:03:31,970 --> 00:03:34,540
+In some cases, it can also
+
+60
+00:03:34,540 --> 00:03:37,320
+work between different regions,
+
+61
+00:03:37,320 --> 00:03:44,530
+if you're going over the
+provider's network fabric.
+
+62
+00:03:45,380 --> 00:03:48,000
+How you can get to this is,
+
+63
+00:03:48,000 --> 00:03:51,290
+again, in the
+interconnect button.
+
+64
+00:03:51,290 --> 00:03:54,040
+But instead of the top ones
+
+65
+00:03:54,040 --> 00:03:56,170
+where the direct
+connect, this last one,
+
+66
+00:03:56,170 --> 00:04:01,530
+is cross-cloud
+interconnect connection.
+
+67
+00:04:01,530 --> 00:04:05,700
+This is that Google provided
+
+68
+00:04:05,700 --> 00:04:10,260
+between two different Google
+
+69
+00:04:10,260 --> 00:04:13,815
+to the other cloud
+service providers.
+
+70
+00:04:13,815 --> 00:04:16,680
+If you wanted to do
+it through a partner,
+
+71
+00:04:16,680 --> 00:04:19,385
+you would have selected this
+one, and it could have,
+
+72
+00:04:19,385 --> 00:04:21,740
+inside of the partner network,
+
+73
+00:04:21,740 --> 00:04:23,640
+you would have
+configured to go to
+
+74
+00:04:23,640 --> 00:04:26,940
+AWS as the other end
+of the cloud router.
+
+75
+00:04:26,940 --> 00:04:28,460
+But you could do it all within
+
+76
+00:04:28,460 --> 00:04:31,860
+the Google's interface if you
+
+77
+00:04:31,860 --> 00:04:35,865
+want if you're using
+Google's service.
+
+78
+00:04:35,865 --> 00:04:37,495
+But you would still need to,
+
+79
+00:04:37,495 --> 00:04:39,840
+in either case, go over
+onto the Amazon side,
+
+80
+00:04:39,840 --> 00:04:44,740
+set up the equivalent of
+a cloud router there,
+
+81
+00:04:44,740 --> 00:04:48,930
+the equivalent of the VLAN
+attachment, and all that.
+
+82
+00:04:48,930 --> 00:04:51,825
+That's what it is.
+
+83
+00:04:51,825 --> 00:04:57,165
+Again, a little more
+challenging to set up.
+
+84
+00:04:57,165 --> 00:05:00,660
+This one, all these providers
+are straightforward,
+
+85
+00:05:00,660 --> 00:05:04,185
+but they're not cheap.
+
+86
+00:05:04,185 --> 00:05:07,160
+If you have a few
+hundred bucks that you
+
+87
+00:05:07,160 --> 00:05:09,720
+want to spend to test this out,
+
+88
+00:05:09,720 --> 00:05:12,120
+you can certainly
+get a connection
+
+89
+00:05:12,120 --> 00:05:15,600
+between your Google
+infrastructure and,
+
+90
+00:05:15,600 --> 00:05:18,740
+say, your Amazon infrastructure
+and see how it works.
+
+91
+00:05:18,740 --> 00:05:23,490
+We're not going to walk
+through that in this,
+
+92
+00:05:23,490 --> 00:05:25,930
+but you can try on your own.
+
+93
+00:05:27,680 --> 00:05:33,150
+Similar exact setup,
+VLAN attachments,
+
+94
+00:05:33,150 --> 00:05:36,910
+PGP configurations,
+and so forth.
+
+95
+00:05:36,980 --> 00:05:39,800
+Then results would
+look like this.
+
+96
+00:05:39,800 --> 00:05:41,540
+You got your VPC network.
+
+97
+00:05:41,540 --> 00:05:43,360
+You got a cloud router there.
+
+98
+00:05:43,360 --> 00:05:48,810
+It would go through
+Google routers.
+
+99
+00:05:49,130 --> 00:05:51,720
+They have connections to,
+
+100
+00:05:51,720 --> 00:05:53,600
+let's say, it's Amazon,
+
+101
+00:05:53,600 --> 00:05:58,285
+a router run by Amazon,
+
+102
+00:05:58,285 --> 00:06:03,270
+and then inside of
+the remote cloud,
+
+103
+00:06:03,270 --> 00:06:05,730
+so that's Amazon, they
+would have a router there.
+
+104
+00:06:05,730 --> 00:06:12,955
+You can read all about
+it in that link.
+
+105
+00:06:12,955 --> 00:06:18,220
+With that, we will
+end here. Thank you.

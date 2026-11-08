@@ -1,0 +1,75 @@
+All right, welcome back, so now we're going to talk about part two
+of the load balancing introduction. All right, so
+the next consideration that's presented is do we want global or
+a regional load balancer? So regional, meaning our workload, that is load balancing between
+is all within the same region. Global means, you have workloads
+in two different regions, but, kind of under the hood,
+why does that matter? Well, let's first look to understand
+premium versus standard tier. As we alluded to this, we saw,
+when we're setting up a VM and VPC, that question does get asked. So let's understand, all right,
+so in the standard tier we have, here's the Google cloud platform region. We talked about their edge network,
+these points of presence, or PoP. And in standard tier for egress traffic, meaning it's going outbound from
+a workload running in inside of, say, a VM,
+in GCP out to some end user, well, it'll exit Google's network
+closest to the source. And then all of this is meaning
+it's traversing the Internet, and then it gets to end user. Premium tier, they're going to
+leverage Google's network. They say it's cold potato, you know, cold, they just say cold potato. And that means, so the opposite is hot
+potato, hot potato is get the packet out of my network as quickly as possible,
+so that's, you know, this picture. Cold potato is, well,
+I will, I'm fine with, having the packet go
+further into my network if it leads to better performance. In Google's case, traffic exits Google's
+network nearest the destination. And so this path over to public
+Internet is as short as possible. And this is much better
+performance because Google can control their own backbone network and
+optimize it. So if you recall that
+Google espresso paper and we saw a picture like this where
+through their SDN capabilities, they could send traffic out this PoP or they could have forward
+it to a different one. And so this is that functionality
+in the premium tier. Now, that was all egress or
+traffic exiting from Google out to some
+end user in ingress, which is the kind of incoming
+traffic in premium tier. The same global external IP
+address is advertised from various points of presence,
+and client requests are directed to the client nearest GFE or
+Google front end. All right, so refreshing,
+kind of what BGP is, so this is just a picture of the Internet, which is many interconnected
+networks called autonomous systems. BGP, or the Border Gateway Protocol, is the protocol used to
+coordinate between them. So shown here is an example of some,
+you know, IP address or some company that has a prefix that
+they own of IPs, public IPs space. And, you know, it gets advertised
+by these different networks. So AS4 is going to announce
+to its neighbors AS2 and AS3, like, hey, you can get to
+the destination D via me this AS4, all right, AS2 and 3 will insert
+those into their routing tables. Then they will notify the next,
+you know, and all of their peers. And so in this case,
+they can say to as one or as two, in this case is shown
+to as telling as one, hey, you can get to
+destination D via AS2 and then AS3, so myself, and
+then AS4, all right? And they will also,
+kind of exchange routes, with each other,
+leading to updates on their routing table. Then ultimately,
+they each have their routing table of kind of paths they know about. So AS1 knows about the path,
+through AS2 and AS4 or through AS3 and AS4. And, then, it has to decide
+which it's going to choose, and so there's a kind of defined
+BGP decision making process. You can largely think of it as
+going to be, the shortest path, so AS2, we'll choose to go
+through AS4 to destination rather than going AS3,
+AS4 destination, all right? So that's just the scratching
+the surface of BGP, where it comes back to
+premium versus standard tier. Why this matters is we
+said these different front ends or these points of presence, it can be announcing prefixes
+into its peer networks. This prefix D will be
+announced into this AS, which will then exchange
+it with its neighbors. And then likewise, this one would tell
+this as and it would exchange it, and then any AS in between would choose which
+direction it's going to send traffic. And so this allows you to
+have this kind of concept of network closeness
+because this would have had the shortest path to
+prefix D in this path, but a different one would have a different
+path to a closer Google front end server. That's what anycast is, and that's what
+that premium tier would bring you. To summarize both part one and part two, we talked about what load balancing
+is application versus network level. We talked about the internal and
+external, and saw what type of system would
+be used under the hood, talked about global versus regional and how egress traffic and
+egress traffic is handled in both cases, and talked about anycast. All right, with that we're
+going to end here, thanks, bye.

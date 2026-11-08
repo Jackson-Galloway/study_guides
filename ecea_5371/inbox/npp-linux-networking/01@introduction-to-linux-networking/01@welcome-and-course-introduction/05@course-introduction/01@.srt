@@ -1,0 +1,403 @@
+1
+00:00:08,880 --> 00:00:12,775
+Welcome to Network
+Principles in Practice,
+
+2
+00:00:12,775 --> 00:00:15,480
+Linux Networking.
+I'm Eric Keller.
+
+3
+00:00:15,480 --> 00:00:18,080
+I'm a professor at the
+University of Colorado,
+
+4
+00:00:18,080 --> 00:00:22,010
+and I've been working in
+networking for a long time now.
+
+5
+00:00:22,010 --> 00:00:23,640
+I've worked around the hardware,
+
+6
+00:00:23,640 --> 00:00:27,980
+the operating systems, large
+scale distributed systems.
+
+7
+00:00:27,980 --> 00:00:29,760
+I've seen a great deal of
+
+8
+00:00:29,760 --> 00:00:32,800
+innovation and I'm
+passionate about this space.
+
+9
+00:00:32,800 --> 00:00:36,945
+Its history is fascinating
+and its future is exciting.
+
+10
+00:00:36,945 --> 00:00:41,185
+Why the name network
+principles in practice?
+
+11
+00:00:41,185 --> 00:00:45,260
+The idea here is that we
+learn network systems,
+
+12
+00:00:45,260 --> 00:00:50,175
+so we understand the protocols,
+understand some concepts.
+
+13
+00:00:50,175 --> 00:00:54,330
+But this course, putting
+that into practice,
+
+14
+00:00:54,330 --> 00:00:57,690
+helps reinforce the
+concepts where we
+
+15
+00:00:57,690 --> 00:01:01,410
+can see how they were built.
+
+16
+00:01:01,410 --> 00:01:05,955
+Those principles were built
+into widely used systems,
+
+17
+00:01:05,955 --> 00:01:08,650
+in this case, Linux.
+
+18
+00:01:08,650 --> 00:01:11,045
+Understanding how to use that,
+
+19
+00:01:11,045 --> 00:01:14,210
+getting hands-on
+experience architecting,
+
+20
+00:01:14,210 --> 00:01:16,715
+putting those
+concepts into place,
+
+21
+00:01:16,715 --> 00:01:18,370
+building complex networks and
+
+22
+00:01:18,370 --> 00:01:20,250
+network systems, all of that.
+
+23
+00:01:20,250 --> 00:01:22,010
+Let's put this all into practice
+
+24
+00:01:22,010 --> 00:01:25,300
+while learning much more
+about Linux networking.
+
+25
+00:01:25,300 --> 00:01:27,920
+Who is this course for?
+
+26
+00:01:27,920 --> 00:01:30,750
+The answer to that is that
+it was really designed to
+
+27
+00:01:30,750 --> 00:01:34,140
+supplement many different paths.
+
+28
+00:01:34,140 --> 00:01:36,930
+I'll talk about
+the two main paths
+
+29
+00:01:36,930 --> 00:01:39,565
+for the network engineer.
+
+30
+00:01:39,565 --> 00:01:42,110
+Traditionally,
+you're taught how to
+
+31
+00:01:42,110 --> 00:01:45,430
+configure Cisco devices
+to do something.
+
+32
+00:01:45,430 --> 00:01:50,010
+Well, Linux is becoming
+more pervasive in networks.
+
+33
+00:01:50,010 --> 00:01:52,530
+The underlying systems in
+
+34
+00:01:52,530 --> 00:01:55,495
+all of these cases are
+really moving to Linux.
+
+35
+00:01:55,495 --> 00:01:58,590
+You'll set yourself up
+to really understand
+
+36
+00:01:58,590 --> 00:02:02,575
+those systems and even
+contribute to their future.
+
+37
+00:02:02,575 --> 00:02:05,510
+The other main path
+is developers,
+
+38
+00:02:05,510 --> 00:02:08,850
+or Cloud architects,
+or DevOps engineers.
+
+39
+00:02:08,850 --> 00:02:12,315
+From networks, it's not
+really your main job.
+
+40
+00:02:12,315 --> 00:02:16,990
+The thing is networks
+touch everything you do.
+
+41
+00:02:16,990 --> 00:02:18,950
+I've always found that the
+
+42
+00:02:18,950 --> 00:02:20,750
+most valuable contributions are
+
+43
+00:02:20,750 --> 00:02:24,870
+from those that
+can both innovate,
+
+44
+00:02:24,870 --> 00:02:27,510
+demonstrate, and troubleshoot to
+
+45
+00:02:27,510 --> 00:02:30,270
+get really to the
+root cause of issues.
+
+46
+00:02:30,270 --> 00:02:33,010
+Being that networks
+are so pervasive,
+
+47
+00:02:33,010 --> 00:02:36,575
+you're really setting yourself
+up to be that person.
+
+48
+00:02:36,575 --> 00:02:40,270
+You'll be better positioned
+to set up proof of concepts,
+
+49
+00:02:40,270 --> 00:02:43,790
+have the understanding
+to troubleshoot,
+
+50
+00:02:43,790 --> 00:02:45,610
+even broaden your skills to
+
+51
+00:02:45,610 --> 00:02:48,375
+innovate in ways that
+you couldn't before.
+
+52
+00:02:48,375 --> 00:02:52,875
+This is the course I
+wish I had years ago.
+
+53
+00:02:52,875 --> 00:02:55,230
+From one perspective, there's
+
+54
+00:02:55,230 --> 00:02:59,650
+a complete lack of resources
+around Linux networking.
+
+55
+00:02:59,650 --> 00:03:02,490
+But the reality
+is there actually
+
+56
+00:03:02,490 --> 00:03:05,645
+is an abundance of resources,
+but it's very scattered.
+
+57
+00:03:05,645 --> 00:03:07,990
+It comes in a bunch
+of different forms,
+
+58
+00:03:07,990 --> 00:03:10,430
+there's a lot of noise to
+
+59
+00:03:10,430 --> 00:03:12,665
+all the resources
+that are out there.
+
+60
+00:03:12,665 --> 00:03:15,310
+Hopefully going
+through this course,
+
+61
+00:03:15,310 --> 00:03:18,330
+this will help you cut
+through the noise to give you
+
+62
+00:03:18,330 --> 00:03:20,070
+the background needed to be
+
+63
+00:03:20,070 --> 00:03:22,780
+able to learn more on your own.
+
+64
+00:03:22,780 --> 00:03:24,925
+What's this course about
+
+65
+00:03:24,925 --> 00:03:27,190
+we're going to go
+through five modules.
+
+66
+00:03:27,190 --> 00:03:29,490
+The first three
+will really build
+
+67
+00:03:29,490 --> 00:03:31,925
+up knowledge on
+Linux networking,
+
+68
+00:03:31,925 --> 00:03:34,510
+effectively working
+our way up the layers.
+
+69
+00:03:34,510 --> 00:03:37,270
+We'll start with
+layer 2 and devices.
+
+70
+00:03:37,270 --> 00:03:41,330
+We'll then move to layer 3
+with forwarding and routing.
+
+71
+00:03:41,330 --> 00:03:44,775
+How do you build a
+router with just Linux?
+
+72
+00:03:44,775 --> 00:03:46,330
+Then we'll move up to
+
+73
+00:03:46,330 --> 00:03:49,850
+more complex functionality
+across filtering,
+
+74
+00:03:49,850 --> 00:03:53,110
+load balancing, and
+quality of service.
+
+75
+00:03:53,110 --> 00:03:55,070
+Then we'll shift gears
+
+76
+00:03:55,070 --> 00:03:56,810
+a little bit and
+dive into the world
+
+77
+00:03:56,810 --> 00:04:00,910
+of virtual networking
+and containerization.
+
+78
+00:04:00,910 --> 00:04:04,270
+We'll understand how Linux
+works under the hood and
+
+79
+00:04:04,270 --> 00:04:07,790
+how some popular systems
+like Dockers and Kubernetes,
+
+80
+00:04:07,790 --> 00:04:11,605
+leverage Linux networking
+to make those systems work.
+
+81
+00:04:11,605 --> 00:04:16,210
+Welcome, and I hope this
+is really helpful to you.
+
+82
+00:04:16,210 --> 00:04:20,550
+Feel free to reach out on the
+discussion forums or find
+
+83
+00:04:20,550 --> 00:04:23,210
+my e ail on my
+University of Colorado
+
+84
+00:04:23,210 --> 00:04:26,470
+site or interact through Github.
+
+85
+00:04:26,470 --> 00:04:28,110
+I'd love to hear from you.
+
+86
+00:04:28,110 --> 00:04:36,430
+Thanks.

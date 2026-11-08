@@ -1,0 +1,112 @@
+Let's go ahead and get started. Here, we're going to talk
+about load balancing. We're going to give a
+little introduction to it. We're going to break this
+material into two parts, so it doesn't become too long. I guess the first question is, what is load balancing? In case you don't know, a load balancer serves as the point of
+entry for a service, and it directs traffic to one of N servers that can
+handle the request. It's used for both scaling
+and for resilience. Scaling meaning, I have
+three servers now, I want to add a fourth because I have a lot of traffic
+to my servers, great, I can add a fourth and the load
+balancer will handle that. It also handles resilience, in this case let's say
+I have three servers, one of them fails, well, the load balancer can
+detect that and stop directing traffic to
+the third server. So a key property of load
+balancing is the algorithm, how it's doing the
+balancing of the load. The clients of this service,
+initiate a connection. It comes to the load balancer, and then has to choose which server to
+forward the request to, and so this would
+be some algorithm. It could be round-robin, first connection
+goes to the top one, second connection
+goes to the middle, third one goes to
+the bottom one, and then it goes back, the next connection will
+go to this top one. It could be look at the
+amount of load they have, the number of connections
+each of these has, and divide up the traffic
+in different ways. That's the first key
+property is the algorithm. The second is the server set. This is basically on
+the load balancer. You need a table of
+what all servers are part of this set that it
+can load balance between. This gets updated as you
+add and remove servers, but it also keeps
+track of which of these servers are live or not. That, would include some
+form of liveness check, so potentially
+through a heartbeat. The load balancer sends
+the server requests, like just are you still alive? And if the server responds, it marks that down and say,
+yes, it's still alive. This could be in the
+case of a dead server, it just wouldn't
+receive the response, and it would time out. That's the second key property. Now, if we were to go into Google Cloud platform into the console and start saying,
+give me a load balancer. It's going to ask you a bunch
+of different things like, what type are you looking for? The first thing is
+differentiating between, is this an application
+load balancer or is it network load balancer? Let's tap into
+this a little bit, make sure that we have an
+understanding of both. When we say network
+load balancer, and it said L4 for Layer 4, this is the transport layer. As a refresher of what
+transport layer does is, I have an application run-in in this
+picture on my laptop, and there's some application
+running on a server. Both of those are
+just a process, and so a transport layer provides this process to
+process communication, and in the case of TCP, it'll provide a reliable,
+in order stream. If I'm talking to YouTube, I open a TCP connection
+between my process, and a process running in
+the YouTube infrastructure, and the transport layer, make sure that
+communication can happen. One key part, but well
+we're particularly interested in is one of the header fields
+called the port. This is an example,
+transport header, and it's got a source port, a destination port, and
+then some other fields. This would be within
+an IP packet. What this allows the
+operating system to be able to do is to be
+able to direct traffic, either to application
+that's running HTTP, and that would be Port 80, or an application running SSH, and that would be
+Port 22 because both of them have
+the same IP address. We've seen this with
+the firewall rules, but just to refresh it again. On other hand, an application layer protocol
+defines message syntax, what fields it has, how fields are delineated, the types of messages
+that are exchange, is this a request and
+response protocol? And the message semantics, the meaning of the
+information in the fields. An example of an application
+layer protocol is HTTP, which is the web's
+application layer protocol, where a client and server
+exchange web objects, whether it's HTML or JPEG,
+audio file, whatever. The server itself is stateless, in that it doesn't retain information about
+past client requests. When you're doing a request, you specify the
+protocol like HTTP, a host name, and then
+that web object. In this case, the PC would
+send a request to the server, get a response, something else can send a request
+and get a response. Coming back to
+application load balancer versus network load balancer, Layer 4 considers
+just the network IP and the transport layer headers. It can pass through the traffic, and the routing consideration
+is largely how to balance load and may be used
+to ensure flow affinity. We'll come back to what that really means and how Google handles it with
+their Maglev system, but it just means that if I
+open up a TCP connection, I want all packets in that same connection to
+go to the same server. We need to ensure the
+affinity of a given flow, meaning a TCP connection, all goes to the same server. Layer 7 also considers
+the application header. A lot of times this is
+called a web proxy. A lot of times it will
+terminate the TCP connection, and then it also provides
+extra routing consideration, where you can direct specific
+URLs to specific servers, so maybe sign up
+goes to Server 1, but then the purchase process, the URL of domain/purchase
+goes to Servers 2 or 3. A web proxy or application
+load balancer can do that. Another thing that
+Google asked you about, is this internal or external? External load balancing would likely want a public IP
+address associated with it, and to be able to direct it to, in this case say,
+web tier front-end. Internal load balancing would
+be between applications, both of them are within
+the Google domain. The key difference is comes back to that Andromeda
+software that we saw. With an internal
+network load balancer, forwarding rules can be
+handled with Andromeda. That's shown in this picture. We saw this the
+same with Cloudnet. The load balancer
+normally would have this separate machine in the case of Google because
+they control both sides, they don't need
+this middle box or this middle proxy to do that
+for a network load balancer. The two key systems in GCP, we're going to
+learn about Maglev for network load balancing, for traffic from the external. For application load balancing, it's going to be set up a proxy, and there's some open source
+software called Envoy. To summarize what we
+just covered was, application or Layer 7, versus network or Layer
+4 load balancing, and what it means to be
+internal versus external, and how that differs for Google. We're going to stop here, and then jump into
+Part 2 next. Thanks.

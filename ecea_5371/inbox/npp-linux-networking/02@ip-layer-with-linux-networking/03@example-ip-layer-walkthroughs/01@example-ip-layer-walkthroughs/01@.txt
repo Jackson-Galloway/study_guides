@@ -1,0 +1,224 @@
+Welcome back. This
+time we're going to go through some example IP
+layer OR network layer. I keep saying IP layer really, IP is the dominant
+network layer protocol. I use them ubiquitously
+or synonymously. We're going to walk
+through the commands that we've been learning, namely adding addresses
+and adding routes. In this, we're going to use Container Lab again and
+we're going to set up a topology that looks like this with three
+nodes that we call lan1, lan2, lan3 and one that we're
+calling rtr for router. Let's switch over.
+This right here, what I'm showing is
+the directory of a GitHub repo that will post a link in the exercises, the reading for this module. You can get all this code. You'll note that what's
+provided is a vagrant file, which is setting up a
+single virtual machine, installs, container lab, docker, all the stuff that you need. Now I've created SSH into this. I'm using Mobi X term. Now what we're going to do
+for this particular video is look into this
+directory demo1 CLI. The first thing
+that you'll know is this container lab
+configuration file. Let me open that up and
+go to the first line. You can see the name mod2-play. Now we can see that the container that will
+be created will be named something like
+clab-mod2-play-lan1, for example. The play just means
+we're playing around trying to
+testing things out. The topology, you can see
+it has the four nodes. As mentioned, we're again using that same docker
+image that I created, has a bunch of different
+network utilities on it. What we're not doing, I commented out
+the part to create the various bindings
+because we're not going to necessarily past
+any files back and forth, but left it in there. You can uncomment
+it if you want to. Then finally, the endpoints
+which connects lan1, lan2 and lan3 up to the router. The next thing to
+note is that there's four different scripts that are provided and these correspond to four different demos
+we're going to go through. What they're going to be is the four different
+demos are going to be. The first we're going
+to show setting up some routes and
+addresses and we're not going to use the via keyword. The next we're going to use the via keyword and
+then we're going to assign multiple IP addresses per interface and see what that looks like and then we're
+going to set up a GRE tunnel. The first thing that
+we're going to do is not using via or via however
+you want to say it. We're going to have
+this basic set up. In terms of the addresses, we're going to have
+a addressing scheme where it's going to be 10.0.1.2, 10.0.2.2 and 10.0.3.2 for the three different lan
+nodes or these hosts. Then for the router, each of those interfaces
+will have an address that will be the
+same first 24 bits but then change up the last bit. It'll be 10.0.1.1, 2.1 and 3.1. That gives the address
+t to these interfaces. Now we need routes. We're also going to
+add routes t to these. We're going to say
+anything in here that is to another destination,
+10.0.0.0/16. Anything that starts with 10.0, just send it out
+the eth1 interface and the same route is going
+to be added to lan2 and lan3. For the router, it's going to be a
+little more specific. We're going to 10.0.1, so the first 24 bits to specify, when we see traffic
+that's destined to 10.0.1. something, send it out eth1,
+10.0.2. something, send it out eth2 and
+10.0.3. something, send it out eth3. Those will be the
+three routes that we want to add to the router. You should hopefully remember the two main commands
+that we'll use, IP adder, ad, and IP route add. Let me open up set. Let me explain this
+file real quick. It's got two functions, create set up, and
+delete set up. You can run it where as the command line argument you specify either delete or create. We'll say set up ex1, create. What that will do is create the function or call the
+create set up function. The second thing to
+note is I'm using these variables to represent all of this part of the command. Instead of having
+every line saying docker exec, all of that. Then the command, I'm just
+be able to say $lan1. That will get replaced with docker exec -it
+clab-mod2-play -lan1. That makes it a lot
+easier to read. Now let's look at what
+this script actually does. Let's look at the first line. This is executing this inside of the lan1 container and
+we're running ip addr add 10.0.1.2 dev eth1. Great. Then we're going
+to add the ip route add 10.0.0.0/16 dev eth1. That matches that
+set up for lan1. Same exact commands with the different address
+for lan2 and lan3. Then the router, we're assigning the address
+teach of the interfaces. That's those three lines. Then we're adding
+the route ip route add10.0.1.0 go out eth1, 2.0 go out eth2, 3.0 go out eth3. If I were to run this set up IP and then I'm
+going to say Create. It's going to run through
+each of those commands and it just executed them as
+if we did it individually. I can validate that. I can say things like docker, exec, whatever the
+container name is, IP route to see it. Let's do that. But first there's another file right
+here, make aliases. I want to create aliases that I can use on the
+command line as well, not just inside of that script. If I source this, I'll be able to say
+lan1 to reference lan1. Let me source that. Make aliases. Great. All right, so now
+I can say lan1 ip adder. Great. Let's look at eth1. So let me clear this. Lan1 ip addr show eth1. Great. So we can see it's there. I can also say lan
+1 IP route show. Or if I wanted to use IP
+route. Same exact thing. You could see it'll add that
+route entry that we added. These other ones were installed by container lab for the
+management interface, but this is the one we added. If we do the same
+for the router, I could see those three
+routes that we added. Now what I want to do is
+let's test it out and ping from lan1 to lan2. From lan1, I'm going to
+ping the address 10.0.3.2. That was the address of lan2. You can see it's not working. Destination host unreachable. If we go into let me pull
+open another terminal. Let me source the
+make aliases here. Let me do router T, shark I E one. Let's see what's going on there. You could see it's doing
+ARP for who has 10.0.3.2. Let me flip back to the slide. What we're doing from LAN 1, we're trying to ping
+LAN 3, so 10.0.3.2. But because we
+didn't have the via, this guy is saying
+ARP who has 10.0.3.2. Because it's not this
+router that has that, there's nothing to respond. These guys, LAN 1 and LAN 2, were not on the same
+layer 2 domain. That's why we need the
+router to do something, or the router to do forwarding,
+so we need the via. Let me cancel that. That's hopefully showed that without the via it's
+not going to work. Let me do the setup delete. That's going to clear
+everything and we can check that IP route. See, all those
+routes disappeared. Now, let me run the second one. Let's look at the second one. If I flip back to the slides, now the second one, instead
+of saying just dev eth 1, it's going to add
+this via 10.0.1.1. This should be 2.1 and 3.1. It should be via whatever
+it's connected to. It's going to do that. But now we've added one
+extra route, 10.0.1.1. Well, because for
+that specific one, it is directly connected. For this address, it's
+directly connected. For 10.0.3.1 is
+directly connected. We don't want to go via for
+the directly connected one. If we switch back, we can open up this and
+we can see the first one, it's adding the address again. Second line is
+saying IP route add. That's the directly
+connected one to the router. This is the address of
+the router's interface. Then we're going to add the route via whatever the
+address on the router is. For the router, we
+didn't have to change anything. It's still
+going to work. Now, if we say ping 10.0.3.2, it'll come in in here. It'll ARP for 10.0.1.1.
+It'll get that. It'll send a MAC address destined to whatever the
+MAC address of eth 1 is, but the destination
+will still be 10.0.3.2. The router will look up
+in its routing table or its forwarding table,
+where is 10.0.3.2? It'll match this entry, and so it'll send it out eth 3. That's what we should see. If I run this setup
+to create, great. Let me look at LAN 1, IP route. Great. We can see the via, the router, and then the
+directly connected one there. Now, this is important
+because we're telling it to go via this router, and now we can do
+the ARP for that. Let me do LAN 1 ping
+10.0.3.2 again, and we could see that it works. If I was to go and run TShark again on
+that eth 1 interface, we're going to be
+able to see it. If you went and
+you expanded this, I don't remember the exact
+command off the top of my head to show the
+MAC addresses as well, it would be destined to the MAC address of
+eth 1 of the router. Which we could see if we did
+router IP link show eth 1, it would be this is the MAC address of
+eth 1 in the router. That's great. Let me stop that. Let me delete this setup. All delete is doing is the
+reverse of every command. You can come down here. Every command that was up here exists down here as a delete. If you delete something, the address of the
+interface and there were some routes correlating to that, it's not necessary
+to delete it itself. That will automatically happen. We can confirm that
+lan1 IP route, say it doesn't have
+that lan1 IP addr show eth1 and it doesn't have the IP address associated
+with it, so it's clean. Let's go back and check
+out the third set up. Now, we're going to add
+multiple addresses. Same exact setup with
+the Via and all that. Now for each of these,
+I'm just going to add an additional IP address for
+each of these interfaces. Setup 3, we go up here. Three of these lines
+are the exact same. The only difference is
+this line right here, I added a third or second
+IP address to eth1, added a second address, added a second address. The only thing to note, now, let's run this setup 3. Create. If we do IP or lan1 IP addr show eth1. We can see that it has
+two addresses with it, and so this just means if it gets a result or gets a
+message destined to it. Both of these would be
+something that they would say, yes, this is destined for
+me, I should respond. Now the thing to note, and I think this is
+noted inside of this. Now let's say we're
+going to ping, I want to ping the 10.0.3.3
+address from lan1. Let's try that. lan1, ping 10.0.3,3, so that's
+great, it's working. But is this necessarily
+going to be the address? Question is, what is
+the source address? What is the destination address? What are we actually seeing? Let's look with tshark. I'm going to look on the router eth1 to see what's
+coming through the router. There we go, router,
+tshark eth1. You could see it's using 10.0.1.2 and destined
+to 10.0.3.2 or 3.3. It's using this address as the source and this address as the destination, because
+that's what I'm pinging. Now, let's say I wanted
+to actually use 10.0.1.3. That's possible. How
+is that possible? This is also specified in this. If I can specify this -I to tell it what I wanted the
+source to actually be. Let me take this whole
+command and do that. Great. Now let's
+go back to tshark, and now I can see it's
+using that other address. We don't have an
+example for this, but there's a way that you
+can specify as part of the IP route command to say when it's going out this particular interface
+or matching this entry. Use this source address
+instead of another one, and so look in the
+man page for that. Actually, let me cancel this. Delete this.setup 3, delete, let me stop
+tshark, and clear that. Let's go to the final setup which is setting
+up a GRE tunnel. Here, what we're going to do, if you recall a GRE
+tunnel is basically just creating a device of type GRE, and here, we're going
+to give it a name gre1, and then we're going to
+give it an IP address. Now any traffic
+that we can get to go through interface gre1, is going to tunnel, is going to add address, so it's going to
+say the local is this address, the 10.0.1.2. The remote is 10.0.3.2. Then what we're going to see
+is the 192.168 addresses. It'll go through this, it'll add the extra
+header of 10.0.1.2, such that it can go through this internal network
+because there's going to be no route table entries for 192. It'll come to this, which will then direct
+it to the GRE tunnel. Then once it pops out, it'll be looking
+like that address. Now let's look at what, well, actually this notes here. We'll tunnel it, the
+local and remote. We'll see the inner
+header with those 192s. The outer headers will
+be the 10 dot something. The rounding tables will say
+anything destined to 192. We're going to have
+it go through gre1. Anything for 10 dot something, we're going to have
+it go through eth1. Let's look at that. This is set up IP example 4. Here we're going to create
+the addresses for eth1, and I kept multiple
+addresses and the routes. This is all basically the same. The new part is on lan1, we're going to set
+up the tunnel, and then lan3, we're
+going to set up a tunnel. The command, we're going to say ip tunnel add gre1
+mode gre local. You can read the command. This is saying create
+a device local address 10.0.1.2 remote
+address, all of that. I'm going to add an
+address to that device, and then I'm going to set
+that link up to stay up. Now anything that
+goes through that, we'll get this address
+outer header put onto it. Then they'll say, now
+I need to send that, and they'll look that up in the route table and
+they'll say, oh, I need to send that
+out eth1 via 10.0.1.1. Let's run this setup 4 create. Let's look at lan1's
+IP route table. We can see that's going
+to go through gre1. We're going to see the rest
+is going to be the same. Now, which is also
+specified in the file, I can say something like
+lan1 ping on the other end, the 192 address on lan3. If I want to see it go through, I can say, we'll have
+the encapsulation, won't have the capsulation, so let's look at
+it coming on lan1. Clear this. Let me get this. This is looking at lan1 eth1. This is after it
+gets encapsulated. Now I can ping there. It's pinging, it's saying
+it's coming to and from 192. We can see the source is
+10.0.3.2 destination, and then it's going
+to have inside of it the inner header of that. If I was to just look at gre1, it would not have that extra
+information put on yet. That shows an example of
+how to create a GRE tunnel. Let me clean this up
+and summarize, delete. All of this is available
+for you to try on your own and you can see what
+we did right there. Well hopefully that provides a nice overview of some commands you
+could try on your own. Play around with it, try to change the different addresses, create tunnels of your own. Just try different things. Use TShark to see what traffic
+is actually going through. But with that, we'll end here and we'll see you
+next time. Thanks.

@@ -1,0 +1,162 @@
+Let's go ahead and get started. This time, we're going to
+talk about Google's Maglev. As a reminder, well, as an explanation
+of what Maglev is, we've heard this term before. Heard that it's one
+of the systems. This is Google's
+network load balancer. Recall that's layer
+4 load balancing, is designed to be fast and be able to
+pass through traffic. Before we get into Maglev, one of the things it relies on and leverages is something
+called consistent hashing. I want to give a little
+background on that before we dive into the
+Maglev paper itself. It was originally designed
+around content distribution. The founders of
+Akamai created that. Suppose we want to partition
+files or, in our case, we're going to want
+to balance load among a set of servers. We could use the modulo, so we could say which server is whatever value
+of the content, do modulo k. Maybe this is like the name of
+the file or something, modulo k. k is number of
+servers that you have, and that's one way that
+you can divide it. That might not be
+even distribution. Depending on how the
+files are named, they might all end up
+on a single server. To give a little bit
+of randomness to it, you could use hashing. Hash, let's say, the name of the file and
+do the modulo k. Now, that might be better
+distribution. But now the problem is, and it existed
+before with modulo. What if k changes? Say a server fails or
+we're scaling out. Then what that means
+is the mapping of x, that particular
+piece of content, or the flow of traffic
+to a server will change. Let's say we add two
+servers, the value 3. Modulo 2 is one thing. Then if we had a third server, that would be 3 modulo 3. Those are going to be
+two different answers. System hashing is a algorithm to be able to handle
+that situation. The construction of
+it is you assign n hash buckets to random points. Now we're given our
+servers names as well, and then they get hashed and mapped to some
+address space. It's usually
+illustrated as a ring. Then you're also mapping objects to random positions
+on the circle. You take the hash of
+the file name and then that gets a
+point on a circle. The hash of the object is the
+closest clockwise bucket. By bucket here, we're
+talking server. There's a bucket
+in that red dot. All of the nodes, all this space before it
+and in between it and the previous bucket would map
+to this particular bucket. You could see so forth. All of these ones map to
+that particular bucket. The desired features here
+is this is balanced, so no bucket has
+disproportionate number of objects and smoothness. The addition and removal
+of bucket does not cause movement among
+existing buckets, only the immediate buckets. With that mind, this works. Well, let's just focus on
+failure and how it changes. If a node fails, its successor takes over. This bucket fails.
+Now, everything that was pointing to this bucket is now just pointing to this new bucket or
+this other bucket. That's smooth. It didn't affect these
+other buckets or servers in our case.
+It was smooth. The problem is the successor owns now two buckets
+worth of content, so that's not ideal. The fix for that is basically have virtual nodes spread over this ID space. You don't really need
+to know all that. The key I think as
+far as Google got, it was basically a successor takes over a bucket, I believe. Actually, I think they
+introduced their own algorithm. With that, we're going to
+read the paper Maglev, and we're going
+to switch over to their slides. There we go. This was published by Google. Just as a refresher,
+what is a load balancer? It is a network load balancer is something that sits at
+the edge of the network, and it balances the load between a set of
+backend servers. A lot of times on the return
+path, you can bypass. You don't have to send
+traffic back through the network load
+balance or you can send it direct to the source. What do we want from
+a load balancer? Balance load evenly. We want it to be reliable, meaning TCP connections
+do not get reset. It's flexible, where you
+can iterate quickly. We hear that commonly
+from Google. They like to write software and update it frequently.
+It's scalable. It grows with a cloud scale, and it's efficient and could
+deliver high performance. Why they introduced
+Maglev was because the existing hardware
+appliances that existed out there from companies
+such as F5 and whatnot, they believed they
+had poor flexibility. We saw this before where the whole process from Google wants some new feature to
+the vendor accepting that, implementing it, testing it, and then getting into
+Google's hands is too slow. Second, scaling those
+appliances is too hard and they're expensive and the failure of a
+mechanism isn't ideal. They hit a wall with their
+existing appliances. Instead, another common theme, let's just run everything in software on commodity servers. Make it then a scale out model, where we can just add more processing nodes
+as we need them, and then coordinate all this through software
+defined networking. What is Maglev? It effectively sits there. It's the network load balancer and it runs on existing server, so it's no different. It's just the same servers. Scalability is in
+two dimensions, scale out across many
+servers with ECMP and that scale up to 10
+gig line rate processing. They do that leveraging some technique called
+kernel bypass. This enables Cloud
+scale control plane, which is what they needed. Here's the scalability. Scale out of Maglev
+instances right there, and it can handle the
+scaling of the end points. As we get more traffic, we can add all those, but then each one of
+them handles 10 gigs. what's their design? Their challenges is
+the reliability, keeping connections alive. We need a TCP connection to always go to the
+same backend server. But we need to be
+able to do that, even when the set of Maglev's
+or low balancers changes and when the set of
+backends changes. They're going to use
+consistent hashing. The scaling, they want to be
+able to scale out with ECMP, the standard network technology, and they use kernel bypass. We're just going to focus
+on the reliability part. We've talked about why is
+the set of Maglev changing. Well, the health
+change of a Maglev, so it itself could fail. We could be wanting
+to add more capacity. ECMP change sends most
+connections to different Maglev. Where ECMP would come into play? Going back to this picture. This is a standard
+network device. It supports ECMP. They're going to use ECMP to balance load between
+these Maglev devices. Then they're going to use a technique for
+Maglev to keep it consistently all the traffic
+going to the same backend. Can't share connection state. Sharing state is a challenge across all those
+Maglev instances. I can't just do round-robin. That won't work, and
+consistent hashing is obvious. Here's the router. If Maglev set changes, ECMP is going to redirect from handling it on one to
+be able to handle it on two. If they just use hashing mod, there's six servers here. Great. It doesn't matter
+what server you end up on. It'll still be able to
+redirect it to one. But now, when the set
+of backend changes, same reasons, the hash
+base would get remapped. Ideally, you need to do
+connection tracking. Here, if packet comes in and then there's a
+failure, the set changed. It used to be mod 6, now it's mod 5. Now, it would map
+to a different one. But for existing connections, you can use connection tracking. I can keep a table and say
+for existing connections, look it up in a table, and then that's going to one. Then for everything
+else, it would map. It would just do
+that hash and then modulo to the set
+of backend servers. Now, these both work. But now, what if both
+happens at once? The ECMP change ruins
+Maglev affinity. Now, if Maglev is
+maintaining state, then the new Maglev would not have this connection
+table entry. If we go back to this picture, it's storing state
+right here in number 1 that this particular connection
+maps to backend server 1. If this gets redirected
+to something else, that server 2, Maglev 2, wouldn't
+have that state. This is them both happening
+at the same time. Number 2, it would look like
+there's a new connection, that it doesn't
+have in this table. Their solution to this is consistent hashing,
+given similar inputs, will produce similar
+assignments, and it does not depend on storing the state in
+the backend history. What this means is ECMP changes will not cause the resets. Steady state. Because we're able to use consistent hashing, it will know to map where
+one originally chose. Why this is saying use the existing connection tracking for an existing connection? That might be a faster lookup than performing the algorithm
+for a consistent hash. Much more details in the paper. Definitely go read it. They basically highlight the operational winds
+of consistent hashing, allows them to be able to
+upgrade the Maglev binaries. They could just do
+rolling restarts. They don't need to drain traffic first or anything like that. If backend flaps, I mean, it goes up and down a
+little bit unreliably. There's minimal impact to that. Bringing it all together, this is the
+architectural diagram where off of the network
+they receive it. They do lookup and say, I do I have this already? Well, is this in the
+set of backend servers? Do a connection tracking, look up if it's a hit
+or if it's a miss, I guess, do the consistent
+hashing and then add it, and then encapsulate it. All of that is their packet
+processing pipeline. These are the
+different algorithms. One of the things they said is the algorithms
+weren't that good. They didn't say it that way, but they had reasons
+created their own. This M right here
+stands for Maglev, and these are two
+existing other ones. Then they show with this, there was good reason with their algorithm for
+consistent hashing. They improved the evenness. Then there's other evaluation you can read through the paper, but one of the key things
+they show is it's fast. It's reliable. They can leverage standard
+network technology to load balance between the
+Maglevs and then introduce the capability within the Maglev software to balance consistently between the
+set of backend servers. We didn't talk about
+in this presentation, but read about how they
+leverage kernel bypass. It's pretty much a
+standard approach to get high performance
+packet processing. They're big fans of software. With that, that's all
+that covers Maglev, and we'll stop here. Thanks.

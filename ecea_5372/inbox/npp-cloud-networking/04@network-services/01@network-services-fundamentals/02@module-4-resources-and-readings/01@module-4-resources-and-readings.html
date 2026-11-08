@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Module 4 Resources and Readings</title>
+  <link rel="stylesheet" href="../../../resource/katex/katex.min.css">
+  <script src="../../../resource/katex/katex.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var math_spans = document.querySelectorAll(
+        'span[hasmath="true"], span[hasMath="true"]'
+      );
+
+      for (var i = 0; i < math_spans.length; i++) {
+        try {
+          katex.render(math_spans[i].textContent, math_spans[i], {
+            throwOnError: false
+          });
+        } catch (e) {
+          // Keep the original LaTeX text if rendering fails.
+        }
+      }
+    });
+  </script>
+  <style>
+    .content-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    pre, p.asset {
+      padding: 1em;
+      background: #f5f2f0;
+      overflow: auto;
+    }
+
+    p, h1, h2, h3, h4, h5, h6 {
+      font-family: OpenSans,Arial,sans-serif;
+      overflow-wrap: break-word;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    table, th, td {
+      border: 1px gray solid;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0 10px;
+    }
+
+    .quiz-options {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .quiz-options li {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .quiz-options input[type='checkbox'],
+    .quiz-options input[type='radio'] {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .quiz-option-text p:first-child {
+      margin-top: 0;
+    }
+
+    .quiz-option-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .quiz-option-text p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+<h2>Lecture Slides</h2><p class="asset">npp-cloud-04-NetworkServices.pdf</p><h2>Readings</h2><p>The following readings are highly recommended. I suggest at least a light reading: read the introduction, then each of the section titles and figures. </p><p><strong>Core Readings:</strong></p><p>Danielle E. Eisenbud, et. al. Maglev: A Fast and Reliable Software Network Load Balancer.  In Usenix Network Systems Design and Implementation (NSDI), 2016.</p><p class="asset">maglev-nsdi2016.pdf</p><p></p><p>Erik Nygren, Ramesh K. Sitaraman, and Jennifer Sun. 2010. The Akamai network: a platform for high-performance internet applications. SIGOPS Oper. Syst. Rev. 44, 3 (July 2010), 2–19. </p><p class="asset">akamai-osr2010.pdf</p><p></p><p></p><p><strong>Other Readings:</strong></p><p>Krzysztof Rzadca, et.al.. Autopilot: workload autoscaling at Google. In European Conference on Computer Systems (EuroSys),  2020. </p><p class="asset">autopilot-eurosys2020.pdf</p><p></p><p>David G. Andersen, Hari Balakrishnan, M. Frans Kaashoek, Robert Morris. Resilient Overlay Networks  Proc. 18th ACM SOSP, Banff, Canada, October 2001. </p><p class="asset">ron-sosp2001.pdf</p><p></p>
+  </div>
+</body>
+</html>

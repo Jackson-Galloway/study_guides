@@ -1,0 +1,792 @@
+1
+00:00:07,440 --> 00:00:09,742
+All right, welcome, let's get started.
+
+2
+00:00:09,742 --> 00:00:12,792
+So this time,
+we're going to talk about Cloud NAT.
+
+3
+00:00:12,792 --> 00:00:16,933
+All right, so to put this in context,
+recall we've talked about
+
+4
+00:00:16,933 --> 00:00:21,848
+the two things we want to take care of,
+communication beyond the VPC bounds.
+
+5
+00:00:21,848 --> 00:00:27,104
+So last time we talked about VPC peering,
+so being able to peer between
+
+6
+00:00:27,104 --> 00:00:33,372
+two VPCs to allow them to communicate as
+if they were on the same private network.
+
+7
+00:00:33,372 --> 00:00:38,189
+And it works by some
+sort of router exchanging
+
+8
+00:00:38,189 --> 00:00:43,388
+routes with one another
+such that the visibility
+
+9
+00:00:43,388 --> 00:00:48,124
+of the subnets are available in each.
+
+10
+00:00:48,124 --> 00:00:53,402
+This time, we're going to
+talk about going out to some,
+
+11
+00:00:53,402 --> 00:00:59,942
+it says end user, but it could be
+some service across the Internet,
+
+12
+00:00:59,942 --> 00:01:03,875
+something across the public Internet.
+
+13
+00:01:03,875 --> 00:01:09,172
+If you recall,
+we had this setup in module 2.
+
+14
+00:01:09,172 --> 00:01:14,632
+So we had two VPCs, some subnets in each,
+
+15
+00:01:14,632 --> 00:01:20,873
+and only vm1 and
+vm2 had public IP addresses.
+
+16
+00:01:20,873 --> 00:01:25,916
+The rest, vm3 and vm4,
+only had private IP addresses.
+
+17
+00:01:25,916 --> 00:01:30,724
+And we showed what communication patterns.
+
+18
+00:01:30,724 --> 00:01:37,823
+And you had to play a little bit
+with this for the lab, right?
+
+19
+00:01:37,823 --> 00:01:43,263
+So this time, right now,
+we're just going to only create VPC1,
+
+20
+00:01:43,263 --> 00:01:46,285
+that should say sub1 and vm1, but
+
+21
+00:01:46,285 --> 00:01:51,553
+we're going to make it without
+a public IP address, all right?
+
+22
+00:01:51,553 --> 00:01:53,161
+So I've already done this.
+
+23
+00:01:53,161 --> 00:02:00,099
+So if we go over to the console, we could
+see vm1, VPC1, that's all that's created.
+
+24
+00:02:00,099 --> 00:02:07,017
+And I've already SSHed into vm1,
+we can see its IP address.
+
+25
+00:02:07,017 --> 00:02:10,416
+Okay, we got it 10.0.1.2.
+
+26
+00:02:10,416 --> 00:02:13,784
+And we can try pinging google.com.
+
+27
+00:02:14,924 --> 00:02:18,720
+And it's not working, all right?
+
+28
+00:02:18,720 --> 00:02:23,684
+And that's not because the firewall
+is blocking it or anything like that.
+
+29
+00:02:24,904 --> 00:02:29,690
+All right, so now what's happening is,
+
+30
+00:02:29,690 --> 00:02:34,338
+what we need is some form of NAT address,
+
+31
+00:02:34,338 --> 00:02:38,054
+network address translation.
+
+32
+00:02:38,054 --> 00:02:45,723
+So just as a review, when we were talking
+about this in a different course,
+
+33
+00:02:45,723 --> 00:02:50,495
+we talked about the actions
+that you can take.
+
+34
+00:02:50,495 --> 00:02:55,887
+And in this context of this course,
+we talked about open flow or
+
+35
+00:02:55,887 --> 00:03:00,467
+the actions in the virtual
+switch in the Andromeda and
+
+36
+00:03:00,467 --> 00:03:03,239
+ExcelNet and things like that.
+
+37
+00:03:03,239 --> 00:03:10,135
+So one of them is where you can do address
+translation to manipulate the addresses,
+
+38
+00:03:10,135 --> 00:03:17,924
+the source and destination IP addresses,
+source and destination TCP or UDP ports.
+
+39
+00:03:17,924 --> 00:03:22,985
+So an example of that is,
+that we're all commonly familiar with is,
+
+40
+00:03:22,985 --> 00:03:27,611
+I have a private network,
+a bunch of IP addresses inside of it,
+
+41
+00:03:27,611 --> 00:03:30,605
+like my home network I'm referring to.
+
+42
+00:03:30,605 --> 00:03:35,348
+And then I have this router that
+goes out to the public Internet.
+
+43
+00:03:35,348 --> 00:03:40,305
+NAT is being used where I only
+get one public IP address.
+
+44
+00:03:40,305 --> 00:03:45,573
+But all of my computers inside
+of my home network have these
+
+45
+00:03:45,573 --> 00:03:50,313
+private IP addresses, but
+they can all share that.
+
+46
+00:03:50,313 --> 00:03:58,202
+All right, so use case 1 is static
+mapping of internal to external.
+
+47
+00:03:58,202 --> 00:04:01,556
+If each server gets a public and
+a private IP address.
+
+48
+00:04:01,556 --> 00:04:08,384
+We saw this with the virtual machines,
+with both in GCP.
+
+49
+00:04:08,384 --> 00:04:14,854
+So here's the machine,
+we could see its IP address, 10.0.0.1.
+
+50
+00:04:14,854 --> 00:04:19,222
+And I want to,
+let's assume it has a public IP address.
+
+51
+00:04:19,222 --> 00:04:23,886
+I can send a message out
+to some destination, say,
+
+52
+00:04:23,886 --> 00:04:30,054
+I'm accessing some web server and
+it's got my source address.
+
+53
+00:04:30,054 --> 00:04:35,236
+So NAT, what would be happening
+in Google's infrastructure is,
+
+54
+00:04:35,236 --> 00:04:40,140
+it's translating this private
+address of the VM to that public
+
+55
+00:04:40,140 --> 00:04:43,486
+address of the VM, the external address.
+
+56
+00:04:43,486 --> 00:04:46,287
+So this is doing source NATing.
+
+57
+00:04:46,287 --> 00:04:52,069
+And then the reverse,
+it would just do destination NATing.
+
+58
+00:04:52,069 --> 00:04:57,139
+A 2nd use case is where I
+have private IP addresses,
+
+59
+00:04:57,139 --> 00:05:04,412
+but they don't have a public IP address,
+but I want to be able to share them.
+
+60
+00:05:04,412 --> 00:05:08,490
+The cases that we showed
+with that home network,
+
+61
+00:05:08,490 --> 00:05:12,969
+which will be the case that
+we're talking about now.
+
+62
+00:05:12,969 --> 00:05:20,425
+Where we can use both modifying the source
+address to be the source address of this.
+
+63
+00:05:20,425 --> 00:05:27,480
+But then taking from a pool of available
+ports, and that kind of becomes that pair,
+
+64
+00:05:27,480 --> 00:05:32,400
+becomes associated with the internal pair,
+all right?
+
+65
+00:05:32,400 --> 00:05:34,117
+So all of that should be review.
+
+66
+00:05:34,117 --> 00:05:41,626
+But these kind of correspond to the two
+use cases that we were talking about.
+
+67
+00:05:41,626 --> 00:05:47,684
+So the first one is where this machine has
+both a public and a private IP address.
+
+68
+00:05:47,684 --> 00:05:52,249
+But the Google's infrastructure
+is using address translation on
+
+69
+00:05:52,249 --> 00:05:54,184
+the external address.
+
+70
+00:05:54,184 --> 00:05:58,576
+This one is where there's
+only a private IP address.
+
+71
+00:05:58,576 --> 00:06:03,709
+And in this lesson, we're going to
+talk about something called Cloud NAT.
+
+72
+00:06:03,709 --> 00:06:08,864
+Which is how Google will
+realize this to be able to give
+
+73
+00:06:08,864 --> 00:06:15,053
+you that public Internet access
+to these private IP addresses or
+
+74
+00:06:15,053 --> 00:06:19,191
+machines with only private IP addresses.
+
+75
+00:06:19,191 --> 00:06:24,168
+So in the last course,
+we did a lot of Linux networking and
+
+76
+00:06:24,168 --> 00:06:28,896
+we set this up where each one
+of these was a container.
+
+77
+00:06:28,896 --> 00:06:33,653
+We set up this topology and
+we created a gateway where we can
+
+78
+00:06:33,653 --> 00:06:37,644
+now play with the rules to do NATing,
+all right?
+
+79
+00:06:38,744 --> 00:06:47,309
+Here's just an example of NATing for
+use case 2.
+
+80
+00:06:47,309 --> 00:06:48,758
+Here's your internal,
+
+81
+00:06:48,758 --> 00:06:52,898
+you want to go out to the public
+Internet that's represented by these.
+
+82
+00:06:52,898 --> 00:06:58,087
+And it's going to share,
+use both the pool of TCP ports and
+
+83
+00:06:58,087 --> 00:07:03,290
+in iptables,
+it's called masquerading, all right?
+
+84
+00:07:03,290 --> 00:07:09,191
+And so it's going to allow, basically,
+any traffic that goes external.
+
+85
+00:07:09,191 --> 00:07:13,171
+It's going to allow it,
+it's going to establish a connection,
+
+86
+00:07:13,171 --> 00:07:18,414
+it's going to set some state for what the
+translation is, go out to the Internet.
+
+87
+00:07:18,414 --> 00:07:22,416
+And then when it comes back,
+it's going to say,
+
+88
+00:07:22,416 --> 00:07:27,923
+this is an established connection
+that was initiated from internal.
+
+89
+00:07:27,923 --> 00:07:31,641
+And then it's going to do the translation
+in the reverse direction.
+
+90
+00:07:31,641 --> 00:07:35,375
+This one corresponds more to use case 1,
+
+91
+00:07:35,375 --> 00:07:39,438
+where we have a machine, it's sending out.
+
+92
+00:07:39,438 --> 00:07:44,144
+And on this gateway,
+we're going to translate and
+
+93
+00:07:44,144 --> 00:07:49,440
+make it look like it came
+from its external IP address.
+
+94
+00:07:49,440 --> 00:07:51,686
+All right, so I mentioned Cloud NAT.
+
+95
+00:07:51,686 --> 00:07:55,366
+That's the Google service that provides
+access to external networks for
+
+96
+00:07:55,366 --> 00:07:57,634
+VMs that don't have external IP addresses.
+
+97
+00:07:58,774 --> 00:08:05,344
+So it effectively provides this same
+concept that we've been showing for a VPC.
+
+98
+00:08:05,344 --> 00:08:10,783
+What's interesting about Cloud NAT is,
+this is kind of what we just showed
+
+99
+00:08:10,783 --> 00:08:16,221
+in that picture, this picture,
+where we had this explicit kind of proxy,
+
+100
+00:08:16,221 --> 00:08:19,484
+I was running some
+iptables commands on it.
+
+101
+00:08:21,224 --> 00:08:24,065
+That would be the traditional
+way that you would do it.
+
+102
+00:08:24,065 --> 00:08:28,097
+In Google's network,
+it looks more like this.
+
+103
+00:08:28,097 --> 00:08:29,791
+And you kind of highlight this little bit.
+
+104
+00:08:29,791 --> 00:08:33,128
+There is no intermediate
+NAT proxy in the data path.
+
+105
+00:08:33,128 --> 00:08:39,144
+Each VM is programs by GCP
+to NAT using assigned ports.
+
+106
+00:08:39,144 --> 00:08:44,028
+And this is, what this is effectively
+saying is, it's using Andromeda,
+
+107
+00:08:44,028 --> 00:08:47,872
+which is on each host, and
+it's doing the translation.
+
+108
+00:08:47,872 --> 00:08:49,604
+So that's kind of cool.
+
+109
+00:08:50,624 --> 00:08:56,611
+All right, so let's go and
+instantiate this in the console.
+
+110
+00:08:56,611 --> 00:09:02,434
+So I already have this set up with
+the VPC, with the subnet, with the VM.
+
+111
+00:09:02,434 --> 00:09:08,592
+No external IP, already SSHed into it,
+and we saw that.
+
+112
+00:09:08,592 --> 00:09:11,962
+Now let's just add.
+
+113
+00:09:11,962 --> 00:09:12,833
+So that's what we.
+
+114
+00:09:12,833 --> 00:09:16,624
+Let me stop the pinging and
+let's go into the console.
+
+115
+00:09:16,624 --> 00:09:20,104
+Let me search for cloud NAT.
+
+116
+00:09:20,104 --> 00:09:21,164
+There we go.
+
+117
+00:09:22,224 --> 00:09:24,992
+And it's got a nice,
+it's pretty straightforward.
+
+118
+00:09:24,992 --> 00:09:31,523
+It's got a nice, VPC1 gateway,
+
+119
+00:09:31,523 --> 00:09:34,909
+NAT type public.
+
+120
+00:09:34,909 --> 00:09:40,074
+So I could also be doing this
+between kind of private networks,
+
+121
+00:09:40,074 --> 00:09:43,198
+but I'm going to do everything public.
+
+122
+00:09:43,198 --> 00:09:47,372
+So VPC1, us-central1, and
+
+123
+00:09:47,372 --> 00:09:51,892
+then I don't have a cloud router.
+
+124
+00:09:51,892 --> 00:09:58,474
+So what this needs is not just a NAT
+gateway, but it needs a router as well.
+
+125
+00:09:58,474 --> 00:10:01,955
+All right, so there's something
+called the cloud router, and
+
+126
+00:10:01,955 --> 00:10:03,899
+you could just easily create that.
+
+127
+00:10:03,899 --> 00:10:10,614
+So VPC1 cloud router, or
+I'll call it RTR for router.
+
+128
+00:10:10,614 --> 00:10:16,874
+And it's got different
+things I can set here.
+
+129
+00:10:18,694 --> 00:10:24,264
+But these said, if not specify,
+Google will sign automatically.
+
+130
+00:10:24,264 --> 00:10:26,964
+Right, so we'll just leave it at that.
+
+131
+00:10:28,704 --> 00:10:35,792
+All right, so it's now source
+endpoint type VM instances.
+
+132
+00:10:35,792 --> 00:10:37,764
+That's great, that's what I want.
+
+133
+00:10:40,344 --> 00:10:43,472
+Source, primary and secondary ranges.
+
+134
+00:10:43,472 --> 00:10:47,594
+We haven't really done any secondary
+ranges, so doesn't matter.
+
+135
+00:10:47,594 --> 00:10:51,641
+And the IP addresses,
+do I want to do it manually or
+
+136
+00:10:51,641 --> 00:10:55,994
+just allow Google to do take from a pool.
+
+137
+00:10:55,994 --> 00:11:01,529
+All right, let's see if there's anything
+interesting in advanced configuration,
+
+138
+00:11:01,529 --> 00:11:06,323
+some more kind of timeouts and
+things like that and logging capabilities.
+
+139
+00:11:06,323 --> 00:11:11,300
+But we're just going to
+leave all the defaults,
+
+140
+00:11:11,300 --> 00:11:14,240
+click create, all right?
+
+141
+00:11:14,240 --> 00:11:18,154
+And that was pretty,
+pretty straightforward.
+
+142
+00:11:19,334 --> 00:11:23,894
+All right, so it's all running the router.
+
+143
+00:11:23,894 --> 00:11:28,566
+So the router, cloud routers are also
+very useful when we get into the kind of
+
+144
+00:11:28,566 --> 00:11:30,183
+hybrid infrastructure.
+
+145
+00:11:30,183 --> 00:11:35,302
+It's useful when we're talking
+about network services and we'll
+
+146
+00:11:35,302 --> 00:11:41,866
+talk about a little more in those contexts
+because it's pretty simple for right here.
+
+147
+00:11:41,866 --> 00:11:50,188
+All right, so
+it looks like the router is all set up.
+
+148
+00:11:50,188 --> 00:11:52,052
+Let's cross our fingers.
+
+149
+00:11:52,052 --> 00:11:56,276
+And this is my local terminal.
+
+150
+00:11:56,276 --> 00:11:58,404
+I want the SSH terminal.
+
+151
+00:11:58,404 --> 00:12:01,292
+This is vm1, clear this.
+
+152
+00:12:01,292 --> 00:12:04,614
+We just tried to ping google.com dot and
+
+153
+00:12:04,614 --> 00:12:08,530
+now it's actually able to ping it,
+all right?
+
+154
+00:12:08,530 --> 00:12:14,410
+And you can see I still only has
+the private IP address there.
+
+155
+00:12:14,410 --> 00:12:17,964
+And it still only has
+private IP address there.
+
+156
+00:12:19,264 --> 00:12:26,592
+Now if I created more VMs, more subnets,
+all within VPC1, this is all shared.
+
+157
+00:12:26,592 --> 00:12:32,987
+This cloud NAT instance is
+all shared from within VPC1.
+
+158
+00:12:32,987 --> 00:12:38,555
+Even if I created a second VM here,
+second Subnet,
+
+159
+00:12:38,555 --> 00:12:44,262
+more VMs,
+they're all sharing the same cloud NAT.
+
+160
+00:12:44,262 --> 00:12:49,253
+For terraform you have to
+instantiate the router.
+
+161
+00:12:49,253 --> 00:12:51,802
+This is the code to do that.
+
+162
+00:12:51,802 --> 00:12:57,935
+And then the NAT and you reference
+the router and its attributes.
+
+163
+00:12:57,935 --> 00:13:02,374
+Okay, and here's the documentation.
+
+164
+00:13:02,374 --> 00:13:09,474
+And I won't go through these, too complex,
+but we've gone through terraform before.
+
+165
+00:13:11,134 --> 00:13:15,694
+All right, so with that,
+that ends our discussion of Cloud NAT.
+
+166
+00:13:15,694 --> 00:13:19,402
+Next, we're going to get
+into a little bit of
+
+167
+00:13:19,402 --> 00:13:23,831
+the academic work understanding
+what do Google and
+
+168
+00:13:23,831 --> 00:13:29,814
+Microsoft's wide area networks
+actually look like under the hood.
+
+169
+00:13:30,914 --> 00:13:31,414
+All right, thanks.

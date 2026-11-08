@@ -1,0 +1,326 @@
+Let's get started.
+In this lesson, we're going to talk about the lab environment that
+we're going to use. We're going to use this probably for the first three modules, then we'll switch it up
+a little bit after that. First question ask is, what do we need out
+of a lab environment? Why do we even need
+this? Really, this is a course about networking. We really want to create a topology of network
+devices and hosts. We can configure the
+network devices. We could do stuff like
+injecting traffic. We could do troubleshooting,
+all of that stuff. Now we could go out and
+buy a bunch of equipment, install some nodes
+inside of our house. But luckily, there
+are some tools available technology that can make it so that we don't
+have to do all that. We're going to go over
+all of that today. The first thing that we're
+going to use is Vagrant, and we're going to run
+a virtual machine. Vagrant enables the creation and configuration
+of lightweight, reproducible, and portable
+development environments. How it works is there's a configuration file
+called a VagrantFile, and we'll show an example, that really specifies the
+desired Linux distribution, it has configuration scripts to install all the needed software. Then in my case, I'm running it on top of a virtualization software
+called VirtualBox. You can use other
+virtualization providers, probably requires modification
+to the VagrantFile, but we're going to assume you have VirtualBox installed on your machine and then
+you can run Vagrant, which it's a nice shell or a nice wrapper around that
+virtualization technology. What does the
+VagrantFile look like? Shown here is a complete example and we'll provide as part of the GitHub repo
+that's linked to, for this module, we provide the VagrantFile
+that we're using. The first thing that
+you'll notice is it configures what
+they're calling a box, that's the configuration of the virtual machine image
+that they're going to boot. We're going to choose a
+specific Linux distribution in Ubuntu One with
+the specific version. The next part of
+it allows you to specify if you want to limit
+the resources of the VM. Here I'm giving it one CPU
+and one gig of memory. Then the final piece down here
+is a provisioning script. This is as if I booted a VM, then I went in and
+executed all this myself. This is something that Vagrant
+will do on our behalf. This is shown it updating app, installing net tools, which will provide us
+some useful utilities. It's installing docker,
+that's all these things. Then installing something
+called containerlab. Now this is a pretty basic one, but there's a lot of
+other options available. You could set up networking, you can instantiate
+multiple VMs, connect them together,
+and all that stuff. Once you have this VagrantFile, you can run vagrant
+up. That's all it is. On the command line,
+here I'm showing in my command prompt in Windows, I'm using Windows to do this. I've run vagrant up in the directory with
+the VagrantFile. If I look at the file, here's this VagrantFile and then I just run the
+command vagrant up. Then it downloads the
+Ubuntu distribution, starts a virtual machine, and boots it with that. When I'm done with the VM, I have two options. I can run vagrant suspend, or I can run vagrant halt. Suspend will basically
+just pause the VM, it'll save the state, turn off the VM, and then the next time I can resume it from the
+current state. You can use vagrant resume
+or actually vagrant up, still works and they'll note that this is a suspended VM, let me just resume it. Then vagrant halt is
+shutting down the VM. That's like turning
+off the machine. Then you can get a status of all of your
+machines if you want. Once that's up and running, now how do you
+connect to the VM? The way to connect to
+the VM is through SSH. Many of you have
+probably used SSH. If you haven't, the way it
+works is on some client, you run some software
+and you basically say SSH connect to some server. The server will be running on SSH agent waiting for
+those connections. Then there's a public
+key that goes on the server and
+then a private key that goes on the client. Now we're not going to get
+into how to create those keys because Vagrant actually
+creates it for you. For us, we're going to run a client software on the host, and then our VM is going to
+be running the SSH server. The next question is, how do you know where these keys are? What settings we should
+set for the SSH? There's a command
+vagrant ssh-config. You could see here, I ran that and then this
+is the output. It'll say the host name. It's the local host. It'll be up on port 2222. Then where it says
+this identity file, that's that private
+key that I need. Now let me switch over
+to the SSH client, but how you can figure it is use those information inside
+of the SSH client. I'm using software
+called MobaXterm, and here's a link to it. If I switch over to it, it has interface like this. I can create new
+sessions and I don't know if I can make this bigger, but let me go in. Edit this session
+I already created. Here's all the SSH setting. Know I have X11 forwarding on. Here's the remote host. That's the local host. Username, Vagrant, port 2222. All of that came
+from ssh-config. Then the last piece
+is use private key. You could see this
+is pointing to that path that was
+output as part of the vagrant
+ssh-config command. You can see it's private
+key is right there. With all of that, I can now click on this and
+it opens up connection. Now I'm inside of
+the virtual machine. I've cloned the GitHub repo that we're providing
+for this course, npp-linux-01-intro
+and there'll be a link on the Coursera page and you could see
+what's inside of it. Included is this Vagrant file. Little more comments included which were stripped
+out in the slides, but it's doing the
+exact same stuff that was in that slide. We have a read me if you need to discuss or see those
+information again as well. Now I'm inside of
+the VM and all that. Let me switch back
+to the slides. Now that's great. That got us a virtual machine. Now what can we do
+inside of that? The second piece of information
+is about containers. We're going to be using
+containers and we're going to be using Docker in particular. If you're not familiar
+with what containers are, it's not a problem.
+They're real simple. Let me give you a quick
+overview of them. To just understand the problem that containers were solving, let's start with bare metal. What is a machine or
+what is the server? We want to be able to
+run in bare metal. We run applications
+directly on server. Down at the bottom,
+we have our hardware, so this is the network card, the disc, the CPU, the memory. On top of that, we run
+an operating system like Windows or Linux. Then on top of the
+operating system, we have all the
+binaries and libraries , the specific distribution. This is like Ubuntu. Which one's on Linux or
+Arch Linux or Windows 7 or specific
+variant of Windows? Then we run our
+applications on top. Like the operating system, it's responsible
+for CPU scheduling, memory management,
+network stack, the binaries and libraries. These are things
+like all the files, the package, the commands
+that we can run like LS. The challenge here
+is historically, resource wastage, only
+using part of a server. If we're going to run one
+application on one server, that's going to waste resources. Ultimately, we want to run multiple applications
+on each server. But this causes some
+problems, difficulties. Applications might need
+different operating systems. Applications might have
+variable workloads. They might interfere
+with one another. They might have
+conflicting dependencies like Application 1
+might need Python 3, Application 2 might
+need Python 2. Sometimes these are complex to resolve those dependencies. From that, virtualization or virtual machines
+were introduced, where we can run a software
+layer known as a Hypervisor, that makes it possible to run multiple independent
+operating systems. Now we can have an
+operating system, let's say over here
+we're running Windows, and over here we're
+running Linux. Or maybe is both Linux and we're just running different
+distributions of it. But this provides us with this nice isolation and now I can run my
+application in here, not have to worry
+about dependencies or any other problems of interference
+or overlap with this. It makes it much more simple. To recap that, challenges with bare metal, there was the resource usage, so we wanted to run
+multiple applications, but there is challenges. Virtualization made it so that it solved all the problems that we just discussed
+about the conflicts, about needing different
+operating systems, different workloads, conflicting dependencies
+and so forth. Now the problem with virtual machines is that
+it's a bit heavyweight. There's CPU, memory disk for
+an extra operating system, and a full set of binaries. There's the overhead, the OS traditionally assumes that they are directly
+on the hardware. The CPU architecture
+has improved, but it's still some performance overhead running
+virtual machines. Then came containers, or the next evolution of
+that concept is containers. What if we don't need
+different operating systems? The solution here
+is to introduce isolation mechanisms inside
+of the operating system. Now the operating
+system is all the same. Let's say we're only
+running on Linux, but I might have a different
+set of dependencies. I might have different
+binaries and libraries and here we're showing two completely different
+distributions. But going to the example, maybe this is focused on
+Python 3 and this is Python 2. Now I don't have to worry about resolving the conflicts
+between those, but I could still run them both. And it's much lighter weight. It's really just the same
+as running a process. You have extra files, of course, but it's a much more efficient. Now, this is not new technology. It's had a evolution from the early 1980s
+through the early 2000s. Really, where we stand
+is inside of the kernel, the two key mechanisms that support this are called
+namespaces and cgroups. Namespaces control
+what resources and namings of those resources, or processes like the
+file descriptors, the IP addresses, and so forth. And the cgroup or control group, groups processes and
+allocates resources, CPU memory that the
+kernel will enforce. With this, we can now have that same benefit
+of the isolation, but in a much more
+efficient manner. Now you might be thinking, and many people thought
+Docker invented containers. And we can see they date back
+well before Docker existed. What did they bring?
+They really brought nice packaging around
+container technology. They made it usable, which was a huge innovation. Let me give a quick overview
+of the Docker architecture. What we're going to show is
+three separate machines. They could all be on
+the same machine, but we'll consider
+them separate for now. Most of the time you'll have the client and host
+be a single machine, and then the registry be off
+on the Internet somewhere. On the host, you have
+running containers. A container is a process that
+runs in its own namespace, has its own file
+directory structure, its own network resources, own file descriptors, and all of that. The next concept is images. An image is an immutable, meaning it doesn't change, snapshot of a file system. That means it's a
+collection of files and directories such as shown here. It's used as the
+initial collection of files within a
+container's namespace. Now, docker provides an executable that interacts with the daemon to
+initiate docker commands. You could say something
+like docker run, which will then send a command
+to this docker daemon, which is a process that runs on each machine you want
+to run containers on. It manages the images and starting processes
+and interfacing to the cgroups and namespaces. When you say docker run, it'll contact the daemon, get the start a container
+with a particular image. Then the last piece
+is the registry. The registry is a storage
+for images and enables an interface to pull or push images to or from a local host. So docker provides a build
+system where you can say, I want to build an image
+that looks like this. That will make it so
+that you can build it. It'll be able to put it
+in the local image tour, but you can also push
+it to a registry. Now, the most popular one is called docker hub
+and that's where I'm storing some images that
+we'll use for this class. So with all that, a summary of containers is a temporary file system
+that's layered over an image that's fully writable and then disappears
+when it is end of life. Each container has its
+own network stack. It consists of a process group, which has one main process
+with possible subprocess, and all of those exit when
+the main process exits. We'll see this inaction plenty, but that was a quick overview. Certainly go read up end
+containers if you've never used them before, but we'll get plenty of
+exposure in this course. So that brings us
+to containerlab. I talked about docker because containerlab now is
+a wrapper on top of that leverages docker to provide a command line interface for orchestrating and managing container-based
+networking labs. It starts the containers, builds the virtual
+wiring between them to create lab topologies
+of the user's choice, manages the labs life
+cycle and all of that. One additional thing
+that we're not going to really take advantage of in this class is they also hook in images from various vendors. I can say if you recall
+me talking about sonic, you could say, I
+want this one to be a sonic image or
+things like that. Or shown here is SR Linux, that's a thing from Nokia. Let's give a quick demo of this. Let's say we have a
+lab and I want to build a topology that
+looks like this. I want four hosts connected
+to a network switch, and because this
+is a Linux class, these will all just
+be running Linux. And then I can
+configure this switch using all Linux commands
+to behave like a switch. Let me show you all of this. Let me flip back
+over to MobaXterm. Let me clear this screen. Zoom in a little bit more, so this is the hub repo. We started the vigrantfile. I went to MobaXterm and
+I SSH-ed into this VM. Now, let me go into demo 1, which is for this
+particular lab. I can look at the readme, it'll describe what we're doing. It's really just going to
+show off containerlab. It talks about some suggested
+steps to walk through. You can read that on your own, but we'll just go here. The main thing to look at
+is this file right there. The YML stands for YAML. All of the containerlab
+files will have a file name
+similar to this. You'll name it
+whatever you want. I'm naming it for node part 1. Let's look inside of that. First main thing to
+look at is the name. We're going to see this pop
+up later, so remember this. I called it lab1, part1, because this is the basis
+to do a lab around this. But right now we're
+just doing a demo. Then we're going to
+describe the topology. The topology has two
+main parts to it. One is describing
+all of the nodes, and then the second is
+describing the links. Starting with the nodes, you're going to describe here, we're going to have host1, then you specify the kind. For us it's going to be Linux. If it was some other
+network device that we wanted, we
+could have done that. But I'm going to say it's Linux. This is all containerized, it uses Docker, so the image I'm going
+to provide is this. This is on Docker hub and
+it's this particular name. This is my username there
+and this is the image name, network testing, and
+here's a version for it. Why I created this is because I wanted a bunch of different utilities that
+we're going to be using, only one container, so
+we're going to do that. That's host1, and then
+this next part is binds. What this can do is it
+can make it so that a directory on my host, which is the VM or
+running [inaudible] can bind or mount to a directory
+inside of the container. It'll show up as lab folder
+inside of the container, but it'll be lab-host1
+outside of the container. I could do this for host1, host2, host3, host4 and you can know I chose the same directory inside of the container
+for all of them, but they each have a unique name outside of the
+container on the host. Then I called the
+last one lab-switch. You can see I instantiated those five nodes
+from that pitcher. Let me flip back to
+that real quick, host1, host2, host3, host4. There's a typo obviously, that should be host4,
+and then switch. Now, we get to the links. All the link is
+specifying is saying, here's the end points. I want to connect together. I want to connect
+on host1, eth1, and I want to connect that
+on the node called switch, it's interface, eth1. Then host2, eth1 to switch eth2. Host3 eth1 to switch eth3, and then the host4
+eth1 to switch eth4. We go back to the pitcher. That's eth1 for each of these, and then we have eth1, 2, 3, and 4 on the switch. You might be asking,
+what about eth0? Well, that's reserved
+for a management network by Containerlab and so it's
+not part of that topology. You probably won't have to
+create this from scratch. You'll just copy this. You can modify it if you want another host
+or delete a host. Just edit these files
+that are already created. Containerlab provides
+several examples. Now, we've run sudo
+containerlab deploy. That's the command
+that it'll look at, it'll see this file inside of this directory and
+Containerlab will deploy. There's an error.
+What this is just saying is that failed to bind. Well, because if we do an LS, we could see that
+those directories that we were telling should
+exist, aren't there? As a reminder, what were these
+called on the local host? It was called lab-host1. mkdir lab-host1, 2, 3, 4, and then I think the
+last one was switch, but let me double check
+that just to make sure. Yes, lab-switch, and so now I can run sudo
+containerlab deploy again. This time hopefully it works. There you go. It's
+looking much better. You can see it's
+creating each of those at the end it provides
+this little report. Because I'm zoomed
+in, it looks weird, it goes across multiple
+lines but you'll see right here is the name of each node. This is the docker
+container that was created. If I do dockerps, I'll see that as each
+of the containers. That's the container names. With this, what does that mean? What can I do with this? I could say stuff like docker exec-it for interactive let me execute a command
+inside of host 1. You'll note that the
+naming convention is going to be C lab. That's for container
+lab and then whenever I named the topology, I named it lab1- part 1 and then what the
+particular node, and I called it host 1. With doc, you could
+execute commands inside of the container let's say LS. That was listing out what
+is inside of the container. Let me do something
+a little different. Let me do if config to
+look at the interfaces. You can see here
+we have each zero, that was the management but
+then here I have this eth1. Now let me look at
+the switch instead. Do the same thing, and we can see that there is
+multiple eth1,2,3, and 4 all exist inside
+of that switch. We'll get to using the
+docker exec command in doing things inside
+of the container in features but for now, here just see that it exists. The last thing I want to show, was what about
+these directories. Let me start inside
+of part1-host1. Let me list that
+was it lab folder. There was nothing there. There was nothing inside of it. Let me doublecheck that
+that was the correct name. Lab-/lab-folder. You can see
+there's nothing in there. Now, let me CD into our local lab1 host folder. You could see I'm still
+inside of the VM, right here outside
+of the container, nothing is in it but
+let me edit some file, edit blah, blah, blah, blah. Now we could see
+inside of this VM, I could see that file. Now if I run that
+same command again to list in host1 that lab folder, you could see that file
+exists if I cap/ blah. You could see that it
+says blah, blah, blah. This is going to be really helpful for us
+because it allows us to move files between the
+inside of the container, which remember it has its
+own file system internally, and the VM itself because you could see now I
+can look inside of host2. Let me do the LS command so
+docker exec all that host2, list the lab folder
+there's nothing in there. It's a completely different
+container or set of files. The last thing to mention is, aliases we'll see
+in future demos, then I'm going to
+start using aliases. I don't like typing out docker exec container
+name and then a command. I want to make an
+alias for all of that. We'll show how to do
+that at a future time, but that's going to be
+something that's pretty useful. With that that's it for our lab environment and we'll start using that
+starting next time. Thanks. See you then.

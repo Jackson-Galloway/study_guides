@@ -1,0 +1,1192 @@
+1
+00:00:08,678 --> 00:00:10,814
+All right, let's go ahead and get started.
+
+2
+00:00:10,814 --> 00:00:14,112
+This time we're going to talk
+about Software Defined Networking.
+
+3
+00:00:14,112 --> 00:00:18,380
+So, in the last lesson,
+we showed how to create
+
+4
+00:00:18,380 --> 00:00:23,313
+a VPC inside of GCP and
+went through that abstraction.
+
+5
+00:00:23,313 --> 00:00:26,398
+We talked about how to
+do it with terraform.
+
+6
+00:00:26,398 --> 00:00:31,161
+But one of the things that we talked
+about wanting to do with this course as
+
+7
+00:00:31,161 --> 00:00:35,222
+a whole is to really understand,
+all right, when I did that,
+
+8
+00:00:35,222 --> 00:00:38,599
+when I created that VPC,
+what actually happened?
+
+9
+00:00:38,599 --> 00:00:41,479
+What happened inside of
+Google's infrastructure?
+
+10
+00:00:41,479 --> 00:00:44,860
+And so
+we'll talk about that in the next lesson.
+
+11
+00:00:44,860 --> 00:00:47,940
+But to really understand that and
+appreciate that,
+
+12
+00:00:47,940 --> 00:00:50,880
+we're going to talk about a,
+provide a little bit of
+
+13
+00:00:50,880 --> 00:00:54,666
+background in something called
+software defined networking.
+
+14
+00:00:54,666 --> 00:00:58,662
+You might have heard this term before but,
+
+15
+00:00:58,662 --> 00:01:02,553
+to really understand what exactly it is.
+
+16
+00:01:02,553 --> 00:01:05,983
+I wanted to kind of share my,
+my thinking on it.
+
+17
+00:01:05,983 --> 00:01:10,815
+And this really comes
+from a lot of experience.
+
+18
+00:01:10,815 --> 00:01:15,624
+This is a core area that I've
+worked in for for quite a while and
+
+19
+00:01:15,624 --> 00:01:19,893
+so, I have a little,
+little bit of history behind it.
+
+20
+00:01:19,893 --> 00:01:24,324
+So, just to kind of give
+a little backdrop on, on SDN,
+
+21
+00:01:24,324 --> 00:01:28,459
+what, like what was
+the feeling in the networking
+
+22
+00:01:28,459 --> 00:01:32,999
+community right as SDN emerged or
+kind of what led to it?
+
+23
+00:01:32,999 --> 00:01:37,804
+And, there was this kind of
+feeling of a glacial process of
+
+24
+00:01:37,804 --> 00:01:42,818
+innovation was made worse by
+captive standards processes.
+
+25
+00:01:42,818 --> 00:01:47,664
+And, this is kind of there was
+a feeling that really the Internet
+
+26
+00:01:47,664 --> 00:01:52,692
+has become ossified, that,
+really the innovation that we wanted
+
+27
+00:01:52,692 --> 00:01:57,206
+as networking researchers,
+it just wasn't as possible.
+
+28
+00:01:57,206 --> 00:02:02,160
+And that's because you have this idea go
+through some standardization process where
+
+29
+00:02:02,160 --> 00:02:06,715
+you're waiting years and then ultimately
+there's some sort of deployment.
+
+30
+00:02:06,715 --> 00:02:10,656
+And this process is
+really driven by vendors,
+
+31
+00:02:10,656 --> 00:02:13,796
+consumers were largely locked out.
+
+32
+00:02:13,796 --> 00:02:16,967
+And because it was
+a standardization process,
+
+33
+00:02:16,967 --> 00:02:21,973
+lowest common denominator features is
+kind of what, what made it through.
+
+34
+00:02:21,973 --> 00:02:25,640
+So this led to glacial innovation.
+
+35
+00:02:25,640 --> 00:02:30,490
+Another feeling is that
+really we in networking
+
+36
+00:02:30,490 --> 00:02:34,498
+built an artifact, not a discipline.
+
+37
+00:02:34,498 --> 00:02:39,066
+Other fields and systems,
+like operating systems,
+
+38
+00:02:39,066 --> 00:02:43,327
+databases and so
+forth teach basic principles and
+
+39
+00:02:43,327 --> 00:02:47,908
+then are easily managed and
+they continue to evolve.
+
+40
+00:02:47,908 --> 00:02:51,661
+If you look at how
+networking class is taught,
+
+41
+00:02:51,661 --> 00:02:56,582
+it's really this big bag of
+protocols that you learn about.
+
+42
+00:02:56,582 --> 00:03:01,200
+It's historically notoriously
+difficult to manage, and
+
+43
+00:03:01,200 --> 00:03:05,919
+the network has been a piece
+that has really evolved slowly.
+
+44
+00:03:05,919 --> 00:03:10,369
+Why it lags behind networks
+used to be simple.
+
+45
+00:03:10,369 --> 00:03:15,426
+We had Ethernet, IP, TCP, but
+there's been a lot of control,
+
+46
+00:03:15,426 --> 00:03:19,940
+new control requirements that
+led to great complexity.
+
+47
+00:03:19,940 --> 00:03:25,018
+There's isolation, we added VLAns and
+access control lists,
+
+48
+00:03:25,018 --> 00:03:29,071
+traffic engineering,
+MPLs and ECMP and so forth.
+
+49
+00:03:29,071 --> 00:03:35,403
+Added middle boxes like firewalls and
+NATs and payload analysis and so forth.
+
+50
+00:03:35,403 --> 00:03:41,405
+And these mechanisms are designed and
+deployed independently.
+
+51
+00:03:41,405 --> 00:03:44,856
+All that said,
+the infrastructure still works, but
+
+52
+00:03:44,856 --> 00:03:48,854
+it works really because of our
+ability to master complexity.
+
+53
+00:03:48,854 --> 00:03:54,426
+And that's both a blessing and a curse.
+
+54
+00:03:54,426 --> 00:04:00,283
+Complexity versus simplicity, networking
+still focused on mastering complexity.
+
+55
+00:04:00,283 --> 00:04:05,793
+There was little emphasis on extracting
+the simplicity from the control plane,
+
+56
+00:04:05,793 --> 00:04:09,612
+and really no recognition
+that there's a difference.
+
+57
+00:04:09,612 --> 00:04:13,319
+Extracting simples,
+simplicity builds those intellectual
+
+58
+00:04:13,319 --> 00:04:16,963
+foundations that are necessary for
+creating a discipline.
+
+59
+00:04:16,963 --> 00:04:21,822
+And that's why networking lags behind, or
+
+60
+00:04:21,822 --> 00:04:25,113
+lagged behind in at the time.
+
+61
+00:04:25,113 --> 00:04:30,387
+So, as an example,
+the OSPF open shortest path,
+
+62
+00:04:30,387 --> 00:04:38,442
+shortest path first, a protocol really
+is just finding the shortest path.
+
+63
+00:04:38,442 --> 00:04:43,991
+It's 400,
+245 pages document that describes this,
+
+64
+00:04:43,991 --> 00:04:47,808
+it's really just a distributed system.
+
+65
+00:04:47,808 --> 00:04:52,813
+But since it's not using any abstractions,
+it just does it all.
+
+66
+00:04:52,813 --> 00:04:57,540
+And it has this distributed
+system to build up a consistent,
+
+67
+00:04:57,540 --> 00:05:01,723
+up to date map of the network,
+turns to 101 pages.
+
+68
+00:05:01,723 --> 00:05:06,967
+And then Dijkstra's algorithm, which
+is defining the shortest path, is just,
+
+69
+00:05:06,967 --> 00:05:11,842
+that's the core, that's all the protocol
+really is and that was 4 pages.
+
+70
+00:05:11,842 --> 00:05:16,220
+And so,
+kind of this just highlights kind of the,
+
+71
+00:05:16,220 --> 00:05:19,728
+one of the challenges in networking.
+
+72
+00:05:19,728 --> 00:05:25,293
+Another example to kind of illustrate
+this concept is programming.
+
+73
+00:05:25,293 --> 00:05:29,687
+So imagine back in the day,
+we used to work in machine languages.
+
+74
+00:05:29,687 --> 00:05:35,623
+There was no abstractions we had to master
+complexity, and yeah that was crucial.
+
+75
+00:05:35,623 --> 00:05:40,625
+Then some higher level
+languages were introduced.
+
+76
+00:05:40,625 --> 00:05:44,093
+Operating systems and
+other abstractions came along,
+
+77
+00:05:44,093 --> 00:05:48,604
+like file systems, virtual memory,
+abstract data types and so forth.
+
+78
+00:05:48,604 --> 00:05:53,077
+And then we've evolved to more
+modern languages with object
+
+79
+00:05:53,077 --> 00:05:56,330
+oriented garbage collection and so forth.
+
+80
+00:05:56,330 --> 00:06:00,614
+Each iteration is a new abstraction that
+
+81
+00:06:00,614 --> 00:06:05,532
+allowed us to extract
+simplicity on top of it.
+
+82
+00:06:05,532 --> 00:06:06,991
+So now, stepping back,
+
+83
+00:06:06,991 --> 00:06:10,682
+let's just make sure we're on
+the same page do we understand?
+
+84
+00:06:10,682 --> 00:06:12,651
+Let's look at legacy switches.
+
+85
+00:06:12,651 --> 00:06:16,566
+So here's a picture of a switch,
+it has a hardware component to it and
+
+86
+00:06:16,566 --> 00:06:18,197
+a software component to it.
+
+87
+00:06:18,197 --> 00:06:20,947
+And then some way to configure it.
+
+88
+00:06:20,947 --> 00:06:25,713
+So the hardware has a lot of
+times an underlying ASIC that's
+
+89
+00:06:25,713 --> 00:06:29,727
+this fixed pipeline,
+the fixed functionality.
+
+90
+00:06:29,727 --> 00:06:35,534
+And then there's software.
+
+91
+00:06:35,534 --> 00:06:39,738
+These switches are packaged
+with software with,
+
+92
+00:06:39,738 --> 00:06:44,556
+that have routing processes and
+ways to configure them.
+
+93
+00:06:44,556 --> 00:06:51,438
+So back in 2005, there was a paper in CCR,
+and I'll have a link to it,
+
+94
+00:06:51,438 --> 00:06:57,991
+called a clean slate 4D approach
+to network control and management.
+
+95
+00:06:57,991 --> 00:07:03,099
+And this was really kind of
+the first paper outlining a lot
+
+96
+00:07:03,099 --> 00:07:09,707
+of the software defined networking
+principles before it even had a name.
+
+97
+00:07:09,707 --> 00:07:14,434
+The problem with legacy
+approach is that routers
+
+98
+00:07:14,434 --> 00:07:18,938
+make uncoordinated
+changes to their routes.
+
+99
+00:07:18,938 --> 00:07:22,844
+I can go in, configure one router and
+put on its own policy, but
+
+100
+00:07:22,844 --> 00:07:26,921
+I don't know how that's really
+going to affect the whole network.
+
+101
+00:07:26,921 --> 00:07:32,857
+If it will coordinate, it'll exchange
+information with other routers,
+
+102
+00:07:32,857 --> 00:07:37,955
+but that change to that one
+router wasn't really coordinated.
+
+103
+00:07:37,955 --> 00:07:43,107
+This leads to poor stability and
+thrashing.
+
+104
+00:07:43,107 --> 00:07:49,102
+The first observation in this paper
+was that we need a network wide view,
+
+105
+00:07:49,102 --> 00:07:53,341
+which is needed to have
+a network level objective.
+
+106
+00:07:53,341 --> 00:07:57,898
+That's really what we care about, make
+this network behave in a particular way.
+
+107
+00:07:57,898 --> 00:08:02,519
+Second kind of core problem that
+they identified was that you have to
+
+108
+00:08:02,519 --> 00:08:06,078
+predict and
+undo the effects of the control plane.
+
+109
+00:08:06,078 --> 00:08:10,578
+The control plane you can
+configure the OSPF parameters and
+
+110
+00:08:10,578 --> 00:08:16,614
+BGP configuration and things like that,
+but that's not what I actually want.
+
+111
+00:08:16,614 --> 00:08:21,948
+I know how I want my network to behave,
+but I have to translate that solution
+
+112
+00:08:21,948 --> 00:08:27,286
+into these settings, of these kind of
+knobs that are provided by the various
+
+113
+00:08:27,286 --> 00:08:32,051
+routing protocols and
+configuration interfaces by the vendors.
+
+114
+00:08:32,051 --> 00:08:37,097
+And so the second insight, or
+second principle that they identified
+
+115
+00:08:37,097 --> 00:08:41,621
+was that we need the ability to
+express the desired solution.
+
+116
+00:08:41,621 --> 00:08:46,401
+So they were noting that the switch
+software gets in the way of automation and
+
+117
+00:08:46,401 --> 00:08:48,127
+network wide management.
+
+118
+00:08:48,127 --> 00:08:52,744
+You don't really need to trick
+protocols into doing what you need on
+
+119
+00:08:52,744 --> 00:08:54,533
+a switch by switch basis.
+
+120
+00:08:54,533 --> 00:08:58,826
+So they introduced a new
+architecture called 4D's,
+
+121
+00:08:58,826 --> 00:09:03,398
+where they went kind of replaced
+the standard data plane,
+
+122
+00:09:03,398 --> 00:09:06,119
+control plane management plane.
+
+123
+00:09:06,119 --> 00:09:10,619
+With these as the kind of interfaces
+between planes, with the data plane
+
+124
+00:09:10,619 --> 00:09:15,949
+dissemination plane, decision plane, and
+discovery plane, which is not shown.
+
+125
+00:09:15,949 --> 00:09:21,386
+And so in this case,
+the decision plane can do those network
+
+126
+00:09:21,386 --> 00:09:26,065
+wide objectives,
+disseminate the findings, and
+
+127
+00:09:26,065 --> 00:09:32,298
+then more directly instruct the data
+plane to do what it needs to do.
+
+128
+00:09:32,298 --> 00:09:38,080
+So in 2007,
+a paper came out called Ethane,
+
+129
+00:09:38,080 --> 00:09:42,318
+Erick and I also have a link to that.
+
+130
+00:09:42,318 --> 00:09:48,052
+And Ethane's contribution, so
+this is not to trivialize or anything,
+
+131
+00:09:48,052 --> 00:09:54,726
+this was a very critical paper, but really
+took a lot of those principles from 4D and
+
+132
+00:09:54,726 --> 00:09:58,396
+put them into practice,
+which is a huge step.
+
+133
+00:09:58,396 --> 00:10:03,466
+And this became open flow,
+and then really kind
+
+134
+00:10:03,466 --> 00:10:08,038
+of created the whole movement behind SDN.
+
+135
+00:10:08,038 --> 00:10:14,408
+So they introduced specific mechanisms for
+finding and mapping namespaces.
+
+136
+00:10:14,408 --> 00:10:18,821
+This would be the discovery plane,
+like you plug in a server into a switch.
+
+137
+00:10:18,821 --> 00:10:22,557
+How does the centralized
+controller find out about it?
+
+138
+00:10:22,557 --> 00:10:23,193
+Right, so
+
+139
+00:10:23,193 --> 00:10:27,810
+the centralized controller is what is
+doing these network wide objectives.
+
+140
+00:10:27,810 --> 00:10:30,813
+And so they kind of were introducing.
+
+141
+00:10:30,813 --> 00:10:35,629
+I think this picture came out after,
+this concept where you have this
+
+142
+00:10:35,629 --> 00:10:40,115
+effectively centralized control,
+where you have this network
+
+143
+00:10:40,115 --> 00:10:44,536
+operating system which builds
+up a view of the entire network.
+
+144
+00:10:44,536 --> 00:10:48,230
+And then you can write control
+programs on top of it.
+
+145
+00:10:48,230 --> 00:10:53,846
+So this Ethan paper also described
+an interface to describe policy and
+
+146
+00:10:53,846 --> 00:10:56,136
+this is the decision plane.
+
+147
+00:10:56,136 --> 00:11:01,138
+Like there are examples, Nick can
+talk to Martin over instant message,
+
+148
+00:11:01,138 --> 00:11:04,339
+and that was something
+that you can describe.
+
+149
+00:11:04,339 --> 00:11:08,467
+And it would be realized
+in the data plane.
+
+150
+00:11:08,467 --> 00:11:14,478
+So they introduced a mechanism to enforce
+the policy through the data plane and
+
+151
+00:11:14,478 --> 00:11:19,944
+dissemination through a series of
+max action tables in the data plane,
+
+152
+00:11:19,944 --> 00:11:22,873
+and a protocol to write those tables.
+
+153
+00:11:22,873 --> 00:11:30,508
+So this kind of link led to Openflow
+as a kind of standardization of this.
+
+154
+00:11:30,508 --> 00:11:34,703
+Right, so we have software centralized
+controller that can talk to
+
+155
+00:11:34,703 --> 00:11:38,689
+various switches that have both
+the hardware and the software.
+
+156
+00:11:38,689 --> 00:11:42,768
+And so the Openflow, the key
+innovation here was an abstraction.
+
+157
+00:11:42,768 --> 00:11:47,706
+It was the abstraction of the hardware and
+an API on top of it, and
+
+158
+00:11:47,706 --> 00:11:52,205
+a protocol for how a centralized
+controller to talk to it.
+
+159
+00:11:52,205 --> 00:11:57,220
+So kind of key abstraction
+was really this match action
+
+160
+00:11:57,220 --> 00:12:03,229
+table that we can view a lot of
+networking as a match action table.
+
+161
+00:12:03,229 --> 00:12:06,299
+If we have these kind of
+set of actions that
+
+162
+00:12:06,299 --> 00:12:11,010
+are fairly flexible,all of my
+traffic I can match on things.
+
+163
+00:12:11,010 --> 00:12:14,416
+So here is showing a switch
+with two rules inside of it.
+
+164
+00:12:14,416 --> 00:12:19,587
+So star means wildcard, so
+match on, IP destination and
+
+165
+00:12:19,587 --> 00:12:25,314
+then send it out port one, or
+match on the source destination.
+
+166
+00:12:25,314 --> 00:12:30,970
+The source and destination TCP port,
+send it out in port two.
+
+167
+00:12:30,970 --> 00:12:37,628
+All right,
+this unifies different kinds of devices.
+
+168
+00:12:37,628 --> 00:12:42,092
+A router matches on the longest
+destination IP prefix
+
+169
+00:12:42,092 --> 00:12:45,176
+the action is forwarding out a link.
+
+170
+00:12:45,176 --> 00:12:48,893
+A switch matching on
+the destination Mac address,
+
+171
+00:12:48,893 --> 00:12:54,520
+the action is either forwarded on a
+particular port or flooded out all ports.
+
+172
+00:12:54,520 --> 00:12:59,281
+A firewall would match on IP addresses and
+TCP or
+
+173
+00:12:59,281 --> 00:13:04,764
+UDP port numbers, and
+the action is permit or deny it.
+
+174
+00:13:04,764 --> 00:13:08,320
+A NAT would match on IP address and ports,
+
+175
+00:13:08,320 --> 00:13:13,315
+action would be to rewrite
+those addresses and the ports.
+
+176
+00:13:13,315 --> 00:13:18,575
+So this is kind of match in action,
+in action, I guess.
+
+177
+00:13:18,575 --> 00:13:23,306
+The problem with Openflow was
+it had a fixed set of things
+
+178
+00:13:23,306 --> 00:13:28,037
+you can match on and
+the reason was they were trying to fit
+
+179
+00:13:28,037 --> 00:13:32,279
+within a ecosystem of
+switch ASICs that existed.
+
+180
+00:13:32,279 --> 00:13:37,536
+So here's all the fields and then
+a fixed set of actions that you can do,
+
+181
+00:13:37,536 --> 00:13:41,666
+and it's all dedicated,
+dictated by that fixed ASIC.
+
+182
+00:13:41,666 --> 00:13:46,514
+And they kept adding kind of
+more header fields to parse and
+
+183
+00:13:46,514 --> 00:13:50,454
+things like that but
+it still wasn't enough.
+
+184
+00:13:50,454 --> 00:13:53,895
+New things like VXLAN or NVGRE or
+
+185
+00:13:53,895 --> 00:13:59,128
+whatever came out so
+we continued needing more.
+
+186
+00:13:59,128 --> 00:14:01,176
+So that's where in 2013,
+
+187
+00:14:01,176 --> 00:14:05,912
+there was the introduction of
+the reconfigurable match action table.
+
+188
+00:14:05,912 --> 00:14:11,050
+All right, so this is now bringing
+flexibility into that hardware.
+
+189
+00:14:11,050 --> 00:14:16,446
+So in classic openflow,
+this software defined control
+
+190
+00:14:16,446 --> 00:14:21,858
+plane installs and
+queries rules in the target switch.
+
+191
+00:14:21,858 --> 00:14:26,236
+What this new thing allows is
+basically a compiler to be
+
+192
+00:14:26,236 --> 00:14:29,955
+able to see where you
+can specify the parsing.
+
+193
+00:14:29,955 --> 00:14:33,716
+How packets should be parsed,
+different tables,
+
+194
+00:14:33,716 --> 00:14:36,601
+control flows build up your actions and
+
+195
+00:14:36,601 --> 00:14:41,684
+there's a compiler that can then
+build that into the target switch.
+
+196
+00:14:41,684 --> 00:14:45,494
+All right, and then the control plane
+interfaces with that, installing and
+
+197
+00:14:45,494 --> 00:14:46,381
+querying rules.
+
+198
+00:14:46,381 --> 00:14:49,009
+And then something translates that to
+
+199
+00:14:49,009 --> 00:14:52,795
+where those specific tables
+in the target switch are.
+
+200
+00:14:52,795 --> 00:14:55,088
+So the abstract model, and
+
+201
+00:14:55,088 --> 00:15:00,284
+there was a language that was
+created around this called P4.
+
+202
+00:15:00,284 --> 00:15:05,549
+It's a reconfigurable parser
+plus a non-sequential match
+
+203
+00:15:05,549 --> 00:15:10,614
+action pipeline plus protocol
+independent processing.
+
+204
+00:15:10,614 --> 00:15:15,174
+So you can see it's built as
+this parser plan where part of
+
+205
+00:15:15,174 --> 00:15:18,028
+the configuration tells a parser.
+
+206
+00:15:18,028 --> 00:15:23,026
+That's the all and we can go read
+that paper to see understand
+
+207
+00:15:23,026 --> 00:15:27,935
+really how that works and
+that could be parse any protocol.
+
+208
+00:15:27,935 --> 00:15:33,223
+Then there's these match action
+tables that are set up in a pipeline
+
+209
+00:15:33,223 --> 00:15:39,551
+where there's this high programmability
+of what those kind of actions could be.
+
+210
+00:15:39,551 --> 00:15:44,125
+And how you can put these
+together can get pretty powerful.
+
+211
+00:15:44,125 --> 00:15:50,549
+So another view of it is you take
+your P4 program, you compile it,
+
+212
+00:15:50,549 --> 00:15:56,629
+it builds a structure of kind of
+different tables in a pipeline,
+
+213
+00:15:56,629 --> 00:16:00,780
+each of them with their own little memory.
+
+214
+00:16:00,780 --> 00:16:05,166
+You can pass metadata,
+you can have stateful memory and
+
+215
+00:16:05,166 --> 00:16:07,788
+you have programmable parsing.
+
+216
+00:16:07,788 --> 00:16:13,754
+All right, that's kind of
+where we got to and we'll see.
+
+217
+00:16:13,754 --> 00:16:20,607
+It's actually key in enabling these cloud
+infrastructures so we'll dive into those.
+
+218
+00:16:20,607 --> 00:16:26,052
+But one of the analogies that emerged
+in the early days of software
+
+219
+00:16:26,052 --> 00:16:32,297
+defined networking that was quite
+powerful was an analogy to mainframes.
+
+220
+00:16:32,297 --> 00:16:37,853
+So on the left was your
+traditional IBM mainframe.
+
+221
+00:16:37,853 --> 00:16:42,751
+It had specialized applications on it,
+specialized operating system,
+
+222
+00:16:42,751 --> 00:16:44,416
+specialized hardware.
+
+223
+00:16:44,416 --> 00:16:48,801
+All of that was vertically integrated,
+it was closed, it was proprietary,
+
+224
+00:16:48,801 --> 00:16:52,588
+there was slow innovation, and
+there was a small industry for it.
+
+225
+00:16:52,588 --> 00:16:57,794
+Once we kind of opened that
+environment up through the kind of
+
+226
+00:16:57,794 --> 00:17:04,285
+innovation of a microprocessor with
+an open interface, namely x86.
+
+227
+00:17:04,285 --> 00:17:08,870
+That can run different operating
+systems on top of it each with
+
+228
+00:17:08,870 --> 00:17:13,823
+their own interface where you can
+build applications on top of it.
+
+229
+00:17:13,823 --> 00:17:16,555
+Right, so this horizontal,
+
+230
+00:17:16,555 --> 00:17:22,467
+open interfaces led to rapid
+innovation and the huge industry.
+
+231
+00:17:22,467 --> 00:17:27,615
+The personal computer, the server market,
+
+232
+00:17:27,615 --> 00:17:33,309
+the phone,
+kind of all kind of emerged out of that.
+
+233
+00:17:33,309 --> 00:17:38,289
+The analogy in the routing world
+is again a big router like
+
+234
+00:17:38,289 --> 00:17:40,580
+from a vendor like Cisco.
+
+235
+00:17:40,580 --> 00:17:44,513
+Specialized features, specialized
+control plane, specialized hardware,
+
+236
+00:17:44,513 --> 00:17:47,987
+vertically integrated, closed,
+proprietary, slow innovation.
+
+237
+00:17:47,987 --> 00:17:53,053
+And what the SDN movement and
+Openflow were trying
+
+238
+00:17:53,053 --> 00:17:58,722
+to do was let's evolve to take
+in these merchant silicon
+
+239
+00:17:58,722 --> 00:18:03,560
+switching chips,
+have those open interface.
+
+240
+00:18:03,560 --> 00:18:08,181
+That's kind of the open flow where
+you can build different control
+
+241
+00:18:08,181 --> 00:18:09,759
+planes on top of them.
+
+242
+00:18:09,759 --> 00:18:12,762
+There's a number of different controllers,
+
+243
+00:18:12,762 --> 00:18:16,152
+and then you can build
+applications on top of those.
+
+244
+00:18:16,152 --> 00:18:21,461
+All right, open interfaces,
+rapid innovation and
+
+245
+00:18:21,461 --> 00:18:25,450
+we saw that actually came to fruition.
+
+246
+00:18:25,450 --> 00:18:30,215
+All right, with that we're going to
+kind of end this little bit on SDN,
+
+247
+00:18:30,215 --> 00:18:33,068
+and next time we'll see it in practice.
+
+248
+00:18:33,068 --> 00:18:33,820
+All right, thanks.

@@ -1,0 +1,1092 @@
+1
+00:00:07,730 --> 00:00:10,725
+Let's go ahead and get started.
+
+2
+00:00:10,725 --> 00:00:14,265
+Today, we're going to
+talk about VPC peering.
+
+3
+00:00:14,265 --> 00:00:16,910
+We introduced the concept to
+
+4
+00:00:16,910 --> 00:00:19,750
+the wide area network and we
+talked about communicating,
+
+5
+00:00:19,750 --> 00:00:24,985
+it's beyond the bounds
+of a given VPC.
+
+6
+00:00:24,985 --> 00:00:30,590
+We talked about, the case
+on the left of two VPCs,
+
+7
+00:00:30,590 --> 00:00:33,885
+wanted to talk directly
+to each other.
+
+8
+00:00:33,885 --> 00:00:37,050
+Then, on the right,
+
+9
+00:00:37,050 --> 00:00:39,480
+the VPC to end user.
+
+10
+00:00:39,480 --> 00:00:43,070
+In this case, we're going
+to be talking about
+
+11
+00:00:43,070 --> 00:00:47,820
+the VPC to VPC as
+shown on the left.
+
+12
+00:00:48,170 --> 00:00:51,375
+Let's start with this setup.
+
+13
+00:00:51,375 --> 00:00:54,405
+We have two VPCs, VPC1,
+
+14
+00:00:54,405 --> 00:00:58,910
+VPC2 located in two
+different regions.
+
+15
+00:00:58,910 --> 00:01:03,780
+Each of them has a
+sub-net and a VM.
+
+16
+00:01:03,780 --> 00:01:06,110
+Then they have some
+firewall rules
+
+17
+00:01:06,110 --> 00:01:08,870
+that allow ICMP traffic,
+
+18
+00:01:08,870 --> 00:01:13,190
+SSH traffic, and
+a custom traffic.
+
+19
+00:01:13,190 --> 00:01:15,350
+This was set up such that
+
+20
+00:01:15,350 --> 00:01:20,110
+this IP or this VM only
+has an IP address,
+
+21
+00:01:20,110 --> 00:01:23,410
+private IP address and
+no public IP address,
+
+22
+00:01:23,410 --> 00:01:26,570
+and same with this one.
+
+23
+00:01:26,580 --> 00:01:30,740
+Just to show that in
+the interest of time,
+
+24
+00:01:30,740 --> 00:01:33,340
+I set this up in advance.
+
+25
+00:01:33,340 --> 00:01:37,980
+You can see, I have
+the two VMs running.
+
+26
+00:01:37,980 --> 00:01:41,385
+I'll just reload to show that.
+
+27
+00:01:41,385 --> 00:01:46,350
+The two VMs running,
+us-central1, us-east1,
+
+28
+00:01:46,350 --> 00:01:50,780
+neither of them have
+a public IP address,
+
+29
+00:01:50,780 --> 00:01:55,945
+and then they have, in the
+subnets that we're expecting.
+
+30
+00:01:55,945 --> 00:01:59,765
+Then I have my two VPC networks.
+
+31
+00:01:59,765 --> 00:02:03,520
+VPC1 and VPC2.
+
+32
+00:02:04,550 --> 00:02:08,170
+You can see it has one subnet.
+
+33
+00:02:08,930 --> 00:02:14,020
+Let's just start with that.
+
+34
+00:02:15,410 --> 00:02:18,840
+I've already SSH
+into each of them.
+
+35
+00:02:18,840 --> 00:02:21,310
+If you recall how
+you can do that,
+
+36
+00:02:21,310 --> 00:02:23,990
+is I can either click
+on this "SSH" button,
+
+37
+00:02:23,990 --> 00:02:25,770
+and I'll bring it
+up in the browser,
+
+38
+00:02:25,770 --> 00:02:30,900
+or I can view the
+gcloud command,
+
+39
+00:02:30,900 --> 00:02:32,985
+and there's other ways as well.
+
+40
+00:02:32,985 --> 00:02:35,295
+But let's pull that open.
+
+41
+00:02:35,295 --> 00:02:37,560
+VM1, VM2.
+
+42
+00:02:37,560 --> 00:02:39,795
+If I do ip addr,
+
+43
+00:02:39,795 --> 00:02:43,890
+you can see, here's
+this guy's IP address,
+
+44
+00:02:43,890 --> 00:02:46,190
+and I will copy that.
+
+45
+00:02:48,860 --> 00:02:51,700
+IP addr.
+
+46
+00:02:51,700 --> 00:02:55,040
+You can see that's
+that guy's IP address.
+
+47
+00:02:55,040 --> 00:02:59,740
+But let me ping from
+here to the other one.
+
+48
+00:03:00,830 --> 00:03:03,930
+It's not working.
+
+49
+00:03:03,930 --> 00:03:06,030
+That's what we expected.
+
+50
+00:03:06,030 --> 00:03:08,890
+We expect two different VPCs
+
+51
+00:03:08,890 --> 00:03:13,660
+to be isolated from one another.
+
+52
+00:03:16,880 --> 00:03:19,230
+Well, so that's
+what we just did.
+
+53
+00:03:19,230 --> 00:03:23,310
+We showed the ip addr
+pinged each of them.
+
+54
+00:03:23,310 --> 00:03:25,745
+Now, if you want to test,
+
+55
+00:03:25,745 --> 00:03:30,510
+maybe you're hiding something.
+
+56
+00:03:30,510 --> 00:03:34,400
+We'll create a second
+subnet inside of this one.
+
+57
+00:03:34,400 --> 00:03:37,620
+Give it a 10.0.3,
+
+58
+00:03:37,620 --> 00:03:40,350
+and you'll be able to
+see, and then check,
+
+59
+00:03:40,350 --> 00:03:43,725
+can you ping from VM1 to VM3,
+
+60
+00:03:43,725 --> 00:03:46,500
+creating in two
+different subnets.
+
+61
+00:03:46,500 --> 00:03:48,300
+Then if that's the case,
+
+62
+00:03:48,300 --> 00:03:49,990
+if you're able to do that,
+
+63
+00:03:49,990 --> 00:03:51,690
+it is the bound of
+
+64
+00:03:51,690 --> 00:03:56,290
+the VPC that did prevent,
+these two things.
+
+65
+00:03:56,290 --> 00:03:57,630
+Even though they're both my
+
+66
+00:03:57,630 --> 00:03:59,490
+infrastructure that
+I just graded,
+
+67
+00:03:59,490 --> 00:04:01,710
+it kept them isolated.
+
+68
+00:04:01,710 --> 00:04:05,565
+If you just trust me
+and that is the case,
+
+69
+00:04:05,565 --> 00:04:10,080
+let's move on to
+this, VPC peering.
+
+70
+00:04:10,080 --> 00:04:12,750
+You can find the
+documentation there,
+
+71
+00:04:12,750 --> 00:04:15,450
+but what it does is
+basically sets up
+
+72
+00:04:15,450 --> 00:04:19,310
+a private connection
+between two VPCs.
+
+73
+00:04:19,310 --> 00:04:21,630
+You must create the peering,
+
+74
+00:04:21,630 --> 00:04:24,960
+one peering in each direction.
+
+75
+00:04:24,960 --> 00:04:30,615
+You have to go from
+1-2 and then, VPC2-1.
+
+76
+00:04:30,615 --> 00:04:35,220
+What that would allow
+is then it will create
+
+77
+00:04:35,220 --> 00:04:40,220
+this route exchange
+between the VPCs.
+
+78
+00:04:40,680 --> 00:04:42,990
+We've seen where you can go
+
+79
+00:04:42,990 --> 00:04:45,765
+and click on the routes and see,
+
+80
+00:04:45,765 --> 00:04:48,530
+I'll have all the
+routes in the subnets.
+
+81
+00:04:48,530 --> 00:04:54,190
+But this subnet would
+
+82
+00:04:54,190 --> 00:04:58,870
+get advertised as an available
+route into this VPC.
+
+83
+00:04:58,870 --> 00:05:01,200
+That's what the peering does.
+
+84
+00:05:01,210 --> 00:05:04,700
+With that, you can't
+have subnets with
+
+85
+00:05:04,700 --> 00:05:08,520
+overlapping address space
+when you do the peering.
+
+86
+00:05:08,520 --> 00:05:12,375
+For example, if we
+had vpc1.sub1 with
+
+87
+00:05:12,375 --> 00:05:19,640
+a 10.0.0.0/24 and vpc2.sub2
+
+88
+00:05:19,640 --> 00:05:22,610
+with that same prefix.
+
+89
+00:05:22,610 --> 00:05:24,155
+These are overlapping,
+
+90
+00:05:24,155 --> 00:05:27,900
+and then it wouldn't
+know what to do.
+
+91
+00:05:29,060 --> 00:05:32,700
+Let's go through a quick demo.
+
+92
+00:05:32,700 --> 00:05:35,655
+We'll create a peering from 1-2,
+
+93
+00:05:35,655 --> 00:05:40,815
+and then create a
+peering from VPC2-1,
+
+94
+00:05:40,815 --> 00:05:44,010
+we'll show you the
+routes in each,
+
+95
+00:05:44,010 --> 00:05:48,530
+and you can add a subnet,
+
+96
+00:05:48,530 --> 00:05:50,940
+if we want to see extra routes.
+
+97
+00:05:50,940 --> 00:05:54,690
+Now, I'll note about
+hybrid infrastructure.
+
+98
+00:05:54,690 --> 00:05:56,330
+We're going to have
+one of the modules
+
+99
+00:05:56,330 --> 00:06:00,190
+later about hybrid
+infrastructure.
+
+100
+00:06:00,190 --> 00:06:02,930
+By that, we mean where if I have
+
+101
+00:06:02,930 --> 00:06:07,110
+both stuff inside of
+Amazon or Google Cloud.
+
+102
+00:06:07,110 --> 00:06:08,950
+But then, let's say over here,
+
+103
+00:06:08,950 --> 00:06:10,850
+I add my private infrastructure.
+
+104
+00:06:10,850 --> 00:06:13,790
+I have something in
+a colocation space,
+
+105
+00:06:13,790 --> 00:06:16,030
+and it's connected in.
+
+106
+00:06:16,030 --> 00:06:18,495
+Well, there's going to be,
+
+107
+00:06:18,495 --> 00:06:22,380
+more use of the routes and
+
+108
+00:06:22,380 --> 00:06:27,165
+routing within that we'll
+see come up in that case.
+
+109
+00:06:27,165 --> 00:06:31,330
+Let me flip to the console.
+
+110
+00:06:32,330 --> 00:06:38,310
+I go over to this VPC networks,
+
+111
+00:06:38,310 --> 00:06:40,870
+and you can see VPC
+network peering.
+
+112
+00:06:40,870 --> 00:06:44,110
+Otherwise, I could
+have typed peering,
+
+113
+00:06:44,110 --> 00:06:47,025
+and I would be brought to that,
+
+114
+00:06:47,025 --> 00:06:51,040
+and I can say Create Connection.
+
+115
+00:06:52,610 --> 00:07:00,610
+My name, peer-1-to-2.
+
+116
+00:07:02,180 --> 00:07:07,005
+My network that we're
+peering from is VPC.
+
+117
+00:07:07,005 --> 00:07:12,900
+The one I'm peering to is VPC2,
+
+118
+00:07:12,900 --> 00:07:19,140
+so from 1-2, I'm just
+going to allow it,
+
+119
+00:07:19,140 --> 00:07:22,330
+to import custom routes.
+
+120
+00:07:22,430 --> 00:07:26,100
+We don't have any custom routes,
+
+121
+00:07:26,100 --> 00:07:32,055
+but if we did and we wanted
+those advertised in exchange,
+
+122
+00:07:32,055 --> 00:07:34,785
+then we would allow that.
+
+123
+00:07:34,785 --> 00:07:39,630
+Then, if they had
+public IP addresses.
+
+124
+00:07:39,630 --> 00:07:41,700
+We don't have any of that.
+
+125
+00:07:41,700 --> 00:07:44,950
+But we'll check
+those boxes anyway.
+
+126
+00:07:45,920 --> 00:07:48,765
+Well, that's creating.
+
+127
+00:07:48,765 --> 00:07:52,565
+I will now you can
+see it's inactive.
+
+128
+00:07:52,565 --> 00:07:55,670
+I will create the second one,
+
+129
+00:07:55,670 --> 00:07:58,970
+what do I call it peer-2-to-1.
+
+130
+00:08:00,650 --> 00:08:05,860
+In this case, we
+need it VPC2-VPC1.
+
+131
+00:08:07,880 --> 00:08:12,760
+I'm going to, import
+and export everything.
+
+132
+00:08:18,290 --> 00:08:24,190
+With that, let me come over
+to the VPC networks again.
+
+133
+00:08:26,930 --> 00:08:30,850
+Look at VPC1.
+
+134
+00:08:30,850 --> 00:08:35,640
+Specifically, I want
+to look at the routes.
+
+135
+00:08:40,340 --> 00:08:42,765
+What we can see,
+
+136
+00:08:42,765 --> 00:08:48,745
+this is the route for the
+subnet. This makes sense.
+
+137
+00:08:48,745 --> 00:08:52,520
+What we're looking
+at is we're in VPC1,
+
+138
+00:08:52,520 --> 00:08:55,240
+looking at the routes,
+and we can say,
+
+139
+00:08:55,240 --> 00:08:59,330
+imagine there's a router
+here, the VPC router.
+
+140
+00:08:59,510 --> 00:09:04,360
+We need to be able to know
+how to get to subnet 1.
+
+141
+00:09:04,360 --> 00:09:07,300
+Here's that address.
+
+142
+00:09:10,430 --> 00:09:15,045
+Then, and says
+where to get to it.
+
+143
+00:09:15,045 --> 00:09:16,930
+Then, this is
+
+144
+00:09:16,930 --> 00:09:19,695
+the general default go
+out to the Internet.
+
+145
+00:09:19,695 --> 00:09:22,560
+Now you can see this new
+route that we added which
+
+146
+00:09:22,560 --> 00:09:28,060
+was of the VPC2s subnet.
+
+147
+00:09:29,000 --> 00:09:36,135
+We could go and you look at VPC2
+
+148
+00:09:36,135 --> 00:09:37,970
+to see if it also has
+
+149
+00:09:37,970 --> 00:09:43,810
+those routes and fingers
+crossed that it does.
+
+150
+00:09:44,090 --> 00:09:47,610
+There it is. That's the route.
+
+151
+00:09:47,610 --> 00:09:49,845
+Now, within VPC2,
+
+152
+00:09:49,845 --> 00:09:52,980
+I should be able to
+say ping 10.0.1.0.
+
+153
+00:09:52,980 --> 00:09:58,900
+Let's try that out again.
+
+154
+00:10:00,590 --> 00:10:02,730
+This is VM1,
+
+155
+00:10:02,730 --> 00:10:05,625
+I want VM2. There we go.
+
+156
+00:10:05,625 --> 00:10:07,390
+The last thing I ran was Ping,
+
+157
+00:10:07,390 --> 00:10:10,230
+the other guy, and you
+could see now it's working.
+
+158
+00:10:10,230 --> 00:10:12,550
+Because they
+exchanged the routes,
+
+159
+00:10:12,550 --> 00:10:15,225
+and that made it work.
+
+160
+00:10:15,225 --> 00:10:18,240
+Let me cancel that.
+
+161
+00:10:18,240 --> 00:10:25,185
+Now, the last thing I said
+that we might want to do is,
+
+162
+00:10:25,185 --> 00:10:29,040
+let's create a new
+another subnet in
+
+163
+00:10:29,040 --> 00:10:34,450
+VPC1 we call it sub3.
+
+164
+00:10:34,730 --> 00:10:39,585
+I'll put it in
+us-central1 again.
+
+165
+00:10:39,585 --> 00:10:46,510
+I will give it, 10.0.3.0/24,
+
+166
+00:10:46,510 --> 00:10:49,070
+because I know that's
+not overlapping,
+
+167
+00:10:49,070 --> 00:10:52,220
+and I will add that.
+
+168
+00:10:52,840 --> 00:10:58,840
+This is now adding a
+second subnet in VPC1.
+
+169
+00:10:59,930 --> 00:11:04,290
+When it's created,
+we'll be able to
+
+170
+00:11:04,290 --> 00:11:11,295
+see that route
+
+171
+00:11:11,295 --> 00:11:15,640
+was created within VPC1.
+
+172
+00:11:20,660 --> 00:11:27,890
+I didn't get created,
+
+173
+00:11:27,890 --> 00:11:33,895
+maybe because there's
+no, there it goes.
+
+174
+00:11:33,895 --> 00:11:38,720
+It created this, route there.
+
+175
+00:11:38,720 --> 00:11:46,750
+Let's go see if it showed
+up in VPC 2s routing table.
+
+176
+00:11:48,140 --> 00:11:55,800
+Let's look, and there it is.
+
+177
+00:11:55,800 --> 00:12:00,280
+I can connect, talk
+to either subnet.
+
+178
+00:12:00,680 --> 00:12:04,605
+I don't have a VM, so we
+can't show, ping working,
+
+179
+00:12:04,605 --> 00:12:10,260
+but you can see it is
+pretty straightforward.
+
+180
+00:12:10,260 --> 00:12:12,840
+Now, one thing to
+note is probably
+
+181
+00:12:12,840 --> 00:12:16,590
+the most important thing
+is about transitivity.
+
+182
+00:12:16,590 --> 00:12:18,600
+Let's say we had three VPCs A,
+
+183
+00:12:18,600 --> 00:12:22,605
+B and C, and we created a
+peering between A and B,
+
+184
+00:12:22,605 --> 00:12:26,430
+and B and C. This would,
+
+185
+00:12:26,430 --> 00:12:29,470
+we might look at this
+picture and say,
+
+186
+00:12:29,470 --> 00:12:33,085
+B should be a transitive VPC.
+
+187
+00:12:33,085 --> 00:12:37,200
+I should be able to send
+traffic from A to C,
+
+188
+00:12:37,200 --> 00:12:40,075
+and it goes through B.
+
+189
+00:12:40,075 --> 00:12:44,260
+But GCP does not
+support transitive VPC,
+
+190
+00:12:44,260 --> 00:12:48,080
+meaning A does not
+receive the routes
+
+191
+00:12:48,080 --> 00:12:52,185
+of C. C would advertise
+its routes to B.
+
+192
+00:12:52,185 --> 00:12:55,480
+B would get that whole
+list, like we just saw,
+
+193
+00:12:55,480 --> 00:12:58,780
+B would advertise
+its routes to A
+
+194
+00:12:58,780 --> 00:13:00,380
+of all its subnets and
+
+195
+00:13:00,380 --> 00:13:02,540
+custom routes and
+things like that,
+
+196
+00:13:02,540 --> 00:13:08,480
+but it won't see the subnets
+from C. We can't do this.
+
+197
+00:13:08,480 --> 00:13:11,070
+You would need to create
+a peering between A and
+
+198
+00:13:11,070 --> 00:13:15,580
+C if that's what
+you were intending.
+
+199
+00:13:17,780 --> 00:13:21,510
+Now, the firewall, just a
+little note on the firewall.
+
+200
+00:13:21,510 --> 00:13:25,650
+When we did send traffic
+from VM1 to VM2 or VM2,
+
+201
+00:13:25,650 --> 00:13:28,755
+actually, is what we pinged VM1.
+
+202
+00:13:28,755 --> 00:13:31,890
+It is still going
+through the VPC.
+
+203
+00:13:31,890 --> 00:13:32,940
+It's still going and
+
+204
+00:13:32,940 --> 00:13:35,010
+traversing the
+boundaries of the VPC,
+
+205
+00:13:35,010 --> 00:13:37,350
+and it's still subject,
+
+206
+00:13:37,460 --> 00:13:40,440
+to the firewall rules.
+
+207
+00:13:40,440 --> 00:13:42,890
+Luckily, we had ICMPs allowed,
+
+208
+00:13:42,890 --> 00:13:45,710
+and that allowed
+the ping through.
+
+209
+00:13:46,700 --> 00:13:50,415
+That's it with VPC peering.
+
+210
+00:13:50,415 --> 00:13:53,640
+It's powerful because it
+
+211
+00:13:53,640 --> 00:13:55,240
+allows you to really partition
+
+212
+00:13:55,240 --> 00:13:57,500
+your network into these VPCs,
+
+213
+00:13:57,500 --> 00:14:00,460
+but then still allow them to
+be able to communicate with
+
+214
+00:14:00,460 --> 00:14:04,095
+one another without traversing,
+
+215
+00:14:04,095 --> 00:14:07,120
+the public IP addresses.
+
+216
+00:14:07,910 --> 00:14:12,060
+Now getting into terraform.
+
+217
+00:14:12,060 --> 00:14:14,220
+This is something that
+we've seen before.
+
+218
+00:14:14,220 --> 00:14:16,115
+We create a VPC network.
+
+219
+00:14:16,115 --> 00:14:20,850
+It's called Google Compute
+Network as the resource type.
+
+220
+00:14:20,850 --> 00:14:23,860
+I will call it vpc1.
+
+221
+00:14:24,620 --> 00:14:29,625
+Then I will create
+a subnet for it,
+
+222
+00:14:29,625 --> 00:14:31,755
+and then tell it,
+
+223
+00:14:31,755 --> 00:14:33,765
+what network to belong to,
+
+224
+00:14:33,765 --> 00:14:38,460
+and so it's referencing
+google_compute_network.vpc1,
+
+225
+00:14:38,460 --> 00:14:44,310
+the value inside of that
+which gets created.
+
+226
+00:14:44,310 --> 00:14:47,910
+That's ID. That's how
+you can identify it.
+
+227
+00:14:47,910 --> 00:14:52,530
+Now, the VPC peering is
+pretty straightforward.
+
+228
+00:14:52,530 --> 00:14:56,060
+I create two resource blocks
+
+229
+00:14:56,060 --> 00:14:59,900
+of type google_compute_network_
+peering,
+
+230
+00:14:59,900 --> 00:15:03,910
+give it its name, and
+then I say what network?
+
+231
+00:15:03,910 --> 00:15:06,170
+This is the From.
+
+232
+00:15:06,170 --> 00:15:11,260
+Note, I can just reference it
+like this, vpc1.self_ link,
+
+233
+00:15:11,260 --> 00:15:15,565
+and then peer network,
+the vpcs2.self_ link.
+
+234
+00:15:15,565 --> 00:15:19,170
+That's similar to how
+we were saying vpc1.id.
+
+235
+00:15:19,310 --> 00:15:25,545
+It's just another value
+that you can obtain.
+
+236
+00:15:25,545 --> 00:15:29,950
+Just look up, the
+Google Compute network,
+
+237
+00:15:30,350 --> 00:15:33,550
+documentation, and you'll
+see that as one of
+
+238
+00:15:33,550 --> 00:15:37,755
+those attributes
+that gets assigned.
+
+239
+00:15:37,755 --> 00:15:43,000
+Then I just create one
+and the reverse from 2-1.
+
+240
+00:15:43,610 --> 00:15:48,375
+With that, that's about
+it for VPC Peering.
+
+241
+00:15:48,375 --> 00:16:00,880
+Next time, we'll talk
+about Cloudnet. Thanks.

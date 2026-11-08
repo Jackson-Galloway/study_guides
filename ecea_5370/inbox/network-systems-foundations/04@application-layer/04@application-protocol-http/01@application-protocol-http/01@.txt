@@ -1,0 +1,182 @@
+All right, let's jump into
+an application protocol, HTTP. So when you're visiting YouTube or
+any other service, We need an application level protocol. And so the transport provides
+the ability to communicate, but the application layer tells us how
+do we actually structure that data? How should these processes communicate? How should I be able to tell YouTube,
+I want to watch this video? Or at a different time here,
+I want to upload this video? And then how do these processes
+encode the data such that the two parts are effectively able to
+communicate with one another? And so this is the application layer or
+application level protocol. And so this application layer
+protocol defines these three things. It defines the message syntax,
+that is, what fields, how fields are delineated,
+and things like that. It talks about the types of messages,
+exchanged, such as is this a request and
+response type system? Is this streaming? How do the message exchange work? And then the message semantics. That is,
+the meaning of information in the fields. So looking at the message syntax,
+the requirement here is that the receiver needs to be able to extract the same
+message as what the transmitter sent. And there's many different
+considerations for how we might actually go about
+this based on different goals. We might have a goal of debuggability, or maybe our main concern is bandwidth or
+how much processing it takes. And so,
+as you can see in this illustration, we take this application data,
+put it through some presentation encoding, which puts it into a sequence of messages. And at the receiver side,
+it goes through a presentation decoding. So next we're going to go over a taxonomy
+of this presentation covering data types, conversion strategy, and tagging approach. So, data types. So if you've programmed, you know
+that there's different types of data that we use in our programs, but
+these are also the types of things, the information that we want
+to be able to exchange. So there's going to be base
+types such as integers. So the concern here is how many
+bits does an integer actually use? Is it 16 bits, 32, 64? Define what is an integer. And then it's also important
+to define the order of bytes. So you may have heard of the terms
+big-endian and little-endian. And this is an illustration of the same
+number represented in two different ways. And that's more associated
+with computer architecture. But if you have two machines
+that are communicating, one may be using big-endian,
+one may be using little-endian. So we need to be able to
+how do they communicate. The next major data type
+are what we call flat types. And these are arrays or structures. So the concern here would be things
+like the padding and the length. How long are these? How do we know how many
+elements are in array? If there's a structure that has,
+so typically, if we create a structure in C,
+the compiler might put some extra padding to make it align to byte
+boundaries that are more fitting for the machine that it's
+going to be running on. But again, if we have different machines,
+those decisions might be different, so we need to have these things
+defined as part of the protocol. And then lastly, complex types. So think of these as things like trees or
+linked lists, maybe they have pointers. And the challenge here, or
+the concern is that you must serialize or flatten these representations such
+that you can transmit them and share them across the medium,
+across the network. So the next part of the taxonomy
+is the conversion strategy. And so this is once we've determined
+on the representation and all those definition of data types, well, whose responsibility,
+how do we actually transmit in this? Do we use, in the first case,
+a canonical intermediate form? So this is where the sender
+does all its computation in its own internal representation,
+then before it sends it, it gets converted into
+some agreed upon format. Then when it gets to the receiver,
+the receiver then converts that agreed upon format into its own
+internal representation. So there's this conversion that's
+happening both at the send side and at the receive side. And there's this agreed upon format, and that's the format that gets transmitted. The other way that you might do
+this as part of your conversion strategy is what's called
+receiver makes right. And so here the sender transmits the data
+in its internal representation and then as part of that includes
+information about that representation. So that's enough information, so now
+the receiver can convert from the sender's representation to its own internal
+representation, if that's even needed. And so this has the benefit of
+reducing the number of conversions, but it also makes that conversion
+a little more complex. But where this really works, is it works well if the assumption
+is a homogeneous infrastructure. If it's not the case that machine A and B that are talking, one is big-endian,
+one is little-endian. Well, why do we even need to make
+conversion to handle that case? So if there's homogeneity, well,
+then let's just have the send or send in its own internal representation. And the assumption is the receiver
+has the same internal representation. And then the final piece of this
+taxonomy is the tagging approach. So we can see one approach
+is to go with untagged and that's where you agree on the type. Length and location of data. So we've seen these in a lot
+of the kind of protocols like TCP where it had this
+agreed upon header format. And here it said bits 0
+through 16 are this field and so forth and it's of this type and
+it's all that information. So that's the untagged approach. And then the tagged approach
+would be where you include in the message some tags about the data, like the type of the data and
+the length of the data. And so we'll see this with
+some examples like JSON. So now with that taxonomy of the syntax, now it's about the semantics
+of the message and we'll look at that through the lens of an example protocol of HTTP. So this is widely used, it's the web's
+application-layer protocol and it's about a client in the server
+being able to exchange web objects. So web objects can be a BLOB of HTML text, it could be a JPEG image,
+it could be an audio file. And the protocol is a request and
+response of request between the client which
+are commonly like browsers and getting a response from a server
+that has some information. And these servers are all stateless, they don't retain information
+about past client requests. All right, so you've seen
+kind of URLs that look like this down at the bottom and
+just breaking this apart. That first part,
+the HTTP part is the protocol. The next part,
+the www.example.com is the hostname and the rest is some path that's
+used as part of HTTP. So the message format looks like this. So it's at the highest level, very simple. You have some start line and
+then a carriage return line feed, a message header and then a new line,
+then a blank line and then the message body, all right? And so on the request side, that start line would
+have the request type and then some extra information
+such as a path and a version. And then the message header would
+then include various things that are more information
+about the request. So we're not going to get into
+what the message header and all those different fields for HTTP,
+but this is the general structure. So the response to that request,
+we'll see it's the same format. It has that start line and here it's the version,
+some status code and then a bunch of information
+as part of the header. An important part of this one
+is this last one that says the Content-Type and
+it's saying that it's text/html and this is how it's encoding
+the characters as 8-bit. All right, and then you would see the message body
+contains all of that HTML text. So the HTTP message types
+that we saw in the request, they can include all of these
+that are kind of shown here. But the kind of key ones to
+know about are the GET and this is where you're retrieving some
+web object identified in the URL. Or POST where you're sending or PUT, you're sending some
+information to the server. So the GET is getting from and the POST or
+PUT is sending something to the server. Now, diving into some of
+the data format examples, we saw those tags in the message
+header like Content-Type, text/html. So HTML is one example of data format,
+stands for Hypertext Markup Language. It's really good for describing
+the appearance of a web page, for example. And we're not going to
+really cover that but you've seen probably examples of HTML. On the right hand side there's
+something called JSON for JavaScript Object Notation. And this is something that's good for
+passing information, widely used in APIs or
+Application Programming Interfaces. And here you would see the Content-Type
+specified as application/json. So since this might be
+a little less familiar, we're going to dive into this
+a little bit to show what this is. So as a quick overview in JSON, all of
+the data is in these value pairs and name value pairs where you have this key,
+which is a string and then the value which is any type,
+a string, a number, an object,
+an array, a boolean, null. Curly braces hold objects which
+are these lists of name value pairs. And then square brackets hold
+arrays which are lists of values. All right, so here's an example and we'll
+go through kind of line by line of this. All right, so this is an example but
+we're going to use a different example. We're going to use this example
+of top quarterbacks and you could tell I'm an Eagles fan, so I put Jalen Hurts as the first
+ranked best quarterback. And then Daniel Jones of the Giants and Dak Prescott of the Cowboys
+would be the second and third. And then the Washington team,
+I don't even rank their quarterback. So this is just me having fun,
+this is the source of this, this is Eric. So if this was the information we wanted
+to send, this would be a JSON BLOB. So this is why we're
+going to go line by line. So the top level object name-value
+pairs are, there's two of them. The first one is this TopQBs,
+that's the name or the key. And then the value is this
+array shown in green. The second name-value pair In this
+object is the source is the name or the key and then Eric as the value and
+that's a string. Now, if we go into looking
+inside this array, we can see there's three elements in the
+array, so there's three array elements. And this first array element is
+an object and it's highlighted. And then within that object we could
+see that it's now its own object, which has its own list of key value pairs. So this is the first key or name rank. And then the value would be the integer or
+number one. And then we have another name or
+key which is player. And then the value for that is an object. All right, so then we have
+three of those element objects. So you can go play with
+JSON once it kind of makes sense, real easy to understand and it conveys information in APIs. Now, you might have seen that
+there's different versions of http. So just to give a quick kind of
+highlight of what each version, the main innovation or
+addition in each is in this table. But first let's look at what
+an http request actually is. So you have some client with
+a web browser, for example, and it's initiating a TCP connection. So it needs to do an http request. But first that's running over TCP, so
+it makes the connection request, and we saw the three way handshake. And so that has round trip times,
+transmission times. Then it's now time to make the request and transmit the file. And so if we add on the time to
+transmit the file, great, and then we get the file received. So in http 1.0, any web object that you're requesting would go through
+that entire process. So the first web object,
+you would do that. Then a second web object, let's say
+there's two images you wanted to get from the server, you would do the same thing. So version 1.1, added the notion
+of persistent connections. That just meant I don't
+close the TCP connection once I've gotten that first object. I can make a second request
+on the same TCP connection. So this saves me the time for
+doing this TCP three way handshake. And it also allows us to not have
+to overcome that slow start or that kind of initial
+probing of the bandwidth or the congestion levels
+inside of the network. The more requests you put over this, well, it's finding what that
+congestion window should be. So that's this 1.1 and then in 2.0, this allowed you to multiplex requests. So you didn't have to do a request and
+then wait for a response. Then do another request and
+then wait for a response. You can request five, six, whatever number of
+objects all in parallel. And then finally the most recent 3.0, it introduced this ability
+to use a different protocol called QUIC instead of TCP. So we didn't go over QUIC
+in the transport layer. But it's certainly something
+that if you find this topic interesting,
+something worth looking into. All right, so that covers http and
+how it works. And next time we're going to discuss QRPC.

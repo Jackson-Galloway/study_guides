@@ -1,0 +1,62 @@
+1
+00:00:09,310 --> 00:00:13,800
+In this lab for the transport layer,
+we're going to use scapy again.
+
+2
+00:00:13,800 --> 00:00:16,821
+So we're going to use it in a way to
+
+3
+00:00:16,821 --> 00:00:21,363
+basically look through
+a single TCP session.
+
+4
+00:00:21,363 --> 00:00:26,063
+And the job is to calculate
+the max number of bytes
+
+5
+00:00:26,063 --> 00:00:29,621
+that are in flight at any given time.
+
+6
+00:00:29,621 --> 00:00:35,422
+So if you recall, the number of bytes
+that are in flight can be calculated
+
+7
+00:00:35,422 --> 00:00:40,938
+through a combination of looking at
+the last sequence number that I,
+
+8
+00:00:40,938 --> 00:00:44,763
+as a client, have sent out or
+on the other side.
+
+9
+00:00:44,763 --> 00:00:49,307
+And a combination with what should
+those bytes have been acknowledged.
+
+10
+00:00:49,307 --> 00:00:54,035
+So you're going to need to go through and
+find and take into account
+
+11
+00:00:54,035 --> 00:00:58,691
+that there may be packets out of order,
+packets might be lost.
+
+12
+00:00:58,691 --> 00:01:02,419
+But this is all a Python
+program that can calculate
+
+13
+00:01:02,419 --> 00:01:06,075
+this using scapy to look
+through those packets.

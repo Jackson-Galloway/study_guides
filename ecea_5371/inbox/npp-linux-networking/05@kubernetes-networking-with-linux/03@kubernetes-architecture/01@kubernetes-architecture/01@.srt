@@ -1,0 +1,888 @@
+1
+00:00:08,971 --> 00:00:12,837
+So now that we've seen
+basic use of Kubernetes,
+
+2
+00:00:12,837 --> 00:00:16,898
+let's dive into
+the architecture a little bit.
+
+3
+00:00:16,898 --> 00:00:21,679
+And this will help us really understand
+how networking works, because we need to
+
+4
+00:00:21,679 --> 00:00:26,835
+understand kind of all the components and
+the general structure of the architecture.
+
+5
+00:00:29,440 --> 00:00:36,463
+So here's a high level picture of
+the Kubernetes architecture, right?
+
+6
+00:00:36,463 --> 00:00:40,506
+So we have the control plane where it's
+running a bunch of different things.
+
+7
+00:00:40,506 --> 00:00:45,002
+We talked about the scheduler,
+controller manager, and
+
+8
+00:00:45,002 --> 00:00:48,407
+then we have a bunch of workers,
+all right?
+
+9
+00:00:48,407 --> 00:00:54,111
+So we talked about container runtime,
+that's something like Docker and
+
+10
+00:00:54,111 --> 00:00:57,490
+you can run proxies and things like that.
+
+11
+00:00:57,490 --> 00:01:00,152
+So we'll dive into a bunch of these.
+
+12
+00:01:02,160 --> 00:01:05,282
+Now how components are run.
+
+13
+00:01:05,282 --> 00:01:12,740
+So the kubelet is the only component that
+always runs as a regular system component.
+
+14
+00:01:12,740 --> 00:01:17,048
+Kubelet then runs all
+other components as pods.
+
+15
+00:01:17,048 --> 00:01:23,586
+So what kubelet is, it runs on each node,
+including the control plane.
+
+16
+00:01:23,586 --> 00:01:29,438
+It's what can communicate with the server
+when you say I need a pod created,
+
+17
+00:01:29,438 --> 00:01:35,024
+kubelet is the one that will make that
+happen [COUGH] on that local node.
+
+18
+00:01:35,024 --> 00:01:39,089
+So it'll interact with a container
+runtime like docker, but
+
+19
+00:01:39,089 --> 00:01:41,130
+Docker is not the only option.
+
+20
+00:01:42,300 --> 00:01:46,934
+It will to create the containers and
+set up the pod.
+
+21
+00:01:46,934 --> 00:01:50,804
+So that's what runs as a system component,
+but
+
+22
+00:01:50,804 --> 00:01:54,300
+all of these other components run as pods.
+
+23
+00:01:55,920 --> 00:01:59,766
+So let's explore this a little bit.
+
+24
+00:01:59,766 --> 00:02:04,108
+All right, so
+let me pull open our terminal.
+
+25
+00:02:04,108 --> 00:02:08,345
+We can run docker ps, see our nodes,
+
+26
+00:02:08,345 --> 00:02:13,052
+let's log into the control plane node.
+
+27
+00:02:13,052 --> 00:02:16,386
+So docker exec -it,
+
+28
+00:02:16,386 --> 00:02:21,018
+give it the container name and
+
+29
+00:02:21,018 --> 00:02:25,101
+we'll say /bin/bash.
+
+30
+00:02:26,933 --> 00:02:31,390
+All right, I could say ps aux,
+I could see a bunch of things like
+
+31
+00:02:31,390 --> 00:02:36,031
+the kube-scheduler,
+kube-controller, kube-apiserver.
+
+32
+00:02:36,031 --> 00:02:40,477
+But let's use the, so
+inside of the container,
+
+33
+00:02:40,477 --> 00:02:45,038
+the container runtime in
+this case is not docker.
+
+34
+00:02:45,038 --> 00:02:52,569
+And so to interact with it, I'm saying
+crictl and I can say ps, all right?
+
+35
+00:02:52,569 --> 00:02:58,694
+And so here are the various components,
+the containers or
+
+36
+00:02:58,694 --> 00:03:04,950
+pods that are running inside
+of the control pit plane node.
+
+37
+00:03:08,827 --> 00:03:15,008
+So that's looking at it for the
+perspective of the container runtime fFrom
+
+38
+00:03:15,008 --> 00:03:20,121
+the perspective of Kubernetes,
+I could say kubectl get all.
+
+39
+00:03:20,121 --> 00:03:23,772
+And when I do that it's not
+going to show much, but
+
+40
+00:03:23,772 --> 00:03:27,435
+if I add -a,
+it'll start showing something.
+
+41
+00:03:27,435 --> 00:03:33,310
+So this is take a quick detour
+to mention what a namespace is.
+
+42
+00:03:34,880 --> 00:03:38,621
+So in namespace, in Kubernetes,
+
+43
+00:03:38,621 --> 00:03:43,523
+that's basically
+a grouping of resources in
+
+44
+00:03:43,523 --> 00:03:47,784
+a particular partition or isolation.
+
+45
+00:03:47,784 --> 00:03:53,597
+So they're all running, but, so
+the default namespace when we say kubectl,
+
+46
+00:03:53,597 --> 00:03:58,187
+apply and then create a pod,
+that's the default namespace.
+
+47
+00:03:58,187 --> 00:04:02,139
+But there's other namespaces,
+
+48
+00:04:02,139 --> 00:04:07,260
+kubectl get namespaces that exist.
+
+49
+00:04:07,260 --> 00:04:13,180
+And where a lot of the system components
+get run is within this kube system.
+
+50
+00:04:13,180 --> 00:04:17,184
+So if I say kubectl get all -a,
+
+51
+00:04:17,184 --> 00:04:22,400
+I'm saying for all namespaces.
+
+52
+00:04:22,400 --> 00:04:28,648
+All right, and so
+we could see the various components.
+
+53
+00:04:28,648 --> 00:04:32,995
+So here's all the pods
+that are running and
+
+54
+00:04:32,995 --> 00:04:40,976
+we could say -o wide if we want to see
+where their extra information about them.
+
+55
+00:04:40,976 --> 00:04:45,334
+All right, kube system, so
+
+56
+00:04:45,334 --> 00:04:49,510
+this is kind of one entry and
+
+57
+00:04:49,510 --> 00:04:53,687
+you can kind of see all the,
+
+58
+00:04:53,687 --> 00:04:58,600
+well sorry, this is one entry.
+
+59
+00:04:59,900 --> 00:05:05,612
+So you can see this component is
+running on the node control plane,
+
+60
+00:05:05,612 --> 00:05:08,470
+has this IP address and so forth.
+
+61
+00:05:08,470 --> 00:05:10,850
+So there's a lot of
+components that are running.
+
+62
+00:05:10,850 --> 00:05:12,831
+So explore that a little bit on your own.
+
+63
+00:05:15,265 --> 00:05:18,113
+All right, so
+let's dive into some of these components.
+
+64
+00:05:18,113 --> 00:05:22,269
+One that you might have
+seen is called etcd.
+
+65
+00:05:22,269 --> 00:05:26,580
+What etcs is,
+is a distributed key value store.
+
+66
+00:05:26,580 --> 00:05:30,848
+So it stores all the state for
+a Kubernetes cluster,
+
+67
+00:05:30,848 --> 00:05:35,310
+information about the pods,
+about the deployments.
+
+68
+00:05:35,310 --> 00:05:40,329
+And it uses the RAFT
+consensus algorithm to ensure
+
+69
+00:05:40,329 --> 00:05:45,827
+consensus because this is
+run in a replicated manner,
+
+70
+00:05:45,827 --> 00:05:49,188
+it'll be run on multiple nodes.
+
+71
+00:05:49,188 --> 00:05:54,086
+So this is showing just two, and when
+anything kind of reads or writes to or
+
+72
+00:05:54,086 --> 00:05:58,596
+writes to one of the nodes,
+it'll synchronize to another node.
+
+73
+00:05:58,596 --> 00:06:03,029
+So the RAFT algorithm will ensure
+that each node state is either what
+
+74
+00:06:03,029 --> 00:06:06,528
+the majority of the nodes
+agree is the current state or
+
+75
+00:06:06,528 --> 00:06:09,513
+is one of the previously
+agreed upon states.
+
+76
+00:06:11,546 --> 00:06:16,091
+So that's the property of etcd and
+it's a system that exists,
+
+77
+00:06:16,091 --> 00:06:21,520
+you can go it's not only used in
+Kubernetes, but it is used in Kubernetes.
+
+78
+00:06:22,760 --> 00:06:28,486
+Next we can mention the API Server and
+this provides a CRUD interface or
+
+79
+00:06:28,486 --> 00:06:33,435
+create, read, update,
+delete interface for querying and
+
+80
+00:06:33,435 --> 00:06:37,138
+modifying the cluster
+state over a REST API.
+
+81
+00:06:37,138 --> 00:06:40,356
+And then it stores all the state in etcd.
+
+82
+00:06:40,356 --> 00:06:45,508
+So as we mentioned, we're interacting with
+the Kubernetes cluster, with kubectl.
+
+83
+00:06:45,508 --> 00:06:48,900
+So that's just a client
+of this API server.
+
+84
+00:06:48,900 --> 00:06:53,688
+So it'll send request REST API
+through the REST API.
+
+85
+00:06:53,688 --> 00:06:58,068
+And then there's the series
+of kind of things that
+
+86
+00:06:58,068 --> 00:07:02,986
+perform authentication which
+we don't have enabled.
+
+87
+00:07:02,986 --> 00:07:08,106
+Does some admission control which can
+do things like modifying resources,
+
+88
+00:07:08,106 --> 00:07:13,456
+initializing missing fields, and so
+forth, and then resource validation.
+
+89
+00:07:13,456 --> 00:07:19,084
+Once it gets past all that it goes into
+etcd and says great, now we've got
+
+90
+00:07:19,084 --> 00:07:24,271
+a request to create a resource or
+updates the state in some manner.
+
+91
+00:07:26,010 --> 00:07:30,655
+Now how that then interacts with
+all the other components is all of
+
+92
+00:07:30,655 --> 00:07:34,932
+the other components are just
+watching on the API server.
+
+93
+00:07:34,932 --> 00:07:40,674
+So the components open an HTTP session and
+then say watch = true.
+
+94
+00:07:40,674 --> 00:07:45,120
+So this means they're basically
+setting themselves up as a listener.
+
+95
+00:07:45,120 --> 00:07:47,868
+So now anytime a command,
+so that's the first step,
+
+96
+00:07:47,868 --> 00:07:50,086
+each of these components would do that.
+
+97
+00:07:50,086 --> 00:07:56,436
+Now let's say kubectl does something
+that it does a post, it creates a pod.
+
+98
+00:07:56,436 --> 00:08:02,354
+Well, API server, as we mentioned,
+will send to etcd update the state.
+
+99
+00:08:02,354 --> 00:08:08,464
+etcd will send a modification
+notification to the API server,
+
+100
+00:08:08,464 --> 00:08:14,584
+which will then send the updated
+object to all of the watchers.
+
+101
+00:08:14,584 --> 00:08:21,451
+We can also have kubectl itself
+watch if we ran that command.
+
+102
+00:08:24,632 --> 00:08:26,640
+Next, the scheduler.
+
+103
+00:08:27,640 --> 00:08:32,530
+So the scheduler waits for
+newly created pods,
+
+104
+00:08:32,530 --> 00:08:36,624
+then it assigns a node to each new pod.
+
+105
+00:08:36,624 --> 00:08:41,944
+So it doesn't actually instruct
+the selected node to run the pod,
+
+106
+00:08:41,944 --> 00:08:47,169
+it just updates the state of the pod
+that it goes from not scheduled
+
+107
+00:08:47,169 --> 00:08:52,869
+to it selects a node, updates the state
+to say it should run on node two,
+
+108
+00:08:52,869 --> 00:08:57,840
+and then updates the state
+to say that it's scheduled.
+
+109
+00:08:57,840 --> 00:09:03,979
+So the basic operation of
+the scheduler is a multi-step process.
+
+110
+00:09:03,979 --> 00:09:09,923
+And it's quite interesting and you can
+highly recommend you kind of dig in and
+
+111
+00:09:09,923 --> 00:09:13,780
+read it if there's something
+of interest to you.
+
+112
+00:09:13,780 --> 00:09:15,640
+But it'll first filter, so
+
+113
+00:09:15,640 --> 00:09:20,352
+it'll find the set of nodes where
+it's feasible to schedule the pod.
+
+114
+00:09:20,352 --> 00:09:24,826
+So you can specify for
+example using labels and say,
+
+115
+00:09:24,826 --> 00:09:29,415
+I want this to run on any
+node that matches this label.
+
+116
+00:09:29,415 --> 00:09:32,269
+So it'll filter out any that it doesn't or
+
+117
+00:09:32,269 --> 00:09:36,300
+maybe there's nodes that are down and
+not ready.
+
+118
+00:09:36,300 --> 00:09:41,127
+Then it'll perform a scoring
+of all the nodes that made it
+
+119
+00:09:41,127 --> 00:09:46,344
+past the filter to choose
+the most suitable pod placement.
+
+120
+00:09:46,344 --> 00:09:51,115
+And this is broken down into a bunch of
+extension points where you can kind of
+
+121
+00:09:51,115 --> 00:09:52,720
+look through.
+
+122
+00:09:52,720 --> 00:09:58,270
+And there's a lot of
+interesting things in that.
+
+123
+00:09:58,270 --> 00:10:02,975
+The controller manager
+component runs multiple
+
+124
+00:10:02,975 --> 00:10:07,450
+controllers as processes
+performing various
+
+125
+00:10:07,450 --> 00:10:12,928
+reconciliation loop tasks or
+reconciliation loops.
+
+126
+00:10:12,928 --> 00:10:17,661
+So we have replication manager replication
+manager, ReplicaSet, DaemonSet,
+
+127
+00:10:17,661 --> 00:10:19,690
+Deployment, Node, Service.
+
+128
+00:10:19,690 --> 00:10:23,598
+So we talked about
+the deployment last time.
+
+129
+00:10:23,598 --> 00:10:30,395
+So this will run as a process within the
+controller manager and it'll be watching.
+
+130
+00:10:30,395 --> 00:10:34,898
+All right, for example,
+did something change, did pod,
+
+131
+00:10:34,898 --> 00:10:40,136
+the configuration change or
+the number of pods and things like that.
+
+132
+00:10:42,635 --> 00:10:45,262
+[COUGH] So
+it will watch the API Server for
+
+133
+00:10:45,262 --> 00:10:51,220
+changes to resources they care about and
+perform operations for each change.
+
+134
+00:10:51,220 --> 00:10:55,327
+So the ReplicaSet watches,
+ReplicaSet resources and
+
+135
+00:10:55,327 --> 00:10:59,620
+Pod resources, and creates and
+deletes Pod resources.
+
+136
+00:10:59,620 --> 00:11:04,117
+Endpoints, watch Services resources and
+Pod resources and
+
+137
+00:11:04,117 --> 00:11:06,920
+creates Endpoint resources.
+
+138
+00:11:06,920 --> 00:11:10,251
+And each of these runs
+a reconciliation loop, so
+
+139
+00:11:10,251 --> 00:11:14,574
+you can actually look inside
+of the Kubernetes source code.
+
+140
+00:11:14,574 --> 00:11:18,678
+There's a directory controller that
+you can look at all of these and
+
+141
+00:11:18,678 --> 00:11:20,557
+basically see that in action.
+
+142
+00:11:23,251 --> 00:11:26,615
+Next that we'll talk about is kubelet.
+
+143
+00:11:26,615 --> 00:11:31,708
+So we've briefly mentioned this,
+but it'll register the node
+
+144
+00:11:31,708 --> 00:11:37,060
+it's running on by creating a node
+resource in the API server.
+
+145
+00:11:37,060 --> 00:11:43,698
+It watches the API server for
+Pods that have been scheduled to its node.
+
+146
+00:11:43,698 --> 00:11:46,143
+So if you recall,
+the scheduler doesn't do that.
+
+147
+00:11:46,143 --> 00:11:49,821
+So the scheduler just
+updates the state and
+
+148
+00:11:49,821 --> 00:11:54,533
+kubelet will see that this
+Pod state has been updated.
+
+149
+00:11:54,533 --> 00:11:56,490
+So that's what it's watching on.
+
+150
+00:11:56,490 --> 00:12:01,440
+It'll then start the Pods containers
+by telling the container runtime to run
+
+151
+00:12:01,440 --> 00:12:03,684
+a container from a given image.
+
+152
+00:12:03,684 --> 00:12:08,220
+Then it monitors the running containers,
+reports any events.
+
+153
+00:12:08,220 --> 00:12:14,002
+It runs liveness probes,
+restarts containers when the probes fail,
+
+154
+00:12:14,002 --> 00:12:18,715
+and then deletes the containers
+when the Pod is deleted.
+
+155
+00:12:22,362 --> 00:12:26,628
+It can also run things called static Pods.
+
+156
+00:12:26,628 --> 00:12:31,412
+There's a special
+directory that you can say,
+
+157
+00:12:31,412 --> 00:12:36,435
+here are some Pods I want to
+create automatically,
+
+158
+00:12:36,435 --> 00:12:39,916
+statically as part of the system.
+
+159
+00:12:39,916 --> 00:12:43,545
+Right, so let's look at a kind of
+summary of the chain of events.
+
+160
+00:12:43,545 --> 00:12:48,592
+Right, so let's say in kubectl we say,
+I want to create some resource.
+
+161
+00:12:48,592 --> 00:12:51,652
+Here, I'm going to create a deployment,
+right?
+
+162
+00:12:51,652 --> 00:12:57,258
+So we're going to kind of match this
+as etcd and API server, all of this.
+
+163
+00:12:57,258 --> 00:13:01,266
+So I come in and
+I say create a deployment.
+
+164
+00:13:01,266 --> 00:13:06,287
+So in etcd and the API server will
+notify the resource controller and
+
+165
+00:13:06,287 --> 00:13:11,939
+the particular process, the deployment
+controller that's watching it.
+
+166
+00:13:11,939 --> 00:13:16,214
+The deployment controller
+will update the ReplicaSet,
+
+167
+00:13:16,214 --> 00:13:20,051
+ReplicaSet will then,
+that's all gets updated.
+
+168
+00:13:20,051 --> 00:13:24,114
+The ReplicaSet controller
+will see that and
+
+169
+00:13:24,114 --> 00:13:28,723
+it will update the Pod,
+create Pods and whatnot,
+
+170
+00:13:28,723 --> 00:13:34,928
+which once it creates this Pod resource,
+it'll be unscheduled.
+
+171
+00:13:34,928 --> 00:13:38,866
+So then the scheduler which is
+watching on Pods sees that and
+
+172
+00:13:38,866 --> 00:13:41,796
+says, this Pod needs to be scheduled.
+
+173
+00:13:41,796 --> 00:13:45,900
+It'll figure out which node,
+it'll update that state.
+
+174
+00:13:45,900 --> 00:13:50,624
+And then once that state is updated,
+the kubelet is watching on that and
+
+175
+00:13:50,624 --> 00:13:53,224
+it will contact the local runtime which
+
+176
+00:13:53,224 --> 00:13:57,520
+could be Docker which will
+then create the containers.
+
+177
+00:13:57,520 --> 00:14:04,823
+So that's a summary of a chain of events
+when you're creating a deployment.
+
+178
+00:14:07,064 --> 00:14:10,457
+So kind of summarizing,
+showing this picture again,
+
+179
+00:14:10,457 --> 00:14:13,186
+we've talked about the API server, etcd,
+
+180
+00:14:13,186 --> 00:14:18,076
+the scheduler, controller manager,
+kubelet, and the container runtime.
+
+181
+00:14:18,076 --> 00:14:19,515
+We've talked plenty about.
+
+182
+00:14:22,369 --> 00:14:28,880
+So next time we're going to go into
+the networking aspect of Kubernetes.
+
+183
+00:14:28,880 --> 00:14:35,126
+But now that we have the overarching
+context of the architecture in mind,
+
+184
+00:14:35,126 --> 00:14:38,944
+we can now better understand networking.
+
+185
+00:14:38,944 --> 00:14:42,035
+And then ultimately we can write our own
+
+186
+00:14:42,035 --> 00:14:45,790
+networking constructs
+inside of Kubernetes.
+
+187
+00:14:45,790 --> 00:14:47,880
+And with that, we'll end here, thanks.
